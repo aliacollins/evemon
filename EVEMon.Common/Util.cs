@@ -305,37 +305,36 @@ namespace EVEMon.Common
                                                    String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
 
             // Query async and wait
-            using (EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset))
-            {
-                EveMonClient.HttpWebService.DownloadXmlAsync(
-                    url, postData,
-                    (asyncResult, userState) =>
+            EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
+            EveMonClient.HttpWebService.DownloadXmlAsync(
+                url, postData,
+                (asyncResult, userState) =>
+                    {
+                        try
                         {
-                            try
-                            {
-                                // Was there an HTTP error ?
-                                result = asyncResult.Error != null
-                                             ? new APIResult<T>(asyncResult.Error)
-                                             : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
-                            }
-                            catch (Exception e)
-                            {
-                                ExceptionHandler.LogException(e, true);
-                                result = new APIResult<T>(APIError.Http, e.Message);
-                                EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
-                                                   url.AbsoluteUri, postData, typeof(T).Name);
-                            }
-                            finally
-                            {
-                                // We got the result, so we resume the calling thread
-                                wait.Set();
-                            }
-                        },
-                    null);
+                            // Was there an HTTP error ?
+                            result = asyncResult.Error != null
+                                         ? new APIResult<T>(asyncResult.Error)
+                                         : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
+                        }
+                        catch (Exception e)
+                        {
+                            ExceptionHandler.LogException(e, true);
+                            result = new APIResult<T>(APIError.Http, e.Message);
+                            EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
+                                               url.AbsoluteUri, postData, typeof(T).Name);
+                        }
+                        finally
+                        {
+                            // We got the result, so we resume the calling thread
+                            wait.Set();
+                        }
+                    },
+                null);
 
-                // Wait for the completion of the background thread
-                wait.WaitOne();
-            }
+            // Wait for the completion of the background thread
+            wait.WaitOne();
+            wait.Close();
 
             // Returns
             return result;
@@ -420,47 +419,46 @@ namespace EVEMon.Common
             BCAPIResult<T> result = new BCAPIResult<T> { Error = error };
 
             // Query async and wait
-            using (EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset))
-            {
-                EveMonClient.HttpWebService.DownloadXmlAsync(
-                    url, postData,
-                    (asyncResult, userState) =>
+            EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
+            EveMonClient.HttpWebService.DownloadXmlAsync(
+                url, postData,
+                (asyncResult, userState) =>
+                    {
+                        try
                         {
-                            try
-                            {
-                                // Was there an HTTP error ?
+                            // Was there an HTTP error ?
 
-                                if (asyncResult.Error != null)
-                                {
-                                    errorMessage = asyncResult.Error.InnerException == null
-                                                              ? asyncResult.Error.Message
-                                                              : asyncResult.Error.InnerException.Message;
-                                    error.ErrorMessage = errorMessage;
-                                }
-                                else
-                                    result = DeserializeBCAPIResultCore<T>(asyncResult.Result);
-                            }
-                            catch (Exception e)
+                            if (asyncResult.Error != null)
                             {
-                                ExceptionHandler.LogException(e, true);
-                                errorMessage = e.InnerException == null
-                                                          ? e.Message
-                                                          : e.InnerException.Message;
+                                errorMessage = asyncResult.Error.InnerException == null
+                                                   ? asyncResult.Error.Message
+                                                   : asyncResult.Error.InnerException.Message;
                                 error.ErrorMessage = errorMessage;
-                                EveMonClient.Trace("Method: DownloadBCAPIResult, url: {0}, postdata: {1}, type: {2}",
-                                                   url.AbsoluteUri, postData, typeof(T).Name);
                             }
-                            finally
-                            {
-                                // We got the result, so we resume the calling thread
-                                wait.Set();
-                            }
-                        },
-                    null);
+                            else
+                                result = DeserializeBCAPIResultCore<T>(asyncResult.Result);
+                        }
+                        catch (Exception e)
+                        {
+                            ExceptionHandler.LogException(e, true);
+                            errorMessage = e.InnerException == null
+                                               ? e.Message
+                                               : e.InnerException.Message;
+                            error.ErrorMessage = errorMessage;
+                            EveMonClient.Trace("Method: DownloadBCAPIResult, url: {0}, postdata: {1}, type: {2}",
+                                               url.AbsoluteUri, postData, typeof(T).Name);
+                        }
+                        finally
+                        {
+                            // We got the result, so we resume the calling thread
+                            wait.Set();
+                        }
+                    },
+                null);
 
-                // Wait for the completion of the background thread
-                wait.WaitOne();
-            }
+            // Wait for the completion of the background thread
+            wait.WaitOne();
+            wait.Close();
 
             // Returns
             return result;

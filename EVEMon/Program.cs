@@ -71,22 +71,22 @@ namespace EVEMon
             if (s_exitRequested)
                 return;
 
-            // Fires the main window
             try
             {
+                // Fires the main window
                 EveMonClient.Trace("Main loop - start");
                 s_mainWindow = new MainWindow(startMinimized);
                 Application.Run(s_mainWindow);
                 EveMonClient.Trace("Main loop - done");
             }
-                // Save before we quit
             finally
             {
+                // Save before we quit
                 Settings.SaveImmediate();
                 EveIDToName.SaveImmediate();
                 BCAPI.UploadSettingsFile();
 
-                // Stops the one-second timer right now
+                // Stop the one-second timer right now
                 EveMonClient.Shutdown();
                 EveMonClient.Trace("Closed");
                 EveMonClient.StopTraceLogging();

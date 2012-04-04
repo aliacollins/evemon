@@ -73,8 +73,6 @@ namespace EVEMon
         public MainWindow(bool startMinimized)
             : this()
         {
-            m_isUpdating = false;
-
             // Start minimized ?
             if (startMinimized)
             {
@@ -105,9 +103,13 @@ namespace EVEMon
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             if (DesignMode)
                 return;
 
+            // Start the one-second timer 
+            EveMonClient.Run(this);
+            
             trayIcon.Text = Application.ProductName;
 
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
@@ -124,9 +126,6 @@ namespace EVEMon
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-
-            // Initialize all of our business objects
-            EveMonClient.Run(this);
 
             // Update the content
             UpdateTabs();
@@ -1057,7 +1056,7 @@ namespace EVEMon
                 {
                     m_isUpdating = true;
 
-                    // Save the settings to make sure we don't loose anything
+                    // Save the settings to make sure we don't lose anything
                     Settings.SaveImmediate();
                     Close();
                 }
