@@ -169,23 +169,24 @@ namespace EVEMon.ApiTester
                                    ? "IDs:"
                                    : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterID)
                                          ? "Names:"
-                                         : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
-                                           cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems)
-                                               ? "Contract ID:"
-                                               : cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees)
-                                                     ? "Event IDs:"
-                                                     : cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                                                       cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts)
-                                                           ? "Message IDs:"
-                                                           : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.TypeName) ||
-                                                             cbAPIMethod.SelectedItem.Equals(APICharacterMethods.Locations) ||
-                                                             cbAPIMethod.SelectedItem.Equals(
-                                                                 APICorporationMethods.CorporationLocations)
-                                                                 ? "Item IDs:"
-                                                                 : cbAPIMethod.SelectedItem.Equals(
-                                                                     APICorporationMethods.CorporationStarbaseDetails)
-                                                                       ? "Starbase ID:"
-                                                                       : String.Empty;
+                                         : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.TypeName)
+                                               ? "Type IDs:"
+                                               : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                                                 cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems)
+                                                     ? "Contract ID:"
+                                                     : cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees)
+                                                           ? "Event IDs:"
+                                                           : cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
+                                                             cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts)
+                                                                 ? "Message IDs:"
+                                                                 : cbAPIMethod.SelectedItem.Equals(APICharacterMethods.Locations) ||
+                                                                   cbAPIMethod.SelectedItem.Equals(
+                                                                       APICorporationMethods.CorporationLocations)
+                                                                       ? "Item IDs:"
+                                                                       : cbAPIMethod.SelectedItem.Equals(
+                                                                           APICorporationMethods.CorporationStarbaseDetails)
+                                                                             ? "Starbase ID:"
+                                                                             : String.Empty;
         }
 
         /// <summary>
