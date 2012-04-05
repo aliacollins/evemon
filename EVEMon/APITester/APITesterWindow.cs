@@ -9,14 +9,13 @@ using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.ApiTester
 {
     public partial class ApiTesterWindow : EVEMonForm
     {
         private Uri m_url;
-
+        private const string NoAPIKeyWithAccess = "No API key with access to API call found";
 
         #region Constructor
 
@@ -44,10 +43,14 @@ namespace EVEMon.ApiTester
         {
             get
             {
-                string uriString =
-                    EveMonClient.APIProviders.CurrentProvider.GetMethodUrl((Enum)cbAPIMethod.SelectedItem).AbsoluteUri;
                 string postData = GetPostData();
-                if (!String.IsNullOrWhiteSpace(postData))
+                string uriString = EveMonClient.APIProviders.CurrentProvider
+                    .GetMethodUrl((Enum)APIMethodComboBox.SelectedItem).AbsoluteUri;
+                string errorText = postData == NoAPIKeyWithAccess ? NoAPIKeyWithAccess : String.Empty;
+
+                ErrorProvider.SetError(APIUrlLabel, errorText);
+
+                if (!String.IsNullOrWhiteSpace(postData) && postData != NoAPIKeyWithAccess)
                     uriString += String.Format(CultureConstants.InvariantCulture, "?{0}", postData);
 
                 return new Uri(uriString);
@@ -88,8 +91,8 @@ namespace EVEMon.ApiTester
                 APIMethods.Methods.OfType<APICorporationMethods>().Cast<Enum>().Concat(
                 APIMethods.CorporationSupplementalMethods).OrderBy(method => method.ToString()));
 
-            cbAPIMethod.Items.Clear();
-            cbAPIMethod.Items.AddRange(apiMethods.ToArray<Object>());
+            APIMethodComboBox.Items.Clear();
+            APIMethodComboBox.Items.AddRange(apiMethods.ToArray<Object>());
         }
 
         /// <summary>
@@ -97,8 +100,8 @@ namespace EVEMon.ApiTester
         /// </summary>
         private void UpdateCharacterList()
         {
-            cbCharacter.Items.Clear();
-            cbCharacter.Items.AddRange(EveMonClient.Characters.OfType<CCPCharacter>().Where(
+            CharacterComboBox.Items.Clear();
+            CharacterComboBox.Items.AddRange(EveMonClient.Characters.OfType<CCPCharacter>().Where(
                 character => character.Identity.APIKeys.Any()).OrderBy(character => character.Name).ToArray<Object>());
 
             UpdateCharacterSelectionEnabling();
@@ -109,11 +112,11 @@ namespace EVEMon.ApiTester
         /// </summary>
         private void UpdateCharacterSelectionEnabling()
         {
-            cbCharacter.Enabled = rbInternal.Checked && cbCharacter.Items.Count > 0 && cbAPIMethod.SelectedItem != null &&
-                                  !APIMethods.NonAccountGenericMethods.Contains(cbAPIMethod.SelectedItem);
+            CharacterComboBox.Enabled = InternalInfoRadioButton.Checked && CharacterComboBox.Items.Count > 0 && APIMethodComboBox.SelectedItem != null &&
+                                  !APIMethods.NonAccountGenericMethods.Contains(APIMethodComboBox.SelectedItem);
 
-            if (!cbCharacter.Enabled)
-                cbCharacter.SelectedItem = null;
+            if (!CharacterComboBox.Enabled)
+                CharacterComboBox.SelectedItem = null;
         }
 
         /// <summary>
@@ -121,16 +124,16 @@ namespace EVEMon.ApiTester
         /// </summary>
         private void UpdateExternalInfoControlsEnabling()
         {
-            tbKeyID.Enabled = tbVCode.Enabled = rbExternal.Checked && cbAPIMethod.SelectedItem != null &&
-                                                !APIMethods.NonAccountGenericMethods.Contains(cbAPIMethod.SelectedItem);
+            KeyIDTextBox.Enabled = VCodeTextBox.Enabled = ExternalInfoRadioButton.Checked && APIMethodComboBox.SelectedItem != null &&
+                                                !APIMethods.NonAccountGenericMethods.Contains(APIMethodComboBox.SelectedItem);
 
-            lblCharID.Visible = tbCharID.Visible = rbExternal.Checked && cbAPIMethod.SelectedItem != null &&
-                                                   (cbAPIMethod.SelectedItem is APICharacterMethods ||
-                                                    APIMethods.CharacterSupplementalMethods.Contains(cbAPIMethod.SelectedItem) ||
-                                                    cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationLocations));
+            CharIDLabel.Visible = CharIDTextBox.Visible = ExternalInfoRadioButton.Checked && APIMethodComboBox.SelectedItem != null &&
+                                                   (APIMethodComboBox.SelectedItem is APICharacterMethods ||
+                                                    APIMethods.CharacterSupplementalMethods.Contains(APIMethodComboBox.SelectedItem) ||
+                                                    APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationLocations));
 
-            if (!tbCharID.Visible)
-                tbCharID.ResetText();
+            if (!CharIDTextBox.Visible)
+                CharIDTextBox.ResetText();
         }
 
         /// <summary>
@@ -143,47 +146,47 @@ namespace EVEMon.ApiTester
             UpdateCharacterSelectionEnabling();
             UpdateExternalInfoControlsEnabling();
 
-            if (cbAPIMethod.SelectedItem == null)
+            if (APIMethodComboBox.SelectedItem == null)
             {
-                lblIDOrName.Visible = tbIDOrName.Visible = false;
+                IDOrNameLabel.Visible = IDOrNameTextBox.Visible = false;
                 return;
             }
 
-            lblIDOrName.Visible =
-                tbIDOrName.Visible = cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterID) ||
-                                     cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterName) ||
-                                     cbAPIMethod.SelectedItem.Equals(APIGenericMethods.TypeName) ||
-                                     cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
-                                     cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems) ||
-                                     cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees) ||
-                                     cbAPIMethod.SelectedItem.Equals(APICharacterMethods.Locations) ||
-                                     cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                                     cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts) ||
-                                     cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationLocations) ||
-                                     cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails);
+            IDOrNameLabel.Visible =
+                IDOrNameTextBox.Visible = APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterName) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.TypeName) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CorporationContractItems) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.Locations) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.NotificationTexts) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationLocations) ||
+                                     APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails);
 
-            if (!lblIDOrName.Visible)
+            if (!IDOrNameLabel.Visible)
                 return;
 
-            lblIDOrName.Text = cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterName)
+            IDOrNameLabel.Text = APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterName)
                                    ? "IDs:"
-                                   : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterID)
+                                   : APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID)
                                          ? "Names:"
-                                         : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.TypeName)
+                                         : APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.TypeName)
                                                ? "Type IDs:"
-                                               : cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
-                                                 cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems)
+                                               : APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                                                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CorporationContractItems)
                                                      ? "Contract ID:"
-                                                     : cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees)
+                                                     : APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees)
                                                            ? "Event IDs:"
-                                                           : cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                                                             cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts)
+                                                           : APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
+                                                             APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.NotificationTexts)
                                                                  ? "Message IDs:"
-                                                                 : cbAPIMethod.SelectedItem.Equals(APICharacterMethods.Locations) ||
-                                                                   cbAPIMethod.SelectedItem.Equals(
+                                                                 : APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.Locations) ||
+                                                                   APIMethodComboBox.SelectedItem.Equals(
                                                                        APICorporationMethods.CorporationLocations)
                                                                        ? "Item IDs:"
-                                                                       : cbAPIMethod.SelectedItem.Equals(
+                                                                       : APIMethodComboBox.SelectedItem.Equals(
                                                                            APICorporationMethods.CorporationStarbaseDetails)
                                                                              ? "Starbase ID:"
                                                                              : String.Empty;
@@ -207,13 +210,13 @@ namespace EVEMon.ApiTester
         /// <returns></returns>
         private string GetPostData()
         {
-            if (cbAPIMethod.SelectedItem is APIGenericMethods)
+            if (APIMethodComboBox.SelectedItem is APIGenericMethods)
                 return GetPostDataForGenericAPIMethods();
 
-            if (cbAPIMethod.SelectedItem is APICharacterMethods)
+            if (APIMethodComboBox.SelectedItem is APICharacterMethods)
                 return GetCharacterAPIMethodsPostData();
 
-            if (cbAPIMethod.SelectedItem is APICorporationMethods)
+            if (APIMethodComboBox.SelectedItem is APICorporationMethods)
                 return GetCorporationAPIMethodsPostData();
             
             return String.Empty;
@@ -225,26 +228,26 @@ namespace EVEMon.ApiTester
         /// <returns></returns>
         private string GetPostDataForGenericAPIMethods()
         {
-            if (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterName) ||
-                cbAPIMethod.SelectedItem.Equals(APIGenericMethods.TypeName))
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterName) ||
+                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.TypeName))
             {
-                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly, tbIDOrName.Text);
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly, IDOrNameTextBox.Text);
             }
 
-            if (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CharacterID))
-                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataNamesOnly, tbIDOrName.Text);
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID))
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataNamesOnly, IDOrNameTextBox.Text);
 
-            if (APIMethods.AllSupplementalMethods.Contains(cbAPIMethod.SelectedItem))
+            if (APIMethods.AllSupplementalMethods.Contains(APIMethodComboBox.SelectedItem))
                 return SupplementalAPIMethodsPostData();
 
-            if (!APIMethods.NonAccountGenericMethods.Contains(cbAPIMethod.SelectedItem))
+            if (!APIMethods.NonAccountGenericMethods.Contains(APIMethodComboBox.SelectedItem))
             {
-                if (rbInternal.Checked)
+                if (InternalInfoRadioButton.Checked)
                 {
-                    if (cbCharacter.SelectedItem == null)
+                    if (CharacterComboBox.SelectedItem == null)
                         return String.Empty;
 
-                    Character character = (Character)cbCharacter.SelectedItem;
+                    Character character = (Character)CharacterComboBox.SelectedItem;
                     APIKey apiKey = character.Identity.APIKeys.FirstOrDefault(key => key.IsCharacterOrAccountType);
 
                     return apiKey == null
@@ -253,9 +256,9 @@ namespace EVEMon.ApiTester
                                                apiKey.ID, apiKey.VerificationCode);
                 }
 
-                if (rbExternal.Checked)
+                if (ExternalInfoRadioButton.Checked)
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                                         tbKeyID.Text, tbVCode.Text);
+                                         KeyIDTextBox.Text, VCodeTextBox.Text);
             }
 
             return String.Empty;
@@ -267,43 +270,43 @@ namespace EVEMon.ApiTester
         /// <returns></returns>
         private string SupplementalAPIMethodsPostData()
         {
-            if (rbInternal.Checked)
+            if (InternalInfoRadioButton.Checked)
             {
-                if (cbCharacter.SelectedItem == null)
+                if (CharacterComboBox.SelectedItem == null)
                     return String.Empty;
 
-                Character character = (Character)cbCharacter.SelectedItem;
+                Character character = (Character)CharacterComboBox.SelectedItem;
                 APIKey apiKey = null;
 
-                if (cbAPIMethod.SelectedItem.ToString().StartsWith("CorporationContract", StringComparison.Ordinal))
+                if (APIMethodComboBox.SelectedItem.ToString().StartsWith("CorporationContract", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts);
 
-                if (cbAPIMethod.SelectedItem.ToString().StartsWith("Contract", StringComparison.Ordinal))
+                if (APIMethodComboBox.SelectedItem.ToString().StartsWith("Contract", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
 
                 if (apiKey == null)
-                    return String.Empty;
+                    return NoAPIKeyWithAccess;
 
-                if (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
-                    cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
+                if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                    APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndContractID,
-                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, tbIDOrName.Text);
+                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameTextBox.Text);
                 }
 
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                      apiKey.ID, apiKey.VerificationCode, character.CharacterID);
             }
 
-            if (cbAPIMethod.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
-                cbAPIMethod.SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
+                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndContractID,
-                                     tbKeyID.Text, tbVCode.Text, tbCharID.Text, tbIDOrName.Text);
+                                     KeyIDTextBox.Text, VCodeTextBox.Text, CharIDTextBox.Text, IDOrNameTextBox.Text);
             }
 
             return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                 tbKeyID.Text, tbVCode.Text, tbCharID.Text);
+                                 KeyIDTextBox.Text, VCodeTextBox.Text, CharIDTextBox.Text);
         }
 
         /// <summary>
@@ -312,47 +315,47 @@ namespace EVEMon.ApiTester
         /// <returns></returns>
         private String GetCharacterAPIMethodsPostData()
         {
-            if (rbInternal.Checked)
+            if (InternalInfoRadioButton.Checked)
             {
-                if (cbCharacter.SelectedItem == null)
+                if (CharacterComboBox.SelectedItem == null)
                     return String.Empty;
 
-                Character character = (Character)cbCharacter.SelectedItem;
-                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APICharacterMethods)cbAPIMethod.SelectedItem);
+                Character character = (Character)CharacterComboBox.SelectedItem;
+                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APICharacterMethods)APIMethodComboBox.SelectedItem);
 
                 if (apiKey == null)
-                    return String.Empty;
+                    return NoAPIKeyWithAccess;
 
-                if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees) ||
-                    cbAPIMethod.SelectedItem.Equals(APICharacterMethods.Locations) ||
-                    cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                    cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
+                if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees) ||
+                    APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.Locations) ||
+                    APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
+                    APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
-                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, tbIDOrName.Text);
+                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameTextBox.Text);
                 }
 
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                      apiKey.ID, apiKey.VerificationCode, character.CharacterID);
             }
 
-            if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
-                (tbKeyID.Text.Length == 0 || tbVCode.Text.Length == 0))
+            if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
+                (KeyIDTextBox.Text.Length == 0 || VCodeTextBox.Text.Length == 0))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly,
-                                     tbCharID.Text);
+                                     CharIDTextBox.Text);
             }
 
-            if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.Locations) ||
-                cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
+            if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.Locations) ||
+                APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
+                APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
-                                     tbKeyID.Text, tbVCode.Text, tbCharID.Text, tbIDOrName.Text);
+                                     KeyIDTextBox.Text, VCodeTextBox.Text, CharIDTextBox.Text, IDOrNameTextBox.Text);
             }
 
             return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                 tbKeyID.Text, tbVCode.Text, tbCharID.Text);
+                                 KeyIDTextBox.Text, VCodeTextBox.Text, CharIDTextBox.Text);
         }
 
         /// <summary>
@@ -361,59 +364,59 @@ namespace EVEMon.ApiTester
         /// <returns></returns>
         private String GetCorporationAPIMethodsPostData()
         {
-            if (rbInternal.Checked)
+            if (InternalInfoRadioButton.Checked)
             {
-                if (cbCharacter.SelectedItem == null)
+                if (CharacterComboBox.SelectedItem == null)
                     return String.Empty;
 
-                Character character = (Character)cbCharacter.SelectedItem;
-                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APICorporationMethods)cbAPIMethod.SelectedItem);
+                Character character = (Character)CharacterComboBox.SelectedItem;
+                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APICorporationMethods)APIMethodComboBox.SelectedItem);
 
                 if (apiKey == null)
-                    return String.Empty;
+                    return NoAPIKeyWithAccess;
 
-                if (cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationLocations))
+                if (APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationLocations))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
-                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, tbIDOrName.Text);
+                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameTextBox.Text);
                 }
 
-                if (cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationMemberTrackingExtended))
+                if (APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationMemberTrackingExtended))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithExtendedParameter,
                                          apiKey.ID, apiKey.VerificationCode);
                 }
 
-                if (cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
+                if (APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithItemID,
-                                         apiKey.ID, apiKey.VerificationCode, tbIDOrName.Text);
+                                         apiKey.ID, apiKey.VerificationCode, IDOrNameTextBox.Text);
                 }
 
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
                                      apiKey.ID, apiKey.VerificationCode);
             }
 
-            if (cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationLocations))
+            if (APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationLocations))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
-                                     tbKeyID.Text, tbVCode.Text, tbCharID, tbIDOrName.Text);
+                                     KeyIDTextBox.Text, VCodeTextBox.Text, CharIDTextBox, IDOrNameTextBox.Text);
             }
 
-            if (cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationMemberTrackingExtended))
+            if (APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationMemberTrackingExtended))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithExtendedParameter,
-                                     tbKeyID.Text, tbVCode.Text);
+                                     KeyIDTextBox.Text, VCodeTextBox.Text);
             }
 
-            if (cbAPIMethod.SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
+            if (APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithItemID,
-                                     tbKeyID.Text, tbVCode.Text, tbIDOrName.Text);
+                                     KeyIDTextBox.Text, VCodeTextBox.Text, IDOrNameTextBox.Text);
             }
 
             return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                                 tbKeyID.Text, tbVCode.Text);
+                                 KeyIDTextBox.Text, VCodeTextBox.Text);
         }
 
         /// <summary>
@@ -422,12 +425,12 @@ namespace EVEMon.ApiTester
         /// <param name="url">The URL.</param>
         private void LoadDocument(Uri url)
         {
-            lblAPIUrl.Text = url.AbsoluteUri != "about:blank"
+            APIUrlLabel.Text = url.AbsoluteUri != "about:blank"
                                  ? String.Format(CultureConstants.InvariantCulture, "URL: {0}", url.AbsoluteUri)
                                  : String.Empty;
 
             m_url = url;
-            webBrowser.Navigate(url);
+            WebBrowser.Navigate(url);
         }
 
         /// <summary>
@@ -435,7 +438,7 @@ namespace EVEMon.ApiTester
         /// </summary>
         private void SaveDocument()
         {
-            if (webBrowser.Document == null || webBrowser.Document.Body == null)
+            if (WebBrowser.Document == null || WebBrowser.Document.Body == null)
                 return;
 
             using (SaveFileDialog sfd = new SaveFileDialog())
@@ -453,7 +456,7 @@ namespace EVEMon.ApiTester
                 try
                 {
                     XmlDocument xdoc = new XmlDocument();
-                    string innerText = webBrowser.Document.Body.InnerText.Trim().Replace("\n-", "\n");
+                    string innerText = WebBrowser.Document.Body.InnerText.Trim().Replace("\n-", "\n");
                     xdoc.LoadXml(innerText);
                     string content = Util.GetXMLStringRepresentation(xdoc);
 
@@ -498,14 +501,14 @@ namespace EVEMon.ApiTester
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void APITesterWindow_Load(object sender, EventArgs e)
         {
-            lblAPIUrl.Text = String.Empty;
+            APIUrlLabel.Text = String.Empty;
 
             UpdateAPIMethodsList();
             UpdateCharacterList();
 
             UpdateControlsVisibility();
 
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged += EveMonClient_CharacterCollectionChanged;
             Disposed += OnDisposed;
         }
@@ -517,17 +520,17 @@ namespace EVEMon.ApiTester
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.CharacterCollectionChanged -= EveMonClient_CharacterCollectionChanged;
             Disposed -= OnDisposed;
         }
 
         /// <summary>
-        /// Handles the CharacterUpdated event of the EveMonClient control.
+        /// Handles the APIKeyInfoUpdated event of the EveMonClient control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
         {
             UpdateCharacterList();
             UpdateControlsVisibility();
@@ -545,61 +548,61 @@ namespace EVEMon.ApiTester
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the rbInternal control.
+        /// Handles the CheckedChanged event of the InternalInfoRadioButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void rbInternal_CheckedChanged(object sender, EventArgs e)
+        private void InternalInfoRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             UpdateControlsVisibility();
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the rbExternal control.
+        /// Handles the CheckedChanged event of the ExternalInfoRadioButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void rbExternal_CheckedChanged(object sender, EventArgs e)
+        private void ExternalInfoRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             UpdateControlsVisibility();
         }
 
         /// <summary>
-        /// Handles the SelectedIndexChanged event of the cbAPIMethod control.
+        /// Handles the SelectedIndexChanged event of the APIMethodComboBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void cbAPIMethod_SelectedIndexChanged(object sender, EventArgs e)
+        private void APIMethodComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Reset controls
-            saveButton.Enabled = false;
-            cbCharacter.SelectedItem = null;
-            tbIDOrName.ResetText();
+            SaveButton.Enabled = false;
+            CharacterComboBox.SelectedItem = null;
+            IDOrNameTextBox.ResetText();
 
             UpdateControlsVisibility();
 
-            if (APIMethods.NonAccountGenericMethods.Contains(cbAPIMethod.SelectedItem) && !tbIDOrName.Visible)
+            if (APIMethods.NonAccountGenericMethods.Contains(APIMethodComboBox.SelectedItem) && !IDOrNameTextBox.Visible)
                 LoadDocument(Url);
         }
 
         /// <summary>
-        /// Handles the SelectedIndexChanged event of the cbCharacter control.
+        /// Handles the SelectedIndexChanged event of the CharacterComboBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void cbCharacter_SelectedIndexChanged(object sender, EventArgs e)
+        private void CharacterComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            saveButton.Enabled = false;
-            if (cbCharacter.SelectedItem != null && !tbIDOrName.Visible)
+            SaveButton.Enabled = false;
+            if (CharacterComboBox.SelectedItem != null && !IDOrNameTextBox.Visible)
                 LoadDocument(Url);
         }
 
         /// <summary>
-        /// Handles the Navigating event of the webBrowser control.
+        /// Handles the Navigating event of the WebBrowser control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.WebBrowserNavigatingEventArgs"/> instance containing the event data.</param>
-        private void webBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        private void WebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             // Prevents the browser to navigate past the shown page
             if (e.Url != m_url)
@@ -607,71 +610,71 @@ namespace EVEMon.ApiTester
         }
 
         /// <summary>
-        /// Handles the DocumentCompleted event of the webBrowser control.
+        /// Handles the DocumentCompleted event of the WebBrowser control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.WebBrowserDocumentCompletedEventArgs"/> instance containing the event data.</param>
-        private void webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void WebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             // Enable "Save" button on condition
-            saveButton.Enabled = (m_url == e.Url && e.Url.AbsoluteUri != "about:blank" &&
-                                 webBrowser.Document != null && webBrowser.Document.Body != null);
+            SaveButton.Enabled = (m_url == e.Url && e.Url.AbsoluteUri != "about:blank" &&
+                                 WebBrowser.Document != null && WebBrowser.Document.Body != null);
         }
 
         /// <summary>
-        /// Handles the PreviewKeyDown event of the webBrowser control.
+        /// Handles the PreviewKeyDown event of the WebBrowser control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.PreviewKeyDownEventArgs"/> instance containing the event data.</param>
-        private void webBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void WebBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             // Disable the reload shortcut key
-            webBrowser.WebBrowserShortcutsEnabled = e.KeyData != Keys.F5;
+            WebBrowser.WebBrowserShortcutsEnabled = e.KeyData != Keys.F5;
         }
 
         /// <summary>
-        /// Handles the Click event of the saveButton control.
+        /// Handles the Click event of the SaveButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void saveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
             SaveDocument();
         }
 
         /// <summary>
-        /// Handles the Validating of a text box that requires a character's ID.
+        /// Handles the Validating of a text box that requires an ID.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void tbCharID_Validating(object sender, CancelEventArgs e)
+        private void RequiredIDTextBox_Validating(object sender, CancelEventArgs e)
         {
             TextBox textbox = sender as TextBox;
-            if (textbox == null || !textbox.Visible)
+            if (textbox == null || !textbox.Visible || !textbox.Enabled)
                 return;
 
             // Special condition in case user requests character info without API credentials
-            if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
-                textbox.Equals(tbKeyID) && textbox.Text.Length == 0 && tbVCode.Text.Length == 0)
+            if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
+                textbox.Equals(KeyIDTextBox) && textbox.Text.Length == 0 && VCodeTextBox.Text.Length == 0)
                 return;
 
             if (String.IsNullOrEmpty(textbox.Text))
             {
-                errorProvider.SetError(textbox, "ID cannot be blank.");
+                ErrorProvider.SetError(textbox, "ID cannot be blank.");
                 e.Cancel = true;
                 return;
             }
 
             if (textbox.TextLength == 1 && textbox.Text == "0")
             {
-                errorProvider.SetError(textbox, "ID must not be zero.");
+                ErrorProvider.SetError(textbox, "ID must not be zero.");
                 e.Cancel = true;
                 return;
             }
 
             if (textbox.Text.StartsWith("0", StringComparison.Ordinal))
             {
-                errorProvider.SetError(textbox, "ID must not start with zero.");
+                ErrorProvider.SetError(textbox, "ID must not start with zero.");
                 e.Cancel = true;
                 return;
             }
@@ -681,113 +684,117 @@ namespace EVEMon.ApiTester
                 if (Char.IsDigit(textbox.Text[i]))
                     continue;
 
-                errorProvider.SetError(textbox, "ID must be numerical.");
+                ErrorProvider.SetError(textbox, "ID must be numerical.");
                 e.Cancel = true;
                 break;
             }
         }
 
         /// <summary>
-        /// Handles the Validating event of the tbVCode control.
+        /// Handles the Validating event of the VCodeTextBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void tbVCode_Validating(object sender, CancelEventArgs e)
+        private void VCodeTextBox_Validating(object sender, CancelEventArgs e)
         {
-            // Special condition in case user requests character info without API credentials
-            if (cbAPIMethod.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
-                tbKeyID.Text.Length == 0 && tbVCode.Text.Length == 0)
+            TextBox textbox = sender as TextBox;
+            if (textbox == null || !textbox.Enabled)
                 return;
 
-            string vCode = tbVCode.Text.Trim();
+            // Special condition in case user requests character info without API credentials
+            if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
+                KeyIDTextBox.Text.Length == 0 && VCodeTextBox.Text.Length == 0)
+                return;
+
+            string vCode = VCodeTextBox.Text.Trim();
             if (vCode.Length != 0)
                 return;
 
-            errorProvider.SetError(tbVCode, "Verification Code cannot be blank.");
+            ErrorProvider.SetError(VCodeTextBox, "Verification Code cannot be blank.");
             e.Cancel = true;
         }
 
         /// <summary>
-        /// Handles the Validated event of a text box that requires a character's ID.
+        /// Handles the Validated event of the CharIDTextBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tbCharID_Validated(object sender, EventArgs e)
+        private void CharIDTextBox_Validated(object sender, EventArgs e)
         {
             TextBox textbox = sender as TextBox;
             if (textbox == null)
                 return;
 
-            errorProvider.SetError(textbox, String.Empty);
+            ErrorProvider.SetError(textbox, String.Empty);
         }
 
         /// <summary>
-        /// Handles the Validated event of the tbVCode control.
+        /// Handles the Validated event of the VCodeTextBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tbVCode_Validated(object sender, EventArgs e)
+        private void VCodeTextBox_Validated(object sender, EventArgs e)
         {
-            errorProvider.SetError(tbVCode, String.Empty);
+            ErrorProvider.SetError(VCodeTextBox, String.Empty);
         }
 
         /// <summary>
-        /// Handles the KeyUp event of the tbIDOrName control.
+        /// Handles the KeyUp event of the IDOrNameTextBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
-        private void tbIDOrName_KeyUp(object sender, KeyEventArgs e)
+        private void IDOrNameTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (!e.KeyCode.Equals(Keys.Tab))
-                saveButton.Enabled = false;
+                SaveButton.Enabled = false;
 
             if (!e.KeyCode.Equals(Keys.Enter))
                 return;
 
-            if ((cbAPIMethod.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                 cbAPIMethod.SelectedItem.Equals(APICharacterMethods.NotificationTexts)) && cbCharacter.SelectedItem == null)
+            if ((APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
+                 APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.NotificationTexts)) && CharacterComboBox.SelectedItem == null)
                 return;
 
             LoadDocument(Url);
         }
 
         /// <summary>
-        /// Handles the KeyUp event of the tbKeyID control.
+        /// Handles the KeyUp event of the KeyIDTextBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
-        private void tbKeyID_KeyUp(object sender, KeyEventArgs e)
+        private void KeyIDTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (!e.KeyCode.Equals(Keys.Tab))
-                saveButton.Enabled = false;
+                SaveButton.Enabled = false;
 
             if (e.KeyCode.Equals(Keys.Enter))
                 CheckCredentialsValidation();
         }
 
         /// <summary>
-        /// Handles the KeyUp event of the tbVCode control.
+        /// Handles the KeyUp event of the VCodeTextBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
-        private void tbVCode_KeyUp(object sender, KeyEventArgs e)
+        private void VCodeTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (!e.KeyCode.Equals(Keys.Tab))
-                saveButton.Enabled = false;
+                SaveButton.Enabled = false;
 
             if (e.KeyCode.Equals(Keys.Enter))
                 CheckCredentialsValidation();
         }
 
         /// <summary>
-        /// Handles the KeyUp event of the tbCharID control.
+        /// Handles the KeyUp event of the CharIDTextBox control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
-        private void tbCharID_KeyUp(object sender, KeyEventArgs e)
+        private void CharIDTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (!e.KeyCode.Equals(Keys.Tab))
-                saveButton.Enabled = false;
+                SaveButton.Enabled = false;
 
             if (e.KeyCode.Equals(Keys.Enter))
                 CheckCredentialsValidation();
@@ -804,14 +811,14 @@ namespace EVEMon.ApiTester
 
             if (e.KeyChar.Equals((char)Keys.Escape))
             {
-                if (tbIDOrName.Focused)
-                    tbIDOrName.ResetText();
-                else if (tbKeyID.Focused)
-                    tbKeyID.ResetText();
-                else if (tbVCode.Focused)
-                    tbVCode.ResetText();
-                else if (tbCharID.Focused)
-                    tbCharID.ResetText();
+                if (IDOrNameTextBox.Focused)
+                    IDOrNameTextBox.ResetText();
+                else if (KeyIDTextBox.Focused)
+                    KeyIDTextBox.ResetText();
+                else if (VCodeTextBox.Focused)
+                    VCodeTextBox.ResetText();
+                else if (CharIDTextBox.Focused)
+                    CharIDTextBox.ResetText();
                 else
                 {
                     foreach (TextBox textBox in HeaderPanel.Controls.OfType<TextBox>())
