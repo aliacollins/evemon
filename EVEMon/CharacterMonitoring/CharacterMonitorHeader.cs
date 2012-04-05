@@ -488,6 +488,9 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             // Fonts
             Font = FontFactory.GetFont("Tahoma");
             CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);

@@ -36,6 +36,13 @@ namespace EVEMon.SettingsUI
         {
             InitializeComponent();
 
+            treeView.Font = FontFactory.GetFont("Tahoma", 9.75F);
+            alwaysAskRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold); 
+            removeAllRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
+            removeConfirmedRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
+            battleClinicAPIControl.Font = FontFactory.GetFont("Tahoma", 8.25F);
+            settingsFileStorageControl.Font = FontFactory.GetFont("Tahoma", 8.25F);
+
             m_settings = Settings.Export();
             m_oldSettings = Settings.Export();
         }

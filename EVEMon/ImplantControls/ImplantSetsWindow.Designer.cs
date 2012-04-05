@@ -55,8 +55,8 @@ namespace EVEMon.ImplantControls
             this.lblImplant1 = new System.Windows.Forms.Label();
             this.setsGrid = new EVEMon.Common.Controls.IntuitiveDataGridView();
             this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
+            this.ImplantSetsLabel = new System.Windows.Forms.Label();
+            this.ImplantsLabel = new System.Windows.Forms.Label();
             this.importButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.setsGrid)).BeginInit();
             this.SuspendLayout();
@@ -414,29 +414,27 @@ namespace EVEMon.ImplantControls
             this.NameColumn.HeaderText = "Name";
             this.NameColumn.Name = "NameColumn";
             // 
-            // label9
+            // ImplantSetsLabel
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label9.Location = new System.Drawing.Point(13, 13);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(103, 19);
-            this.label9.TabIndex = 9;
-            this.label9.Text = "Implants sets";
+            this.ImplantSetsLabel.AutoSize = true;
+            this.ImplantSetsLabel.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.ImplantSetsLabel.Location = new System.Drawing.Point(13, 13);
+            this.ImplantSetsLabel.Name = "ImplantSetsLabel";
+            this.ImplantSetsLabel.Size = new System.Drawing.Size(68, 13);
+            this.ImplantSetsLabel.TabIndex = 9;
+            this.ImplantSetsLabel.Text = "Implants sets";
             // 
-            // label10
+            // ImplantsLabel
             // 
-            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.ImplantsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label10.Location = new System.Drawing.Point(13, 227);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(71, 19);
-            this.label10.TabIndex = 10;
-            this.label10.Text = "Implants";
+            this.ImplantsLabel.AutoSize = true;
+            this.ImplantsLabel.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.ImplantsLabel.Location = new System.Drawing.Point(13, 227);
+            this.ImplantsLabel.Name = "ImplantsLabel";
+            this.ImplantsLabel.Size = new System.Drawing.Size(46, 13);
+            this.ImplantsLabel.TabIndex = 10;
+            this.ImplantsLabel.Text = "Implants";
             // 
             // importButton
             // 
@@ -461,9 +459,9 @@ namespace EVEMon.ImplantControls
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.importButton);
             this.Controls.Add(this.cbSlot10);
-            this.Controls.Add(this.label10);
+            this.Controls.Add(this.ImplantsLabel);
             this.Controls.Add(this.cbSlot9);
-            this.Controls.Add(this.label9);
+            this.Controls.Add(this.ImplantSetsLabel);
             this.Controls.Add(this.cbSlot8);
             this.Controls.Add(this.setsGrid);
             this.Controls.Add(this.cbSlot7);
@@ -522,8 +520,8 @@ namespace EVEMon.ImplantControls
         private DropDownMouseMoveComboBox cbSlot1;
         private IntuitiveDataGridView setsGrid;
         private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label ImplantSetsLabel;
+        private System.Windows.Forms.Label ImplantsLabel;
         private System.Windows.Forms.Button importButton;
     }
 }

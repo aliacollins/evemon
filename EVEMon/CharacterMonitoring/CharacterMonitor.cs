@@ -36,6 +36,7 @@ namespace EVEMon.CharacterMonitoring
             UpdateStyles();
 
             Font = FontFactory.GetFont("Tahoma");
+            Header.Font = FontFactory.GetFont("Tahoma");
             lblScheduleWarning.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
 
             // We make a copy of the preference menu for later use
@@ -141,6 +142,9 @@ namespace EVEMon.CharacterMonitoring
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
 
             // Updates the controls
             UpdateInfrequentControls();
@@ -755,17 +759,6 @@ namespace EVEMon.CharacterMonitoring
 
             if (m_character is CCPCharacter)
                 ExternalCalendar.UpdateCalendar(m_character as CCPCharacter);
-        }
-
-        /// <summary>
-        /// Notification list was resized, this may affect the skills list.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void notificationList_Resize(object sender, EventArgs e)
-        {
-            UpdateNotifications();
-            skillsList.Invalidate();
         }
 
         #endregion

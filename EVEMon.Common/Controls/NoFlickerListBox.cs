@@ -6,6 +6,10 @@ namespace EVEMon.Common.Controls
 {
     public class NoFlickerListBox : ListBox
     {
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.ListBox.DrawItem"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.DrawItemEventArgs"/> that contains the event data.</param>
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
             if (e == null)
@@ -32,12 +36,19 @@ namespace EVEMon.Common.Controls
             }
         }
 
+        /// <summary>
+        /// Enumerations of Window Messages
+        /// </summary>
         private enum WM
         {
             WM_NULL = 0x0000,
             WM_ERASEBKGND = 0x0014
         }
 
+        /// <summary>
+        /// The list's window procedure.
+        /// </summary>
+        /// <param name="m">A Windows Message Object.</param>
         protected override void WndProc(ref Message m)
         {
             switch (m.Msg)
@@ -50,6 +61,9 @@ namespace EVEMon.Common.Controls
             base.WndProc(ref m);
         }
 
+        /// <summary>
+        /// Paints the non item region.
+        /// </summary>
         private void PaintNonItemRegion()
         {
             using (Graphics g = Graphics.FromHwnd(Handle))

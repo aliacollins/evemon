@@ -96,7 +96,6 @@ namespace EVEMon.PatchXmlCreator
             // lblEVEMonReleaseDate
             // 
             this.lblEVEMonReleaseDate.AutoSize = true;
-            this.lblEVEMonReleaseDate.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lblEVEMonReleaseDate.Location = new System.Drawing.Point(5, 20);
             this.lblEVEMonReleaseDate.Name = "lblEVEMonReleaseDate";
             this.lblEVEMonReleaseDate.Size = new System.Drawing.Size(78, 13);
@@ -108,7 +107,6 @@ namespace EVEMon.PatchXmlCreator
             // 
             this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lblVersion.Location = new System.Drawing.Point(258, 20);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(49, 13);
@@ -119,7 +117,6 @@ namespace EVEMon.PatchXmlCreator
             // dtpRelease
             // 
             this.dtpRelease.CustomFormat = " dd MMMM yyyy";
-            this.dtpRelease.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.dtpRelease.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpRelease.Location = new System.Drawing.Point(86, 16);
             this.dtpRelease.Name = "dtpRelease";
@@ -134,7 +131,6 @@ namespace EVEMon.PatchXmlCreator
             this.lblEVEMonVersion.BackColor = System.Drawing.SystemColors.ControlLight;
             this.lblEVEMonVersion.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblEVEMonVersion.Cursor = System.Windows.Forms.Cursors.Default;
-            this.lblEVEMonVersion.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.lblEVEMonVersion.Location = new System.Drawing.Point(313, 16);
             this.lblEVEMonVersion.Name = "lblEVEMonVersion";
             this.lblEVEMonVersion.Size = new System.Drawing.Size(76, 21);
@@ -158,7 +154,6 @@ namespace EVEMon.PatchXmlCreator
             this.gbRelease.Controls.Add(this.dtpRelease);
             this.gbRelease.Controls.Add(this.lblMD5Sum);
             this.gbRelease.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbRelease.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
             this.gbRelease.Location = new System.Drawing.Point(10, 10);
             this.gbRelease.Name = "gbRelease";
             this.gbRelease.Size = new System.Drawing.Size(396, 211);
@@ -171,7 +166,6 @@ namespace EVEMon.PatchXmlCreator
             // 
             this.lblMD5Sum.AutoSize = true;
             this.lblMD5Sum.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblMD5Sum.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lblMD5Sum.Location = new System.Drawing.Point(342, 17);
             this.lblMD5Sum.Name = "lblMD5Sum";
             this.lblMD5Sum.Padding = new System.Windows.Forms.Padding(0, 70, 0, 0);
@@ -183,7 +177,6 @@ namespace EVEMon.PatchXmlCreator
             // btnInstallerClear
             // 
             this.btnInstallerClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnInstallerClear.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.btnInstallerClear.Location = new System.Drawing.Point(7, 182);
             this.btnInstallerClear.Name = "btnInstallerClear";
             this.btnInstallerClear.Size = new System.Drawing.Size(75, 23);
@@ -196,7 +189,6 @@ namespace EVEMon.PatchXmlCreator
             // 
             this.btnLoadReleaseInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLoadReleaseInfo.AutoSize = true;
-            this.btnLoadReleaseInfo.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.btnLoadReleaseInfo.Location = new System.Drawing.Point(232, 183);
             this.btnLoadReleaseInfo.Name = "btnLoadReleaseInfo";
             this.btnLoadReleaseInfo.Size = new System.Drawing.Size(158, 23);
@@ -208,7 +200,6 @@ namespace EVEMon.PatchXmlCreator
             // lblMessage
             // 
             this.lblMessage.AutoSize = true;
-            this.lblMessage.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lblMessage.Location = new System.Drawing.Point(5, 100);
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Size = new System.Drawing.Size(56, 13);
@@ -222,7 +213,6 @@ namespace EVEMon.PatchXmlCreator
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbReleaseMessage.DetectUrls = false;
-            this.rtbReleaseMessage.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.rtbReleaseMessage.Location = new System.Drawing.Point(7, 116);
             this.rtbReleaseMessage.Name = "rtbReleaseMessage";
             this.rtbReleaseMessage.Size = new System.Drawing.Size(383, 47);
@@ -237,7 +227,6 @@ namespace EVEMon.PatchXmlCreator
             this.rtbReleaseUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbReleaseUrl.DetectUrls = false;
-            this.rtbReleaseUrl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.rtbReleaseUrl.Location = new System.Drawing.Point(37, 63);
             this.rtbReleaseUrl.Multiline = false;
             this.rtbReleaseUrl.Name = "rtbReleaseUrl";
@@ -251,7 +240,6 @@ namespace EVEMon.PatchXmlCreator
             // lblInstallerUrl
             // 
             this.lblInstallerUrl.AutoSize = true;
-            this.lblInstallerUrl.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lblInstallerUrl.Location = new System.Drawing.Point(5, 66);
             this.lblInstallerUrl.Name = "lblInstallerUrl";
             this.lblInstallerUrl.Size = new System.Drawing.Size(27, 13);
@@ -264,7 +252,6 @@ namespace EVEMon.PatchXmlCreator
             this.rtbTopicUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbTopicUrl.DetectUrls = false;
-            this.rtbTopicUrl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.rtbTopicUrl.Location = new System.Drawing.Point(65, 40);
             this.rtbTopicUrl.Multiline = false;
             this.rtbTopicUrl.Name = "rtbTopicUrl";
@@ -278,7 +265,6 @@ namespace EVEMon.PatchXmlCreator
             // lblForumUrl
             // 
             this.lblForumUrl.AutoSize = true;
-            this.lblForumUrl.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.lblForumUrl.Location = new System.Drawing.Point(5, 44);
             this.lblForumUrl.Name = "lblForumUrl";
             this.lblForumUrl.Size = new System.Drawing.Size(55, 13);
@@ -312,7 +298,6 @@ namespace EVEMon.PatchXmlCreator
             this.gbDatafiles.Controls.Add(this.tbExpansion);
             this.gbDatafiles.Controls.Add(this.lblUrl);
             this.gbDatafiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbDatafiles.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.gbDatafiles.Location = new System.Drawing.Point(5, 10);
             this.gbDatafiles.Name = "gbDatafiles";
             this.gbDatafiles.Size = new System.Drawing.Size(440, 211);
@@ -325,7 +310,6 @@ namespace EVEMon.PatchXmlCreator
             // lblExpVersion
             // 
             this.lblExpVersion.AutoSize = true;
-            this.lblExpVersion.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.lblExpVersion.Location = new System.Drawing.Point(180, 43);
             this.lblExpVersion.Name = "lblExpVersion";
             this.lblExpVersion.Size = new System.Drawing.Size(49, 13);
@@ -334,7 +318,6 @@ namespace EVEMon.PatchXmlCreator
             // 
             // tbExpVersion
             // 
-            this.tbExpVersion.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.tbExpVersion.Location = new System.Drawing.Point(229, 40);
             this.tbExpVersion.Name = "tbExpVersion";
             this.tbExpVersion.Size = new System.Drawing.Size(49, 21);
@@ -348,7 +331,6 @@ namespace EVEMon.PatchXmlCreator
             // btnDatafilesClear
             // 
             this.btnDatafilesClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDatafilesClear.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.btnDatafilesClear.Location = new System.Drawing.Point(9, 182);
             this.btnDatafilesClear.Name = "btnDatafilesClear";
             this.btnDatafilesClear.Size = new System.Drawing.Size(75, 23);
@@ -361,7 +343,6 @@ namespace EVEMon.PatchXmlCreator
             // 
             this.btnLoadDatafileInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLoadDatafileInfo.AutoSize = true;
-            this.btnLoadDatafileInfo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.btnLoadDatafileInfo.Location = new System.Drawing.Point(278, 183);
             this.btnLoadDatafileInfo.Name = "btnLoadDatafileInfo";
             this.btnLoadDatafileInfo.Size = new System.Drawing.Size(158, 23);
@@ -373,7 +354,6 @@ namespace EVEMon.PatchXmlCreator
             // lblRevision
             // 
             this.lblRevision.AutoSize = true;
-            this.lblRevision.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.lblRevision.Location = new System.Drawing.Point(292, 43);
             this.lblRevision.Name = "lblRevision";
             this.lblRevision.Size = new System.Drawing.Size(54, 13);
@@ -383,7 +363,6 @@ namespace EVEMon.PatchXmlCreator
             // 
             // tbExpRevision
             // 
-            this.tbExpRevision.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.tbExpRevision.Location = new System.Drawing.Point(346, 40);
             this.tbExpRevision.Name = "tbExpRevision";
             this.tbExpRevision.Size = new System.Drawing.Size(78, 21);
@@ -397,7 +376,6 @@ namespace EVEMon.PatchXmlCreator
             // lblExpansion
             // 
             this.lblExpansion.AutoSize = true;
-            this.lblExpansion.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.lblExpansion.Location = new System.Drawing.Point(12, 43);
             this.lblExpansion.Name = "lblExpansion";
             this.lblExpansion.Size = new System.Drawing.Size(63, 13);
@@ -410,7 +388,6 @@ namespace EVEMon.PatchXmlCreator
             this.rtbDatafileUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbDatafileUrl.DetectUrls = false;
-            this.rtbDatafileUrl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.rtbDatafileUrl.Location = new System.Drawing.Point(46, 16);
             this.rtbDatafileUrl.Multiline = false;
             this.rtbDatafileUrl.Name = "rtbDatafileUrl";
@@ -423,7 +400,6 @@ namespace EVEMon.PatchXmlCreator
             // 
             // tbExpansion
             // 
-            this.tbExpansion.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.tbExpansion.Location = new System.Drawing.Point(75, 40);
             this.tbExpansion.Name = "tbExpansion";
             this.tbExpansion.Size = new System.Drawing.Size(91, 21);
@@ -437,7 +413,6 @@ namespace EVEMon.PatchXmlCreator
             // lblUrl
             // 
             this.lblUrl.AutoSize = true;
-            this.lblUrl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.lblUrl.Location = new System.Drawing.Point(13, 19);
             this.lblUrl.Name = "lblUrl";
             this.lblUrl.Size = new System.Drawing.Size(27, 13);
@@ -487,7 +462,6 @@ namespace EVEMon.PatchXmlCreator
             this.datafileControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.datafileControl.AutoSize = true;
-            this.datafileControl.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.datafileControl.Location = new System.Drawing.Point(9, 65);
             this.datafileControl.Name = "datafileControl";
             this.datafileControl.Size = new System.Drawing.Size(427, 91);

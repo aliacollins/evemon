@@ -35,7 +35,6 @@
             // 
             // labelBehaviour
             // 
-            this.labelBehaviour.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelBehaviour.Location = new System.Drawing.Point(154, 0);
             this.labelBehaviour.Name = "labelBehaviour";
             this.labelBehaviour.Size = new System.Drawing.Size(131, 18);
@@ -45,7 +44,6 @@
             // 
             // labelNotification
             // 
-            this.labelNotification.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelNotification.Location = new System.Drawing.Point(0, 0);
             this.labelNotification.Name = "labelNotification";
             this.labelNotification.Size = new System.Drawing.Size(136, 18);
@@ -55,7 +53,6 @@
             // 
             // labelMainWindow
             // 
-            this.labelMainWindow.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMainWindow.Location = new System.Drawing.Point(307, 0);
             this.labelMainWindow.Name = "labelMainWindow";
             this.labelMainWindow.Size = new System.Drawing.Size(89, 18);

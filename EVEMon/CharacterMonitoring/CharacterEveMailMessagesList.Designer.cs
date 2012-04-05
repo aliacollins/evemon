@@ -87,7 +87,6 @@ namespace EVEMon.CharacterMonitoring
             // 
             // mailReadLocal
             // 
-            this.mailReadLocal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.mailReadLocal.Name = "mailReadLocal";
             this.mailReadLocal.Size = new System.Drawing.Size(179, 22);
             this.mailReadLocal.Text = "Read";
@@ -107,7 +106,6 @@ namespace EVEMon.CharacterMonitoring
             // 
             // mailGateRead
             // 
-            this.mailGateRead.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.mailGateRead.Name = "mailGateRead";
             this.mailGateRead.Size = new System.Drawing.Size(118, 22);
             this.mailGateRead.Text = "Read";

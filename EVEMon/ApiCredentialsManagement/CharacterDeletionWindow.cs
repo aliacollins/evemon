@@ -19,6 +19,7 @@ namespace EVEMon.ApiCredentialsManagement
         private CharacterDeletionWindow()
         {
             InitializeComponent();
+            characterToRemoveLabel.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
         }
 
         /// <summary>

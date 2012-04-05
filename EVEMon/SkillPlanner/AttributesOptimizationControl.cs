@@ -34,6 +34,11 @@ namespace EVEMon.SkillPlanner
                                              RemappingResult remapping, string description)
         {
             InitializeComponent();
+            lbMEM.Font = FontFactory.GetFont("Tahoma");
+            lbWIL.Font = FontFactory.GetFont("Tahoma");
+            lbCHA.Font = FontFactory.GetFont("Tahoma");
+            lbPER.Font = FontFactory.GetFont("Tahoma");
+            lbINT.Font = FontFactory.GetFont("Tahoma");
 
             m_character = character;
             m_plan = plan;

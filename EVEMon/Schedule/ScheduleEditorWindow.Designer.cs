@@ -318,7 +318,6 @@ namespace EVEMon.Schedule
             // 
             // newScheduleEntryToolStripMenuItem
             // 
-            this.newScheduleEntryToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.newScheduleEntryToolStripMenuItem.Name = "newScheduleEntryToolStripMenuItem";
             this.newScheduleEntryToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.newScheduleEntryToolStripMenuItem.Text = "New Schedule Entry...";

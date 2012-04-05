@@ -118,7 +118,6 @@
             // 
             // showDetailsToolStripMenuItem
             // 
-            this.showDetailsToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.showDetailsToolStripMenuItem.Name = "showDetailsToolStripMenuItem";
             this.showDetailsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showDetailsToolStripMenuItem.Text = "Show details";

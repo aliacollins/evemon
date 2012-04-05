@@ -25,6 +25,8 @@ namespace EVEMon.SettingsUI
         public UpdateSettingsControl()
         {
             InitializeComponent();
+            labelPeriod.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
+            labelMethod.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
 
             PopulateControl();
         }

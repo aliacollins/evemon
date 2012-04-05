@@ -45,8 +45,6 @@ namespace EVEMon.Controls
             listBox.MouseMove += listBox_MouseMove;
             listBox.MouseDown += listBox_MouseDown;
             listBox.MouseLeave += listBox_MouseLeave;
-
-            listBox.Font = FontFactory.GetFont("Tahoma", 8.25F);
         }
 
         /// <summary>
@@ -59,6 +57,8 @@ namespace EVEMon.Controls
 
             if (!DesignMode && !this.IsDesignModeHosted())
                 return;
+
+            listBox.Font = FontFactory.GetFont("Tahoma", 8.25F);
 
             Notifications = new List<NotificationEventArgs>
                                 {

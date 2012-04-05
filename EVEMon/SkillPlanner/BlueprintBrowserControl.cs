@@ -34,6 +34,10 @@ namespace EVEMon.SkillPlanner
         public BlueprintBrowserControl()
         {
             InitializeComponent();
+            lblNoItemME.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemPE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoResearch.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
             scObjectBrowser.RememberDistanceKey = "BlueprintBrowser_Left";
             SelectControl = blueprintSelectControl;
             PropertiesList = lvManufacturing;
