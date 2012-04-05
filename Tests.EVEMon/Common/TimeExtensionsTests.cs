@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Tests.EVEMon.Common
 {
     [TestFixture]
-    public static class TimeUtilTests
+    public static class TimeExtensionsTests
     {
         #region Helper Variables
 
