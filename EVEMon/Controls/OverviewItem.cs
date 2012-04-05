@@ -133,7 +133,7 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            PerformCustomLayout(m_isTooltip); 
+            UpdateContent();
             UpdateTrainingTime();
 
             base.OnVisibleChanged(e);
@@ -367,10 +367,7 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateTrainingTime()
         {
-            if (!Visible)
-                return;
-
-            if (!Character.IsTraining)
+            if (!Visible || !Character.IsTraining)
                 return;
 
             TimeSpan remainingTime = Character.CurrentlyTrainingSkill.RemainingTime;
