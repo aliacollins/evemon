@@ -638,6 +638,26 @@ namespace EVEMon.Common
         /// The type id. Used to convert typeIDs to typeNames.
         /// </summary>
         TypeName,
+
+        /// <summary>
+        /// List of solar systems taking part in Factional Warfare and their occupancy.
+        /// </summary>
+        FactionalWarfareSystems,
+
+        /// <summary>
+        /// List of solar sytems with jump gates.
+        /// </summary>
+        Jumps,
+
+        /// <summary>
+        /// List of solar systems with kills within the last hour.
+        /// </summary>
+        Kills,
+
+        /// <summary>
+        /// List of solar systems that are controled by faction or alliance.
+        /// </summary>
+        Sovereignty,
     }
 
     public enum ThrobberState

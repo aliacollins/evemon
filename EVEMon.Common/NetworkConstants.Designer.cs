@@ -124,7 +124,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /api/calllist.xml.aspx.
+        ///   Looks up a localized string similar to /api/CallList.xml.aspx.
         /// </summary>
         public static string APICallList {
             get {
@@ -565,6 +565,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /map/FacWarSystems.xml.aspx.
+        /// </summary>
+        public static string APIFactionalWarfareSystems {
+            get {
+                return ResourceManager.GetString("APIFactionalWarfareSystems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /char/IndustryJobs.xml.aspx.
         /// </summary>
         public static string APIIndustryJobs {
@@ -574,11 +583,29 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /map/Jumps.xml.aspx.
+        /// </summary>
+        public static string APIJumps {
+            get {
+                return ResourceManager.GetString("APIJumps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /char/Killlog.xml.aspx.
         /// </summary>
         public static string APIKillLog {
             get {
                 return ResourceManager.GetString("APIKillLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /map/Kills.xml.aspx.
+        /// </summary>
+        public static string APIKills {
+            get {
+                return ResourceManager.GetString("APIKills", resourceCulture);
             }
         }
         
@@ -705,6 +732,15 @@ namespace EVEMon.Common {
         public static string APISkillTree {
             get {
                 return ResourceManager.GetString("APISkillTree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /map/Sovereignty.xml.aspx.
+        /// </summary>
+        public static string APISovereignty {
+            get {
+                return ResourceManager.GetString("APISovereignty", resourceCulture);
             }
         }
         

@@ -346,7 +346,7 @@
     <value>/char/CalendarEventAttendees.xml.aspx</value>
   </data>
   <data name="APICallList" xml:space="preserve">
-    <value>/api/calllist.xml.aspx</value>
+    <value>/api/CallList.xml.aspx</value>
   </data>
   <data name="APICertificateTree" xml:space="preserve">
     <value>/eve/CertificateTree.xml.aspx</value>
@@ -476,5 +476,17 @@
   </data>
   <data name="PostDataWithItemID" xml:space="preserve">
     <value>keyID={0}&amp;vCode={1}&amp;itemID={2}</value>
+  </data>
+  <data name="APIFactionalWarfareSystems" xml:space="preserve">
+    <value>/map/FacWarSystems.xml.aspx</value>
+  </data>
+  <data name="APIJumps" xml:space="preserve">
+    <value>/map/Jumps.xml.aspx</value>
+  </data>
+  <data name="APIKills" xml:space="preserve">
+    <value>/map/Kills.xml.aspx</value>
+  </data>
+  <data name="APISovereignty" xml:space="preserve">
+    <value>/map/Sovereignty.xml.aspx</value>
   </data>
 </root>
