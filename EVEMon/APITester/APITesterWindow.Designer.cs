@@ -93,7 +93,7 @@
             this.tbCharID.Location = new System.Drawing.Point(382, 87);
             this.tbCharID.MaxLength = 16;
             this.tbCharID.Name = "tbCharID";
-            this.tbCharID.Size = new System.Drawing.Size(100, 20);
+            this.tbCharID.Size = new System.Drawing.Size(102, 20);
             this.tbCharID.TabIndex = 9;
             this.tbCharID.Visible = false;
             this.tbCharID.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbCharID_KeyUp);
@@ -141,7 +141,7 @@
             this.tbVCode.Location = new System.Drawing.Point(203, 126);
             this.tbVCode.MaxLength = 64;
             this.tbVCode.Name = "tbVCode";
-            this.tbVCode.Size = new System.Drawing.Size(342, 20);
+            this.tbVCode.Size = new System.Drawing.Size(456, 20);
             this.tbVCode.TabIndex = 8;
             this.tbVCode.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbVCode_KeyUp);
             this.tbVCode.Validating += new System.ComponentModel.CancelEventHandler(this.tbVCode_Validating);
@@ -152,7 +152,7 @@
             this.tbKeyID.Location = new System.Drawing.Point(203, 87);
             this.tbKeyID.MaxLength = 16;
             this.tbKeyID.Name = "tbKeyID";
-            this.tbKeyID.Size = new System.Drawing.Size(100, 20);
+            this.tbKeyID.Size = new System.Drawing.Size(102, 20);
             this.tbKeyID.TabIndex = 7;
             this.tbKeyID.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbKeyID_KeyUp);
             this.tbKeyID.Validating += new System.ComponentModel.CancelEventHandler(this.tbCharID_Validating);
