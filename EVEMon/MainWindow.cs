@@ -107,11 +107,17 @@ namespace EVEMon
             if (DesignMode)
                 return;
 
+            // Ensures the installation files downloaded through the autoupdate are correctly deleted
+            UpdateManager.DeleteInstallationFiles();
+
+            // Check with BattleClinic the local clock is synchronized
+            if (Settings.Updates.CheckTimeOnStartup)
+                CheckTimeSynchronization();
+
             // Start the one-second timer 
             EveMonClient.Run(this);
             
             trayIcon.Text = Application.ProductName;
-
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
             // Prepare control's visibility
@@ -129,13 +135,6 @@ namespace EVEMon
 
             // Update the content
             UpdateTabs();
-
-            // Ensures the installation files downloaded through the autoupdate are correctly deleted
-            UpdateManager.DeleteInstallationFiles();
-
-            // Check with BattleClinic the local clock is synchronized
-            if (Settings.Updates.CheckTimeOnStartup)
-                CheckTimeSynchronization();
 
             // Updates the controls visibility according to settings
             UpdateControlsVisibility();
