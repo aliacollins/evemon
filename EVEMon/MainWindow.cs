@@ -375,7 +375,7 @@ namespace EVEMon
             if (Settings.UI.MainWindow.ShowOverview)
             {
                 // Trim the overview page index
-                int overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount, Settings.UI.MainWindow.OverviewIndex));
+                int overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount - 1, Settings.UI.MainWindow.OverviewIndex));
 
                 // Inserts it if it doesn't exist
                 if (!tcCharacterTabs.TabPages.Contains(tpOverview))
