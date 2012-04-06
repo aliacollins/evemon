@@ -307,8 +307,7 @@ namespace EVEMon
             Dictionary<Character, TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
                 page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
 
-            tcCharacterTabs.Visible = false;
-            tcCharacterTabs.SuspendLayout();
+            tcCharacterTabs.Hide();
             try
             {
                 // Rebuild the pages
@@ -361,8 +360,7 @@ namespace EVEMon
             }
             finally
             {
-                tcCharacterTabs.ResumeLayout();
-                tcCharacterTabs.Visible = true;
+                tcCharacterTabs.Show();
             }
         }
 
