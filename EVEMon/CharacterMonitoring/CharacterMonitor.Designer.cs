@@ -392,7 +392,6 @@ namespace EVEMon.CharacterMonitoring
             this.borderPanel.Controls.Add(this.corePanel);
             this.borderPanel.Controls.Add(this.notificationList);
             this.borderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.borderPanel.ForeColor = System.Drawing.Color.Gray;
             this.borderPanel.Location = new System.Drawing.Point(0, 56);
             this.borderPanel.Margin = new System.Windows.Forms.Padding(0);
             this.borderPanel.Name = "borderPanel";
@@ -671,7 +670,6 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.notificationList.Dock = System.Windows.Forms.DockStyle.Top;
             this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.notificationList.ForeColor = System.Drawing.SystemColors.ControlText;
             this.notificationList.Location = new System.Drawing.Point(2, 2);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";

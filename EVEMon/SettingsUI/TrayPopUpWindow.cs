@@ -113,8 +113,8 @@ namespace EVEMon.SettingsUI
             Size cornerSize = new Size(Radius * 2, Radius * 2);
 
             // Draw the background and border line
-            DrawBackground(e, g, cornerSize);
-            DrawBorder(e, g, cornerSize);
+            DrawBackground(g, cornerSize);
+            DrawBorder(g, cornerSize);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
         /// <param name="g">The g.</param>
         /// <param name="cornerSize">Size of the corner.</param>
-        private void DrawBackground(PaintEventArgs e, Graphics g, Size cornerSize)
+        private void DrawBackground(Graphics g, Size cornerSize)
         {
             // Construct a GraphicsPath for the form
             using (GraphicsPath path = new GraphicsPath())
@@ -146,16 +146,16 @@ namespace EVEMon.SettingsUI
                 path.AddArc(new Rectangle(0, 0, cornerSize.Width, cornerSize.Height), 180, 90);
 
                 // Top Right
-                path.AddArc(new Rectangle(e.ClipRectangle.Width - cornerSize.Width, 0, cornerSize.Width, cornerSize.Height),
+                path.AddArc(new Rectangle(ClientRectangle.Width - cornerSize.Width, 0, cornerSize.Width, cornerSize.Height),
                             270, 90);
 
                 // Bottom right
-                path.AddArc(new Rectangle(e.ClipRectangle.Width - cornerSize.Width,
-                                          e.ClipRectangle.Height - cornerSize.Height, cornerSize.Width, cornerSize.Height),
+                path.AddArc(new Rectangle(ClientRectangle.Width - cornerSize.Width,
+                                          ClientRectangle.Height - cornerSize.Height, cornerSize.Width, cornerSize.Height),
                             0, 90);
 
                 // Bottom Left
-                path.AddArc(new Rectangle(0, e.ClipRectangle.Height - cornerSize.Height,
+                path.AddArc(new Rectangle(0, ClientRectangle.Height - cornerSize.Height,
                                           cornerSize.Width, cornerSize.Height), 90, 90);
                 path.CloseFigure();
 
@@ -175,7 +175,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         /// <param name="g"></param>
         /// <param name="cornerSize"></param>
-        private static void DrawBorder(PaintEventArgs e, Graphics g, Size cornerSize)
+        private void DrawBorder(Graphics g, Size cornerSize)
         {
             // Construct a GraphicsPath for the border line
             using (GraphicsPath path = new GraphicsPath())
@@ -186,17 +186,17 @@ namespace EVEMon.SettingsUI
                 path.AddArc(new Rectangle(0, 0, cornerSize.Width, cornerSize.Height), 180, 90);
 
                 // Top Right
-                path.AddArc(new Rectangle(e.ClipRectangle.Width - cornerSize.Width - 1, 0, cornerSize.Width, cornerSize.Height),
+                path.AddArc(new Rectangle(ClientRectangle.Width - cornerSize.Width - 1, 0, cornerSize.Width, cornerSize.Height),
                             270, 90);
 
                 // Bottom right
-                path.AddArc(new Rectangle(e.ClipRectangle.Width - cornerSize.Width - 1,
-                                          e.ClipRectangle.Height - cornerSize.Height - 1, cornerSize.Width,
+                path.AddArc(new Rectangle(ClientRectangle.Width - cornerSize.Width - 1,
+                                          ClientRectangle.Height - cornerSize.Height, cornerSize.Width,
                                           cornerSize.Height),
                             0, 90);
 
                 // Bottom Left
-                path.AddArc(new Rectangle(0, e.ClipRectangle.Height - cornerSize.Height - 1,
+                path.AddArc(new Rectangle(0, ClientRectangle.Height - cornerSize.Height,
                                           cornerSize.Width, cornerSize.Height), 90, 90);
                 path.CloseFigure();
 
