@@ -355,12 +355,12 @@ namespace EVEMon.Common
         {
             Station station = null;
 
-            // If 'id' is a 32bit number then it's a station or conquerable outpost station,
+            // If 'id' is a 32bit number it may be a conquerable outpost station or station,
             // so we look it up in our datafile
             if (id <= Int32.MaxValue)
             {
                 int stationID = Convert.ToInt32(id);
-                station = Station.GetByID(stationID);
+                station = ConquerableStation.GetStationByID(stationID) ?? StaticGeography.GetStationByID(stationID);
             }
 
             // In case the 'id' doesn't correspond to a station, it's a starbase structure
