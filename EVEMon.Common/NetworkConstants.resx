@@ -489,4 +489,7 @@
   <data name="APISovereignty" xml:space="preserve">
     <value>/map/Sovereignty.xml.aspx</value>
   </data>
+  <data name="PostDataCorporationIDOnly" xml:space="preserve">
+    <value>corporationID={0}</value>
+  </data>
 </root>

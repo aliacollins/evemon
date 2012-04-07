@@ -1096,6 +1096,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to corporationID={0}.
+        /// </summary>
+        public static string PostDataCorporationIDOnly {
+            get {
+                return ResourceManager.GetString("PostDataCorporationIDOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ids={0}.
         /// </summary>
         public static string PostDataIDsOnly {

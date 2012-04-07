@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.HeaderPanel = new System.Windows.Forms.Panel();
-            this.APIUrlLabel = new System.Windows.Forms.Label();
+            this.UrlLabel = new System.Windows.Forms.Label();
             this.CharIDTextBox = new System.Windows.Forms.TextBox();
             this.CharIDLabel = new System.Windows.Forms.Label();
             this.ExternalInfoRadioButton = new System.Windows.Forms.RadioButton();
@@ -56,7 +56,7 @@
             // 
             // HeaderPanel
             // 
-            this.HeaderPanel.Controls.Add(this.APIUrlLabel);
+            this.HeaderPanel.Controls.Add(this.UrlLabel);
             this.HeaderPanel.Controls.Add(this.CharIDTextBox);
             this.HeaderPanel.Controls.Add(this.CharIDLabel);
             this.HeaderPanel.Controls.Add(this.ExternalInfoRadioButton);
@@ -80,13 +80,13 @@
             // 
             // APIUrlLabel
             // 
-            this.APIUrlLabel.AutoSize = true;
-            this.APIUrlLabel.Location = new System.Drawing.Point(22, 153);
-            this.APIUrlLabel.Name = "APIUrlLabel";
-            this.APIUrlLabel.Size = new System.Drawing.Size(120, 13);
-            this.APIUrlLabel.TabIndex = 12;
-            this.APIUrlLabel.Text = "The URL of the API call";
-            this.APIUrlLabel.UseMnemonic = false;
+            this.UrlLabel.AutoSize = true;
+            this.UrlLabel.Location = new System.Drawing.Point(22, 153);
+            this.UrlLabel.Name = "UrlLabel";
+            this.UrlLabel.Size = new System.Drawing.Size(120, 13);
+            this.UrlLabel.TabIndex = 12;
+            this.UrlLabel.Text = "The URL of the API call";
+            this.UrlLabel.UseMnemonic = false;
             // 
             // CharIDTextBox
             // 
@@ -98,7 +98,7 @@
             this.CharIDTextBox.Visible = false;
             this.CharIDTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CharIDTextBox_KeyUp);
             this.CharIDTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.RequiredIDTextBox_Validating);
-            this.CharIDTextBox.Validated += new System.EventHandler(this.CharIDTextBox_Validated);
+            this.CharIDTextBox.Validated += new System.EventHandler(this.RequiredIDTextBox_Validated);
             // 
             // CharIDLabel
             // 
@@ -156,7 +156,7 @@
             this.KeyIDTextBox.TabIndex = 7;
             this.KeyIDTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.KeyIDTextBox_KeyUp);
             this.KeyIDTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.RequiredIDTextBox_Validating);
-            this.KeyIDTextBox.Validated += new System.EventHandler(this.CharIDTextBox_Validated);
+            this.KeyIDTextBox.Validated += new System.EventHandler(this.RequiredIDTextBox_Validated);
             // 
             // VCodeLabel
             // 
@@ -185,7 +185,7 @@
             this.IDOrNameTextBox.Visible = false;
             this.IDOrNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.IDOrNameTextBox_KeyUp);
             this.IDOrNameTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.RequiredIDTextBox_Validating);
-            this.IDOrNameTextBox.Validated += new System.EventHandler(this.CharIDTextBox_Validated);
+            this.IDOrNameTextBox.Validated += new System.EventHandler(this.RequiredIDTextBox_Validated);
             // 
             // IDOrNameLabel
             // 
@@ -289,7 +289,7 @@
             this.KeyPreview = true;
             this.Name = "ApiTesterWindow";
             this.Text = "API Tester";
-            this.Load += new System.EventHandler(this.APITesterWindow_Load);
+            this.Load += new System.EventHandler(this.ApiTesterWindow_Load);
             this.HeaderPanel.ResumeLayout(false);
             this.HeaderPanel.PerformLayout();
             this.BodyPanel.ResumeLayout(false);
@@ -319,6 +319,6 @@
         private System.Windows.Forms.ErrorProvider ErrorProvider;
         private System.Windows.Forms.TextBox CharIDTextBox;
         private System.Windows.Forms.Label CharIDLabel;
-        private System.Windows.Forms.Label APIUrlLabel;
+        private System.Windows.Forms.Label UrlLabel;
     }
 }
