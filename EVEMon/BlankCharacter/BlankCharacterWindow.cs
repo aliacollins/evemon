@@ -1,18 +1,13 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using System.Windows.Forms;
-using System.Xml;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.BlankCharacter
 {
     public partial class BlankCharacterWindow : EVEMonForm
     {
-        private string m_filename;
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlankCharacterWindow"/> class.
@@ -21,6 +16,12 @@ namespace EVEMon.BlankCharacter
         {
             InitializeComponent();
         }
+
+
+        #endregion
+
+
+        #region Inherited Event Handlers
 
         /// <summary>
         /// Handles the Load event of the BlankCharacterWindow control.
@@ -36,8 +37,21 @@ namespace EVEMon.BlankCharacter
             buttonOK.Enabled = false;
         }
 
+        /// <summary>
+        /// Called when the instance get disposed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            Disposed -= OnDisposed;
+        }
 
-        #region Event Handlers
+        #endregion
+
+
+        #region Global Event Handlers
 
         /// <summary>
         /// Handles the TimerTick event of the EveMonClient control.
@@ -46,18 +60,8 @@ namespace EVEMon.BlankCharacter
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            buttonOK.Enabled = !String.IsNullOrEmpty(blankCharacterControl.CharacterName);
-        }
-
-        /// <summary>
-        /// Called when [disposed].
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            Disposed -= OnDisposed;
+            buttonOK.Enabled = !String.IsNullOrEmpty(BlankCharacterUIHelper.CharacterName);
+            AcceptButton = buttonOK.Enabled ? buttonOK : buttonCancel;
         }
 
         #endregion
@@ -77,15 +81,11 @@ namespace EVEMon.BlankCharacter
             {
                     // Save blank character
                 case DialogResult.None:
-                    Save(blankCharacterControl.CreateCharacter());
+                    BlankCharacterUIHelper.Save(OnCharacterSaved);
                     break;
                     // Add blank character
-                case DialogResult.Yes:
-                    AddBlankCharacter();
-                    break;
-                    // Close window
                 case DialogResult.OK:
-                    Close();
+                    BlankCharacterUIHelper.AddBlankCharacter(OnCharacterImported);
                     break;
             }
         }
@@ -103,65 +103,26 @@ namespace EVEMon.BlankCharacter
         #endregion
 
 
-        #region Helper Methods
+        #region Callback Methods
 
         /// <summary>
-        /// Saves the blank character.
+        /// Called when character is saved.
         /// </summary>
-        /// <param name="serial">The serial.</param>
-        private void Save(ISerializableCharacterIdentity serial)
+        private void OnCharacterSaved()
         {
-            using (SaveFileDialog fileDialog = new SaveFileDialog())
-            {
-                fileDialog.Title = "Save Blank Character";
-                fileDialog.Filter = "Blank Character CCPXML (*.xml) | *.xml";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.xml", serial.Name);
-                fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            buttonOK.Text = "Import";
+            buttonOK.DialogResult = DialogResult.OK;
 
-                if (fileDialog.ShowDialog() != DialogResult.OK)
-                    return;
-
-                // Disabling control edit ability
-                blankCharacterControl.Enabled = false;
-
-                XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializableCCPCharacter), serial);
-                string content = Util.GetXMLStringRepresentation(xmlDoc);
-                FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
-                                                  fs =>
-                                                      {
-                                                          using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                                                          {
-                                                              writer.Write(content);
-                                                              writer.Flush();
-                                                              fs.Flush();
-                                                          }
-                                                          return true;
-                                                      });
-
-                m_filename = fileDialog.FileName;
-                buttonOK.DialogResult = DialogResult.Yes;
-                buttonOK.Text = "Import";
-            }
+            // Disabling control editing
+            blankCharacterControl.Enabled = false;
         }
 
         /// <summary>
-        /// Adds the blank character.
+        /// Called when character is imported.
         /// </summary>
-        private void AddBlankCharacter()
+        private void OnCharacterImported()
         {
-            // Add blank character
-            GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(m_filename),
-                                                                 (send, args) =>
-                                                                     {
-                                                                         if (args == null || args.HasError)
-                                                                             return;
-
-                                                                         UriCharacter character = args.CreateCharacter();
-                                                                         character.Monitored = true;
-                                                                         
-                                                                         buttonOK.Text = "Close";
-                                                                         buttonOK.DialogResult = DialogResult.OK;
-                                                                     });
+            Close();
         }
 
         #endregion
