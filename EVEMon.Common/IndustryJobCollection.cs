@@ -82,12 +82,16 @@ namespace EVEMon.Common
                 srcJob => new
                               {
                                   srcJob,
-                                  limit = srcJob.EndProductionTime.AddDays(IndustryJob.MaxEndedDays)
+                                  limit = srcJob.EndProductionTime.AddDays(IndustryJob.MaxEndedDays),
+                                  state = srcJob.Completed,
+                                  status = srcJob.CompletedStatus
                               }).Where(
-                                  job => job.limit >= DateTime.UtcNow).Where(
-                                      job => !Items.Any(x => x.TryImport(job.srcJob))).Select(
-                                          job => new IndustryJob(job.srcJob)).Where(
-                                              job => job.InstalledItem != null && job.OutputItem != null).ToList();
+                                  job => job.limit >= DateTime.UtcNow ||
+                                         (job.state == (int)JobState.Active &&
+                                          job.status != (int)CCPJobCompletedStatus.Delivered)).Where(
+                                              job => !Items.Any(x => x.TryImport(job.srcJob))).Select(
+                                                  job => new IndustryJob(job.srcJob)).Where(
+                                                      job => job.InstalledItem != null && job.OutputItem != null).ToList();
 
             // Add the items that are no longer marked for deletion
             newJobs.AddRange(Items.Where(x => !x.MarkedForDeletion));
