@@ -236,7 +236,7 @@ namespace EVEMon.XmlGenerator
                         InitialCatalog = "EveStaticData",
                         IntegratedSecurity = true,
                         MultipleActiveResultSets = true,
-                        ApplicationName = "EntityFramework",
+                        ApplicationName = "EVEMon.XmlGenerator",
                     };
 
             // Initialize the EntityConnectionStringBuilder

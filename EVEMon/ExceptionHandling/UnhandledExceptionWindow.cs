@@ -62,7 +62,7 @@ namespace EVEMon.ExceptionHandling
             }
             catch (Exception ex)
             {
-                Common.ExceptionHandler.LogRethrowException(ex);
+                ExceptionHandler.LogRethrowException(ex);
                 throw;
             }
 
@@ -82,12 +82,12 @@ namespace EVEMon.ExceptionHandling
             }
             catch (IOException ex)
             {
-                Common.ExceptionHandler.LogException(ex, true);
+                ExceptionHandler.LogException(ex, true);
                 trace = "Unable to load trace file for inclusion in report";
             }
             catch (UnauthorizedAccessException ex)
             {
-                Common.ExceptionHandler.LogException(ex, true);
+                ExceptionHandler.LogException(ex, true);
                 trace = "Unable to load trace file for inclusion in report";
             }
             finally
@@ -121,7 +121,7 @@ namespace EVEMon.ExceptionHandling
             }
             catch (InvalidOperationException ex)
             {
-                Common.ExceptionHandler.LogException(ex, true);
+                ExceptionHandler.LogException(ex, true);
                 TechnicalDetailsTextBox.Text = "Error retrieving error data. Wow, things are *really* screwed up!";
             }
         }
@@ -153,7 +153,7 @@ namespace EVEMon.ExceptionHandling
                 }
                 catch (UnauthorizedAccessException ex)
                 {
-                    Common.ExceptionHandler.LogException(ex, true);
+                    ExceptionHandler.LogException(ex, true);
                     datafileReport.Append("Unable to create datafile report").AppendLine();
                 }
                 return datafileReport.ToString();
@@ -213,7 +213,7 @@ namespace EVEMon.ExceptionHandling
             catch (ExternalException ex)
             {
                 // Occurs when another process is using the clipboard
-                Common.ExceptionHandler.LogException(ex, true);
+                ExceptionHandler.LogException(ex, true);
                 MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process. " +
                                 "Wait a few moments and try again.");
             }
