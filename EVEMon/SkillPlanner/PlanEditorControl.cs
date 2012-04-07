@@ -959,8 +959,7 @@ namespace EVEMon.SkillPlanner
         {
             get
             {
-                return lvSkills.SelectedItems.Cast<ListViewItem>().Where(
-                    x => x.Tag is PlanEntry).Select(x => x.Tag as PlanEntry);
+                return lvSkills.SelectedItems.Cast<ListViewItem>().Select(x => x.Tag).OfType<PlanEntry>();
             }
         }
 
@@ -1185,8 +1184,8 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private IPlanOperation PrepareSelectionRemoval()
         {
-            IEnumerable<PlanEntry> entriesToRemove =
-                lvSkills.SelectedItems.Cast<ListViewItem>().Where(x => x.Tag is PlanEntry).Select(x => (PlanEntry)x.Tag);
+            IEnumerable<PlanEntry> entriesToRemove = lvSkills.SelectedItems.Cast<ListViewItem>()
+                .Select(x => x.Tag).OfType<PlanEntry>();
             IPlanOperation operation = m_plan.TryRemoveSet(entriesToRemove);
             return operation;
         }
@@ -1485,7 +1484,8 @@ namespace EVEMon.SkillPlanner
 
             // "Mark as owned"
             IEnumerable<Skill> skills = lvSkills.SelectedItems.Cast<ListViewItem>()
-                .Where(x => x.Tag is PlanEntry).Select(x => ((PlanEntry)x.Tag).CharacterSkill);
+                .Select(x => x.Tag).OfType<PlanEntry>().Select(x => x.CharacterSkill);
+
             if (skills.Any(x => !x.IsKnown))
             {
                 miMarkOwned.Text = (skills.Any(x => !x.IsOwned) ? "Mark as owned" : "Mark as unowned");

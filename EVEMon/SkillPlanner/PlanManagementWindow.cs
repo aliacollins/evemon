@@ -116,8 +116,8 @@ namespace EVEMon.SkillPlanner
         private void UpdateContent(bool restoreSelectionAndFocus)
         {
             // Store selection and focus
-            Plan selection =
-                lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected).Select(x => x.Tag as Plan).FirstOrDefault();
+            Plan selection = lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected)
+                .Select(x => x.Tag).OfType<Plan>().FirstOrDefault();
             Plan focused = (lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan);
 
             lbPlanList.BeginUpdate();
@@ -291,7 +291,7 @@ namespace EVEMon.SkillPlanner
             lbPlanList.Sort();
 
             // Rebuild the plans list from the listview items
-            m_character.Plans.RebuildFrom(lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan));
+            m_character.Plans.RebuildFrom(lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag).OfType<Plan>());
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace EVEMon.SkillPlanner
         private void lbPlanList_ListViewItemsDragged(object sender, EventArgs e)
         {
             // Rebuild the plans list from the listview items
-            m_character.Plans.RebuildFrom(lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan));
+            m_character.Plans.RebuildFrom(lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag).OfType<Plan>());
         }
 
         #endregion
@@ -552,7 +552,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Rebuild a plans array
-            Plan[] plans = lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan).ToArray();
+            Plan[] plans = lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag).OfType<Plan>().ToArray();
             Plan temp = plans[idx - 1];
             plans[idx - 1] = plans[idx];
             plans[idx] = temp;
@@ -574,7 +574,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Rebuild a plans array
-            Plan[] plans = lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag as Plan).ToArray();
+            Plan[] plans = lbPlanList.Items.Cast<ListViewItem>().Select(x => x.Tag).OfType<Plan>().ToArray();
             Plan temp = plans[idx + 1];
             plans[idx + 1] = plans[idx];
             plans[idx] = temp;

@@ -336,8 +336,8 @@ namespace EVEMon.ApiCredentialsManagement
             try
             {
                 // Retrieve current selection and grouping option
-                List<Character> oldSelection =
-                    new List<Character>(charactersListView.SelectedItems.Cast<ListViewItem>().Select(x => x.Tag as Character));
+                List<Character> oldSelection = new List<Character>(charactersListView.SelectedItems.Cast<ListViewItem>()
+                    .Select(x => x.Tag).OfType<Character>());
 
                 charactersListView.Groups.Clear();
                 charactersListView.Items.Clear();

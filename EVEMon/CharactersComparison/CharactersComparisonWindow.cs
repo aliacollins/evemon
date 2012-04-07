@@ -54,13 +54,11 @@ namespace EVEMon.CharactersComparison
         /// <summary>
         /// Updates the selected items.
         /// </summary>
-        /// <param name="reset">if set to <c>true</c> [reset].</param>
-        private void UpdateSelectedItems(bool reset = false)
+        /// <param name="reset">if set to <c>true</c> reset the selection.</param>
+        private void UpdateSelectedItems(bool reset = true)
         {
             if (reset)
-            {
                 m_selectedCharacters.Clear();
-            }
             else
             {
                 IEnumerable<Character> selectedItems = lvCharacterList.SelectedItems.Cast<ListViewItem>().Select(
@@ -311,7 +309,6 @@ namespace EVEMon.CharactersComparison
             ListViewHelper.EnableDoubleBuffer(lvCharacterList);
             ListViewHelper.EnableDoubleBuffer(lvCharacterInfo);
 
-            //cbFilter.SelectedIndex = Settings.CharacterComparison.Filter;
             cbFilter.SelectedIndex = 0;
             chCharacters.Width = lvCharacterList.ClientSize.Width;
 
@@ -320,7 +317,7 @@ namespace EVEMon.CharactersComparison
             Disposed += OnDisposed;
 
             UpdateCharacterList();
-            UpdateSelectedItems(true);
+            UpdateSelectedItems();
         }
 
         /// <summary>
@@ -335,13 +332,18 @@ namespace EVEMon.CharactersComparison
             Disposed -= OnDisposed;
         }
 
+        /// <summary>
+        /// Handles the MonitoredCharacterCollectionChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
         {
             if (cbFilter.SelectedIndex != 1)
                 return;
 
             UpdateCharacterList();
-            UpdateSelectedItems(true);
+            UpdateSelectedItems();
         }
 
         /// <summary>
@@ -352,7 +354,7 @@ namespace EVEMon.CharactersComparison
         private void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
         {
             UpdateCharacterList();
-            UpdateSelectedItems(true);
+            UpdateSelectedItems();
         }
 
         /// <summary>
@@ -364,7 +366,7 @@ namespace EVEMon.CharactersComparison
         {
             //Settings.CharacterComparison.Filter = cbFilter.SelectedIndex;
             UpdateCharacterList();
-            UpdateSelectedItems(true);
+            UpdateSelectedItems();
         }
 
         /// <summary>
@@ -410,9 +412,12 @@ namespace EVEMon.CharactersComparison
             m_tmrSelect.Stop();
 
             if (lvCharacterList.SelectedIndices.Count == 0)
-                UpdateSelectedItems(true);
-            else
+            {
                 UpdateSelectedItems();
+                return;
+            }
+
+            UpdateSelectedItems(false);
         }
 
         /// <summary>
