@@ -170,7 +170,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the entry matching the given parameters
+        /// Gets the entry matching the given parameters.
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="level"></param>
@@ -184,7 +184,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Adds the given entry into the items list and the lookup
+        /// Adds the given entry into the items list and the lookup.
         /// </summary>
         /// <param name="entry"></param>
         protected void AddCore(PlanEntry entry)
@@ -198,7 +198,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Inserts the given entry into the items list and the lookup
+        /// Inserts the given entry into the items list and the lookup.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="entry"></param>
@@ -213,7 +213,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Inserts the given entry into the items list and the lookup
+        /// Inserts the given entry into the items list and the lookup.
         /// </summary>
         /// <param name="index"></param>
         protected void RemoveCore(int index)
@@ -252,7 +252,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true if the given skill is planned
+        /// Gets true if the given skill is planned.
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
@@ -332,7 +332,8 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Checks whether a matching entry exists between before the provided <c>insertionIndex</c>. 
+        /// Checks whether a matching entry exists between before the provided <c>insertionIndex</c>.
+        /// If the entry exist and is trained, remove it.
         /// If the entry exist later, it is moved to this <c>insertionIndex</c>.
         /// If the entry does not exit, it is inserted at <c>insertionIndex</c>.
         /// </summary>
@@ -343,16 +344,22 @@ namespace EVEMon.Common
         /// <returns>True if the searched entry existed or is already trained; false if an insertion or a move was required.</returns>
         private bool EnsurePrerequisiteExistBefore(StaticSkill skill, int level, int insertionIndex, int newEntriesPriority)
         {
-            // Is the wanted level already known by the character ?
+            int skillIndex = IndexOf(skill, level);
+
+            // Is the level already trained by the character ?
             if (Character.GetSkillLevel(skill) >= level)
+            {
+                // If the level is planned, remove it
+                if (skillIndex != -1)
+                    RemoveCore(skillIndex);
+
                 return true;
+            }
 
             // Is the prerequisite already planned before this very entry ?
             // Then we continue the foreach loop to the next prereq
-            int skillIndex = IndexOf(skill, level);
             if (skillIndex != -1 && skillIndex < insertionIndex)
                 return true;
-
 
             // The prerequisite is not planned yet, we insert it just before this very entry
             if (skillIndex == -1)
@@ -734,6 +741,8 @@ namespace EVEMon.Common
                         continue;
 
                     Items.RemoveAt(i);
+                    m_lookup[pe.Skill.ArrayIndex * 5 + pe.Level - 1] = null;
+
                     i--;
                 }
             }
