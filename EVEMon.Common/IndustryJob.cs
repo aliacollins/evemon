@@ -24,26 +24,9 @@ namespace EVEMon.Common
             if (src == null)
                 throw new ArgumentNullException("src");
 
+            PopulateJobInfo(src);
             State = GetState(src);
-            ID = src.JobID;
-            InstallerID = src.InstallerID;
-            InstalledItemID = src.InstalledItemTypeID;
-            InstalledItem = StaticBlueprints.GetBlueprintByID(src.InstalledItemTypeID);
-            OutputItemID = src.OutputTypeID;
-            OutputItem = GetOutputItem(src.OutputTypeID);
-            Runs = src.Runs;
-            Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
-            BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
-            Installation = GetInstallation(src.InstalledItemLocationID);
-            SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
-            InstalledTime = src.InstallTime;
-            InstalledME = src.InstalledItemMaterialLevel;
-            InstalledPE = src.InstalledItemProductivityLevel;
-            BeginProductionTime = src.BeginProductionTime;
-            EndProductionTime = src.EndProductionTime;
-            PauseProductionTime = src.PauseProductionTime;
             LastStateChange = DateTime.UtcNow;
-            IssuedFor = src.IssuedFor;
             ActiveJobState = GetActiveJobState();
         }
 
@@ -56,21 +39,8 @@ namespace EVEMon.Common
             if (src == null)
                 throw new ArgumentNullException("src");
 
-            Ignored = src.Ignored;
             ID = src.JobID;
             State = src.State;
-            InstalledItemID = src.InstalledItemID;
-            InstalledItem = StaticBlueprints.GetBlueprintByID(src.InstalledItemID);
-            OutputItemID = src.OutputItemID;
-            OutputItem = GetOutputItem(src.OutputItemID);
-            Runs = src.Runs;
-            Activity = src.Activity;
-            BlueprintType = src.BlueprintType;
-            Installation = src.ItemLocation;
-            SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
-            InstalledTime = src.InstalledTime;
-            InstalledME = src.InstalledItemME;
-            InstalledPE = src.InstalledItemPE;
             BeginProductionTime = src.BeginProductionTime;
             EndProductionTime = src.EndProductionTime;
             PauseProductionTime = src.PauseProductionTime;
@@ -93,11 +63,6 @@ namespace EVEMon.Common
         /// When true, the job will be deleted unless it was found on the API feed.
         /// </summary>
         internal bool MarkedForDeletion { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether an expired job has been deleted by the user.
-        /// </summary>
-        public bool Ignored { get; set; }
 
         /// <summary>
         /// Gets or sets the jobs state.
@@ -252,7 +217,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Checks whether the given API object matches with this job.
+        /// Checks whether the given API object has been modified.
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
@@ -265,7 +230,7 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Helper Methods
+        #region Importation, Exportation
 
         /// <summary>
         /// Exports the given object to a serialization object.
@@ -274,21 +239,8 @@ namespace EVEMon.Common
         {
             return new SerializableJob
                        {
-                           Ignored = Ignored,
                            JobID = ID,
-                           State = State,
-                           InstalledItemID = InstalledItemID,
-                           InstalledItem = (InstalledItem != null ? InstalledItem.Name : "Unknown Blueprint"),
-                           OutputItemID = OutputItemID,
-                           OutputItem = (OutputItem != null ? OutputItem.Name : "Unknown Blueprint/Item"),
-                           Runs = Runs,
-                           Activity = Activity,
-                           BlueprintType = BlueprintType,
-                           ItemLocation = Installation,
-                           SolarSystemID = (SolarSystem != null ? SolarSystem.ID : 0),
-                           InstalledTime = InstalledTime,
-                           InstalledItemME = InstalledME,
-                           InstalledItemPE = InstalledPE,
+                           State = State,                         
                            BeginProductionTime = BeginProductionTime,
                            EndProductionTime = EndProductionTime,
                            PauseProductionTime = PauseProductionTime,
@@ -315,14 +267,24 @@ namespace EVEMon.Common
 
             // Update infos (if ID is the same it may have been modified)
             if (IsModified(src))
-            {
-                EndProductionTime = src.EndProductionTime;
-                PauseProductionTime = src.PauseProductionTime;
+            {                
+                // Job is from a serialized object, so populate the missing info
+                if (InstalledItem == null)
+                    PopulateJobInfo(src);
+                else
+                {
+                    EndProductionTime = src.EndProductionTime;
+                    PauseProductionTime = src.PauseProductionTime;
+                }
 
                 State = (PauseProductionTime == DateTime.MinValue ? JobState.Active : JobState.Paused);
                 ActiveJobState = GetActiveJobState();
                 LastStateChange = DateTime.UtcNow;
             }
+
+            // Job is from a serialized object, so populate the missing info
+            if (InstalledItem == null)
+                PopulateJobInfo(src);
 
             // Update state
             JobState state = GetState(src);
@@ -334,6 +296,37 @@ namespace EVEMon.Common
 
             return true;
         }
+
+        /// <summary>
+        /// Populates the serialization object job with the info from the API.
+        /// </summary>
+        /// <param name="src">The source.</param>
+        private void PopulateJobInfo(SerializableJobListItem src)
+        {
+            ID = src.JobID;
+            InstallerID = src.InstallerID;
+            InstalledItemID = src.InstalledItemTypeID;
+            InstalledItem = StaticBlueprints.GetBlueprintByID(src.InstalledItemTypeID);
+            OutputItemID = src.OutputTypeID;
+            OutputItem = GetOutputItem(src.OutputTypeID);
+            Runs = src.Runs;
+            Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
+            BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
+            Installation = GetInstallation(src.InstalledItemLocationID);
+            SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
+            InstalledTime = src.InstallTime;
+            InstalledME = src.InstalledItemMaterialLevel;
+            InstalledPE = src.InstalledItemProductivityLevel;
+            BeginProductionTime = src.BeginProductionTime;
+            EndProductionTime = src.EndProductionTime;
+            PauseProductionTime = src.PauseProductionTime;
+            IssuedFor = src.IssuedFor;
+        }
+
+        #endregion
+
+
+        #region Helper Methods
 
         /// <summary>
         /// Gets the output item by its ID (can be a blueprint or an item).

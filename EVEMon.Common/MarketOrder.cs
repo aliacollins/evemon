@@ -225,14 +225,17 @@ namespace EVEMon.Common
                 // Order is from a serialized object, so populate the missing info
                 if (Item == null)
                     PopulateOrderInfo(src);
+                else
+                {
+                    // If it's a buying order, escrow may have changed
+                    if (src.IsBuyOrder != 0)
+                        ((BuyOrder)this).Escrow = src.Escrow;
 
-                // If it's a buying order, escrow may have changed
-                if (src.IsBuyOrder != 0)
-                    ((BuyOrder)this).Escrow = src.Escrow;
+                    UnitaryPrice = src.UnitaryPrice;
+                    RemainingVolume = src.RemainingVolume;
+                    Issued = src.Issued;
+                }
 
-                UnitaryPrice = src.UnitaryPrice;
-                RemainingVolume = src.RemainingVolume;
-                Issued = src.Issued;
                 LastStateChange = DateTime.UtcNow;
                 m_state = OrderState.Modified;
             }
@@ -265,11 +268,6 @@ namespace EVEMon.Common
             return true;
         }
 
-        #endregion
-
-
-        #region Helper Methods
-
         /// <summary>
         /// Populates the serialization object order with the info from the API.
         /// </summary>
@@ -295,6 +293,11 @@ namespace EVEMon.Common
             buyOrder.Escrow = src.Escrow;
             buyOrder.Range = src.Range;
         }
+
+        #endregion
+
+
+        #region Helper Methods
 
         /// <summary>
         /// Gets the state of an order.
@@ -330,7 +333,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Checks whether the given API object matches with this order.
+        /// Checks whether the given API object has been modified.
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>

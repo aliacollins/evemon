@@ -65,7 +65,7 @@ namespace EVEMon.Common
 
             m_charIndustryJobsMonitor =
                 new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, APICharacterMethods.IndustryJobs,
-                                                                       OnCharacterIndustryJobsUpdated);
+                                                                       OnCharacterIndustryJobsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charIndustryJobsMonitor);
 
             m_charResearchPointsMonitor =

@@ -41,7 +41,7 @@ namespace EVEMon.Common
             m_corpIndustryJobsMonitor =
                 new CorporationQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter,
                                                                          APICorporationMethods.CorporationIndustryJobs,
-                                                                         OnCorporationIndustryJobsUpdated);
+                                                                         OnCorporationIndustryJobsUpdated) { QueryOnStartup = true };
             m_corporationQueryMonitors.Add(m_corpIndustryJobsMonitor);
 
             m_corporationQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
