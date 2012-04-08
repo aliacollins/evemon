@@ -22,7 +22,6 @@ using EVEMon.Common.IgbService;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
-using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
@@ -74,8 +73,6 @@ namespace EVEMon
         public MainWindow(bool startMinimized)
             : this()
         {
-            m_isUpdating = false;
-
             // Start minimized ?
             if (startMinimized)
             {
@@ -106,11 +103,21 @@ namespace EVEMon
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             if (DesignMode)
                 return;
 
-            trayIcon.Text = Application.ProductName;
+            // Ensures the installation files downloaded through the autoupdate are correctly deleted
+            UpdateManager.DeleteInstallationFiles();
 
+            // Start the one-second timer 
+            EveMonClient.Run(this);
+
+            // Check with BattleClinic the local clock is synchronized
+            if (Settings.Updates.CheckTimeOnStartup)
+                CheckTimeSynchronization();
+            
+            trayIcon.Text = Application.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
             // Prepare control's visibility
@@ -126,24 +133,8 @@ namespace EVEMon
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
 
-            // Initialize all of our business objects
-            EveMonClient.Run(this);
-
-            // Upgrades the BattleClinic API settings
-            BCAPI.UpgradeSettings();
-
-            // BattleClinic storage service
-            BCAPI.DownloadSettingsFile();
-
             // Update the content
             UpdateTabs();
-
-            // Ensures the installation files downloaded through the autoupdate are correctly deleted
-            UpdateManager.DeleteInstallationFiles();
-
-            // Check with BattleClinic the local clock is synchronized
-            if (Settings.Updates.CheckTimeOnStartup)
-                CheckTimeSynchronization();
 
             // Updates the controls visibility according to settings
             UpdateControlsVisibility();
@@ -244,9 +235,6 @@ namespace EVEMon
             // Hide the system tray icons
             niAlertIcon.Visible = false;
             trayIcon.Visible = false;
-
-            // Stops the one-second timer right now
-            EveMonClient.Shutdown();
         }
 
         /// <summary>
@@ -319,8 +307,7 @@ namespace EVEMon
             Dictionary<Character, TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
                 page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
 
-            tcCharacterTabs.Visible = false;
-            tcCharacterTabs.SuspendLayout();
+            tcCharacterTabs.Hide();
             try
             {
                 // Rebuild the pages
@@ -373,8 +360,7 @@ namespace EVEMon
             }
             finally
             {
-                tcCharacterTabs.ResumeLayout();
-                tcCharacterTabs.Visible = true;
+                tcCharacterTabs.Show();
             }
         }
 
@@ -389,7 +375,7 @@ namespace EVEMon
             if (Settings.UI.MainWindow.ShowOverview)
             {
                 // Trim the overview page index
-                int overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount, Settings.UI.MainWindow.OverviewIndex));
+                int overviewIndex = Math.Max(0, Math.Min(tcCharacterTabs.TabCount - 1, Settings.UI.MainWindow.OverviewIndex));
 
                 // Inserts it if it doesn't exist
                 if (!tcCharacterTabs.TabPages.Contains(tpOverview))
@@ -1067,7 +1053,7 @@ namespace EVEMon
                 {
                     m_isUpdating = true;
 
-                    // Save the settings to make sure we don't loose anything
+                    // Save the settings to make sure we don't lose anything
                     Settings.SaveImmediate();
                     Close();
                 }

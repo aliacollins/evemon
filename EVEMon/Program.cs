@@ -55,9 +55,12 @@ namespace EVEMon
             // Check arguments
             bool startMinimized = Environment.GetCommandLineArgs().Contains("-startMinimized");
 
+            // Upgrades the BattleClinic API settings
+            BCAPI.UpgradeSettings();
+
             // Initialization
             EveMonClient.Initialize();
-            Settings.InitializeFromFile();
+            Settings.Initialize();
             EveIDToName.InitializeFromFile();
 
             // Initialize G15
@@ -68,20 +71,23 @@ namespace EVEMon
             if (s_exitRequested)
                 return;
 
-            // Fires the main window
             try
             {
+                // Fires the main window
                 EveMonClient.Trace("Main loop - start");
                 s_mainWindow = new MainWindow(startMinimized);
                 Application.Run(s_mainWindow);
                 EveMonClient.Trace("Main loop - done");
             }
-                // Save before we quit
             finally
             {
+                // Save before we quit
                 Settings.SaveImmediate();
                 EveIDToName.SaveImmediate();
                 BCAPI.UploadSettingsFile();
+
+                // Stop the one-second timer right now
+                EveMonClient.Shutdown();
                 EveMonClient.Trace("Closed");
                 EveMonClient.StopTraceLogging();
             }

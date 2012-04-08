@@ -25,6 +25,9 @@ namespace EVEMon.SettingsUI
         public NotificationsControl()
         {
             InitializeComponent();
+            labelBehaviour.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
+            labelNotification.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
+            labelMainWindow.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
 
             PopulateControl();
         }

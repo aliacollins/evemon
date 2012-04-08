@@ -36,7 +36,6 @@
             // 
             // labelPeriod
             // 
-            this.labelPeriod.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPeriod.Location = new System.Drawing.Point(169, 0);
             this.labelPeriod.Name = "labelPeriod";
             this.labelPeriod.Size = new System.Drawing.Size(173, 18);
@@ -47,7 +46,6 @@
             // 
             // labelMethod
             // 
-            this.labelMethod.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMethod.Location = new System.Drawing.Point(20, 0);
             this.labelMethod.Name = "labelMethod";
             this.labelMethod.Size = new System.Drawing.Size(143, 18);

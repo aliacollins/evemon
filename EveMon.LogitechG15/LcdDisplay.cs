@@ -159,10 +159,7 @@ namespace EVEMon.LogitechG15
         {
             get
             {
-                if (!MonitoredCharacters.Any() || !MonitoredCharacters.Contains(m_currentCharacter))
-                    return null;
-
-                return m_currentCharacter;
+                return MonitoredCharacters.Contains(m_currentCharacter) ? m_currentCharacter : null;
             }
             set
             {
@@ -307,7 +304,7 @@ namespace EVEMon.LogitechG15
         {
             m_lcdLines.Clear();
 
-            if (CurrentCharacter == null)
+            if (!MonitoredCharacters.Any())
             {
                 m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
@@ -323,6 +320,9 @@ namespace EVEMon.LogitechG15
                     m_showingCycledQueueInfo = !m_showingCycledQueueInfo;
                 }
             }
+
+            if (CurrentCharacter == null)
+                return;
 
             m_lcdLines.Add(new LineProcess(CurrentCharacter.AdornedName, m_defaultFont));
 
@@ -410,6 +410,9 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void RenderWalletBalance()
         {
+            if (CurrentCharacter == null)
+                return;
+
             decimal balance = CurrentCharacter.Balance;
             string walletBalance = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", balance);
             SizeF size = m_lcdCanvas.MeasureString(walletBalance, m_defaultFont);
@@ -435,6 +438,9 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void RenderSkillQueueInfo()
         {
+            if (CurrentCharacter == null)
+                return;
+
             bool freeTime = CurrentCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24);
 
             if (CurrentCharacter.IsTraining && m_showingCycledQueueInfo && freeTime)
@@ -446,7 +452,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void RenderCompletionTime()
         {
-            if (!CurrentCharacter.IsTraining)
+            if (CurrentCharacter == null || !CurrentCharacter.IsTraining)
                 return;
 
             DateTime completionDateTime = CurrentCharacter.CurrentlyTrainingSkill.EndTime.ToLocalTime();
@@ -503,18 +509,18 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void PaintSkillCompletionMessage()
         {
-            if (CurrentCharacter.SkillQueue.LastCompleted == null)
-                return;
-
             m_lcdLines.Clear();
 
-            if (CurrentCharacter == null)
+            if (!MonitoredCharacters.Any())
             {
                 m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
                 UpdateLcdDisplay();
                 return;
             }
+
+            if (CurrentCharacter == null || CurrentCharacter.SkillQueue.LastCompleted == null)
+                return;
 
             m_lcdLines.Add(new LineProcess(CurrentCharacter.AdornedName, m_defaultFont));
             m_lcdLines.Add(new LineProcess("has finished training", m_defaultFont));
@@ -554,7 +560,7 @@ namespace EVEMon.LogitechG15
             // Creates a reordered list with the selected character on top
             List<CCPCharacter> charList = new List<CCPCharacter>();
 
-            int currentCharacterIndex = MonitoredCharacters.IndexOf(CurrentCharacter);
+            int currentCharacterIndex = Math.Max(0, MonitoredCharacters.IndexOf(CurrentCharacter));
             for (int i = currentCharacterIndex; i < MonitoredCharacters.Count(); i++)
             {
                 charList.Add(MonitoredCharacters.ElementAt(i));
@@ -657,6 +663,9 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private void UpdateSkillQueueFreeRoom()
         {
+            if (CurrentCharacter == null)
+                return;
+
             TimeSpan timeLeft = DateTime.UtcNow.AddHours(24) - CurrentCharacter.SkillQueue.EndTime;
 
             // Prevents the "(none)" text from being displayed
@@ -865,8 +874,7 @@ namespace EVEMon.LogitechG15
 
             // Move to next char
             int index = MonitoredCharacters.IndexOf(CurrentCharacter);
-            index++;
-            if (index >= MonitoredCharacters.Count())
+            if (++index >= MonitoredCharacters.Count())
                 index = 0;
 
             CurrentCharacter = MonitoredCharacters.ElementAt(index);

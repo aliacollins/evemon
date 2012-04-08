@@ -26,6 +26,7 @@ namespace EVEMon.Schedule
         {
             InitializeComponent();
 
+            newScheduleEntryToolStripMenuItem.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
             calControl.EntryFont = FontFactory.GetFont("Microsoft Sans Serif", 7F);
 
             // Load Calendar Colors

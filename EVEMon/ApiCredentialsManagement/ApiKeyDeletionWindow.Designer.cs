@@ -46,7 +46,6 @@
             // deletionLabel
             // 
             this.deletionLabel.AutoSize = true;
-            this.deletionLabel.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.deletionLabel.Location = new System.Drawing.Point(51, 22);
             this.deletionLabel.Name = "deletionLabel";
             this.deletionLabel.Size = new System.Drawing.Size(285, 13);

@@ -10,6 +10,7 @@ using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
+using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 
@@ -91,7 +92,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the settings for the notifications (alerts).
         /// </summary>
-        public static NotificationSettings Notifications { get; set; }
+        public static NotificationSettings Notifications { get; private set; }
 
         /// <summary>
         /// Gets the settings for the network.
@@ -124,7 +125,7 @@ namespace EVEMon.Common
         public static void Reset()
         {
             // Append new properties here
-            Import(new SerializableSettings(), false);
+            Import(new SerializableSettings());
 
             // Notifies the client and save
             SaveImmediate();
@@ -135,7 +136,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="serial">The serializable version of the new settings. May be null (acts as a reset)</param>
         /// <param name="preferencesOnly">When true, only the user preferences will be reimported, not plans, characters, accounts and such.</param>
-        public static void Import(SerializableSettings serial, bool preferencesOnly)
+        public static void Import(SerializableSettings serial, bool preferencesOnly = false)
         {
             // When null, we just reset
             if (serial == null)
@@ -310,47 +311,95 @@ namespace EVEMon.Common
         {
             get { return Assembly.GetExecutingAssembly().GetName().Version.Revision; }
         }
-
+        
         /// <summary>
-        /// Initialization for the EVEMon client. Will automatically load the settings file.
+        /// Initialization for the EVEMon client settings.
         /// </summary>
-        /// <exception cref="InvalidOperationException">The instance has been initialized already</exception>
-        public static void InitializeFromFile()
+        /// <remarks>
+        /// Will attempt to fetch and initialize settings from a storage server, if user has specified so.
+        /// Otherwise attempts to initialize from a locally stored file.
+        /// </remarks>
+        public static void Initialize()
         {
-            // Creates the settings from the file
-            SerializableSettings settings = TryDeserializeSettings();
+            SerializableFilesListItem settingsFile = BCAPI.DownloadSettingsFile();
+            SerializableSettings settings = settingsFile != null
+                                                ? TryDeserializeFromFileContent(settingsFile.FileContent)
+                                                : TryDeserializeFromFile();
 
-            // Loading from file failed, we create settings from scratch
+            // Loading settings failed, we create settings from scratch
             if (settings == null)
                 Reset();
             else
-                Import(settings, false);
+                Import(settings);
         }
 
         /// <summary>
-        /// Loads a settings file from a specified filepath and sets m_instance.
+        /// Try to deserialize the settings from a storage server file, prompting the user for errors.
+        /// </summary>
+        /// <returns><c>Null</c> if we have been unable to deserialize anything, the generated settings otherwise</returns>
+        private static SerializableSettings TryDeserializeFromFileContent(string fileContent)
+        {
+            if (String.IsNullOrWhiteSpace(fileContent))
+                return null;
+
+            EveMonClient.Trace("Settings.TryDeserializeFromFileContent - begin");
+
+            // Gets the revision number of the assembly which generated this file
+            int revision = Util.GetRevisionNumber(fileContent);
+
+            // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
+            SerializableSettings settings = revision == 0
+                                                ? (SerializableSettings)ShowNoSupportMessage()
+                                                : Util.DeserializeXMLFromString<SerializableSettings>(fileContent,
+                                                                                                      SettingsTransform);
+
+            if (settings != null)
+            {
+                EveMonClient.Trace("Settings.TryDeserializeFromFileContent - done");
+                return settings;
+            }
+
+            const string Caption = "Corrupt Settings";
+
+            DialogResult dr = MessageBox.Show("Loading settings from the storage server file failed.\n" +
+                                              "Do you want to use the local settings file?",
+                                              Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+            if (dr == DialogResult.No)
+            {
+                MessageBox.Show("A new settings file will be created.\n"
+                                + "You may wish then to restore a saved copy of the file.", Caption,
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return null;
+            }
+
+            return TryDeserializeFromFile();
+        }
+
+        /// <summary>
+        /// Loads a settings file from a specified filepath.
         /// </summary>
         /// <param name="filename">The fully qualified filename of the settings file to load</param>
         /// <returns>The Settings object loaded</returns>
         public static void Restore(string filename)
         {
             // Try deserialize
-            string settingsFile = EveMonClient.SettingsFileNameFullPath;
-            SerializableSettings settings = TryDeserializeBackup(filename, settingsFile, false);
+            SerializableSettings settings = TryDeserializeFromBackupFile(filename, EveMonClient.SettingsFileNameFullPath, false);
 
             // Loading from file failed, we abort and keep our current settings
             if (settings == null)
                 return;
 
             // Updates and save
-            Import(settings, false);
+            Import(settings);
         }
 
         /// <summary>
-        /// Loads the settings file, or the backup, prompting the user for errors.
+        /// Try to deserialize the settings from a file, prompting the user for errors.
         /// </summary>
         /// <returns><c>Null</c> if we have been unable to load anything from files, the generated settings otherwise</returns>
-        private static SerializableSettings TryDeserializeSettings()
+        private static SerializableSettings TryDeserializeFromFile()
         {
             string settingsFile = EveMonClient.SettingsFileNameFullPath;
             string backupFile = settingsFile + ".bak";
@@ -358,14 +407,14 @@ namespace EVEMon.Common
             // If settings file doesn't exists
             // try to recover from the backup
             if (!File.Exists(settingsFile))
-                return TryDeserializeBackup(backupFile, settingsFile, true);
+                return TryDeserializeFromBackupFile(backupFile, settingsFile);
 
-            EveMonClient.Trace("Settings.TryDeserializeSettings - begin");
+            EveMonClient.Trace("Settings.TryDeserializeFromFile - begin");
 
             // Check settings file length
             FileInfo settingsInfo = new FileInfo(settingsFile);
             if (settingsInfo.Length == 0)
-                return TryDeserializeBackup(backupFile, settingsFile, true);
+                return TryDeserializeFromBackupFile(backupFile, settingsFile);
 
             // Gets the revision number of the assembly which generated this file
             int revision = Util.GetRevisionNumber(settingsFile);
@@ -381,27 +430,30 @@ namespace EVEMon.Common
             {
                 CheckSettingsVersion(settings);
                 FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                EveMonClient.Trace("Settings.TryDeserializeSettings - done");
+                EveMonClient.Trace("Settings.TryDeserializeFromFile - done");
                 return settings;
             }
 
-            return TryDeserializeBackup(backupFile, settingsFile, true);
+            return TryDeserializeFromBackupFile(backupFile, settingsFile);
         }
 
         /// <summary>
         /// Try to deserialize from the backup file.
         /// </summary>
-        /// <param name="backupFile"></param>
-        /// <param name="settingsFile"></param>
-        /// <param name="recover"></param>
-        /// <returns></returns>
-        private static SerializableSettings TryDeserializeBackup(string backupFile, string settingsFile, bool recover)
+        /// <param name="backupFile">The backup file.</param>
+        /// <param name="settingsFile">The settings file.</param>
+        /// <param name="recover">if set to <c>true</c> do a settings recover attempt.</param>
+        /// <returns>
+        /// 	<c>Null</c> if we have been unable to load anything from files, the generated settings otherwise
+        /// </returns>
+        private static SerializableSettings TryDeserializeFromBackupFile(string backupFile, string settingsFile,
+                                                                         bool recover = true)
         {
             // Load failed, so check for backup
             if (!File.Exists(backupFile))
                 return null;
 
-            EveMonClient.Trace("Settings.TryDeserializeBackup - begin");
+            EveMonClient.Trace("Settings.TryDeserializeFromBackupFile - begin");
 
             // Check backup settings file length
             FileInfo backupInfo = new FileInfo(backupFile);
@@ -449,14 +501,14 @@ namespace EVEMon.Common
                 CheckSettingsVersion(settings);
                 FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
                 FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                EveMonClient.Trace("Settings.TryDeserializeBackup - done");
+                EveMonClient.Trace("Settings.TryDeserializeFromBackupFile - done");
                 return settings;
             }
 
             if (recover)
             {
                 // Backup failed too, notify the user we have a problem
-                MessageBox.Show("Loading from backup failed. A new settings file will be created.\n"
+                MessageBox.Show("Loading from backup failed.\nA new settings file will be created.\n"
                                 + "You may wish then to restore a saved copy of the file.",
                                 Caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 

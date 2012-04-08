@@ -359,7 +359,7 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<MarketOrder> orders = m_list.Where(x => !x.Ignored && IsTextMatching(x, text));
+                IEnumerable<MarketOrder> orders = m_list.Where(x => IsTextMatching(x, text));
                 if (Character != null && m_hideInactive)
                     orders = orders.Where(x => x.IsAvailable);
 
@@ -819,18 +819,6 @@ namespace EVEMon.CharacterMonitoring
                 case Keys.A:
                     if (e.Control)
                         lvOrders.SelectAll();
-                    break;
-                case Keys.Delete:
-                    if (lvOrders.SelectedItems.Count == 0)
-                        return;
-                    // Mark as ignored
-                    foreach (MarketOrder order in lvOrders.SelectedItems.Cast<ListViewItem>().Select(
-                        item => (MarketOrder)item.Tag))
-                    {
-                        order.Ignored = true;
-                    }
-                    // Updates
-                    UpdateContent();
                     break;
             }
         }

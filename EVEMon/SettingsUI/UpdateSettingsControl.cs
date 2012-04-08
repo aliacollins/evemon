@@ -25,6 +25,8 @@ namespace EVEMon.SettingsUI
         public UpdateSettingsControl()
         {
             InitializeComponent();
+            labelPeriod.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
+            labelMethod.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
 
             PopulateControl();
         }
@@ -70,8 +72,7 @@ namespace EVEMon.SettingsUI
 
                 methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
                     method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().
-                                     OrderBy(
-                                         method => method.GetHeader()));
+                                     OrderBy(method => method.GetHeader()));
 
                 // Uncomment upon implementing an exclicit corporation monitor feature
                 //methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(

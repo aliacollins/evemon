@@ -175,6 +175,7 @@ namespace EVEMon.Controls
             Controls.Clear();
             Controls.Add(labelNoCharacters);
         }
+
         /// <summary>
         /// Gets the overview item.
         /// </summary>

@@ -59,7 +59,9 @@ namespace EVEMon.SettingsUI
             Disposed += OnDisposed;
 
             alwaysUploadCheckBox.Checked = BCAPISettings.Default.UploadAlways;
-            alwaysDownloadcheckBox.Checked = BCAPISettings.Default.DownloadAlways;
+            alwaysDownloadCheckBox.Checked = BCAPISettings.Default.DownloadAlways;
+            useImmediatelyCheckBox.Checked = BCAPISettings.Default.UseImmediately;
+            useImmediatelyCheckBox.Enabled = alwaysDownloadCheckBox.Checked;
             Enabled = false;
         }
 
@@ -90,9 +92,21 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void alwaysDownloadcheckBox_CheckedChanged(object sender, EventArgs e)
+        private void alwaysDownloadCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            BCAPISettings.Default.DownloadAlways = alwaysDownloadcheckBox.Checked;
+            useImmediatelyCheckBox.Enabled = alwaysDownloadCheckBox.Checked;
+            BCAPISettings.Default.DownloadAlways = alwaysDownloadCheckBox.Checked;
+            BCAPISettings.Default.Save();
+        }
+
+        /// <summary>
+        /// Occurs when the checkbox state changes.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void useImmediatelyCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            BCAPISettings.Default.UseImmediately = useImmediatelyCheckBox.Checked;
             BCAPISettings.Default.Save();
         }
 

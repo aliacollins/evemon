@@ -56,7 +56,6 @@ namespace EVEMon.PatchXmlCreator
             // dtpDatafiles
             // 
             this.dtpDatafiles.CustomFormat = " dd MMMM yyyy";
-            this.dtpDatafiles.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.dtpDatafiles.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpDatafiles.Location = new System.Drawing.Point(47, 18);
             this.dtpDatafiles.Name = "dtpDatafiles";
@@ -67,7 +66,6 @@ namespace EVEMon.PatchXmlCreator
             // lblDatafileDate
             // 
             this.lblDatafileDate.AutoSize = true;
-            this.lblDatafileDate.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.lblDatafileDate.Location = new System.Drawing.Point(4, 21);
             this.lblDatafileDate.Name = "lblDatafileDate";
             this.lblDatafileDate.Size = new System.Drawing.Size(37, 13);

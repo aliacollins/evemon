@@ -1155,7 +1155,6 @@ namespace EVEMon.SettingsUI
             this.treeView.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.treeView.FullRowSelect = true;
             this.treeView.HideSelection = false;
             this.treeView.ImageIndex = 0;
@@ -2599,7 +2598,6 @@ namespace EVEMon.SettingsUI
             // alwaysAskRadioButton
             // 
             this.alwaysAskRadioButton.AutoSize = true;
-            this.alwaysAskRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
             this.alwaysAskRadioButton.Location = new System.Drawing.Point(7, 73);
             this.alwaysAskRadioButton.Name = "alwaysAskRadioButton";
             this.alwaysAskRadioButton.Size = new System.Drawing.Size(88, 17);
@@ -2611,7 +2609,6 @@ namespace EVEMon.SettingsUI
             // removeAllRadioButton
             // 
             this.removeAllRadioButton.AutoSize = true;
-            this.removeAllRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
             this.removeAllRadioButton.Location = new System.Drawing.Point(7, 126);
             this.removeAllRadioButton.Name = "removeAllRadioButton";
             this.removeAllRadioButton.Size = new System.Drawing.Size(245, 17);
@@ -2623,7 +2620,6 @@ namespace EVEMon.SettingsUI
             // removeConfirmedRadioButton
             // 
             this.removeConfirmedRadioButton.AutoSize = true;
-            this.removeConfirmedRadioButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
             this.removeConfirmedRadioButton.Location = new System.Drawing.Point(7, 21);
             this.removeConfirmedRadioButton.Name = "removeConfirmedRadioButton";
             this.removeConfirmedRadioButton.Size = new System.Drawing.Size(264, 17);
@@ -2658,7 +2654,6 @@ namespace EVEMon.SettingsUI
             // settingsFileStorageControl
             // 
             this.settingsFileStorageControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsFileStorageControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.settingsFileStorageControl.Location = new System.Drawing.Point(3, 16);
             this.settingsFileStorageControl.Name = "settingsFileStorageControl";
             this.settingsFileStorageControl.Size = new System.Drawing.Size(416, 108);
@@ -2691,7 +2686,6 @@ namespace EVEMon.SettingsUI
             // 
             this.battleClinicAPIControl.CausesValidation = false;
             this.battleClinicAPIControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.battleClinicAPIControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.battleClinicAPIControl.Location = new System.Drawing.Point(3, 16);
             this.battleClinicAPIControl.Name = "battleClinicAPIControl";
             this.battleClinicAPIControl.Size = new System.Drawing.Size(416, 164);

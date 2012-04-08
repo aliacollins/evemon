@@ -1052,7 +1052,6 @@ namespace EVEMon
             // notificationList
             // 
             this.notificationList.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.notificationList.Location = new System.Drawing.Point(0, 552);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";

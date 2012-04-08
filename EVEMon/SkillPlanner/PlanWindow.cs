@@ -198,7 +198,7 @@ namespace EVEMon.SkillPlanner
                 Tag = value;
 
                 // Check to see if one or more obsolete entries were found,
-                // we this now so the related label is immediately visible
+                // we do this now so the related label is immediately visible
                 CheckObsoleteEntries();
 
                 // Jump to the appropriate tab depending on whether

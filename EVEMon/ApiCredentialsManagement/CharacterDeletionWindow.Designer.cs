@@ -64,7 +64,6 @@
             this.characterToRemoveLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.characterToRemoveLabel.AutoSize = true;
-            this.characterToRemoveLabel.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.characterToRemoveLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.characterToRemoveLabel.Location = new System.Drawing.Point(51, 22);
             this.characterToRemoveLabel.Name = "characterToRemoveLabel";

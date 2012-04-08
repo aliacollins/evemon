@@ -132,6 +132,7 @@
             this.tbCharacterName.Name = "tbCharacterName";
             this.tbCharacterName.Size = new System.Drawing.Size(200, 20);
             this.tbCharacterName.TabIndex = 4;
+            this.tbCharacterName.TextChanged += new System.EventHandler(this.tbCharacterName_TextChanged);
             // 
             // gbRace
             // 

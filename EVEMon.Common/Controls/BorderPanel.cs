@@ -19,7 +19,6 @@ namespace EVEMon.Common.Controls
         {
             DoubleBuffered = true;
             BackColor = SystemColors.Window;
-            ForeColor = Color.Gray;
             Padding = new Padding(0);
             Margin = new Padding(0);
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
@@ -44,12 +43,9 @@ namespace EVEMon.Common.Controls
             Rectangle rect = ClientRectangle;
             rect.Inflate(-1, -1);
 
-            using (SolidBrush brush = new SolidBrush(ForeColor))
+            using (Pen pen = new Pen(Color.Gray, 1.0f))
             {
-                using (Pen pen = new Pen(brush, 1.0f))
-                {
-                    pe.Graphics.DrawRectangle(pen, rect);
-                }
+                pe.Graphics.DrawRectangle(pen, rect);
             }
         }
     }

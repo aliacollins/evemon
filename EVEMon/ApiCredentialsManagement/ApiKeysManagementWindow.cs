@@ -21,6 +21,13 @@ namespace EVEMon.ApiCredentialsManagement
         public ApiKeysManagementWindow()
         {
             InitializeComponent();
+
+            apiKeysListBox.Font = FontFactory.GetFont("Tahoma", 9.75f);
+            charactersListView.Font = FontFactory.GetFont("Tahoma", 9.75f);
+            apiKeysLabel.Font = FontFactory.GetFont("Tahoma", 12F);
+            apiKeyListLabel.Font = FontFactory.GetFont("Tahoma", 12F);
+            charactersLabel.Font = FontFactory.GetFont("Tahoma", 12F);
+            charactersListLabel.Font = FontFactory.GetFont("Tahoma", 12F);
         }
 
         /// <summary>
@@ -33,8 +40,6 @@ namespace EVEMon.ApiCredentialsManagement
             if (DesignMode)
                 return;
 
-            apiKeysListBox.Font = FontFactory.GetFont("Tahoma", 9.75f);
-            charactersListView.Font = FontFactory.GetFont("Tahoma", 9.75f);
             ListViewHelper.EnableDoubleBuffer(charactersListView);
 
             EveMonClient.APIKeyCollectionChanged += EveMonClient_APIKeyCollectionChanged;
@@ -331,8 +336,8 @@ namespace EVEMon.ApiCredentialsManagement
             try
             {
                 // Retrieve current selection and grouping option
-                List<Character> oldSelection =
-                    new List<Character>(charactersListView.SelectedItems.Cast<ListViewItem>().Select(x => x.Tag as Character));
+                List<Character> oldSelection = new List<Character>(charactersListView.SelectedItems.Cast<ListViewItem>()
+                    .Select(x => x.Tag).OfType<Character>());
 
                 charactersListView.Groups.Clear();
                 charactersListView.Items.Clear();

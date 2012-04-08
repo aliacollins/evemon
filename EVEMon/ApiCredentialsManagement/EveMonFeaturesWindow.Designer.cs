@@ -52,7 +52,6 @@
             // BasicFeaturesLabel
             // 
             this.BasicFeaturesLabel.AutoSize = true;
-            this.BasicFeaturesLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BasicFeaturesLabel.ForeColor = System.Drawing.SystemColors.Highlight;
             this.BasicFeaturesLabel.Location = new System.Drawing.Point(3, 0);
             this.BasicFeaturesLabel.Name = "BasicFeaturesLabel";
@@ -126,7 +125,6 @@
             // AdvancedFeaturesLabel
             // 
             this.AdvancedFeaturesLabel.AutoSize = true;
-            this.AdvancedFeaturesLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AdvancedFeaturesLabel.ForeColor = System.Drawing.SystemColors.Highlight;
             this.AdvancedFeaturesLabel.Location = new System.Drawing.Point(3, 113);
             this.AdvancedFeaturesLabel.Name = "AdvancedFeaturesLabel";

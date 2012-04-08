@@ -43,6 +43,8 @@ namespace EVEMon.CharacterMonitoring
         public CharacterEveMailMessagesList()
         {
             InitializeComponent();
+            mailReadLocal.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
+            mailGateRead.Font = FontFactory.GetFont("Segoe UI", 9F, FontStyle.Bold);
 
             eveMailReadingPane.HidePane();
             splitContainerMailMessages.Visible = false;

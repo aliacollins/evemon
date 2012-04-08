@@ -21,15 +21,27 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("charID")]
         public long OwnerID { get; set; }
 
+        /// <summary>
+        /// The item ID.
+        /// </summary>
         [XmlAttribute("typeID")]
         public int ItemID { get; set; }
 
+        /// <summary>
+        /// The station ID.
+        /// </summary>
         [XmlAttribute("stationID")]
         public int StationID { get; set; }
 
+        /// <summary>
+        /// The initial volume of the order.
+        /// </summary>
         [XmlAttribute("volEntered")]
         public int InitialVolume { get; set; }
 
+        /// <summary>
+        /// The remaining volume of the order.
+        /// </summary>
         [XmlAttribute("volRemaining")]
         public int RemainingVolume { get; set; }
 

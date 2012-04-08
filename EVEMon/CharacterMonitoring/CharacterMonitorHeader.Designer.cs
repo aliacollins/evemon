@@ -469,7 +469,7 @@
             this.SkillSummaryLabel.Size = new System.Drawing.Size(115, 65);
             this.SkillSummaryLabel.TabIndex = 1;
             this.SkillSummaryLabel.Text = "Known Skills: 0\r\nSkills at Level V: 0\r\nTotal SP: 0\r\nClone Limit: 0\r\nClone Grade U" +
-    "nknown";
+                "nknown";
             this.SkillSummaryLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.SkillSummaryLabel.MouseHover += new System.EventHandler(this.SkillSummaryLabel_MouseHover);
             // 

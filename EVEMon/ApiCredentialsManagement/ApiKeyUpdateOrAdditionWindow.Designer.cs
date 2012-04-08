@@ -104,7 +104,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.FeaturesLinkLabel.TabIndex = 1;
             this.FeaturesLinkLabel.TabStop = true;
             this.FeaturesLinkLabel.Text = "To see what kind of Access Mask the API key needs to be, check the list of EVEMon" +
-    " features.";
+                " features.";
             this.FeaturesLinkLabel.UseCompatibleTextRendering = true;
             this.FeaturesLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.FeaturesLinkLabel_LinkClicked);
             // 
@@ -133,14 +133,14 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // GuideLabel
             // 
-            this.GuideLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.GuideLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.GuideLabel.Location = new System.Drawing.Point(3, 3);
             this.GuideLabel.Name = "GuideLabel";
             this.GuideLabel.Size = new System.Drawing.Size(267, 79);
             this.GuideLabel.TabIndex = 3;
             this.GuideLabel.Text = "Uncheck the characters you do not want to import.\r\n\r\nYou can also import a charac" +
-    "ter and hide it through the API keys management window.";
+                "ter and hide it through the API keys management window.";
             // 
             // ActiveLinksLabel
             // 
@@ -153,7 +153,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.ActiveLinksLabel.TabIndex = 2;
             this.ActiveLinksLabel.TabStop = true;
             this.ActiveLinksLabel.Text = "If you have already an API key, you can install it directly by clicking on the [I" +
-    "nstall] link at :\r\nhttps://support.eveonline.com/api/key/activeinstalllinks";
+                "nstall] link at :\r\nhttps://support.eveonline.com/api/key/activeinstalllinks";
             this.ActiveLinksLabel.UseCompatibleTextRendering = true;
             this.ActiveLinksLabel.Visible = false;
             this.ActiveLinksLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ActiveLinksLabel_LinkClicked);
@@ -196,9 +196,9 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // MultiPanel
             // 
-            this.MultiPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MultiPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.MultiPanel.Controls.Add(this.CredentialsPage);
             this.MultiPanel.Controls.Add(this.WaitingPage);
             this.MultiPanel.Controls.Add(this.ResultPage);
@@ -227,12 +227,12 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // VerificationCodeTextBox
             // 
-            this.VerificationCodeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.VerificationCodeTextBox.Location = new System.Drawing.Point(41, 141);
+            this.VerificationCodeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.VerificationCodeTextBox.Location = new System.Drawing.Point(35, 141);
             this.VerificationCodeTextBox.MaxLength = 64;
             this.VerificationCodeTextBox.Name = "VerificationCodeTextBox";
-            this.VerificationCodeTextBox.Size = new System.Drawing.Size(443, 20);
+            this.VerificationCodeTextBox.Size = new System.Drawing.Size(456, 20);
             this.VerificationCodeTextBox.TabIndex = 4;
             this.VerificationCodeTextBox.TextChanged += new System.EventHandler(this.VerificationCodeTextBox_TextChanged);
             this.VerificationCodeTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.VerificationCodeTextBox_Validating);
@@ -240,10 +240,10 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // IDTextBox
             // 
-            this.IDTextBox.Location = new System.Drawing.Point(41, 99);
-            this.IDTextBox.MaxLength = 12;
+            this.IDTextBox.Location = new System.Drawing.Point(35, 99);
+            this.IDTextBox.MaxLength = 16;
             this.IDTextBox.Name = "IDTextBox";
-            this.IDTextBox.Size = new System.Drawing.Size(109, 20);
+            this.IDTextBox.Size = new System.Drawing.Size(102, 20);
             this.IDTextBox.TabIndex = 3;
             this.IDTextBox.TextChanged += new System.EventHandler(this.IDTextBox_TextChanged);
             this.IDTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.IDTextBox_Validating);
@@ -252,7 +252,7 @@ namespace EVEMon.ApiCredentialsManagement
             // VerificationCodeLabel
             // 
             this.VerificationCodeLabel.AutoSize = true;
-            this.VerificationCodeLabel.Location = new System.Drawing.Point(38, 125);
+            this.VerificationCodeLabel.Location = new System.Drawing.Point(32, 125);
             this.VerificationCodeLabel.Name = "VerificationCodeLabel";
             this.VerificationCodeLabel.Size = new System.Drawing.Size(90, 13);
             this.VerificationCodeLabel.TabIndex = 1;
@@ -261,7 +261,7 @@ namespace EVEMon.ApiCredentialsManagement
             // IDLabel
             // 
             this.IDLabel.AutoSize = true;
-            this.IDLabel.Location = new System.Drawing.Point(38, 83);
+            this.IDLabel.Location = new System.Drawing.Point(32, 83);
             this.IDLabel.Name = "IDLabel";
             this.IDLabel.Size = new System.Drawing.Size(21, 13);
             this.IDLabel.TabIndex = 0;
@@ -302,8 +302,8 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // KeyTableLayoutPanel
             // 
-            this.KeyTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.KeyTableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.KeyTableLayoutPanel.AutoSize = true;
             this.KeyTableLayoutPanel.ColumnCount = 2;
             this.KeyTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.141962F));
@@ -358,10 +358,10 @@ namespace EVEMon.ApiCredentialsManagement
             this.ResultsMultiPanel.Controls.Add(this.APIKeyExistsErrorPage);
             this.ResultsMultiPanel.Controls.Add(this.CachedWarningPage);
             this.ResultsMultiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ResultsMultiPanel.Location = new System.Drawing.Point(3, 17);
+            this.ResultsMultiPanel.Location = new System.Drawing.Point(3, 16);
             this.ResultsMultiPanel.Name = "ResultsMultiPanel";
             this.ResultsMultiPanel.SelectedPage = this.CharactersListPage;
-            this.ResultsMultiPanel.Size = new System.Drawing.Size(473, 98);
+            this.ResultsMultiPanel.Size = new System.Drawing.Size(473, 99);
             this.ResultsMultiPanel.TabIndex = 5;
             // 
             // CharactersListPage
@@ -372,7 +372,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.CharactersListPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CharactersListPage.Location = new System.Drawing.Point(0, 0);
             this.CharactersListPage.Name = "CharactersListPage";
-            this.CharactersListPage.Size = new System.Drawing.Size(473, 98);
+            this.CharactersListPage.Size = new System.Drawing.Size(473, 99);
             this.CharactersListPage.TabIndex = 0;
             this.CharactersListPage.Text = "charactersListPage";
             // 
@@ -405,7 +405,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.WarningLabel.Size = new System.Drawing.Size(402, 13);
             this.WarningLabel.TabIndex = 4;
             this.WarningLabel.Text = "Beware! When you remove characters, all their data and plans will be definitely l" +
-    "ost !";
+                "ost !";
             // 
             // AuthenticationErrorPage
             // 
@@ -472,7 +472,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.GeneralErrorLabel.Size = new System.Drawing.Size(473, 98);
             this.GeneralErrorLabel.TabIndex = 0;
             this.GeneralErrorLabel.Text = "An error occurred while retrieving the information.\r\n\r\nThe error message was: {0}" +
-    "";
+                "";
             this.GeneralErrorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // APIKeyExpiredErrorPage
@@ -496,8 +496,8 @@ namespace EVEMon.ApiCredentialsManagement
             this.APIKeyExpiredLinkLabel.TabIndex = 0;
             this.APIKeyExpiredLinkLabel.TabStop = true;
             this.APIKeyExpiredLinkLabel.Text = "The API key has expired.\r\n\r\nIf this API key is yours, update it at : https://supp" +
-    "ort.eveonline.com/api/key/update\r\notherwise contact the API key owner for access" +
-    " renewal.";
+                "ort.eveonline.com/api/key/update\r\notherwise contact the API key owner for access" +
+                " renewal.";
             this.APIKeyExpiredLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.APIKeyExpiredLinkLabel.UseCompatibleTextRendering = true;
             this.APIKeyExpiredLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.APIKeyExpiredLinkLabel_LinkClicked);
@@ -521,8 +521,8 @@ namespace EVEMon.ApiCredentialsManagement
             this.APIKeyExistsLabel.Size = new System.Drawing.Size(473, 98);
             this.APIKeyExistsLabel.TabIndex = 0;
             this.APIKeyExistsLabel.Text = "This API key already exists in the API Keys list.\r\n\r\nIf you where trying to updat" +
-    "e it, use \'Edit\' in \"Manage API Keys > API Keys tab\",\r\nafter you have selected t" +
-    "he API key. ";
+                "e it, use \'Edit\' in \"Manage API Keys > API Keys tab\",\r\nafter you have selected t" +
+                "he API key. ";
             this.APIKeyExistsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CachedWarningPage
@@ -543,7 +543,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.CachedWarningLabel.Size = new System.Drawing.Size(473, 98);
             this.CachedWarningLabel.TabIndex = 0;
             this.CachedWarningLabel.Text = "Due to the fact that the cached timer has not yet expired,\r\nyour query attempt wi" +
-    "ll result in getting the same data you already have.\r\nTry again after: {0}";
+                "ll result in getting the same data you already have.\r\nTry again after: {0}";
             this.CachedWarningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // errorProvider

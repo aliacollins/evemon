@@ -33,6 +33,8 @@ namespace EVEMon.ImplantControls
         private ImplantSetsWindow()
         {
             InitializeComponent();
+            ImplantSetsLabel.Font = FontFactory.GetFont("Tahoma", 12F);
+            ImplantsLabel.Font = FontFactory.GetFont("Tahoma", 12F);
             RememberPositionKey = "ImplantSetsWindow";
         }
 

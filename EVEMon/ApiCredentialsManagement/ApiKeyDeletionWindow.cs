@@ -17,6 +17,7 @@ namespace EVEMon.ApiCredentialsManagement
         private ApiKeyDeletionWindow()
         {
             InitializeComponent();
+            deletionLabel.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
         }
 
         /// <summary>

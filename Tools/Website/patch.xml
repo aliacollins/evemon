@@ -1,57 +1,43 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>10 March 2012</date>
-    <version>1.6.0.3464</version>
-    <md5>c165814819c399b61c812b2b251be47f</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,161260.0.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.6.0.3464.exe</autopatchurl>
+    <date>06 April 2012</date>
+    <version>1.6.1.3611</version>
+    <md5>fcdd61fd97ec0bf22236dbcc54399e16</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,162875.0.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.6.1.3611.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[== Breaking Changes ==
-
-* Changes have been made to the structure of the settings file. Downgrading to previous version will not be possible once upgraded.
-* Support of settings files prior of version 1.3.0 has been discontinued.
-
-== Contributors for this version ==
+    <message><![CDATA[== Contributors for this version ==
 
 * Jimi
-
-== New Features ==
-
-* EVEMon now has a new tool (API Tester).
-* EVEMon now has a new tool (Characters Comparison).
-* EVEMon now can monitor a character's Contracts.
-* EVEMon now can monitor a character's Employment History.
+* Jazzy_Josh
 
 == Bug Fixes ==
 
-* Fixed a visual bug where the tray icon popup window had not rounded edges.
-* Fixed a crash bug when comparing ships and one of them uses any type of isotopes.
-* Fixed a crash bug when applying specific filtering in skill browser.
-* Fixed a crash bug when a produced item from a blueprint is not included in our data files.
-* Fixed a crash bug when not using the default URL for Google Calendar.
-* Fixed a bug where priority and canceling the operation, where ignored when using "Set Priority When Adding Skills To Plan".
-* Fixed a bug where proxy settings password was not getting decrypted upon usage.
-* Fixed a bug when exporting/importing an Uri character.
-* Fixed a crash bug when trying to open different notification details windows.
-* Fixed a bug where the group selection was not taken into account when building the tree list upon initialization in Item browser.
-* Fixed a bug where a corp type API key has trying to call the AccountStatus.
-* Fixed a bug where corporation info of a character where not updated when updating the bind API key.
-* Fixed a crash bug when Outlook is chosen as External Calender but Outlook isn't installed.
-* Fixed a bug when rearranging columns in EVE Mail monitor.
-* Fixed a visual flickering when Overview was updated.
+* Fixed a bug in EVE Notifications Monitor where every sender was shown as a corporation.
+* Fixed various issues when choosing Outlook as external calendar.
+* Fixed some minor visual bugs when displaying courier contracts details.
+* Fixed a visual bug where corporation name in Employment History monitor wasn't updating correctly.
+* Fixed a bug where Overview was not placed in the correct position when restoring settings.
+* Fixed a visual bug where when restoring settings the tip window visibility wasn't following settings.
+* Fixed a bug where EVEMon was notifying when an update was initiated and the character was removed since.
+* Fixed a bug where the character list in API Tester was not updated when collection of characters changes.
+* Fixed a bug where the character list in Characters Comparison was not updated when collection of characters or monitored characters changes.
+* Fixed a bug where any open windows were not closed when reseting or restoring settings or hide or deleting characters.
+* Fixed a bug where tray icon was visible after restoring main window while settings for 'Show System Tray Icon' is set to 'When Minimized'.
+* Fixed a crash bug when an Implant set gets deleted while is selected in Plan Editor.
+* Fixed several memory leaks when restoring or resetting settings.
+* Fixed a bug in Contracts where the names of assignee and acceptor where not updated.
+* Fixed the link to EVE-Dev site.
+* Fixed a bug where controls that accept vCode was restrained to fewer digits than allowed.
+* Fixed several issues that can lead to crash when machine is missing fonts.
 
 == Enhancements ==
 
-* EVEMon can now use Outlook calendars other than the default (see 'Settings').
-* Google calendar password credential will now be stored encrypted in settings file.
-* EVE ID to Name cache file is now handled in a way that prevent data loss.
-* Skill browser can now filter by attributes.
-* EVEMon will now automatically force a monitor to update if monitor's last update time is in the future.
-* A character's skills can be exported as a plan via the 'Manage Plans' and 'Characters Comparison' tool.
-* Selected character's skills can be exported as a plan via 'Characters Comparison' tool.
-* Scroll bar position is now persistent in all major controls when EVEMon updates.
+* Blueprint browser filter now takes into consideration the activity when showing the 'blueprints I cannot use'.
+* Added ability to load settings directly from the storage server on EVEMon startup.
+* Added the remaining API calls to API Tester feature.
 
 == Misc ==
 

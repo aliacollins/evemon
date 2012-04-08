@@ -325,7 +325,7 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<IndustryJob> jobs = m_list.Where(x => !x.Ignored && IsTextMatching(x, text));
+                IEnumerable<IndustryJob> jobs = m_list.Where(x => IsTextMatching(x, text));
 
                 if (Character != null && m_hideInactive)
                     jobs = jobs.Where(x => x.IsActive);
@@ -886,17 +886,6 @@ namespace EVEMon.CharacterMonitoring
                 case Keys.A:
                     if (e.Control)
                         lvJobs.SelectAll();
-                    break;
-                case Keys.Delete:
-                    if (lvJobs.SelectedItems.Count == 0)
-                        return;
-                    // Mark as ignored
-                    foreach (IndustryJob job in from ListViewItem item in lvJobs.SelectedItems select (IndustryJob)item.Tag)
-                    {
-                        job.Ignored = true;
-                    }
-                    // Updates
-                    UpdateContent();
                     break;
             }
         }

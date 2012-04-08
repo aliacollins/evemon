@@ -29,7 +29,7 @@ namespace EVEMon.Common
             m_corpMarketOrdersMonitor =
                 new CorporationQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter,
                                                                          APICorporationMethods.CorporationMarketOrders,
-                                                                         OnCorporationMarketOrdersUpdated);
+                                                                         OnCorporationMarketOrdersUpdated) { QueryOnStartup = true };
             m_corporationQueryMonitors.Add(m_corpMarketOrdersMonitor);
 
             m_corpContractsMonitor =
@@ -41,7 +41,7 @@ namespace EVEMon.Common
             m_corpIndustryJobsMonitor =
                 new CorporationQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter,
                                                                          APICorporationMethods.CorporationIndustryJobs,
-                                                                         OnCorporationIndustryJobsUpdated);
+                                                                         OnCorporationIndustryJobsUpdated) { QueryOnStartup = true };
             m_corporationQueryMonitors.Add(m_corpIndustryJobsMonitor);
 
             m_corporationQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
@@ -49,6 +49,8 @@ namespace EVEMon.Common
 
         #endregion
 
+
+        #region Dispose
 
         /// <summary>
         /// Called when the object gets disposed.
@@ -61,6 +63,8 @@ namespace EVEMon.Common
                 monitor.Dispose();
             }
         }
+
+        #endregion
 
 
         #region Properties

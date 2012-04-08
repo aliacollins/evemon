@@ -12,6 +12,8 @@ namespace EVEMon.ApiCredentialsManagement
         public EVEMonFeaturesWindow()
         {
             InitializeComponent();
+            BasicFeaturesLabel.Font = FontFactory.GetFont("Tahoma", 9.75F);
+            AdvancedFeaturesLabel.Font = FontFactory.GetFont("Tahoma", 9.75F);
             RememberPositionKey = "EVEMonFeaturesWindow";
         }
 

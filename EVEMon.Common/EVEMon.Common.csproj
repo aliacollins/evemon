@@ -103,6 +103,8 @@
   <ItemGroup>
     <Compile Include="APIKeyQueryMonitor.cs" />
     <Compile Include="APIMethods.cs" />
+    <Compile Include="ApiTesterUIHelper.cs" />
+    <Compile Include="BlankCharacterUIHelper.cs" />
     <Compile Include="CharacterDataQuerying.cs" />
     <Compile Include="CharacterIdentityIgnoreList.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />

@@ -67,7 +67,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        ///Deserializes an XML document from a file.
+        /// Deserializes an XML document from a file.
         /// </summary>
         /// <typeparam name="T">The type to deserialize from the document</typeparam>
         /// <param name="filename">The XML document to deserialize from.</param>
@@ -126,17 +126,44 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="text">The text.</param>
-        /// <returns></returns>
-        public static T DeserializeXMLFromString<T>(string text)
+        /// <param name="transform">The transform.</param>
+        /// <returns>The result of the deserialization.</returns>
+        public static T DeserializeXMLFromString<T>(string text, XslCompiledTransform transform = null)
             where T : class
         {
             try
             {
-                using (TextReader stream = new StringReader(text))
+                if (transform != null)
+                {
+                    MemoryStream stream = GetMemoryStream();
+                    using (TextReader textReader = new StringReader(text))
+                    using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
+                    {
+                        XmlReader reader = new XmlTextReader(textReader);
+
+                        // Apply the XSL transform
+                        writer.Formatting = Formatting.Indented;
+                        transform.Transform(reader, writer);
+                        writer.Flush();
+
+                        // Deserialize from the given stream
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
+                        stream.Seek(0, SeekOrigin.Begin);
+                        return (T)xs.Deserialize(stream);
+                    }
+                }
+
+                using (TextReader textReader = new StringReader(text))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(T));
-                    return (T)xs.Deserialize(stream);
+                    return (T)xs.Deserialize(textReader);
                 }
+            }
+                // An error occurred during the XSL transform
+            catch (XsltException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                return null;
             }
                 // An error occurred during the deserialization
             catch (InvalidOperationException exc)
@@ -278,37 +305,36 @@ namespace EVEMon.Common
                                                    String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
 
             // Query async and wait
-            using (EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset))
-            {
-                EveMonClient.HttpWebService.DownloadXmlAsync(
-                    url, postData,
-                    (asyncResult, userState) =>
+            EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
+            EveMonClient.HttpWebService.DownloadXmlAsync(
+                url, postData,
+                (asyncResult, userState) =>
+                    {
+                        try
                         {
-                            try
-                            {
-                                // Was there an HTTP error ?
-                                result = asyncResult.Error != null
-                                             ? new APIResult<T>(asyncResult.Error)
-                                             : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
-                            }
-                            catch (Exception e)
-                            {
-                                ExceptionHandler.LogException(e, true);
-                                result = new APIResult<T>(APIError.Http, e.Message);
-                                EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
-                                                   url.AbsoluteUri, postData, typeof(T).Name);
-                            }
-                            finally
-                            {
-                                // We got the result, so we resume the calling thread
-                                wait.Set();
-                            }
-                        },
-                    null);
+                            // Was there an HTTP error ?
+                            result = asyncResult.Error != null
+                                         ? new APIResult<T>(asyncResult.Error)
+                                         : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
+                        }
+                        catch (Exception e)
+                        {
+                            ExceptionHandler.LogException(e, true);
+                            result = new APIResult<T>(APIError.Http, e.Message);
+                            EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
+                                               url.AbsoluteUri, postData, typeof(T).Name);
+                        }
+                        finally
+                        {
+                            // We got the result, so we resume the calling thread
+                            wait.Set();
+                        }
+                    },
+                null);
 
-                // Wait for the completion of the background thread
-                wait.WaitOne();
-            }
+            // Wait for the completion of the background thread
+            wait.WaitOne();
+            wait.Close();
 
             // Returns
             return result;
@@ -381,6 +407,64 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Synchronously download an XML and deserializes it into the specified type.
+        /// </summary>
+        /// <typeparam name="T">The inner type to deserialize</typeparam>
+        /// <param name="url">The url to query</param>
+        /// <param name="postData">The HTTP POST data to send, may be null.</param>
+        internal static BCAPIResult<T> DownloadBCAPIResult<T>(Uri url, HttpPostData postData)
+        {
+            string errorMessage = String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url);
+            BCAPIError error = new BCAPIError { ErrorCode = "0", ErrorMessage = errorMessage };
+            BCAPIResult<T> result = new BCAPIResult<T> { Error = error };
+
+            // Query async and wait
+            EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
+            EveMonClient.HttpWebService.DownloadXmlAsync(
+                url, postData,
+                (asyncResult, userState) =>
+                    {
+                        try
+                        {
+                            // Was there an HTTP error ?
+
+                            if (asyncResult.Error != null)
+                            {
+                                errorMessage = asyncResult.Error.InnerException == null
+                                                   ? asyncResult.Error.Message
+                                                   : asyncResult.Error.InnerException.Message;
+                                error.ErrorMessage = errorMessage;
+                            }
+                            else
+                                result = DeserializeBCAPIResultCore<T>(asyncResult.Result);
+                        }
+                        catch (Exception e)
+                        {
+                            ExceptionHandler.LogException(e, true);
+                            errorMessage = e.InnerException == null
+                                               ? e.Message
+                                               : e.InnerException.Message;
+                            error.ErrorMessage = errorMessage;
+                            EveMonClient.Trace("Method: DownloadBCAPIResult, url: {0}, postdata: {1}, type: {2}",
+                                               url.AbsoluteUri, postData, typeof(T).Name);
+                        }
+                        finally
+                        {
+                            // We got the result, so we resume the calling thread
+                            wait.Set();
+                        }
+                    },
+                null);
+
+            // Wait for the completion of the background thread
+            wait.WaitOne();
+            wait.Close();
+
+            // Returns
+            return result;
+        }
+
+        /// <summary>
         /// Asynchronously download an XML and deserializes it into the specified type.
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
@@ -394,19 +478,28 @@ namespace EVEMon.Common
                 url, postData,
                 (asyncResult, userState) =>
                     {
-                        BCAPIResult<T> result = asyncResult.Error != null
-                                                    ? null
-                                                    : DeserializeBCAPIResultCore<T>(asyncResult.Result);
+                        try
+                        {
+                            BCAPIResult<T> result = asyncResult.Error != null
+                                                        ? null
+                                                        : DeserializeBCAPIResultCore<T>(asyncResult.Result);
 
-                        string errorMessage = asyncResult.Error == null
-                                                  ? String.Empty
-                                                  : asyncResult.Error.InnerException == null
-                                                        ? asyncResult.Error.Message
-                                                        : asyncResult.Error.InnerException.Message;
+                            string errorMessage = asyncResult.Error == null
+                                                      ? String.Empty
+                                                      : asyncResult.Error.InnerException == null
+                                                            ? asyncResult.Error.Message
+                                                            : asyncResult.Error.InnerException.Message;
 
-                        // We got the result, let's invoke the callback on this actor
-                        Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
-                    },
+                            // We got the result, let's invoke the callback on this actor
+                            Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
+                        }
+                        catch (Exception e)
+                        {
+                            ExceptionHandler.LogException(e, false);
+                            EveMonClient.Trace("Method: DownloadBCAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
+                                url.AbsoluteUri, postData, typeof(T).Name);
+                        }
+},
                 null);
         }
 
@@ -588,19 +681,19 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Opens a file and look for a "revision" attribute and return its value.
+        /// Opens a file or search the given string and look for a "revision" attribute and return its value.
         /// </summary>
         /// <param name="filename"></param>
         /// <returns>The revision number of the assembly which generated this file,
         /// or <c>0</c> if no such file was found (old format, before the introduction of the revision numbers).</returns>
         public static int GetRevisionNumber(string filename)
         {
-            // Uses a regex to retrieve the revision number.
-            string content = File.ReadAllText(filename);
-            Regex regex = new Regex("revision=\"([0-9]+)\"", RegexOptions.Compiled);
-            Match match = regex.Match(content);
+            // Uses a regex to retrieve the revision number
+            string content = File.Exists(filename) ? File.ReadAllText(filename) : filename;
 
-            // No match ? Then there was no "revision" attribute, this is an old format.
+            Match match = Regex.Match(content, "revision=\"([0-9]+)\"", RegexOptions.IgnoreCase);
+
+            // No match ? Then there was no "revision" attribute, this is an old format
             if (!match.Success || match.Groups.Count < 2)
                 return 0;
 

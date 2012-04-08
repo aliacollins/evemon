@@ -55,7 +55,7 @@ namespace EVEMon.Common
 
             m_charMarketOrdersMonitor =
                 new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,
-                                                                       OnCharacterMarketOrdersUpdated);
+                                                                       OnCharacterMarketOrdersUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charMarketOrdersMonitor);
 
             m_charContractsMonitor =
@@ -65,7 +65,7 @@ namespace EVEMon.Common
 
             m_charIndustryJobsMonitor =
                 new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, APICharacterMethods.IndustryJobs,
-                                                                       OnCharacterIndustryJobsUpdated);
+                                                                       OnCharacterIndustryJobsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charIndustryJobsMonitor);
 
             m_charResearchPointsMonitor =
@@ -102,6 +102,8 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Dispose
+
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
@@ -115,6 +117,8 @@ namespace EVEMon.Common
                 monitor.Dispose();
             }
         }
+
+        #endregion
 
 
         #region Properties
@@ -314,7 +318,7 @@ namespace EVEMon.Common
             m_ccpCharacter.SkillQueue.Import(result.Result.Queue);
 
             // Check the account has a character in training (if API key of type "Account")
-            APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterSkillInTraining);
+            APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.SkillInTraining);
             if (apikey != null)
                 apikey.CharacterInTraining();
 

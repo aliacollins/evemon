@@ -15,7 +15,10 @@ namespace EVEMon.SkillPlanner
     /// Provides basic split container layout and item header including icon, name and category, 
     /// along with event handling for item selection and worksafeMode changes.
     /// </summary>
-    internal abstract partial class EveObjectBrowserControl : UserControl
+    /// <remarks>
+    /// Should be an abstract class but Visual Studio Designer throws a wobbler when you
+    /// try to design a class that inherits from an abstract class.</remarks>
+    internal partial class EveObjectBrowserControl : UserControl
     {
         protected const int Pad = 3;
 
@@ -30,6 +33,7 @@ namespace EVEMon.SkillPlanner
         protected EveObjectBrowserControl()
         {
             InitializeComponent();
+            lblEveObjName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
         }
 
         /// <summary>

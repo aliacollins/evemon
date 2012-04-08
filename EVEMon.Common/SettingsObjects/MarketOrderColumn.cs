@@ -66,7 +66,7 @@ namespace EVEMon.Common.SettingsObjects
         [Description("Quantity (Minimum)")]
         MinimumVolume = 13,
 
-        [Header("Rem")]
+        [Header("Remaining")]
         [Description("Quantity (Remaining)")]
         RemainingVolume = 14,
 

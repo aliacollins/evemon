@@ -271,50 +271,45 @@ namespace EVEMon.SkillPlanner
             // lbMEM
             // 
             this.lbMEM.AutoSize = true;
-            this.lbMEM.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbMEM.Location = new System.Drawing.Point(47, 226);
             this.lbMEM.Name = "lbMEM";
-            this.lbMEM.Size = new System.Drawing.Size(58, 13);
+            this.lbMEM.Size = new System.Drawing.Size(57, 13);
             this.lbMEM.TabIndex = 48;
             this.lbMEM.Text = "Points : 20";
             // 
             // lbWIL
             // 
             this.lbWIL.AutoSize = true;
-            this.lbWIL.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbWIL.Location = new System.Drawing.Point(47, 188);
             this.lbWIL.Name = "lbWIL";
-            this.lbWIL.Size = new System.Drawing.Size(58, 13);
+            this.lbWIL.Size = new System.Drawing.Size(57, 13);
             this.lbWIL.TabIndex = 46;
             this.lbWIL.Text = "Points : 20";
             // 
             // lbCHA
             // 
             this.lbCHA.AutoSize = true;
-            this.lbCHA.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbCHA.Location = new System.Drawing.Point(49, 150);
             this.lbCHA.Name = "lbCHA";
-            this.lbCHA.Size = new System.Drawing.Size(58, 13);
+            this.lbCHA.Size = new System.Drawing.Size(57, 13);
             this.lbCHA.TabIndex = 44;
             this.lbCHA.Text = "Points : 20";
             // 
             // lbPER
             // 
             this.lbPER.AutoSize = true;
-            this.lbPER.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbPER.Location = new System.Drawing.Point(47, 113);
             this.lbPER.Name = "lbPER";
-            this.lbPER.Size = new System.Drawing.Size(58, 13);
+            this.lbPER.Size = new System.Drawing.Size(57, 13);
             this.lbPER.TabIndex = 42;
             this.lbPER.Text = "Points : 20";
             // 
             // lbINT
             // 
             this.lbINT.AutoSize = true;
-            this.lbINT.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbINT.Location = new System.Drawing.Point(47, 73);
             this.lbINT.Name = "lbINT";
-            this.lbINT.Size = new System.Drawing.Size(118, 13);
+            this.lbINT.Size = new System.Drawing.Size(113, 13);
             this.lbINT.TabIndex = 40;
             this.lbINT.Text = "20 (new : 18 ; old : 17)";
             // 
@@ -352,18 +347,17 @@ namespace EVEMon.SkillPlanner
             // lbOptimizedTimeInfo
             // 
             this.lbOptimizedTimeInfo.AutoSize = true;
-            this.lbOptimizedTimeInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbOptimizedTimeInfo.Location = new System.Drawing.Point(6, 31);
             this.lbOptimizedTimeInfo.Margin = new System.Windows.Forms.Padding(6);
             this.lbOptimizedTimeInfo.Name = "lbOptimizedTimeInfo";
-            this.lbOptimizedTimeInfo.Size = new System.Drawing.Size(133, 13);
+            this.lbOptimizedTimeInfo.Size = new System.Drawing.Size(110, 13);
             this.lbOptimizedTimeInfo.TabIndex = 16;
             this.lbOptimizedTimeInfo.Text = "With these attributes :";
             // 
             // lbCurrentTime
             // 
             this.lbCurrentTime.AutoSize = true;
-            this.lbCurrentTime.Location = new System.Drawing.Point(151, 6);
+            this.lbCurrentTime.Location = new System.Drawing.Point(128, 6);
             this.lbCurrentTime.Margin = new System.Windows.Forms.Padding(6);
             this.lbCurrentTime.Name = "lbCurrentTime";
             this.lbCurrentTime.Size = new System.Drawing.Size(50, 13);
@@ -373,7 +367,7 @@ namespace EVEMon.SkillPlanner
             // lbOptimizedTime
             // 
             this.lbOptimizedTime.AutoSize = true;
-            this.lbOptimizedTime.Location = new System.Drawing.Point(151, 31);
+            this.lbOptimizedTime.Location = new System.Drawing.Point(128, 31);
             this.lbOptimizedTime.Margin = new System.Windows.Forms.Padding(6);
             this.lbOptimizedTime.Name = "lbOptimizedTime";
             this.lbOptimizedTime.Size = new System.Drawing.Size(13, 13);
@@ -383,18 +377,17 @@ namespace EVEMon.SkillPlanner
             // lbCurrentTimeInfo
             // 
             this.lbCurrentTimeInfo.AutoSize = true;
-            this.lbCurrentTimeInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lbCurrentTimeInfo.Location = new System.Drawing.Point(6, 6);
             this.lbCurrentTimeInfo.Margin = new System.Windows.Forms.Padding(6);
             this.lbCurrentTimeInfo.Name = "lbCurrentTimeInfo";
-            this.lbCurrentTimeInfo.Size = new System.Drawing.Size(83, 13);
+            this.lbCurrentTimeInfo.Size = new System.Drawing.Size(69, 13);
             this.lbCurrentTimeInfo.TabIndex = 15;
             this.lbCurrentTimeInfo.Text = "Current time :";
             // 
             // lbWarning
             // 
-            this.lbWarning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbWarning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lbWarning.AutoSize = true;
             this.lbWarning.ForeColor = System.Drawing.Color.DarkRed;
             this.lbWarning.Location = new System.Drawing.Point(256, 292);
@@ -437,8 +430,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblNotice
             // 
-            this.lblNotice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblNotice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lblNotice.AutoSize = true;
             this.lblNotice.ForeColor = System.Drawing.Color.Red;
             this.lblNotice.Location = new System.Drawing.Point(8, 26);

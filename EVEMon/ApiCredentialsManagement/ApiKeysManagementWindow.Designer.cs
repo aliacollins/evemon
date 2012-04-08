@@ -65,12 +65,12 @@ namespace EVEMon.ApiCredentialsManagement
             this.apiKeysPagePanel = new System.Windows.Forms.Panel();
             this.apiKeysMultiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
             this.apiKeysListPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.apiKeysListBox = new EVEMon.ApiCredentialsManagement.ApiKeysListBox();
             this.noAPIKeysPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.apiKeysToolStrip = new System.Windows.Forms.ToolStrip();
             this.addAPIKeyMenu = new System.Windows.Forms.ToolStripButton();
             this.deleteAPIKeyMenu = new System.Windows.Forms.ToolStripButton();
             this.editAPIKeyMenu = new System.Windows.Forms.ToolStripButton();
-            this.apiKeysListBox = new EVEMon.ApiCredentialsManagement.ApiKeysListBox();
             this.tabControl.SuspendLayout();
             this.charactersTabPage.SuspendLayout();
             this.charactersPagePanel.SuspendLayout();
@@ -90,11 +90,10 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             this.apiKeysLabel.AutoSize = true;
             this.apiKeysLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.apiKeysLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.apiKeysLabel.ForeColor = System.Drawing.SystemColors.Highlight;
             this.apiKeysLabel.Location = new System.Drawing.Point(3, 3);
             this.apiKeysLabel.Name = "apiKeysLabel";
-            this.apiKeysLabel.Size = new System.Drawing.Size(72, 19);
+            this.apiKeysLabel.Size = new System.Drawing.Size(50, 13);
             this.apiKeysLabel.TabIndex = 1;
             this.apiKeysLabel.Text = "API Keys";
             // 
@@ -102,22 +101,20 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             this.charactersLabel.AutoSize = true;
             this.charactersLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.charactersLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.charactersLabel.ForeColor = System.Drawing.SystemColors.Highlight;
             this.charactersLabel.Location = new System.Drawing.Point(3, 3);
             this.charactersLabel.Name = "charactersLabel";
-            this.charactersLabel.Size = new System.Drawing.Size(83, 19);
+            this.charactersLabel.Size = new System.Drawing.Size(58, 13);
             this.charactersLabel.TabIndex = 5;
             this.charactersLabel.Text = "Characters";
             // 
             // apiKeyListLabel
             // 
             this.apiKeyListLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.apiKeyListLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.apiKeyListLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.apiKeyListLabel.Location = new System.Drawing.Point(0, 0);
             this.apiKeyListLabel.Name = "apiKeyListLabel";
-            this.apiKeyListLabel.Size = new System.Drawing.Size(746, 313);
+            this.apiKeyListLabel.Size = new System.Drawing.Size(746, 319);
             this.apiKeyListLabel.TabIndex = 0;
             this.apiKeyListLabel.Text = "First add your API key using the above buttons.";
             this.apiKeyListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -125,14 +122,13 @@ namespace EVEMon.ApiCredentialsManagement
             // charactersListLabel
             // 
             this.charactersListLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.charactersListLabel.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.charactersListLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.charactersListLabel.Location = new System.Drawing.Point(0, 0);
             this.charactersListLabel.Name = "charactersListLabel";
-            this.charactersListLabel.Size = new System.Drawing.Size(746, 313);
+            this.charactersListLabel.Size = new System.Drawing.Size(746, 319);
             this.charactersListLabel.TabIndex = 10;
             this.charactersListLabel.Text = "First add your API key at API Keys section, characters will then appear in this l" +
-    "ist.\r\nYou can also import XML character sheets from files or URLs.";
+                "ist.\r\nYou can also import XML character sheets from files or URLs.";
             this.charactersListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // closeButton
@@ -149,9 +145,9 @@ namespace EVEMon.ApiCredentialsManagement
             // 
             // tabControl
             // 
-            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.charactersTabPage);
             this.tabControl.Controls.Add(this.apiKeysTabPage);
             this.tabControl.Location = new System.Drawing.Point(12, 12);
@@ -177,9 +173,9 @@ namespace EVEMon.ApiCredentialsManagement
             this.charactersPagePanel.Controls.Add(this.charactersMultiPanel);
             this.charactersPagePanel.Controls.Add(this.charactersToolStrip);
             this.charactersPagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.charactersPagePanel.Location = new System.Drawing.Point(3, 22);
+            this.charactersPagePanel.Location = new System.Drawing.Point(3, 16);
             this.charactersPagePanel.Name = "charactersPagePanel";
-            this.charactersPagePanel.Size = new System.Drawing.Size(746, 338);
+            this.charactersPagePanel.Size = new System.Drawing.Size(746, 344);
             this.charactersPagePanel.TabIndex = 16;
             // 
             // charactersMultiPanel
@@ -190,7 +186,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.charactersMultiPanel.Location = new System.Drawing.Point(0, 25);
             this.charactersMultiPanel.Name = "charactersMultiPanel";
             this.charactersMultiPanel.SelectedPage = this.noCharactersPage;
-            this.charactersMultiPanel.Size = new System.Drawing.Size(746, 313);
+            this.charactersMultiPanel.Size = new System.Drawing.Size(746, 319);
             this.charactersMultiPanel.TabIndex = 15;
             // 
             // charactersListPage
@@ -267,7 +263,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.noCharactersPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.noCharactersPage.Location = new System.Drawing.Point(0, 0);
             this.noCharactersPage.Name = "noCharactersPage";
-            this.noCharactersPage.Size = new System.Drawing.Size(746, 313);
+            this.noCharactersPage.Size = new System.Drawing.Size(746, 319);
             this.noCharactersPage.TabIndex = 1;
             this.noCharactersPage.Text = "noCharactersPage";
             // 
@@ -343,9 +339,9 @@ namespace EVEMon.ApiCredentialsManagement
             this.apiKeysPagePanel.Controls.Add(this.apiKeysMultiPanel);
             this.apiKeysPagePanel.Controls.Add(this.apiKeysToolStrip);
             this.apiKeysPagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.apiKeysPagePanel.Location = new System.Drawing.Point(3, 22);
+            this.apiKeysPagePanel.Location = new System.Drawing.Point(3, 16);
             this.apiKeysPagePanel.Name = "apiKeysPagePanel";
-            this.apiKeysPagePanel.Size = new System.Drawing.Size(746, 338);
+            this.apiKeysPagePanel.Size = new System.Drawing.Size(746, 344);
             this.apiKeysPagePanel.TabIndex = 17;
             // 
             // apiKeysMultiPanel
@@ -356,7 +352,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.apiKeysMultiPanel.Location = new System.Drawing.Point(0, 25);
             this.apiKeysMultiPanel.Name = "apiKeysMultiPanel";
             this.apiKeysMultiPanel.SelectedPage = this.noAPIKeysPage;
-            this.apiKeysMultiPanel.Size = new System.Drawing.Size(746, 313);
+            this.apiKeysMultiPanel.Size = new System.Drawing.Size(746, 319);
             this.apiKeysMultiPanel.TabIndex = 16;
             // 
             // apiKeysListPage
@@ -370,13 +366,29 @@ namespace EVEMon.ApiCredentialsManagement
             this.apiKeysListPage.TabIndex = 0;
             this.apiKeysListPage.Text = "apiKeysListPage";
             // 
+            // apiKeysListBox
+            // 
+            this.apiKeysListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.apiKeysListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.apiKeysListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.apiKeysListBox.FormattingEnabled = true;
+            this.apiKeysListBox.ItemHeight = 43;
+            this.apiKeysListBox.Location = new System.Drawing.Point(0, 0);
+            this.apiKeysListBox.Name = "apiKeysListBox";
+            this.apiKeysListBox.Size = new System.Drawing.Size(806, 363);
+            this.apiKeysListBox.TabIndex = 0;
+            this.apiKeysListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.apiKeysListBox_MouseClick);
+            this.apiKeysListBox.SelectedIndexChanged += new System.EventHandler(this.apiKeysListBox_SelectedIndexChanged);
+            this.apiKeysListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.apiKeysListBox_KeyDown);
+            this.apiKeysListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.apiKeysListBox_MouseDoubleClick);
+            // 
             // noAPIKeysPage
             // 
             this.noAPIKeysPage.Controls.Add(this.apiKeyListLabel);
             this.noAPIKeysPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.noAPIKeysPage.Location = new System.Drawing.Point(0, 0);
             this.noAPIKeysPage.Name = "noAPIKeysPage";
-            this.noAPIKeysPage.Size = new System.Drawing.Size(746, 313);
+            this.noAPIKeysPage.Size = new System.Drawing.Size(746, 319);
             this.noAPIKeysPage.TabIndex = 1;
             this.noAPIKeysPage.Text = "noAPIKeysPage";
             // 
@@ -420,22 +432,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.editAPIKeyMenu.Size = new System.Drawing.Size(56, 22);
             this.editAPIKeyMenu.Text = "&Edit...";
             this.editAPIKeyMenu.Click += new System.EventHandler(this.editAPIKeyMenu_Click);
-            // 
-            // apiKeysListBox
-            // 
-            this.apiKeysListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.apiKeysListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.apiKeysListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.apiKeysListBox.FormattingEnabled = true;
-            this.apiKeysListBox.ItemHeight = 43;
-            this.apiKeysListBox.Location = new System.Drawing.Point(0, 0);
-            this.apiKeysListBox.Name = "apiKeysListBox";
-            this.apiKeysListBox.Size = new System.Drawing.Size(806, 363);
-            this.apiKeysListBox.TabIndex = 0;
-            this.apiKeysListBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.apiKeysListBox_MouseClick);
-            this.apiKeysListBox.SelectedIndexChanged += new System.EventHandler(this.apiKeysListBox_SelectedIndexChanged);
-            this.apiKeysListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.apiKeysListBox_KeyDown);
-            this.apiKeysListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.apiKeysListBox_MouseDoubleClick);
             // 
             // ApiKeysManagementWindow
             // 

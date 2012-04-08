@@ -176,7 +176,6 @@ namespace EVEMon.SkillPlanner
             // lblEveObjName
             // 
             this.lblEveObjName.AutoSize = true;
-            this.lblEveObjName.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.lblEveObjName.Location = new System.Drawing.Point(70, 16);
             this.lblEveObjName.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblEveObjName.Name = "lblEveObjName";
