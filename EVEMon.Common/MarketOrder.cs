@@ -18,8 +18,6 @@ namespace EVEMon.Common
 
         private OrderState m_state;
 
-        private readonly int m_itemID;
-
 
         #region Constructors
 
@@ -32,20 +30,9 @@ namespace EVEMon.Common
             if (src == null)
                 throw new ArgumentNullException("src");
 
-            m_state = GetState(src);
-            OwnerID = src.OwnerID;
-            ID = src.OrderID;
-            m_itemID = src.ItemID;
-            Item = StaticItems.GetItemByID(src.ItemID);
-            Station = Station.GetByID(src.StationID);
-            UnitaryPrice = src.UnitaryPrice;
-            InitialVolume = src.InitialVolume;
-            RemainingVolume = src.RemainingVolume;
+            PopulateOrderInfo(src);
             LastStateChange = DateTime.UtcNow;
-            MinVolume = src.MinVolume;
-            Duration = src.Duration;
-            Issued = src.Issued;
-            IssuedFor = src.IssuedFor;
+            m_state = GetState(src);
         }
 
         /// <summary>
@@ -57,20 +44,13 @@ namespace EVEMon.Common
             if (src == null)
                 throw new ArgumentNullException("src");
 
-            Ignored = src.Ignored;
             ID = src.OrderID;
-            m_state = src.State;
-            m_itemID = GetItemID(src);
-            Item = GetItem(src);
-            Station = Station.GetByID(src.StationID);
             UnitaryPrice = src.UnitaryPrice;
-            InitialVolume = src.InitialVolume;
             RemainingVolume = src.RemainingVolume;
-            LastStateChange = src.LastStateChange;
-            MinVolume = src.MinVolume;
-            Duration = src.Duration;
             Issued = src.Issued;
             IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
+            LastStateChange = src.LastStateChange;
+            m_state = src.State;
         }
 
         #endregion
@@ -82,11 +62,6 @@ namespace EVEMon.Common
         /// When true, the order will be deleted unless it was found on the API feed.
         /// </summary>
         internal bool MarkedForDeletion { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether an expired order has been deleted by the user.
-        /// </summary>
-        public bool Ignored { get; set; }
 
         /// <summary>
         /// Gets the order state.
@@ -111,7 +86,7 @@ namespace EVEMon.Common
         /// Gets or sets the owner ID.
         /// </summary>
         /// <value>The owner ID.</value>
-        public long OwnerID { get; set; }
+        public long OwnerID { get; internal set; }
 
         /// <summary>
         /// Gets the item.
@@ -215,20 +190,13 @@ namespace EVEMon.Common
             if (src == null)
                 throw new ArgumentNullException("src");
 
-            src.Ignored = Ignored;
             src.OrderID = ID;
             src.State = m_state;
-            src.ItemID = m_itemID;
-            src.Item = (Item != null ? Item.Name : "Unknown Item");
-            src.StationID = (Station != null ? Station.ID : 0);
             src.UnitaryPrice = UnitaryPrice;
-            src.InitialVolume = InitialVolume;
             src.RemainingVolume = RemainingVolume;
-            src.LastStateChange = LastStateChange;
-            src.MinVolume = MinVolume;
-            src.Duration = Duration;
             src.Issued = Issued;
             src.IssuedFor = IssuedFor;
+            src.LastStateChange = LastStateChange;
 
             return src;
         }
@@ -254,6 +222,10 @@ namespace EVEMon.Common
             // or by the user [modify order] so we update the orders info that are changeable)
             if (IsModified(src))
             {
+                // Order is from a serialized object, so populate the missing info
+                if (Item == null)
+                    PopulateOrderInfo(src);
+
                 // If it's a buying order, escrow may have changed
                 if (src.IsBuyOrder != 0)
                     ((BuyOrder)this).Escrow = src.Escrow;
@@ -261,14 +233,22 @@ namespace EVEMon.Common
                 UnitaryPrice = src.UnitaryPrice;
                 RemainingVolume = src.RemainingVolume;
                 Issued = src.Issued;
-                m_state = OrderState.Modified;
                 LastStateChange = DateTime.UtcNow;
+                m_state = OrderState.Modified;
             }
             else if (m_state == OrderState.Modified)
             {
-                m_state = OrderState.Active;
+                // Order is from a serialized object, so populate the missing info
+                if (Item == null)
+                    PopulateOrderInfo(src);
+
                 LastStateChange = DateTime.UtcNow;
+                m_state = OrderState.Active;
             }
+
+            // Order is from a serialized object, so populate the missing info
+            if (Item == null)
+                PopulateOrderInfo(src);
 
             // Update state
             OrderState state = GetState(src);
@@ -278,7 +258,7 @@ namespace EVEMon.Common
                 LastStateChange = DateTime.UtcNow;
 
                 // Should we notify it to the user ?
-                if ((state == OrderState.Expired || state == OrderState.Fulfilled) && !Ignored)
+                if ((state == OrderState.Expired || state == OrderState.Fulfilled))
                     endedOrders.Add(this);
             }
 
@@ -291,34 +271,29 @@ namespace EVEMon.Common
         #region Helper Methods
 
         /// <summary>
-        /// Gets an items ID either by source or by name.
+        /// Populates the serialization object order with the info from the API.
         /// </summary>
-        /// <param name="src"></param>
-        /// <returns></returns>
-        private static int GetItemID(SerializableOrderBase src)
+        /// <param name="src">The source.</param>
+        private void PopulateOrderInfo(SerializableOrderListItem src)
         {
-            // Try get item ID by source
-            int itemID = src.ItemID;
+            OwnerID = src.OwnerID;
+            ID = src.OrderID;
+            Item = StaticItems.GetItemByID(src.ItemID);
+            Station = Station.GetByID(src.StationID);
+            UnitaryPrice = src.UnitaryPrice;
+            InitialVolume = src.InitialVolume;
+            RemainingVolume = src.RemainingVolume;
+            MinVolume = src.MinVolume;
+            Duration = src.Duration;
+            Issued = src.Issued;
+            IssuedFor = src.IssuedFor;
 
-            // We failed? Try get item ID by name
-            if (itemID == 0)
-            {
-                Item item = StaticItems.GetItemByName(src.Item);
-                itemID = (item == null ? 0 : item.ID);
-            }
+            if (src.IsBuyOrder == 0)
+                return;
 
-            return itemID;
-        }
-
-        /// <summary>
-        /// Gets an item by its ID or its name.
-        /// </summary>
-        /// <param name="src"></param>
-        /// <returns></returns>
-        private static Item GetItem(SerializableOrderBase src)
-        {
-            // Try get item by its ID, if we fail try get it by its name
-            return StaticItems.GetItemByID(src.ItemID) ?? StaticItems.GetItemByName(src.Item);
+            BuyOrder buyOrder = (BuyOrder)this;
+            buyOrder.Escrow = src.Escrow;
+            buyOrder.Range = src.Range;
         }
 
         /// <summary>

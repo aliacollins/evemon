@@ -31,11 +31,10 @@ namespace EVEMon.Common
             Items.Clear();
             foreach (SerializableOrderBase srcOrder in src)
             {
-                SerializableBuyOrder buyOrder = srcOrder as SerializableBuyOrder;
-                if (buyOrder != null)
-                    Items.Add(new BuyOrder(buyOrder) { OwnerID = m_character.CharacterID });
+                if (srcOrder is SerializableBuyOrder)
+                    Items.Add(new BuyOrder(srcOrder) { OwnerID = m_character.CharacterID });
                 else
-                    Items.Add(new SellOrder((SerializableSellOrder)srcOrder) { OwnerID = m_character.CharacterID });
+                    Items.Add(new SellOrder(srcOrder) { OwnerID = m_character.CharacterID });
             }
         }
 

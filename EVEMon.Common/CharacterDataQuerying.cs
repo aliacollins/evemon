@@ -55,7 +55,7 @@ namespace EVEMon.Common
 
             m_charMarketOrdersMonitor =
                 new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,
-                                                                       OnCharacterMarketOrdersUpdated);
+                                                                       OnCharacterMarketOrdersUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charMarketOrdersMonitor);
 
             m_charContractsMonitor =
@@ -102,6 +102,8 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Dispose
+
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
@@ -115,6 +117,8 @@ namespace EVEMon.Common
                 monitor.Dispose();
             }
         }
+
+        #endregion
 
 
         #region Properties

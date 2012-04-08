@@ -21,7 +21,7 @@ namespace EVEMon.Common
         /// Constructor from an object deserialized from the settings file.
         /// </summary>
         /// <param name="src"></param>
-        internal SellOrder(SerializableSellOrder src)
+        internal SellOrder(SerializableOrderBase src)
             : base(src)
         {
         }

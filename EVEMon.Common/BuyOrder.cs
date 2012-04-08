@@ -24,11 +24,9 @@ namespace EVEMon.Common
         /// Constructor from an object deserialized from the settings file.
         /// </summary>
         /// <param name="src"></param>
-        internal BuyOrder(SerializableBuyOrder src)
+        internal BuyOrder(SerializableOrderBase src)
             : base(src)
         {
-            Escrow = src.Escrow;
-            Range = src.Range;
         }
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the range of this order.
         /// </summary>
-        public int Range { get; private set; }
+        public int Range { get; internal set; }
 
         /// <summary>
         /// Gets the description of the range.
@@ -70,7 +68,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override SerializableOrderBase Export()
         {
-            return Export(new SerializableBuyOrder { Escrow = Escrow, Range = Range });
+            return Export(new SerializableBuyOrder());
         }
     }
 }

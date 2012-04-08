@@ -9,38 +9,11 @@ namespace EVEMon.Common.Serialization.Settings
     public class SerializableOrderBase
     {
         /// <summary>
-        /// True if the user choose to delete this order.
-        /// </summary>
-        [XmlAttribute("ignored")]
-        public bool Ignored { get; set; }
-
-        /// <summary>
         /// Unique order ID for this order. Note that these are not guaranteed to be unique forever, they can recycle. 
         /// But they are unique for the purpose of one data pull. 
         /// </summary>
         [XmlAttribute("orderID")]
         public long OrderID { get; set; }
-
-        [XmlAttribute("itemID")]
-        public int ItemID { get; set; }
-
-        [XmlAttribute("item")]
-        public string Item { get; set; }
-
-        [XmlAttribute("stationID")]
-        public int StationID { get; set; }
-
-        [XmlAttribute("volEntered")]
-        public int InitialVolume { get; set; }
-
-        [XmlAttribute("volRemaining")]
-        public int RemainingVolume { get; set; }
-
-        /// <summary>
-        /// The minimum volume a buyer can buy.
-        /// </summary>
-        [XmlAttribute("minVolume")]
-        public int MinVolume { get; set; }
 
         /// <summary>
         /// The state of the order.
@@ -49,16 +22,16 @@ namespace EVEMon.Common.Serialization.Settings
         public OrderState State { get; set; }
 
         /// <summary>
-        /// How many days this order is good for. Expiration is issued + duration in days. 
-        /// </summary>
-        [XmlAttribute("duration")]
-        public int Duration { get; set; }
-
-        /// <summary>
         /// The cost per unit for this order.
         /// </summary>
         [XmlAttribute("price")]
         public decimal UnitaryPrice { get; set; }
+
+        /// <summary>
+        /// The remaining volume of the order.
+        /// </summary>
+        [XmlAttribute("volRemaining")]
+        public int RemainingVolume { get; set; }
 
         /// <summary>
         /// The time this order was issued.
@@ -73,7 +46,7 @@ namespace EVEMon.Common.Serialization.Settings
         public IssuedFor IssuedFor { get; set; }
 
         /// <summary>
-        /// The time this order was issued.
+        /// The time this order state was last changed.
         /// </summary>
         [XmlAttribute("lastStateChange")]
         public DateTime LastStateChange { get; set; }
