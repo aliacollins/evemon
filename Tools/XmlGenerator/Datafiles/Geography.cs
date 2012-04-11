@@ -10,14 +10,12 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Geography
     {
-        private static DateTime s_startTime;
-
         /// <summary>
         /// Generates the geography datafile.
         /// </summary>
         internal static void GenerateDatafile()
         {
-            s_startTime = DateTime.Now;
+            DateTime startTime = DateTime.Now;
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -25,7 +23,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Regions
             List<SerializableRegion> regions = new List<SerializableRegion>();
-            foreach (MapRegion srcRegion in Database.MapRegionsTable)
+            foreach (MapRegions srcRegion in Database.MapRegionsTable)
             {
                 Util.UpdatePercentDone(Database.GeographyTotalCount);
 
@@ -41,10 +39,10 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Jumps
-            IEnumerable<SerializableJump> jumps = Database.MapSolarSystemJumpTable.Where(srcJump => srcJump.A < srcJump.B).Select(
+            IEnumerable<SerializableJump> jumps = Database.MapSolarSystemJumpsTable.Where(srcJump => srcJump.A < srcJump.B).Select(
                 srcJump => new SerializableJump { FirstSystemID = srcJump.A, SecondSystemID = srcJump.B });
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             // Serialize
             GeoDatafile datafile = new GeoDatafile();
@@ -62,7 +60,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static IEnumerable<SerializableConstellation> ExportConstellations(IHasID srcRegion)
         {
             List<SerializableConstellation> constellations = new List<SerializableConstellation>();
-            foreach (MapConstellation srcConstellation in Database.MapConstellationsTable.Where(x => x.RegionID == srcRegion.ID))
+            foreach (MapConstellations srcConstellation in Database.MapConstellationsTable.Where(x => x.RegionID == srcRegion.ID))
             {
                 SerializableConstellation constellation = new SerializableConstellation
                                                               {
@@ -86,7 +84,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             const double BaseDistance = 1.0E14;
             List<SerializableSolarSystem> systems = new List<SerializableSolarSystem>();
-            foreach (MapSolarSystem srcSystem in Database.MapSolarSystemTable.Where(
+            foreach (MapSolarSystems srcSystem in Database.MapSolarSystemsTable.Where(
                 x => x.ConstellationID == srcConstellation.ID))
             {
                 SerializableSolarSystem system = new SerializableSolarSystem
@@ -114,7 +112,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static IEnumerable<SerializableStation> ExportStations(IHasID srcSystem)
         {
             List<SerializableStation> stations = new List<SerializableStation>();
-            foreach (StaStation srcStation in Database.StaStationTable.Where(x => x.SolarSystemID == srcSystem.ID))
+            foreach (StaStations srcStation in Database.StaStationsTable.Where(x => x.SolarSystemID == srcSystem.ID))
             {
                 SerializableStation station = new SerializableStation
                                                   {

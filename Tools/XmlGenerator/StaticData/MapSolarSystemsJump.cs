@@ -2,7 +2,7 @@
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class MapSolarSystemJump
+    public sealed class MapSolarSystemsJump
     {
         [XmlElement("fromSolarSystemID")]
         public int A { get; set; }

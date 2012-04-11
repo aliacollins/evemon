@@ -52,7 +52,7 @@ namespace EVEMon.XmlGenerator
         /// Gets or sets the eve units table.
         /// </summary>
         /// <value>The eve units table.</value>
-        internal static Bag<EveUnit> EveUnitsTable { get; private set; }
+        internal static Bag<EveUnits> EveUnitsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the eve names table.
@@ -76,49 +76,49 @@ namespace EVEMon.XmlGenerator
         /// Gets or sets the DMG attribute categories table.
         /// </summary>
         /// <value>The DMG attribute categories table.</value>
-        internal static Bag<DgmAttributeCategory> DgmAttributeCategoriesTable { get; private set; }
+        internal static Bag<DgmAttributeCategories> DgmAttributeCategoriesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the DMG type effects table.
         /// </summary>
         /// <value>The DMG type effects table.</value>
-        internal static RelationSet<DgmTypeEffect> DgmTypeEffectsTable { get; private set; }
+        internal static RelationSet<DgmTypeEffects> DgmTypeEffectsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the DMG type attributes table.
         /// </summary>
         /// <value>The DMG type attributes table.</value>
-        internal static RelationSet<DgmTypeAttribute> DgmTypeAttributesTable { get; private set; }
+        internal static RelationSet<DgmTypeAttributes> DgmTypeAttributesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the map regions table.
         /// </summary>
         /// <value>The map regions table.</value>
-        internal static Bag<MapRegion> MapRegionsTable { get; private set; }
+        internal static Bag<MapRegions> MapRegionsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the map constellations table.
         /// </summary>
         /// <value>The map constellations table.</value>
-        internal static Bag<MapConstellation> MapConstellationsTable { get; private set; }
+        internal static Bag<MapConstellations> MapConstellationsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the map solar system table.
         /// </summary>
-        /// <value>The map solar system table.</value>
-        internal static Bag<MapSolarSystem> MapSolarSystemTable { get; private set; }
+        /// <value>The map solar systems table.</value>
+        internal static Bag<MapSolarSystems> MapSolarSystemsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the sta station table.
+        /// Gets or sets the sta stations table.
         /// </summary>
         /// <value>The sta station table.</value>
-        internal static Bag<StaStation> StaStationTable { get; private set; }
+        internal static Bag<StaStations> StaStationsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the map solar system jump table.
         /// </summary>
-        /// <value>The map solar system jump table.</value>
-        internal static List<MapSolarSystemJump> MapSolarSystemJumpTable { get; private set; }
+        /// <value>The map solar system jumps table.</value>
+        internal static List<MapSolarSystemsJump> MapSolarSystemJumpsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv blueprint types table.
@@ -133,28 +133,34 @@ namespace EVEMon.XmlGenerator
         internal static Bag<InvCategories> InvCategoriesTable { get; private set; }
 
         /// <summary>
+        /// Gets or sets the inv flag table.
+        /// </summary>
+        /// <value>The inv flags table.</value>
+        internal static Bag<InvFlags> InvFlagsTable { get; private set; }
+
+        /// <summary>
         /// Gets or sets the inv group table.
         /// </summary>
-        /// <value>The inv group table.</value>
-        internal static Bag<InvGroup> InvGroupTable { get; private set; }
+        /// <value>The inv groups table.</value>
+        internal static Bag<InvGroups> InvGroupsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv market group table.
         /// </summary>
-        /// <value>The inv market group table.</value>
-        internal static Bag<InvMarketGroup> InvMarketGroupTable { get; private set; }
+        /// <value>The inv market groups table.</value>
+        internal static Bag<InvMarketGroups> InvMarketGroupsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv meta type table.
         /// </summary>
-        /// <value>The inv meta type table.</value>
-        internal static RelationSet<InvMetaType> InvMetaTypeTable { get; private set; }
+        /// <value>The inv meta types table.</value>
+        internal static RelationSet<InvMetaTypes> InvMetaTypesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv type table.
         /// </summary>
-        /// <value>The inv type table.</value>
-        internal static Bag<InvType> InvTypeTable { get; private set; }
+        /// <value>The inv types table.</value>
+        internal static Bag<InvTypes> InvTypesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv type materials table.
@@ -210,7 +216,7 @@ namespace EVEMon.XmlGenerator
         /// <value>The total tables count.</value>
         internal static int TotalTablesCount
         {
-            get { return 29; }
+            get { return 30; }
         }
 
         #endregion
@@ -335,29 +341,31 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             InvCategoriesTable = Categories();
             Util.UpdateProgress();
-            InvGroupTable = Groups();
+            InvFlagsTable = Flags();
             Util.UpdateProgress();
-            InvMarketGroupTable = MarketGroups();
+            InvGroupsTable = Groups();
             Util.UpdateProgress();
-            InvMetaTypeTable = MetaTypes();
+            InvMarketGroupsTable = MarketGroups();
+            Util.UpdateProgress();
+            InvMetaTypesTable = MetaTypes();
             Util.UpdateProgress();
             InvNamesTable = Names();
             Util.UpdateProgress();
             InvTypeMaterialsTable = TypeMaterials();
             Util.UpdateProgress();
-            InvTypeTable = Types();
+            InvTypesTable = Types();
             Util.UpdateProgress();
             MapRegionsTable = Regions();
             Util.UpdateProgress();
             MapConstellationsTable = Constellations();
             Util.UpdateProgress();
-            MapSolarSystemTable = Solarsystems();
+            MapSolarSystemsTable = Solarsystems();
             Util.UpdateProgress();
-            MapSolarSystemJumpTable = Jumps();
+            MapSolarSystemJumpsTable = Jumps();
             Util.UpdateProgress();
             RamTypeRequirementsTable = TypeRequirements();
             Util.UpdateProgress();
-            StaStationTable = Stations();
+            StaStationsTable = Stations();
             Util.UpdateProgress();
 
             Console.WriteLine(String.Format(CultureInfo.CurrentCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
@@ -490,12 +498,12 @@ namespace EVEMon.XmlGenerator
         /// EVE Units.
         /// </summary>
         /// <returns><c>Bag</c> of EVE Units.</returns>
-        private static Bag<EveUnit> Units()
+        private static Bag<EveUnits> Units()
         {
-            IndexedCollection<EveUnit> collection = new IndexedCollection<EveUnit>();
+            IndexedCollection<EveUnits> collection = new IndexedCollection<EveUnits>();
 
-            foreach (EveUnit item in Context.eveUnits.Select(
-                unit => new EveUnit
+            foreach (EveUnits item in Context.eveUnits.Select(
+                unit => new EveUnits
                             {
                                 Description = unit.description,
                                 DisplayName = unit.displayName,
@@ -509,7 +517,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<EveUnit>(collection);
+            return new Bag<EveUnits>(collection);
         }
 
         /// <summary>
@@ -576,12 +584,12 @@ namespace EVEMon.XmlGenerator
         /// Attribute categories.
         /// </summary>
         /// <returns><c>Bag</c> of Attribute Categories.</returns>
-        private static Bag<DgmAttributeCategory> AttributeCategories()
+        private static Bag<DgmAttributeCategories> AttributeCategories()
         {
-            IndexedCollection<DgmAttributeCategory> collection = new IndexedCollection<DgmAttributeCategory>();
+            IndexedCollection<DgmAttributeCategories> collection = new IndexedCollection<DgmAttributeCategories>();
 
-            foreach (DgmAttributeCategory item in Context.dgmAttributeCategories.Select(
-                category => new DgmAttributeCategory
+            foreach (DgmAttributeCategories item in Context.dgmAttributeCategories.Select(
+                category => new DgmAttributeCategories
                                 {
                                     ID = category.categoryID,
                                     Description = category.categoryDescription,
@@ -594,19 +602,19 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<DgmAttributeCategory>(collection);
+            return new Bag<DgmAttributeCategories>(collection);
         }
 
         /// <summary>
         /// Regions in the EVE Universe.
         /// </summary>
         /// <returns><c>Bag</c> of all regions in EVE.</returns>
-        private static Bag<MapRegion> Regions()
+        private static Bag<MapRegions> Regions()
         {
-            IndexedCollection<MapRegion> collection = new IndexedCollection<MapRegion>();
+            IndexedCollection<MapRegions> collection = new IndexedCollection<MapRegions>();
 
-            foreach (MapRegion item in Context.mapRegions.Select(
-                region => new MapRegion
+            foreach (MapRegions item in Context.mapRegions.Select(
+                region => new MapRegions
                               {
                                   ID = region.regionID,
                                   Name = region.regionName,
@@ -616,20 +624,20 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<MapRegion>(collection);
+            return new Bag<MapRegions>(collection);
         }
 
         /// <summary>
         /// Constallations in the EVE Universe.
         /// </summary>
         /// <returns><c>Bag</c> of Constallations in EVE.</returns>
-        private static Bag<MapConstellation> Constellations()
+        private static Bag<MapConstellations> Constellations()
         {
-            IndexedCollection<MapConstellation> collection = new IndexedCollection<MapConstellation>();
+            IndexedCollection<MapConstellations> collection = new IndexedCollection<MapConstellations>();
 
             foreach (mapConstellations constellation in Context.mapConstellations)
             {
-                MapConstellation item = new MapConstellation
+                MapConstellations item = new MapConstellations
                                             {
                                                 ID = constellation.constellationID,
                                                 Name = constellation.constellationName,
@@ -641,20 +649,20 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<MapConstellation>(collection);
+            return new Bag<MapConstellations>(collection);
         }
 
         /// <summary>
         /// Solar Systems in EVE.
         /// </summary>
         /// <returns><c>Bag</c> of Solar Systems in the EVE.</returns>
-        private static Bag<MapSolarSystem> Solarsystems()
+        private static Bag<MapSolarSystems> Solarsystems()
         {
-            IndexedCollection<MapSolarSystem> collection = new IndexedCollection<MapSolarSystem>();
+            IndexedCollection<MapSolarSystems> collection = new IndexedCollection<MapSolarSystems>();
 
             foreach (mapSolarSystems solarsystem in Context.mapSolarSystems)
             {
-                MapSolarSystem item = new MapSolarSystem
+                MapSolarSystems item = new MapSolarSystems
                                           {
                                               ID = solarsystem.solarSystemID,
                                               Name = solarsystem.solarSystemName
@@ -678,20 +686,20 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<MapSolarSystem>(collection);
+            return new Bag<MapSolarSystems>(collection);
         }
 
         /// <summary>
         /// Stations in the EVE Universe
         /// </summary>
         /// <returns><c>Bag</c> of Stations in the EVE Universe.</returns>
-        private static Bag<StaStation> Stations()
+        private static Bag<StaStations> Stations()
         {
-            IndexedCollection<StaStation> collection = new IndexedCollection<StaStation>();
+            IndexedCollection<StaStations> collection = new IndexedCollection<StaStations>();
 
             foreach (staStations station in Context.staStations)
             {
-                StaStation item = new StaStation
+                StaStations item = new StaStations
                                       {
                                           ID = station.stationID,
                                           Name = station.stationName,
@@ -715,17 +723,17 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<StaStation>(collection);
+            return new Bag<StaStations>(collection);
         }
 
         /// <summary>
         /// Jumps between two solar systems in the EVE Universe.
         /// </summary>
         /// <returns><c>List</c> of jumps between SolarSystems in EVE.</returns>
-        private static List<MapSolarSystemJump> Jumps()
+        private static List<MapSolarSystemsJump> Jumps()
         {
             return Context.mapSolarSystemJumps.Select(
-                jump => new MapSolarSystemJump
+                jump => new MapSolarSystemsJump
                             {
                                 A = jump.fromSolarSystemID,
                                 B = jump.toSolarSystemID
@@ -788,12 +796,12 @@ namespace EVEMon.XmlGenerator
         /// Inventory Item Market Groups.
         /// </summary>
         /// <returns><c>Bag</c> of Market Groups available on the market.</returns>
-        private static Bag<InvMarketGroup> MarketGroups()
+        private static Bag<InvMarketGroups> MarketGroups()
         {
-            IndexedCollection<InvMarketGroup> collection = new IndexedCollection<InvMarketGroup>();
+            IndexedCollection<InvMarketGroups> collection = new IndexedCollection<InvMarketGroups>();
 
-            foreach (InvMarketGroup item in Context.invMarketGroups.Select(
-                marketGroup => new InvMarketGroup
+            foreach (InvMarketGroups item in Context.invMarketGroups.Select(
+                marketGroup => new InvMarketGroups
                                    {
                                        ID = marketGroup.marketGroupID,
                                        Description = marketGroup.description,
@@ -807,7 +815,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvMarketGroup>(collection);
+            return new Bag<InvMarketGroups>(collection);
         }
 
         /// <summary>
@@ -840,20 +848,44 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// Inventory Flags.
+        /// </summary>
+        /// <returns><c>Bag</c> of Inventory Flags.</returns>
+        private static Bag<InvFlags> Flags()
+        {
+            IndexedCollection<InvFlags> collection = new IndexedCollection<InvFlags>();
+
+            foreach (invFlags flag in Context.invFlags)
+            {
+                InvFlags item = new InvFlags
+                {
+                    ID = flag.flagID,
+                    Name = flag.flagName,
+                };
+
+                item.Text = flag.flagText.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            return new Bag<InvFlags>(collection);
+        }
+
+        /// <summary>
         /// Inventory Item Groups.
         /// </summary>
         /// <returns><c>Bag</c> of Inventory Groups.</returns>
-        private static Bag<InvGroup> Groups()
+        private static Bag<InvGroups> Groups()
         {
-            IndexedCollection<InvGroup> collection = new IndexedCollection<InvGroup>();
+            IndexedCollection<InvGroups> collection = new IndexedCollection<InvGroups>();
 
             foreach (invGroups group in Context.invGroups)
             {
-                InvGroup item = new InvGroup
-                                    {
-                                        ID = group.groupID,
-                                        Name = group.groupName
-                                    };
+                InvGroups item = new InvGroups
+                {
+                    ID = group.groupID,
+                    Name = group.groupName
+                };
 
                 if (group.published.HasValue)
                     item.Published = group.published.Value;
@@ -864,20 +896,20 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvGroup>(collection);
+            return new Bag<InvGroups>(collection);
         }
 
         /// <summary>
         /// Inventory Types.
         /// </summary>
         /// <returns><c>Bag</c> of items from the Inventory.</returns>
-        private static Bag<InvType> Types()
+        private static Bag<InvTypes> Types()
         {
-            IndexedCollection<InvType> collection = new IndexedCollection<InvType>();
+            IndexedCollection<InvTypes> collection = new IndexedCollection<InvTypes>();
 
             foreach (invTypes type in Context.invTypes)
             {
-                InvType item = new InvType
+                InvTypes item = new InvTypes
                                    {
                                        ID = type.typeID,
                                        Description = type.description,
@@ -912,7 +944,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvType>(collection);
+            return new Bag<InvTypes>(collection);
         }
 
         /// <summary>
@@ -1103,10 +1135,10 @@ namespace EVEMon.XmlGenerator
         /// Type Attributes.
         /// </summary>
         /// <returns><c>RelationSet</c> of attributes for types.</returns>
-        private static RelationSet<DgmTypeAttribute> TypeAttributes()
+        private static RelationSet<DgmTypeAttributes> TypeAttributes()
         {
-            List<DgmTypeAttribute> list = Context.dgmTypeAttributes.Select(
-                typeAttribute => new DgmTypeAttribute
+            List<DgmTypeAttributes> list = Context.dgmTypeAttributes.Select(
+                typeAttribute => new DgmTypeAttributes
                                      {
                                          AttributeID = typeAttribute.attributeID,
                                          ItemID = typeAttribute.typeID,
@@ -1114,20 +1146,20 @@ namespace EVEMon.XmlGenerator
                                          ValueInt = typeAttribute.valueInt
                                      }).ToList();
 
-            return new RelationSet<DgmTypeAttribute>(list);
+            return new RelationSet<DgmTypeAttributes>(list);
         }
 
         /// <summary>
         /// Meta Types.
         /// </summary>
         /// <returns><c>RelationSet</c> parent-child relationships between types.</returns>
-        private static RelationSet<InvMetaType> MetaTypes()
+        private static RelationSet<InvMetaTypes> MetaTypes()
         {
-            List<InvMetaType> list = new List<InvMetaType>();
+            List<InvMetaTypes> list = new List<InvMetaTypes>();
 
             foreach (invMetaTypes metaType in Context.invMetaTypes)
             {
-                InvMetaType item = new InvMetaType { ItemID = metaType.typeID };
+                InvMetaTypes item = new InvMetaTypes { ItemID = metaType.typeID };
                 if (metaType.metaGroupID.HasValue)
                     item.MetaGroupID = Convert.ToInt32(metaType.metaGroupID, CultureInfo.InvariantCulture);
 
@@ -1135,23 +1167,23 @@ namespace EVEMon.XmlGenerator
                     item.ParentItemID = Convert.ToInt32(metaType.parentTypeID, CultureInfo.InvariantCulture);
                 list.Add(item);
             }
-            return new RelationSet<InvMetaType>(list);
+            return new RelationSet<InvMetaTypes>(list);
         }
 
         /// <summary>
         /// Effects of various types.
         /// </summary>
         /// <returns><c>RelationSet</c> of Types and Effects.</returns>
-        private static RelationSet<DgmTypeEffect> TypeEffects()
+        private static RelationSet<DgmTypeEffects> TypeEffects()
         {
-            List<DgmTypeEffect> list = Context.dgmTypeEffects.Select(
-                typeEffect => new DgmTypeEffect
+            List<DgmTypeEffects> list = Context.dgmTypeEffects.Select(
+                typeEffect => new DgmTypeEffects
                                   {
                                       EffectID = typeEffect.effectID,
                                       ItemID = typeEffect.typeID
                                   }).ToList();
 
-            return new RelationSet<DgmTypeEffect>(list);
+            return new RelationSet<DgmTypeEffects>(list);
         }
 
         #endregion

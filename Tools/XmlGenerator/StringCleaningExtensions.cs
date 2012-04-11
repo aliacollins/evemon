@@ -91,7 +91,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        public static string FormatPropertyValue(this DgmTypeAttribute property)
+        public static string FormatPropertyValue(this DgmTypeAttributes property)
         {
             if (property == null)
                 throw new ArgumentNullException("property");

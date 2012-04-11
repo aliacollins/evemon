@@ -2,13 +2,16 @@
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class DgmTypeEffect : IRelation
+    public sealed class InvMetaTypes : IRelation
     {
         [XmlElement("typeID")]
         public int ItemID { get; set; }
 
-        [XmlElement("effectID")]
-        public int EffectID { get; set; }
+        [XmlElement("parentTypeID")]
+        public int ParentItemID { get; set; }
+
+        [XmlElement("metaGroupID")]
+        public int MetaGroupID { get; set; }
 
 
         #region IRelation Members
@@ -23,12 +26,12 @@ namespace EVEMon.XmlGenerator.StaticData
         }
 
         /// <summary>
-        /// Gets the right column value.
+        /// Gets the right.
         /// </summary>
-        /// <value>The right.</value>
+        /// <value>The right column value.</value>
         int IRelation.Right
         {
-            get { return EffectID; }
+            get { return MetaGroupID; }
         }
 
         #endregion

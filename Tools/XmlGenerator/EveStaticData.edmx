@@ -3187,7 +3187,7 @@
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram Name="EveStaticData" ZoomLevel="75" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx" ShowGrid="false">
+      <Diagram Name="EveStaticData" ZoomLevel="86" xmlns="http://schemas.microsoft.com/ado/2008/10/edmx" ShowGrid="false">
         <EntityTypeShape EntityType="EveStaticDataModel.agtAgentTypes" Width="1.5" PointX="0.75" PointY="0.75"
                          Height="1.4033821614583331" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.agtAgents" Width="1.5" PointX="2.75" PointY="0.75"

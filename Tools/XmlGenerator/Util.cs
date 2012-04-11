@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.Common;
+using EVEMon.XmlGenerator.Xmlfiles;
 
 namespace EVEMon.XmlGenerator
 {
@@ -149,6 +150,24 @@ namespace EVEMon.XmlGenerator
             Copy(path, Path.Combine(appData, Path.Combine("EVEMon", filename)));
 
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Serializes a XML file to EVEMon.Common\Serialization.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="serial">The serial.</param>
+        /// <param name="xmlRootName">Name of the xml root.</param>
+        /// <param name="filename">The filename.</param>
+        internal static void SerializeXMLTo<T>(T serial, string xmlRootName, string filename)
+        {
+            string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Serialization", filename);
+            using (FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(xmlRootName));
+                serializer.Serialize(stream, serial);
+                stream.Flush();
+            }
         }
 
         /// <summary>

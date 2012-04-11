@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Threading;
 using EVEMon.XmlGenerator.Datafiles;
+using EVEMon.XmlGenerator.Xmlfiles;
 
 namespace EVEMon.XmlGenerator
 {
@@ -27,10 +28,13 @@ namespace EVEMon.XmlGenerator
             Blueprints.GenerateDatafile();
             Geography.GenerateDatafile();
             Reprocessing.GenerateDatafile(); // Requires GenerateItems()
+            
+            // Generate support xml files
+            Flags.GenerateXMLfile();
 
             Util.CreateMD5SumsFile("MD5Sums.txt");
 
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating Datafiles completed in {0}",
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating files completed in {0}",
                                             DateTime.Now.Subtract(startTime)).TrimEnd('0'));
             Console.ReadLine();
         }

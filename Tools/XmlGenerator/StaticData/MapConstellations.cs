@@ -2,7 +2,7 @@
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class MapConstellation : IHasID
+    public sealed class MapConstellations : IHasID
     {
         [XmlElement("constellationID")]
         public int ID { get; set; }

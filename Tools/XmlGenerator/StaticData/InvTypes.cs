@@ -2,7 +2,7 @@
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class InvType : IHasID
+    public sealed class InvTypes : IHasID
     {
         [XmlElement("typeID")]
         public int ID { get; set; }

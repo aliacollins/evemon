@@ -9,14 +9,12 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Reprocessing
     {
-        private static DateTime s_startTime;
-
         /// <summary>
         /// Generates the reprocessing datafile.
         /// </summary>
         internal static void GenerateDatafile()
         {
-            s_startTime = DateTime.Now;
+            DateTime startTime = DateTime.Now;
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -24,7 +22,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             List<SerializableItemMaterials> types = new List<SerializableItemMaterials>();
 
-            foreach (int typeID in Database.InvTypeTable.Where(x => x.Generated).Select(x => x.ID))
+            foreach (int typeID in Database.InvTypesTable.Where(x => x.Generated).Select(x => x.ID))
             {
                 Util.UpdatePercentDone(Database.ReprocessingTotalCount);
 
@@ -44,7 +42,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 types.Add(itemMaterials);
             }
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             // Serialize
             ReprocessingDatafile datafile = new ReprocessingDatafile();

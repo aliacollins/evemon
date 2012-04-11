@@ -2,7 +2,7 @@
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class DgmTypeAttribute : IRelation
+    public sealed class DgmTypeAttributes : IRelation
     {
         [XmlElement("typeID")]
         public int ItemID { get; set; }
