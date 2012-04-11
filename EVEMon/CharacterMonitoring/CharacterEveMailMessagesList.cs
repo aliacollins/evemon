@@ -217,6 +217,7 @@ namespace EVEMon.CharacterMonitoring
             EVEMailMessages = (ccpCharacter == null ? null : ccpCharacter.EVEMailMessages);
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;
             Grouping = (Character == null ? EVEMailMessagesGrouping.State : Character.UISettings.EVEMailMessagesGroupBy);
+            TextFilter = String.Empty;
             PanePosition = Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition;
 
             UpdateColumns();

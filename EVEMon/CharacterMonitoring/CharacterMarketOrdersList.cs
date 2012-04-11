@@ -275,6 +275,7 @@ namespace EVEMon.CharacterMonitoring
             Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
             Grouping = (Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy);
+            TextFilter = String.Empty;
 
             UpdateColumns();
 

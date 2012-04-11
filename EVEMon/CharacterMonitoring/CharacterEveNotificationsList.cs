@@ -214,6 +214,7 @@ namespace EVEMon.CharacterMonitoring
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
             Grouping = (Character == null ? EVENotificationsGrouping.Type : Character.UISettings.EVENotificationsGroupBy);
             PanePosition = Settings.UI.MainWindow.EVENotifications.ReadingPanePosition;
+            TextFilter = String.Empty;
 
             UpdateColumns();
             m_init = true;

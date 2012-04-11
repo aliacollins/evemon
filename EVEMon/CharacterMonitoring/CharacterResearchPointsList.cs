@@ -180,6 +180,7 @@ namespace EVEMon.CharacterMonitoring
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             ResearchPoints = (ccpCharacter == null ? null : ccpCharacter.ResearchPoints);
             Columns = Settings.UI.MainWindow.Research.Columns;
+            TextFilter = String.Empty;
 
             UpdateColumns();
 

@@ -697,6 +697,10 @@ namespace EVEMon.CharacterMonitoring
                 ToolStripButton button = item as ToolStripButton;
                 if (button != null && item == sender)
                 {
+                    // Page is already selected
+                    if (button.Checked && multiPanel.SelectedPage != null)
+                        continue;
+
                     // Selects the proper page
                     multiPanel.SelectedPage =
                         multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string)item.Tag);
@@ -733,6 +737,9 @@ namespace EVEMon.CharacterMonitoring
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
+            // Reset the text filter
+            searchTextBox.Text = String.Empty;
+            
             // Update the page controls
             UpdatePageControls();
         }

@@ -189,6 +189,7 @@ namespace EVEMon.CharacterMonitoring
             Assets = (ccpCharacter == null ? null : ccpCharacter.Assets);
             Columns = Settings.UI.MainWindow.Assets.Columns;
             Grouping = (Character == null ? AssetGrouping.NoGroup : Character.UISettings.AssetsGroupBy);
+            TextFilter = String.Empty;
 
             UpdateColumns();
 

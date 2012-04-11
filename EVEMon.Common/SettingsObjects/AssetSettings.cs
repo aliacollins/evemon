@@ -47,6 +47,7 @@ namespace EVEMon.Common.SettingsObjects
                                                    {
                                                        AssetColumn.ItemName,
                                                        AssetColumn.Quantity,
+                                                       AssetColumn.Container, 
                                                        AssetColumn.Location,
                                                        AssetColumn.Jumps
                                                    };

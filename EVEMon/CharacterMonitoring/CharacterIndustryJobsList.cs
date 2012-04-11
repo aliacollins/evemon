@@ -261,6 +261,7 @@ namespace EVEMon.CharacterMonitoring
             Jobs = (ccpCharacter == null ? null : ccpCharacter.IndustryJobs);
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             Grouping = (Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy);
+            TextFilter = String.Empty;
 
             UpdateColumns();
 
