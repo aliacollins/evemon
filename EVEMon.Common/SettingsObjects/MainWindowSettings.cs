@@ -11,6 +11,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             ShowOverview = true;
             ShowMenuBar = true;
+            Assets = new AssetSettings();
             MarketOrders = new MarketOrderSettings();
             Contracts = new ContractSettings();
             IndustryJobs = new IndustryJobSettings();
@@ -182,6 +183,13 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The contracts.</value>
         [XmlElement("contracts")]
         public ContractSettings Contracts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the assets.
+        /// </summary>
+        /// <value>The assets.</value>
+        [XmlElement("assets")]
+        public AssetSettings Assets { get; set; }
 
         /// <summary>
         /// Gets or sets the industry jobs.

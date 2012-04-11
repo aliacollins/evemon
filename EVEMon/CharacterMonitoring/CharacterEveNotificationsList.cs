@@ -218,7 +218,7 @@ namespace EVEMon.CharacterMonitoring
             UpdateColumns();
             m_init = true;
 
-            UpdateContent();
+            UpdateListVisibility();
         }
 
         # endregion
@@ -282,8 +282,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<EveNotification> eveNotifications = m_list.Where(
-                    x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, text));
+                IEnumerable<EveNotification> eveNotifications = m_list
+                    .Where(x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 
@@ -299,18 +299,26 @@ namespace EVEMon.CharacterMonitoring
                     }
                 }
 
-                // Display or hide the "no EVE mail messages" label
-                if (m_init)
-                {
-                    noEVENotificationsLabel.Visible = lvNotifications.Items.Count == 0;
-                    lvNotifications.Visible = splitContainerNotifications.Visible = !noEVENotificationsLabel.Visible;
-                }
+                UpdateListVisibility();
             }
             finally
             {
                 lvNotifications.EndUpdate();
                 lvNotifications.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Updates the list visibility.
+        /// </summary>
+        private void UpdateListVisibility()
+        {
+            // Display or hide the "no EVE mail messages" label
+            if (!m_init)
+                return;
+
+            noEVENotificationsLabel.Visible = lvNotifications.Items.Count == 0;
+            lvNotifications.Visible = splitContainerNotifications.Visible = !noEVENotificationsLabel.Visible;
         }
 
         /// <summary>
@@ -379,31 +387,39 @@ namespace EVEMon.CharacterMonitoring
                 lvNotifications.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (EveNotification eveNotification in group)
-                {
-                    if (String.IsNullOrEmpty(eveNotification.NotificationID.ToString(CultureConstants.DefaultCulture)))
-                        continue;
-
-                    ListViewItem item = new ListViewItem(eveNotification.Sender, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = eveNotification };
-
-                    // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < lvNotifications.Columns.Count + 1)
-                    {
-                        item.SubItems.Add(String.Empty);
-                    }
-
-                    // Creates the subitems
-                    for (int i = 0; i < lvNotifications.Columns.Count; i++)
-                    {
-                        ColumnHeader header = lvNotifications.Columns[i];
-                        EveNotificationColumn column = (EveNotificationColumn)header.Tag;
-                        SetColumn(eveNotification, item.SubItems[i], column);
-                    }
-
-                    lvNotifications.Items.Add(item);
-                }
+                lvNotifications.Items.AddRange(
+                    group.Select(eveNotification => new
+                                                        {
+                                                            eveNotification,
+                                                            item = new ListViewItem(eveNotification.Sender, listGroup)
+                                                                       {
+                                                                           UseItemStyleForSubItems = false,
+                                                                           Tag = eveNotification
+                                                                       }
+                                                        }).Select(x => CreateSubItems(x.eveNotification, x.item)).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Creates the list view sub items.
+        /// </summary>
+        /// <param name="eveNotification">The notification.</param>
+        /// <param name="item">The item.</param>
+        private ListViewItem CreateSubItems(EveNotification eveNotification, ListViewItem item)
+        {
+            // Add enough subitems to match the number of columns
+            while (item.SubItems.Count < lvNotifications.Columns.Count + 1)
+            {
+                item.SubItems.Add(String.Empty);
+            }
+
+            // Creates the subitems
+            for (int i = 0; i < lvNotifications.Columns.Count; i++)
+            {
+                SetColumn(eveNotification, item.SubItems[i], (EveNotificationColumn)lvNotifications.Columns[i].Tag);
+            }
+
+            return item;
         }
 
         /// <summary>
@@ -633,6 +649,9 @@ namespace EVEMon.CharacterMonitoring
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
 
+            if (m_columns[e.ColumnIndex].Width == lvNotifications.Columns[e.ColumnIndex].Width)
+                return;
+
             m_columns[e.ColumnIndex].Width = lvNotifications.Columns[e.ColumnIndex].Width;
             m_columnsChanged = true;
         }
@@ -653,7 +672,7 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
-            UpdateContent();
+            UpdateSort();
         }
 
         # endregion

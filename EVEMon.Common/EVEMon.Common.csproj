@@ -104,6 +104,9 @@
     <Compile Include="APIKeyQueryMonitor.cs" />
     <Compile Include="APIMethods.cs" />
     <Compile Include="ApiTesterUIHelper.cs" />
+    <Compile Include="Asset.cs" />
+    <Compile Include="AssetCollection.cs" />
+    <Compile Include="AssetComparer.cs" />
     <Compile Include="BlankCharacterUIHelper.cs" />
     <Compile Include="CharacterDataQuerying.cs" />
     <Compile Include="CharacterIdentityIgnoreList.cs" />
@@ -230,6 +233,7 @@
     <Compile Include="EmailProvider\YahooProvider.cs" />
     <Compile Include="EmploymentRecordCollection.cs" />
     <Compile Include="EmploymentRecord.cs" />
+    <Compile Include="EveFlags.cs" />
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
@@ -271,8 +275,11 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAPIAssetList.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
+    <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
+    <Compile Include="Serialization\API\SerializableAPIWalletTransactions.cs" />
     <Compile Include="Serialization\API\SerializableContractBidsListItem.cs" />
     <Compile Include="Serialization\API\SerializableContractItemsListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIContracts.cs" />
@@ -340,13 +347,18 @@
     <Compile Include="Serialization\FittingTools\SerializableFittingHardware.cs" />
     <Compile Include="Serialization\FittingTools\SerializableFittings.cs" />
     <Compile Include="Serialization\FittingTools\SerializableFittingShipType.cs" />
+    <Compile Include="Serialization\SerializableEveFlagsListItem.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
+    <Compile Include="Serialization\SerializableEveFlags.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIKey.cs" />
     <Compile Include="Serialization\Settings\SerializableContract.cs" />
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
+    <Compile Include="SettingsObjects\AssetColumn.cs" />
+    <Compile Include="SettingsObjects\AssetColumnSettings.cs" />
+    <Compile Include="SettingsObjects\AssetSettings.cs" />
     <Compile Include="SettingsObjects\ContractColumn.cs" />
     <Compile Include="SettingsObjects\ContractColumnSettings.cs" />
     <Compile Include="SettingsObjects\ContractSettings.cs" />
@@ -1019,6 +1031,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Serialization\Exportation\output-html.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Serialization\Flags.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

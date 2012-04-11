@@ -43,6 +43,7 @@ namespace EVEMon.Common
             QueryMonitors = new QueryMonitorCollection();
             SkillQueue = new SkillQueue(this);
             Standings = new StandingCollection(this);
+            Assets = new AssetCollection(this);
             CharacterMarketOrders = new MarketOrderCollection(this);
             CorporationMarketOrders = new MarketOrderCollection(this);
             CharacterContracts = new ContractCollection(this);
@@ -126,6 +127,11 @@ namespace EVEMon.Common
         /// Gets the standings for this character.
         /// </summary>
         public StandingCollection Standings { get; private set; }
+
+        /// <summary>
+        /// Gets the assets for this character.
+        /// </summary>
+        public AssetCollection Assets { get; private set; }
 
         /// <summary>
         /// Gets the collection of market orders.
@@ -691,15 +697,15 @@ namespace EVEMon.Common
             if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(
-                    m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods),
+                                                                                        lastUpdate.Method)));
             }
 
             if (m_corporationDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType))
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(
-                    m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods),
+                                                                                        lastUpdate.Method)));
             }
         }
 

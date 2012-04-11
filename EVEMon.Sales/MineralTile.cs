@@ -49,9 +49,9 @@ namespace EVEMon.Sales
         /// Gets or sets the quantity.
         /// </summary>
         /// <value>The quantity.</value>
-        public int Quantity
+        public long Quantity
         {
-            get { return Int32.Parse(txtStock.Text, CultureConstants.DefaultCulture); }
+            get { return Int64.Parse(txtStock.Text, CultureConstants.DefaultCulture); }
             set { txtStock.Text = value.ToString(CultureConstants.DefaultCulture); }
         }
 
@@ -126,11 +126,11 @@ namespace EVEMon.Sales
         private void UpdateSubtotal()
         {
             decimal pricePerUnit;
-            int quantity;
+            long quantity;
             if (!Decimal.TryParse(txtLastSell.Text, out pricePerUnit))
                 pricePerUnit = 0;
 
-            if (!Int32.TryParse(txtStock.Text, out quantity))
+            if (!Int64.TryParse(txtStock.Text, out quantity))
                 quantity = 0;
 
             Subtotal = pricePerUnit * quantity;

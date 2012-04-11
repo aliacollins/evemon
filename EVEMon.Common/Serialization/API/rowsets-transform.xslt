@@ -83,8 +83,16 @@
         <xsl:element name="{$rowName}">
           <xsl:for-each select="@* | node()">
             <xsl:choose>
+              <!-- Special condition for APIKeyInfo -->
               <xsl:when test="name(.)='characterName'">
                 <xsl:call-template name="trans-characterName" />
+              </xsl:when>
+              <!-- Special condition for rowset inside rowset (see AssetList) -->
+              <xsl:when test="@name='contents'">
+                <xsl:call-template name="rowsets">
+                  <xsl:with-param name="setName" select="@name" />
+                  <xsl:with-param name="rowName" select="substring(@name, 1, string-length(@name) - 1)" />
+                </xsl:call-template>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:copy/>

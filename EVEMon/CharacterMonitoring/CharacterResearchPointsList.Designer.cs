@@ -30,7 +30,7 @@ namespace EVEMon.CharacterMonitoring
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterResearchPointsList));
-            this.noResearchLabel = new System.Windows.Forms.Label();
+            this.noResearchPointsLabel = new System.Windows.Forms.Label();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.chAgentName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSolarSystem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -42,14 +42,14 @@ namespace EVEMon.CharacterMonitoring
             // 
             // noResearchLabel
             // 
-            this.noResearchLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.noResearchLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.noResearchLabel.Location = new System.Drawing.Point(0, 0);
-            this.noResearchLabel.Name = "noResearchLabel";
-            this.noResearchLabel.Size = new System.Drawing.Size(454, 434);
-            this.noResearchLabel.TabIndex = 1;
-            this.noResearchLabel.Text = "No research points are available.";
-            this.noResearchLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.noResearchPointsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.noResearchPointsLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.noResearchPointsLabel.Location = new System.Drawing.Point(0, 0);
+            this.noResearchPointsLabel.Name = "noResearchPointsLabel";
+            this.noResearchPointsLabel.Size = new System.Drawing.Size(454, 434);
+            this.noResearchPointsLabel.TabIndex = 1;
+            this.noResearchPointsLabel.Text = "No research points are available.";
+            this.noResearchPointsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ilIcons
             // 
@@ -105,7 +105,7 @@ namespace EVEMon.CharacterMonitoring
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lvResearchPoints);
-            this.Controls.Add(this.noResearchLabel);
+            this.Controls.Add(this.noResearchPointsLabel);
             this.Name = "MainWindowResearchPointsList";
             this.Size = new System.Drawing.Size(454, 434);
             this.ResumeLayout(false);
@@ -114,7 +114,7 @@ namespace EVEMon.CharacterMonitoring
 
         #endregion
 
-        private System.Windows.Forms.Label noResearchLabel;
+        private System.Windows.Forms.Label noResearchPointsLabel;
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.ColumnHeader chAgentName;
         private System.Windows.Forms.ColumnHeader chSolarSystem;

@@ -59,8 +59,11 @@ namespace EVEMon.CharacterMonitoring
             skillQueueList.Character = character;
             employmentList.Character = character;
             standingsList.Character = character;
+            assetsList.Character = character;
             ordersList.Character = character;
             contractsList.Character = character;
+            //walletJournalList.Character = character;
+            //walletTransactionsList.Character = character;
             jobsList.Character = character;
             researchList.Character = character;
             mailMessagesList.Character = character;
@@ -70,7 +73,8 @@ namespace EVEMon.CharacterMonitoring
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
                                             {
-                                                standingsIcon, ordersIcon, contractsIcon, jobsIcon,
+                                                standingsIcon, assetsIcon, ordersIcon, contractsIcon,
+                                                walletJournalIcon, walletTransactionsIcon, jobsIcon,
                                                 researchIcon, mailMessagesIcon, eveNotificationsIcon
                                             });
 
@@ -783,25 +787,29 @@ namespace EVEMon.CharacterMonitoring
         /// <returns></returns>
         private IEnumerable<IQueryMonitor> ButtonToMonitors(ToolStripItem button)
         {
-            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string)button.Tag);
+            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(x => x.Name == (string)button.Tag);
             CCPCharacter ccpCharacter = (CCPCharacter)m_character;
 
             List<IQueryMonitor> monitors = new List<IQueryMonitor>();
-            if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
+            if (page != null)
             {
-                APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
-            }
+                if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
+                {
+                    APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
+                    if (ccpCharacter.QueryMonitors[method] != null)
+                        monitors.Add(ccpCharacter.QueryMonitors[method]);
+                }
 
-            if (Enum.IsDefined(typeof(APICorporationMethods),
-                               String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag)))
-            {
-                APICorporationMethods method =
-                    (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods),
-                                                      String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag));
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+                if (Enum.IsDefined(typeof(APICorporationMethods),
+                                   String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag)))
+                {
+                    APICorporationMethods method =
+                        (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods),
+                                                          String.Format(CultureConstants.InvariantCulture, "Corporation{0}",
+                                                                        page.Tag));
+                    if (ccpCharacter.QueryMonitors[method] != null)
+                        monitors.Add(ccpCharacter.QueryMonitors[method]);
+                }
             }
 
             return monitors;
@@ -911,6 +919,9 @@ namespace EVEMon.CharacterMonitoring
         {
             groupMenu.DropDownItems.Clear();
 
+            if (multiPanel.SelectedPage == assetsPage)
+                CreateGroupMenuList<AssetGrouping, Enum>(assetsList);
+
             if (multiPanel.SelectedPage == ordersPage)
                 CreateGroupMenuList<MarketOrderGrouping, Enum>(ordersList);
 
@@ -935,6 +946,10 @@ namespace EVEMon.CharacterMonitoring
         private void groupMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             ToolStripItem item = e.ClickedItem;
+
+            if (multiPanel.SelectedPage == assetsPage)
+                GroupMenuSetting<AssetGrouping, Enum>(item, assetsList);
+
             if (multiPanel.SelectedPage == ordersPage)
                 GroupMenuSetting<MarketOrderGrouping, Enum>(item, ordersList);
 
@@ -958,6 +973,22 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (filterTimer.Enabled)
+                filterTimer.Stop();
+
+            filterTimer.Start();
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the filterTimer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void filterTimer_Tick(object sender, EventArgs e)
+        {
+            if (multiPanel.SelectedPage == assetsPage)
+                assetsList.TextFilter = searchTextBox.Text;
+
             if (multiPanel.SelectedPage == ordersPage)
                 ordersList.TextFilter = searchTextBox.Text;
 
@@ -975,6 +1006,8 @@ namespace EVEMon.CharacterMonitoring
 
             if (multiPanel.SelectedPage == eveNotificationsPage)
                 eveNotificationsList.TextFilter = searchTextBox.Text;
+
+            filterTimer.Stop();
         }
 
         /// <summary>
@@ -1036,7 +1069,7 @@ namespace EVEMon.CharacterMonitoring
                 showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
-            if (multiPanel.SelectedPage == researchPage)
+            if (multiPanel.SelectedPage == researchPage || multiPanel.SelectedPage == assetsPage)
             {
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
@@ -1064,6 +1097,21 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void columnSettingsMenuItem_Click(object sender, EventArgs e)
         {
+            if (multiPanel.SelectedPage == assetsPage)
+            {
+                using (AssetsColumnsSelectWindow f =
+                    new AssetsColumnsSelectWindow(assetsList.Columns.Cast<AssetColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        assetsList.Columns = f.Columns;
+                        Settings.UI.MainWindow.Assets.Columns.Clear();
+                        Settings.UI.MainWindow.Assets.Columns.AddRange(assetsList.Columns.Cast<AssetColumnSettings>());
+                    }
+                }
+            }
+
             if (multiPanel.SelectedPage == ordersPage)
             {
                 using (MarketOrdersColumnsSelectWindow f =

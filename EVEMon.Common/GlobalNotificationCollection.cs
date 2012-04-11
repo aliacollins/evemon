@@ -337,12 +337,27 @@ namespace EVEMon.Common
         internal void NotifyCharacterStandingsError(CCPCharacter character, APIResult<SerializableAPIStandings> result)
         {
             APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occurred while querying the personal standings.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            {
+                Description = "An error occurred while querying the personal standings.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies an assets querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterAssetsError(CCPCharacter character, APIResult<SerializableAPIAssetList> result)
+        {
+            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = "An error occurred while querying the personal assets list.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 
@@ -462,6 +477,38 @@ namespace EVEMon.Common
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a wallet journal querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterWalletJournalError(CCPCharacter character, APIResult<SerializableAPIWalletJournal> result)
+        {
+            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = "An error occurred while querying the personal wallet journal.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a wallet transactions querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterWalletTransactionsError(CCPCharacter character, APIResult<SerializableAPIWalletTransactions> result)
+        {
+            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = "An error occurred while querying the personal wallet transactions.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
             Notify(notification);
         }
 

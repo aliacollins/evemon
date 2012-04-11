@@ -19,7 +19,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The quantity.</value>
         [XmlAttribute("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the damage per job.

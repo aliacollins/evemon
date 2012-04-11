@@ -41,7 +41,7 @@ namespace EVEMon.Common.Data
             Icon = src.Icon;
             MetaGroup = src.MetaGroup;
             MarketGroup = group;
-            Family = ItemFamily.Bpo;
+            Family = ItemFamily.Blueprint;
 
             m_prerequisites = new FastList<StaticSkillLevel>(src.PrereqSkill != null ? src.PrereqSkill.Count : 0);
             if (src.PrereqSkill == null)

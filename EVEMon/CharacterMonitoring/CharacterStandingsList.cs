@@ -15,6 +15,8 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterStandingsList : UserControl
     {
+        #region Fields
+
         private CCPCharacter m_ccpCharacter;
 
         // Standings drawing - Region & text padding
@@ -33,6 +35,11 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_standingsBoldFont;
         private readonly List<string> m_collapsedGroups = new List<string>();
 
+        #endregion
+
+
+        #region Constructor
+
         public CharacterStandingsList()
         {
             InitializeComponent();
@@ -48,11 +55,18 @@ namespace EVEMon.CharacterMonitoring
             Disposed += OnDisposed;
         }
 
+        #endregion
+
+
+        #region Properties
+
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
         public Character Character { get; set; }
+
+        #endregion
 
 
         #region Inherited events
@@ -172,7 +186,7 @@ namespace EVEMon.CharacterMonitoring
             Standing standing = item as Standing;
             if (standing != null)
                 DrawItem(standing, e);
-            else 
+            else
                 DrawItem((String)item, e);
         }
 
@@ -223,7 +237,8 @@ namespace EVEMon.CharacterMonitoring
             string standingText = String.Format(CultureConstants.DefaultCulture, "{0}  {1:N2}", standing.EntityName,
                                                 standing.EffectiveStanding);
             string standingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})", standing.Status);
-            string standingsDetailsText = String.Format(CultureConstants.DefaultCulture, "{0} raises your effective standing from {1:N2}",
+            string standingsDetailsText = String.Format(CultureConstants.DefaultCulture,
+                                                        "{0} raises your effective standing from {1:N2}",
                                                         (standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel),
                                                         standing.StandingValue);
 

@@ -82,7 +82,7 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Private Finders
+        #region Helper Methods
 
         /// <summary>
         /// Assigns the supplemental info of an agent by its ID.

@@ -222,7 +222,7 @@ namespace EVEMon.CharacterMonitoring
             UpdateColumns();
             m_init = true;
 
-            UpdateContent();
+            UpdateListVisibility();
         }
 
         # endregion
@@ -285,8 +285,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<EveMailMessage> eveMailMessages = m_list.Where(
-                    x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, text));
+                IEnumerable<EveMailMessage> eveMailMessages = m_list
+                    .Where(x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 
@@ -302,18 +302,26 @@ namespace EVEMon.CharacterMonitoring
                     }
                 }
 
-                // Display or hide the "no EVE mail messages" label
-                if (m_init)
-                {
-                    noEVEMailMessagesLabel.Visible = lvMailMessages.Items.Count == 0;
-                    lvMailMessages.Visible = splitContainerMailMessages.Visible = !noEVEMailMessagesLabel.Visible;
-                }
+                UpdateListVisibility();
             }
             finally
             {
                 lvMailMessages.EndUpdate();
                 lvMailMessages.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Updates the list visibility.
+        /// </summary>
+        private void UpdateListVisibility()
+        {
+            // Display or hide the "no EVE mail messages" label
+            if (!m_init)
+                return;
+
+            noEVEMailMessagesLabel.Visible = lvMailMessages.Items.Count == 0;
+            lvMailMessages.Visible = splitContainerMailMessages.Visible = !noEVEMailMessagesLabel.Visible;
         }
 
         /// <summary>
@@ -422,31 +430,39 @@ namespace EVEMon.CharacterMonitoring
                 lvMailMessages.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (EveMailMessage eveMailMessage in group)
-                {
-                    if (String.IsNullOrEmpty(eveMailMessage.MessageID.ToString(CultureConstants.DefaultCulture)))
-                        continue;
-
-                    ListViewItem item = new ListViewItem(eveMailMessage.Sender, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = eveMailMessage };
-
-                    // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < lvMailMessages.Columns.Count + 1)
-                    {
-                        item.SubItems.Add(String.Empty);
-                    }
-
-                    // Creates the subitems
-                    for (int i = 0; i < lvMailMessages.Columns.Count; i++)
-                    {
-                        ColumnHeader header = lvMailMessages.Columns[i];
-                        EveMailMessageColumn column = (EveMailMessageColumn)header.Tag;
-                        SetColumn(eveMailMessage, item.SubItems[i], column);
-                    }
-
-                    lvMailMessages.Items.Add(item);
-                }
+                lvMailMessages.Items.AddRange(
+                    group.Select(eveMailMessage => new
+                                                       {
+                                                           eveMailMessage,
+                                                           item = new ListViewItem(eveMailMessage.Sender, listGroup)
+                                                                      {
+                                                                          UseItemStyleForSubItems = false,
+                                                                          Tag = eveMailMessage
+                                                                      }
+                                                       }).Select(x => CreateSubItems(x.eveMailMessage, x.item)).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Creates the list view sub items.
+        /// </summary>
+        /// <param name="eveMailMessage">The mail message.</param>
+        /// <param name="item">The item.</param>
+        private ListViewItem CreateSubItems(EveMailMessage eveMailMessage, ListViewItem item)
+        {
+            // Add enough subitems to match the number of columns
+            while (item.SubItems.Count < lvMailMessages.Columns.Count + 1)
+            {
+                item.SubItems.Add(String.Empty);
+            }
+
+            // Creates the subitems
+            for (int i = 0; i < lvMailMessages.Columns.Count; i++)
+            {
+                SetColumn(eveMailMessage, item.SubItems[i], (EveMailMessageColumn)lvMailMessages.Columns[i].Tag);
+            }
+
+            return item;
         }
 
         /// <summary>
@@ -749,6 +765,9 @@ namespace EVEMon.CharacterMonitoring
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
 
+            if (m_columns[e.ColumnIndex].Width == lvMailMessages.Columns[e.ColumnIndex].Width)
+                return;
+
             m_columns[e.ColumnIndex].Width = lvMailMessages.Columns[e.ColumnIndex].Width;
             m_columnsChanged = true;
         }
@@ -769,7 +788,7 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
-            UpdateContent();
+            UpdateSort();
         }
 
         /// <summary>

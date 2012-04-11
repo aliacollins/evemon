@@ -217,7 +217,7 @@ namespace EVEMon.Common
                 Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
 
                 // Bind the APIKeyInfo and CharacterList update period
-                if ((APIGenericMethods)method == APIGenericMethods.APIKeyInfo &&
+                if (method.Equals(APIGenericMethods.APIKeyInfo) &&
                     Updates.Periods[APIGenericMethods.CharacterList.ToString()] != Updates.Periods[method.ToString()])
                     Updates.Periods[method.ToString()] = Updates.Periods[APIGenericMethods.CharacterList.ToString()];
             }
@@ -249,6 +249,9 @@ namespace EVEMon.Common
         {
             // Initializes the plan columns or adds missing ones
             UI.PlanWindow.Columns.AddRange(UI.PlanWindow.DefaultColumns);
+
+            // Initializes the market order columns or adds missing ones
+            UI.MainWindow.Assets.Columns.AddRange(UI.MainWindow.Assets.DefaultColumns);
 
             // Initializes the market order columns or adds missing ones
             UI.MainWindow.MarketOrders.Columns.AddRange(UI.MainWindow.MarketOrders.DefaultColumns);

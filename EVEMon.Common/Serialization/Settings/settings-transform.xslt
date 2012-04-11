@@ -9,7 +9,7 @@
       <xsl:apply-templates select="@* | node()"/>
     </xsl:copy>
   </xsl:template>
-
+ 
   <!--Transforms the SerializableDictionary to its Modified version-->
   <xsl:template match="periods/dictionary">
     <xsl:for-each select ="item">

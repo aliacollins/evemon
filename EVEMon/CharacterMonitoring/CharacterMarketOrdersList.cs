@@ -19,6 +19,8 @@ namespace EVEMon.CharacterMonitoring
     /// </summary>
     public partial class CharacterMarketOrdersList : UserControl, IListView
     {
+        #region Fields
+
         private readonly List<MarketOrderColumnSettings> m_columns = new List<MarketOrderColumnSettings>();
         private readonly List<MarketOrder> m_list = new List<MarketOrder>();
 
@@ -66,6 +68,8 @@ namespace EVEMon.CharacterMonitoring
 
         private decimal m_issuedForCharacterEscrowAdditionalToCover,
                         m_issuedForCorporationEscrowAdditionalToCover;
+
+        #endregion
 
 
         # region Constructor
@@ -276,7 +280,7 @@ namespace EVEMon.CharacterMonitoring
 
             m_init = true;
 
-            UpdateContent();
+            UpdateListVisibility();
         }
 
         # endregion
@@ -359,7 +363,9 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<MarketOrder> orders = m_list.Where(x => IsTextMatching(x, text));
+                IEnumerable<MarketOrder> orders = m_list
+                    .Where(x => x.Item != null && x.Station != null).Where(x => IsTextMatching(x, text));
+
                 if (Character != null && m_hideInactive)
                     orders = orders.Where(x => x.IsAvailable);
 
@@ -383,20 +389,28 @@ namespace EVEMon.CharacterMonitoring
                 // Update the expandable panel info
                 UpdateExpPanelContent();
 
-                // Display or hide the "no orders" label
-                if (m_init)
-                {
-                    noOrdersLabel.Visible = lvOrders.Items.Count == 0;
-                    lvOrders.Visible = !noOrdersLabel.Visible;
-                    marketExpPanelControl.Visible = true;
-                    marketExpPanelControl.Header.Visible = true;
-                }
+                UpdateListVisibility();
             }
             finally
             {
                 lvOrders.EndUpdate();
                 lvOrders.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Updates the list visibility.
+        /// </summary>
+        private void UpdateListVisibility()
+        {
+            // Display or hide the "no orders" label
+            if (!m_init)
+                return;
+
+            noOrdersLabel.Visible = lvOrders.Items.Count == 0;
+            lvOrders.Visible = !noOrdersLabel.Visible;
+            marketExpPanelControl.Visible = true;
+            marketExpPanelControl.Header.Visible = true;
         }
 
         /// <summary>
@@ -485,49 +499,59 @@ namespace EVEMon.CharacterMonitoring
                 lvOrders.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (MarketOrder order in group)
-                {
-                    if (order.Item == null || order.Station == null)
-                        continue;
+                lvOrders.Items.AddRange(
+                    group.Select(order => new
+                                              {
+                                                  order,
+                                                  item = new ListViewItem(order.Item.Name, listGroup)
+                                                             {
+                                                                 UseItemStyleForSubItems = false,
+                                                                 Tag = order
+                                                             }
 
-                    ListViewItem item = new ListViewItem(order.Item.Name, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = order };
-
-                    // Display text as dimmed if the order is no longer available
-                    if (!order.IsAvailable)
-                        item.ForeColor = SystemColors.GrayText;
-
-                    // Display text highlighted if the order is modified
-                    if (order.State == OrderState.Modified)
-                        item.ForeColor = SystemColors.HotTrack;
-
-                    // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < lvOrders.Columns.Count + 1)
-                    {
-                        item.SubItems.Add(String.Empty);
-                    }
-
-                    // Creates the subitems
-                    for (int i = 0; i < lvOrders.Columns.Count; i++)
-                    {
-                        MarketOrderColumn column = (MarketOrderColumn)lvOrders.Columns[i].Tag;
-                        SetColumn(order, item.SubItems[i], column);
-                    }
-
-                    // Tooltip
-                    StringBuilder builder = new StringBuilder();
-                    builder.AppendFormat(CultureConstants.DefaultCulture,"Issued For: {0}", order.IssuedFor).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", order.Issued.ToLocalTime()).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration,
-                                         (order.Duration > 1 ? "s" : String.Empty)).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
-                                         order.Station.SolarSystem.FullLocation).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Station: {0}", order.Station.Name).AppendLine();
-                    item.ToolTipText = builder.ToString();
-
-                    lvOrders.Items.Add(item);
-                }
+                                              }).Select(x => CreateSubItems(x.order, x.item)).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Creates the list view sub items.
+        /// </summary>
+        /// <param name="order">The order.</param>
+        /// <param name="item">The item.</param>
+        private ListViewItem CreateSubItems(MarketOrder order, ListViewItem item)
+        {                    
+            // Display text as dimmed if the order is no longer available
+            if (!order.IsAvailable)
+                item.ForeColor = SystemColors.GrayText;
+
+            // Display text highlighted if the order is modified
+            if (order.State == OrderState.Modified)
+                item.ForeColor = SystemColors.HotTrack;
+
+            // Add enough subitems to match the number of columns
+            while (item.SubItems.Count < lvOrders.Columns.Count + 1)
+            {
+                item.SubItems.Add(String.Empty);
+            }
+
+            // Creates the subitems
+            for (int i = 0; i < lvOrders.Columns.Count; i++)
+            {
+                SetColumn(order, item.SubItems[i], (MarketOrderColumn)lvOrders.Columns[i].Tag);
+            }
+
+            // Tooltip
+            StringBuilder builder = new StringBuilder();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", order.IssuedFor).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", order.Issued.ToLocalTime()).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration,
+                                 (order.Duration > 1 ? "s" : String.Empty)).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
+                                 order.Station.SolarSystem.FullLocation).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Station: {0}", order.Station.Name).AppendLine();
+            item.ToolTipText = builder.ToString();
+
+            return item;
         }
 
         /// <summary>
@@ -784,6 +808,9 @@ namespace EVEMon.CharacterMonitoring
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
 
+            if (m_columns[e.ColumnIndex].Width == lvOrders.Columns[e.ColumnIndex].Width)
+                return;
+
             m_columns[e.ColumnIndex].Width = lvOrders.Columns[e.ColumnIndex].Width;
             m_columnsChanged = true;
         }
@@ -804,7 +831,7 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
-            UpdateContent();
+            UpdateSort();
         }
 
         /// <summary>
@@ -822,6 +849,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
             }
         }
+
         # endregion
 
 
@@ -1206,7 +1234,7 @@ namespace EVEMon.CharacterMonitoring
                                                             m_lblActiveCharBuyOrdersCount,
                                                             m_lblActiveCorpBuyOrdersCount
                                                         });
-          
+
             // Apply properties
             foreach (Label label in marketExpPanelControl.Controls.OfType<Label>())
             {

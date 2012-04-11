@@ -238,7 +238,7 @@ namespace EVEMon.CharacterMonitoring
 
             m_init = true;
 
-            UpdateContent();
+            UpdateListVisibility();
         }
 
         # endregion
@@ -318,8 +318,10 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<Contract> contracts = m_list.Where(x => x.ContractType != ContractType.None).Where(
-                    x => IsTextMatching(x, text));
+                IEnumerable<Contract> contracts = m_list
+                    .Where(x => x.ContractType != ContractType.None &&
+                                x.StartStation != null && x.EndStation != null)
+                    .Where(x => IsTextMatching(x, text));
 
                 if (Character != null && m_hideInactive)
                     contracts = contracts.Where(x => x.IsAvailable || x.NeedsAttention);
@@ -341,18 +343,26 @@ namespace EVEMon.CharacterMonitoring
                     }
                 }
 
-                // Display or hide the "no contracts" label
-                if (m_init)
-                {
-                    noContractsLabel.Visible = lvContracts.Items.Count == 0;
-                    lvContracts.Visible = !noContractsLabel.Visible;
-                }
+                UpdateListVisibility();
             }
             finally
             {
                 lvContracts.EndUpdate();
                 lvContracts.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Updates the list visibility.
+        /// </summary>
+        private void UpdateListVisibility()
+        {
+            // Display or hide the "no contracts" label
+            if (!m_init)
+                return;
+
+            noContractsLabel.Visible = lvContracts.Items.Count == 0;
+            lvContracts.Visible = !noContractsLabel.Visible;
         }
 
         /// <summary>
@@ -433,67 +443,76 @@ namespace EVEMon.CharacterMonitoring
                 lvContracts.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (Contract contract in group)
-                {
-                    // Exclude contracts with no station info
-                    if (contract.StartStation == null || contract.EndStation == null)
-                        continue;
-
-                    ListViewItem item = new ListViewItem(contract.ContractText, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = contract };
-
-                    // Display text as dimmed if the contract is no longer available
-                    if (!contract.IsAvailable && !contract.NeedsAttention)
-                        item.ForeColor = SystemColors.GrayText;
-
-                    // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < lvContracts.Columns.Count + 1)
-                    {
-                        item.SubItems.Add(String.Empty);
-                    }
-
-                    // Creates the subitems
-                    for (int i = 0; i < lvContracts.Columns.Count; i++)
-                    {
-                        ContractColumn column = (ContractColumn)lvContracts.Columns[i].Tag;
-                        SetColumn(contract, item.SubItems[i], column);
-                    }
-
-                    // Tooltip
-                    StringBuilder builder = new StringBuilder();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", contract.IssuedFor).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}",
-                                         contract.Issued.ToLocalTime()).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", contract.Duration,
-                                         (contract.Duration > 1 ? "s" : String.Empty)).AppendLine();
-
-                    if (contract.ContractType == ContractType.Courier)
-                    {
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Days To Complete: {0} Day{1}",
-                                             contract.DaysToComplete,
-                                             (contract.DaysToComplete > 1 ? "s" : String.Empty)).AppendLine();
-                    }
-
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}Solar System: {1}",
-                                         contract.ContractType == ContractType.Courier ? "Starting " : String.Empty,
-                                         contract.StartStation.SolarSystem.FullLocation).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "{0}Station: {1}",
-                                         contract.ContractType == ContractType.Courier ? "Starting " : String.Empty,
-                                         contract.StartStation.Name).AppendLine();
-
-                    if (contract.ContractType == ContractType.Courier)
-                    {
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Ending Solar System: {0}",
-                                             contract.EndStation.SolarSystem.FullLocation).AppendLine();
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Ending Station: {0}", contract.EndStation.Name).
-                            AppendLine();
-                    }
-
-                    item.ToolTipText = builder.ToString();
-
-                    lvContracts.Items.Add(item);
-                }
+                lvContracts.Items.AddRange(
+                    group.Select(contract => new
+                                                 {
+                                                     contract,
+                                                     item = new ListViewItem(contract.ContractText, listGroup)
+                                                                {
+                                                                    UseItemStyleForSubItems = false,
+                                                                    Tag = contract
+                                                                }
+                                                 }).Select(x => CreateSubItems(x.contract, x.item)).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Creates the list view sub items.
+        /// </summary>
+        /// <param name="contract">The contract.</param>
+        /// <param name="item">The item.</param>
+        private ListViewItem CreateSubItems(Contract contract, ListViewItem item)
+        {
+            // Display text as dimmed if the contract is no longer available
+            if (!contract.IsAvailable && !contract.NeedsAttention)
+                item.ForeColor = SystemColors.GrayText;
+
+            // Add enough subitems to match the number of columns
+            while (item.SubItems.Count < lvContracts.Columns.Count + 1)
+            {
+                item.SubItems.Add(String.Empty);
+            }
+
+            // Creates the subitems
+            for (int i = 0; i < lvContracts.Columns.Count; i++)
+            {
+                ContractColumn column = (ContractColumn)lvContracts.Columns[i].Tag;
+                SetColumn(contract, item.SubItems[i], column);
+            }
+
+            // Tooltip
+            StringBuilder builder = new StringBuilder();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", contract.IssuedFor).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}",
+                                 contract.Issued.ToLocalTime()).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", contract.Duration,
+                                 (contract.Duration > 1 ? "s" : String.Empty)).AppendLine();
+
+            if (contract.ContractType == ContractType.Courier)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Days To Complete: {0} Day{1}",
+                                     contract.DaysToComplete,
+                                     (contract.DaysToComplete > 1 ? "s" : String.Empty)).AppendLine();
+            }
+
+            builder.AppendFormat(CultureConstants.DefaultCulture, "{0}Solar System: {1}",
+                                 contract.ContractType == ContractType.Courier ? "Starting " : String.Empty,
+                                 contract.StartStation.SolarSystem.FullLocation).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "{0}Station: {1}",
+                                 contract.ContractType == ContractType.Courier ? "Starting " : String.Empty,
+                                 contract.StartStation.Name).AppendLine();
+
+            if (contract.ContractType == ContractType.Courier)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Ending Solar System: {0}",
+                                     contract.EndStation.SolarSystem.FullLocation).AppendLine();
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Ending Station: {0}", contract.EndStation.Name).
+                    AppendLine();
+            }
+
+            item.ToolTipText = builder.ToString();
+
+            return item;
         }
 
         /// <summary>
@@ -808,6 +827,9 @@ namespace EVEMon.CharacterMonitoring
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
                 return;
 
+            if (m_columns[e.ColumnIndex].Width == lvContracts.Columns[e.ColumnIndex].Width)
+                return;
+
             m_columns[e.ColumnIndex].Width = lvContracts.Columns[e.ColumnIndex].Width;
             m_columnsChanged = true;
         }
@@ -828,7 +850,7 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
-            UpdateContent();
+            UpdateSort();
         }
 
         /// <summary>

@@ -524,6 +524,11 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterPlanCollectionChanged;
 
         /// <summary>
+        /// Occurs when a character's potrait has been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitUpdated;
+
+        /// <summary>
         /// Occurs when a character sheet has been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterUpdated;
@@ -544,9 +549,9 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterStandingsUpdated;
 
         /// <summary>
-        /// Occurs when a character's potrait has been updated.
+        /// Occurs when a character assets have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitUpdated;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterAssetsUpdated;
 
         /// <summary>
         /// Occurs when both personal and corporation market orders of a character have been updated.
@@ -597,6 +602,16 @@ namespace EVEMon.Common
         /// Occurs when items list of a corporation's contract have been downloaded.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CorporationContractItemsDownloaded;
+
+        /// <summary>
+        /// Occurs when a character wallet journal have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterWalletJournalUpdated;
+
+        /// <summary>
+        /// Occurs when a character walet transactions have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterWalletTransactionsUpdated;
 
         /// <summary>
         /// Occurs when industry jobs of a character have been updated.
@@ -876,6 +891,18 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when the character assets updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterAssetsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterAssetsUpdated - {0}", character.Name);
+            Settings.Save();
+            if (CharacterAssetsUpdated != null)
+                CharacterAssetsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
         /// Called when both character and corporation issued market orders of a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
@@ -989,6 +1016,30 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCorporationContractItemsDownloaded - {0}", character.CorporationName);
             if (CorporationContractItemsDownloaded != null)
                 CorporationContractItemsDownloaded(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character wallet journal updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterWalletJournalUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterWalletJournalUpdated - {0}", character.Name);
+            Settings.Save();
+            if (CharacterWalletJournalUpdated != null)
+                CharacterWalletJournalUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character wallet transcations updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterWalletTransactionsUpdated(Character character)
+        {
+            Trace("EveMonClient.CharacterWalletTransactionsUpdated - {0}", character.Name);
+            Settings.Save();
+            if (CharacterWalletTransactionsUpdated != null)
+                CharacterWalletTransactionsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

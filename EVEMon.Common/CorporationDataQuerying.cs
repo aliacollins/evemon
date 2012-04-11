@@ -29,19 +29,19 @@ namespace EVEMon.Common
             m_corpMarketOrdersMonitor =
                 new CorporationQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter,
                                                                          APICorporationMethods.CorporationMarketOrders,
-                                                                         OnCorporationMarketOrdersUpdated) { QueryOnStartup = true };
+                                                                         OnMarketOrdersUpdated) { QueryOnStartup = true };
             m_corporationQueryMonitors.Add(m_corpMarketOrdersMonitor);
 
             m_corpContractsMonitor =
                 new CorporationQueryMonitor<SerializableAPIContracts>(ccpCharacter,
                                                                       APICorporationMethods.CorporationContracts,
-                                                                      OnCorporationContractsUpdated) { QueryOnStartup = true };
+                                                                      OnContractsUpdated) { QueryOnStartup = true };
             m_corporationQueryMonitors.Add(m_corpContractsMonitor);
 
             m_corpIndustryJobsMonitor =
                 new CorporationQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter,
                                                                          APICorporationMethods.CorporationIndustryJobs,
-                                                                         OnCorporationIndustryJobsUpdated) { QueryOnStartup = true };
+                                                                         OnIndustryJobsUpdated) { QueryOnStartup = true };
             m_corporationQueryMonitors.Add(m_corpIndustryJobsMonitor);
 
             m_corporationQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
@@ -134,7 +134,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which market orders gets queried first</remarks>
-        private void OnCorporationMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
+        private void OnMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
@@ -163,7 +163,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which contracts gets queried first</remarks>
-        private void OnCorporationContractsUpdated(APIResult<SerializableAPIContracts> result)
+        private void OnContractsUpdated(APIResult<SerializableAPIContracts> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
@@ -220,7 +220,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
-        private void OnCorporationIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
+        private void OnIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))

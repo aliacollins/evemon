@@ -72,6 +72,7 @@
             this.lvContracts.FullRowSelect = true;
             this.lvContracts.HideSelection = false;
             this.lvContracts.Location = new System.Drawing.Point(0, 0);
+            this.lvContracts.MultiSelect = false;
             this.lvContracts.Name = "lvContracts";
             this.lvContracts.Size = new System.Drawing.Size(454, 434);
             this.lvContracts.SmallImageList = this.ilIcons;

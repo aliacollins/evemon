@@ -16,6 +16,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The quantity.</value>
         [XmlAttribute("quantity")]
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
     }
 }

@@ -54,8 +54,8 @@ namespace EVEMon.Common
                     writer.Flush();
 
                     // Deserialize from the given stream
-                    stream.Seek(0, SeekOrigin.Begin);
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableNotificationRefTypeIDs));
+                    stream.Seek(0, SeekOrigin.Begin);
                     s_notificationTypes = (SerializableNotificationRefTypeIDs)xs.Deserialize(stream);
                 }
             }

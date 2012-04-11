@@ -29,9 +29,6 @@ namespace EVEMon.Common
             {
                 Items.Add(new Standing(m_character, srcStanding));
             }
-
-            // Fires the event regarding standings update
-            EveMonClient.OnCharacterStandingsUpdated(m_character);
         }
     }
 }

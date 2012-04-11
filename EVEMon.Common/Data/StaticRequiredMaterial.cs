@@ -28,7 +28,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets or sets the quantity.
         /// </summary>
-        public int Quantity { get; private set; }
+        public long Quantity { get; private set; }
 
         /// <summary>
         /// Gets or sets the damage per job.

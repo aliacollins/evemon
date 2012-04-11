@@ -175,7 +175,8 @@ namespace EVEMon.Common
         /// The advanced character features of APIMethods.
         /// </summary>
         AdvancedCharacterFeatures =
-            APICharacterMethods.AccountStatus | APICharacterMethods.MarketOrders | APICharacterMethods.Contracts |
+            APICharacterMethods.AccountStatus | APICharacterMethods.AssetList | APICharacterMethods.MarketOrders |
+            APICharacterMethods.Contracts | APICharacterMethods.WalletJournal | APICharacterMethods.WalletTransactions |
             APICharacterMethods.IndustryJobs | APICharacterMethods.ResearchPoints | APICharacterMethods.Standings |
             APICharacterMethods.MailMessages | APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
             APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts,
@@ -194,13 +195,22 @@ namespace EVEMon.Common
 
     /// <summary>
     /// Enumeration of the character related API methods. Each method has an access mask.
-    /// Each method should have an entry in APIMethods and
-    /// an equivalent string entry in NetworkConstants indicating the default path of the method.
+    /// Each method should have an entry in APIMethods and an equivalent string entry 
+    /// in NetworkConstants indicating the default path of the method.
     /// </summary>
     [Flags]
     public enum APICharacterMethods
     {
         None = 0,
+
+        /// <summary>
+        /// The account status. Used to retreive account create and expiration date.
+        /// </summary>
+        [Header("Account Status")]
+        [Description("The status of an account.")]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        AccountStatus = 1 << 25,
 
         /// <summary>
         /// A character sheet (bio, skills, implants, etc).
@@ -227,13 +237,12 @@ namespace EVEMon.Common
         Standings = 1 << 19,
 
         /// <summary>
-        /// The account status. Used to retreive account create and expiration date.
+        /// Asset list of a character.
         /// </summary>
-        [Header("Account Status")]
-        [Description("The status of an account.")]
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
-        [ForcedOnStartup]
-        AccountStatus = 1 << 25,
+        [Header("Assets")]
+        [Description("The assets of a character.")]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Long)]
+        AssetList = 1 << 1,
 
         /// <summary>
         /// The personal issued market orders of a character.
@@ -272,7 +281,7 @@ namespace EVEMon.Common
         /// </summary>
         [Header("EVE Mail Messages")]
         [Description("Mail messages for a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         MailMessages = 1 << 11,
 
         /// <summary>
@@ -280,8 +289,24 @@ namespace EVEMon.Common
         /// </summary>
         [Header("EVE Notifications")]
         [Description("Notifications messages for a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Long)]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         Notifications = 1 << 14,
+
+        /// <summary>
+        /// A character's wallet journal.
+        /// </summary>
+        [Header("Wallet Journal")]
+        [Description("Wallet journal for a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        WalletJournal = 1 << 21,
+
+        /// <summary>
+        /// A character's wallet transactions.
+        /// </summary>
+        [Header("Wallet Transactions")]
+        [Description("Wallet transactions for a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        WalletTransactions = 1 << 22,
 
         /// <summary>
         /// The skill in training of a character. Used to determine if an account type API key has a character in training.
@@ -312,11 +337,6 @@ namespace EVEMon.Common
         /// The character info. Used to fetch active ship, security status and last known location. 
         /// </summary>
         CharacterInfo = 1 << 23 | 1 << 24,
-
-        /// <summary>
-        /// Asset list of a character.
-        /// </summary>
-        AssetList = 1 << 1,
 
         /// <summary>
         /// Tha attendees to a character's calendar event.
@@ -352,16 +372,6 @@ namespace EVEMon.Common
         /// The upcoming calendar events for a character.
         /// </summary>
         UpcomingCalendarEvents = 1 << 20,
-
-        /// <summary>
-        /// A character's wallet journal.
-        /// </summary>
-        WalletJournal = 1 << 21,
-        
-        /// <summary>
-        /// A character's wallet transactions.
-        /// </summary>
-        WalletTransactions = 1 << 22,
 
         /// <summary>
         /// Allows the fetching of coordinate and name data for items owned by the character.
@@ -730,7 +740,7 @@ namespace EVEMon.Common
         StarbaseStructure = 2,
         Drone = 3,
         Ship = 4,
-        Bpo = 5
+        Blueprint = 5
     }
 
     /// <summary>

@@ -10,6 +10,8 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterEmploymentHistoryList : UserControl
     {
+        #region Fields
+
         private CCPCharacter m_ccpCharacter;
 
         private const int PadTop = 2;
@@ -25,6 +27,11 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly Font m_recordFont;
         private readonly Font m_recordBoldFont;
+
+        #endregion
+
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CharacterEmploymentHistoryList"/> class.
@@ -45,6 +52,11 @@ namespace EVEMon.CharacterMonitoring
             Disposed += OnDisposed;
         }
 
+        #endregion
+
+
+        #region Properties
+
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
@@ -59,6 +71,8 @@ namespace EVEMon.CharacterMonitoring
         {
             get { return Math.Max(m_recordFont.Height * 2 + PadTop * 2, EmploymentRecordDetailHeight); }
         }
+
+        #endregion
 
 
         #region Inherited events

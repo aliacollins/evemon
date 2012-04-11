@@ -194,7 +194,7 @@ namespace EVEMon.Common.Controls
                     return ImageType.Drone;
                 case ItemFamily.StarbaseStructure:
                     return ImageType.Structure;
-                case ItemFamily.Bpo:
+                case ItemFamily.Blueprint:
                     return ImageType.Blueprint;
                 default:
                     return ImageType.Item;

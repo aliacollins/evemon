@@ -16,6 +16,8 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterIndustryJobsList : UserControl, IListView
     {
+        #region Fields
+
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
         private readonly Timer m_timer = new Timer();
@@ -46,6 +48,8 @@ namespace EVEMon.CharacterMonitoring
 
         private int m_activeResearchJobsIssuedForCharacterCount,
                     m_activeResearchJobsIssuedForCorporationCount;
+
+        #endregion
 
 
         # region Constructor
@@ -228,6 +232,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            m_timer.Dispose();
+
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
@@ -260,7 +266,7 @@ namespace EVEMon.CharacterMonitoring
 
             m_init = true;
 
-            UpdateContent();
+            UpdateListVisibility();
         }
 
         # endregion
@@ -325,7 +331,10 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<IndustryJob> jobs = m_list.Where(x => IsTextMatching(x, text));
+                IEnumerable<IndustryJob> jobs = m_list
+                    .Where(x => x.InstalledItem != null &&
+                                x.OutputItem != null &&
+                                x.SolarSystem != null).Where(x => IsTextMatching(x, text));
 
                 if (Character != null && m_hideInactive)
                     jobs = jobs.Where(x => x.IsActive);
@@ -350,21 +359,29 @@ namespace EVEMon.CharacterMonitoring
                 // Update the expandable panel info
                 UpdateExpPanelContent();
 
-                // Display or hide the "no jobs" label
-                if (m_init)
-                {
-                    noJobsLabel.Visible = lvJobs.Items.Count == 0;
-                    lvJobs.Visible = !noJobsLabel.Visible;
-                    m_timer.Enabled = lvJobs.Visible;
-                    industryExpPanelControl.Visible = true;
-                    industryExpPanelControl.Header.Visible = true;
-                }
+                UpdateListVisibility();
             }
             finally
             {
                 lvJobs.EndUpdate();
                 lvJobs.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Updates the list visibility.
+        /// </summary>
+        private void UpdateListVisibility()
+        {
+            // Display or hide the "no jobs" label
+            if (!m_init)
+                return;
+
+            noJobsLabel.Visible = lvJobs.Items.Count == 0;
+            lvJobs.Visible = !noJobsLabel.Visible;
+            m_timer.Enabled = lvJobs.Visible;
+            industryExpPanelControl.Visible = true;
+            industryExpPanelControl.Header.Visible = true;
         }
 
         /// <summary>
@@ -463,62 +480,73 @@ namespace EVEMon.CharacterMonitoring
                 lvJobs.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (IndustryJob job in group)
-                {
-                    if (job.InstalledItem == null || job.OutputItem == null || job.SolarSystem == null)
-                        continue;
+                lvJobs.Items.AddRange(
+                    group.Select(job => new
+                                            {
+                                                job,
+                                                item = new ListViewItem(job.InstalledItem.Name, listGroup)
+                                                           {
+                                                               UseItemStyleForSubItems = false,
+                                                               Tag = job
+                                                           }
 
-                    ListViewItem item = new ListViewItem(job.InstalledItem.Name, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = job };
-
-                    // Display text as dimmed if the job is no longer available
-                    if (!job.IsActive)
-                        item.ForeColor = SystemColors.GrayText;
-
-                    // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < lvJobs.Columns.Count + 1)
-                    {
-                        item.SubItems.Add(String.Empty);
-                    }
-
-                    // Creates the subitems
-                    for (int i = 0; i < lvJobs.Columns.Count; i++)
-                    {
-                        ColumnHeader header = lvJobs.Columns[i];
-                        IndustryJobColumn column = (IndustryJobColumn)header.Tag;
-                        SetColumn(job, item.SubItems[i], column);
-                    }
-
-                    // Tooltip
-                    StringBuilder builder = new StringBuilder();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", job.IssuedFor).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Installed: {0}",
-                                         job.InstalledTime.ToLocalTime()).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
-                                         job.EndProductionTime.ToLocalTime()).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity).AppendLine();
-                    if (job.Activity == BlueprintActivity.ResearchingMaterialProductivity)
-                    {
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
-                                             job.InstalledME).AppendLine();
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
-                                             job.InstalledME + job.Runs).AppendLine();
-                    }
-                    if (job.Activity == BlueprintActivity.ResearchingTimeProductivity)
-                    {
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
-                                             job.InstalledPE).AppendLine();
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
-                                             job.InstalledPE + job.Runs).AppendLine();
-                    }
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
-                                         job.SolarSystem.FullLocation).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Installation: {0}", job.Installation).AppendLine();
-                    item.ToolTipText = builder.ToString();
-
-                    lvJobs.Items.Add(item);
-                }
+                                            }).Select(x => CreateSubItems(x.job, x.item)).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Creates the list view sub items.
+        /// </summary>
+        /// <param name="job">The job.</param>
+        /// <param name="item">The item.</param>
+        private ListViewItem CreateSubItems(IndustryJob job, ListViewItem item)
+        {
+            // Display text as dimmed if the job is no longer available
+            if (!job.IsActive)
+                item.ForeColor = SystemColors.GrayText;
+
+            // Add enough subitems to match the number of columns
+            while (item.SubItems.Count < lvJobs.Columns.Count + 1)
+            {
+                item.SubItems.Add(String.Empty);
+            }
+
+            // Creates the subitems
+            for (int i = 0; i < lvJobs.Columns.Count; i++)
+            {
+                ColumnHeader header = lvJobs.Columns[i];
+                IndustryJobColumn column = (IndustryJobColumn)header.Tag;
+                SetColumn(job, item.SubItems[i], column);
+            }
+
+            // Tooltip
+            StringBuilder builder = new StringBuilder();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", job.IssuedFor).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Installed: {0}",
+                                 job.InstalledTime.ToLocalTime()).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
+                                 job.EndProductionTime.ToLocalTime()).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity).AppendLine();
+            if (job.Activity == BlueprintActivity.ResearchingMaterialProductivity)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
+                                     job.InstalledME).AppendLine();
+                builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
+                                     job.InstalledME + job.Runs).AppendLine();
+            }
+            if (job.Activity == BlueprintActivity.ResearchingTimeProductivity)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
+                                     job.InstalledPE).AppendLine();
+                builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
+                                     job.InstalledPE + job.Runs).AppendLine();
+            }
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
+                                 job.SolarSystem.FullLocation).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Installation: {0}", job.Installation).AppendLine();
+            item.ToolTipText = builder.ToString();
+
+            return item;
         }
 
         /// <summary>
@@ -851,6 +879,9 @@ namespace EVEMon.CharacterMonitoring
             if (e.ColumnIndex == m_columnTTCDisplayIndex)
                 return;
 
+            if (m_columns[e.ColumnIndex].Width == lvJobs.Columns[e.ColumnIndex].Width)
+                return;
+
             m_columns[e.ColumnIndex].Width = lvJobs.Columns[e.ColumnIndex].Width;
             m_columnsChanged = true;
         }
@@ -871,7 +902,7 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
-            UpdateContent();
+            UpdateSort();
         }
 
         /// <summary>

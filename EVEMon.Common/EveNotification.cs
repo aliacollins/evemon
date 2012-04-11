@@ -8,7 +8,7 @@ namespace EVEMon.Common
     public sealed class EveNotification : IEveMessage
     {
         private readonly CCPCharacter m_ccpCharacter;
-        private readonly SerializableNotificationsListItem m_source;
+        private readonly int m_senderID;
 
         private string m_sender;
         private bool m_queryPending;
@@ -24,11 +24,11 @@ namespace EVEMon.Common
         internal EveNotification(CCPCharacter ccpCharacter, SerializableNotificationsListItem src)
         {
             m_ccpCharacter = ccpCharacter;
-            m_source = src;
 
             NotificationID = src.NotificationID;
             Type = EveNotificationType.GetType(src.TypeID);
-            m_sender = GetIDToName(src.SenderID);
+            m_senderID = src.SenderID;
+            m_sender = GetIDToName();
             SentDate = src.SentDate;
             Recipient = new List<string> { ccpCharacter.Name };
             EVENotificationText = new EveNotificationText(new SerializableNotificationTextsListItem
@@ -63,7 +63,7 @@ namespace EVEMon.Common
             get
             {
                 return m_sender == "Unknown"
-                           ? m_sender = GetIDToName(m_source.SenderID)
+                           ? m_sender = GetIDToName()
                            : m_sender;
             }
         }
@@ -112,22 +112,21 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the name of the ID.
         /// </summary>
-        /// <param name="id">The ID.</param>
         /// <returns></returns>
-        private static string GetIDToName(int id)
+        private string GetIDToName()
         {
-            if (id == 0)
+            if (m_senderID == 0)
                 return "(None)";
 
             // Look into EVEMon's data file if it's an NPC corporation or a players null sec corporation
-            Station station = ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id); 
+            Station station = ConquerableStation.GetStationByID(m_senderID) ?? StaticGeography.GetStationByID(m_senderID); 
             if (station != null)
                 return station.CorporationName;
 
             // Look into EVEMon's data file if it's an agent
             // In case we didn't found any, query the API
-            Agent agent = StaticGeography.GetAgentByID(id);
-            return agent != null ? agent.Name : EveIDToName.GetIDToName(id);
+            Agent agent = StaticGeography.GetAgentByID(m_senderID);
+            return agent != null ? agent.Name : EveIDToName.GetIDToName(m_senderID);
         }
 
         #endregion

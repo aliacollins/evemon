@@ -17,7 +17,8 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     /// <remarks>
     /// Should be an abstract class but Visual Studio Designer throws a wobbler when you
-    /// try to design a class that inherits from an abstract class.</remarks>
+    /// try to design a class that inherits from an abstract class.
+    /// </remarks>
     internal partial class EveObjectBrowserControl : UserControl
     {
         protected const int Pad = 3;

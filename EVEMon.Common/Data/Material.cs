@@ -36,7 +36,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the reprocessed quantity.
         /// </summary>
-        public int Quantity { get; private set; }
+        public long Quantity { get; private set; }
 
         #endregion
     }

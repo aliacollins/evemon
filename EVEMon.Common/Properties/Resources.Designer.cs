@@ -179,16 +179,15 @@ namespace EVEMon.Common.Properties {
         ///                xmlns:msxsl=&quot;urn:schemas-microsoft-com:xslt&quot; exclude-result-prefixes=&quot;msxsl&quot;&gt;
         ///  &lt;xsl:strip-space elements=&quot;*&quot; /&gt;
         ///  &lt;xsl:output method=&quot;xml&quot; indent=&quot;yes&quot;/&gt;
-        ///  
+        ///
         ///  &lt;xsl:template match=&quot;@* | node()&quot;&gt;
         ///    &lt;xsl:copy&gt;
         ///      &lt;xsl:apply-templates select=&quot;@* | node()&quot;/&gt;
         ///    &lt;/xsl:copy&gt;
         ///  &lt;/xsl:template&gt;
         ///
-        ///  &lt;xsl:template match=&quot;@Name&quot;&gt;
-        ///    &lt;xsl:attribute name=&quot;name&quot;&gt;
-        ///     [rest of string was truncated]&quot;;.
+        ///  &lt;!-- Renaming attribute &apos;Name&apos; in items datafile to &apos;name&apos; --&gt;
+        ///  &lt;xs [rest of string was truncated]&quot;;.
         /// </summary>
         public static string DatafilesXSLT {
             get {
@@ -333,6 +332,27 @@ namespace EVEMon.Common.Properties {
             get {
                 object obj = ResourceManager.GetObject("Faction", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;flags xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+        ///  &lt;flag id=&quot;0&quot; text=&quot;None&quot;/&gt;
+        ///  &lt;flag id=&quot;1&quot; text=&quot;Wallet&quot;/&gt;
+        ///  &lt;flag id=&quot;2&quot; text=&quot;Factory&quot;/&gt;
+        ///  &lt;flag id=&quot;3&quot; text=&quot;Wardrobe&quot;/&gt;
+        ///  &lt;flag id=&quot;4&quot; text=&quot;Hangar&quot;/&gt;
+        ///  &lt;flag id=&quot;5&quot; text=&quot;Cargo&quot;/&gt;
+        ///  &lt;flag id=&quot;6&quot; text=&quot;Briefcase&quot;/&gt;
+        ///  &lt;flag id=&quot;7&quot; text=&quot;Skill&quot;/&gt;
+        ///  &lt;flag id=&quot;8&quot; text=&quot;Reward&quot;/&gt;
+        ///  &lt;flag id=&quot;9&quot; text=&quot;Character in station connected&quot;/&gt;
+        ///  &lt;flag id=&quot;10&quot; te [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Flags {
+            get {
+                return ResourceManager.GetString("Flags", resourceCulture);
             }
         }
         
@@ -697,9 +717,9 @@ namespace EVEMon.Common.Properties {
         ///      &lt;xsl:apply-templates select=&quot;@* | node()&quot;/&gt;
         ///    &lt;/xsl:copy&gt;
         ///  &lt;/xsl:template&gt;
-        ///
+        /// 
         ///  &lt;!--Transforms the SerializableDictionary to its Modified version--&gt;
-        ///  &lt;xsl:templa [rest of string was truncated]&quot;;.
+        ///  &lt;xsl:templ [rest of string was truncated]&quot;;.
         /// </summary>
         public static string SettingsXSLT {
             get {

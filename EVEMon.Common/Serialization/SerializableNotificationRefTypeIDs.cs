@@ -19,6 +19,5 @@ namespace EVEMon.Common.Serialization
         {
             get { return m_types; }
         }
-
     }
 }
