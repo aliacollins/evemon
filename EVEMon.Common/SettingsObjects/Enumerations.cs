@@ -215,7 +215,13 @@ namespace EVEMon.Common.SettingsObjects
         Location = 7,
 
         [Header("Group by location (Desc)")]
-        LocationDesc = 8
+        LocationDesc = 8,
+
+        [Header("Group by jumps")]
+        Jumps = 9,
+
+        [Header("Group by jumps (Desc)")]
+        JumpsDesc = 10
     }
 
     #endregion

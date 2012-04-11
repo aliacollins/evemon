@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -6,8 +7,8 @@ namespace EVEMon.Common
 {
     public sealed class Asset
     {
-        private readonly short m_rawQuantity;
-        private string m_location;
+        private readonly Character m_character;
+        private long m_locationID;
 
 
         #region Constructor
@@ -15,15 +16,19 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="Asset"/> class.
         /// </summary>
-        /// <param name="src">The SRC.</param>
-        public Asset(SerializableAssetListItem src)
+        /// <param name="character">The character.</param>
+        /// <param name="src">The source.</param>
+        public Asset(Character character, SerializableAssetListItem src)
         {
+            m_character = character;
+
             ID = src.ItemID;
             LocationID = src.LocationID;
-            Item = StaticItems.GetItemByID(src.TypeID);
             Quantity = src.Quantity;
+            Item = StaticItems.GetItemByID(src.TypeID);
             Flag = EveFlags.GetFlagText(src.Flag);
-            m_rawQuantity = src.RawQuantity;
+            BlueprintType = GetBlueprintType(src.RawQuantity);
+            Volume = GetVolume();
         }
 
         #endregion
@@ -39,18 +44,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the location ID.
         /// </summary>
-        internal long LocationID { get; set; }
-
-        /// <summary>
-        /// Gets the location.
-        /// </summary>
-        public string Location
+        internal long LocationID
         {
-            get
+            get { return m_locationID; }
+            set
             {
-                return String.IsNullOrEmpty(m_location)
-                           ? m_location = GetLocation()
-                           : m_location;
+                m_locationID = value;
+                Location = GetLocation();
+                Jumps = GetJumps();
             }
         }
 
@@ -70,19 +71,6 @@ namespace EVEMon.Common
         public Item Item { get; private set; }
 
         /// <summary>
-        /// Gets the type of the blueprint.
-        /// </summary>
-        public string BlueprintType
-        {
-            get
-            {
-                return Item.CategoryName == ItemFamily.Blueprint.ToString()
-                           ? m_rawQuantity == -2 ? "Copy" : "Original"
-                           : String.Empty;
-            }
-        }
-
-        /// <summary>
         /// Gets the container.
         /// </summary>
         public string Container { get; internal set; }
@@ -93,32 +81,64 @@ namespace EVEMon.Common
         public long Quantity { get; private set; }
 
         /// <summary>
-        /// Gets the volume.
+        /// Gets the flag.
         /// </summary>
-        public double Volume
+        public string Flag { get; private set; }
+
+        /// <summary>
+        /// Gets the type of the blueprint.
+        /// </summary>
+        public string BlueprintType { get; private set; }
+
+        /// <summary>
+        /// Gets the location.
+        /// </summary>
+        public string Location { get; private set; }
+
+        /// <summary>
+        /// Gets the jumps count.
+        /// </summary>
+        public int Jumps { get; private set; }
+
+        /// <summary>
+        /// Gets the jumps text.
+        /// </summary>
+        public string JumpsText
         {
             get
             {
-                if (Item != null)
-                {
-                    EveProperty prop = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
-                    if (prop != null)
-                        return prop.GetNumericValue(Item);
-                }
-
-                return 0d;
+                return Jumps == -1 ? String.Empty : String.Intern(String.Format("{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty));
             }
         }
 
         /// <summary>
-        /// Gets the flag.
+        /// Gets the volume.
         /// </summary>
-        public string Flag { get; private set; }
+        public double Volume { get; private set; }
 
         #endregion
 
 
         #region Helper Methods
+
+        private string GetBlueprintType(short rawQuantity)
+        {
+            return Item != null && Item.CategoryName == ItemFamily.Blueprint.ToString()
+                       ? rawQuantity == -2 ? "Copy" : "Original"
+                       : String.Empty;
+        }
+
+        private double GetVolume()
+        {
+            if (Item != null)
+            {
+                EveProperty prop = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
+                if (prop != null)
+                    return prop.GetNumericValue(Item);
+            }
+
+            return 0d;
+        }
 
         /// <summary>
         /// Gets the location.
@@ -129,24 +149,44 @@ namespace EVEMon.Common
             if (LocationID == 0)
                 return String.Empty;
 
+            string location = LocationID.ToString();
+
             if (LocationID <= Int32.MaxValue)
             {
                 int locationID = Convert.ToInt32(LocationID);
                 Station station = ConquerableStation.GetStationByID(locationID) ?? StaticGeography.GetStationByID(locationID);
 
-                if (station == null)
-                {
-                    SolarSystem = StaticGeography.GetSolarSystemByID(locationID);
-                    FullLocation = SolarSystem == null ? LocationID.ToString() : SolarSystem.FullLocation;
-                    return SolarSystem == null ? LocationID.ToString() : SolarSystem.Name;
-                }
+                SolarSystem = station == null
+                                  ? StaticGeography.GetSolarSystemByID(locationID)
+                                  : station.SolarSystem;
 
-                SolarSystem = station.SolarSystem;
-                FullLocation = station.FullLocation;
-                return station.Name;
+                FullLocation = station == null
+                                   ? SolarSystem == null
+                                         ? location
+                                         : SolarSystem.FullLocation
+                                   : station.FullLocation;
+
+                return station == null
+                           ? SolarSystem == null
+                                 ? location
+                                 : SolarSystem.Name
+                           : station.Name;
             }
 
-            return LocationID.ToString();
+            return location;
+        }
+
+        /// <summary>
+        /// Gets the jumps.
+        /// </summary>
+        /// <returns></returns>
+        private int GetJumps()
+        {
+            if (m_character.LastKnownSolarSystem == null || SolarSystem == null)
+                return -1;
+
+            return m_character.LastKnownSolarSystem.GetFastestPathTo(SolarSystem, PathSearchCriteria.FewerJumps)
+                                  .Count(system => system != m_character.LastKnownSolarSystem);
         }
 
         #endregion

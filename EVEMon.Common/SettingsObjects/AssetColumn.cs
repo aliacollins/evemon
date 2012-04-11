@@ -15,7 +15,7 @@ namespace EVEMon.Common.SettingsObjects
         [Description("Quantity")]
         Quantity = 1,
 
-        [Header("Volume")]
+        [Header("Volume (m³)")]
         [Description("Volume")]
         Volume = 2,
 
@@ -53,6 +53,10 @@ namespace EVEMon.Common.SettingsObjects
 
         [Header("Path")]
         [Description("Location (Path)")]
-        FullLocation = 11
+        FullLocation = 11,
+
+        [Header("Jumps")]
+        [Description("Jumps (away from last known location)")]
+        Jumps = 12
     }
 }

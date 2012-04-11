@@ -188,6 +188,7 @@ namespace EVEMon.CharacterMonitoring
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             Assets = (ccpCharacter == null ? null : ccpCharacter.Assets);
             Columns = Settings.UI.MainWindow.Assets.Columns;
+            Grouping = (Character == null ? AssetGrouping.NoGroup : Character.UISettings.AssetsGroupBy);
 
             UpdateColumns();
 
@@ -353,6 +354,16 @@ namespace EVEMon.CharacterMonitoring
                         assets.GroupBy(x => x.Location).OrderByDescending(x => x.Key);
                     UpdateContent(groups8);
                     break;
+                case AssetGrouping.Jumps:
+                    IOrderedEnumerable<IGrouping<int, Asset>> groups9 =
+                        assets.GroupBy(x => x.Jumps).OrderBy(x => x.Key);
+                    UpdateContent(groups9);
+                    break;
+                case AssetGrouping.JumpsDesc:
+                    IOrderedEnumerable<IGrouping<int, Asset>> groups10 =
+                        assets.GroupBy(x => x.Jumps).OrderByDescending(x => x.Key);
+                    UpdateContent(groups10);
+                    break;
             }
         }
 
@@ -390,7 +401,14 @@ namespace EVEMon.CharacterMonitoring
             // Add the groups
             foreach (IGrouping<TKey, Asset> group in groups)
             {
-                ListViewGroup listGroup = new ListViewGroup(group.Key.ToString());
+                string groupText;
+                if (group.Key is int) // Really ugly way but couldn't figured another way
+                    groupText = group.First().JumpsText;
+                else
+                    groupText = group.Key.ToString();
+
+
+                ListViewGroup listGroup = new ListViewGroup(groupText);
                 lvAssets.Groups.Add(listGroup);
 
                 // Add the items in every group
@@ -537,6 +555,9 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case AssetColumn.FullLocation:
                     item.Text = asset.FullLocation;
+                    break;
+                case AssetColumn.Jumps:
+                    item.Text = asset.JumpsText;
                     break;
                 default:
                     throw new NotImplementedException();

@@ -1487,6 +1487,9 @@ namespace EVEMon.CharacterMonitoring
             list.Grouping = grouping;
             T obj = default(T);
 
+            if (obj is AssetGrouping)
+                m_character.UISettings.AssetsGroupBy = (AssetGrouping)grouping;
+  
             if (obj is MarketOrderGrouping)
                 m_character.UISettings.OrdersGroupBy = (MarketOrderGrouping)grouping;
 

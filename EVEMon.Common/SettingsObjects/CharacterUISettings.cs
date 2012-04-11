@@ -40,6 +40,13 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
+        /// Gets or sets the assets group by.
+        /// </summary>
+        /// <value>The assets group by.</value>
+        [XmlElement("assetsGroupBy")]
+        public AssetGrouping AssetsGroupBy { get; set; }
+
+        /// <summary>
         /// Gets or sets the orders group by.
         /// </summary>
         /// <value>The orders group by.</value>

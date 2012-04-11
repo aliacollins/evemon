@@ -28,12 +28,12 @@ namespace EVEMon.Common
             // Import the research points from the API
             foreach (SerializableAssetListItem srcAsset in src)
             {
-                Asset asset = new Asset(srcAsset) { Container = String.Empty };
+                Asset asset = new Asset(m_character, srcAsset) { Container = String.Empty };
                 Items.Add(asset);
 
                 foreach (SerializableAssetListItem content in srcAsset.Contents)
                 {
-                    Items.Add(new Asset(content) { LocationID = asset.LocationID, Container = asset.Item.Name });
+                    Items.Add(new Asset(m_character, content) { LocationID = asset.LocationID, Container = asset.Item.Name });
                 }
             }
         }

@@ -47,11 +47,8 @@ namespace EVEMon.Common.SettingsObjects
                                                    {
                                                        AssetColumn.ItemName,
                                                        AssetColumn.Quantity,
-                                                       AssetColumn.Group,
-                                                       AssetColumn.Category,
-                                                       AssetColumn.Container,
-                                                       AssetColumn.Flag,
-                                                       AssetColumn.Location
+                                                       AssetColumn.Location,
+                                                       AssetColumn.Jumps
                                                    };
 
                 return EnumExtensions.GetValues<AssetColumn>().Where(

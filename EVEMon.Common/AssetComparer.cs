@@ -5,11 +5,12 @@ using EVEMon.Common.SettingsObjects;
 namespace EVEMon.Common
 {
     public sealed class AssetComparer : Comparer<Asset>
-    {        private readonly AssetColumn m_column;
+    {
+        private readonly AssetColumn m_column;
         private readonly bool m_isAscending;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResearchPointComparer"/> class.
+        /// Initializes a new instance of the <see cref="AssetComparer"/> class.
         /// </summary>
         /// <param name="column">The column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
@@ -20,7 +21,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs a comparison of two objects of the <see cref="ResearchPoint" /> type and returns a value
+        /// Performs a comparison of two objects of the <see cref="Asset" /> type and returns a value
         /// indicating whether one object is less than, equal to, or greater than the other.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
@@ -42,7 +43,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Performs a comparison of two objects of the <see cref="ResearchPoint" /> type and returns a value
+        /// Performs a comparison of two objects of the <see cref="Asset" /> type and returns a value
         /// indicating whether one object is less than, equal to, or greater than the other.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
@@ -83,6 +84,8 @@ namespace EVEMon.Common
                     return x.SolarSystem.Constellation.Region.CompareTo(y.SolarSystem.Constellation.Region);
                 case AssetColumn.SolarSystem:
                     return x.SolarSystem.CompareTo(y.SolarSystem);
+                case AssetColumn.Jumps:
+                    return String.Compare(x.JumpsText, y.JumpsText, StringComparison.CurrentCulture);
                 default:
                     return 0;
             }
