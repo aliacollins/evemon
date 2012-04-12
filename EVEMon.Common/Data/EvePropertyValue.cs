@@ -18,7 +18,7 @@ namespace EVEMon.Common.Data
             : this()
         {
             Property = StaticProperties.GetPropertyByID(src.ID);
-            Value = String.Intern(src.Value);
+            Value = src.Value;
         }
 
         #endregion

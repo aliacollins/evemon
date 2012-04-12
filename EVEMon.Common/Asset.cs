@@ -107,7 +107,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return Jumps == -1 ? String.Empty : String.Intern(String.Format("{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty));
+                return Jumps == -1 ? String.Empty : String.Format("{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
             }
         }
 
