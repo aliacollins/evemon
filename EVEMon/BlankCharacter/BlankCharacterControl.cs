@@ -39,6 +39,7 @@ namespace EVEMon.BlankCharacter
             UpdateBloodlineControl();
         }
 
+
         #region Update Methods
 
         /// <summary>

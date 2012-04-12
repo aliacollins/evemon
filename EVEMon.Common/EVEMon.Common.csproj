@@ -1033,7 +1033,7 @@
     <None Include="Serialization\Exportation\output-html.xslt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Serialization\Flags.xml" />
+    <EmbeddedResource Include="Serialization\Flags.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

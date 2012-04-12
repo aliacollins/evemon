@@ -315,7 +315,7 @@ namespace EVEMon.SkillPlanner
                             x =>
                                 {
                                     EvePropertyValue? eveProperty = x.Properties[prop.ID];
-                                    return (eveProperty != null && (prop.DefaultValue != eveProperty.Value.Value));
+                                    return (eveProperty != null && prop.DefaultValue != eveProperty.Value.Value);
                                 });
                     }
 

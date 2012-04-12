@@ -21,12 +21,15 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class LoadoutImportationForm : EVEMonForm
     {
+        #region Fields
+
         private readonly List<Item> m_objects = new List<Item>();
         private readonly List<StaticSkillLevel> m_skillsToAdd = new List<StaticSkillLevel>();
 
         private readonly string[] m_orderedNodeNames = new[]
                                                            {
-                                                               "High", "Med", "Low", "Rigs", "Subsystems", "Ammunition", "Drones"
+                                                               "High", "Med", "Low", "Rigs",
+                                                               "Subsystems", "Ammunition", "Drones"
                                                            };
 
         private static string[] s_lines;
@@ -36,6 +39,8 @@ namespace EVEMon.SkillPlanner
         private BaseCharacter m_character;
         private LoadoutFormat m_loadoutFormat;
         private string m_loadoutName;
+
+        #endregion
 
 
         #region Constructors
