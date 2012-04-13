@@ -11,7 +11,7 @@ namespace EVEMon.Common.Controls
     {
         private static readonly DateTime s_paintTime = DateTime.UtcNow;
 
-        private readonly SkillQueueToolTip m_toolTip;
+        private readonly InfiniteDisplayToolTip m_toolTip;
 
         private DateTime m_nextRepainting = DateTime.MinValue;
         private SkillQueue m_skillQueue;
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public SkillQueueControl()
         {
-            m_toolTip = new SkillQueueToolTip(this);
+            m_toolTip = new InfiniteDisplayToolTip(this);
 
             Disposed += OnDisposed;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
@@ -407,6 +407,48 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
+        /// Displays the skill tool tip.
+        /// </summary>
+        /// <param name="skillRect">The skill rect.</param>
+        /// <param name="skill">The skill.</param>
+        private void DisplaySkillToolTip(Rectangle skillRect, QueuedSkill skill)
+        {
+            const string Format = "{0} {1}\n  Start{2}\t{3}\n  Ends\t{4}";
+            string skillName = skill.SkillName;
+            string skillLevel = Skill.GetRomanFromInt(skill.Level);
+            string skillStart = (skill.Owner.IsTraining
+                                     ? skill.StartTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local)
+                                     : "Paused");
+            string skillEnd = (skill.Owner.IsTraining
+                                   ? skill.EndTime.ToLocalTime().ToAbsoluteDateTimeDescription(DateTimeKind.Local)
+                                   : "Paused");
+            string startText = (skill.StartTime < DateTime.UtcNow ? "ed" : "s");
+            string text = String.Format(CultureConstants.DefaultCulture, Format, skillName, skillLevel, startText, skillStart,
+                                        skillEnd);
+            Size textSize = TextRenderer.MeasureText(text, Font);
+            Size toolTipSize = new Size(textSize.Width + 14, textSize.Height + 11);
+            Point tipPoint = new Point(((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2) - toolTipSize.Width / 2, -toolTipSize.Height);
+            tipPoint.Offset(0, -3);
+            m_toolTip.Show(text, tipPoint);
+        }
+
+        /// <summary>
+        /// Displays the free room tool tip.
+        /// </summary>
+        /// <param name="emptyRect">The empty rect.</param>
+        private void DisplayFreeRoomToolTip(Rectangle emptyRect)
+        {
+            TimeSpan leftTime = (m_skillQueue.IsPaused ? s_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;
+            string text = String.Format(CultureConstants.DefaultCulture, "Free room:{0}",
+                                        leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
+            Size textSize = TextRenderer.MeasureText(text, Font);
+            Size toolTipSize = new Size(textSize.Width + 14, textSize.Height + 11);
+            Point tipPoint = new Point(((emptyRect.Right + emptyRect.Left) / 2) - toolTipSize.Width / 2, - toolTipSize.Height);
+            tipPoint.Offset(0, -3);
+            m_toolTip.Show(text, tipPoint);
+        }
+
+        /// <summary>
         /// Triggers when the mouse is moved displays skill.
         /// </summary>
         /// <param name="e"></param>
@@ -414,6 +456,8 @@ namespace EVEMon.Common.Controls
         {
             if (e == null)
                 throw new ArgumentNullException("e");
+
+            base.OnMouseMove(e);
 
             if (m_skillQueue == null)
                 return;
@@ -434,9 +478,7 @@ namespace EVEMon.Common.Controls
                 if (!skillRect.Contains(e.Location))
                     continue;
 
-                Point tipPoint = new Point((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2, e.Location.Y);
-                m_toolTip.Display(skill, tipPoint);
-                base.OnMouseMove(e);
+                DisplaySkillToolTip(skillRect, skill);
                 return;
             }
 
@@ -444,17 +486,11 @@ namespace EVEMon.Common.Controls
             Rectangle emptyRect = new Rectangle(lastX, 0, Width - lastX, Height);
             if (emptyRect.Contains(e.Location))
             {
-                TimeSpan leftTime = (m_skillQueue.IsPaused ? s_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;
-                string text = String.Format(CultureConstants.DefaultCulture, "Free room:{0}",
-                                            leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
-                Point tipPoint = new Point((emptyRect.Right + emptyRect.Left) / 2, e.Location.Y);
-                m_toolTip.Display(text, tipPoint);
-                base.OnMouseMove(e);
+                DisplayFreeRoomToolTip(emptyRect);
                 return;
             }
 
             m_toolTip.Hide();
-            base.OnMouseMove(e);
         }
 
         /// <summary>

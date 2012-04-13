@@ -129,6 +129,9 @@
     <Compile Include="Controls\ColumnSelectWindow.Designer.cs">
       <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\InfiniteDisplayToolTip.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\DraggableListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -455,7 +458,6 @@
     <Compile Include="SettingsObjects\ResearchColumn.cs" />
     <Compile Include="SettingsObjects\ResearchColumnSettings.cs" />
     <Compile Include="SettingsObjects\ResearchSettings.cs" />
-    <Compile Include="SkillQueueToolTip.cs" />
     <Compile Include="Threading\Dispatcher.cs" />
     <Compile Include="Threading\ActorTimer.cs" />
     <Compile Include="Threading\IActor.cs" />
