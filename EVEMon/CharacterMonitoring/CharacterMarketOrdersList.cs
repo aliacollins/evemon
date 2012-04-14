@@ -98,7 +98,6 @@ namespace EVEMon.CharacterMonitoring
             ListViewHelper.EnableDoubleBuffer(lvOrders);
 
             lvOrders.ColumnClick += listView_ColumnClick;
-            lvOrders.KeyDown += listView_KeyDown;
             lvOrders.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvOrders.ColumnReordered += listView_ColumnReordered;
             lvOrders.MouseMove += listView_MouseMove;
@@ -866,22 +865,6 @@ namespace EVEMon.CharacterMonitoring
         private void listView_MouseLeave(object sender, EventArgs e)
         {
             m_tooltip.Hide();
-        }
-
-        /// <summary>
-        /// Handles key press.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listView_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.A:
-                    if (e.Control)
-                        lvOrders.SelectAll();
-                    break;
-            }
         }
 
         # endregion

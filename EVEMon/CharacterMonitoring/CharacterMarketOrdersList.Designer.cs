@@ -63,6 +63,7 @@ namespace EVEMon.CharacterMonitoring
             listViewGroup2});
             this.lvOrders.HideSelection = false;
             this.lvOrders.Location = new System.Drawing.Point(0, 0);
+            this.lvOrders.MultiSelect = false;
             this.lvOrders.Name = "lvOrders";
             this.lvOrders.Size = new System.Drawing.Size(454, 334);
             this.lvOrders.SmallImageList = this.ilIcons;

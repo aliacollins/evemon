@@ -92,6 +92,7 @@ namespace EVEMon.CharacterMonitoring
             this.lvResearchPoints.FullRowSelect = true;
             this.lvResearchPoints.HideSelection = false;
             this.lvResearchPoints.Location = new System.Drawing.Point(0, 0);
+            this.lvResearchPoints.MultiSelect = false;
             this.lvResearchPoints.Name = "lvResearchPoints";
             this.lvResearchPoints.Size = new System.Drawing.Size(454, 434);
             this.lvResearchPoints.SmallImageList = this.ilIcons;

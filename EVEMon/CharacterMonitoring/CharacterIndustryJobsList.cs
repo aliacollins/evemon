@@ -76,7 +76,6 @@ namespace EVEMon.CharacterMonitoring
             ListViewHelper.EnableDoubleBuffer(lvJobs);
 
             lvJobs.ColumnClick += lvJobs_ColumnClick;
-            lvJobs.KeyDown += lvJobs_KeyDown;
             lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
             lvJobs.ColumnReordered += lvJobs_ColumnReordered;
             lvJobs.MouseMove += listView_MouseMove;
@@ -936,22 +935,6 @@ namespace EVEMon.CharacterMonitoring
         private void listView_MouseLeave(object sender, EventArgs e)
         {
             m_tooltip.Hide();
-        }
-
-        /// <summary>
-        /// Handles key press.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lvJobs_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.A:
-                    if (e.Control)
-                        lvJobs.SelectAll();
-                    break;
-            }
         }
 
         # endregion

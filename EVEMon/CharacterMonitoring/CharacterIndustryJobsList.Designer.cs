@@ -54,6 +54,7 @@ namespace EVEMon.CharacterMonitoring
             this.lvJobs.FullRowSelect = true;
             this.lvJobs.HideSelection = false;
             this.lvJobs.Location = new System.Drawing.Point(0, 0);
+            this.lvJobs.MultiSelect = false;
             this.lvJobs.Name = "lvJobs";
             this.lvJobs.Size = new System.Drawing.Size(454, 334);
             this.lvJobs.SmallImageList = this.ilIcons;
