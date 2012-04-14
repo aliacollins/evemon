@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -600,6 +601,38 @@ namespace EVEMon.CharacterMonitoring
                    || x.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text);
         }
 
+        /// <summary>
+        /// Gets the tool tip text.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
+        private string GetToolTipText(ListViewItem item)
+        {
+            if (!item.Selected || lvAssets.SelectedItems.Count < 2)
+                return String.Empty;
+
+            IEnumerable<ListViewItem> selectedItems = lvAssets.SelectedItems.Cast<ListViewItem>();
+            if (selectedItems.Any(selectedItem => selectedItem.Text != item.Text))
+                return String.Empty;
+
+            IEnumerable<Asset> selectedAssets = selectedItems.Select(selectedItem => selectedItem.Tag).OfType<Asset>();
+            long sumQuantity = selectedAssets.Sum(selectedAsset => selectedAsset.Quantity);
+            int uniqueLocations = selectedAssets.Count();
+            int minJumps = selectedAssets.Min(asset => asset.Jumps);
+            int maxJumps = selectedAssets.Max(asset => asset.Jumps);
+            Asset closestAsset = selectedAssets.First(asset => asset.Jumps == minJumps);
+            Asset farthestAsset = selectedAssets.Last(asset => asset.Jumps == maxJumps);
+
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine(item.Text);
+            builder.AppendFormat("Total Quantity: {0:N0} in {1:N0} different locations\n", sumQuantity, uniqueLocations);
+            builder.AppendFormat("Closest Location: {0} ({1})\n", closestAsset.Location, closestAsset.JumpsText);
+            if (closestAsset.Location != farthestAsset.Location)
+                builder.AppendFormat("Farthest Location: {0} ({1})\n", farthestAsset.Location, farthestAsset.JumpsText);
+
+            return builder.ToString();
+        }
+
         #endregion
 
 
@@ -648,7 +681,12 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
+            m_isUpdatingColumns = true;
+
+            // Updates the item sorter
             UpdateSort();
+
+            m_isUpdatingColumns = false;
         }
 
         /// <summary>
@@ -665,7 +703,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
-            m_tooltip.Show(item.ToolTipText, e.Location);
+            m_tooltip.Show(GetToolTipText(item), e.Location);
         }
 
         /// <summary>
