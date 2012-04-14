@@ -2139,14 +2139,13 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lvSkills_ItemHover(object sender, ListViewItemMouseHoverEventArgs e)
         {
-            ListViewItem lvi = e.Item;
-            if (lvi == null)
+            if (e.Item == null)
                 return;
 
             // Is it an entry ?
-            if (lvi.Tag is PlanEntry)
+            if (e.Item.Tag is PlanEntry)
             {
-                Skill skill = GetPlanEntry(lvi).CharacterSkill;
+                Skill skill = GetPlanEntry(e.Item).CharacterSkill;
                 StringBuilder builder = new StringBuilder(skill.Description.WordWrap(100, false));
 
                 if (!skill.IsKnown)
@@ -2157,13 +2156,13 @@ namespace EVEMon.SkillPlanner
                         builder.Append("do not ");
                     builder.Append("own the skillbook.");
                 }
-                lvi.ToolTipText = builder.ToString();
+                e.Item.ToolTipText = builder.ToString();
             }
                 // Then it is a remapping point
-            else if (lvi.Tag is RemappingPoint)
+            else if (e.Item.Tag is RemappingPoint)
             {
-                RemappingPoint point = lvi.Tag as RemappingPoint;
-                lvi.ToolTipText = (m_areRemappingPointsActive ? point.ToLongString() : "Remapping (ignored)");
+                RemappingPoint point = e.Item.Tag as RemappingPoint;
+                e.Item.ToolTipText = (m_areRemappingPointsActive ? point.ToLongString() : "Remapping (ignored)");
             }
         }
 
