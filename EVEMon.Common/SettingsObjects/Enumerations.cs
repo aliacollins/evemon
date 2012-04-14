@@ -191,7 +191,7 @@ namespace EVEMon.Common.SettingsObjects
     public enum AssetGrouping
     {
         [Header("No group")]
-        NoGroup = 0,
+        None = 0,
 
         [Header("Group by group")]
         Group = 1,

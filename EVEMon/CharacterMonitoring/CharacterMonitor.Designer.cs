@@ -1074,7 +1074,7 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.assetsList.Character = null;
             this.assetsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.NoGroup;
+            this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.None;
             this.assetsList.Location = new System.Drawing.Point(0, 0);
             this.assetsList.Name = "assetsList";
             this.assetsList.Size = new System.Drawing.Size(568, 86);

@@ -196,7 +196,7 @@ namespace EVEMon.CharacterMonitoring
             CCPCharacter ccpCharacter = Character as CCPCharacter;
             Assets = (ccpCharacter == null ? null : ccpCharacter.Assets);
             Columns = Settings.UI.MainWindow.Assets.Columns;
-            Grouping = (Character == null ? AssetGrouping.NoGroup : Character.UISettings.AssetsGroupBy);
+            Grouping = (Character == null ? AssetGrouping.None : Character.UISettings.AssetsGroupBy);
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -320,7 +320,7 @@ namespace EVEMon.CharacterMonitoring
         {
             switch (m_grouping)
             {
-                case AssetGrouping.NoGroup:
+                case AssetGrouping.None:
                     UpdateNoGroupContent(assets);
                     break;
                 case AssetGrouping.Group:
