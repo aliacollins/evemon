@@ -102,6 +102,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
+            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
@@ -124,6 +125,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
+            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
@@ -385,7 +387,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
-            if (ccpCharacter == null)
+            if (ccpCharacter == null || !ccpCharacter.QueryMonitors.Any())
                 return;
 
             tsPagesSeparator.Visible = featuresMenu.Visible = ccpCharacter.QueryMonitors.Any();
@@ -589,13 +591,26 @@ namespace EVEMon.CharacterMonitoring
         /// Occur when the character skill queue updates.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
 
             skillQueueControl.Invalidate();
+        }
+
+        /// <summary>
+        /// Updates the page controls on assets change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterAssetsUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
         }
 
         /// <summary>

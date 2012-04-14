@@ -163,7 +163,7 @@ namespace EVEMon.Common
             GetImageCallback callback = (GetImageCallback)state;
             if (e.Error == null)
             {
-                // Invokes on the UI thread.
+                // Invokes on the UI thread
                 Dispatcher.BeginInvoke(() => callback(e.Result));
             }
             else
