@@ -28,6 +28,7 @@ namespace EVEMon.Common
             Item = StaticItems.GetItemByID(src.TypeID);
             Flag = EveFlags.GetFlagText(src.Flag);
             BlueprintType = GetBlueprintType(src.RawQuantity);
+            Container = String.Empty;
             Volume = GetVolume();
         }
 

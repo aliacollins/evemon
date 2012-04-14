@@ -1,7 +1,8 @@
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
@@ -23,19 +24,27 @@ namespace EVEMon.Common
         /// <param name="src">The enumeration of serializable assets from the API.</param>
         internal void Import(IEnumerable<SerializableAssetListItem> src)
         {
-            Items.Clear();
+            // Importation can take a serious amount of time depending on the amount of assets,
+            // therefore we invoke it on another thread
+            Dispatcher.BackgroundInvoke(() =>
+                                            {
+                                                Items.Clear();
 
-            // Import the research points from the API
-            foreach (SerializableAssetListItem srcAsset in src)
-            {
-                Asset asset = new Asset(m_character, srcAsset) { Container = String.Empty };
-                Items.Add(asset);
+                                                // Import the assets from the API
+                                                foreach (SerializableAssetListItem srcAsset in src)
+                                                {
+                                                    Asset asset = new Asset(m_character, srcAsset);
+                                                    Items.Add(asset);
 
-                foreach (SerializableAssetListItem content in srcAsset.Contents)
-                {
-                    Items.Add(new Asset(m_character, content) { LocationID = asset.LocationID, Container = asset.Item.Name });
-                }
-            }
+                                                    Items.AddRange(srcAsset.Contents.Select(
+                                                        content =>
+                                                        new Asset(m_character, content)
+                                                            { LocationID = asset.LocationID, Container = asset.Item.Name }));
+                                                }
+
+                                                // Fires the event regarding assets update
+                                                Dispatcher.Invoke(() => EveMonClient.OnCharacterAssetsUpdated(m_character));
+                                            });
         }
     }
 }

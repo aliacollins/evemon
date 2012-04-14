@@ -395,9 +395,6 @@ namespace EVEMon.Common
 
             // Import the data
             m_ccpCharacter.Assets.Import(result.Result.Assets);
-
-            // Fires the event regarding assets update
-            EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter);
         }
 
         /// <summary>
