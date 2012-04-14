@@ -48,8 +48,8 @@ namespace EVEMon.CharacterMonitoring
             this.chToCharacterIDs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToCorpOrAlliance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToListID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.eveMailReadingPane = new EVEMon.CharacterMonitoring.ReadingPane();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.eveMailReadingPane = new ReadingPane();
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMailMessages)).BeginInit();
             this.splitContainerMailMessages.Panel1.SuspendLayout();
@@ -211,10 +211,6 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.chToListID.Text = "To Mailing List";
             // 
-            // timer
-            // 
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // eveMailReadingPane
             // 
             this.eveMailReadingPane.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -223,13 +219,17 @@ namespace EVEMon.CharacterMonitoring
             this.eveMailReadingPane.Size = new System.Drawing.Size(454, 140);
             this.eveMailReadingPane.TabIndex = 0;
             // 
-            // MainWindowEveMailMessagesList
+            // timer
+            // 
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
+            // CharacterEveMailMessagesList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainerMailMessages);
             this.Controls.Add(this.noEVEMailMessagesLabel);
-            this.Name = "MainWindowEveMailMessagesList";
+            this.Name = "CharacterEveMailMessagesList";
             this.Size = new System.Drawing.Size(454, 434);
             this.contextMenu.ResumeLayout(false);
             this.splitContainerMailMessages.Panel1.ResumeLayout(false);

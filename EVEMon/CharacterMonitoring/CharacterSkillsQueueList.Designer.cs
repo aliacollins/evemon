@@ -34,7 +34,7 @@ namespace EVEMon.CharacterMonitoring
             this.noSkillsQueueLabel = new System.Windows.Forms.Label();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStripPlanPopup = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.lbSkillsQueue = new NoFlickerListBox();
+            this.lbSkillsQueue = new EVEMon.Common.Controls.NoFlickerListBox();
             this.SuspendLayout();
             // 
             // noSkillsQueueLabel
@@ -81,13 +81,13 @@ namespace EVEMon.CharacterMonitoring
             this.lbSkillsQueue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lbSkills_MouseMove);
             this.lbSkillsQueue.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbSkillsQueue_MouseWheel);
             // 
-            // MainWindowSkillsQueueList
+            // CharacterSkillsQueueList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.noSkillsQueueLabel);
             this.Controls.Add(this.lbSkillsQueue);
-            this.Name = "MainWindowSkillsQueueList";
+            this.Name = "CharacterSkillsQueueList";
             this.Size = new System.Drawing.Size(287, 320);
             this.ResumeLayout(false);
 

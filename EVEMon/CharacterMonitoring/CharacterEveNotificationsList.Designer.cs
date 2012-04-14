@@ -36,7 +36,7 @@
             this.chType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSentDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
-            this.eveNotificationReadingPane = new ReadingPane();
+            this.eveNotificationReadingPane = new EVEMon.CharacterMonitoring.ReadingPane();
             this.noEVENotificationsLabel = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotifications)).BeginInit();
@@ -134,13 +134,13 @@
             // 
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // MainWindowEveNotificationsList
+            // CharacterEveNotificationsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainerNotifications);
             this.Controls.Add(this.noEVENotificationsLabel);
-            this.Name = "MainWindowEveNotificationsList";
+            this.Name = "CharacterEveNotificationsList";
             this.Size = new System.Drawing.Size(454, 434);
             this.splitContainerNotifications.Panel1.ResumeLayout(false);
             this.splitContainerNotifications.Panel2.ResumeLayout(false);

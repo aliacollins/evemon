@@ -64,13 +64,13 @@ namespace EVEMon.CharacterMonitoring
             this.lbStandings.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbStandings_MouseDown);
             this.lbStandings.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.lbStandings_MouseWheel);
             // 
-            // MainWindowStandingsList
+            // CharacterStandingsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.noStandingsLabel);
             this.Controls.Add(this.lbStandings);
-            this.Name = "MainWindowStandingsList";
+            this.Name = "CharacterStandingsList";
             this.Size = new System.Drawing.Size(328, 372);
             this.ResumeLayout(false);
 

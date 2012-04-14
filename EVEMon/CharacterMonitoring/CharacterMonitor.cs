@@ -434,6 +434,10 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void UpdatePageControls()
         {
+            // No need to do anything when the control is not visible
+            if (!Visible)
+                return;
+
             // Enables / Disables the skill page controls
             toggleSkillsIcon.Enabled = m_character.Skills.Any();
 
@@ -447,6 +451,10 @@ namespace EVEMon.CharacterMonitoring
             {
                 item.Visible = true;
             }
+
+            // Enables / Disables the assets page related controls
+            if (multiPanel.SelectedPage == assetsPage)
+                toolStripContextual.Enabled = ccpCharacter.Assets.Any();
 
             // Enables / Disables the market orders page related controls
             if (multiPanel.SelectedPage == ordersPage)

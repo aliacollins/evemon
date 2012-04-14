@@ -426,9 +426,9 @@ namespace EVEMon.Common.Controls
             string text = String.Format(CultureConstants.DefaultCulture, Format, skillName, skillLevel, startText, skillStart,
                                         skillEnd);
             Size textSize = TextRenderer.MeasureText(text, Font);
-            Size toolTipSize = new Size(textSize.Width + 14, textSize.Height + 11);
+            Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
             Point tipPoint = new Point(((Math.Min(skillRect.Right, Width) + skillRect.Left) / 2) - toolTipSize.Width / 2, -toolTipSize.Height);
-            tipPoint.Offset(0, -3);
+            tipPoint.Offset(0, -21);
             m_toolTip.Show(text, tipPoint);
         }
 
@@ -442,9 +442,9 @@ namespace EVEMon.Common.Controls
             string text = String.Format(CultureConstants.DefaultCulture, "Free room:{0}",
                                         leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
             Size textSize = TextRenderer.MeasureText(text, Font);
-            Size toolTipSize = new Size(textSize.Width + 14, textSize.Height + 11);
+            Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
             Point tipPoint = new Point(((emptyRect.Right + emptyRect.Left) / 2) - toolTipSize.Width / 2, - toolTipSize.Height);
-            tipPoint.Offset(0, -3);
+            tipPoint.Offset(0, -21);
             m_toolTip.Show(text, tipPoint);
         }
 

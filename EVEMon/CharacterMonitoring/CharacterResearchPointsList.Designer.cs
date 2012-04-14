@@ -40,7 +40,7 @@ namespace EVEMon.CharacterMonitoring
             this.lvResearchPoints = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
-            // noResearchLabel
+            // noResearchPointsLabel
             // 
             this.noResearchPointsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.noResearchPointsLabel.ForeColor = System.Drawing.SystemColors.GrayText;
@@ -100,13 +100,13 @@ namespace EVEMon.CharacterMonitoring
             this.lvResearchPoints.View = System.Windows.Forms.View.Details;
             this.lvResearchPoints.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvResearchPoints_ColumnReordered);
             // 
-            // MainWindowResearchPointsList
+            // CharacterResearchPointsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lvResearchPoints);
             this.Controls.Add(this.noResearchPointsLabel);
-            this.Name = "MainWindowResearchPointsList";
+            this.Name = "CharacterResearchPointsList";
             this.Size = new System.Drawing.Size(454, 434);
             this.ResumeLayout(false);
 

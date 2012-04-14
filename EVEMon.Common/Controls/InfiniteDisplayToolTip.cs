@@ -10,9 +10,9 @@ namespace EVEMon.Common.Controls
     public class InfiniteDisplayToolTip : ToolTip
     {
         private readonly Control m_owner;
-        private bool m_canceled;
-        private Size m_size = new Size(0, 0);
-        private string m_text = String.Empty;
+        private readonly Timer m_initialDelayTimer;
+        private Point m_point;
+        private string m_text;
 
         /// <summary>
         /// Initializes <see cref="InfiniteDisplayToolTip"/> instance.
@@ -21,29 +21,32 @@ namespace EVEMon.Common.Controls
         public InfiniteDisplayToolTip(Control owner)
         {
             m_owner = owner;
-            Popup += toolTip_Popup;
-            UseFading = false;
+            m_initialDelayTimer = new Timer();
+            m_initialDelayTimer.Tick += m_initialDelayTimer_Tick;
+            m_initialDelayTimer.Interval = InitialDelay;
+            Disposed += OnDisposed;
         }
 
         /// <summary>
-        /// Handles the Popup event of the toolTip control.
+        /// Called when disposed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            m_initialDelayTimer.Tick -= m_initialDelayTimer_Tick;
+            m_initialDelayTimer.Dispose();
+        }
+
+        /// <summary>
+        /// Diplays the tooltip on timer tick.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.PopupEventArgs"/> instance containing the event data.</param>
-        private void toolTip_Popup(object sender, PopupEventArgs e)
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void m_initialDelayTimer_Tick(object sender, EventArgs e)
         {
-            // If height of tooltip differs from the previous one, then we 
-            // must store it and do not show tooltip at wrong position
-            if (!m_size.Equals(e.ToolTipSize))
-            {
-                m_size = e.ToolTipSize;
-                e.Cancel = true;
-                m_canceled = true;
-                m_text = String.Empty;
-                return;
-            }
-
-            m_canceled = false;
+            m_initialDelayTimer.Stop();
+            Show(m_text, m_owner, m_point);
         }
 
         /// <summary>
@@ -56,16 +59,12 @@ namespace EVEMon.Common.Controls
             if (text == m_text)
                 return;
 
+            pt.Offset(0, 18);
+            m_point = pt;
+
+            Hide(m_owner);
             m_text = text;
-            Hide(m_owner);
-            Show(text, m_owner, pt);
-
-            // Cancel means new height and new position
-            if (!m_canceled)
-                return;
-
-            Hide(m_owner);
-            Show(text, m_owner, pt);
+            m_initialDelayTimer.Start();
         }
 
         /// <summary>
@@ -75,6 +74,7 @@ namespace EVEMon.Common.Controls
         {
             Hide(m_owner);
             m_text = String.Empty;
+            m_initialDelayTimer.Stop();
         }
     }
 }

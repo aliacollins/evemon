@@ -21,6 +21,7 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<ContractColumnSettings> m_columns = new List<ContractColumnSettings>();
         private readonly List<Contract> m_list = new List<Contract>();
+        private readonly InfiniteDisplayToolTip m_tooltip;
 
         private ContractGrouping m_grouping;
         private ContractColumn m_sortCriteria;
@@ -47,8 +48,9 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
+            m_tooltip = new InfiniteDisplayToolTip(lvContracts);
+
             lvContracts.Visible = false;
-            lvContracts.ShowItemToolTips = true;
             lvContracts.AllowColumnReorder = true;
             lvContracts.Columns.Clear();
 
@@ -62,6 +64,8 @@ namespace EVEMon.CharacterMonitoring
             lvContracts.ColumnClick += lvContracts_ColumnClick;
             lvContracts.ColumnWidthChanged += lvContracts_ColumnWidthChanged;
             lvContracts.ColumnReordered += lvContracts_ColumnReordered;
+            lvContracts.MouseMove += listView_MouseMove;
+            lvContracts.MouseLeave += listView_MouseLeave;   
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
@@ -204,6 +208,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            m_tooltip.Dispose();
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
             EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
@@ -852,6 +857,33 @@ namespace EVEMon.CharacterMonitoring
             }
 
             UpdateSort();
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we show the item's tooltip if over an item.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            ListViewItem item = lvContracts.GetItemAt(e.Location.X, e.Location.Y);
+            if (item == null)
+            {
+                m_tooltip.Hide();
+                return;
+            }
+
+            m_tooltip.Show(item.ToolTipText, e.Location);
+        }
+
+        /// <summary>
+        /// When the mouse leaves the list, we hide the item's tooltip.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void listView_MouseLeave(object sender, EventArgs e)
+        {
+            m_tooltip.Hide();
         }
 
         /// <summary>

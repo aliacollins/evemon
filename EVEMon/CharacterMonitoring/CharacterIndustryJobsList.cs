@@ -20,7 +20,8 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
-        private readonly Timer m_timer = new Timer();
+        private readonly InfiniteDisplayToolTip m_tooltip;
+        private readonly Timer m_refreshTimer;
 
         private IndustryJobGrouping m_grouping;
         private IndustryJobColumn m_sortCriteria;
@@ -59,8 +60,10 @@ namespace EVEMon.CharacterMonitoring
             InitializeComponent();
             InitializeExpandablePanelControls();
 
+            m_tooltip = new InfiniteDisplayToolTip(lvJobs);
+            m_refreshTimer = new Timer();
+
             lvJobs.Visible = false;
-            lvJobs.ShowItemToolTips = true;
             lvJobs.AllowColumnReorder = true;
             lvJobs.Columns.Clear();
 
@@ -76,9 +79,11 @@ namespace EVEMon.CharacterMonitoring
             lvJobs.KeyDown += lvJobs_KeyDown;
             lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
             lvJobs.ColumnReordered += lvJobs_ColumnReordered;
+            lvJobs.MouseMove += listView_MouseMove;
+            lvJobs.MouseLeave += listView_MouseLeave;   
 
-            m_timer.Interval = 1000;
-            m_timer.Tick += m_timer_Tick;
+            m_refreshTimer.Interval = 1000;
+            m_refreshTimer.Tick += refresh_TimerTick;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
@@ -232,8 +237,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            m_timer.Dispose();
-
+            m_tooltip.Dispose();
+            m_refreshTimer.Dispose();
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
@@ -380,7 +385,7 @@ namespace EVEMon.CharacterMonitoring
 
             noJobsLabel.Visible = lvJobs.Items.Count == 0;
             lvJobs.Visible = !noJobsLabel.Visible;
-            m_timer.Enabled = lvJobs.Visible;
+            m_refreshTimer.Enabled = lvJobs.Visible;
             industryExpPanelControl.Visible = true;
             industryExpPanelControl.Header.Visible = true;
         }
@@ -851,7 +856,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void m_timer_Tick(object sender, EventArgs e)
+        private void refresh_TimerTick(object sender, EventArgs e)
         {
             UpdateTimeToCompletion();
         }
@@ -907,7 +912,34 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Handles key press
+        /// When the mouse moves over the list, we show the item's tooltip if over an item.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
+        {
+            ListViewItem item = lvJobs.GetItemAt(e.Location.X, e.Location.Y);
+            if (item == null)
+            {
+                m_tooltip.Hide();
+                return;
+            }
+
+            m_tooltip.Show(item.ToolTipText, e.Location);
+        }
+
+        /// <summary>
+        /// When the mouse leaves the list, we hide the item's tooltip.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void listView_MouseLeave(object sender, EventArgs e)
+        {
+            m_tooltip.Hide();
+        }
+
+        /// <summary>
+        /// Handles key press.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -963,8 +995,8 @@ namespace EVEMon.CharacterMonitoring
         {
             if (!Visible)
             {
-                if (m_timer.Enabled)
-                    m_timer.Stop();
+                if (m_refreshTimer.Enabled)
+                    m_refreshTimer.Stop();
 
                 return;
             }
@@ -975,7 +1007,7 @@ namespace EVEMon.CharacterMonitoring
 
             // We use time dilation according to the ammount of active jobs that are not ready,
             // due to excess CPU usage for computing the 'time to completion' when there are too many jobs
-            m_timer.Interval = 900 + (100 * activeJobs);
+            m_refreshTimer.Interval = 900 + (100 * activeJobs);
 
             if (!m_columnsChanged)
                 return;

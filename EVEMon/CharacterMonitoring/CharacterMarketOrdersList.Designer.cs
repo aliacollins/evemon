@@ -36,9 +36,9 @@ namespace EVEMon.CharacterMonitoring
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterMarketOrdersList));
             this.lvOrders = new System.Windows.Forms.ListView();
             this.itemColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.quantityColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.unitaryPriceColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.locationColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.unitaryPriceColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.quantityColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noOrdersLabel = new System.Windows.Forms.Label();
             this.marketExpPanelControl = new EVEMon.Common.Controls.ExpandablePanelControl();
@@ -75,20 +75,20 @@ namespace EVEMon.CharacterMonitoring
             this.itemColumn.Text = "Item";
             this.itemColumn.Width = 192;
             // 
-            // quantityColumn
+            // locationColumn
             // 
-            this.quantityColumn.Text = "Quantity";
-            this.quantityColumn.Width = 88;
+            this.locationColumn.Text = "System";
+            this.locationColumn.Width = 80;
             // 
             // unitaryPriceColumn
             // 
             this.unitaryPriceColumn.Text = "Unit Price";
             this.unitaryPriceColumn.Width = 92;
             // 
-            // locationColumn
+            // quantityColumn
             // 
-            this.locationColumn.Text = "System";
-            this.locationColumn.Width = 80;
+            this.quantityColumn.Text = "Quantity";
+            this.quantityColumn.Width = 88;
             // 
             // ilIcons
             // 
@@ -126,14 +126,14 @@ namespace EVEMon.CharacterMonitoring
             this.marketExpPanelControl.Size = new System.Drawing.Size(454, 100);
             this.marketExpPanelControl.TabIndex = 2;
             // 
-            // MainWindowMarketOrdersList
+            // CharacterMarketOrdersList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lvOrders);
             this.Controls.Add(this.marketExpPanelControl);
             this.Controls.Add(this.noOrdersLabel);
-            this.Name = "MainWindowMarketOrdersList";
+            this.Name = "CharacterMarketOrdersList";
             this.Size = new System.Drawing.Size(454, 434);
             this.ResumeLayout(false);
 
