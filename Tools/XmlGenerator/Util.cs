@@ -8,7 +8,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.Common;
-using EVEMon.XmlGenerator.Xmlfiles;
 
 namespace EVEMon.XmlGenerator
 {

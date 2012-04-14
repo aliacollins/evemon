@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -85,6 +87,78 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("text");
 
             return String.Concat(text.Substring(0, 1).ToLowerInvariant(), text.Substring(1, text.Length - 1));
+        }
+
+        /// <summary>
+        /// Remove line feeds and some other characters to format the string.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="maxLength"></param>
+        /// <param name="removeNewLine"> </param>
+        /// <returns></returns>
+        public static string WordWrap(this string text, int maxLength, bool removeNewLine = true)
+        {
+            if (String.IsNullOrWhiteSpace(text))
+                return String.Empty;
+
+            text = removeNewLine
+                       ? text.Replace(Environment.NewLine, " ")
+                       : text.Replace(Environment.NewLine, " " + Environment.NewLine + " ");
+
+            text = text.Replace(".", ". ");
+            text = text.Replace(">", "> ");
+            text = text.Replace("\t", " ");
+            text = text.Replace(",", ", ");
+            text = text.Replace(";", "; ");
+
+            string[] words = text.Split(' ');
+            List<string> lines = new List<string>();
+            int currentLineLength = 0;
+            string currentLine = String.Empty;
+            bool inTag = false;
+
+            foreach (string currentWord in words.Where(currentWord => currentWord.Length > 0))
+            {
+                if (currentWord.Substring(0, 1) == "<")
+                    inTag = true;
+
+                if (inTag)
+                {
+                    //Handle filenames inside html tags
+                    if (currentLine.EndsWith(".", StringComparison.CurrentCulture))
+                        currentLine += currentWord;
+                    else
+                        currentLine += currentWord + " ";
+
+                    if (currentWord.IndexOf(">", StringComparison.CurrentCulture) > -1)
+                        inTag = false;
+                }
+                else
+                {
+                    if (currentWord != Environment.NewLine && currentLine != Environment.NewLine &&
+                        currentLineLength + currentWord.Length + 1 < maxLength)
+                    {
+                        currentLine += currentWord + " ";
+                        currentLineLength += (currentWord.Length + 1);
+                    }
+                    else
+                    {
+                        lines.Add(currentLine.Trim());
+                        currentLine = currentWord + " ";
+                        currentLineLength = currentWord.Length;
+                    }
+                }
+            }
+
+            if (currentLine.Length != 0)
+                lines.Add(currentLine.Trim());
+
+            string[] textLinesStr = new string[lines.Count];
+            lines.CopyTo(textLinesStr, 0);
+
+            return textLinesStr.Aggregate(String.Empty,
+                                          (current, line) => String.Format(CultureConstants.DefaultCulture,
+                                                                           "{0}{1}{2}", current, line, Environment.NewLine));
         }
     }
 }

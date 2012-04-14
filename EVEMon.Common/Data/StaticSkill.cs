@@ -27,7 +27,6 @@ namespace EVEMon.Common.Data
             IsPublic = src.Public;
             Name = src.Name;
             Description = src.Description;
-            DescriptionNL = WordWrap(src.Description, 100);
             PrimaryAttribute = src.PrimaryAttribute;
             SecondaryAttribute = src.SecondaryAttribute;
             IsTrainableOnTrialAccount = src.CanTrainOnTrial;
@@ -87,13 +86,6 @@ namespace EVEMon.Common.Data
         /// Gets the description of this skill.
         /// </summary>
         public string Description { get; private set; }
-
-        /// <summary>
-        /// Gets the description of this skill with a special formatting
-        /// used when showing description in tooltip
-        /// so the tooltip won't get too long.
-        /// </summary>
-        public string DescriptionNL { get; private set; }
 
         /// <summary>
         /// Gets the rank of this skill.
@@ -221,79 +213,6 @@ namespace EVEMon.Common.Data
                 return 0;
 
             return GetPointsRequiredForLevel(level) - GetPointsRequiredForLevelOnly(level - 1);
-        }
-
-        #endregion
-
-
-        #region Public Static Methods
-
-        /// <summary>
-        /// Remove line feeds and some other characters to format the string.
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="maxLength"></param>
-        /// <returns></returns>
-        public static string WordWrap(string text, int maxLength)
-        {
-            if (text == null)
-                throw new ArgumentNullException("text");
-
-            text = text.Replace("\n", " ");
-            text = text.Replace("\r", " ");
-            text = text.Replace(".", ". ");
-            text = text.Replace(">", "> ");
-            text = text.Replace("\t", " ");
-            text = text.Replace(",", ", ");
-            text = text.Replace(";", "; ");
-
-            string[] words = text.Split(' ');
-            List<string> lines = new List<string>(text.Length / maxLength);
-            int currentLineLength = 0;
-            string currentLine = String.Empty;
-            bool inTag = false;
-
-            foreach (string currentWord in words.Where(currentWord => currentWord.Length > 0))
-            {
-                if (currentWord.Substring(0, 1) == "<")
-                    inTag = true;
-
-                if (inTag)
-                {
-                    //Handle filenames inside html tags
-                    if (currentLine.EndsWith(".", StringComparison.CurrentCulture))
-                        currentLine += currentWord;
-                    else
-                        currentLine += " " + currentWord;
-
-                    if (currentWord.IndexOf(">", StringComparison.CurrentCulture) > -1)
-                        inTag = false;
-                }
-                else
-                {
-                    if (currentLineLength + currentWord.Length + 1 < maxLength)
-                    {
-                        currentLine += " " + currentWord;
-                        currentLineLength += (currentWord.Length + 1);
-                    }
-                    else
-                    {
-                        lines.Add(currentLine);
-                        currentLine = currentWord;
-                        currentLineLength = currentWord.Length;
-                    }
-                }
-            }
-
-            if (currentLine.Length != 0)
-                lines.Add(currentLine);
-
-            string[] textLinesStr = new string[lines.Count];
-            lines.CopyTo(textLinesStr, 0);
-
-            return textLinesStr.Aggregate(String.Empty,
-                                          (current, line) => String.Format(CultureConstants.DefaultCulture,
-                                                                           "{0}{1}{2}", current, line, Environment.NewLine));
         }
 
         #endregion

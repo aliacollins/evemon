@@ -53,6 +53,9 @@ namespace EVEMon.SkillPlanner
         private bool m_columnsOrderChanged;
         private readonly List<PlanColumnSettings> m_columns = new List<PlanColumnSettings>();
 
+        // Tooltip
+        private InfiniteDisplayToolTip m_tooltip;
+
         #endregion
 
 
@@ -65,6 +68,8 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
             pscPlan.RememberDistanceKey = "PlanEditor";
+
+            m_tooltip = new InfiniteDisplayToolTip(lvSkills);
 
             ListViewHelper.EnableDoubleBuffer(lvSkills);
 
@@ -96,6 +101,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            m_tooltip.Dispose();
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.CharacterImplantSetCollectionChanged -= EveMonClient_CharacterImplantSetCollectionChanged;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
@@ -2141,7 +2147,7 @@ namespace EVEMon.SkillPlanner
             if (lvi.Tag is PlanEntry)
             {
                 Skill skill = GetPlanEntry(lvi).CharacterSkill;
-                StringBuilder builder = new StringBuilder(skill.Description);
+                StringBuilder builder = new StringBuilder(skill.Description.WordWrap(100, false));
 
                 if (!skill.IsKnown)
                 {
@@ -2168,6 +2174,33 @@ namespace EVEMon.SkillPlanner
         private void lvSkills_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsOrderChanged = true;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we show the item's tooltip if over an item.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lvSkills_MouseMove(object sender, MouseEventArgs e)
+        {
+            ListViewItem item = lvSkills.GetItemAt(e.Location.X, e.Location.Y);
+            if (item == null)
+            {
+                m_tooltip.Hide();
+                return;
+            }
+
+            m_tooltip.Show(item.ToolTipText, e.Location);
+        }
+
+        /// <summary>
+        /// When the mouse leaves the list, we hide the item's tooltip.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void lvSkills_MouseLeave(object sender, EventArgs e)
+        {
+            m_tooltip.Hide();
         }
 
         #endregion

@@ -43,7 +43,7 @@ namespace EVEMon.CharacterMonitoring
             // 
             // ttToolTip
             // 
-            this.ttToolTip.AutoPopDelay = 10000;
+            this.ttToolTip.AutoPopDelay = 32000;
             this.ttToolTip.InitialDelay = 500;
             this.ttToolTip.IsBalloon = true;
             this.ttToolTip.ReshowDelay = 100;

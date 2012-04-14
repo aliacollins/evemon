@@ -82,8 +82,11 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         private static string TrimWhitespace(this string input)
         {
+            // Fix space before a dot (yes, there are those in descriptions)
+            string output = input.Replace(" .", ".");
+
             // Remove whitespace from the beginning and end of a string
-            return input.Trim();
+            return output.Trim();
         }
 
         /// <summary>

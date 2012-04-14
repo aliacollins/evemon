@@ -646,7 +646,7 @@ namespace EVEMon.SkillPlanner
                 (menuPlanItem, plan) =>
                     {
                         menuPlanItem.Tag = plan;
-                        menuPlanItem.ToolTipText = plan.DescriptionNL;
+                        menuPlanItem.ToolTipText = plan.Description.WordWrap(100);
 
                         // Put current plan to bold
                         if (plan == m_plan)
