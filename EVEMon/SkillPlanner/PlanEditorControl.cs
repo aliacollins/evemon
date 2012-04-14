@@ -2151,10 +2151,11 @@ namespace EVEMon.SkillPlanner
 
                 if (!skill.IsKnown)
                 {
-                    builder.Append("\n\nYou do not know this skill - you ");
+                    builder.AppendLine();
+                    builder.Append("You do not know this skill - you ");
                     if (!skill.IsOwned)
                         builder.Append("do not ");
-                    builder.Append("own the skillbook");
+                    builder.Append("own the skillbook.");
                 }
                 lvi.ToolTipText = builder.ToString();
             }
