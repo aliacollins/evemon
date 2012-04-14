@@ -361,9 +361,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="restoreSelectionAndFocus">When false, selection and focus will be reseted.</param>
         private void UpdateSkillList(bool restoreSelectionAndFocus = true)
         {
-            // Disable controls, they will be restored one the selection is updated
-            tsbMoveUp.Enabled = false;
-            tsbMoveDown.Enabled = false;
+            // Disable autorefresh timer, it will be enabled if a training entry is found
             tmrAutoRefresh.Stop();
 
             // Stores selection and focus, to restore them after the update
@@ -413,30 +411,28 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // We avoid clear + AddRange because it causes the sliders position to reset
-                while (lvSkills.Items.Count > 1)
+                while (lvSkills.Items.Count > 0)
                 {
                     lvSkills.Items.RemoveAt(lvSkills.Items.Count - 1);
                 }
 
-                bool isEmpty = (lvSkills.Items.Count == 0);
                 lvSkills.Items.AddRange(items.ToArray());
-                if (!isEmpty)
-                    lvSkills.Items.RemoveAt(0);
-
-                // Complete the items initialization
-                UpdateListViewItems();
 
                 // Restore selection and focus
                 if (restoreSelectionAndFocus)
                 {
                     RestoreSelection(selection);
-                    ListViewItem focusedItem =
-                        lvSkills.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag.GetHashCode() == focusedHashCode);
+                    ListViewItem focusedItem = lvSkills.Items.Cast<ListViewItem>()
+                        .FirstOrDefault(x => x.Tag.GetHashCode() == focusedHashCode);
+
                     if (focusedItem != null)
                         focusedItem.Focused = true;
 
                     lvSkills.Select();
                 }
+
+                // Complete the items initialization
+                UpdateListViewItems();
             }
             finally
             {
