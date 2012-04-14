@@ -856,7 +856,12 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
+            m_isUpdatingColumns = true;
+
+            // Updates the item sorter
             UpdateSort();
+
+            m_isUpdatingColumns = false;
         }
 
         /// <summary>
