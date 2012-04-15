@@ -45,11 +45,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                  "Targeting", "Propulsion", "Miscellaneous", "NULL"
                                              };
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(startTime)).TrimEnd('0'));
-
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
             datafile.Categories.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))));
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }

@@ -41,12 +41,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 listOfSkillGroups.Add(skillGroup);
             }
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
-
             // Serialize
             SkillsDatafile datafile = new SkillsDatafile();
             datafile.SkillGroups.AddRange(listOfSkillGroups);
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }

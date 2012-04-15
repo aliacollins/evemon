@@ -13,7 +13,7 @@ namespace EVEMon.XmlGenerator.Xmlfiles
             DateTime startTime = DateTime.Now;
 
             Console.WriteLine();
-            Console.Write("Generating Flags XML file... ");
+            Console.Write("Generating Flags XML file ");
 
             SerializableRoot<SerializableInvFlagsRow> flags = new SerializableRoot<SerializableInvFlagsRow>
                                                                   {
@@ -33,7 +33,7 @@ namespace EVEMon.XmlGenerator.Xmlfiles
                                 Text = flag.Text
                             }));
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, "in {0}",
                                             DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             // Serialize

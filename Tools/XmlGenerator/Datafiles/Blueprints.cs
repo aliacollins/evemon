@@ -12,7 +12,7 @@ namespace EVEMon.XmlGenerator.Datafiles
     public static class Blueprints
     {
         private static List<InvMarketGroups> s_injectedMarketGroups;
-        private static List<InvTypes> s_nullMarketBlueprints; 
+        private static List<InvTypes> s_nullMarketBlueprints;
 
         /// <summary>
         /// Generate the skills datafile.
@@ -49,14 +49,14 @@ namespace EVEMon.XmlGenerator.Datafiles
                     x => groups[x.ID]).OrderBy(x => x.Name);
 
             // Reset the custom market groups
-            ResetNullMarketBlueprints();
-
-            Console.WriteLine(
-                String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            s_nullMarketBlueprints.ForEach(srcItem => srcItem.MarketGroupID = null);
 
             // Serialize
             BlueprintsDatafile datafile = new BlueprintsDatafile();
             datafile.MarketGroups.AddRange(blueprintGroups);
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }
@@ -159,24 +159,23 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                  }
                                          };
 
-            s_nullMarketBlueprints = new List<InvTypes>();
-            foreach (InvTypes srcItem in Database.InvTypesTable.Where(
-                item => item.MarketGroupID == null && !item.Name.Contains("TEST") &&
-                        Database.InvBlueprintTypesTable.Any(blueprintType => blueprintType.ID == item.ID)).Select(
-                            blueprint => new
-                                        {
-                                            blueprint,
-                                            productedItemID = Database.InvBlueprintTypesTable[blueprint.ID].ProductTypeID
-                                        }).Where(
-                                            blueprint => Database.InvTypesTable.Any(item => item.ID == blueprint.productedItemID) &&
-                                                            Database.InvTypesTable[blueprint.productedItemID].Published).Select(
-                                                                item => item.blueprint))
-            {
-                Util.UpdatePercentDone(Database.BlueprintsTotalCount);
-
-                srcItem.Published = true;
-                s_nullMarketBlueprints.Add(srcItem);
-            }
+            s_nullMarketBlueprints = Database.InvTypesTable.Where(
+                item => item.MarketGroupID == null && !item.Name.Contains("TEST")).Where(
+                    item => Database.InvBlueprintTypesTable.Any(blueprintType => blueprintType.ID == item.ID)).Select(
+                        blueprint => new
+                                         {
+                                             blueprint,
+                                             productedItemID = Database.InvBlueprintTypesTable[blueprint.ID].ProductTypeID,
+                                         }).Where(
+                                             blueprint =>
+                                             Database.InvTypesTable.Any(item => item.ID == blueprint.productedItemID) &&
+                                             Database.InvTypesTable[blueprint.productedItemID].Published).Select(
+                                                 item =>
+                                                     {
+                                                         Util.UpdatePercentDone(Database.BlueprintsTotalCount);
+                                                         item.blueprint.Published = true;
+                                                         return item.blueprint;
+                                                     }).ToList();
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (InvTypes item in s_nullMarketBlueprints)
@@ -282,17 +281,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                         item.MarketGroupID = DBConstants.BlueprintTechIIINonMarketGroupID;
                         break;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Resets the null market blueprints.
-        /// </summary>
-        private static void ResetNullMarketBlueprints()
-        {
-            foreach (InvTypes srcItem in s_nullMarketBlueprints)
-            {
-                srcItem.MarketGroupID = null;
             }
         }
 
@@ -476,10 +464,10 @@ namespace EVEMon.XmlGenerator.Datafiles
             foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable.Where(x => x.TypeID == blueprintID))
             {
                 // Is it a skill ? Add it to the prerequisities skills list
-                if (Database.InvTypesTable.Any(x => x.ID == requirement.RequiredTypeID
-                                                   && Database.InvGroupsTable.Any(y => y.ID == x.GroupID
-                                                                                      &&
-                                                                                      y.CategoryID == DBConstants.SkillCategoryID)))
+                if (Database.InvTypesTable.Any(x => x.ID == requirement.RequiredTypeID &&
+                                                    Database.InvGroupsTable.Any(
+                                                        y => y.ID == x.GroupID &&
+                                                             y.CategoryID == DBConstants.SkillCategoryID)))
                 {
                     prerequisiteSkills.Add(new SerializablePrereqSkill
                                                {
@@ -506,7 +494,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                         foreach (InvTypeMaterials reprocItem in Database.InvTypeMaterialsTable.Where(
                             x => x.TypeID == requirement.RequiredTypeID))
                         {
-                            if (!requiredMaterials.Any(x => x.ID == reprocItem.MaterialTypeID))
+                            if (requiredMaterials.All(x => x.ID != reprocItem.MaterialTypeID))
                                 continue;
 
                             SerializableRequiredMaterial material = requiredMaterials.First(

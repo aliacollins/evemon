@@ -41,11 +41,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 listOfCertCategories.Add(crtCategory);
             }
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(startTime)).TrimEnd('0'));
-
             // Serialize
             CertificatesDatafile datafile = new CertificatesDatafile();
             datafile.Categories.AddRange(listOfCertCategories);
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
         }

@@ -36,8 +36,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Create the parent-children groups relations
             foreach (SerializableMarketGroup group in groups.Values)
             {
-                IEnumerable<SerializableMarketGroup> children = Database.InvMarketGroupsTable.Concat(s_injectedMarketGroups).Where(
-                    x => x.ParentID.GetValueOrDefault() == group.ID).Select(x => groups[x.ID]).OrderBy(x => x.Name);
+                IEnumerable<SerializableMarketGroup> children = Database.InvMarketGroupsTable.Concat(
+                    s_injectedMarketGroups).Where(x => x.ParentID.GetValueOrDefault() == group.ID).Select(
+                        x => groups[x.ID]).OrderBy(x => x.Name);
 
                 group.SubGroups.AddRange(children);
             }
@@ -54,14 +55,14 @@ namespace EVEMon.XmlGenerator.Datafiles
                 x => !x.ParentID.HasValue).Select(x => groups[x.ID]).OrderBy(x => x.Name);
 
             // Reset the custom market groups
-            ResetNullMarketItems();
-
-            Console.WriteLine(
-                String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            s_nullMarketItems.ForEach(srcItem => srcItem.MarketGroupID = null);
 
             // Serialize
             ItemsDatafile datafile = new ItemsDatafile();
             datafile.MarketGroups.AddRange(rootGroups);
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }
@@ -214,6 +215,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             Database.InvTypesTable[DBConstants.CivilianGatlingAutocannonID].Published = true;
             Database.InvTypesTable[DBConstants.CivilianGatlingRailgunID].Published = true;
             Database.InvTypesTable[DBConstants.CivilianLightElectronBlasterID].Published = true;
+            Database.InvTypesTable[DBConstants.CivilianDataInterfaceID].Published = true;
             Database.InvTypesTable[DBConstants.TemperatePlanetID].Published = true;
             Database.InvTypesTable[DBConstants.IcePlanetID].Published = true;
             Database.InvTypesTable[DBConstants.GasPlanetID].Published = true;
@@ -229,19 +231,14 @@ namespace EVEMon.XmlGenerator.Datafiles
             Database.InvTypesTable[DBConstants.ReaperID].Published = true;
             Database.InvTypesTable[DBConstants.CapsuleID].Published = true;
 
-            s_nullMarketItems = new List<InvTypes>();
-
             // Include only items that are published (Special condition check for blueprints)
-            foreach (InvTypes srcItem in Database.InvTypesTable.Where(x => x.Published && x.MarketGroupID == null).Where(
+            s_nullMarketItems = Database.InvTypesTable.Where(x => x.Published && x.MarketGroupID == null).Where(
                 srcItem => Database.InvBlueprintTypesTable.Where(x => x.ID == srcItem.ID).Select(
                     item => new
                                 {
                                     item,
                                     productItemID = Database.InvBlueprintTypesTable[srcItem.ID].ProductTypeID
-                                }).All(item => Database.InvTypesTable[item.productItemID].Published)))
-            {
-                s_nullMarketItems.Add(srcItem);
-            }
+                                }).All(item => Database.InvTypesTable[item.productItemID].Published)).ToList();
 
             // Set some attributes to items because their MarketGroupID is NULL
             foreach (InvTypes srcItem in s_nullMarketItems)
@@ -281,17 +278,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                         srcItem.RaceID = (int)Race.Faction;
                         break;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Resets the null market items.
-        /// </summary>
-        private static void ResetNullMarketItems()
-        {
-            foreach (InvTypes srcItem in s_nullMarketItems)
-            {
-                srcItem.MarketGroupID = null;
             }
         }
         

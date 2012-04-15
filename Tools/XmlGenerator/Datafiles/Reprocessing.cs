@@ -42,11 +42,13 @@ namespace EVEMon.XmlGenerator.Datafiles
                 types.Add(itemMaterials);
             }
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(startTime)).TrimEnd('0'));
-
             // Serialize
             ReprocessingDatafile datafile = new ReprocessingDatafile();
             datafile.Items.AddRange(types);
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+
             Util.SerializeXML(datafile, DatafileConstants.ReprocessingDatafile);
         }
     }

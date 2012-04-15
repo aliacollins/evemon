@@ -167,6 +167,8 @@ namespace EVEMon.XmlGenerator
                 serializer.Serialize(stream, serial);
                 stream.Flush();
             }
+
+            Console.WriteLine();
         }
 
         /// <summary>
@@ -177,6 +179,8 @@ namespace EVEMon.XmlGenerator
         internal static void CreateMD5SumsFile(string filename)
         {
             ResetCounters();
+
+            Console.WriteLine();
 
             const string ResourcesPath = @"..\..\..\..\..\EVEMon.Common\Resources";
             string md5SumsFileFullPath = Path.Combine(ResourcesPath, filename);
@@ -195,7 +199,7 @@ namespace EVEMon.XmlGenerator
                 }
             }
 
-            Console.WriteLine("MD5Sums File Created Successfully");
+            Console.WriteLine("MD5Sums file created successfully");
             Console.WriteLine();
         }
 
