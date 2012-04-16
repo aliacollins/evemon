@@ -407,6 +407,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="column"></param>
         private static void SetColumn(ResearchPoint researchPoint, ListViewItem.ListViewSubItem item, ResearchColumn column)
         {
+            ConquerableStation outpost = researchPoint.Station as ConquerableStation;
+
             switch (column)
             {
                 case ResearchColumn.Agent:
@@ -428,7 +430,9 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = researchPoint.StartDate.ToLocalTime().ToString();
                     break;
                 case ResearchColumn.Location:
-                    item.Text = researchPoint.Station.FullLocation;
+                    item.Text = (outpost != null
+                                     ? outpost.FullLocation
+                                     : researchPoint.Station.FullLocation);
                     break;
                 case ResearchColumn.Region:
                     item.Text = researchPoint.Station.SolarSystem.Constellation.Region.Name;
@@ -437,7 +441,9 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = researchPoint.Station.SolarSystem.Name;
                     break;
                 case ResearchColumn.Station:
-                    item.Text = researchPoint.Station.Name;
+                    item.Text = (outpost != null
+                                     ? outpost.FullName
+                                     : researchPoint.Station.Name);
                     break;
                 case ResearchColumn.Quality:
                     break;

@@ -12,7 +12,7 @@ namespace EVEMon.Common
         /// Internal constructor.
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
-        public EveMailingListCollection(CCPCharacter ccpCharacter)
+        internal EveMailingListCollection(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;
         }

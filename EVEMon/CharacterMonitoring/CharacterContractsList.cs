@@ -30,8 +30,6 @@ namespace EVEMon.CharacterMonitoring
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
 
-        private bool m_hideInactive;
-        private bool m_numberFormat;
         private bool m_isUpdatingColumns;
         private bool m_columnsChanged;
         private bool m_init;
@@ -317,9 +315,6 @@ namespace EVEMon.CharacterMonitoring
                                     ? lvContracts.SelectedItems[0].Tag.GetHashCode()
                                     : 0);
 
-            m_hideInactive = Settings.UI.MainWindow.Contracts.HideInactiveContracts;
-            m_numberFormat = Settings.UI.MainWindow.Contracts.NumberAbsFormat;
-
             lvContracts.BeginUpdate();
             try
             {
@@ -329,7 +324,7 @@ namespace EVEMon.CharacterMonitoring
                                 x.StartStation != null && x.EndStation != null)
                     .Where(x => IsTextMatching(x, text));
 
-                if (Character != null && m_hideInactive)
+                if (Character != null && Settings.UI.MainWindow.Contracts.HideInactiveContracts)
                     contracts = contracts.Where(x => x.IsAvailable || x.NeedsAttention);
 
                 if (m_showIssuedFor != IssuedFor.All)
@@ -391,12 +386,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case ContractGrouping.Issued:
                     IOrderedEnumerable<IGrouping<DateTime, Contract>> groups4 =
-                        contracts.GroupBy(x => x.Issued.Date).OrderBy(x => x.Key);
+                        contracts.GroupBy(x => x.Issued.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups4);
                     break;
                 case ContractGrouping.IssuedDesc:
                     IOrderedEnumerable<IGrouping<DateTime, Contract>> groups5 =
-                        contracts.GroupBy(x => x.Issued.Date).OrderByDescending(x => x.Key);
+                        contracts.GroupBy(x => x.Issued.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups5);
                     break;
                 case ContractGrouping.ContractType:
@@ -590,8 +585,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="contract"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private void SetColumn(Contract contract, ListViewItem.ListViewSubItem item, ContractColumn column)
+        private static void SetColumn(Contract contract, ListViewItem.ListViewSubItem item, ContractColumn column)
         {
+            bool numberFormat = Settings.UI.MainWindow.Contracts.NumberAbsFormat;
+
             ConquerableStation startOutpost = contract.StartStation as ConquerableStation;
             ConquerableStation endOutpost = contract.EndStation as ConquerableStation;
 
@@ -622,28 +619,28 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = contract.Availability.GetDescription();
                     break;
                 case ContractColumn.Price:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Price, AbbreviationFormat.AbbreviationSymbols)
                                      : contract.Price.ToString("N2", CultureConstants.DefaultCulture));
                     break;
                 case ContractColumn.Buyout:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Buyout, AbbreviationFormat.AbbreviationSymbols)
                                      : contract.Buyout.ToString("N2", CultureConstants.DefaultCulture));
                     break;
                 case ContractColumn.Reward:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Reward, AbbreviationFormat.AbbreviationSymbols)
                                      : contract.Reward.ToString("N2", CultureConstants.DefaultCulture));
                     break;
                 case ContractColumn.Collateral:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Collateral, AbbreviationFormat.AbbreviationSymbols)
                                      : contract.Collateral.ToString("N2", CultureConstants.DefaultCulture));
                     break;
                 case ContractColumn.Volume:
-                    item.Text = (m_numberFormat
-                                     ? FormatHelper.Format((decimal)contract.Volume, AbbreviationFormat.AbbreviationSymbols)
+                    item.Text = (numberFormat
+                                     ? FormatHelper.Format(contract.Volume, AbbreviationFormat.AbbreviationSymbols)
                                      : contract.Volume.ToString("N2", CultureConstants.DefaultCulture));
                     break;
                 case ContractColumn.StartLocation:

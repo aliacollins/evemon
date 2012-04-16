@@ -170,6 +170,12 @@
     <Compile Include="CharacterMonitoring\CharacterWalletTransactionsList.Designer.cs">
       <DependentUpon>CharacterWalletTransactionsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\WalletJournalColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\WalletTransactionsColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="CharactersComparison\CharactersComparisonWindow.cs">
       <SubType>Form</SubType>
     </Compile>

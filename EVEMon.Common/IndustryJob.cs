@@ -347,6 +347,7 @@ namespace EVEMon.Common
         private string GetInstallation(long id)
         {
             Station station = null;
+            ConquerableStation outpost = null;
 
             // If 'id' is a 32bit number it may be a conquerable outpost station or station,
             // so we look it up in our datafile
@@ -354,6 +355,7 @@ namespace EVEMon.Common
             {
                 int stationID = Convert.ToInt32(id);
                 station = ConquerableStation.GetStationByID(stationID) ?? StaticGeography.GetStationByID(stationID);
+                outpost = station as ConquerableStation;
             }
 
             // In case the 'id' doesn't correspond to a station, it's a starbase structure
@@ -363,7 +365,9 @@ namespace EVEMon.Common
                        ? Activity == BlueprintActivity.Manufacturing
                              ? "POS - Assembly Array"
                              : "POS - Laboratory"
-                       : station.Name;
+                       : outpost != null
+                             ? outpost.FullName
+                             : station.Name;
         }
 
         /// <summary>

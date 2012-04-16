@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
@@ -6,22 +6,22 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.SettingsObjects
 {
     /// <summary>
-    /// Settings for Assets.
+    /// Settings for Wallet Transactions.
     /// </summary>
     /// <remarks>
     /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
     /// Don't use auto-property with private setter for the collections as it does not work with XmlSerializer.
     /// </remarks>
-    public sealed class AssetSettings
+    public sealed class WalletJournalSettings
     {
-        private readonly Collection<AssetColumnSettings> m_columns;
+        private readonly Collection<WalletJournalColumnSettings> m_columns;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AssetSettings"/> class.
+        /// Initializes a new instance of the <see cref="WalletJournalSettings"/> class.
         /// </summary>
-        public AssetSettings()
+        public WalletJournalSettings()
         {
-            m_columns = new Collection<AssetColumnSettings>();
+            m_columns = new Collection<WalletJournalColumnSettings>();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The columns.</value>
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public Collection<AssetColumnSettings> Columns
+        public Collection<WalletJournalColumnSettings> Columns
         {
             get { return m_columns; }
         }
@@ -46,23 +46,23 @@ namespace EVEMon.Common.SettingsObjects
         /// Gets the default columns.
         /// </summary>
         /// <value>The default columns.</value>
-        public IEnumerable<AssetColumnSettings> DefaultColumns
+        public IEnumerable<WalletJournalColumnSettings> DefaultColumns
         {
             get
             {
-                AssetColumn[] defaultColumns = new[]
-                                                   {
-                                                       AssetColumn.ItemName,
-                                                       AssetColumn.Quantity,
-                                                       AssetColumn.Container, 
-                                                       AssetColumn.Location,
-                                                       AssetColumn.Jumps
-                                                   };
+                WalletJournalColumn[] defaultColumns = new[]
+                                                           {
+                                                               WalletJournalColumn.Date,
+                                                               WalletJournalColumn.Type,
+                                                               WalletJournalColumn.Amount,
+                                                               WalletJournalColumn.Balance,
+                                                               WalletJournalColumn.Description
+                                                           };
 
-                return EnumExtensions.GetValues<AssetColumn>().Where(
-                    column => column != AssetColumn.None).Where(
+                return EnumExtensions.GetValues<WalletJournalColumn>().Where(
+                    column => column != WalletJournalColumn.None).Where(
                         column => Columns.All(columnSetting => columnSetting.Column != column)).Select(
-                            column => new AssetColumnSettings
+                            column => new WalletJournalColumnSettings
                                           {
                                               Column = column,
                                               Visible = defaultColumns.Contains(column),

@@ -26,6 +26,7 @@ namespace EVEMon.CharacterMonitoring
 
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
+
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
         private bool m_init;
@@ -35,7 +36,9 @@ namespace EVEMon.CharacterMonitoring
 
         #region Constructor
 
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public CharacterAssetsList()
         {
             InitializeComponent();
@@ -89,7 +92,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Gets or sets the enumeration of research points to display.
+        /// Gets or sets the enumeration of assets to display.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -527,16 +530,22 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="column"></param>
         private static void SetColumn(Asset asset, ListViewItem.ListViewSubItem item, AssetColumn column)
         {
+            bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
+
             switch (column)
             {
                 case AssetColumn.ItemName:
                     item.Text = asset.Item.Name;
                     break;
                 case AssetColumn.Quantity:
-                    item.Text = asset.Quantity.ToString("N0",CultureConstants.DefaultCulture);
+                    item.Text = (numberFormat
+                                     ? FormatHelper.Format(asset.Quantity, AbbreviationFormat.AbbreviationSymbols)
+                                     : asset.Quantity.ToString("N0", CultureConstants.DefaultCulture));
                     break;
                 case AssetColumn.Volume:
-                    item.Text = asset.Volume.ToString("N2", CultureConstants.DefaultCulture);
+                    item.Text = (numberFormat
+                                     ? FormatHelper.Format(asset.Volume, AbbreviationFormat.AbbreviationSymbols)
+                                     : asset.Volume.ToString("N2", CultureConstants.DefaultCulture));
                     break;
                 case AssetColumn.BlueprintType:
                     item.Text = asset.BlueprintType;

@@ -61,6 +61,20 @@ namespace EVEMon.Common.SettingsObjects
         public ContractGrouping ContractsGroupBy { get; set; }
 
         /// <summary>
+        /// Gets or sets the wallet journal group by.
+        /// </summary>
+        /// <value>The wallet journal group by.</value>
+        [XmlElement("walletJournalGroupBy")]
+        public WalletJournalGrouping WalletJournalGroupBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the wallet transactions group by.
+        /// </summary>
+        /// <value>The wallet transactions group by.</value>
+        [XmlElement("walletTransactionsGroupBy")]
+        public WalletTransactionGrouping WalletTransactionsGroupBy { get; set; }
+
+        /// <summary>
         /// Gets or sets the jobs group by.
         /// </summary>
         /// <value>The jobs group by.</value>

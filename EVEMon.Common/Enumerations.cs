@@ -1143,6 +1143,12 @@ namespace EVEMon.Common
         ShortestDistance
     }
 
+    public enum TransactionType
+    {
+        Buy,
+        Sell
+    }
+
     #endregion
 
 

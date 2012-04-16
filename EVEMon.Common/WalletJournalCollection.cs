@@ -4,7 +4,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class StandingCollection : ReadonlyCollection<Standing>
+    public sealed class WalletJournalCollection : ReadonlyCollection<WalletJournal>
     {
         private readonly CCPCharacter m_character;
 
@@ -12,7 +12,7 @@ namespace EVEMon.Common
         /// Internal constructor.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal StandingCollection(CCPCharacter character)
+        internal WalletJournalCollection(CCPCharacter character)
         {
             m_character = character;
         }
@@ -20,15 +20,15 @@ namespace EVEMon.Common
         /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
-        /// <param name="src">The enumeration of serializable standings from the API.</param>
-        internal void Import(IEnumerable<SerializableStandingsListItem> src)
+        /// <param name="src">The enumeration of serializable wallet journal from the API.</param>
+        internal void Import(IEnumerable<SerializableWalletJournalListItem> src)
         {
             Items.Clear();
 
-            // Import the standings from the API
-            foreach (SerializableStandingsListItem srcStanding in src)
+            // Import the wallet journal from the API
+            foreach (SerializableWalletJournalListItem srcWalletJournal in src)
             {
-                Items.Add(new Standing(m_character, srcStanding));
+                Items.Add(new WalletJournal(srcWalletJournal));
             }
         }
     }

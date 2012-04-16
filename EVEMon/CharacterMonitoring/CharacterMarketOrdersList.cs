@@ -32,8 +32,6 @@ namespace EVEMon.CharacterMonitoring
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
 
-        private bool m_hideInactive;
-        private bool m_numberFormat;
         private bool m_isUpdatingColumns;
         private bool m_columnsChanged;
         private bool m_init;
@@ -361,9 +359,6 @@ namespace EVEMon.CharacterMonitoring
                                     ? lvOrders.SelectedItems[0].Tag.GetHashCode()
                                     : 0);
 
-            m_hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
-            m_numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
-
             lvOrders.BeginUpdate();
             try
             {
@@ -371,7 +366,7 @@ namespace EVEMon.CharacterMonitoring
                 IEnumerable<MarketOrder> orders = m_list
                     .Where(x => x.Item != null && x.Station != null).Where(x => IsTextMatching(x, text));
 
-                if (Character != null && m_hideInactive)
+                if (Character != null && Settings.UI.MainWindow.MarketOrders.HideInactiveOrders)
                     orders = orders.Where(x => x.IsAvailable);
 
                 if (m_showIssuedFor != IssuedFor.All)
@@ -438,12 +433,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case MarketOrderGrouping.Issued:
                     IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups2 =
-                        orders.GroupBy(x => x.Issued.Date).OrderBy(x => x.Key);
+                        orders.GroupBy(x => x.Issued.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups2);
                     break;
                 case MarketOrderGrouping.IssuedDesc:
                     IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups3 =
-                        orders.GroupBy(x => x.Issued.Date).OrderByDescending(x => x.Key);
+                        orders.GroupBy(x => x.Issued.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups3);
                     break;
                 case MarketOrderGrouping.ItemType:
@@ -628,8 +623,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="order"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private void SetColumn(MarketOrder order, ListViewItem.ListViewSubItem item, MarketOrderColumn column)
+        private static void SetColumn(MarketOrder order, ListViewItem.ListViewSubItem item, MarketOrderColumn column)
         {
+            bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
+
             BuyOrder buyOrder = order as BuyOrder;
             ConquerableStation outpost = order.Station as ConquerableStation;
 
@@ -645,7 +642,7 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = format.TextColor;
                     break;
                 case MarketOrderColumn.InitialVolume:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
@@ -667,7 +664,7 @@ namespace EVEMon.CharacterMonitoring
                                      : order.Station.FullLocation);
                     break;
                 case MarketOrderColumn.MinimumVolume:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.MinVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
@@ -675,7 +672,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = order.Station.SolarSystem.Constellation.Region.Name;
                     break;
                 case MarketOrderColumn.RemainingVolume:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
@@ -688,13 +685,13 @@ namespace EVEMon.CharacterMonitoring
                                      : order.Station.Name);
                     break;
                 case MarketOrderColumn.TotalPrice:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
                                      : order.TotalPrice.ToString("N2", CultureConstants.DefaultCulture));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.UnitaryPrice:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
                                      : order.UnitaryPrice.ToString("N2", CultureConstants.DefaultCulture));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
@@ -702,10 +699,10 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.Volume:
                     item.Text = String.Format(
                         CultureConstants.DefaultCulture, "{0} / {1}",
-                        (m_numberFormat
+                        (numberFormat
                              ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
                              : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture)),
-                        (m_numberFormat
+                        (numberFormat
                              ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
                              : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture)));
                     break;
@@ -719,7 +716,7 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.Escrow:
                     if (buyOrder != null)
                     {
-                        item.Text = (m_numberFormat
+                        item.Text = (numberFormat
                                          ? FormatHelper.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
                                          : buyOrder.Escrow.ToString("N2", CultureConstants.DefaultCulture));
                         item.ForeColor = Color.DarkBlue;

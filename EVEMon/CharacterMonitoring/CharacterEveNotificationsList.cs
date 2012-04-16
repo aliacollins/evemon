@@ -342,12 +342,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case EVENotificationsGrouping.SentDate:
                     IOrderedEnumerable<IGrouping<DateTime, EveNotification>> groups2 =
-                        eveNotifications.GroupBy(x => x.SentDate.Date).OrderBy(x => x.Key);
+                        eveNotifications.GroupBy(x => x.SentDate.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups2);
                     break;
                 case EVENotificationsGrouping.SentDateDesc:
                     IOrderedEnumerable<IGrouping<DateTime, EveNotification>> groups3 =
-                        eveNotifications.GroupBy(x => x.SentDate.Date).OrderByDescending(x => x.Key);
+                        eveNotifications.GroupBy(x => x.SentDate.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups3);
                     break;
                 case EVENotificationsGrouping.Sender:

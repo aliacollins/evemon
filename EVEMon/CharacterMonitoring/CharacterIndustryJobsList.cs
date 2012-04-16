@@ -30,7 +30,6 @@ namespace EVEMon.CharacterMonitoring
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
 
-        private bool m_hideInactive;
         private bool m_isUpdatingColumns;
         private bool m_columnsChanged;
         private bool m_init;
@@ -330,8 +329,6 @@ namespace EVEMon.CharacterMonitoring
                                     ? lvJobs.SelectedItems[0].Tag.GetHashCode()
                                     : 0);
 
-            m_hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
-
             lvJobs.BeginUpdate();
             try
             {
@@ -341,7 +338,7 @@ namespace EVEMon.CharacterMonitoring
                                 x.OutputItem != null &&
                                 x.SolarSystem != null).Where(x => IsTextMatching(x, text));
 
-                if (Character != null && m_hideInactive)
+                if (Character != null && Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs)
                     jobs = jobs.Where(x => x.IsActive);
 
                 if (m_showIssuedFor != IssuedFor.All)
@@ -409,12 +406,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobGrouping.EndDate:
                     IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups2 =
-                        jobs.GroupBy(x => x.EndProductionTime.Date).OrderBy(x => x.Key);
+                        jobs.GroupBy(x => x.EndProductionTime.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups2);
                     break;
                 case IndustryJobGrouping.EndDateDesc:
                     IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups3 =
-                        jobs.GroupBy(x => x.EndProductionTime.Date).OrderByDescending(x => x.Key);
+                        jobs.GroupBy(x => x.EndProductionTime.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups3);
                     break;
                 case IndustryJobGrouping.InstalledItemType:

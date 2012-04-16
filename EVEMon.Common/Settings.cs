@@ -250,7 +250,7 @@ namespace EVEMon.Common
             // Initializes the plan columns or adds missing ones
             UI.PlanWindow.Columns.AddRange(UI.PlanWindow.DefaultColumns);
 
-            // Initializes the market order columns or adds missing ones
+            // Initializes the asset columns or adds missing ones
             UI.MainWindow.Assets.Columns.AddRange(UI.MainWindow.Assets.DefaultColumns);
 
             // Initializes the market order columns or adds missing ones
@@ -258,6 +258,12 @@ namespace EVEMon.Common
 
             // Initializes the contracts columns or adds missing ones
             UI.MainWindow.Contracts.Columns.AddRange(UI.MainWindow.Contracts.DefaultColumns);
+
+            // Initializes the wallet journal columns or adds missing ones
+            UI.MainWindow.WalletJournal.Columns.AddRange(UI.MainWindow.WalletJournal.DefaultColumns);
+
+            // Initializes the wallet transactions columns or adds missing ones
+            UI.MainWindow.WalletTransactions.Columns.AddRange(UI.MainWindow.WalletTransactions.DefaultColumns);
 
             // Initializes the industry jobs columns or adds missing ones
             UI.MainWindow.IndustryJobs.Columns.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);

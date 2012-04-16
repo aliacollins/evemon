@@ -12,6 +12,8 @@ namespace EVEMon.Common.SettingsObjects
             ShowOverview = true;
             ShowMenuBar = true;
             Assets = new AssetSettings();
+            WalletJournal = new WalletJournalSettings();
+            WalletTransactions = new WalletTransactionSettings();
             MarketOrders = new MarketOrderSettings();
             Contracts = new ContractSettings();
             IndustryJobs = new IndustryJobSettings();
@@ -171,6 +173,13 @@ namespace EVEMon.Common.SettingsObjects
         public bool UseIncreasedContrastOnOverview { get; set; }
 
         /// <summary>
+        /// Gets or sets the assets.
+        /// </summary>
+        /// <value>The assets.</value>
+        [XmlElement("assets")]
+        public AssetSettings Assets { get; set; }
+
+        /// <summary>
         /// Gets or sets the market orders.
         /// </summary>
         /// <value>The market orders.</value>
@@ -185,11 +194,18 @@ namespace EVEMon.Common.SettingsObjects
         public ContractSettings Contracts { get; set; }
 
         /// <summary>
-        /// Gets or sets the assets.
+        /// Gets or sets the wallet journal.
         /// </summary>
-        /// <value>The assets.</value>
-        [XmlElement("assets")]
-        public AssetSettings Assets { get; set; }
+        /// <value>The wallet journal.</value>
+        [XmlElement("walletJournal")]
+        public WalletJournalSettings WalletJournal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the wallet transactions.
+        /// </summary>
+        /// <value>The wallet transactions.</value>
+        [XmlElement("walletTransactions")]
+        public WalletTransactionSettings WalletTransactions { get; set; }
 
         /// <summary>
         /// Gets or sets the industry jobs.

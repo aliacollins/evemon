@@ -44,6 +44,8 @@ namespace EVEMon.Common
             SkillQueue = new SkillQueue(this);
             Standings = new StandingCollection(this);
             Assets = new AssetCollection(this);
+            WalletJournal = new WalletJournalCollection(this);
+            WalletTransactions = new WalletTransactionsCollection(this);
             CharacterMarketOrders = new MarketOrderCollection(this);
             CorporationMarketOrders = new MarketOrderCollection(this);
             CharacterContracts = new ContractCollection(this);
@@ -132,6 +134,16 @@ namespace EVEMon.Common
         /// Gets the assets for this character.
         /// </summary>
         public AssetCollection Assets { get; private set; }
+
+        /// <summary>
+        /// Gets the wallet journal for this character.
+        /// </summary>
+        public WalletJournalCollection WalletJournal { get; private set; }
+
+        /// <summary>
+        /// Gets the wallet transactions for this character.
+        /// </summary>
+        public WalletTransactionsCollection WalletTransactions { get; private set; }
 
         /// <summary>
         /// Gets the collection of market orders.

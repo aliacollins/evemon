@@ -1,11 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.ObjectModel;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-    class SerializableAPIWalletJournal
+    public sealed class SerializableAPIWalletJournal
     {
+        private readonly Collection<SerializableWalletJournalListItem> m_walletJournal;
+
+        public SerializableAPIWalletJournal()
+        {
+            m_walletJournal = new Collection<SerializableWalletJournalListItem>();
+        }
+
+        [XmlArray("transactions")]
+        [XmlArrayItem("transaction")]
+        public Collection<SerializableWalletJournalListItem> WalletJournal
+        {
+            get { return m_walletJournal; }
+        }
+
     }
 }

@@ -46,6 +46,7 @@ namespace EVEMon.CharacterMonitoring
             this.lblTrainingEst = new System.Windows.Forms.Label();
             this.btnAddToCalendar = new System.Windows.Forms.Button();
             this.upperPanel = new System.Windows.Forms.Panel();
+            this.Header = new EVEMon.CharacterMonitoring.CharacterMonitorHeader();
             this.skillQueuePanel = new System.Windows.Forms.Panel();
             this.lblPaused = new System.Windows.Forms.Label();
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
@@ -57,17 +58,33 @@ namespace EVEMon.CharacterMonitoring
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
             this.standingsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.standingsList = new EVEMon.CharacterMonitoring.CharacterStandingsList();
             this.skillsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.skillsList = new EVEMon.CharacterMonitoring.CharacterSkillsList();
             this.ordersPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.ordersList = new EVEMon.CharacterMonitoring.CharacterMarketOrdersList();
             this.skillQueuePage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.skillQueueList = new EVEMon.CharacterMonitoring.CharacterSkillsQueueList();
             this.jobsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.jobsList = new EVEMon.CharacterMonitoring.CharacterIndustryJobsList();
             this.researchPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.researchList = new EVEMon.CharacterMonitoring.CharacterResearchPointsList();
             this.mailMessagesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.mailMessagesList = new EVEMon.CharacterMonitoring.CharacterEveMailMessagesList();
             this.eveNotificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.eveNotificationsList = new EVEMon.CharacterMonitoring.CharacterEveNotificationsList();
             this.employmentPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.employmentList = new EVEMon.CharacterMonitoring.CharacterEmploymentHistoryList();
             this.contractsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.contractsList = new EVEMon.CharacterMonitoring.CharacterContractsList();
             this.assetsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.assetsList = new EVEMon.CharacterMonitoring.CharacterAssetsList();
+            this.walletJournalPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.walletJournalList = new EVEMon.CharacterMonitoring.CharacterWalletJournalList();
+            this.walletTransactionsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.walletTransactionsList = new EVEMon.CharacterMonitoring.CharacterWalletTransactionsList();
             this.warningLabel = new System.Windows.Forms.Label();
+            this.notificationList = new EVEMon.Controls.NotificationList();
             this.toolstripPanel = new System.Windows.Forms.Panel();
             this.toolStripContextual = new System.Windows.Forms.ToolStrip();
             this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
@@ -104,19 +121,6 @@ namespace EVEMon.CharacterMonitoring
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.filterTimer = new System.Windows.Forms.Timer(this.components);
-            this.standingsList = new EVEMon.CharacterMonitoring.CharacterStandingsList();
-            this.skillsList = new EVEMon.CharacterMonitoring.CharacterSkillsList();
-            this.ordersList = new EVEMon.CharacterMonitoring.CharacterMarketOrdersList();
-            this.skillQueueList = new EVEMon.CharacterMonitoring.CharacterSkillsQueueList();
-            this.jobsList = new EVEMon.CharacterMonitoring.CharacterIndustryJobsList();
-            this.researchList = new EVEMon.CharacterMonitoring.CharacterResearchPointsList();
-            this.mailMessagesList = new EVEMon.CharacterMonitoring.CharacterEveMailMessagesList();
-            this.eveNotificationsList = new EVEMon.CharacterMonitoring.CharacterEveNotificationsList();
-            this.employmentList = new EVEMon.CharacterMonitoring.CharacterEmploymentHistoryList();
-            this.contractsList = new EVEMon.CharacterMonitoring.CharacterContractsList();
-            this.assetsList = new EVEMon.CharacterMonitoring.CharacterAssetsList();
-            this.notificationList = new EVEMon.Controls.NotificationList();
-            this.Header = new EVEMon.CharacterMonitoring.CharacterMonitorHeader();
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
             this.flpStatusLabels.SuspendLayout();
@@ -139,6 +143,8 @@ namespace EVEMon.CharacterMonitoring
             this.employmentPage.SuspendLayout();
             this.contractsPage.SuspendLayout();
             this.assetsPage.SuspendLayout();
+            this.walletJournalPage.SuspendLayout();
+            this.walletTransactionsPage.SuspendLayout();
             this.toolstripPanel.SuspendLayout();
             this.toolStripContextual.SuspendLayout();
             this.toolStripFeatures.SuspendLayout();
@@ -186,8 +192,8 @@ namespace EVEMon.CharacterMonitoring
             // 
             // flpStatusLabels
             // 
-            this.flpStatusLabels.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpStatusLabels.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.flpStatusLabels.AutoSize = true;
             this.flpStatusLabels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flpStatusLabels.Controls.Add(this.lblCurrentlyTraining);
@@ -301,6 +307,16 @@ namespace EVEMon.CharacterMonitoring
             this.upperPanel.Name = "upperPanel";
             this.upperPanel.Size = new System.Drawing.Size(574, 165);
             this.upperPanel.TabIndex = 14;
+            // 
+            // Header
+            // 
+            this.Header.AutoSize = true;
+            this.Header.Character = null;
+            this.Header.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Header.Location = new System.Drawing.Point(0, 0);
+            this.Header.Name = "Header";
+            this.Header.Size = new System.Drawing.Size(574, 165);
+            this.Header.TabIndex = 15;
             // 
             // skillQueuePanel
             // 
@@ -422,6 +438,8 @@ namespace EVEMon.CharacterMonitoring
             this.multiPanel.Controls.Add(this.employmentPage);
             this.multiPanel.Controls.Add(this.contractsPage);
             this.multiPanel.Controls.Add(this.assetsPage);
+            this.multiPanel.Controls.Add(this.walletJournalPage);
+            this.multiPanel.Controls.Add(this.walletTransactionsPage);
             this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
@@ -440,6 +458,15 @@ namespace EVEMon.CharacterMonitoring
             this.standingsPage.Tag = "Standings";
             this.standingsPage.Text = "standingsPage";
             // 
+            // standingsList
+            // 
+            this.standingsList.Character = null;
+            this.standingsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.standingsList.Location = new System.Drawing.Point(0, 0);
+            this.standingsList.Name = "standingsList";
+            this.standingsList.Size = new System.Drawing.Size(568, 86);
+            this.standingsList.TabIndex = 0;
+            // 
             // skillsPage
             // 
             this.skillsPage.Controls.Add(this.skillsList);
@@ -450,6 +477,16 @@ namespace EVEMon.CharacterMonitoring
             this.skillsPage.TabIndex = 0;
             this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
+            // 
+            // skillsList
+            // 
+            this.skillsList.Character = null;
+            this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsList.Location = new System.Drawing.Point(0, 0);
+            this.skillsList.Margin = new System.Windows.Forms.Padding(0);
+            this.skillsList.Name = "skillsList";
+            this.skillsList.Size = new System.Drawing.Size(568, 86);
+            this.skillsList.TabIndex = 12;
             // 
             // ordersPage
             // 
@@ -462,6 +499,19 @@ namespace EVEMon.CharacterMonitoring
             this.ordersPage.Tag = "MarketOrders";
             this.ordersPage.Text = "ordersPage";
             // 
+            // ordersList
+            // 
+            this.ordersList.Character = null;
+            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
+            this.ordersList.Location = new System.Drawing.Point(0, 0);
+            this.ordersList.Name = "ordersList";
+            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.ordersList.Size = new System.Drawing.Size(568, 86);
+            this.ordersList.TabIndex = 13;
+            this.ordersList.TextFilter = "";
+            this.ordersList.Visibility = false;
+            // 
             // skillQueuePage
             // 
             this.skillQueuePage.Controls.Add(this.skillQueueList);
@@ -472,6 +522,15 @@ namespace EVEMon.CharacterMonitoring
             this.skillQueuePage.TabIndex = 1;
             this.skillQueuePage.Tag = "SkillQueue";
             this.skillQueuePage.Text = "skillQueuePage";
+            // 
+            // skillQueueList
+            // 
+            this.skillQueueList.Character = null;
+            this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillQueueList.Location = new System.Drawing.Point(0, 0);
+            this.skillQueueList.Name = "skillQueueList";
+            this.skillQueueList.Size = new System.Drawing.Size(568, 86);
+            this.skillQueueList.TabIndex = 0;
             // 
             // jobsPage
             // 
@@ -484,6 +543,19 @@ namespace EVEMon.CharacterMonitoring
             this.jobsPage.Tag = "IndustryJobs";
             this.jobsPage.Text = "jobsPage";
             // 
+            // jobsList
+            // 
+            this.jobsList.Character = null;
+            this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
+            this.jobsList.Location = new System.Drawing.Point(0, 0);
+            this.jobsList.Name = "jobsList";
+            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.jobsList.Size = new System.Drawing.Size(568, 86);
+            this.jobsList.TabIndex = 0;
+            this.jobsList.TextFilter = "";
+            this.jobsList.Visibility = false;
+            // 
             // researchPage
             // 
             this.researchPage.Controls.Add(this.researchList);
@@ -494,6 +566,17 @@ namespace EVEMon.CharacterMonitoring
             this.researchPage.TabIndex = 4;
             this.researchPage.Tag = "ResearchPoints";
             this.researchPage.Text = "researchPage";
+            // 
+            // researchList
+            // 
+            this.researchList.Character = null;
+            this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.researchList.Grouping = null;
+            this.researchList.Location = new System.Drawing.Point(0, 0);
+            this.researchList.Name = "researchList";
+            this.researchList.Size = new System.Drawing.Size(568, 86);
+            this.researchList.TabIndex = 0;
+            this.researchList.TextFilter = "";
             // 
             // mailMessagesPage
             // 
@@ -506,6 +589,18 @@ namespace EVEMon.CharacterMonitoring
             this.mailMessagesPage.Tag = "MailMessages";
             this.mailMessagesPage.Text = "mailMessagesPage";
             // 
+            // mailMessagesList
+            // 
+            this.mailMessagesList.Character = null;
+            this.mailMessagesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mailMessagesList.Grouping = EVEMon.Common.SettingsObjects.EVEMailMessagesGrouping.State;
+            this.mailMessagesList.Location = new System.Drawing.Point(0, 0);
+            this.mailMessagesList.Name = "mailMessagesList";
+            this.mailMessagesList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
+            this.mailMessagesList.Size = new System.Drawing.Size(568, 87);
+            this.mailMessagesList.TabIndex = 0;
+            this.mailMessagesList.TextFilter = "";
+            // 
             // eveNotificationsPage
             // 
             this.eveNotificationsPage.Controls.Add(this.eveNotificationsList);
@@ -516,6 +611,18 @@ namespace EVEMon.CharacterMonitoring
             this.eveNotificationsPage.TabIndex = 6;
             this.eveNotificationsPage.Tag = "Notifications";
             this.eveNotificationsPage.Text = "eveNotificationsPage";
+            // 
+            // eveNotificationsList
+            // 
+            this.eveNotificationsList.Character = null;
+            this.eveNotificationsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eveNotificationsList.Grouping = EVEMon.Common.SettingsObjects.EVENotificationsGrouping.Type;
+            this.eveNotificationsList.Location = new System.Drawing.Point(0, 0);
+            this.eveNotificationsList.Name = "eveNotificationsList";
+            this.eveNotificationsList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
+            this.eveNotificationsList.Size = new System.Drawing.Size(568, 86);
+            this.eveNotificationsList.TabIndex = 0;
+            this.eveNotificationsList.TextFilter = "";
             // 
             // employmentPage
             // 
@@ -528,6 +635,15 @@ namespace EVEMon.CharacterMonitoring
             this.employmentPage.Tag = "EmploymentHistory";
             this.employmentPage.Text = "employmentPage";
             // 
+            // employmentList
+            // 
+            this.employmentList.Character = null;
+            this.employmentList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.employmentList.Location = new System.Drawing.Point(0, 0);
+            this.employmentList.Name = "employmentList";
+            this.employmentList.Size = new System.Drawing.Size(568, 86);
+            this.employmentList.TabIndex = 0;
+            // 
             // contractsPage
             // 
             this.contractsPage.Controls.Add(this.contractsList);
@@ -539,6 +655,19 @@ namespace EVEMon.CharacterMonitoring
             this.contractsPage.Tag = "Contracts";
             this.contractsPage.Text = "contractsPage";
             // 
+            // contractsList
+            // 
+            this.contractsList.Character = null;
+            this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
+            this.contractsList.Location = new System.Drawing.Point(0, 0);
+            this.contractsList.Name = "contractsList";
+            this.contractsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.contractsList.Size = new System.Drawing.Size(568, 86);
+            this.contractsList.TabIndex = 0;
+            this.contractsList.TextFilter = "";
+            this.contractsList.Visibility = false;
+            // 
             // assetsPage
             // 
             this.assetsPage.Controls.Add(this.assetsList);
@@ -549,6 +678,55 @@ namespace EVEMon.CharacterMonitoring
             this.assetsPage.TabIndex = 10;
             this.assetsPage.Tag = "AssetList";
             this.assetsPage.Text = "assetsPage";
+            // 
+            // assetsList
+            // 
+            this.assetsList.Character = null;
+            this.assetsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.None;
+            this.assetsList.Location = new System.Drawing.Point(0, 0);
+            this.assetsList.Name = "assetsList";
+            this.assetsList.Size = new System.Drawing.Size(568, 86);
+            this.assetsList.TabIndex = 0;
+            this.assetsList.TextFilter = "";
+            // 
+            // walletJournalPage
+            // 
+            this.walletJournalPage.Controls.Add(this.walletJournalList);
+            this.walletJournalPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.walletJournalPage.Location = new System.Drawing.Point(0, 0);
+            this.walletJournalPage.Name = "walletJournalPage";
+            this.walletJournalPage.Size = new System.Drawing.Size(568, 86);
+            this.walletJournalPage.TabIndex = 11;
+            this.walletJournalPage.Tag = "WalletJournal";
+            this.walletJournalPage.Text = "walletJournalPage";
+            // 
+            // walletJournalList
+            // 
+            this.walletJournalList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.walletJournalList.Location = new System.Drawing.Point(0, 0);
+            this.walletJournalList.Name = "walletJournalList";
+            this.walletJournalList.Size = new System.Drawing.Size(568, 86);
+            this.walletJournalList.TabIndex = 0;
+            // 
+            // walletTransactionsPage
+            // 
+            this.walletTransactionsPage.Controls.Add(this.walletTransactionsList);
+            this.walletTransactionsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.walletTransactionsPage.Location = new System.Drawing.Point(0, 0);
+            this.walletTransactionsPage.Name = "walletTransactionsPage";
+            this.walletTransactionsPage.Size = new System.Drawing.Size(568, 86);
+            this.walletTransactionsPage.TabIndex = 12;
+            this.walletTransactionsPage.Tag = "WalletTransactions";
+            this.walletTransactionsPage.Text = "walletTransactionsPage";
+            // 
+            // walletTransactionsList
+            // 
+            this.walletTransactionsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.walletTransactionsList.Location = new System.Drawing.Point(0, 0);
+            this.walletTransactionsList.Name = "walletTransactionsList";
+            this.walletTransactionsList.Size = new System.Drawing.Size(568, 86);
+            this.walletTransactionsList.TabIndex = 0;
             // 
             // warningLabel
             // 
@@ -564,6 +742,16 @@ namespace EVEMon.CharacterMonitoring
             this.warningLabel.TabIndex = 1;
             this.warningLabel.Text = "This character has no associated API key, data won\'t be updated.";
             this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // notificationList
+            // 
+            this.notificationList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.notificationList.Location = new System.Drawing.Point(2, 2);
+            this.notificationList.Margin = new System.Windows.Forms.Padding(0);
+            this.notificationList.Name = "notificationList";
+            this.notificationList.Size = new System.Drawing.Size(571, 72);
+            this.notificationList.TabIndex = 13;
             // 
             // toolstripPanel
             // 
@@ -857,6 +1045,7 @@ namespace EVEMon.CharacterMonitoring
             this.walletJournalIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.walletJournalIcon.Name = "walletJournalIcon";
             this.walletJournalIcon.Size = new System.Drawing.Size(28, 28);
+            this.walletJournalIcon.Tag = "walletJournalPage";
             this.walletJournalIcon.Text = "Wallet Journal";
             this.walletJournalIcon.ToolTipText = "Display wallet journal";
             this.walletJournalIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
@@ -868,6 +1057,7 @@ namespace EVEMon.CharacterMonitoring
             this.walletTransactionsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.walletTransactionsIcon.Name = "walletTransactionsIcon";
             this.walletTransactionsIcon.Size = new System.Drawing.Size(28, 28);
+            this.walletTransactionsIcon.Tag = "walletTransactionsPage";
             this.walletTransactionsIcon.Text = "Wallet Transactions";
             this.walletTransactionsIcon.ToolTipText = "Display wallet transactions";
             this.walletTransactionsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
@@ -959,148 +1149,6 @@ namespace EVEMon.CharacterMonitoring
             this.filterTimer.Interval = 300;
             this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
             // 
-            // standingsList
-            // 
-            this.standingsList.Character = null;
-            this.standingsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.standingsList.Location = new System.Drawing.Point(0, 0);
-            this.standingsList.Name = "standingsList";
-            this.standingsList.Size = new System.Drawing.Size(568, 86);
-            this.standingsList.TabIndex = 0;
-            // 
-            // skillsList
-            // 
-            this.skillsList.Character = null;
-            this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillsList.Location = new System.Drawing.Point(0, 0);
-            this.skillsList.Margin = new System.Windows.Forms.Padding(0);
-            this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(568, 86);
-            this.skillsList.TabIndex = 12;
-            // 
-            // ordersList
-            // 
-            this.ordersList.Character = null;
-            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
-            this.ordersList.Location = new System.Drawing.Point(0, 0);
-            this.ordersList.Name = "ordersList";
-            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.ordersList.Size = new System.Drawing.Size(568, 86);
-            this.ordersList.TabIndex = 13;
-            this.ordersList.TextFilter = "";
-            this.ordersList.Visibility = false;
-            // 
-            // skillQueueList
-            // 
-            this.skillQueueList.Character = null;
-            this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillQueueList.Location = new System.Drawing.Point(0, 0);
-            this.skillQueueList.Name = "skillQueueList";
-            this.skillQueueList.Size = new System.Drawing.Size(568, 86);
-            this.skillQueueList.TabIndex = 0;
-            // 
-            // jobsList
-            // 
-            this.jobsList.Character = null;
-            this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
-            this.jobsList.Location = new System.Drawing.Point(0, 0);
-            this.jobsList.Name = "jobsList";
-            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.jobsList.Size = new System.Drawing.Size(568, 86);
-            this.jobsList.TabIndex = 0;
-            this.jobsList.TextFilter = "";
-            this.jobsList.Visibility = false;
-            // 
-            // researchList
-            // 
-            this.researchList.Character = null;
-            this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.researchList.Grouping = null;
-            this.researchList.Location = new System.Drawing.Point(0, 0);
-            this.researchList.Name = "researchList";
-            this.researchList.Size = new System.Drawing.Size(568, 86);
-            this.researchList.TabIndex = 0;
-            this.researchList.TextFilter = "";
-            // 
-            // mailMessagesList
-            // 
-            this.mailMessagesList.Character = null;
-            this.mailMessagesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mailMessagesList.Grouping = EVEMon.Common.SettingsObjects.EVEMailMessagesGrouping.State;
-            this.mailMessagesList.Location = new System.Drawing.Point(0, 0);
-            this.mailMessagesList.Name = "mailMessagesList";
-            this.mailMessagesList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
-            this.mailMessagesList.Size = new System.Drawing.Size(568, 87);
-            this.mailMessagesList.TabIndex = 0;
-            this.mailMessagesList.TextFilter = "";
-            // 
-            // eveNotificationsList
-            // 
-            this.eveNotificationsList.Character = null;
-            this.eveNotificationsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eveNotificationsList.Grouping = EVEMon.Common.SettingsObjects.EVENotificationsGrouping.Type;
-            this.eveNotificationsList.Location = new System.Drawing.Point(0, 0);
-            this.eveNotificationsList.Name = "eveNotificationsList";
-            this.eveNotificationsList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
-            this.eveNotificationsList.Size = new System.Drawing.Size(568, 86);
-            this.eveNotificationsList.TabIndex = 0;
-            this.eveNotificationsList.TextFilter = "";
-            // 
-            // employmentList
-            // 
-            this.employmentList.Character = null;
-            this.employmentList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.employmentList.Location = new System.Drawing.Point(0, 0);
-            this.employmentList.Name = "employmentList";
-            this.employmentList.Size = new System.Drawing.Size(568, 86);
-            this.employmentList.TabIndex = 0;
-            // 
-            // contractsList
-            // 
-            this.contractsList.Character = null;
-            this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
-            this.contractsList.Location = new System.Drawing.Point(0, 0);
-            this.contractsList.Name = "contractsList";
-            this.contractsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.contractsList.Size = new System.Drawing.Size(568, 86);
-            this.contractsList.TabIndex = 0;
-            this.contractsList.TextFilter = "";
-            this.contractsList.Visibility = false;
-            // 
-            // assetsList
-            // 
-            this.assetsList.Character = null;
-            this.assetsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.None;
-            this.assetsList.Location = new System.Drawing.Point(0, 0);
-            this.assetsList.Name = "assetsList";
-            this.assetsList.Size = new System.Drawing.Size(568, 86);
-            this.assetsList.TabIndex = 0;
-            this.assetsList.TextFilter = "";
-            // 
-            // notificationList
-            // 
-            this.notificationList.Dock = System.Windows.Forms.DockStyle.Top;
-            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.notificationList.Location = new System.Drawing.Point(2, 2);
-            this.notificationList.Margin = new System.Windows.Forms.Padding(0);
-            this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(571, 72);
-            this.notificationList.TabIndex = 13;
-            // 
-            // Header
-            // 
-            this.Header.AutoSize = true;
-            this.Header.Character = null;
-            this.Header.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Header.Location = new System.Drawing.Point(0, 0);
-            this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(574, 165);
-            this.Header.TabIndex = 15;
-            // 
             // CharacterMonitor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1139,6 +1187,8 @@ namespace EVEMon.CharacterMonitoring
             this.employmentPage.ResumeLayout(false);
             this.contractsPage.ResumeLayout(false);
             this.assetsPage.ResumeLayout(false);
+            this.walletJournalPage.ResumeLayout(false);
+            this.walletTransactionsPage.ResumeLayout(false);
             this.toolstripPanel.ResumeLayout(false);
             this.toolstripPanel.PerformLayout();
             this.toolStripContextual.ResumeLayout(false);
@@ -1235,5 +1285,9 @@ namespace EVEMon.CharacterMonitoring
         private MultiPanelPage assetsPage;
         private CharacterAssetsList assetsList;
         private System.Windows.Forms.Timer filterTimer;
+        private MultiPanelPage walletJournalPage;
+        private CharacterWalletJournalList walletJournalList;
+        private MultiPanelPage walletTransactionsPage;
+        private CharacterWalletTransactionsList walletTransactionsList;
     }
 }

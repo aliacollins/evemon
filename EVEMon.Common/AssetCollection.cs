@@ -13,6 +13,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal AssetCollection(CCPCharacter character)
         {
             m_character = character;
@@ -42,6 +43,7 @@ namespace EVEMon.Common
                                                             { LocationID = asset.LocationID, Container = asset.Item.Name }));
                                                 }
 
+                                                // Invoke back to the UI thread
                                                 // Fires the event regarding assets update
                                                 Dispatcher.Invoke(() => EveMonClient.OnCharacterAssetsUpdated(m_character));
                                             });

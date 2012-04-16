@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterWalletTransactionsList));
             this.noWalletTransactionsLabel = new System.Windows.Forms.Label();
             this.lvWalletTransactions = new System.Windows.Forms.ListView();
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // noWalletTransactionsLabel
@@ -52,9 +55,18 @@
             this.lvWalletTransactions.Location = new System.Drawing.Point(0, 0);
             this.lvWalletTransactions.Name = "lvWalletTransactions";
             this.lvWalletTransactions.Size = new System.Drawing.Size(454, 434);
+            this.lvWalletTransactions.SmallImageList = this.ilIcons;
             this.lvWalletTransactions.TabIndex = 4;
             this.lvWalletTransactions.UseCompatibleStateImageBehavior = false;
             this.lvWalletTransactions.View = System.Windows.Forms.View.Details;
+            // 
+            // ilIcons
+            // 
+            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
+            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
+            this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
+            this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
             // 
             // CharacterWalletTransactionsList
             // 
@@ -72,5 +84,6 @@
 
         private System.Windows.Forms.Label noWalletTransactionsLabel;
         private System.Windows.Forms.ListView lvWalletTransactions;
+        private System.Windows.Forms.ImageList ilIcons;
     }
 }

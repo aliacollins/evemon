@@ -32,7 +32,7 @@ namespace EVEMon.Common.SettingsObjects
         Category = 5,
 
         [Header("Container")]
-        [Description("Container (that contains the item)")]
+        [Description("Container (Containing the item)")]
         Container = 6,
 
         [Header("Flag")]
@@ -40,7 +40,7 @@ namespace EVEMon.Common.SettingsObjects
         Flag = 7,
 
         [Header("Location")]
-        [Description("Location")]
+        [Description("Location (Station or Solar System)")]
         Location = 8,
 
         [Header("Region")]
@@ -52,11 +52,11 @@ namespace EVEMon.Common.SettingsObjects
         SolarSystem = 10,
 
         [Header("Path")]
-        [Description("Location (Path)")]
+        [Description("Location (Full)")]
         FullLocation = 11,
 
         [Header("Jumps")]
-        [Description("Jumps (away from last known location)")]
+        [Description("Jumps (From character's last known location)")]
         Jumps = 12
     }
 }

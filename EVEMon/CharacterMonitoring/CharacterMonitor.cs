@@ -62,8 +62,8 @@ namespace EVEMon.CharacterMonitoring
             assetsList.Character = character;
             ordersList.Character = character;
             contractsList.Character = character;
-            //walletJournalList.Character = character;
-            //walletTransactionsList.Character = character;
+            walletJournalList.Character = character;
+            walletTransactionsList.Character = character;
             jobsList.Character = character;
             researchList.Character = character;
             mailMessagesList.Character = character;
@@ -104,6 +104,9 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
+            EveMonClient.CharacterWalletJournalUpdated += EveMonClient_CharacterWalletJournalUpdated;
+            EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_CharacterWalletTransactionsUpdated;
             EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
             EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_CharacterEVEMailMessagesUpdated;
@@ -127,6 +130,9 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
+            EveMonClient.CharacterWalletJournalUpdated -= EveMonClient_CharacterWalletJournalUpdated;
+            EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_CharacterWalletTransactionsUpdated;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
             EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_CharacterEVEMailMessagesUpdated;
@@ -157,13 +163,13 @@ namespace EVEMon.CharacterMonitoring
 
             // Picks the last selected page
             multiPanel.SelectedPage = null;
-            string tag = m_character.UISettings.SelectedPage;
             ToolStripItem item = null;
 
             // Only for CCP characters
             if (m_character is CCPCharacter)
             {
-                item = toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == (string)x.Tag);
+                item = toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(
+                    x => m_character.UISettings.SelectedPage == (string)x.Tag);
 
                 // If it's not an advanced feature page make it visible
                 if (item != null && !m_advancedFeatures.Contains(item))
@@ -466,6 +472,14 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == contractsPage)
                 toolStripContextual.Enabled = ccpCharacter.Contracts.Any();
 
+            // Enables / Disables the wallet journal page related controls
+            if (multiPanel.SelectedPage == walletJournalPage)
+                toolStripContextual.Enabled = ccpCharacter.WalletJournal.Any();
+
+            // Enables / Disables the wallet transactions page related controls
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+                toolStripContextual.Enabled = ccpCharacter.WalletTransactions.Any();
+
             // Enables / Disables the industry jobs page related controls
             if (multiPanel.SelectedPage == jobsPage)
                 toolStripContextual.Enabled = ccpCharacter.IndustryJobs.Any();
@@ -619,6 +633,45 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
+        /// Updates the page controls on contracts change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ContractsUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
+        /// Updates the page controls on wallet journal change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterWalletJournalUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
+        /// Updates the page controls on wallet transactions change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterWalletTransactionsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -958,6 +1011,12 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == contractsPage)
                 CreateGroupMenuList<ContractGrouping, Enum>(contractsList);
 
+            if (multiPanel.SelectedPage == walletJournalPage)
+                CreateGroupMenuList<WalletJournalGrouping, Enum>(walletJournalList);
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+                CreateGroupMenuList<WalletTransactionGrouping, Enum>(walletTransactionsList);
+
             if (multiPanel.SelectedPage == jobsPage)
                 CreateGroupMenuList<IndustryJobGrouping, Enum>(jobsList);
 
@@ -985,6 +1044,12 @@ namespace EVEMon.CharacterMonitoring
 
             if (multiPanel.SelectedPage == contractsPage)
                 GroupMenuSetting<ContractGrouping, Enum>(item, contractsList);
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+                GroupMenuSetting<WalletJournalGrouping, Enum>(item, walletJournalList);
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+                GroupMenuSetting<WalletTransactionGrouping, Enum>(item, walletTransactionsList);
 
             if (multiPanel.SelectedPage == jobsPage)
                 GroupMenuSetting<IndustryJobGrouping, Enum>(item, jobsList);
@@ -1025,6 +1090,12 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == contractsPage)
                 contractsList.TextFilter = searchTextBox.Text;
 
+            if (multiPanel.SelectedPage == walletJournalPage)
+                walletJournalList.TextFilter = searchTextBox.Text;
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+                walletTransactionsList.TextFilter = searchTextBox.Text;
+
             if (multiPanel.SelectedPage == jobsPage)
                 jobsList.TextFilter = searchTextBox.Text;
 
@@ -1048,6 +1119,22 @@ namespace EVEMon.CharacterMonitoring
         private void preferencesMenu_DropDownOpening(object sender, EventArgs e)
         {
             bool hideInactive = true;
+
+            if (multiPanel.SelectedPage == assetsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
+
+                preferencesMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in m_preferenceMenu.Where(
+                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
+                        !item.Equals(showOnlyCharMenuItem) && ! item.Equals(showOnlyCorpMenuItem) &&
+                        !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                {
+                    preferencesMenu.DropDownItems.Add(item);
+                }
+
+                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+            }
 
             if (multiPanel.SelectedPage == ordersPage)
             {
@@ -1083,6 +1170,38 @@ namespace EVEMon.CharacterMonitoring
                 showOnlyCorpMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
+            if (multiPanel.SelectedPage == walletJournalPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.WalletJournal.NumberAbsFormat;
+
+                preferencesMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in m_preferenceMenu.Where(
+                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
+                        !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
+                        !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                {
+                    preferencesMenu.DropDownItems.Add(item);
+                }
+
+                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+            }
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat;
+
+                preferencesMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in m_preferenceMenu.Where(
+                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
+                        !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
+                        !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                {
+                    preferencesMenu.DropDownItems.Add(item);
+                }
+
+                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+            }
+
             if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
@@ -1099,7 +1218,7 @@ namespace EVEMon.CharacterMonitoring
                 showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
-            if (multiPanel.SelectedPage == researchPage || multiPanel.SelectedPage == assetsPage)
+            if (multiPanel.SelectedPage == researchPage)
             {
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
@@ -1168,6 +1287,38 @@ namespace EVEMon.CharacterMonitoring
                         contractsList.Columns = f.Columns;
                         Settings.UI.MainWindow.Contracts.Columns.Clear();
                         Settings.UI.MainWindow.Contracts.Columns.AddRange(contractsList.Columns.Cast<ContractColumnSettings>());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+            {
+                using (WalletJournalColumnsSelectWindow f =
+                    new WalletJournalColumnsSelectWindow(walletJournalList.Columns.Cast<WalletJournalColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        walletJournalList.Columns = f.Columns;
+                        Settings.UI.MainWindow.WalletJournal.Columns.Clear();
+                        Settings.UI.MainWindow.WalletJournal.Columns.AddRange(
+                            walletJournalList.Columns.Cast<WalletJournalColumnSettings>());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+            {
+                using (WalletTransactionsColumnsSelectWindow f = new WalletTransactionsColumnsSelectWindow(
+                    walletTransactionsList.Columns.Cast<WalletTransactionColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        walletTransactionsList.Columns = f.Columns;
+                        Settings.UI.MainWindow.WalletTransactions.Columns.Clear();
+                        Settings.UI.MainWindow.WalletTransactions.Columns.AddRange(
+                            walletTransactionsList.Columns.Cast<WalletTransactionColumnSettings>());
                     }
                 }
             }
@@ -1243,8 +1394,10 @@ namespace EVEMon.CharacterMonitoring
         private void autoSizeColumnMenuItem_Click(object sender, EventArgs e)
         {
             IListView list = multiPanel.SelectedPage.Controls.OfType<IListView>().FirstOrDefault();
+
             if (list == null)
                 return;
+
             list.Columns.Where(column => column.Visible).ToList().ForEach(column => column.Width = -2);
             list.UpdateColumns();
         }
@@ -1257,6 +1410,7 @@ namespace EVEMon.CharacterMonitoring
         private void hideInactiveMenuItem_Click(object sender, EventArgs e)
         {
             bool hideInactive = true;
+
             if (multiPanel.SelectedPage == ordersPage)
             {
                 hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
@@ -1287,6 +1441,14 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void numberAbsFormatMenuItem_Click(object sender, EventArgs e)
         {
+            if (multiPanel.SelectedPage == assetsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
+                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                Settings.UI.MainWindow.Assets.NumberAbsFormat = !numberFormat;
+                assetsList.UpdateColumns();
+            }
+
             if (multiPanel.SelectedPage == ordersPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
@@ -1301,6 +1463,22 @@ namespace EVEMon.CharacterMonitoring
                 numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
                 Settings.UI.MainWindow.Contracts.NumberAbsFormat = !numberFormat;
                 contractsList.UpdateColumns();
+            }
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.WalletJournal.NumberAbsFormat;
+                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                Settings.UI.MainWindow.WalletJournal.NumberAbsFormat = !numberFormat;
+                walletJournalList.UpdateColumns();
+            }
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat;
+                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat = !numberFormat;
+                walletTransactionsList.UpdateColumns();
             }
         }
 
@@ -1523,11 +1701,17 @@ namespace EVEMon.CharacterMonitoring
             if (obj is MarketOrderGrouping)
                 m_character.UISettings.OrdersGroupBy = (MarketOrderGrouping)grouping;
 
-            if (obj is IndustryJobGrouping)
-                m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
-
             if (obj is ContractGrouping)
                 m_character.UISettings.ContractsGroupBy = (ContractGrouping)grouping;
+
+            if (obj is WalletJournalGrouping)
+                m_character.UISettings.WalletJournalGroupBy = (WalletJournalGrouping)grouping;
+
+            if (obj is WalletTransactionGrouping)
+                m_character.UISettings.WalletTransactionsGroupBy = (WalletTransactionGrouping)grouping;
+
+            if (obj is IndustryJobGrouping)
+                m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
 
             if (obj is EVEMailMessagesGrouping)
                 m_character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;

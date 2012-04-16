@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-    public class SerializableContractBidsListItem
+    public sealed class SerializableContractBidsListItem
     {
         [XmlAttribute("bidID")]
         public long ID { get; set; }

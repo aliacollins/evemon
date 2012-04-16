@@ -178,7 +178,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the volume.
         /// </summary>
-        public double Volume { get; private set; }
+        public decimal Volume { get; private set; }
 
         /// <summary>
         /// Gets the issuer.

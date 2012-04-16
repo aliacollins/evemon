@@ -8,7 +8,7 @@ using EVEMon.Common.Serialization;
 
 namespace EVEMon.Common
 {
-    public static class EveFlags
+    public static class EveFlag
     {
         private static SerializableEveFlags s_eveFlags;
         private static bool s_isLoaded;

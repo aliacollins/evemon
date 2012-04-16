@@ -2,17 +2,17 @@
 
 namespace EVEMon.Common.SettingsObjects
 {
-    public sealed class AssetColumnSettings : IColumnSettings
+    public sealed class WalletJournalColumnSettings : IColumnSettings
     {
         /// <summary>
         /// Gets or sets the column.
         /// </summary>
         /// <value>The column.</value>
         [XmlAttribute("column")]
-        public AssetColumn Column { get; set; }
+        public WalletJournalColumn Column { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="AssetColumnSettings"/> is visible.
+        /// Gets or sets a value indicating whether this <see cref="WalletTransactionColumnSettings"/> is visible.
         /// </summary>
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
         [XmlAttribute("visible")]

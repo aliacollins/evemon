@@ -345,12 +345,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case EVEMailMessagesGrouping.SentDate:
                     IOrderedEnumerable<IGrouping<DateTime, EveMailMessage>> groups2 =
-                        eveMailMessages.GroupBy(x => x.SentDate.Date).OrderBy(x => x.Key);
+                        eveMailMessages.GroupBy(x => x.SentDate.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups2);
                     break;
                 case EVEMailMessagesGrouping.SentDateDesc:
                     IOrderedEnumerable<IGrouping<DateTime, EveMailMessage>> groups3 =
-                        eveMailMessages.GroupBy(x => x.SentDate.Date).OrderByDescending(x => x.Key);
+                        eveMailMessages.GroupBy(x => x.SentDate.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups3);
                     break;
                 case EVEMailMessagesGrouping.Sender:

@@ -26,7 +26,7 @@ namespace EVEMon.Common
             LocationID = src.LocationID;
             Quantity = src.Quantity;
             Item = StaticItems.GetItemByID(src.TypeID);
-            Flag = EveFlags.GetFlagText(src.Flag);
+            Flag = EveFlag.GetFlagText(src.Flag);
             BlueprintType = GetBlueprintType(src.RawQuantity);
             Container = String.Empty;
             Volume = GetVolume();
@@ -115,30 +115,39 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the volume.
         /// </summary>
-        public double Volume { get; private set; }
+        public decimal Volume { get; private set; }
 
         #endregion
 
 
         #region Helper Methods
 
+        /// <summary>
+        /// Gets the type of the blueprint.
+        /// </summary>
+        /// <param name="rawQuantity">The raw quantity.</param>
+        /// <returns></returns>
         private string GetBlueprintType(short rawQuantity)
         {
             return Item != null && Item.CategoryName == ItemFamily.Blueprint.ToString()
-                       ? rawQuantity == -2 ? "Copy" : "Original"
+                       ? rawQuantity == -2 ? Common.BlueprintType.Copy.ToString() : Common.BlueprintType.Original.ToString()
                        : String.Empty;
         }
 
-        private double GetVolume()
+        /// <summary>
+        /// Gets the volume.
+        /// </summary>
+        /// <returns></returns>
+        private decimal GetVolume()
         {
             if (Item != null)
             {
                 EveProperty prop = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
                 if (prop != null)
-                    return prop.GetNumericValue(Item);
+                    return Convert.ToDecimal(prop.GetNumericValue(Item));
             }
 
-            return 0d;
+            return 0M;
         }
 
         /// <summary>
@@ -156,6 +165,7 @@ namespace EVEMon.Common
             {
                 int locationID = Convert.ToInt32(LocationID);
                 Station station = ConquerableStation.GetStationByID(locationID) ?? StaticGeography.GetStationByID(locationID);
+                ConquerableStation outpost = station as ConquerableStation;
 
                 SolarSystem = station == null
                                   ? StaticGeography.GetSolarSystemByID(locationID)
@@ -165,7 +175,9 @@ namespace EVEMon.Common
                                    ? SolarSystem == null
                                          ? location
                                          : SolarSystem.FullLocation
-                                   : station.FullLocation;
+                                   : outpost != null
+                                         ? outpost.FullLocation
+                                         : station.FullLocation;
 
                 return station == null
                            ? SolarSystem == null

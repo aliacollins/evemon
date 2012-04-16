@@ -503,7 +503,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            //m_ccpCharacter.WalletJournal.Import(result.Result.WalletJournal);
+            m_ccpCharacter.WalletJournal.Import(result.Result.WalletJournal);
 
             // Fires the event regarding wallet journal update
             EveMonClient.OnCharacterWalletJournalUpdated(m_ccpCharacter);
@@ -528,7 +528,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            //m_ccpCharacter.WalletTransactions.Import(result.Result.WalletTransactions);
+            m_ccpCharacter.WalletTransactions.Import(result.Result.WalletTransactions);
 
             // Fires the event regarding wallet transactions update
             EveMonClient.OnCharacterWalletTransactionsUpdated(m_ccpCharacter);

@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterWalletJournalList));
             this.noWalletJournalLabel = new System.Windows.Forms.Label();
             this.lvWalletJournal = new System.Windows.Forms.ListView();
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // noWalletJournalLabel
@@ -52,9 +55,18 @@
             this.lvWalletJournal.Location = new System.Drawing.Point(0, 0);
             this.lvWalletJournal.Name = "lvWalletJournal";
             this.lvWalletJournal.Size = new System.Drawing.Size(454, 434);
+            this.lvWalletJournal.SmallImageList = this.ilIcons;
             this.lvWalletJournal.TabIndex = 4;
             this.lvWalletJournal.UseCompatibleStateImageBehavior = false;
             this.lvWalletJournal.View = System.Windows.Forms.View.Details;
+            // 
+            // ilIcons
+            // 
+            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
+            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
+            this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
+            this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
             // 
             // CharacterWalletJournalList
             // 
@@ -72,5 +84,6 @@
 
         private System.Windows.Forms.Label noWalletJournalLabel;
         private System.Windows.Forms.ListView lvWalletJournal;
+        private System.Windows.Forms.ImageList ilIcons;
     }
 }

@@ -79,7 +79,7 @@ namespace EVEMon.Common
                 case AssetColumn.Location:
                     return String.Compare(x.Location, y.Location, StringComparison.CurrentCulture);
                 case AssetColumn.FullLocation:
-                    return String.Compare(x.FullLocation, y.FullLocation, StringComparison.CurrentCulture);
+                    return x.SolarSystem.CompareTo(y.SolarSystem);
                 case AssetColumn.Region:
                     return x.SolarSystem.Constellation.Region.CompareTo(y.SolarSystem.Constellation.Region);
                 case AssetColumn.SolarSystem:

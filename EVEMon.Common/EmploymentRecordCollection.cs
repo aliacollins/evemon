@@ -12,7 +12,11 @@ namespace EVEMon.Common
 
         #region Constructor
 
-        public EmploymentRecordCollection(Character character)
+        /// <summary>
+        /// Internal constructor.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal EmploymentRecordCollection(Character character)
         {
             m_character = character;
         }
