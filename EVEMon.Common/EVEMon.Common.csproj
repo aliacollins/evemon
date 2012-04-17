@@ -419,7 +419,6 @@
     <Compile Include="EveMailMessageCollection.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="ListViewExporter.cs" />
-    <Compile Include="Pair.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="PlanEntrySorter.cs" />
     <Compile Include="ResearchPoint.cs" />

@@ -780,7 +780,7 @@ namespace EVEMon.CharacterMonitoring
                                               (menuPlanItem, plan) =>
                                                   {
                                                       menuPlanItem.Click += menuPlanItem_Click;
-                                                      menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan,
+                                                      menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
                                                                                                     new SkillLevel(skill, level));
                                                   });
 
@@ -984,9 +984,9 @@ namespace EVEMon.CharacterMonitoring
         private static void menuPlanItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
-            Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>)planItem.Tag;
+            KeyValuePair<Plan, SkillLevel> tag = (KeyValuePair<Plan, SkillLevel>)planItem.Tag;
 
-            IPlanOperation operation = tag.A.TryPlanTo(tag.B.Skill, tag.B.Level);
+            IPlanOperation operation = tag.Key.TryPlanTo(tag.Value.Skill, tag.Value.Level);
             PlanHelper.SelectPerform(operation);
         }
 
