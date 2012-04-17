@@ -18,7 +18,6 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<WalletJournalColumnSettings> m_columns = new List<WalletJournalColumnSettings>();
         private readonly List<WalletJournal> m_list = new List<WalletJournal>();
-        private readonly InfiniteDisplayToolTip m_tooltip;
 
         private WalletJournalGrouping m_grouping;
         private WalletJournalColumn m_sortCriteria;
@@ -41,8 +40,6 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            m_tooltip = new InfiniteDisplayToolTip(lvWalletJournal);
-
             lvWalletJournal.Visible = false;
             lvWalletJournal.AllowColumnReorder = true;
             lvWalletJournal.Columns.Clear();
@@ -51,12 +48,9 @@ namespace EVEMon.CharacterMonitoring
 
             ListViewHelper.EnableDoubleBuffer(lvWalletJournal);
 
-            lvWalletJournal.KeyDown += listView_KeyDown;
             lvWalletJournal.ColumnClick += listView_ColumnClick;
             lvWalletJournal.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvWalletJournal.ColumnReordered += listView_ColumnReordered;
-            lvWalletJournal.MouseMove += listView_MouseMove;
-            lvWalletJournal.MouseLeave += listView_MouseLeave;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.RefTypesUpdated += EveMonClient_RefTypesUpdated;
@@ -174,7 +168,6 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            m_tooltip.Dispose();
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.RefTypesUpdated -= EveMonClient_RefTypesUpdated;
             EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
@@ -547,8 +540,8 @@ namespace EVEMon.CharacterMonitoring
                                      ? FormatHelper.Format(walletJournal.Balance, AbbreviationFormat.AbbreviationSymbols)
                                      : walletJournal.Balance.ToString("N2", CultureConstants.DefaultCulture));
                     break;
-                case WalletJournalColumn.Description:
-                    item.Text = walletJournal.Description;
+                case WalletJournalColumn.Reason:
+                    item.Text = walletJournal.Reason;
                     break;
                 case WalletJournalColumn.Issuer:
                     item.Text = walletJournal.Issuer;
@@ -589,20 +582,10 @@ namespace EVEMon.CharacterMonitoring
         {
             return String.IsNullOrEmpty(text)
                    || x.Type.ToLowerInvariant().Contains(text)
-                   || x.Description.ToLowerInvariant().Contains(text)
+                   || x.Reason.ToLowerInvariant().Contains(text)
                    || x.Issuer.ToLowerInvariant().Contains(text)
                    || x.Recipient.ToLowerInvariant().Contains(text)
                    || x.TaxReceiver.ToLowerInvariant().Contains(text);
-        }
-
-        /// <summary>
-        /// Gets the tool tip text.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns></returns>
-        private string GetToolTipText(ListViewItem item)
-        {
-            return String.Empty;
         }
 
         #endregion
@@ -659,49 +642,6 @@ namespace EVEMon.CharacterMonitoring
             UpdateSort();
 
             m_isUpdatingColumns = false;
-        }
-
-        /// <summary>
-        /// When the mouse moves over the list, we show the item's tooltip if over an item.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void listView_MouseMove(object sender, MouseEventArgs e)
-        {
-            ListViewItem item = lvWalletJournal.GetItemAt(e.Location.X, e.Location.Y);
-            if (item == null)
-            {
-                m_tooltip.Hide();
-                return;
-            }
-
-            m_tooltip.Show(GetToolTipText(item), e.Location);
-        }
-
-        /// <summary>
-        /// When the mouse leaves the list, we hide the item's tooltip.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void listView_MouseLeave(object sender, EventArgs e)
-        {
-            m_tooltip.Hide();
-        }
-
-        /// <summary>
-        /// Handles key press.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listView_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.A:
-                    if (e.Control)
-                        lvWalletJournal.SelectAll();
-                    break;
-            }
         }
 
         # endregion

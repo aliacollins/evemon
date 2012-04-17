@@ -68,8 +68,8 @@ namespace EVEMon.Common
                     return x.Amount.CompareTo(y.Amount);
                 case WalletJournalColumn.Balance:
                     return x.Balance.CompareTo(y.Balance);
-                case WalletJournalColumn.Description:
-                    return String.Compare(x.Description, y.Description, StringComparison.CurrentCulture);
+                case WalletJournalColumn.Reason:
+                    return String.Compare(x.Reason, y.Reason, StringComparison.CurrentCulture);
                 case WalletJournalColumn.Issuer:
                     return String.Compare(x.Issuer, y.Issuer, StringComparison.CurrentCulture);
                 case WalletJournalColumn.Recipient:

@@ -56,7 +56,6 @@ namespace EVEMon.Common.SettingsObjects
                                                                WalletJournalColumn.Type,
                                                                WalletJournalColumn.Amount,
                                                                WalletJournalColumn.Balance,
-                                                               WalletJournalColumn.Description
                                                            };
 
                 return EnumExtensions.GetValues<WalletJournalColumn>().Where(

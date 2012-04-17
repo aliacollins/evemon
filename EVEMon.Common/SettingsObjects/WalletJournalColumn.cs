@@ -23,9 +23,9 @@ namespace EVEMon.Common.SettingsObjects
         [Description("Balance")]
         Balance = 3,
 
-        [Header("Description")]
-        [Description("Description")]
-        Description = 4,
+        [Header("Reason")]
+        [Description("Reason")]
+        Reason = 4,
 
         [Header("From")]
         [Description("From (Issuer)")]

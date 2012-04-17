@@ -23,7 +23,7 @@ namespace EVEMon.Common
             Date = src.Date;
             Amount = src.Amount;
             Balance = src.Balance;
-            Description = src.Reason;
+            Reason = src.Reason;
             Issuer = src.OwnerName1;
             Recipient = src.OwnerName2;
             TaxAmount = src.TaxAmount;
@@ -60,9 +60,9 @@ namespace EVEMon.Common
         public decimal Balance { get; private set; }
 
         /// <summary>
-        /// Gets the description.
+        /// Gets the reason.
         /// </summary>
-        public string Description { get; private set; }
+        public string Reason { get; private set; }
 
         /// <summary>
         /// Gets the issuer.
