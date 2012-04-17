@@ -1825,7 +1825,7 @@ namespace EVEMon
 
         /// <summary>
         /// Occurs when the user click the tray icon.
-        /// If it's not a right click button, we restore the window.
+        /// If it's not a right click button, we restore or minimize the window.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1838,6 +1838,13 @@ namespace EVEMon
 
             // Update the tray icon's visibility
             HidePopup();
+
+            // Minimize the main window if it's not
+            if (WindowState != FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Minimized;
+                return;
+            }
 
             // Restore the main window
             RestoreMainWindow();
