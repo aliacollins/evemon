@@ -36,9 +36,9 @@ namespace EVEMon.Common
         #region Properties
 
         /// <summary>
-        /// Gets an enumeration of all the stations in the universe.
+        /// Gets an enumeration of all the conquerable stations in the universe.
         /// </summary>
-        internal static IEnumerable<ConquerableStation> AllStations
+        internal static IEnumerable<ConquerableStation> AllConquerableStations
         {
             get
             {
@@ -165,8 +165,8 @@ namespace EVEMon.Common
         private static void Import(IEnumerable<SerializableOutpost> outposts)
         {
             EveMonClient.Trace("ConquerableStationList.Import - begin");
-            s_conqStationsByID.Clear();
 
+            s_conqStationsByID.Clear();
             foreach (SerializableOutpost outpost in outposts)
             {
                 s_conqStationsByID[outpost.StationID] = new ConquerableStation(outpost);

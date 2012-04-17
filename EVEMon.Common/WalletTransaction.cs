@@ -24,6 +24,8 @@ namespace EVEMon.Common
             Station = Station.GetByID(src.StationID);
             TransactionType = src.TransactionType == "buy" ? TransactionType.Buy : TransactionType.Sell;
             TransactionFor = src.TransactionFor == "personal" ? IssuedFor.Character : IssuedFor.Corporation;
+
+            Credit = GetCredit();
         }
 
         #endregion
@@ -93,13 +95,18 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the credit.
         /// </summary>
-        public decimal Credit
+        public decimal Credit { get; private set; }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        private decimal GetCredit()
         {
-            get
-            {
-                decimal credit = Quantity * Price;
-                return TransactionType == TransactionType.Buy ? -credit : credit;
-            }
+
+            decimal credit = Quantity * Price;
+            return TransactionType == TransactionType.Buy ? -credit : credit;
         }
 
         #endregion

@@ -138,11 +138,27 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                    {
-                        Description = "An error occurred while querying the ID to Name conversion.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the ID to Name conversion.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a refTypes querying error.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        internal void NotifyRefTypesError(APIResult<SerializableAPIRefTypes> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                {
+                    Description = "An error occurred while querying the RefTypes list.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 

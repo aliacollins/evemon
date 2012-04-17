@@ -7,6 +7,8 @@ namespace EVEMon.Common
     {
         private readonly long m_taxReceiverID;
         private string m_taxReceiver;
+        private string m_refType;
+        private int m_refTypeID;
 
 
         #region Constructor
@@ -18,16 +20,18 @@ namespace EVEMon.Common
         public WalletJournal(SerializableWalletJournalListItem src)
         {
             ID = src.ID;
-            Type = EveRefType.GetRefTypeIDToName(src.RefTypeID);
             Date = src.Date;
             Amount = src.Amount;
             Balance = src.Balance;
-            Description = String.Empty;
+            Description = src.Reason;
             Issuer = src.OwnerName1;
             Recipient = src.OwnerName2;
-            m_taxReceiverID = src.TaxReceiverID;
-            m_taxReceiver = GetTaxReceiver();
             TaxAmount = src.TaxAmount;
+            m_refTypeID = src.RefTypeID;
+            m_taxReceiverID = src.TaxReceiverID;
+
+            m_refType = EveRefType.GetRefTypeIDToName(src.RefTypeID);
+            m_taxReceiver = GetTaxReceiver();
         }
 
         #endregion
@@ -39,11 +43,6 @@ namespace EVEMon.Common
         /// Gets the ID.
         /// </summary>
         public long ID { get; private set; }
-
-        /// <summary>
-        /// Gets the type.
-        /// </summary>
-        public string Type { get; private set; }
 
         /// <summary>
         /// Gets the date.
@@ -76,6 +75,24 @@ namespace EVEMon.Common
         public string Recipient { get; private set; }
 
         /// <summary>
+        /// Gets the tax amount.
+        /// </summary>
+        public decimal TaxAmount { get; private set; }
+
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
+        public string Type
+        {
+            get
+            {
+                return m_refType == "Unknown"
+                           ? m_refType = EveRefType.GetRefTypeIDToName(m_refTypeID)
+                           : m_refType;
+            }
+        }
+
+        /// <summary>
         /// Gets the tax receiver.
         /// </summary>
         public string TaxReceiver
@@ -87,11 +104,6 @@ namespace EVEMon.Common
                            : m_taxReceiver;
             }
         }
-
-        /// <summary>
-        /// Gets the tax amount.
-        /// </summary>
-        public decimal TaxAmount { get; private set; }
 
         #endregion
 

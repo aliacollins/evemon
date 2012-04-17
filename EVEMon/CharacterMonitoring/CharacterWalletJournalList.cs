@@ -59,6 +59,7 @@ namespace EVEMon.CharacterMonitoring
             lvWalletJournal.MouseLeave += listView_MouseLeave;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.RefTypesUpdated += EveMonClient_RefTypesUpdated;
             EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             EveMonClient.CharacterWalletJournalUpdated += EveMonClient_CharacterWalletJournalUpdated;
             Disposed += OnDisposed;
@@ -175,6 +176,7 @@ namespace EVEMon.CharacterMonitoring
         {
             m_tooltip.Dispose();
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.RefTypesUpdated -= EveMonClient_RefTypesUpdated;
             EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             EveMonClient.CharacterWalletJournalUpdated -= EveMonClient_CharacterWalletJournalUpdated;
             Disposed -= OnDisposed;
@@ -723,6 +725,16 @@ namespace EVEMon.CharacterMonitoring
             // Recreate the columns
             Columns = Settings.UI.MainWindow.WalletJournal.Columns;
             m_columnsChanged = false;
+        }
+
+        /// <summary>
+        /// When the RefTypes list updates, update the list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_RefTypesUpdated(object sender, EventArgs e)
+        {
+            UpdateColumns();
         }
 
         /// <summary>

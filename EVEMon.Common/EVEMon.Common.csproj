@@ -282,7 +282,9 @@
     <Compile Include="Serialization\API\SerializableAPIAssetList.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
+    <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
+    <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />
     <Compile Include="Serialization\API\SerializableWalletJournalListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletTransactions.cs" />
     <Compile Include="Serialization\API\SerializableWalletTransactionsListItem.cs" />

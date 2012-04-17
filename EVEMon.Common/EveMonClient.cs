@@ -509,6 +509,11 @@ namespace EVEMon.Common
         public static event EventHandler EveIDToNameUpdated;
 
         /// <summary>
+        /// Occurs when the refTypes list has been updated.
+        /// </summary>
+        public static event EventHandler RefTypesUpdated;
+
+        /// <summary>
         /// Occurs when the list of characters in an API key has been updated.
         /// </summary>
         public static event EventHandler<APIKeyInfoChangedEventArgs> CharacterListUpdated;
@@ -804,6 +809,16 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnEveIDToNameUpdated");
             if (EveIDToNameUpdated != null)
                 EveIDToNameUpdated(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when the RefTypes list has been updated.
+        /// </summary>
+        internal static void OnRefTypesUpdated()
+        {
+            Trace("EveMonClient.OnRefTypesUpdated");
+            if (RefTypesUpdated != null)
+                RefTypesUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>
