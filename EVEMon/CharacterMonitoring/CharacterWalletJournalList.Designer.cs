@@ -33,6 +33,10 @@
             this.noWalletJournalLabel = new System.Windows.Forms.Label();
             this.lvWalletJournal = new System.Windows.Forms.ListView();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
+            this.chDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chAmount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chBalance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // noWalletJournalLabel
@@ -49,10 +53,16 @@
             // lvWalletJournal
             // 
             this.lvWalletJournal.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvWalletJournal.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chDate,
+            this.chType,
+            this.chAmount,
+            this.chBalance});
             this.lvWalletJournal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvWalletJournal.FullRowSelect = true;
             this.lvWalletJournal.HideSelection = false;
             this.lvWalletJournal.Location = new System.Drawing.Point(0, 0);
+            this.lvWalletJournal.MultiSelect = false;
             this.lvWalletJournal.Name = "lvWalletJournal";
             this.lvWalletJournal.Size = new System.Drawing.Size(454, 434);
             this.lvWalletJournal.SmallImageList = this.ilIcons;
@@ -67,6 +77,26 @@
             this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
             this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
             this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
+            // 
+            // chDate
+            // 
+            this.chDate.Text = "Date";
+            this.chDate.Width = 106;
+            // 
+            // chType
+            // 
+            this.chType.Text = "Type";
+            this.chType.Width = 100;
+            // 
+            // chAmount
+            // 
+            this.chAmount.Text = "Amount";
+            this.chAmount.Width = 99;
+            // 
+            // chBalance
+            // 
+            this.chBalance.Text = "Balance";
+            this.chBalance.Width = 106;
             // 
             // CharacterWalletJournalList
             // 
@@ -85,5 +115,9 @@
         private System.Windows.Forms.Label noWalletJournalLabel;
         private System.Windows.Forms.ListView lvWalletJournal;
         private System.Windows.Forms.ImageList ilIcons;
+        private System.Windows.Forms.ColumnHeader chDate;
+        private System.Windows.Forms.ColumnHeader chType;
+        private System.Windows.Forms.ColumnHeader chAmount;
+        private System.Windows.Forms.ColumnHeader chBalance;
     }
 }

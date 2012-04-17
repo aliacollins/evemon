@@ -6,9 +6,9 @@ namespace EVEMon.Common
     public sealed class WalletJournal
     {
         private readonly long m_taxReceiverID;
+        private readonly int m_refTypeID;
         private string m_taxReceiver;
         private string m_refType;
-        private int m_refTypeID;
 
 
         #region Constructor

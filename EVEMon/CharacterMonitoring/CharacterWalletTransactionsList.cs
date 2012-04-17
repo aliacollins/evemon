@@ -19,7 +19,6 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<WalletTransactionColumnSettings> m_columns = new List<WalletTransactionColumnSettings>();
         private readonly List<WalletTransaction> m_list = new List<WalletTransaction>();
-        private readonly InfiniteDisplayToolTip m_tooltip;
 
         private WalletTransactionGrouping m_grouping;
         private WalletTransactionColumn m_sortCriteria;
@@ -42,8 +41,6 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            m_tooltip = new InfiniteDisplayToolTip(lvWalletTransactions);
-
             lvWalletTransactions.Visible = false;
             lvWalletTransactions.AllowColumnReorder = true;
             lvWalletTransactions.Columns.Clear();
@@ -52,12 +49,9 @@ namespace EVEMon.CharacterMonitoring
 
             ListViewHelper.EnableDoubleBuffer(lvWalletTransactions);
 
-            lvWalletTransactions.KeyDown += listView_KeyDown;
             lvWalletTransactions.ColumnClick += listView_ColumnClick;
             lvWalletTransactions.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvWalletTransactions.ColumnReordered += listView_ColumnReordered;
-            lvWalletTransactions.MouseMove += listView_MouseMove;
-            lvWalletTransactions.MouseLeave += listView_MouseLeave;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_CharacterWalletTransactionsUpdated;
@@ -173,7 +167,6 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            m_tooltip.Dispose();
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_CharacterWalletTransactionsUpdated;
             Disposed -= OnDisposed;
@@ -604,16 +597,6 @@ namespace EVEMon.CharacterMonitoring
                    || x.Station.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text);
         }
 
-        /// <summary>
-        /// Gets the tool tip text.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns></returns>
-        private string GetToolTipText(ListViewItem item)
-        {
-            return String.Empty;
-        }
-
         #endregion
 
 
@@ -668,49 +651,6 @@ namespace EVEMon.CharacterMonitoring
             UpdateSort();
 
             m_isUpdatingColumns = false;
-        }
-
-        /// <summary>
-        /// When the mouse moves over the list, we show the item's tooltip if over an item.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void listView_MouseMove(object sender, MouseEventArgs e)
-        {
-            ListViewItem item = lvWalletTransactions.GetItemAt(e.Location.X, e.Location.Y);
-            if (item == null)
-            {
-                m_tooltip.Hide();
-                return;
-            }
-
-            m_tooltip.Show(GetToolTipText(item), e.Location);
-        }
-
-        /// <summary>
-        /// When the mouse leaves the list, we hide the item's tooltip.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void listView_MouseLeave(object sender, EventArgs e)
-        {
-            m_tooltip.Hide();
-        }
-
-        /// <summary>
-        /// Handles key press.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listView_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.A:
-                    if (e.Control)
-                        lvWalletTransactions.SelectAll();
-                    break;
-            }
         }
 
         # endregion

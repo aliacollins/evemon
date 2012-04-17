@@ -33,6 +33,10 @@
             this.noWalletTransactionsLabel = new System.Windows.Forms.Label();
             this.lvWalletTransactions = new System.Windows.Forms.ListView();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
+            this.chDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // noWalletTransactionsLabel
@@ -49,10 +53,16 @@
             // lvWalletTransactions
             // 
             this.lvWalletTransactions.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvWalletTransactions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chDate,
+            this.chItem,
+            this.chPrice,
+            this.chQuantity});
             this.lvWalletTransactions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvWalletTransactions.FullRowSelect = true;
             this.lvWalletTransactions.HideSelection = false;
             this.lvWalletTransactions.Location = new System.Drawing.Point(0, 0);
+            this.lvWalletTransactions.MultiSelect = false;
             this.lvWalletTransactions.Name = "lvWalletTransactions";
             this.lvWalletTransactions.Size = new System.Drawing.Size(454, 434);
             this.lvWalletTransactions.SmallImageList = this.ilIcons;
@@ -67,6 +77,26 @@
             this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
             this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
             this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
+            // 
+            // chDate
+            // 
+            this.chDate.Text = "Date";
+            this.chDate.Width = 125;
+            // 
+            // chItem
+            // 
+            this.chItem.Text = "Item";
+            this.chItem.Width = 169;
+            // 
+            // chPrice
+            // 
+            this.chPrice.Text = "Price";
+            this.chPrice.Width = 77;
+            // 
+            // chQuantity
+            // 
+            this.chQuantity.Text = "Quantity";
+            this.chQuantity.Width = 81;
             // 
             // CharacterWalletTransactionsList
             // 
@@ -85,5 +115,9 @@
         private System.Windows.Forms.Label noWalletTransactionsLabel;
         private System.Windows.Forms.ListView lvWalletTransactions;
         private System.Windows.Forms.ImageList ilIcons;
+        private System.Windows.Forms.ColumnHeader chDate;
+        private System.Windows.Forms.ColumnHeader chItem;
+        private System.Windows.Forms.ColumnHeader chPrice;
+        private System.Windows.Forms.ColumnHeader chQuantity;
     }
 }
