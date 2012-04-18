@@ -47,35 +47,9 @@ namespace EVEMon.Controls
         /// <summary>
         /// Default constructor for designer.
         /// </summary>
-        private OverviewItem(Character character)
+        private OverviewItem()
         {
             InitializeComponent();
-
-            // Initializes fonts
-            lblCharName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblBalance.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Bold);
-            lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F);
-            lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F);
-            lblCompletionTime.Font = FontFactory.GetFont("Tahoma");
-            lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F);
-
-            // Initializes the portrait
-            pbCharacterPortrait.Visible = false;
-            pbCharacterPortrait.Character = character;
-            Character = character;
-
-            // Initialize the skill queue free room label text
-            lblSkillQueueTrainingTime.Text = String.Empty;
-
-            // Global events
-            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
-            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
-            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            Disposed += OnDisposed;
         }
 
         /// <summary>
@@ -84,9 +58,10 @@ namespace EVEMon.Controls
         /// <param name="character">The character.</param>
         /// <param name="isTooltip">if set to <c>true</c> if this instance is used as tooltip.</param>
         internal OverviewItem(Character character, bool isTooltip = false)
-            : this(character)
+            : this()
         {
             m_isTooltip = isTooltip;
+            Character = character;
         }
 
         #endregion
@@ -100,14 +75,40 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             // Returns in design mode or when no char
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
             DoubleBuffered = true;
-            UpdateFromSettings();
 
-            base.OnLoad(e);
+            // Initializes fonts
+            lblCharName.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblBalance.Font = FontFactory.GetFont("Tahoma", 9.75F, FontStyle.Bold);
+            lblRemainingTime.Font = FontFactory.GetFont("Tahoma", 9.75F);
+            lblSkillInTraining.Font = FontFactory.GetFont("Tahoma", 8.25F);
+            lblCompletionTime.Font = FontFactory.GetFont("Tahoma");
+            lblSkillQueueTrainingTime.Font = FontFactory.GetFont("Tahoma", 8.25F);
+
+            // Initializes the portrait
+            pbCharacterPortrait.Visible = false;
+            pbCharacterPortrait.Character = Character;
+
+            // Initialize the skill queue free room label text
+            lblSkillQueueTrainingTime.Text = String.Empty;
+
+            // Global events
+            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
+            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            Disposed += OnDisposed;
+            
+            UpdateFromSettings();
         }
 
         /// <summary>

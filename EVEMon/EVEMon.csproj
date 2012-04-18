@@ -311,6 +311,12 @@
     <Compile Include="SettingsUI\SettingsFileStorageControl.Designer.cs">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsUI\TrayBaseWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\TrayBaseWindow.Designer.cs">
+      <DependentUpon>TrayBaseWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsUI\UpdateSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -484,6 +490,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\SettingsFileStorageControl.resx">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\TrayBaseWindow.resx">
+      <DependentUpon>TrayBaseWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\UpdateSettingsControl.resx">
       <DependentUpon>UpdateSettingsControl.cs</DependentUpon>
@@ -769,14 +778,8 @@
     <Compile Include="SettingsUI\TrayPopupWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsUI\TrayPopupWindow.Designer.cs">
-      <DependentUpon>TrayPopupWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="SettingsUI\TrayTooltipWindow.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SettingsUI\TrayTooltipWindow.Designer.cs">
-      <DependentUpon>TrayTooltipWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ExceptionHandling\UnhandledExceptionWindow.cs">
       <SubType>Form</SubType>
@@ -951,14 +954,6 @@
     <EmbeddedResource Include="NotificationWindow\TimeCheckNotification.resx">
       <SubType>Designer</SubType>
       <DependentUpon>TimeCheckNotification.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingsUI\TrayPopupWindow.resx">
-      <DependentUpon>TrayPopupWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingsUI\TrayTooltipWindow.resx">
-      <DependentUpon>TrayTooltipWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ExceptionHandling\UnhandledExceptionWindow.resx">
       <SubType>Designer</SubType>

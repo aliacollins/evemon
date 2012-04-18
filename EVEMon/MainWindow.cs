@@ -1821,6 +1821,7 @@ namespace EVEMon
 
             m_trayPopup.Close();
             m_trayPopup.Dispose();
+            m_trayPopup = null;
         }
 
         /// <summary>
