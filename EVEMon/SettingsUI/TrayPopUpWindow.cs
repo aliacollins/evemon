@@ -136,6 +136,51 @@ namespace EVEMon.SettingsUI
             }
             UpdatePending = false;
 
+            // Controls layout
+            PerformCustomLayout();
+
+            // Supplemental controls layout
+            PerformSupplementalControlsLayout();
+
+            // Updates the tooltip width
+            CompleteLayout();
+        }
+
+        /// <summary>
+        /// Performs the supplemental controls layout.
+        /// </summary>
+        private void PerformSupplementalControlsLayout()
+        {
+            // Skip if the user do not want to be warned about accounts not in training
+            string warningMessage;
+            if (Settings.UI.SystemTrayPopup.ShowWarning && APIKey.HasCharactersNotTraining(out warningMessage))
+            {
+                FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
+                MainFlowLayoutPanel.Controls.Add(warningPanel);
+            }
+
+            // Server Status
+            if (Settings.UI.SystemTrayPopup.ShowServerStatus)
+            {
+                m_serverStatusLabel.AutoSize = true;
+                MainFlowLayoutPanel.Controls.Add(m_serverStatusLabel);
+                UpdateServerStatusLabel();
+            }
+
+            // EVE Time
+            if (!Settings.UI.SystemTrayPopup.ShowEveTime)
+                return;
+
+            m_eveTimeLabel.AutoSize = true;
+            MainFlowLayoutPanel.Controls.Add(m_eveTimeLabel);
+            UpdateEveTimeLabel();
+        }
+
+        /// <summary>
+        /// Performs the custom layout.
+        /// </summary>
+        private void PerformCustomLayout()
+        {
             // Remove controls and dispose them
             IEnumerable<Control> oldControls = MainFlowLayoutPanel.Controls.Cast<Control>().ToList();
             MainFlowLayoutPanel.Controls.Clear();
@@ -155,7 +200,7 @@ namespace EVEMon.SettingsUI
                 {
                     OverviewItem charPanel = GetOverviewItem(character);
                     List<APIKey> apiKeys = character.Identity.APIKeys.ToList();
-                    
+
                     if (!apiKeys.Exists(apiKey => prevAPIKeys.Contains(apiKey)))
                     {
                         MainFlowLayoutPanel.Controls.Add(charPanel);
@@ -172,6 +217,8 @@ namespace EVEMon.SettingsUI
                             tempAccountGroupPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
                             tempAccountGroupPanel.FlowDirection = FlowDirection.TopDown;
                             tempAccountGroupPanel.Padding = new Padding(10, 0, 0, 0);
+
+                            tempAccountGroupPanel.CreateControl();
 
                             FlowLayoutPanel accountGroupPanel = tempAccountGroupPanel;
                             tempAccountGroupPanel = null;
@@ -190,33 +237,6 @@ namespace EVEMon.SettingsUI
             }
             else
                 MainFlowLayoutPanel.Controls.AddRange(characters.Select(GetOverviewItem).ToArray<Control>());
-
-            // Skip if the user do not want to be warned about accounts not in training
-            string warningMessage;
-            if (Settings.UI.SystemTrayPopup.ShowWarning && APIKey.HasCharactersNotTraining(out warningMessage))
-            {
-                FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
-                MainFlowLayoutPanel.Controls.Add(warningPanel);
-            }
-
-            // Server Status
-            if (Settings.UI.SystemTrayPopup.ShowServerStatus)
-            {
-                m_serverStatusLabel.AutoSize = true;
-                MainFlowLayoutPanel.Controls.Add(m_serverStatusLabel);
-                UpdateServerStatusLabel();
-            }
-
-            // EVE Time
-            if (Settings.UI.SystemTrayPopup.ShowEveTime)
-            {
-                m_eveTimeLabel.AutoSize = true;
-                MainFlowLayoutPanel.Controls.Add(m_eveTimeLabel);
-                UpdateEveTimeLabel();
-            }
-
-            // Updates the tooltip width
-            CompleteLayout();
         }
 
         /// <summary>
@@ -233,6 +253,8 @@ namespace EVEMon.SettingsUI
                 // Creates a new page
                 tempOverviewItem = new OverviewItem(character, true);
                 tempOverviewItem.Tag = character;
+
+                tempOverviewItem.CreateControl();
 
                 overviewItem = tempOverviewItem;
                 tempOverviewItem = null;
@@ -307,6 +329,8 @@ namespace EVEMon.SettingsUI
                         tempLabelMessage.Dispose();
                 }
 
+                tempWarningPanel.CreateControl();
+
                 warningPanel = tempWarningPanel;
                 tempWarningPanel = null;
             }
@@ -315,6 +339,7 @@ namespace EVEMon.SettingsUI
                 if (tempWarningPanel != null)
                     tempWarningPanel.Dispose();
             }
+
             return warningPanel;
         }
 
@@ -328,16 +353,10 @@ namespace EVEMon.SettingsUI
             // updates to training time remaining don't cause the form to resize
             int pnlWidth = (MainFlowLayoutPanel.Controls.Cast<Control>().Select(control => control.Width)).Concat(new[] { 0 }).Max();
 
-            foreach (Control control in MainFlowLayoutPanel.Controls)
+            foreach (FlowLayoutPanel flowPanel in MainFlowLayoutPanel.Controls.OfType<FlowLayoutPanel>())
             {
-                FlowLayoutPanel flowPanel = control as FlowLayoutPanel;
-                if (flowPanel == null)
-                    continue;
-
-                int pnlHeight = flowPanel.Height;
                 flowPanel.AutoSize = false;
                 flowPanel.Width = pnlWidth;
-                flowPanel.Height = pnlHeight;
             }
 
             // Position Popup

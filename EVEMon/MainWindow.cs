@@ -1818,10 +1818,19 @@ namespace EVEMon
         {
             if (m_trayPopup == null)
                 return;
-
-            m_trayPopup.Close();
-            m_trayPopup.Dispose();
-            m_trayPopup = null;
+            try
+            {
+                m_trayPopup.Close();
+            }
+            catch (InvalidOperationException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+            }
+            finally
+            {
+                m_trayPopup.Dispose();
+                m_trayPopup = null;
+            }
         }
 
         /// <summary>
