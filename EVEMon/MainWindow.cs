@@ -1818,6 +1818,7 @@ namespace EVEMon
         {
             if (m_trayPopup == null)
                 return;
+
             try
             {
                 m_trayPopup.Close();
@@ -1829,7 +1830,6 @@ namespace EVEMon
             finally
             {
                 m_trayPopup.Dispose();
-                m_trayPopup = null;
             }
         }
 
