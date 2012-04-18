@@ -1849,13 +1849,6 @@ namespace EVEMon
             // Update the tray icon's visibility
             HidePopup();
 
-            // Minimize the main window if it's not
-            if (WindowState != FormWindowState.Minimized)
-            {
-                WindowState = FormWindowState.Minimized;
-                return;
-            }
-
             // Restore the main window
             RestoreMainWindow();
         }
