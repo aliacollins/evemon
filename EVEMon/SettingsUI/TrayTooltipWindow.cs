@@ -159,8 +159,7 @@ namespace EVEMon.SettingsUI
             }
 
             CCPCharacter ccpCharacter = character as CCPCharacter;
-            if (ccpCharacter != null &&
-                (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
+            if (ccpCharacter != null && (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
             {
                 int level;
                 switch (m.Groups[1].Value[0])

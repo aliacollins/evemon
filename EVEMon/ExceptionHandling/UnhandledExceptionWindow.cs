@@ -182,7 +182,8 @@ namespace EVEMon.ExceptionHandling
                 }
 
                 // Replace local path to project
-                return Regex.Replace(stackTraceBuilder.ToString(), @"[a-zA-Z]+:.*\\(?=EVEMon)", String.Empty, RegexOptions.IgnoreCase);
+                return Regex.Replace(stackTraceBuilder.ToString(), @"[a-zA-Z]+:.*\\(?=EVEMon)",
+                    String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             }
         }
 

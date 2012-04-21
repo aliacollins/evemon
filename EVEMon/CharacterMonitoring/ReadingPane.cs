@@ -121,13 +121,13 @@ namespace EVEMon.CharacterMonitoring
         private void FormatLinks(IDictionary<string, string> replacements)
         {
             // Regular expression for all HTML links
-            Regex regexLinks = new Regex(@"<a\shref=""(.+?)"">(.+?)</a>", RegexOptions.IgnoreCase);
+            Regex regexLinks = new Regex(@"<a\shref=""(.+?)"">(.+?)</a>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             // Regular expression for all showinfo URLs
             Regex regexShowInfo = new Regex(@"^showinfo:(\d+)//(\d+)$");
 
             // Regular expression for clickable/valid URLs
-            Regex regexWebProtocol = new Regex(@"(?:f|ht)tps?://", RegexOptions.IgnoreCase);
+            Regex regexWebProtocol = new Regex(@"(?:f|ht)tps?://", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             foreach (Match match in regexLinks.Matches(m_selectedObject.Text))
             {
@@ -200,7 +200,7 @@ namespace EVEMon.CharacterMonitoring
             Color backColor = flPanelHeader.BackColor;
 
             // Regular expression for fixing text color
-            Regex regexColor = new Regex(@"color(?:=""|:\s*)#[0-9a-f]{2}([0-9a-f]{6})(?:;|"")", RegexOptions.IgnoreCase);
+            Regex regexColor = new Regex(@"color(?:=""|:\s*)#[0-9a-f]{2}([0-9a-f]{6})(?:;|"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             foreach (Match match in regexColor.Matches(m_selectedObject.Text))
             {
                 replacements[match.ToString()] = String.Format(CultureConstants.InvariantCulture, "color=\"#{0}\"",
@@ -239,7 +239,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="replacements">The replacements.</param>
         private void FixFontSize(IDictionary<string, string> replacements)
         {
-            Regex regexFontSize = new Regex(@"size(?:=""|:\s*)([0-9]+)(?:;|"")", RegexOptions.IgnoreCase);
+            Regex regexFontSize = new Regex(@"size(?:=""|:\s*)([0-9]+)(?:;|"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             foreach (Match match in regexFontSize.Matches(m_selectedObject.Text))
             {
                 int newFontSize = Convert.ToByte(match.Groups[1].Value, CultureConstants.InvariantCulture) / 4;

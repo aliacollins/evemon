@@ -691,7 +691,8 @@ namespace EVEMon.Common
             // Uses a regex to retrieve the revision number
             string content = File.Exists(filename) ? File.ReadAllText(filename) : filename;
 
-            Match match = Regex.Match(content, "revision=\"([0-9]+)\"", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(content, "revision=\"([0-9]+)\"",
+                RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
             // No match ? Then there was no "revision" attribute, this is an old format
             if (!match.Success || match.Groups.Count < 2)

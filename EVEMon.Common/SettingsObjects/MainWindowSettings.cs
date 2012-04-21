@@ -67,6 +67,12 @@ namespace EVEMon.Common.SettingsObjects
         [XmlElement("showSkillNameInWindowTitle")]
         public bool ShowSkillNameInWindowTitle { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show all public skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show all public skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showAllPublicSkills")]
         public bool ShowAllPublicSkills { get; set; }
 
