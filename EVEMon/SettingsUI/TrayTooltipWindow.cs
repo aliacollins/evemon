@@ -19,21 +19,14 @@ namespace EVEMon.SettingsUI
 
         #region Inherited Events
 
-        /// <summary>
-        /// On load, update controls.
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-
             if (DesignMode)
                 return;
 
-            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
 
-            UpdateCharactersList();
+            base.OnLoad(e);
         }
 
         /// <summary>
@@ -43,7 +36,6 @@ namespace EVEMon.SettingsUI
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
         }
 
@@ -51,6 +43,49 @@ namespace EVEMon.SettingsUI
 
 
         #region Content creation and refresh
+
+        /// <summary>
+        /// Updates the tooltip's content.
+        /// </summary>
+        protected override void UpdateContent()
+        {
+            if (!Visible)
+            {
+                UpdatePending = true;
+                return;
+            }
+            UpdatePending = false;
+
+            UpdateCharactersList();
+
+            // Replaces the fragments like "%10546464r" (the number being the character ID) by the remaining time
+            string tooltip = m_tooltipFormat ?? String.Empty;
+            foreach (Character character in m_characters)
+            {
+                if (character.IsTraining)
+                {
+                    QueuedSkill trainingSkill = character.CurrentlyTrainingSkill;
+                    TimeSpan remainingTime = trainingSkill.EndTime.Subtract(DateTime.UtcNow);
+
+                    tooltip = Regex.Replace(tooltip,
+                                            String.Format(CultureConstants.DefaultCulture, "%{0}r", character.CharacterID),
+                                            remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
+                                            RegexOptions.Compiled);
+                }
+
+                CCPCharacter ccpCharacter = character as CCPCharacter;
+                if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
+                {
+                    tooltip = Regex.Replace(tooltip,
+                                            String.Format(CultureConstants.DefaultCulture, "%{0}r", character.CharacterID),
+                                            "(Paused)", RegexOptions.Compiled);
+                }
+            }
+
+            // Updates the tooltip and its location
+            ToolTipLabel.Text = tooltip;
+            TrayIcon.SetToolTipLocation(this);
+        }
 
         /// <summary>
         /// Updates the tooltip format we use as a base for update on every second, along with the characters list.
@@ -87,50 +122,6 @@ namespace EVEMon.SettingsUI
                 }
             }
             m_tooltipFormat = sb.ToString();
-
-            // Update the tooltip's content
-            UpdateContent();
-        }
-
-        /// <summary>
-        /// Updates the tooltip's content.
-        /// </summary>
-        protected override void UpdateContent()
-        {
-            if (!Visible)
-            {
-                UpdatePending = true;
-                return;
-            }
-            UpdatePending = false;
-
-            // Replaces the fragments like "%10546464r" (the number being the character ID) by the remaining time
-            string tooltip = m_tooltipFormat ?? String.Empty;
-            foreach (Character character in m_characters)
-            {
-                if (character.IsTraining)
-                {
-                    QueuedSkill trainingSkill = character.CurrentlyTrainingSkill;
-                    TimeSpan remainingTime = trainingSkill.EndTime.Subtract(DateTime.UtcNow);
-
-                    tooltip = Regex.Replace(tooltip,
-                                            String.Format(CultureConstants.DefaultCulture, "%{0}r", character.CharacterID),
-                                            remainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas),
-                                            RegexOptions.Compiled);
-                }
-
-                CCPCharacter ccpCharacter = character as CCPCharacter;
-                if (ccpCharacter != null && ccpCharacter.SkillQueue.IsPaused)
-                {
-                    tooltip = Regex.Replace(tooltip,
-                                            String.Format(CultureConstants.DefaultCulture, "%{0}r", character.CharacterID),
-                                            "(Paused)", RegexOptions.Compiled);
-                }
-            }
-
-            // Updates the tooltip and its location
-            ToolTipLabel.Text = tooltip;
-            TrayIcon.SetToolTipLocation(this);
         }
 
         /// <summary>
@@ -143,78 +134,76 @@ namespace EVEMon.SettingsUI
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(Regex.Replace(toolTipFormat, "%([nbsdr]|[ct][ir])",
-                                    m =>
-                                        {
-                                            // First group
-                                            switch (m.Groups[1].Value[0])
-                                            {
-                                                case 'n':
-                                                    return character.Name;
-                                                case 'b':
-                                                    return character.Balance.ToString("N2", CultureConstants.DefaultCulture);
-                                            }
+            string tooltipText = Regex.Replace(toolTipFormat, "%([nbsdr]|[ct][ir])",
+                                               m => TransformTooltipText(character, m), RegexOptions.Compiled);
 
-                                            CCPCharacter ccpCharacter = character as CCPCharacter;
-                                            if (ccpCharacter != null &&
-                                                (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
-                                            {
-                                                int level;
-                                                switch (m.Groups[1].Value[0])
-                                                {
-                                                    case 'r':
-                                                        return String.Format(CultureConstants.DefaultCulture, "%{0}r",
-                                                                             character.CharacterID);
-                                                    case 's':
-                                                        return character.CurrentlyTrainingSkill.SkillName;
-                                                    case 'd':
-                                                        return character.CurrentlyTrainingSkill.EndTime.ToString(
-                                                            "g", CultureConstants.DefaultCulture);
-                                                    case 'c':
-                                                        level = character.CurrentlyTrainingSkill.Level - 1;
-                                                        break;
-                                                    case 't':
-                                                        level = character.CurrentlyTrainingSkill.Level;
-                                                        break;
-                                                    default:
-                                                        return String.Empty;
-                                                }
-
-                                                // Second group
-                                                if (level >= 0 && m.Groups[1].Value.Length > 1)
-                                                {
-                                                    switch (m.Groups[1].Value[1])
-                                                    {
-                                                        case 'i':
-                                                            return level.ToString(CultureConstants.DefaultCulture);
-                                                        case 'r':
-                                                            return Skill.GetRomanFromInt(level);
-                                                        default:
-                                                            return String.Empty;
-                                                    }
-                                                }
-                                            }
-
-                                            return String.Empty;
-                                        }, RegexOptions.Compiled));
-
+            sb.Append(tooltipText);
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Transforms the tooltip text.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="m">The regex match.</param>
+        /// <returns></returns>
+        private static string TransformTooltipText(Character character, Match m)
+        {
+            // First group
+            switch (m.Groups[1].Value[0])
+            {
+                case 'n':
+                    return character.Name;
+                case 'b':
+                    return character.Balance.ToString("N2", CultureConstants.DefaultCulture);
+            }
+
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+            if (ccpCharacter != null &&
+                (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
+            {
+                int level;
+                switch (m.Groups[1].Value[0])
+                {
+                    case 'r':
+                        return String.Format(CultureConstants.DefaultCulture, "%{0}r",
+                                             character.CharacterID);
+                    case 's':
+                        return character.CurrentlyTrainingSkill.SkillName;
+                    case 'd':
+                        return character.CurrentlyTrainingSkill.EndTime.ToString("g", CultureConstants.DefaultCulture);
+                    case 'c':
+                        level = character.CurrentlyTrainingSkill.Level - 1;
+                        break;
+                    case 't':
+                        level = character.CurrentlyTrainingSkill.Level;
+                        break;
+                    default:
+                        return String.Empty;
+                }
+
+                // Second group
+                if (level >= 0 && m.Groups[1].Value.Length > 1)
+                {
+                    switch (m.Groups[1].Value[1])
+                    {
+                        case 'i':
+                            return level.ToString(CultureConstants.DefaultCulture);
+                        case 'r':
+                            return Skill.GetRomanFromInt(level);
+                        default:
+                            return String.Empty;
+                    }
+                }
+            }
+
+            return String.Empty;
         }
 
         #endregion
 
 
         #region Global events
-
-        /// <summary>
-        /// Whenever the monitored characters collection changes, update the characters list.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
-        {
-            UpdateCharactersList();
-        }
 
         /// <summary>
         /// Every second, when characters are in training, we update the tooltip.

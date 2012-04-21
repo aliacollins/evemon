@@ -97,64 +97,70 @@ namespace EVEMon.SettingsUI
             DisplayCustomControls(index == m_tooltipCodes.Length);
         }
 
-        // Formats the argument format string with hardcoded exampe values.  Works basically the
-        // same as MainWindow.FormatTooltipText(...), with the exception of the exampe values.
+        // Formats the argument format string with hardcoded exampe values. Works basically the
+        // same as TrayTooltipWindow.FormatTooltipText(...), with the exception of the exampe values.
         private static string FormatExampleTooltipText(string fmt)
         {
-            return Regex.Replace(fmt, "%([nbsdr]|[ct][ir])",
-                                 delegate(Match m)
-                                     {
-                                         string value = String.Empty;
-                                         char capture = m.Groups[1].Value[0];
+            return Regex.Replace(fmt, "%([nbsdr]|[ct][ir])", TransformTooltipText, RegexOptions.Compiled);
+        }
 
-                                         switch (capture)
-                                         {
-                                             case 'n':
-                                                 value = "John Doe";
-                                                 break;
-                                             case 'b':
-                                                 value = "183,415,254.05";
-                                                 break;
-                                             case 's':
-                                                 value = "Gunnery";
-                                                 break;
-                                             case 'd':
-                                                 value = "9/15/2006 6:36 PM";
-                                                 break;
-                                             case 'r':
-                                                 value = "2h, 53m, 28s";
-                                                 break;
-                                             default:
-                                                 int level = -1;
-                                                 switch (capture)
-                                                 {
-                                                     case 'c':
-                                                         level = 3;
-                                                         break;
-                                                     case 't':
-                                                         level = 4;
-                                                         break;
-                                                 }
+        /// <summary>
+        /// Transforms the tooltip text.
+        /// </summary>
+        /// <param name="m">The regex match.</param>
+        /// <returns></returns>
+        private static string TransformTooltipText(Match m)
+        {
+            string value = String.Empty;
+            char capture = m.Groups[1].Value[0];
 
-                                                 if (m.Groups[1].Value.Length > 1 && level >= 0)
-                                                 {
-                                                     capture = m.Groups[1].Value[1];
+            switch (capture)
+            {
+                case 'n':
+                    value = "John Doe";
+                    break;
+                case 'b':
+                    value = "183,415,254.05";
+                    break;
+                case 's':
+                    value = "Gunnery";
+                    break;
+                case 'd':
+                    value = "9/15/2006 6:36 PM";
+                    break;
+                case 'r':
+                    value = "2h, 53m, 28s";
+                    break;
+                default:
+                    int level = -1;
+                    switch (capture)
+                    {
+                        case 'c':
+                            level = 3;
+                            break;
+                        case 't':
+                            level = 4;
+                            break;
+                    }
 
-                                                     switch (capture)
-                                                     {
-                                                         case 'i':
-                                                             value = level.ToString(CultureConstants.DefaultCulture);
-                                                             break;
-                                                         case 'r':
-                                                             value = Skill.GetRomanFromInt(level);
-                                                             break;
-                                                     }
-                                                 }
-                                                 break;
-                                         }
+                    if (m.Groups[1].Value.Length > 1 && level >= 0)
+                    {
+                        capture = m.Groups[1].Value[1];
 
-                                         return value;
-                                     }, RegexOptions.Compiled);
+                        switch (capture)
+                        {
+                            case 'i':
+                                value = level.ToString(CultureConstants.DefaultCulture);
+                                break;
+                            case 'r':
+                                value = Skill.GetRomanFromInt(level);
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+            return value;
         }
 
         /// <summary>

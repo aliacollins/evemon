@@ -63,8 +63,7 @@ namespace EVEMon.SettingsUI
 
         #endregion
 
-
-
+        
         #region Inherited Events
 
         /// <summary>
@@ -74,11 +73,14 @@ namespace EVEMon.SettingsUI
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             if (DesignMode)
                 return;
 
             // Look'n feel
             Font = FontFactory.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints);
+            
+            UpdateContent();
         }
 
         /// <summary>
@@ -204,7 +206,6 @@ namespace EVEMon.SettingsUI
         }
 
         #endregion
-
 
         /// <summary>
         /// Updates the content.

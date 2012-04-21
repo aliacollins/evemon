@@ -21,8 +21,6 @@ namespace EVEMon.SettingsUI
     /// </remarks>
     public class TrayPopupWindow : TrayBaseWindow
     {
-        private readonly int[] m_portraitSize = { 16, 24, 32, 40, 48, 56, 64 };
-
         private readonly Label m_eveTimeLabel = new Label();
         private readonly Label m_serverStatusLabel = new Label();
 
@@ -35,20 +33,15 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-
             if (DesignMode)
                 return;
 
             // Client events
-            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.ServerStatusUpdated += EveMonClient_ServerStatusUpdated;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
 
-            // Character Details
-            UpdateContent();
+            base.OnLoad(e);
         }
 
         /// <summary>
@@ -58,10 +51,8 @@ namespace EVEMon.SettingsUI
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.ServerStatusUpdated -= EveMonClient_ServerStatusUpdated;
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
         }
 
@@ -69,6 +60,28 @@ namespace EVEMon.SettingsUI
 
 
         #region Content management : add the controls to the panel, update them, etc
+
+        /// <summary>
+        /// Recreates the controls for character and warning.
+        /// </summary>
+        protected override void UpdateContent()
+        {
+            if (!Visible)
+            {
+                UpdatePending = true;
+                return;
+            }
+            UpdatePending = false;
+
+            // Controls layout
+            PerformCustomLayout();
+
+            // Supplemental controls layout
+            PerformSupplementalControlsLayout();
+
+            // Updates the tooltip width
+            CompleteLayout();
+        }
 
         /// <summary>
         /// Gets the characters list, sorted, grouped and filter according to the user settings.
@@ -122,58 +135,6 @@ namespace EVEMon.SettingsUI
             return character.Identity.APIKeys.First(
                 apiKey => EveMonClient.MonitoredCharacters.Any(
                     monitoredCharacter => monitoredCharacter.Identity.APIKeys.Contains(apiKey)));
-        }
-
-        /// <summary>
-        /// Recreates the controls for character and warning.
-        /// </summary>
-        protected override void UpdateContent()
-        {
-            if (!Visible)
-            {
-                UpdatePending = true;
-                return;
-            }
-            UpdatePending = false;
-
-            // Controls layout
-            PerformCustomLayout();
-
-            // Supplemental controls layout
-            PerformSupplementalControlsLayout();
-
-            // Updates the tooltip width
-            CompleteLayout();
-        }
-
-        /// <summary>
-        /// Performs the supplemental controls layout.
-        /// </summary>
-        private void PerformSupplementalControlsLayout()
-        {
-            // Skip if the user do not want to be warned about accounts not in training
-            string warningMessage;
-            if (Settings.UI.SystemTrayPopup.ShowWarning && APIKey.HasCharactersNotTraining(out warningMessage))
-            {
-                FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
-                MainFlowLayoutPanel.Controls.Add(warningPanel);
-            }
-
-            // Server Status
-            if (Settings.UI.SystemTrayPopup.ShowServerStatus)
-            {
-                m_serverStatusLabel.AutoSize = true;
-                MainFlowLayoutPanel.Controls.Add(m_serverStatusLabel);
-                UpdateServerStatusLabel();
-            }
-
-            // EVE Time
-            if (!Settings.UI.SystemTrayPopup.ShowEveTime)
-                return;
-
-            m_eveTimeLabel.AutoSize = true;
-            MainFlowLayoutPanel.Controls.Add(m_eveTimeLabel);
-            UpdateEveTimeLabel();
         }
 
         /// <summary>
@@ -269,11 +230,41 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
+        /// Performs the supplemental controls layout.
+        /// </summary>
+        private void PerformSupplementalControlsLayout()
+        {
+            // Skip if the user do not want to be warned about accounts not in training
+            string warningMessage;
+            if (Settings.UI.SystemTrayPopup.ShowWarning && APIKey.HasCharactersNotTraining(out warningMessage))
+            {
+                FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
+                MainFlowLayoutPanel.Controls.Add(warningPanel);
+            }
+
+            // Server Status
+            if (Settings.UI.SystemTrayPopup.ShowServerStatus)
+            {
+                m_serverStatusLabel.AutoSize = true;
+                MainFlowLayoutPanel.Controls.Add(m_serverStatusLabel);
+                UpdateServerStatusLabel();
+            }
+
+            // EVE Time
+            if (!Settings.UI.SystemTrayPopup.ShowEveTime)
+                return;
+
+            m_eveTimeLabel.AutoSize = true;
+            MainFlowLayoutPanel.Controls.Add(m_eveTimeLabel);
+            UpdateEveTimeLabel();
+        }
+
+        /// <summary>
         /// Creates a panel contains the warning message for accounts not in training.
         /// </summary>
         /// <param name="warningMessage"></param>
         /// <returns></returns>
-        private FlowLayoutPanel CreateAccountsNotTrainingPanel(string warningMessage)
+        private static FlowLayoutPanel CreateAccountsNotTrainingPanel(string warningMessage)
         {
             // Create a flowlayout to hold the content
             FlowLayoutPanel warningPanel;
@@ -288,14 +279,16 @@ namespace EVEMon.SettingsUI
                 // Add a picture on the left with a warning icon
                 if (!Settings.UI.SafeForWork)
                 {
+                    int portraitSize = Int32.Parse(Settings.UI.SystemTrayPopup.PortraitSize.ToString().Substring(1),
+                                                   CultureConstants.InvariantCulture);
+
                     PictureBox tempPictureBoxWarning = null;
                     try
                     {
                         tempPictureBoxWarning = new PictureBox();
                         tempPictureBoxWarning.Image = SystemIcons.Warning.ToBitmap();
                         tempPictureBoxWarning.SizeMode = PictureBoxSizeMode.StretchImage;
-                        tempPictureBoxWarning.Size = new Size(m_portraitSize[(int)Settings.UI.SystemTrayPopup.PortraitSize],
-                                                              m_portraitSize[(int)Settings.UI.SystemTrayPopup.PortraitSize]);
+                        tempPictureBoxWarning.Size = new Size(portraitSize, portraitSize);
                         tempPictureBoxWarning.Margin = new Padding(2);
 
                         PictureBox pbWarning = tempPictureBoxWarning;
@@ -368,6 +361,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateEveTimeLabel()
         {
+            if (!Visible)
+                return;
+
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
                 m_eveTimeLabel.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", DateTime.UtcNow);
         }
@@ -377,7 +373,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateServerStatusLabel()
         {
-            if (m_serverStatusLabel == null)
+            if (!Visible || m_serverStatusLabel == null)
                 return;
 
             if (Settings.UI.SystemTrayPopup.ShowServerStatus)
@@ -388,16 +384,6 @@ namespace EVEMon.SettingsUI
 
 
         #region Global Events
-
-        /// <summary>
-        /// Occurs when the monitored characters collection changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
-        {
-            UpdateContent();
-        }
 
         /// <summary>
         /// Updates the TQ status message.
@@ -425,16 +411,6 @@ namespace EVEMon.SettingsUI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
-        {
-            UpdateContent();
-        }
-
-        /// <summary>
-        /// When the settings changed, some may affect this popup, so we recreate content.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             UpdateContent();
         }
