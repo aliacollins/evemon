@@ -348,6 +348,10 @@ namespace EVEMon.CharacterMonitoring
                 // "Update Calendar" button
                 btnAddToCalendar.Visible = Settings.Calendar.Enabled;
 
+                // Reset the text filter
+                if (toolStripContextual.Visible)
+                    searchTextBox.Text = String.Empty;
+
                 // Read the settings
                 if (Settings.UI.SafeForWork)
                 {
