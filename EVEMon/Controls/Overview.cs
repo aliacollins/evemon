@@ -19,7 +19,7 @@ namespace EVEMon.Controls
         /// <summary>
         /// Default constructor.
         /// </summary>
-        internal Overview()
+        public Overview()
         {
             InitializeComponent();
         }
@@ -36,6 +36,7 @@ namespace EVEMon.Controls
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
@@ -61,16 +62,6 @@ namespace EVEMon.Controls
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             Disposed -= OnDisposed;
         }
-
-        ///// <summary>
-        ///// Occurs when the visibility changed.
-        ///// </summary>
-        ///// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        //protected override void OnVisibleChanged(EventArgs e)
-        //{
-        //    UpdateContent();
-        //    base.OnVisibleChanged(e);
-        //}
 
         /// <summary>
         /// Adjust the layout on size change.

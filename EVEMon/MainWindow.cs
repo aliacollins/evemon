@@ -1228,21 +1228,13 @@ namespace EVEMon
         /// <param name="e"></param>
         private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Save current directory
-            string currentDirectory = Directory.GetCurrentDirectory();
-
             // Prompts the user for a location
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             DialogResult result = saveFileDialog.ShowDialog();
 
-            // Restore current directory
-            Directory.SetCurrentDirectory(currentDirectory);
-
             // Copy settings if OK
-            if (result != DialogResult.OK)
-                return;
-
-            Settings.CopySettings(saveFileDialog.FileName);
+            if (result == DialogResult.OK)
+                Settings.CopySettings(saveFileDialog.FileName);
         }
 
         /// <summary>
@@ -1252,15 +1244,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Save current directory
-            string currentDirectory = Directory.GetCurrentDirectory();
-
             // Prompts the user for a location
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             DialogResult result = openFileDialog.ShowDialog();
-
-            // Restore current directory
-            Directory.SetCurrentDirectory(currentDirectory);
 
             // Load settings if OK
             if (result != DialogResult.OK)
@@ -2068,7 +2054,7 @@ namespace EVEMon
         /// </summary>
         private void DisplayTestMenu()
         {
-            testToolStripMenuItem.Visible = true;
+            testsToolStripMenuItem.Visible = true;
             testTrayToolStripMenuItem.Visible = true;
             testsToolStripSeperator.Visible = true;
             testCharacterNotificationToolStripMenuItem.Visible = true;

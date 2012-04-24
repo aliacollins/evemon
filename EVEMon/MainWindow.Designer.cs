@@ -35,7 +35,7 @@ namespace EVEMon
             this.planToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.testTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayTestCharacterNotificationTSMI = new System.Windows.Forms.ToolStripMenuItem();
             this.testsToolStripSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,7 +90,7 @@ namespace EVEMon
             this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutKnownProblemsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exceptionWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exceptionWindowRecursiveExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,9 +133,9 @@ namespace EVEMon
             this.tcCharacterTabs = new EVEMon.Common.Controls.DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
+            this.tabCreationLabel = new System.Windows.Forms.Label();
             this.overview = new EVEMon.Controls.Overview();
             this.notificationList = new EVEMon.Controls.NotificationList();
-            this.tabCreationLabel = new System.Windows.Forms.Label();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -173,19 +173,19 @@ namespace EVEMon
             // testTrayToolStripMenuItem
             // 
             this.testTrayToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tesToolStripMenuItem,
+            this.testToolStripMenuItem,
             this.trayTestCharacterNotificationTSMI});
             this.testTrayToolStripMenuItem.Name = "testTrayToolStripMenuItem";
             this.testTrayToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.testTrayToolStripMenuItem.Text = "Test";
             this.testTrayToolStripMenuItem.Visible = false;
             // 
-            // tesToolStripMenuItem
+            // testToolStripMenuItem
             // 
-            this.tesToolStripMenuItem.Name = "tesToolStripMenuItem";
-            this.tesToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.tesToolStripMenuItem.Text = "Notification";
-            this.tesToolStripMenuItem.Click += new System.EventHandler(this.testNotificationToolStripMenuItem_Click);
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.testToolStripMenuItem.Text = "Notification";
+            this.testToolStripMenuItem.Click += new System.EventHandler(this.testNotificationToolStripMenuItem_Click);
             // 
             // trayTestCharacterNotificationTSMI
             // 
@@ -246,16 +246,18 @@ namespace EVEMon
             // 
             // saveFileDialog
             // 
-            this.saveFileDialog.DefaultExt = "xml";
+            this.saveFileDialog.DefaultExt = "bak";
             this.saveFileDialog.FileName = "settings.xml.bak";
             this.saveFileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
+            this.saveFileDialog.RestoreDirectory = true;
             this.saveFileDialog.Title = "Backup your settings file";
             // 
             // openFileDialog
             // 
-            this.openFileDialog.DefaultExt = "xml";
+            this.openFileDialog.DefaultExt = "bak";
             this.openFileDialog.FileName = "settings.xml.bak";
             this.openFileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
+            this.openFileDialog.RestoreDirectory = true;
             this.openFileDialog.ShowHelp = true;
             this.openFileDialog.Title = "Restore your settings file";
             // 
@@ -269,7 +271,7 @@ namespace EVEMon
             this.plansToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem,
-            this.testToolStripMenuItem});
+            this.testsToolStripMenuItem});
             this.mainMenuBar.Location = new System.Drawing.Point(0, 0);
             this.mainMenuBar.Name = "mainMenuBar";
             this.mainMenuBar.Size = new System.Drawing.Size(554, 24);
@@ -630,19 +632,19 @@ namespace EVEMon
             this.aboutMenuItem.Text = "&About...";
             this.aboutMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // testToolStripMenuItem
+            // testsToolStripMenuItem
             // 
-            this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exceptionWindowToolStripMenuItem,
             this.exceptionWindowRecursiveExceptionToolStripMenuItem,
             this.testNotificationToolStripMenuItem,
             this.testCharacterNotificationToolStripMenuItem,
             this.testTimeoutOneSecToolStripMenuItem});
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
-            this.testToolStripMenuItem.Text = "Te&st";
-            this.testToolStripMenuItem.Visible = false;
-            this.testToolStripMenuItem.DropDownOpening += new System.EventHandler(this.testToolStripMenuItem_DropDownOpening);
+            this.testsToolStripMenuItem.Name = "testsToolStripMenuItem";
+            this.testsToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.testsToolStripMenuItem.Text = "Te&st";
+            this.testsToolStripMenuItem.Visible = false;
+            this.testsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.testToolStripMenuItem_DropDownOpening);
             // 
             // exceptionWindowToolStripMenuItem
             // 
@@ -1027,18 +1029,6 @@ namespace EVEMon
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
             // 
-            // overview
-            // 
-            this.overview.AutoScroll = true;
-            this.overview.BackColor = System.Drawing.Color.Transparent;
-            this.overview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.overview.Location = new System.Drawing.Point(0, 0);
-            this.overview.Name = "overview";
-            this.overview.Size = new System.Drawing.Size(546, 477);
-            this.overview.TabIndex = 0;
-            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
-            // 
             // trayIcon
             // 
             this.trayIcon.ContextMenuStrip = this.trayIconToolStrip;
@@ -1048,15 +1038,6 @@ namespace EVEMon
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
             this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
-            // 
-            // notificationList
-            // 
-            this.notificationList.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.notificationList.Location = new System.Drawing.Point(0, 552);
-            this.notificationList.Margin = new System.Windows.Forms.Padding(0);
-            this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(554, 72);
-            this.notificationList.TabIndex = 6;
             // 
             // tabCreationLabel
             // 
@@ -1069,6 +1050,28 @@ namespace EVEMon
             this.tabCreationLabel.TabIndex = 7;
             this.tabCreationLabel.Text = "Tab pages creation in progress.\r\n\r\nPlease wait.";
             this.tabCreationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // overview
+            // 
+            this.overview.AutoScroll = true;
+            this.overview.BackColor = System.Drawing.Color.Transparent;
+            this.overview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.overview.Location = new System.Drawing.Point(0, 0);
+            this.overview.Name = "overview";
+            this.overview.Size = new System.Drawing.Size(546, 477);
+            this.overview.TabIndex = 0;
+            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
+            // 
+            // notificationList
+            // 
+            this.notificationList.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.notificationList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.notificationList.Location = new System.Drawing.Point(0, 552);
+            this.notificationList.Margin = new System.Windows.Forms.Padding(0);
+            this.notificationList.Name = "notificationList";
+            this.notificationList.Size = new System.Drawing.Size(554, 72);
+            this.notificationList.TabIndex = 6;
             // 
             // MainWindow
             // 
@@ -1176,7 +1179,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton addAPIKeyTbMenu;
         private System.Windows.Forms.ToolStripMenuItem miImportPlanFromFile;
         private System.Windows.Forms.OpenFileDialog ofdOpenDialog;
-        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowRecursiveExceptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator plansStripSeparator;
@@ -1184,7 +1187,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem testTrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator testsToolStripSeperator;
         private System.Windows.Forms.ToolStripMenuItem testNotificationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testCharacterNotificationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem trayTestCharacterNotificationTSMI;
         private System.Windows.Forms.ToolStripMenuItem testTimeoutOneSecToolStripMenuItem;
