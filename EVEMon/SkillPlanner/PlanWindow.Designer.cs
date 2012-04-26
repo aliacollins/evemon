@@ -103,7 +103,6 @@ namespace EVEMon.SkillPlanner
             // 
             this.SkillsStatusLabel.AutoToolTip = true;
             this.SkillsStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("SkillsStatusLabel.Image")));
-            this.SkillsStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SkillsStatusLabel.Name = "SkillsStatusLabel";
             this.SkillsStatusLabel.Size = new System.Drawing.Size(104, 17);
             this.SkillsStatusLabel.Text = "0 Skills Planned";
@@ -112,7 +111,6 @@ namespace EVEMon.SkillPlanner
             // TimeStatusLabel
             // 
             this.TimeStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("TimeStatusLabel.Image")));
-            this.TimeStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.TimeStatusLabel.Name = "TimeStatusLabel";
             this.TimeStatusLabel.Size = new System.Drawing.Size(116, 17);
             this.TimeStatusLabel.Text = "356d 23h 25m 10s";
@@ -121,7 +119,6 @@ namespace EVEMon.SkillPlanner
             // CostStatusLabel
             // 
             this.CostStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("CostStatusLabel.Image")));
-            this.CostStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CostStatusLabel.Name = "CostStatusLabel";
             this.CostStatusLabel.Size = new System.Drawing.Size(98, 17);
             this.CostStatusLabel.Text = "0 ISK Required";
@@ -258,7 +255,7 @@ namespace EVEMon.SkillPlanner
             // sfdSave
             // 
             this.sfdSave.Filter = "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*." +
-                "txt";
+    "txt";
             this.sfdSave.Title = "Save to File";
             // 
             // tabControl

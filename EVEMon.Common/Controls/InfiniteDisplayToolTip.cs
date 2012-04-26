@@ -59,7 +59,7 @@ namespace EVEMon.Common.Controls
             if (text == m_text)
                 return;
 
-            pt.Offset(0, 18);
+            pt.Offset(0, 24);
             m_point = pt;
 
             Hide(m_owner);
