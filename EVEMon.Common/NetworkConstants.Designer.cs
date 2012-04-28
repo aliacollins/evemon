@@ -1060,7 +1060,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://www.google.com/calendar/feeds/default/private/full.
+        ///   Looks up a localized string similar to https://www.google.com/calendar/feeds/default/private/full.
         /// </summary>
         public static string GoogleCalendarURL {
             get {

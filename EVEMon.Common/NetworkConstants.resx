@@ -155,7 +155,7 @@
     <comment>New web address for portraits as part of Incursion 1.1.0</comment>
   </data>
   <data name="GoogleCalendarURL" xml:space="preserve">
-    <value>http://www.google.com/calendar/feeds/default/private/full</value>
+    <value>https://www.google.com/calendar/feeds/default/private/full</value>
   </data>
   <data name="APICredentials" xml:space="preserve">
     <value>https://support.eveonline.com/api</value>

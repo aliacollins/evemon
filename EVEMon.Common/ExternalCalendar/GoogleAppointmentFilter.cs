@@ -40,7 +40,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// </summary>
         internal GoogleAppointmentFilter()
         {
-            m_service = new CalendarService("serviceName");
+            m_service = new CalendarService(Application.ProductName);
 
             UserName = String.Empty;
             Password = String.Empty;
@@ -100,8 +100,6 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
         internal override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue)
         {
-            Exception googleProblem = null;
-
             EventEntry appointmentItem = appointmentExists
                                              ? (EventEntry)AppointmentArray[0]
                                              : new EventEntry();
@@ -152,9 +150,6 @@ namespace EVEMon.Common.ExternalCalendar
                 // Send the request and receive the response
                 m_service.Insert(Uri, appointmentItem);
             }
-
-            if (googleProblem != null)
-                throw googleProblem;
         }
 
         /// <summary>
@@ -171,10 +166,13 @@ namespace EVEMon.Common.ExternalCalendar
                     return false;
 
                 EventEntry appointmentItem = (EventEntry)AppointmentArray[0];
+                if (appointmentItem.Times.Count < 1)
+                    return false;
+
                 StartDate = appointmentItem.Times[0].StartTime;
                 EndDate = appointmentItem.Times[0].EndTime;
                 Subject = appointmentItem.Title.Text;
-                EntryId = appointmentItem.Id.Uri.Content;
+                EntryId = appointmentItem.EventId;
 
                 if (appointmentItem.Reminder != null)
                 {
@@ -242,6 +240,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// </summary>
         internal void Logon()
         {
+            m_service.RequestFactory.UseSSL = Uri.Scheme == Uri.UriSchemeHttps;
             m_service.setUserCredentials(UserName, Password);
         }
 
