@@ -102,9 +102,9 @@ namespace EVEMon.Common.ExternalCalendar
         {
             Exception googleProblem = null;
 
-            EventEntry appointmentItem = (appointmentExists
-                                              ? (EventEntry)AppointmentArray[0]
-                                              : new EventEntry());
+            EventEntry appointmentItem = appointmentExists
+                                             ? (EventEntry)AppointmentArray[0]
+                                             : new EventEntry();
 
             if (appointmentItem.Times.Count == 0)
                 appointmentItem.Times.Add(new When());
@@ -211,7 +211,8 @@ namespace EVEMon.Common.ExternalCalendar
             try
             {
                 EventFeed myResultsFeed = m_service.Query(myQuery);
-                foreach (EventEntry eventEntry in myResultsFeed.Entries.OfType<EventEntry>())
+                foreach (EventEntry eventEntry in myResultsFeed.Entries.OfType<EventEntry>()
+                    .Where(entry => entry.Title.Text == Subject))
                 {
                     AppointmentArray.Add(eventEntry);
                 }
