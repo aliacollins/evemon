@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace EVEMon.MarketUnifiedUploader
 {
     internal class UnifiedFormat
     {
         private const string UnifiedFormatVersion = "0.1alpha";
-        private const string EVEMonVersion = "Beta v0.1";
+        private readonly string m_eveMonVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         private readonly Dictionary<string, object> m_data = new Dictionary<string, object>();
         private readonly string[] m_orderColumns = new[]
                                                        {
@@ -71,7 +72,7 @@ namespace EVEMon.MarketUnifiedUploader
             Dictionary<string, object> generator = new Dictionary<string, object>
                                                        {
                                                            { "name", "EVEMon.MarketUnifiedUploader" },
-                                                           { "version", EVEMonVersion }
+                                                           { "version", m_eveMonVersion }
                                                        };
 
             // Columns and Rows info
