@@ -305,6 +305,12 @@
     <Compile Include="SettingsUI\EmailNotificationsControl.Designer.cs">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsUI\MarketUnifiedUploaderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\MarketUnifiedUploaderControl.Designer.cs">
+      <DependentUpon>MarketUnifiedUploaderControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsUI\SettingsFileStorageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -487,6 +493,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\EmailNotificationsControl.resx">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\MarketUnifiedUploaderControl.resx">
+      <DependentUpon>MarketUnifiedUploaderControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\SettingsFileStorageControl.resx">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>

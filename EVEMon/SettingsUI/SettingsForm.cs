@@ -146,6 +146,9 @@ namespace EVEMon.SettingsUI
             // G15
             SetG15Settings();
 
+            // Market Unified Uploader
+            marketUnifiedUploaderCheckBox.Checked = m_settings.MarketUnifiedUploader.Enabled;
+
             // Skills display on the main window
             cbShowAllPublicSkills.Checked = m_settings.UI.MainWindow.ShowAllPublicSkills;
             cbShowNonPublicSkills.Checked = m_settings.UI.MainWindow.ShowNonPublicSkills;
@@ -425,6 +428,9 @@ namespace EVEMon.SettingsUI
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.MinimizeToTray;
             else
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.Exit;
+
+            // Market Unified Uploader
+            m_settings.MarketUnifiedUploader.Enabled =  marketUnifiedUploaderCheckBox.Checked;
 
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
@@ -708,6 +714,7 @@ namespace EVEMon.SettingsUI
             emailNotificationsControl.Enabled = mailNotificationCheckBox.Checked;
             customProxyPanel.Enabled = customProxyCheckBox.Checked;
             overviewPanel.Enabled = cbShowOverViewTab.Checked;
+            marketUnifiedUploaderControl.Enabled = marketUnifiedUploaderCheckBox.Checked;
 
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
@@ -1095,6 +1102,11 @@ namespace EVEMon.SettingsUI
         }
 
         #endregion
+
+        private void marketUnifiedUploaderControl_Load(object sender, EventArgs e)
+        {
+
+        }
 
     }
 }

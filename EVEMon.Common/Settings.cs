@@ -47,6 +47,7 @@ namespace EVEMon.Common
             Calendar = new CalendarSettings();
             Exportation = new ExportationSettings();
             Notifications = new NotificationSettings();
+            MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
@@ -93,6 +94,11 @@ namespace EVEMon.Common
         /// Gets the settings for the notifications (alerts).
         /// </summary>
         public static NotificationSettings Notifications { get; private set; }
+
+        /// <summary>
+        /// Gets the settings for the market unified uploader.
+        /// </summary>
+        public static MarketUnifiedUploaderSettings MarketUnifiedUploader { get; private set; }
 
         /// <summary>
         /// Gets the settings for the network.
@@ -168,6 +174,7 @@ namespace EVEMon.Common
                 Calendar = serial.Calendar;
                 Exportation = serial.Exportation;
                 Notifications = serial.Notifications;
+                MarketUnifiedUploader = serial.MarketUnifiedUploader;
 
                 // Import the characters, API keys and plans
                 if (!preferencesOnly)
@@ -291,6 +298,7 @@ namespace EVEMon.Common
                                                   APIProviders = EveMonClient.APIProviders.Export(),
                                                   Scheduler = Scheduler.Export(),
                                                   Calendar = Calendar,
+                                                  MarketUnifiedUploader = MarketUnifiedUploader,
                                                   Notifications = Notifications,
                                                   Exportation = Exportation,
                                                   Updates = Updates,

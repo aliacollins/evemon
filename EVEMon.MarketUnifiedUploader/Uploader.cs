@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Net;
+using EVEMon.Common.Threading;
 using EVEMon.MarketUnifiedUploader.EveCacheParser;
 
 namespace EVEMon.MarketUnifiedUploader
@@ -68,21 +69,16 @@ namespace EVEMon.MarketUnifiedUploader
         #region Public Methods
 
         /// <summary>
-        /// Saves the endpoints.
-        /// </summary>
-        public static void SaveEndPoints()
-        {
-            s_endPoints.SaveEndPoints();
-        }
-
-        /// <summary>
         /// Starts the uploader.
         /// </summary>
         public static void Start()
         {
+            // Already started
+            if (s_run)
+                return;
+
             Status = UploaderStatus.Initializing;
 
-            NetworkMonitor.Initialize();
             if (!NetworkMonitor.IsNetworkAvailable)
             {
                 Stop();
@@ -98,7 +94,7 @@ namespace EVEMon.MarketUnifiedUploader
 
             Status = UploaderStatus.Idle;
             s_run = true;
-            Upload();
+            Dispatcher.BackgroundInvoke(Upload);
         }
 
         /// <summary>
@@ -134,7 +130,7 @@ namespace EVEMon.MarketUnifiedUploader
         }
 
         /// <summary>
-        /// Called when the endpoints updated.
+        /// Called when the endpoints have been updated.
         /// </summary>
         public static void OnEndPointsUpdated()
         {
@@ -200,33 +196,49 @@ namespace EVEMon.MarketUnifiedUploader
                     if (jsonObj == null || !jsonObj.Any())
                         continue;
 
-                    // Get the endpoints the message was generated for;
-                    // a check to where we can upload to has been made while generating the message
-                    IEnumerable<EndPoint> endPoints =
-                        ((ArrayList)jsonObj["uploadKeys"]).OfType<Dictionary<string, object>>().Select(
-                            key => key["name"].ToString()).SelectMany(
-                                name => s_endPoints, (name, endPoint) => new { name, endPoint }).Where(
-                                    endpoint => endpoint.endPoint.Name == endpoint.name).Select(
-                                        endpoint => endpoint.endPoint);
-
-                    // Serialize the JSON object to string
-                    string postdata = Util.SerializeObjectToJSON(jsonObj);
-
-                    // Upload to the selected endpoints
-                    foreach (EndPoint endPoint in endPoints)
-                    {
-                        // Upload to endpoint
-                        string response = UploadToEndPoint(postdata, endPoint, jsonObj);
-
-                        // On response act accordingly
-                        OnUploaded(cachedfile, response, endPoint);
-                    }
+                    // Uploads to the selected endpoints
+                    UploadToEndPoints(cachedfile, jsonObj);
                 }
 
                 Status = UploaderStatus.Idle;
-
                 nextRun = GetNextRun();
                 Console.WriteLine("Next run at: {0}", nextRun);
+            }
+
+            Status = UploaderStatus.Disabled;
+        }
+
+        /// <summary>
+        /// Uploads to the selected endpoints
+        /// </summary>
+        /// <param name="cachedfile">The cachedfile.</param>
+        /// <param name="jsonObj">The json obj.</param>
+        private static void UploadToEndPoints(FileSystemInfo cachedfile, Dictionary<string, object> jsonObj)
+        {
+            // Get the endpoints the message was generated for;
+            // a check to where we can upload to has been made while generating the message
+            IEnumerable<EndPoint> endPoints =
+                ((ArrayList)jsonObj["uploadKeys"]).OfType<Dictionary<string, object>>().Select(
+                    key => key["name"].ToString()).SelectMany(
+                        name => s_endPoints, (name, endPoint) => new { name, endPoint }).Where(
+                            endpoint => endpoint.endPoint.Name == endpoint.name).Select(
+                                endpoint => endpoint.endPoint);
+
+            // Serialize the JSON object to string
+            string postdata = Util.SerializeObjectToJSON(jsonObj);
+
+            // Upload to the selected endpoints
+            foreach (EndPoint endPoint in endPoints)
+            {
+                Status = UploaderStatus.Uploading;
+                ProgressText = GetProcessText(jsonObj, endPoint);
+                Console.Write(s_progressText);
+
+                // Upload to endpoint
+                string response = UploadToEndPoint(postdata, endPoint);
+
+                // On response act accordingly
+                OnUploaded(cachedfile, response, endPoint);
             }
         }
 
@@ -235,19 +247,12 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         /// <param name="postdata">The postdata.</param>
         /// <param name="endPoint">The endpoint.</param>
-        /// <param name="jsonObj">The json obj.</param>
         /// <returns></returns>
-        private static string UploadToEndPoint(string postdata, EndPoint endPoint, IDictionary<string, object> jsonObj)
+        private static string UploadToEndPoint(string postdata, EndPoint endPoint)
         {
-            Status = UploaderStatus.Uploading;
-
             string response;
             try
             {
-                ProgressText = GetProcessText(jsonObj, endPoint);
-
-                Console.Write(s_progressText);
-
                 response = EveMonClient.HttpWebService.DownloadString(endPoint.URL, postdata, endPoint.GzipSupport);
             }
             catch (HttpWebServiceException ex)
@@ -303,7 +308,7 @@ namespace EVEMon.MarketUnifiedUploader
                                              Environment.NewLine);
                 Console.Write(s_progressText);
             }
-                // Inform about a succesful upload and delete the cached file
+                // Inform about a successful upload and delete the cached file
             else
             {
                 endPoint.UploadInterval = TimeSpan.Zero;
@@ -317,7 +322,7 @@ namespace EVEMon.MarketUnifiedUploader
                 try
                 {
                     Console.WriteLine("Deleting cache file.");
-                    cachedfile.Delete();
+                    //cachedfile.Delete();
                 }
                 catch (IOException ex)
                 {

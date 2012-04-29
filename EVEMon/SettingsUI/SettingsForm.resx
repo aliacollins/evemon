@@ -131,9 +131,6 @@
     <value>EVEMon can export your current training queue to Microsoft Outlook or Google. This allows you to sync your calendar with your Smart phone, Blackberry etc. so you can take your reminders with you. Early and Late reminders allow you to set the times you will not be available or near EVE to update your queue and the reminder will be set to trigger at these times instead of standard reminder interval.
 </value>
   </data>
-  <metadata name="ttToolTipCodes.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>150, 24</value>
-  </metadata>
   <metadata name="colorDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>289, 24</value>
   </metadata>
@@ -145,7 +142,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAC2
-        PgAAAk1TRnQBSQFMAgEBEAEAAXwBBwF8AQcBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        PgAAAk1TRnQBSQFMAgEBEAEAAdQBBwHUAQcBEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
         AwABUAMAAQEBAAEgBgABUP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8AIgADEAEVAxEBFwMI
         AQsDAgEDRAADBwEJAzcBWwNZAb8DSAGGAxYBHxgAA0oBigNXAbcDVQGyA1QBrwNUAa8DVAGuA1QBrwNW
         AasDMgFQAwwEEAEVAxABFQMPARQDDQESAwcBCgMBAQIDYQHcA10B7QNdAe0DXQHtA10B7QNdAe0DXQHt

@@ -21,6 +21,7 @@ namespace EVEMon.Common.Serialization.Settings
             m_apiKeys = new Collection<SerializableAPIKey>();
             m_characters = new Collection<SerializableSettingsCharacter>();
             m_monitoredCharacters = new Collection<MonitoredCharacterSettings>();
+            MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
             APIProviders = new SerializableAPIProviders();
             Notifications = new NotificationSettings();
             Exportation = new ExportationSettings();
@@ -92,6 +93,9 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlElement("exportation")]
         public ExportationSettings Exportation { get; set; }
+
+        [XmlElement("marketUnifiedUploader")]
+        public MarketUnifiedUploaderSettings MarketUnifiedUploader { get; set; }
 
         [XmlElement("G15")]
         public G15Settings G15 { get; set; }

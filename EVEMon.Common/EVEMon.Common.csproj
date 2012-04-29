@@ -88,8 +88,9 @@
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Outlook, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>Dependencies\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -364,6 +365,7 @@
     <Compile Include="Serialization\Settings\SerializableAPIKey.cs" />
     <Compile Include="Serialization\Settings\SerializableContract.cs" />
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
+    <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
     <Compile Include="SettingsObjects\AssetColumn.cs" />
     <Compile Include="SettingsObjects\AssetColumnSettings.cs" />
@@ -371,6 +373,7 @@
     <Compile Include="SettingsObjects\ContractColumn.cs" />
     <Compile Include="SettingsObjects\ContractColumnSettings.cs" />
     <Compile Include="SettingsObjects\ContractSettings.cs" />
+    <Compile Include="SettingsObjects\MarketUnifiedUploaderSettings.cs" />
     <Compile Include="SettingsObjects\ModifiedSerializableDictionary.cs" />
     <Compile Include="SettingsObjects\EveNotificationColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationColumnSettings.cs" />

@@ -26,6 +26,7 @@ using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using EVEMon.ImplantControls;
+using EVEMon.MarketUnifiedUploader;
 using EVEMon.NotificationWindow;
 using EVEMon.PieChart;
 using EVEMon.Sales;
@@ -41,6 +42,7 @@ namespace EVEMon
     {
         private Form m_trayPopup;
         private IgbServer m_igbServer;
+        private UploaderStatus m_uploaderStatus;
 
         private bool m_isUpdating;
         private bool m_isUpdatingData;
@@ -116,7 +118,7 @@ namespace EVEMon
             // Check with BattleClinic the local clock is synchronized
             if (Settings.Updates.CheckTimeOnStartup)
                 CheckTimeSynchronization();
-            
+
             trayIcon.Text = Application.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
@@ -132,6 +134,7 @@ namespace EVEMon
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            Uploader.StatusChanged += Uploader_StatusChanged;
 
             // Update the content
             UpdateTabs();
@@ -157,7 +160,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Occurs when the window is shown, display a tooltip message.
+        /// Occurs when the window is shown.
         /// </summary>
         /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnShown(EventArgs e)
@@ -232,6 +235,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
+            // Stops the market unified uploader
+            Uploader.Stop();
+
             // Hide the system tray icons
             niAlertIcon.Visible = false;
             trayIcon.Visible = false;
@@ -859,8 +865,10 @@ namespace EVEMon
             if (WindowState == FormWindowState.Minimized)
                 return;
 
-            DateTime now = DateTime.Now.ToUniversalTime();
+            DateTime now = DateTime.UtcNow;
             lblStatus.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", now);
+            lblStatus.ToolTipText = String.Format(CultureConstants.DefaultCulture, "YC{0} ({1})",
+                                                  now.Year - 1898, now.Date.ToShortDateString());
         }
 
         /// <summary>
@@ -1954,6 +1962,23 @@ namespace EVEMon
         #endregion
 
 
+        #region Market Unified Uploader
+
+        private void Uploader_StatusChanged(object sender, EventArgs e)
+        {
+            //Invoke((MethodInvoker)UpdateUploaderStatus);
+
+            if (Uploader.Status == m_uploaderStatus)
+                return;
+
+            m_uploaderStatus = Uploader.Status;
+            UploaderToolStripStatusLabel.Image = UploaderStatusImageList.Images[(int)Uploader.Status];
+            UploaderToolStripStatusLabel.ToolTipText = Uploader.Status.ToString();
+        }
+
+        #endregion
+
+
         #region Reaction to settings change
 
         /// <summary>
@@ -1978,6 +2003,11 @@ namespace EVEMon
 
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
+
+            if (Settings.MarketUnifiedUploader.Enabled)
+                Uploader.Start();
+            else
+                Uploader.Stop();
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {

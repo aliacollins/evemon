@@ -2,19 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Net;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.MarketUnifiedUploader
 {
-    internal sealed class EndPointCollection : ReadOnlyCollection<EndPoint>
+    public sealed class EndPointCollection : ReadOnlyCollection<EndPoint>
     {
-        private const string EndPointFilename = "endpoints.json";
-        private readonly string m_settingsFilePath = Path.Combine(Directory.GetCurrentDirectory(), EndPointFilename);
-        private bool m_init;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EndPointCollection"/> class.
         /// </summary>
@@ -29,10 +25,10 @@ namespace EVEMon.MarketUnifiedUploader
         internal void InitializeEndPoints()
         {
             // Online EndPoints
-            IEnumerable<EndPoint> endpointsOnline = GetEndPoints(GetOnlineEndPoints());
+            IEnumerable<EndPoint> endpointsOnline = GetOnlineEndPoints();
 
             // Settings EndPoints
-            IEnumerable<EndPoint> endpointsSettings = GetEndPoints(GetSettingsEndPoints());
+            IEnumerable<EndPoint> endpointsSettings = GetSettingsEndPoints();
 
             // Merge online and user configuration
             foreach (EndPoint onlineEndPoint in endpointsOnline)
@@ -51,17 +47,22 @@ namespace EVEMon.MarketUnifiedUploader
             // Import the merged endpoints
             Import(endpointsOnline);
 
+            // Update the settings
+            UpdateEndPointSettings();
+
+            // Notify the subscribers
             Uploader.OnEndPointsUpdated();
         }
 
         /// <summary>
-        /// Gets the endpoints.
+        /// Gets the online endpoints.
         /// </summary>
-        /// <param name="jsonObj">The json obj.</param>
         /// <returns></returns>
-        private static IEnumerable<EndPoint> GetEndPoints(IDictionary<string, object> jsonObj)
+        private static IEnumerable<EndPoint> GetOnlineEndPoints()
         {
             List<EndPoint> endPoints = new List<EndPoint>();
+
+            Dictionary<string, object> jsonObj = GetEndPointsOnline();
 
             if (jsonObj != null && jsonObj.Any())
             {
@@ -96,37 +97,23 @@ namespace EVEMon.MarketUnifiedUploader
         /// Gets the settings endpoints.
         /// </summary>
         /// <returns></returns>
-        private Dictionary<string, object> GetSettingsEndPoints()
+        private static IEnumerable<EndPoint> GetSettingsEndPoints()
         {
-            if (!File.Exists(m_settingsFilePath))
-                return null;
-
-            try
-            {
-                string fileContent = File.ReadAllText(m_settingsFilePath);
-                return Util.DeserializeJSONToObject(fileContent);
-            }
-            catch (IOException)
-            {
-                return null;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return null;
-            }
+            return Settings.MarketUnifiedUploader.EndPoints.Select(
+                endPoint => new EndPoint { Name = endPoint.Name, Enabled = endPoint.Enabled });
         }
 
         /// <summary>
-        /// Gets the online endpoints.
+        /// Gets the endpoints online.
         /// </summary>
         /// <returns></returns>
-        private static Dictionary<string, object> GetOnlineEndPoints()
+        private static Dictionary<string, object> GetEndPointsOnline()
         {
-            string url = NetworkConstants.UploaderEndPoints + EndPointFilename;
             string responce;
             try
             {
-                responce = EveMonClient.HttpWebService.DownloadString(new Uri(url));
+                Uri url = new Uri(NetworkConstants.UploaderEndPoints);
+                responce = EveMonClient.HttpWebService.DownloadString(url);
             }
             catch (HttpWebServiceException ex)
             {
@@ -156,46 +143,17 @@ namespace EVEMon.MarketUnifiedUploader
             {
                 Items.Add(endpoint);
             }
-
-            m_init = true;
-
-            // Save endpoint to file
-            SaveEndPoints();
         }
 
         /// <summary>
-        /// Saves the endpoints.
+        /// Updates the endpoint settings.
         /// </summary>
-        internal void SaveEndPoints()
+        public static void UpdateEndPointSettings()
         {
-            // Do not save before endpoints initilization
-            if (!m_init)
-                return;
-
-            ArrayList endPoints = new ArrayList();
-            endPoints.AddRange(Items.Select(item => new Dictionary<string, object>
-                                                        {
-                                                            { "name", item.Name },
-                                                            { "enabled", item.Enabled.ToString() }
-                                                        }).ToArray());
-
-            Dictionary<string, object> jsonObj = new Dictionary<string, object> { { "endpoints", endPoints } };
-            string json = Util.SerializeObjectToJSON(jsonObj);
-
-            try
-            {
-                File.WriteAllText(m_settingsFilePath, json);
-            }
-            catch (IOException ex)
-            {
-                string message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                Console.WriteLine(message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                string message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                Console.WriteLine(message);
-            }
+            Settings.MarketUnifiedUploader.EndPoints.Clear();
+            Settings.MarketUnifiedUploader.EndPoints.AddRange(
+                Uploader.EndPoints.Select(
+                    endPoint => new SerializableEndPoint { Name = endPoint.Name, Enabled = endPoint.Enabled }));
         }
     }
 }
