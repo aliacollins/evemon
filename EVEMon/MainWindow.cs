@@ -1966,8 +1966,14 @@ namespace EVEMon
 
         private void Uploader_StatusChanged(object sender, EventArgs e)
         {
-            //Invoke((MethodInvoker)UpdateUploaderStatus);
+            Dispatcher.Invoke(UpdateUploaderStatus);
+        }
 
+        /// <summary>
+        /// Updates the uploader status.
+        /// </summary>
+        private void UpdateUploaderStatus()
+        {
             if (Uploader.Status == m_uploaderStatus)
                 return;
 
@@ -2005,9 +2011,9 @@ namespace EVEMon
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
 
             if (Settings.MarketUnifiedUploader.Enabled)
-                Uploader.Start();
+                 Dispatcher.BackgroundInvoke(Uploader.Start);
             else
-                Uploader.Stop();
+                 Dispatcher.Invoke(Uploader.Stop);
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {

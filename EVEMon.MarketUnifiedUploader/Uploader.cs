@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Net;
-using EVEMon.Common.Threading;
 using EVEMon.MarketUnifiedUploader.EveCacheParser;
 
 namespace EVEMon.MarketUnifiedUploader
@@ -21,8 +20,8 @@ namespace EVEMon.MarketUnifiedUploader
         private static readonly EndPointCollection s_endPoints = new EndPointCollection();
 
         private static UploaderStatus s_status;
-        private static bool s_run;
         private static string s_progressText;
+        private static bool s_run;
 
         #endregion
 
@@ -94,7 +93,7 @@ namespace EVEMon.MarketUnifiedUploader
 
             Status = UploaderStatus.Idle;
             s_run = true;
-            Dispatcher.BackgroundInvoke(Upload);
+            Upload();
         }
 
         /// <summary>
