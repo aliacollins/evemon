@@ -123,9 +123,10 @@ namespace EVEMon.Common
             }
 
             // So, it's a web address, let's do it in an async way
-            Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, null, APIProvider.RowsetsTransform,
+            Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri,
                                                                        result =>
-                                                                       callback(null, new UriCharacterEventArgs(uri, result)));
+                                                                       callback(null, new UriCharacterEventArgs(uri, result)),
+                                                                       null, APIProvider.RowsetsTransform);
         }
 
         /// <summary>

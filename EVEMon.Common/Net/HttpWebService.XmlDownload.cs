@@ -18,16 +18,17 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Downloads an Xml document from the specified url using the specified POST data.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="postData"></param>
-        /// <param name="gzipCompressed"></param>
+        /// <param name="url">The URL.</param>
+        /// <param name="postdata">The postdata.</param>
+        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
         /// <returns></returns>
-        public IXPathNavigable DownloadXml(Uri url, HttpPostData postData = null, bool gzipCompressed = false)
+        public IXPathNavigable DownloadXml(Uri url, string postdata = null, bool gzipCompressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, gzipCompressed);
             HttpWebServiceRequest request = GetRequest();
             try
             {
@@ -52,17 +53,19 @@ namespace EVEMon.Common.Net
         /// Asynchronously downloads an xml file from the specified url.
         /// </summary>
         /// <param name="url">The URL.</param>
-        /// <param name="postData">The post data.</param>
-        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
-        public void DownloadXmlAsync(Uri url, HttpPostData postData, bool gzipCompressed, DownloadXmlCompletedCallback callback, object userState)
+        /// <param name="postdata">The postdata.</param>
+        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
+        public void DownloadXmlAsync(Uri url, DownloadXmlCompletedCallback callback, object userState,
+                                     string postdata = null, bool gzipCompressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
             XmlRequestAsyncState state = new XmlRequestAsyncState(callback, DownloadXmlAsyncCompleted, userState);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, gzipCompressed);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
             request.GetResponseAsync(url, postData, gzipCompressed, responseStream, XMLAccept, state);

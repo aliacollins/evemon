@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EVEMon.MarketUnifiedUploader</RootNamespace>
+    <AssemblyName>EVEMon.MarketUnifiedUploader</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EndPoint.cs" />
+    <Compile Include="EndPointCollection.cs" />
+    <Compile Include="EveCacheParser\CachedFileParser.cs" />
+    <Compile Include="EveCacheParser\CachedFileReader.cs" />
+    <Compile Include="EveCacheParser\CachedFilesFinder.cs" />
+    <Compile Include="EveCacheParser\Enumerations.cs" />
+    <Compile Include="EveCacheParser\GlobalSuppressions.cs" />
+    <Compile Include="EveCacheParser\Parser.cs" />
+    <Compile Include="EveCacheParser\ParserException.cs" />
+    <Compile Include="EveCacheParser\StringsTable.cs" />
+    <Compile Include="EveCacheParser\STypes\SBooleanType.cs" />
+    <Compile Include="EveCacheParser\STypes\SByteType.cs" />
+    <Compile Include="EveCacheParser\STypes\SCachedObjectType.cs" />
+    <Compile Include="EveCacheParser\STypes\SDictType.cs" />
+    <Compile Include="EveCacheParser\STypes\SDoubleType.cs" />
+    <Compile Include="EveCacheParser\STypes\SIdentType.cs" />
+    <Compile Include="EveCacheParser\STypes\SIntType.cs" />
+    <Compile Include="EveCacheParser\STypes\SListType.cs" />
+    <Compile Include="EveCacheParser\STypes\SLongType.cs" />
+    <Compile Include="EveCacheParser\STypes\SNoneType.cs" />
+    <Compile Include="EveCacheParser\STypes\SObjectType.cs" />
+    <Compile Include="EveCacheParser\STypes\SReferenceType.cs" />
+    <Compile Include="EveCacheParser\STypes\SShortType.cs" />
+    <Compile Include="EveCacheParser\STypes\SStreamType.cs" />
+    <Compile Include="EveCacheParser\STypes\SStringType.cs" />
+    <Compile Include="EveCacheParser\STypes\STupleType.cs" />
+    <Compile Include="EveCacheParser\STypes\SType.cs" />
+    <Compile Include="EveCentralFormat.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="MarketeerFormat.cs" />
+    <Compile Include="MarketOrder.cs" />
+    <Compile Include="PriceHistoryEntry.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.template.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UnifiedFormat.cs" />
+    <Compile Include="Uploader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EveCacheParser\Resources\StringsTable.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EVEMon.Common\EVEMon.Common.csproj">
+      <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
+      <Name>EVEMon.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

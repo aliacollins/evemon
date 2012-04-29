@@ -11,7 +11,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
@@ -244,7 +243,7 @@ namespace EVEMon.Common
         /// <param name="filename">The filename.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <returns>The deserialized result</returns>
-        internal static APIResult<T> DeserializeAPIResult<T>(string filename, XslCompiledTransform transform)
+        internal static APIResult<T> DeserializeAPIResult<T>(string filename, XslCompiledTransform transform = null)
         {
             try
             {
@@ -264,14 +263,14 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The HTTP POST data to send, may be null.</param>
+        /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <param name="callback">The callback to call once the query has been completed.</param>
-        internal static void DownloadAPIResultAsync<T>(Uri url, HttpPostData postData, XslCompiledTransform transform,
-                                                       QueryCallback<T> callback)
+        internal static void DownloadAPIResultAsync<T>(Uri url, QueryCallback<T> callback, string postData = null,
+                                                       XslCompiledTransform transform = null)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData, false,
+                url,
                 (asyncResult, userState) =>
                     {
                         try
@@ -288,10 +287,10 @@ namespace EVEMon.Common
                         {
                             ExceptionHandler.LogException(e, false);
                             EveMonClient.Trace("Method: DownloadAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
-                                url.AbsoluteUri, postData, typeof(T).Name);
+                                               url.AbsoluteUri, postData, typeof(T).Name);
                         }
                     },
-                null);
+                null, postData);
         }
 
         /// <summary>
@@ -299,9 +298,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The HTTP POST data to send, may be null.</param>
+        /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static APIResult<T> DownloadAPIResult<T>(Uri url, HttpPostData postData, XslCompiledTransform transform)
+        internal static APIResult<T> DownloadAPIResult<T>(Uri url, string postData = null, XslCompiledTransform transform = null)
         {
             APIResult<T> result = new APIResult<T>(APIError.Http,
                                                    String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
@@ -309,7 +308,7 @@ namespace EVEMon.Common
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData, false,
+                url,
                 (asyncResult, userState) =>
                     {
                         try
@@ -332,7 +331,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null);
+                null, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -349,7 +348,7 @@ namespace EVEMon.Common
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <param name="doc">The XML document to deserialize from.</param>
         /// <returns>The result of the deserialization.</returns>
-        private static APIResult<T> DeserializeAPIResultCore<T>(IXPathNavigable doc, XslCompiledTransform transform)
+        private static APIResult<T> DeserializeAPIResultCore<T>(IXPathNavigable doc, XslCompiledTransform transform = null)
         {
             APIResult<T> result;
 
@@ -413,8 +412,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The HTTP POST data to send, may be null.</param>
-        internal static BCAPIResult<T> DownloadBCAPIResult<T>(Uri url, HttpPostData postData)
+        /// <param name="postData">The post data.</param>
+        /// <returns></returns>
+        internal static BCAPIResult<T> DownloadBCAPIResult<T>(Uri url, string postData = null)
         {
             string errorMessage = String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url);
             BCAPIError error = new BCAPIError { ErrorCode = "0", ErrorMessage = errorMessage };
@@ -423,7 +423,7 @@ namespace EVEMon.Common
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData, false,
+                url,
                 (asyncResult, userState) =>
                     {
                         try
@@ -456,7 +456,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null);
+                null, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -471,13 +471,13 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The HTTP POST data to send, may be null.</param>
+        /// <param name="postData">The post data.</param>
         /// <param name="callback">The callback to call once the query has been completed.</param>
         internal static void DownloadBCAPIResultAsync<T>(Uri url, Serialization.BattleClinic.QueryCallback<T> callback,
-                                                         HttpPostData postData = null)
+                                                         string postData = null)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData, false,
+                url,
                 (asyncResult, userState) =>
                     {
                         try
@@ -499,10 +499,10 @@ namespace EVEMon.Common
                         {
                             ExceptionHandler.LogException(e, false);
                             EveMonClient.Trace("Method: DownloadBCAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
-                                url.AbsoluteUri, postData, typeof(T).Name);
+                                               url.AbsoluteUri, postData, typeof(T).Name);
                         }
-},
-                null);
+                    },
+                null, postData);
         }
 
         /// <summary>
@@ -559,11 +559,11 @@ namespace EVEMon.Common
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
         /// <param name="callback">A callback invoked on the UI thread.</param>
         /// <returns></returns>
-        public static void DownloadXMLAsync<T>(Uri url, DownloadCallback<T> callback, HttpPostData postData = null)
+        public static void DownloadXMLAsync<T>(Uri url, DownloadCallback<T> callback, string postData = null)
             where T : class
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData, false,
+                url,
                 // Callback
                 (asyncResult, userState) =>
                     {
@@ -605,7 +605,7 @@ namespace EVEMon.Common
                         // We got the result, let's invoke the callback on this actor
                         Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
                     },
-                null);
+                null, postData);
         }
 
         /// <summary>
@@ -694,7 +694,7 @@ namespace EVEMon.Common
             string content = File.Exists(filename) ? File.ReadAllText(filename) : filename;
 
             Match match = Regex.Match(content, "revision=\"([0-9]+)\"",
-                RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+                                      RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
             // No match ? Then there was no "revision" attribute, this is an old format
             if (!match.Success || match.Groups.Count < 2)

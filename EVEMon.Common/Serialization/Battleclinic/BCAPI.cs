@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Windows.Forms;
-using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {
@@ -223,11 +222,11 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <returns><c>true</c> if credentials are authenticated; otherwise <c>false</c></returns>
         public static bool CheckAPICredentials()
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   "userID={0}&apiKey={1}&applicationKey={2}",
-                                                                   BCAPISettings.Default.BCUserID,
-                                                                   BCAPISettings.Default.BCAPIKey,
-                                                                   BCAPISettings.Default.BCApplicationKey));
+            string postData = String.Format(CultureConstants.InvariantCulture,
+                                            "userID={0}&apiKey={1}&applicationKey={2}",
+                                            BCAPISettings.Default.BCUserID,
+                                            BCAPISettings.Default.BCAPIKey,
+                                            BCAPISettings.Default.BCApplicationKey);
 
             BCAPIResult<SerializableBCAPICredentials> result =
                 QueryMethod<SerializableBCAPICredentials>(BCAPIMethods.CheckCredentials, postData);
@@ -241,12 +240,11 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <returns><c>true</c> if file saving succeded; otherwise <c>false</c></returns>
         public static BCAPIResult<SerializableBCAPIFiles> FileSave()
         {
-            HttpPostData postData =
-                new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                               "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
-                                               BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
-                                               BCAPISettings.Default.BCApplicationKey,
-                                               EveMonClient.SettingsFileName, SettingsFileContent));
+            string postData = String.Format(CultureConstants.InvariantCulture,
+                                            "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
+                                            BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
+                                            BCAPISettings.Default.BCApplicationKey,
+                                            EveMonClient.SettingsFileName, SettingsFileContent);
 
             return QueryMethod<SerializableBCAPIFiles>(BCAPIMethods.FileSave, postData);
         }
@@ -256,11 +254,11 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         public static BCAPIResult<SerializableBCAPIFiles> FileGetByName()
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
-                                                                   BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
-                                                                   BCAPISettings.Default.BCApplicationKey,
-                                                                   EveMonClient.SettingsFileName));
+            string postData = String.Format(CultureConstants.InvariantCulture,
+                                            "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
+                                            BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
+                                            BCAPISettings.Default.BCApplicationKey,
+                                            EveMonClient.SettingsFileName);
 
             return QueryMethod<SerializableBCAPIFiles>(BCAPIMethods.FileGetByName, postData);
         }
@@ -273,11 +271,11 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="callback">The callback.</param>
         public static void CheckAPICredentialsAsync(uint userID, string apiKey, QueryCallback<SerializableBCAPICredentials> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   "userID={0}&apiKey={1}&applicationKey={2}",
-                                                                   userID, apiKey, BCAPISettings.Default.BCApplicationKey));
+            string postData = String.Format(CultureConstants.InvariantCulture,
+                                            "userID={0}&apiKey={1}&applicationKey={2}",
+                                            userID, apiKey, BCAPISettings.Default.BCApplicationKey);
 
-            QueryMethodAsync(BCAPIMethods.CheckCredentials, postData, callback);
+            QueryMethodAsync(BCAPIMethods.CheckCredentials, callback, postData);
         }
 
         /// <summary>
@@ -286,14 +284,13 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="callback">The callback.</param>
         public static void FileSaveAsync(QueryCallback<SerializableBCAPIFiles> callback)
         {
-            HttpPostData postData =
-                new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                               "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
-                                               BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
-                                               BCAPISettings.Default.BCApplicationKey,
-                                               EveMonClient.SettingsFileName, SettingsFileContent));
+            string postData = String.Format(CultureConstants.InvariantCulture,
+                                            "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
+                                            BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
+                                            BCAPISettings.Default.BCApplicationKey,
+                                            EveMonClient.SettingsFileName, SettingsFileContent);
 
-            QueryMethodAsync(BCAPIMethods.FileSave, postData, callback);
+            QueryMethodAsync(BCAPIMethods.FileSave, callback, postData);
         }
 
         /// <summary>
@@ -302,13 +299,13 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="callback">The callback.</param>
         public static void FileGetByNameAsync(QueryCallback<SerializableBCAPIFiles> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
-                                                                   BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
-                                                                   BCAPISettings.Default.BCApplicationKey,
-                                                                   EveMonClient.SettingsFileName));
+            string postData = String.Format(CultureConstants.InvariantCulture,
+                                            "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
+                                            BCAPISettings.Default.BCUserID, BCAPISettings.Default.BCAPIKey,
+                                            BCAPISettings.Default.BCApplicationKey,
+                                            EveMonClient.SettingsFileName);
 
-            QueryMethodAsync(BCAPIMethods.FileGetByName, postData, callback);
+            QueryMethodAsync(BCAPIMethods.FileGetByName, callback, postData);
         }
 
         #endregion
@@ -321,7 +318,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <param name="method">The method.</param>
         /// <param name="postData">The post data.</param>
-        private static BCAPIResult<T> QueryMethod<T>(BCAPIMethods method, HttpPostData postData)
+        private static BCAPIResult<T> QueryMethod<T>(BCAPIMethods method, string postData = null)
         {
             Uri url = GetMethodUrl(method);
             return Util.DownloadBCAPIResult<T>(url, postData);
@@ -334,7 +331,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="method">The method.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="callback">The callback.</param>
-        private static void QueryMethodAsync<T>(BCAPIMethods method, HttpPostData postData, QueryCallback<T> callback)
+        private static void QueryMethodAsync<T>(BCAPIMethods method, QueryCallback<T> callback, string postData = null)
         {
             // Check callback not null
             if (callback == null)

@@ -17,18 +17,21 @@ namespace EVEMon.Common.Net
         /// Downloads an image from the specified url.
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="postdata">The post data.</param>
+        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
         /// <returns></returns>
-        public Image DownloadImage(Uri url)
+        public Image DownloadImage(Uri url, string postdata = null, bool gzipCompressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, gzipCompressed);
             HttpWebServiceRequest request = GetRequest();
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, null, false, responseStream, ImageAccept);
+                request.GetResponse(url, postData, gzipCompressed, responseStream, ImageAccept);
                 return GetImage(request);
             }
             finally
@@ -44,17 +47,21 @@ namespace EVEMon.Common.Net
         /// <param name="url"></param>
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
+        /// <param name="postdata">The postdata.</param>
+        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
         /// <returns></returns>
-        public void DownloadImageAsync(Uri url, DownloadImageCompletedCallback callback, object userState)
+        public void DownloadImageAsync(Uri url, DownloadImageCompletedCallback callback, object userState,
+                                       string postdata = null, bool gzipCompressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
             ImageRequestAsyncState state = new ImageRequestAsyncState(callback, DownloadImageAsyncCompleted, userState);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, gzipCompressed);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, null, false, responseStream, ImageAccept, state);
+            request.GetResponseAsync(url, postData, gzipCompressed, responseStream, ImageAccept, state);
         }
 
         /// <summary>
