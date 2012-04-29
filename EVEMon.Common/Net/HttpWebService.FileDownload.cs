@@ -7,7 +7,7 @@ namespace EVEMon.Common.Net
 
     partial class HttpWebService
     {
-        private const string FILE_ACCEPT = "*/*;q=0.5";
+        private const string FileAccept = "*/*;q=0.5";
 
         /// <summary>
         /// Downloads an file from the specified url to the specified path.
@@ -27,13 +27,13 @@ namespace EVEMon.Common.Net
                 FileStream responseStream;
                 try
                 {
-                    responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write);
                 }
                 catch (Exception ex)
                 {
                     throw HttpWebServiceException.FileError(url, ex);
                 }
-                request.GetResponse(url, responseStream, FILE_ACCEPT);
+                request.GetResponse(url, null, false, responseStream, FileAccept);
                 return new FileInfo(filePath);
             }
             finally
@@ -61,8 +61,8 @@ namespace EVEMon.Common.Net
             FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback,
                                                                     DownloadFileAsyncCompleted);
             HttpWebServiceRequest request = GetRequest();
-            FileStream responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-            request.GetResponseAsync(url, responseStream, IMAGE_ACCEPT, null, state);
+            FileStream responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write);
+            request.GetResponseAsync(url, null, false, responseStream, FileAccept, state);
             return request;
         }
 

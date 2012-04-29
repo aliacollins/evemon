@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -14,6 +15,7 @@ using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace EVEMon.Common
 {
@@ -269,7 +271,7 @@ namespace EVEMon.Common
                                                        QueryCallback<T> callback)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url, postData, false,
                 (asyncResult, userState) =>
                     {
                         try
@@ -307,7 +309,7 @@ namespace EVEMon.Common
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url, postData, false,
                 (asyncResult, userState) =>
                     {
                         try
@@ -421,7 +423,7 @@ namespace EVEMon.Common
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url, postData, false,
                 (asyncResult, userState) =>
                     {
                         try
@@ -475,7 +477,7 @@ namespace EVEMon.Common
                                                          HttpPostData postData = null)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url, postData, false,
                 (asyncResult, userState) =>
                     {
                         try
@@ -561,7 +563,7 @@ namespace EVEMon.Common
             where T : class
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url, postData, false,
                 // Callback
                 (asyncResult, userState) =>
                     {
@@ -850,6 +852,23 @@ namespace EVEMon.Common
                                                FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
             return new FileStream(filePath, mode, access, share);
+        }
+
+        /// <summary>
+        /// Compresses the provided input data using zlib.
+        /// </summary>
+        /// <param name="inputData">The input data.</param>
+        /// <returns></returns>
+        public static IEnumerable<byte> ZlibCompress(byte[] inputData)
+        {
+            using (MemoryStream outStream = GetMemoryStream())
+            {
+                DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(outStream);
+                deflaterOutputStream.Write(inputData, 0, inputData.Length);
+                deflaterOutputStream.Finish();
+
+                return outStream.ToArray();
+            }
         }
 
         /// <summary>

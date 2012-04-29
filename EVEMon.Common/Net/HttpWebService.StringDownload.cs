@@ -10,7 +10,7 @@ namespace EVEMon.Common.Net
     /// </summary>
     public partial class HttpWebService
     {
-        private const string STRING_ACCEPT =
+        private const string StringAccept =
             "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,*/*;q=0.5";
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace EVEMon.Common.Net
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, responseStream, STRING_ACCEPT);
+                request.GetResponse(url, null, false, responseStream, StringAccept);
                 string result = String.Empty;
                 if (request.ResponseStream != null)
                 {
@@ -63,7 +63,7 @@ namespace EVEMon.Common.Net
             StringRequestAsyncState state = new StringRequestAsyncState(callback, DownloadStringAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, responseStream, STRING_ACCEPT, null, state);
+            request.GetResponseAsync(url, null, false, responseStream, StringAccept, state);
         }
 
         /// <summary>

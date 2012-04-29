@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace EVEMon.Common.Net
@@ -10,21 +10,25 @@ namespace EVEMon.Common.Net
     public sealed class HttpPostData
     {
         private readonly string m_data;
-        private readonly List<byte> m_content;
+        private readonly IEnumerable<byte> m_content;
 
-        public HttpPostData(string data)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpPostData"/> class.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="compress">if set to <c>true</c> [compress].</param>
+        public HttpPostData(string data, bool compress = false)
         {
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            m_content = new List<byte>(encoding.GetBytes(data));
             m_data = data;
+            m_content = compress ? Util.ZlibCompress(Encoding.ASCII.GetBytes(data)) : Encoding.ASCII.GetBytes(data);
         }
 
         /// <summary>
         /// Gets the content's bytes.
         /// </summary>
-        public ReadOnlyCollection<byte> Content
+        public IEnumerable<byte> Content
         {
-            get { return m_content.AsReadOnly(); }
+            get { return m_content; }
         }
 
         /// <summary>
@@ -32,7 +36,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         public int Length
         {
-            get { return Content.Count; }
+            get { return Content.Count(); }
         }
 
         /// <summary>

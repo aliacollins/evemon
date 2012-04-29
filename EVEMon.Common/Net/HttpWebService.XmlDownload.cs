@@ -12,7 +12,7 @@ namespace EVEMon.Common.Net
     /// </summary>
     partial class HttpWebService
     {
-        private const string XML_ACCEPT =
+        private const string XMLAccept =
             "text/xml,application/xml,application/xhtml+xml;q=0.8,*/*;q=0.5";
 
         /// <summary>
@@ -20,8 +20,9 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url"></param>
         /// <param name="postData"></param>
+        /// <param name="gzipCompressed"></param>
         /// <returns></returns>
-        public IXPathNavigable DownloadXml(Uri url, HttpPostData postData = null)
+        public IXPathNavigable DownloadXml(Uri url, HttpPostData postData = null, bool gzipCompressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -31,7 +32,7 @@ namespace EVEMon.Common.Net
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, responseStream, XML_ACCEPT, postData);
+                request.GetResponse(url, postData, gzipCompressed, responseStream, XMLAccept);
                 XmlDocument result = new XmlDocument();
                 if (request.ResponseStream != null)
                 {
@@ -52,10 +53,10 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="postData">The post data.</param>
+        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
-        /// <returns></returns>
-        public void DownloadXmlAsync(Uri url, HttpPostData postData, DownloadXmlCompletedCallback callback, object userState)
+        public void DownloadXmlAsync(Uri url, HttpPostData postData, bool gzipCompressed, DownloadXmlCompletedCallback callback, object userState)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -64,7 +65,7 @@ namespace EVEMon.Common.Net
             XmlRequestAsyncState state = new XmlRequestAsyncState(callback, DownloadXmlAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, responseStream, XML_ACCEPT, postData, state);
+            request.GetResponseAsync(url, postData, gzipCompressed, responseStream, XMLAccept, state);
         }
 
         /// <summary>

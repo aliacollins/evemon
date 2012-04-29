@@ -11,10 +11,10 @@ namespace EVEMon.Common.Net
     /// </summary>
     partial class HttpWebService
     {
-        private const string IMAGE_ACCEPT = "image/png,*/*;q=0.5";
+        private const string ImageAccept = "image/png,*/*;q=0.5";
 
         /// <summary>
-        /// Downloads an image from the specified url
+        /// Downloads an image from the specified url.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -28,7 +28,7 @@ namespace EVEMon.Common.Net
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, responseStream, IMAGE_ACCEPT);
+                request.GetResponse(url, null, false, responseStream, ImageAccept);
                 return GetImage(request);
             }
             finally
@@ -39,7 +39,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Asynchronously downloads an image from the specified url
+        /// Asynchronously downloads an image from the specified url.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
@@ -54,11 +54,11 @@ namespace EVEMon.Common.Net
             ImageRequestAsyncState state = new ImageRequestAsyncState(callback, DownloadImageAsyncCompleted, userState);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, responseStream, IMAGE_ACCEPT, null, state);
+            request.GetResponseAsync(url, null, false, responseStream, ImageAccept, state);
         }
 
         /// <summary>
-        /// Callback method for asynchronous requests
+        /// Callback method for asynchronous requests.
         /// </summary>
         private static void DownloadImageAsyncCompleted(WebRequestAsyncState state)
         {
@@ -101,7 +101,7 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Helper class to retain the original callback and return data for asynchronous requests
+        /// Helper class to retain the original callback and return data for asynchronous requests.
         /// </summary>
         private class ImageRequestAsyncState : WebRequestAsyncState
         {
