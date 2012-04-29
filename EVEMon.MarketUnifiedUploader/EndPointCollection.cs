@@ -4,23 +4,28 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Web.Script.Serialization;
 using EVEMon.Common;
 using EVEMon.Common.Net;
 
 namespace EVEMon.MarketUnifiedUploader
 {
-    public sealed class EndPointCollection : ReadOnlyCollection<EndPoint>
+    internal sealed class EndPointCollection : ReadOnlyCollection<EndPoint>
     {
         private const string EndPointFilename = "endpoints.json";
         private readonly string m_settingsFilePath = Path.Combine(Directory.GetCurrentDirectory(), EndPointFilename);
         private bool m_init;
 
-        public EndPointCollection()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EndPointCollection"/> class.
+        /// </summary>
+        internal EndPointCollection()
             : base(new List<EndPoint>())
         {
         }
 
+        /// <summary>
+        /// Initializes the endpoints.
+        /// </summary>
         internal void InitializeEndPoints()
         {
             // Online EndPoints
@@ -49,6 +54,11 @@ namespace EVEMon.MarketUnifiedUploader
             Uploader.OnEndPointsUpdated();
         }
 
+        /// <summary>
+        /// Gets the endpoints.
+        /// </summary>
+        /// <param name="jsonObj">The json obj.</param>
+        /// <returns></returns>
         private static IEnumerable<EndPoint> GetEndPoints(IDictionary<string, object> jsonObj)
         {
             List<EndPoint> endPoints = new List<EndPoint>();
@@ -82,6 +92,10 @@ namespace EVEMon.MarketUnifiedUploader
             return endPoints;
         }
 
+        /// <summary>
+        /// Gets the settings endpoints.
+        /// </summary>
+        /// <returns></returns>
         private Dictionary<string, object> GetSettingsEndPoints()
         {
             if (!File.Exists(m_settingsFilePath))
@@ -90,7 +104,7 @@ namespace EVEMon.MarketUnifiedUploader
             try
             {
                 string fileContent = File.ReadAllText(m_settingsFilePath);
-                return DeserializeJSONToObject(fileContent);
+                return Util.DeserializeJSONToObject(fileContent);
             }
             catch (IOException)
             {
@@ -102,6 +116,10 @@ namespace EVEMon.MarketUnifiedUploader
             }
         }
 
+        /// <summary>
+        /// Gets the online endpoints.
+        /// </summary>
+        /// <returns></returns>
         private static Dictionary<string, object> GetOnlineEndPoints()
         {
             string url = NetworkConstants.UploaderEndPoints + EndPointFilename;
@@ -124,28 +142,13 @@ namespace EVEMon.MarketUnifiedUploader
             //           "{'name':'EVE Addicts','url':'http://upload.addicts.nl/upload/','key':'fd6e2d2d824da46bc229013e3a5c804a','gzipSupport':'true','enabled':'false'}" +
             //           "]}";
 
-            return DeserializeJSONToObject(responce);
+            return Util.DeserializeJSONToObject(responce);
         }
 
-        private static Dictionary<string, object> DeserializeJSONToObject(string jsonString)
-        {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Deserialize<Dictionary<string, object>>(jsonString);
-        }
-
-        private string SerializeObjectToJSON()
-        {
-            ArrayList endPoints = new ArrayList();
-            endPoints.AddRange(Items.Select(item => new Dictionary<string, object>
-                                                        {
-                                                            { "name", item.Name },
-                                                            { "enabled", item.Enabled.ToString() }
-                                                        }).ToArray());
-
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Serialize(new Dictionary<string, object> { { "endpoints", endPoints } });
-        }
-
+        /// <summary>
+        /// Imports the specified endpoints.
+        /// </summary>
+        /// <param name="endpoints">The endpoints.</param>
         private void Import(IEnumerable<EndPoint> endpoints)
         {
             Items.Clear();
@@ -160,13 +163,24 @@ namespace EVEMon.MarketUnifiedUploader
             SaveEndPoints();
         }
 
+        /// <summary>
+        /// Saves the endpoints.
+        /// </summary>
         internal void SaveEndPoints()
         {
             // Do not save before endpoints initilization
             if (!m_init)
                 return;
 
-            string json = SerializeObjectToJSON();
+            ArrayList endPoints = new ArrayList();
+            endPoints.AddRange(Items.Select(item => new Dictionary<string, object>
+                                                        {
+                                                            { "name", item.Name },
+                                                            { "enabled", item.Enabled.ToString() }
+                                                        }).ToArray());
+
+            Dictionary<string, object> jsonObj = new Dictionary<string, object> { { "endpoints", endPoints } };
+            string json = Util.SerializeObjectToJSON(jsonObj);
 
             try
             {
@@ -183,5 +197,5 @@ namespace EVEMon.MarketUnifiedUploader
                 Console.WriteLine(message);
             }
         }
-   }
+    }
 }

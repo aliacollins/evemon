@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
@@ -869,6 +870,28 @@ namespace EVEMon.Common
 
                 return outStream.ToArray();
             }
+        }
+
+        /// <summary>
+        /// Deserializes the JSON to an object.
+        /// </summary>
+        /// <param name="jsonString">The json string.</param>
+        /// <returns></returns>
+        public static Dictionary<string, object> DeserializeJSONToObject(string jsonString)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            return serializer.Deserialize<Dictionary<string, object>>(jsonString);
+        }
+
+        /// <summary>
+        /// Serializes the object to JSON.
+        /// </summary>
+        /// <param name="jsonObj">The json object.</param>
+        /// <returns></returns>
+        public static string SerializeObjectToJSON(Dictionary<string, object> jsonObj)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            return serializer.Serialize(jsonObj);
         }
 
         /// <summary>
