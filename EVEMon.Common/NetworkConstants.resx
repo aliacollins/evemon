@@ -493,6 +493,6 @@
     <value>corporationID={0}</value>
   </data>
   <data name="UploaderEndPoints" xml:space="preserve">
-    <value>https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/beta/endpoints.json</value>
+    <value>https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/endpoints.json</value>
   </data>
 </root>

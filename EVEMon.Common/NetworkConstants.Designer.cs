@@ -1168,7 +1168,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/beta/endpoints.json.
+        ///   Looks up a localized string similar to https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/endpoints.json.
         /// </summary>
         public static string UploaderEndPoints {
             get {
