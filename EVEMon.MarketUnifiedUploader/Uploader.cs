@@ -321,7 +321,7 @@ namespace EVEMon.MarketUnifiedUploader
                 try
                 {
                     Console.WriteLine("Deleting cache file.");
-                    //cachedfile.Delete();
+                    cachedfile.Delete();
                 }
                 catch (IOException ex)
                 {

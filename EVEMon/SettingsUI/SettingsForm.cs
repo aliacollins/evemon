@@ -431,6 +431,7 @@ namespace EVEMon.SettingsUI
 
             // Market Unified Uploader
             m_settings.MarketUnifiedUploader.Enabled =  marketUnifiedUploaderCheckBox.Checked;
+            marketUnifiedUploaderControl.UpdateEndPointSettings();
 
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
@@ -1102,11 +1103,6 @@ namespace EVEMon.SettingsUI
         }
 
         #endregion
-
-        private void marketUnifiedUploaderControl_Load(object sender, EventArgs e)
-        {
-
-        }
 
     }
 }

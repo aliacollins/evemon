@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Threading;
 using EVEMon.MarketUnifiedUploader;
 
@@ -11,6 +12,8 @@ namespace EVEMon.SettingsUI
     /// </summary>
     public partial class MarketUnifiedUploaderControl : UserControl
     {
+        #region Constructor
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -18,6 +21,11 @@ namespace EVEMon.SettingsUI
         {
             InitializeComponent();
         }
+
+        #endregion
+
+
+        #region Inherited Events
 
         /// <summary>
         /// On load, subscribe events.
@@ -30,8 +38,8 @@ namespace EVEMon.SettingsUI
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            EndPointsCheckedListView.Focus();
-            EndPointsCheckedListView.SendToBack();
+            EndPointsCheckedListBox.Focus();
+            EndPointsCheckedListBox.SendToBack();
 
             Uploader.EndPointsUpdated += Uploader_EndPointsUpdated;
             Uploader.ProgressTextChanged += Uploader_ProgressTextChanged;
@@ -51,6 +59,12 @@ namespace EVEMon.SettingsUI
             Uploader.ProgressTextChanged -= Uploader_ProgressTextChanged;
             Disposed -= OnDisposed;
         }
+
+
+        #endregion
+
+
+        #region Event Handlers
 
         /// <summary>
         /// Handles the EndPointsUpdated event of the Uploader control.
@@ -72,47 +86,37 @@ namespace EVEMon.SettingsUI
             Dispatcher.Invoke(UpdateProgressText);
         }
 
-        /// <summary>
-        /// Handles the ItemSelectionChanged event of the EndpointsCheckedListView control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.ListViewItemSelectionChangedEventArgs"/> instance containing the event data.</param>
-        private void EndpointsCheckedListView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            if (!e.IsSelected)
-                return;
 
-            e.Item.Checked = !e.Item.Checked;
-            Uploader.EndPoints.First(x => x.Name == e.Item.Text).Enabled = e.Item.Checked;
+        #endregion
 
-            // Update the settings
-            EndPointCollection.UpdateEndPointSettings();
-        }
+
+        #region Helper Methods
 
         /// <summary>
         /// Updates the endpoints list.
         /// </summary>
         private void UpdateEndPointsList()
         {
-            EndPointsCheckedListView.Items.Clear();
+            // Display the informative label if uploader isn't enabled
+            if (!Settings.MarketUnifiedUploader.Enabled)
+                return;
+
+            EndPointsCheckedListBox.Items.Clear();
 
             if (!Uploader.EndPoints.Any())
             {
                 NoEndPointsLabel.Text = "No endpoints are available.";
-                EndPointsCheckedListView.Visible = false;
+                EndPointsCheckedListBox.Visible = false;
                 return;
             }
 
             foreach (EndPoint endPoint in Uploader.EndPoints)
             {
-                EndPointsCheckedListView.Items.Add(new ListViewItem(endPoint.Name)
-                                                       {
-                                                           Checked = endPoint.Enabled,
-                                                       });
+                EndPointsCheckedListBox.Items.Add(endPoint.Name, endPoint.Enabled);
             }
 
-            EndPointsCheckedListView.Visible = Uploader.EndPoints.Any();
-            EndPointsCheckedListView.BringToFront();
+            EndPointsCheckedListBox.Visible = Uploader.EndPoints.Any();
+            EndPointsCheckedListBox.BringToFront();
         }
 
         /// <summary>
@@ -127,5 +131,34 @@ namespace EVEMon.SettingsUI
             ProgressTextBox.SelectionStart = ProgressTextBox.Text.Length;
             ProgressTextBox.ScrollToCaret();
         }
+
+
+        #endregion
+
+
+        #region Exportation
+
+        /// <summary>
+        /// Updates the settings for the endpoints.
+        /// </summary>
+        internal void UpdateEndPointSettings()
+        {
+            // Quit if the list is empty (we are initalizing)
+            if (EndPointsCheckedListBox.Items.Count == 0)
+            {
+                NoEndPointsLabel.Text = "Looking for available online endpoints.";
+                return;
+            }
+
+            foreach (string item in EndPointsCheckedListBox.Items.Cast<string>())
+            {
+                int index = EndPointsCheckedListBox.Items.IndexOf(item);
+                bool isChecked = EndPointsCheckedListBox.GetItemChecked(index);
+                Uploader.EndPoints.First(endpoint => endpoint.Name == item).Enabled = isChecked;
+            }
+            EndPointCollection.UpdateEndPointSettings();
+        }
+
+        #endregion
     }
 }

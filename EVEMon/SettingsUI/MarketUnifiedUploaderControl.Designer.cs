@@ -30,7 +30,7 @@
         {
             this.EndpointsGroupBox = new System.Windows.Forms.GroupBox();
             this.EndpointsPanel = new System.Windows.Forms.Panel();
-            this.EndPointsCheckedListView = new System.Windows.Forms.ListView();
+            this.EndPointsCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.NoEndPointsLabel = new System.Windows.Forms.Label();
             this.ProgressGroupBox = new System.Windows.Forms.GroupBox();
             this.ProgressTextBox = new System.Windows.Forms.TextBox();
@@ -52,7 +52,7 @@
             // 
             // EndpointsPanel
             // 
-            this.EndpointsPanel.Controls.Add(this.EndPointsCheckedListView);
+            this.EndpointsPanel.Controls.Add(this.EndPointsCheckedListBox);
             this.EndpointsPanel.Controls.Add(this.NoEndPointsLabel);
             this.EndpointsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EndpointsPanel.Location = new System.Drawing.Point(3, 16);
@@ -60,17 +60,14 @@
             this.EndpointsPanel.Size = new System.Drawing.Size(414, 94);
             this.EndpointsPanel.TabIndex = 3;
             // 
-            // EndPointsCheckedListView
+            // EndPointsCheckedListBox
             // 
-            this.EndPointsCheckedListView.CheckBoxes = true;
-            this.EndPointsCheckedListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EndPointsCheckedListView.Location = new System.Drawing.Point(0, 0);
-            this.EndPointsCheckedListView.Name = "EndPointsCheckedListView";
-            this.EndPointsCheckedListView.Size = new System.Drawing.Size(414, 94);
-            this.EndPointsCheckedListView.TabIndex = 1;
-            this.EndPointsCheckedListView.UseCompatibleStateImageBehavior = false;
-            this.EndPointsCheckedListView.View = System.Windows.Forms.View.List;
-            this.EndPointsCheckedListView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.EndpointsCheckedListView_ItemSelectionChanged);
+            this.EndPointsCheckedListBox.CheckOnClick = true;
+            this.EndPointsCheckedListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EndPointsCheckedListBox.Location = new System.Drawing.Point(0, 0);
+            this.EndPointsCheckedListBox.Name = "EndPointsCheckedListBox";
+            this.EndPointsCheckedListBox.Size = new System.Drawing.Size(414, 94);
+            this.EndPointsCheckedListBox.TabIndex = 1;
             // 
             // NoEndPointsLabel
             // 
@@ -79,7 +76,7 @@
             this.NoEndPointsLabel.Name = "NoEndPointsLabel";
             this.NoEndPointsLabel.Size = new System.Drawing.Size(414, 94);
             this.NoEndPointsLabel.TabIndex = 0;
-            this.NoEndPointsLabel.Text = "Looking for available endpoints online.";
+            this.NoEndPointsLabel.Text = "Enable the uploader and click \"Apply\" to fetch online endpoints.";
             this.NoEndPointsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ProgressGroupBox
@@ -127,6 +124,6 @@
         private System.Windows.Forms.Panel EndpointsPanel;
         private System.Windows.Forms.Label NoEndPointsLabel;
         private System.Windows.Forms.TextBox ProgressTextBox;
-        private System.Windows.Forms.ListView EndPointsCheckedListView;
+        private System.Windows.Forms.CheckedListBox EndPointsCheckedListBox;
     }
 }
