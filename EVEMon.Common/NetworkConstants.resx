@@ -492,4 +492,7 @@
   <data name="PostDataCorporationIDOnly" xml:space="preserve">
     <value>corporationID={0}</value>
   </data>
+  <data name="UploaderEndPoints" xml:space="preserve">
+    <value>https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/</value>
+  </data>
 </root>

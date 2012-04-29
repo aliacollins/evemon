@@ -1166,5 +1166,14 @@ namespace EVEMon.Common {
                 return ResourceManager.GetString("PostDataWithItemID", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/.
+        /// </summary>
+        public static string UploaderEndPoints {
+            get {
+                return ResourceManager.GetString("UploaderEndPoints", resourceCulture);
+            }
+        }
     }
 }

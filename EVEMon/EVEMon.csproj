@@ -1062,6 +1062,10 @@
       <Name>EVEMon.LogitechG15</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\EVEMon.MarketUnifiedUploader\EVEMon.MarketUnifiedUploader.csproj">
+      <Project>{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}</Project>
+      <Name>EVEMon.MarketUnifiedUploader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EVEMon.Watchdog\EVEMon.Watchdog.csproj">
       <Project>{8C4A87A0-780E-4765-ADD0-146091FE26F4}</Project>
       <Name>EVEMon.Watchdog</Name>

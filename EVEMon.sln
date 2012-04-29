@@ -5,6 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon", "EVEMon\EVEMon.csp
 	ProjectSection(ProjectDependencies) = postProject
 		{696E929A-6A4A-4C6D-A8B2-C4F25F781940} = {696E929A-6A4A-4C6D-A8B2-C4F25F781940}
 		{8C4A87A0-780E-4765-ADD0-146091FE26F4} = {8C4A87A0-780E-4765-ADD0-146091FE26F4}
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66} = {4E359DE3-6C0D-4F87-A48A-82F059D7CF66}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Common", "EVEMon.Common\EVEMon.Common.csproj", "{C0665275-3E0B-4117-81B0-751206ED03CD}"
@@ -29,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Watchdog", "EVEMon.Watchdog\EVEMon.Watchdog.csproj", "{8C4A87A0-780E-4765-ADD0-146091FE26F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatchXmlCreator", "Tools\PatchXMLCreator\PatchXmlCreator.csproj", "{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.MarketUnifiedUploader", "EVEMon.MarketUnifiedUploader\EVEMon.MarketUnifiedUploader.csproj", "{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -227,13 +230,31 @@ Global
 		{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}.Snapshot|Mixed Platforms.ActiveCfg = Snapshot|x86
 		{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}.Snapshot|Win32.ActiveCfg = Snapshot|x86
 		{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}.Snapshot|x86.ActiveCfg = Snapshot|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Debug|Win32.ActiveCfg = Debug|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Debug|x86.ActiveCfg = Debug|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Debug|x86.Build.0 = Debug|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Release|Any CPU.ActiveCfg = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Release|Mixed Platforms.Build.0 = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Release|Win32.ActiveCfg = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Release|x86.ActiveCfg = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Release|x86.Build.0 = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|Any CPU.ActiveCfg = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|Mixed Platforms.ActiveCfg = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|Mixed Platforms.Build.0 = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|Win32.ActiveCfg = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|x86.ActiveCfg = Release|x86
+		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		CodeStyleEnforcer_Active = 0
 		CodeStyleEnforcer_RulesLocation = 
+		CodeStyleEnforcer_Active = 0
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True

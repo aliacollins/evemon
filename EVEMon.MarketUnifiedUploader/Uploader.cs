@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Script.Serialization;
+using EVEMon.Common;
 using EVEMon.Common.Net;
 using EVEMon.MarketUnifiedUploader.EveCacheParser;
 
@@ -24,7 +25,6 @@ namespace EVEMon.MarketUnifiedUploader
         public static event EventHandler EndPointsUpdated;
 
         private static readonly EndPointCollection s_endPoints = new EndPointCollection();
-        private static readonly HttpWebService s_webService = new HttpWebService();
 
         private static UploaderStatus s_status;
         private static bool s_run;
@@ -53,11 +53,6 @@ namespace EVEMon.MarketUnifiedUploader
         public static IEnumerable<EndPoint> EndPoints
         {
             get { return s_endPoints; }
-        }
-
-        internal static HttpWebService WebService
-        {
-            get { return s_webService; }
         }
 
         public static void SaveEndPoints()
@@ -157,7 +152,7 @@ namespace EVEMon.MarketUnifiedUploader
                     {
                         string message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                         Console.WriteLine(message);
-                        //ExceptionHandler.LogException(ex, false);
+                        ExceptionHandler.LogException(ex, false);
                         continue;
                     }
 
@@ -203,7 +198,7 @@ namespace EVEMon.MarketUnifiedUploader
                                                          DateTime.Now.ToUniversalDateTimeString(), Environment.NewLine);
                             Console.Write(s_progressText);
 
-                            responce = s_webService.DownloadString(endPoint.URL, postdata, endPoint.GzipSupport);
+                            responce = EveMonClient.HttpWebService.DownloadString(endPoint.URL, postdata, endPoint.GzipSupport);
                         }
                         catch (HttpWebServiceException ex)
                         {
@@ -244,12 +239,12 @@ namespace EVEMon.MarketUnifiedUploader
                             catch (IOException ex)
                             {
                                 Console.WriteLine(ex.Message);
-                                //ExceptionHandler.LogException(ex, false);
+                                ExceptionHandler.LogException(ex, false);
                             }
                             catch (UnauthorizedAccessException ex)
                             {
                                 Console.WriteLine(ex.Message);
-                                //ExceptionHandler.LogException(ex, false);
+                                ExceptionHandler.LogException(ex, false);
                             }
                         }
                     }

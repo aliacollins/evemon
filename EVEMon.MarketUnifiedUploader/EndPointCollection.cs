@@ -5,7 +5,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Web.Script.Serialization;
-using EVEMon.MarketUnifiedUploader.Net;
+using EVEMon.Common;
+using EVEMon.Common.Net;
 
 namespace EVEMon.MarketUnifiedUploader
 {
@@ -103,16 +104,16 @@ namespace EVEMon.MarketUnifiedUploader
 
         private static Dictionary<string, object> GetOnlineEndPoints()
         {
-            string url = NetworkConstants.EndPoints + EndPointFilename;
+            string url = NetworkConstants.UploaderEndPoints + EndPointFilename;
             string responce;
             try
             {
-                responce = Uploader.WebService.DownloadString(new Uri(url));
+                responce = EveMonClient.HttpWebService.DownloadString(new Uri(url));
             }
             catch (HttpWebServiceException ex)
             {
-                responce = ex.Message;
-                Console.WriteLine(responce);
+                Console.WriteLine(ex.Message);
+                ExceptionHandler.LogException(ex, true);
                 return new Dictionary<string, object>();
             }
 
