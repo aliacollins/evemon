@@ -11,6 +11,17 @@ namespace EVEMon.Common
     public static class StringExtensions
     {
         /// <summary>
+        /// Removes the project local path from the text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        public static string RemoveProjectLocalPath(this string text)
+        {
+            return Regex.Replace(text, @"[a-zA-Z]+:.*\\(?=EVEMon)",
+                String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        }
+
+        /// <summary>
         ///Converts a string that has been HTML-encoded for HTTP transmission into a decoded string.        
         /// </summary>
         /// <param name="text">The string to decode.</param>

@@ -3,7 +3,6 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -181,9 +180,8 @@ namespace EVEMon.ExceptionHandling
                     stackTraceBuilder.Append(ex.ToString()).AppendLine();
                 }
 
-                // Replace local path to project
-                return Regex.Replace(stackTraceBuilder.ToString(), @"[a-zA-Z]+:.*\\(?=EVEMon)",
-                    String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                // Remove project local path from message
+                return stackTraceBuilder.ToString().RemoveProjectLocalPath();
             }
         }
 
