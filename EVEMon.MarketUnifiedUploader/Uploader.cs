@@ -174,6 +174,10 @@ namespace EVEMon.MarketUnifiedUploader
                         // Parse the cached file
                         KeyValuePair<object, object> result = ParseCacheFile(cachedfile);
 
+                        // Skip if for some reason the result is null
+                        if (result.Key == null || result.Value == null)
+                            continue;
+
                         // Create the JSON object
                         Dictionary<string, object> jsonObj = UnifiedFormat.GetJSONObject(result);
 
@@ -194,12 +198,12 @@ namespace EVEMon.MarketUnifiedUploader
             }
             catch (Exception ex)
             {
-                // Log the exception
-                ExceptionHandler.LogException(ex, true);
-
                 // Disable the uploader
                 Dispatcher.Invoke(() =>
                                       {
+                                          // Log the exception
+                                          ExceptionHandler.LogException(ex, true);
+
                                           ProgressText = String.Format(CultureConstants.DefaultCulture,
                                                                        "{1}: {0}{2}",
                                                                        ex.InnerException == null
@@ -268,8 +272,8 @@ namespace EVEMon.MarketUnifiedUploader
             {
                 string message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
                 Console.WriteLine(message);
-                ExceptionHandler.LogException(ex, true);
-                return new KeyValuePair<object, object>();
+                Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, true));
+                return new KeyValuePair<object, object>(null, null);
             }
             return result;
         }
@@ -324,7 +328,7 @@ namespace EVEMon.MarketUnifiedUploader
             catch (HttpWebServiceException ex)
             {
                 response = ex.Message;
-                ExceptionHandler.LogException(ex, true);
+                Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, true));
             }
             return response;
         }
@@ -399,12 +403,12 @@ namespace EVEMon.MarketUnifiedUploader
                 catch (IOException ex)
                 {
                     Console.WriteLine(ex.Message);
-                    ExceptionHandler.LogException(ex, false);
+                    Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, false));
                 }
                 catch (UnauthorizedAccessException ex)
                 {
                     Console.WriteLine(ex.Message);
-                    ExceptionHandler.LogException(ex, false);
+                    Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, false));
                 }
             }
         }
