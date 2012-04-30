@@ -235,9 +235,6 @@ namespace EVEMon
         /// <param name="e"></param>
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // Stops the market unified uploader
-            Uploader.Stop();
-
             // Hide the system tray icons
             niAlertIcon.Visible = false;
             trayIcon.Visible = false;
@@ -1966,7 +1963,7 @@ namespace EVEMon
 
         private void Uploader_StatusChanged(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(UpdateUploaderStatus);
+            UpdateUploaderStatus();
         }
 
         /// <summary>
@@ -2012,9 +2009,9 @@ namespace EVEMon
 
             // Enable/Disable Uploader
             if (Settings.MarketUnifiedUploader.Enabled)
-                 Dispatcher.BackgroundInvoke(Uploader.Start);
+                 Uploader.Start();
             else
-                 Dispatcher.Invoke(Uploader.Stop);
+                 Uploader.Stop();
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {

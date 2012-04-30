@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
-using EVEMon.Common.Threading;
 using EVEMon.MarketUnifiedUploader;
 
 namespace EVEMon.SettingsUI
@@ -73,7 +72,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void Uploader_EndPointsUpdated(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(UpdateEndPointsList);
+            UpdateEndPointsList();
         }
 
         /// <summary>
@@ -83,7 +82,12 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void Uploader_ProgressTextChanged(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(UpdateProgressText);
+            if (ProgressTextBox.Lines.Length > 1000)
+                ProgressTextBox.ResetText();
+
+            ProgressTextBox.AppendText(Uploader.ProgressText);
+            ProgressTextBox.SelectionStart = ProgressTextBox.Text.Length;
+            ProgressTextBox.ScrollToCaret();
         }
 
 
@@ -117,19 +121,6 @@ namespace EVEMon.SettingsUI
 
             EndPointsCheckedListBox.Visible = Uploader.EndPoints.Any();
             EndPointsCheckedListBox.BringToFront();
-        }
-
-        /// <summary>
-        /// Updates the progress text.
-        /// </summary>
-        private void UpdateProgressText()
-        {
-            if (ProgressTextBox.Lines.Length > 1000)
-                ProgressTextBox.ResetText();
-
-            ProgressTextBox.AppendText(Uploader.ProgressText);
-            ProgressTextBox.SelectionStart = ProgressTextBox.Text.Length;
-            ProgressTextBox.ScrollToCaret();
         }
 
 

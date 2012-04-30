@@ -8,7 +8,6 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Threading;
 using EVEMon.Controls;
 using EVEMon.MarketUnifiedUploader;
 
@@ -370,7 +369,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateEveTimeLabel()
         {
-            if (!Visible)
+            if (!Visible || m_eveTimeLabel == null)
                 return;
 
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
@@ -397,7 +396,7 @@ namespace EVEMon.SettingsUI
             if (!Visible || m_uploaderStatusLabel == null)
                 return;
 
-            m_uploaderStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "Uploader Status: {0}" ,Uploader.Status);
+            m_uploaderStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "Uploader Status: {0}", Uploader.Status);
         }
 
         #endregion
@@ -442,7 +441,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void Uploader_StatusChanged(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(UpdateUploaderStatusLabel);
+            UpdateUploaderStatusLabel();
         }
 
         #endregion

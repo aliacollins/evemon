@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Net;
+using EVEMon.Common.Threading;
 using EVEMon.MarketUnifiedUploader.EveCacheParser;
 
 namespace EVEMon.MarketUnifiedUploader
@@ -76,24 +77,7 @@ namespace EVEMon.MarketUnifiedUploader
             if (s_run)
                 return;
 
-            Status = UploaderStatus.Initializing;
-
-            if (!NetworkMonitor.IsNetworkAvailable)
-            {
-                Stop();
-                return;
-            }
-
-            s_endPoints.InitializeEndPoints();
-            if (!s_endPoints.Any())
-            {
-                Stop();
-                return;
-            }
-
-            Status = UploaderStatus.Idle;
-            s_run = true;
-            Upload();
+            Dispatcher.BackgroundInvoke(Upload);
         }
 
         /// <summary>
@@ -143,6 +127,115 @@ namespace EVEMon.MarketUnifiedUploader
         #region Uploader methods
 
         /// <summary>
+        /// Gets the data, processes them and uploads them to the specified endpoints.
+        /// </summary>
+        private static void Upload()
+        {
+            if (!Initialized())
+                return;
+
+            try
+            {
+                DateTime nextRun = GetNextRun(true);
+                Parser.SetIncludeMethodsFilter("GetOrders", "GetOldPriceHistory", "GetNewPriceHistory");
+
+                while (s_run)
+                {
+                    // Is it time to scan?
+                    if (nextRun >= DateTime.UtcNow)
+                        continue;
+
+                    if (!NetworkMonitor.IsNetworkAvailable)
+                    {
+                        Dispatcher.Invoke(() => { Status = UploaderStatus.Disabled; });
+                        nextRun = GetNextRun();
+                        Console.WriteLine("Network Unavailable. Next run at: {0}", nextRun);
+                        continue;
+                    }
+
+                    // Are there enabled endpoints?
+                    if (s_endPoints.All(endPoint => !endPoint.Enabled || endPoint.NextUploadTimeUtc >= DateTime.UtcNow))
+                    {
+                        nextRun = GetNextRun();
+                        Console.WriteLine("Disabled Endpoints. Next run at: {0}", nextRun);
+                        continue;
+                    }
+
+                    // Get files from EVE cache and upload the data to the selected endpoints
+                    foreach (FileInfo cachedfile in Parser.GetMachoNetCachedFiles())
+                    {
+                        // Parse the cached file
+                        KeyValuePair<object, object> result = ParseCacheFile(cachedfile);
+
+                        // Create the JSON object
+                        Dictionary<string, object> jsonObj = UnifiedFormat.GetJSONObject(result);
+
+                        // Skip if for some reason the JSON object is null or empty
+                        if (jsonObj == null || !jsonObj.Any())
+                            continue;
+
+                        // Uploads to the selected endpoints
+                        UploadToEndPoints(cachedfile, jsonObj);
+                    }
+
+                    Dispatcher.Invoke(() => { Status = UploaderStatus.Idle; });
+                    nextRun = GetNextRun();
+                    Console.WriteLine("Next run at: {0}", nextRun);
+                }
+
+                Dispatcher.Invoke(() => { Status = UploaderStatus.Disabled; });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                ExceptionHandler.LogException(ex, true);
+
+                // Disable the uploader
+                Dispatcher.Invoke(() =>
+                                      {
+                                          ProgressText = String.Format(CultureConstants.DefaultCulture,
+                                                                       "{1}: {0}{2}",
+                                                                       ex.InnerException == null
+                                                                           ? ex.Message
+                                                                           : ex.InnerException.Message,
+                                                                       DateTime.Now.ToUniversalDateTimeString(),
+                                                                       Environment.NewLine);
+                                          Settings.MarketUnifiedUploader.Enabled = false;
+                                          Stop();
+                                      });
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Uploader"/> is initialized.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if initialized; otherwise, <c>false</c>.
+        /// </returns>
+        private static bool Initialized()
+        {
+            Status = UploaderStatus.Initializing;
+
+            if (!NetworkMonitor.IsNetworkAvailable)
+            {
+                Stop();
+                return false;
+            }
+
+            s_endPoints.InitializeEndPoints();
+            if (!s_endPoints.Any())
+            {
+                Stop();
+                return false;
+            }
+
+            Status = UploaderStatus.Idle;
+            s_run = true;
+
+            return true;
+        }
+
+        /// <summary>
         /// Gets the next run.
         /// </summary>
         /// <param name="init">if set to <c>true</c> returns the initial time.</param>
@@ -153,58 +246,25 @@ namespace EVEMon.MarketUnifiedUploader
         }
 
         /// <summary>
-        /// Gets the data, processes them and uploads them to the specified endpoints.
+        /// Parses the cache file.
         /// </summary>
-        private static void Upload()
+        /// <param name="cachedfile">The cachedfile.</param>
+        /// <returns></returns>
+        private static KeyValuePair<object, object> ParseCacheFile(FileInfo cachedfile)
         {
-            DateTime nextRun = GetNextRun(true);
-            Parser.SetIncludeMethodsFilter("GetOrders", "GetOldPriceHistory", "GetNewPriceHistory");
-
-            while (s_run)
+            KeyValuePair<object, object> result;
+            try
             {
-                // Is it time to scan?
-                if (nextRun >= DateTime.UtcNow)
-                    continue;
-
-                if (!NetworkMonitor.IsNetworkAvailable)
-                {
-                    Status = UploaderStatus.Disabled;
-                    nextRun = GetNextRun();
-                    Console.WriteLine("Network Unavailable. Next run at: {0}", nextRun);
-                    continue;
-                }
-
-                // Are there enabled endpoints?
-                if (s_endPoints.All(endPoint => !endPoint.Enabled || endPoint.NextUploadTimeUtc >= DateTime.UtcNow))
-                {
-                    nextRun = GetNextRun();
-                    Console.WriteLine("Disabled Endpoints. Next run at: {0}", nextRun);
-                    continue;
-                }
-
-                // Get files from EVE cache and upload the data to the selected endpoints
-                foreach (FileInfo cachedfile in Parser.GetMachoNetCachedFiles())
-                {
-                    // Parse the cached file
-                    KeyValuePair<object, object> result = ParseCacheFile(cachedfile);
-
-                    // Create the JSON object
-                    Dictionary<string, object> jsonObj = UnifiedFormat.GetJSONObject(result);
-
-                    // Skip if for some reason the JSON object is null or empty
-                    if (jsonObj == null || !jsonObj.Any())
-                        continue;
-
-                    // Uploads to the selected endpoints
-                    UploadToEndPoints(cachedfile, jsonObj);
-                }
-
-                Status = UploaderStatus.Idle;
-                nextRun = GetNextRun();
-                Console.WriteLine("Next run at: {0}", nextRun);
+                result = Parser.Parse(cachedfile);
             }
-
-            Status = UploaderStatus.Disabled;
+            catch (ParserException ex)
+            {
+                string message = ex.InnerException == null ? ex.Message : ex.InnerException.Message;
+                Console.WriteLine(message);
+                ExceptionHandler.LogException(ex, true);
+                return new KeyValuePair<object, object>();
+            }
+            return result;
         }
 
         /// <summary>
@@ -229,8 +289,8 @@ namespace EVEMon.MarketUnifiedUploader
             // Upload to the selected endpoints
             foreach (EndPoint endPoint in endPoints)
             {
-                Status = UploaderStatus.Uploading;
-                ProgressText = GetProcessText(jsonObj, endPoint);
+                Dispatcher.Invoke(() => { Status = UploaderStatus.Uploading; });
+                Dispatcher.Invoke(() => { ProgressText = GetProcessText(jsonObj, endPoint); });
                 Console.Write(s_progressText);
 
                 // Upload to endpoint
@@ -257,7 +317,7 @@ namespace EVEMon.MarketUnifiedUploader
             catch (HttpWebServiceException ex)
             {
                 response = ex.Message;
-                ExceptionHandler.LogException(ex, false);
+                ExceptionHandler.LogException(ex, true);
             }
             return response;
         }
@@ -300,11 +360,14 @@ namespace EVEMon.MarketUnifiedUploader
 
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow.Add(endPoint.UploadInterval);
 
-                ProgressText = String.Format("{3}: {0}{4}Next upload try to {1} at: {2}{4}", response,
-                                             endPoint.Name,
-                                             endPoint.NextUploadTimeUtc.ToLocalTime(),
-                                             DateTime.Now.ToUniversalDateTimeString(),
-                                             Environment.NewLine);
+                Dispatcher.Invoke(() =>
+                                      {
+                                          ProgressText = String.Format("{3}: {0}{4}Next upload try to {1} at: {2}{4}", response,
+                                                                       endPoint.Name,
+                                                                       endPoint.NextUploadTimeUtc.ToLocalTime(),
+                                                                       DateTime.Now.ToUniversalDateTimeString(),
+                                                                       Environment.NewLine);
+                                      });
                 Console.Write(s_progressText);
             }
                 // Inform about a successful upload and delete the cached file
@@ -312,9 +375,12 @@ namespace EVEMon.MarketUnifiedUploader
             {
                 endPoint.UploadInterval = TimeSpan.Zero;
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow;
-                ProgressText = String.Format("{1}: Uploaded to {0} succesfully.{2}",
-                                             endPoint.Name, DateTime.Now.ToUniversalDateTimeString(),
-                                             Environment.NewLine);
+                Dispatcher.Invoke(() =>
+                                      {
+                                          ProgressText = String.Format("{1}: Uploaded to {0} succesfully.{2}",
+                                                                       endPoint.Name, DateTime.Now.ToUniversalDateTimeString(),
+                                                                       Environment.NewLine);
+                                      });
                 Console.Write(s_progressText);
 
                 // Delete the cached file
@@ -334,28 +400,6 @@ namespace EVEMon.MarketUnifiedUploader
                     ExceptionHandler.LogException(ex, false);
                 }
             }
-        }
-
-        /// <summary>
-        /// Parses the cache file.
-        /// </summary>
-        /// <param name="cachedfile">The cachedfile.</param>
-        /// <returns></returns>
-        private static KeyValuePair<object, object> ParseCacheFile(FileInfo cachedfile)
-        {
-            KeyValuePair<object, object> result;
-            try
-            {
-                result = Parser.Parse(cachedfile);
-            }
-            catch (ParserException ex)
-            {
-                string message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                Console.WriteLine(message);
-                ExceptionHandler.LogException(ex, false);
-                return new KeyValuePair<object, object>();
-            }
-            return result;
         }
 
         #endregion
