@@ -50,6 +50,9 @@ namespace EVEMon.MarketUnifiedUploader
             get { return s_status; }
             private set
             {
+                if (s_status == value)
+                    return;
+
                 s_status = value;
                 OnStatusChanged();
             }
@@ -77,6 +80,7 @@ namespace EVEMon.MarketUnifiedUploader
             if (s_run)
                 return;
 
+            EveMonClient.Trace("MarketUnifiedUploader.Start()");
             Dispatcher.BackgroundInvoke(Upload);
         }
 
@@ -87,6 +91,7 @@ namespace EVEMon.MarketUnifiedUploader
         {
             Status = UploaderStatus.Disabled;
             s_run = false;
+            EveMonClient.Trace("MarketUnifiedUploader.Stop()");
         }
 
         #endregion
@@ -99,6 +104,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         private static void OnStatusChanged()
         {
+            EveMonClient.Trace("MarketUnifiedUploader.OnStatusChanged - {0}", s_status);
             if (StatusChanged != null)
                 StatusChanged(null, EventArgs.Empty);
         }
@@ -117,6 +123,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         public static void OnEndPointsUpdated()
         {
+            EveMonClient.Trace("MarketUnifiedUploader.OnEndPointsUpdated - {0}", s_endPoints.ToString());
             if (EndPointsUpdated != null)
                 EndPointsUpdated(null, EventArgs.Empty);
         }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using EVEMon.Common;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Settings;
@@ -154,6 +155,22 @@ namespace EVEMon.MarketUnifiedUploader
             Settings.MarketUnifiedUploader.EndPoints.AddRange(
                 Uploader.EndPoints.Select(
                     endPoint => new SerializableEndPoint { Name = endPoint.Name, Enabled = endPoint.Enabled }));
+        }
+
+        /// <summary>
+        /// Gets a string representation of this collection.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder endpoints = new StringBuilder();
+            foreach (EndPoint endPoint in Items)
+            {
+                endpoints.Append(endPoint.Name);
+                if (endPoint != Items.Last())
+                    endpoints.Append(", ");
+            }
+            return endpoints.ToString();
         }
     }
 }
