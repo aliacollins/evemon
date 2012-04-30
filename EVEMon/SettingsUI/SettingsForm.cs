@@ -205,13 +205,14 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Enable/Disable uploader according to its status.
+        /// Enable/Disable uploader according to its state.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <remarks>A special condition so not to disable the uploader if network is unavailable.</remarks>
         private void Uploader_StatusChanged(object sender, EventArgs e)
         {
-            marketUnifiedUploaderCheckBox.Checked = Uploader.Status != UploaderStatus.Disabled;
+            marketUnifiedUploaderCheckBox.Checked = Uploader.IsRunning;
         }
 
         /// <summary>
@@ -469,6 +470,8 @@ namespace EVEMon.SettingsUI
             // Market Unified Uploader
             m_settings.MarketUnifiedUploader.Enabled = marketUnifiedUploaderCheckBox.Checked;
             marketUnifiedUploaderControl.UpdateEndPointSettings();
+            if (!marketUnifiedUploaderCheckBox.Checked)
+                marketUnifiedUploaderControl.ShowInfoLabel();
 
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;

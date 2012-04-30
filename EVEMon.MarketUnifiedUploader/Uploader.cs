@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using EVEMon.Common;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
@@ -22,12 +23,19 @@ namespace EVEMon.MarketUnifiedUploader
 
         private static UploaderStatus s_status;
         private static string s_progressText;
-        private static bool s_run;
 
         #endregion
 
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the Uploader is running.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the Uploader is running; otherwise, <c>false</c>.
+        /// </value>
+        public static bool IsRunning { get; private set; }
 
         /// <summary>
         /// Gets the progress text.
@@ -38,7 +46,7 @@ namespace EVEMon.MarketUnifiedUploader
             private set
             {
                 s_progressText = value;
-                OnProgressTextChanged();
+                Dispatcher.Invoke(OnProgressTextChanged);
             }
         }
 
@@ -54,7 +62,7 @@ namespace EVEMon.MarketUnifiedUploader
                     return;
 
                 s_status = value;
-                OnStatusChanged();
+                Dispatcher.Invoke(OnStatusChanged);
             }
         }
 
@@ -77,11 +85,18 @@ namespace EVEMon.MarketUnifiedUploader
         public static void Start()
         {
             // Already started
-            if (s_run)
+            if (IsRunning)
                 return;
 
+            // When there is no network connection retry
+            if (!NetworkMonitor.IsNetworkAvailable)
+            {
+                Dispatcher.Schedule(TimeSpan.FromSeconds(1), Start);
+                return;
+            }
+
             EveMonClient.Trace("MarketUnifiedUploader.Start()");
-            Dispatcher.BackgroundInvoke(Upload);
+            Dispatcher.BackgroundInvoke(Initialize);
         }
 
         /// <summary>
@@ -89,8 +104,8 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         public static void Stop()
         {
+            IsRunning = false;
             Status = UploaderStatus.Disabled;
-            s_run = false;
             EveMonClient.Trace("MarketUnifiedUploader.Stop()");
         }
 
@@ -134,36 +149,56 @@ namespace EVEMon.MarketUnifiedUploader
         #region Uploader methods
 
         /// <summary>
+        /// Initializes the uploader.
+        /// </summary>
+        private static void Initialize()
+        {
+            IsRunning = true;
+            Status = UploaderStatus.Initializing;
+            s_endPoints.InitializeEndPoints();
+
+            // If there are no available endpoints disable the uploader
+            if (!s_endPoints.Any())
+            {
+                Stop();
+                return;
+            }
+
+            Parser.SetIncludeMethodsFilter("GetOrders", "GetOldPriceHistory", "GetNewPriceHistory");
+            Status = UploaderStatus.Idle;
+            Upload();
+        }
+
+        /// <summary>
         /// Gets the data, processes them and uploads them to the specified endpoints.
         /// </summary>
         private static void Upload()
         {
-            if (!Initialized())
-                return;
+            DateTime nextRun = GetNextRun(TimeSpan.FromSeconds(30));
 
             try
             {
-                DateTime nextRun = GetNextRun(true);
-                Parser.SetIncludeMethodsFilter("GetOrders", "GetOldPriceHistory", "GetNewPriceHistory");
-
-                while (s_run)
+                while (IsRunning)
                 {
                     // Is it time to scan?
                     if (nextRun >= DateTime.UtcNow)
-                        continue;
-
-                    if (!NetworkMonitor.IsNetworkAvailable)
                     {
-                        Dispatcher.Invoke(() => { Status = UploaderStatus.Disabled; });
-                        nextRun = GetNextRun();
-                        Console.WriteLine("Network Unavailable. Next run at: {0}", nextRun);
+                        Thread.Sleep(TimeSpan.FromSeconds(1));
+
+                        if (!NetworkMonitor.IsNetworkAvailable)
+                        {
+                            Status = UploaderStatus.Disabled;
+                            nextRun = GetNextRun(TimeSpan.FromSeconds(1));
+                            Console.WriteLine("Network Unavailable. Next run at: {0}", nextRun);
+                            continue;
+                        }
                         continue;
                     }
 
                     // Are there enabled endpoints?
                     if (s_endPoints.All(endPoint => !endPoint.Enabled || endPoint.NextUploadTimeUtc >= DateTime.UtcNow))
                     {
-                        nextRun = GetNextRun();
+                        nextRun = GetNextRun(TimeSpan.FromMinutes(1));
                         Console.WriteLine("Disabled Endpoints. Next run at: {0}", nextRun);
                         continue;
                     }
@@ -189,71 +224,37 @@ namespace EVEMon.MarketUnifiedUploader
                         UploadToEndPoints(cachedfile, jsonObj);
                     }
 
-                    Dispatcher.Invoke(() => { Status = UploaderStatus.Idle; });
-                    nextRun = GetNextRun();
+                    Status = UploaderStatus.Idle;
+                    nextRun = GetNextRun(TimeSpan.FromMinutes(1));
                     Console.WriteLine("Next run at: {0}", nextRun);
                 }
-
-                Dispatcher.Invoke(() => { Status = UploaderStatus.Disabled; });
             }
             catch (Exception ex)
             {
+                // Log the exception
+                Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, true));
+
                 // Disable the uploader
-                Dispatcher.Invoke(() =>
-                                      {
-                                          // Log the exception
-                                          ExceptionHandler.LogException(ex, true);
-
-                                          ProgressText = String.Format(CultureConstants.DefaultCulture,
-                                                                       "{1}: {0}{2}",
-                                                                       ex.InnerException == null
-                                                                           ? ex.Message
-                                                                           : ex.InnerException.Message,
-                                                                       DateTime.Now.ToUniversalDateTimeString(),
-                                                                       Environment.NewLine);
-                                          Settings.MarketUnifiedUploader.Enabled = false;
-                                          Stop();
-                                      });
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Uploader"/> is initialized.
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if initialized; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool Initialized()
-        {
-            Status = UploaderStatus.Initializing;
-
-            if (!NetworkMonitor.IsNetworkAvailable)
-            {
+                ProgressText = String.Format(CultureConstants.DefaultCulture,
+                                             "{1}: {0}{2}",
+                                             ex.InnerException == null
+                                                 ? ex.Message
+                                                 : ex.InnerException.Message,
+                                             DateTime.Now.ToUniversalDateTimeString(),
+                                             Environment.NewLine);
+                Settings.MarketUnifiedUploader.Enabled = false;
                 Stop();
-                return false;
             }
-
-            s_endPoints.InitializeEndPoints();
-            if (!s_endPoints.Any())
-            {
-                Stop();
-                return false;
-            }
-
-            Status = UploaderStatus.Idle;
-            s_run = true;
-
-            return true;
         }
 
         /// <summary>
         /// Gets the next run.
         /// </summary>
-        /// <param name="init">if set to <c>true</c> returns the initial time.</param>
+        /// <param name="delay">The delay to add.</param>
         /// <returns></returns>
-        private static DateTime GetNextRun(bool init = false)
+        private static DateTime GetNextRun(TimeSpan delay)
         {
-            return init ? DateTime.UtcNow.AddSeconds(5) : DateTime.UtcNow.AddMinutes(1);
+            return DateTime.UtcNow.Add(delay);
         }
 
         /// <summary>
@@ -300,8 +301,8 @@ namespace EVEMon.MarketUnifiedUploader
             // Upload to the selected endpoints
             foreach (EndPoint endPoint in endPoints)
             {
-                Dispatcher.Invoke(() => { Status = UploaderStatus.Uploading; });
-                Dispatcher.Invoke(() => { ProgressText = GetProcessText(jsonObj, endPoint); });
+                Status = UploaderStatus.Uploading;
+                ProgressText = GetProcessText(jsonObj, endPoint);
                 Console.Write(s_progressText);
 
                 // Upload to endpoint
@@ -371,14 +372,12 @@ namespace EVEMon.MarketUnifiedUploader
 
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow.Add(endPoint.UploadInterval);
 
-                Dispatcher.Invoke(() =>
-                                      {
-                                          ProgressText = String.Format("{3}: {0}{4}Next upload try to {1} at: {2}{4}", response,
-                                                                       endPoint.Name,
-                                                                       endPoint.NextUploadTimeUtc.ToLocalTime(),
-                                                                       DateTime.Now.ToUniversalDateTimeString(),
-                                                                       Environment.NewLine);
-                                      });
+                ProgressText = String.Format("{3}: {0}{4}Next upload try to {1} at: {2}{4}", response,
+                                             endPoint.Name,
+                                             endPoint.NextUploadTimeUtc.ToLocalTime(),
+                                             DateTime.Now.ToUniversalDateTimeString(),
+                                             Environment.NewLine);
+
                 Console.Write(s_progressText);
             }
                 // Inform about a successful upload and delete the cached file
@@ -386,12 +385,11 @@ namespace EVEMon.MarketUnifiedUploader
             {
                 endPoint.UploadInterval = TimeSpan.Zero;
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow;
-                Dispatcher.Invoke(() =>
-                                      {
-                                          ProgressText = String.Format("{1}: Uploaded to {0} succesfully.{2}",
-                                                                       endPoint.Name, DateTime.Now.ToUniversalDateTimeString(),
-                                                                       Environment.NewLine);
-                                      });
+
+                ProgressText = String.Format("{1}: Uploaded to {0} succesfully.{2}",
+                                             endPoint.Name, DateTime.Now.ToUniversalDateTimeString(),
+                                             Environment.NewLine);
+
                 Console.Write(s_progressText);
 
                 // Delete the cached file

@@ -7,6 +7,7 @@ using System.Text;
 using EVEMon.Common;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.MarketUnifiedUploader
 {
@@ -52,7 +53,7 @@ namespace EVEMon.MarketUnifiedUploader
             UpdateEndPointSettings();
 
             // Notify the subscribers
-            Uploader.OnEndPointsUpdated();
+            Dispatcher.Invoke(Uploader.OnEndPointsUpdated);
         }
 
         /// <summary>

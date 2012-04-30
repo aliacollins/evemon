@@ -40,6 +40,7 @@ namespace EVEMon.SettingsUI
             EndPointsCheckedListBox.Focus();
             EndPointsCheckedListBox.SendToBack();
 
+            Uploader.StatusChanged += Uploader_StatusChanged;
             Uploader.EndPointsUpdated += Uploader_EndPointsUpdated;
             Uploader.ProgressTextChanged += Uploader_ProgressTextChanged;
             Disposed += OnDisposed;
@@ -54,16 +55,30 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            Uploader.StatusChanged -= Uploader_StatusChanged;
             Uploader.EndPointsUpdated -= Uploader_EndPointsUpdated;
             Uploader.ProgressTextChanged -= Uploader_ProgressTextChanged;
             Disposed -= OnDisposed;
         }
 
-
         #endregion
 
 
         #region Event Handlers
+
+        /// <summary>
+        /// Handles the StatusChanged event of the Uploader control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void Uploader_StatusChanged(object sender, EventArgs e)
+        {
+            if (Uploader.Status != UploaderStatus.Initializing)
+                return;
+
+            NoEndPointsLabel.Text = "Looking for available online endpoints.";
+            EndPointsCheckedListBox.Visible = false;
+        }
 
         /// <summary>
         /// Handles the EndPointsUpdated event of the Uploader control.
@@ -123,6 +138,15 @@ namespace EVEMon.SettingsUI
             EndPointsCheckedListBox.BringToFront();
         }
 
+        /// <summary>
+        /// Shows the info label.
+        /// </summary>
+        internal void ShowInfoLabel()
+        {
+            NoEndPointsLabel.Text = "Enable the uploader and click \"Apply\" to fetch online endpoints.";
+            EndPointsCheckedListBox.Visible = false;
+        }
+
 
         #endregion
 
@@ -134,12 +158,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         internal void UpdateEndPointSettings()
         {
-            // Quit if the list is empty (we are initalizing)
+            // Quit if the list is empty
             if (EndPointsCheckedListBox.Items.Count == 0)
-            {
-                NoEndPointsLabel.Text = "Looking for available online endpoints.";
                 return;
-            }
 
             foreach (string item in EndPointsCheckedListBox.Items.Cast<string>())
             {
@@ -151,5 +172,6 @@ namespace EVEMon.SettingsUI
         }
 
         #endregion
+
     }
 }
