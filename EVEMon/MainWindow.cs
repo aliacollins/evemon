@@ -2010,6 +2010,7 @@ namespace EVEMon
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
 
+            // Enable/Disable Uploader
             if (Settings.MarketUnifiedUploader.Enabled)
                  Dispatcher.BackgroundInvoke(Uploader.Start);
             else
