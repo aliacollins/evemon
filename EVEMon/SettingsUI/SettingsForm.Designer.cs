@@ -74,7 +74,7 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Notifications", 9, 9, new System.Windows.Forms.TreeNode[] {
             treeNode22});
             System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("BattleClinic Service", 15, 15);
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Market Unified Uploader");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Market Unified Uploader", 16, 16);
             this.systemTrayIconGroupBox = new System.Windows.Forms.GroupBox();
             this.rbSystemTrayOptionsNever = new System.Windows.Forms.RadioButton();
             this.rbSystemTrayOptionsAlways = new System.Windows.Forms.RadioButton();
@@ -183,8 +183,10 @@ namespace EVEMon.SettingsUI
             this.proxyHttpHostTextBox = new System.Windows.Forms.TextBox();
             this.emailNotificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.mailNotificationCheckBox = new System.Windows.Forms.CheckBox();
+            this.emailNotificationsControl = new EVEMon.SettingsUI.EmailNotificationsControl();
             this.notificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
+            this.notificationsControl = new EVEMon.SettingsUI.NotificationsControl();
             this.trayIconPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.mainWindowBehaviourGroupBox = new System.Windows.Forms.GroupBox();
             this.rbMinToTaskBar = new System.Windows.Forms.RadioButton();
@@ -197,6 +199,7 @@ namespace EVEMon.SettingsUI
             this.trayTooltipRadio = new System.Windows.Forms.RadioButton();
             this.trayTooltipButton = new System.Windows.Forms.Button();
             this.updatesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
             this.lblUpdatesPage = new System.Windows.Forms.Label();
             this.cbCheckTimeOnStartup = new System.Windows.Forms.CheckBox();
             this.cbCheckForUpdates = new System.Windows.Forms.CheckBox();
@@ -264,17 +267,14 @@ namespace EVEMon.SettingsUI
             this.removeConfirmedRadioButton = new System.Windows.Forms.RadioButton();
             this.battleClinicServicePage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.settingsFileStorageGroupBox = new System.Windows.Forms.GroupBox();
+            this.settingsFileStorageControl = new EVEMon.SettingsUI.SettingsFileStorageControl();
             this.BattleClinicLinkLabel = new System.Windows.Forms.LinkLabel();
             this.bcCredentialsGroupBox = new System.Windows.Forms.GroupBox();
+            this.battleClinicAPIControl = new EVEMon.SettingsUI.BattleClinicAPIControl();
             this.marketUnifiedUploaderPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.marketUnifiedUploaderControl = new EVEMon.SettingsUI.MarketUnifiedUploaderControl();
             this.marketUnifiedUploaderCheckBox = new System.Windows.Forms.CheckBox();
             this.marketUnifiedUploaderPageLabel = new System.Windows.Forms.Label();
-            this.emailNotificationsControl = new EVEMon.SettingsUI.EmailNotificationsControl();
-            this.notificationsControl = new EVEMon.SettingsUI.NotificationsControl();
-            this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
-            this.settingsFileStorageControl = new EVEMon.SettingsUI.SettingsFileStorageControl();
-            this.battleClinicAPIControl = new EVEMon.SettingsUI.BattleClinicAPIControl();
-            this.marketUnifiedUploaderControl = new EVEMon.SettingsUI.MarketUnifiedUploaderControl();
             this.systemTrayIconGroupBox.SuspendLayout();
             this.bottomPanel.SuspendLayout();
             this.groupBox15.SuspendLayout();
@@ -1243,7 +1243,9 @@ namespace EVEMon.SettingsUI
             treeNode24.SelectedImageIndex = 15;
             treeNode24.Tag = "battleClinicServicePage";
             treeNode24.Text = "BattleClinic Service";
+            treeNode25.ImageIndex = 16;
             treeNode25.Name = "MarketUnifiedUploaderNode";
+            treeNode25.SelectedImageIndex = 16;
             treeNode25.Tag = "marketUnifiedUploaderPage";
             treeNode25.Text = "Market Unified Uploader";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
@@ -1283,6 +1285,7 @@ namespace EVEMon.SettingsUI
             this.imageList.Images.SetKeyName(13, "book.png");
             this.imageList.Images.SetKeyName(14, "messagebox.png");
             this.imageList.Images.SetKeyName(15, "BattleClinic.png");
+            this.imageList.Images.SetKeyName(16, "EMUU16.png");
             // 
             // leftPanel
             // 
@@ -1681,6 +1684,14 @@ namespace EVEMon.SettingsUI
             this.mailNotificationCheckBox.UseVisualStyleBackColor = true;
             this.mailNotificationCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
+            // emailNotificationsControl
+            // 
+            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
+            this.emailNotificationsControl.Name = "emailNotificationsControl";
+            this.emailNotificationsControl.Settings = null;
+            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
+            this.emailNotificationsControl.TabIndex = 20;
+            // 
             // notificationsPage
             // 
             this.notificationsPage.Controls.Add(this.lblNotificationsPage);
@@ -1703,6 +1714,18 @@ namespace EVEMon.SettingsUI
             this.cbPlaySoundOnSkillComplete.TabIndex = 3;
             this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
             this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
+            // 
+            // notificationsControl
+            // 
+            this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.notificationsControl.AutoScroll = true;
+            this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
+            this.notificationsControl.Location = new System.Drawing.Point(3, 56);
+            this.notificationsControl.Name = "notificationsControl";
+            this.notificationsControl.Settings = null;
+            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
+            this.notificationsControl.TabIndex = 4;
             // 
             // trayIconPage
             // 
@@ -1845,6 +1868,18 @@ namespace EVEMon.SettingsUI
             this.updatesPage.TabIndex = 9;
             this.updatesPage.Text = "updatesPage";
             this.updatesPage.Visible = false;
+            // 
+            // updateSettingsControl
+            // 
+            this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.updateSettingsControl.AutoScroll = true;
+            this.updateSettingsControl.Location = new System.Drawing.Point(11, 85);
+            this.updateSettingsControl.Name = "updateSettingsControl";
+            this.updateSettingsControl.Settings = null;
+            this.updateSettingsControl.Size = new System.Drawing.Size(413, 340);
+            this.updateSettingsControl.TabIndex = 10;
             // 
             // lblUpdatesPage
             // 
@@ -2630,6 +2665,14 @@ namespace EVEMon.SettingsUI
             this.settingsFileStorageGroupBox.TabStop = false;
             this.settingsFileStorageGroupBox.Text = "Settings File Storage";
             // 
+            // settingsFileStorageControl
+            // 
+            this.settingsFileStorageControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsFileStorageControl.Location = new System.Drawing.Point(3, 16);
+            this.settingsFileStorageControl.Name = "settingsFileStorageControl";
+            this.settingsFileStorageControl.Size = new System.Drawing.Size(416, 108);
+            this.settingsFileStorageControl.TabIndex = 0;
+            // 
             // BattleClinicLinkLabel
             // 
             this.BattleClinicLinkLabel.ForeColor = System.Drawing.SystemColors.MenuHighlight;
@@ -2653,6 +2696,15 @@ namespace EVEMon.SettingsUI
             this.bcCredentialsGroupBox.TabStop = false;
             this.bcCredentialsGroupBox.Text = "BattleClinic API Credentials";
             // 
+            // battleClinicAPIControl
+            // 
+            this.battleClinicAPIControl.CausesValidation = false;
+            this.battleClinicAPIControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.battleClinicAPIControl.Location = new System.Drawing.Point(3, 16);
+            this.battleClinicAPIControl.Name = "battleClinicAPIControl";
+            this.battleClinicAPIControl.Size = new System.Drawing.Size(416, 164);
+            this.battleClinicAPIControl.TabIndex = 0;
+            // 
             // marketUnifiedUploaderPage
             // 
             this.marketUnifiedUploaderPage.Controls.Add(this.marketUnifiedUploaderControl);
@@ -2664,6 +2716,13 @@ namespace EVEMon.SettingsUI
             this.marketUnifiedUploaderPage.Size = new System.Drawing.Size(435, 426);
             this.marketUnifiedUploaderPage.TabIndex = 19;
             this.marketUnifiedUploaderPage.Text = "marketUnifiedUploaderPage";
+            // 
+            // marketUnifiedUploaderControl
+            // 
+            this.marketUnifiedUploaderControl.Location = new System.Drawing.Point(6, 78);
+            this.marketUnifiedUploaderControl.Name = "marketUnifiedUploaderControl";
+            this.marketUnifiedUploaderControl.Size = new System.Drawing.Size(422, 337);
+            this.marketUnifiedUploaderControl.TabIndex = 22;
             // 
             // marketUnifiedUploaderCheckBox
             // 
@@ -2688,62 +2747,6 @@ namespace EVEMon.SettingsUI
             this.marketUnifiedUploaderPageLabel.TabIndex = 20;
             this.marketUnifiedUploaderPageLabel.Text = "EVEMon can send market data, from your EVE installation cache, to certified endpo" +
     "ints.";
-            // 
-            // emailNotificationsControl
-            // 
-            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
-            this.emailNotificationsControl.Name = "emailNotificationsControl";
-            this.emailNotificationsControl.Settings = null;
-            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
-            this.emailNotificationsControl.TabIndex = 20;
-            // 
-            // notificationsControl
-            // 
-            this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.notificationsControl.AutoScroll = true;
-            this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.notificationsControl.Location = new System.Drawing.Point(3, 56);
-            this.notificationsControl.Name = "notificationsControl";
-            this.notificationsControl.Settings = null;
-            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
-            this.notificationsControl.TabIndex = 4;
-            // 
-            // updateSettingsControl
-            // 
-            this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.updateSettingsControl.AutoScroll = true;
-            this.updateSettingsControl.Location = new System.Drawing.Point(11, 85);
-            this.updateSettingsControl.Name = "updateSettingsControl";
-            this.updateSettingsControl.Settings = null;
-            this.updateSettingsControl.Size = new System.Drawing.Size(413, 340);
-            this.updateSettingsControl.TabIndex = 10;
-            // 
-            // settingsFileStorageControl
-            // 
-            this.settingsFileStorageControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsFileStorageControl.Location = new System.Drawing.Point(3, 16);
-            this.settingsFileStorageControl.Name = "settingsFileStorageControl";
-            this.settingsFileStorageControl.Size = new System.Drawing.Size(416, 108);
-            this.settingsFileStorageControl.TabIndex = 0;
-            // 
-            // battleClinicAPIControl
-            // 
-            this.battleClinicAPIControl.CausesValidation = false;
-            this.battleClinicAPIControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.battleClinicAPIControl.Location = new System.Drawing.Point(3, 16);
-            this.battleClinicAPIControl.Name = "battleClinicAPIControl";
-            this.battleClinicAPIControl.Size = new System.Drawing.Size(416, 164);
-            this.battleClinicAPIControl.TabIndex = 0;
-            // 
-            // marketUnifiedUploaderControl
-            // 
-            this.marketUnifiedUploaderControl.Location = new System.Drawing.Point(6, 78);
-            this.marketUnifiedUploaderControl.Name = "marketUnifiedUploaderControl";
-            this.marketUnifiedUploaderControl.Size = new System.Drawing.Size(422, 337);
-            this.marketUnifiedUploaderControl.TabIndex = 22;
             // 
             // SettingsForm
             // 
