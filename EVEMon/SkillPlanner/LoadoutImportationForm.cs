@@ -327,7 +327,7 @@ namespace EVEMon.SkillPlanner
         /// </returns>
         private static bool IsDNAFormat(string text)
         {
-            s_lines = text.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            s_lines = text.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             // Nothing to evaluate
             if (s_lines.Length == 0)

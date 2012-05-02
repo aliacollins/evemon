@@ -23,7 +23,7 @@ namespace EVEMon.Common
             Date = src.Date;
             Amount = src.Amount;
             Balance = src.Balance;
-            Reason = src.Reason;
+            Reason = ParseReason(src.Reason);
             Issuer = src.OwnerName1;
             Recipient = src.OwnerName2;
             TaxAmount = src.TaxAmount;
@@ -117,6 +117,18 @@ namespace EVEMon.Common
         private string GetTaxReceiver()
         {
             return m_taxReceiverID == 0 ? String.Empty : EveIDToName.GetIDToName(m_taxReceiverID);
+        }
+
+        /// <summary>
+        /// Parses the reason text.
+        /// </summary>
+        /// <param name="reasonText">The reason text.</param>
+        /// <returns></returns>
+        private string ParseReason(string reasonText)
+        {
+            // If RefType is of type "Bounty Prizes" return a generic message,
+            // otherwise clean the header of a player entered text if it exists
+            return m_refTypeID == 85 ? "Killing NPC entities" : reasonText.Replace("DESC: ", String.Empty);
         }
 
         #endregion
