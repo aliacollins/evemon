@@ -626,6 +626,7 @@ namespace EVEMon.CharacterMonitoring
 
             IEnumerable<Asset> selectedAssets = selectedItems.Select(selectedItem => selectedItem.Tag).OfType<Asset>();
             long sumQuantity = selectedAssets.Sum(selectedAsset => selectedAsset.Quantity);
+            decimal sumVolume = selectedAssets.Select(selectedAsset => selectedAsset.Volume).First() * sumQuantity;
             int uniqueLocations = selectedAssets.Count();
             int minJumps = selectedAssets.Min(asset => asset.Jumps);
             int maxJumps = selectedAssets.Max(asset => asset.Jumps);
@@ -635,6 +636,7 @@ namespace EVEMon.CharacterMonitoring
             StringBuilder builder = new StringBuilder();
             builder.AppendLine(item.Text);
             builder.AppendFormat("Total Quantity: {0:N0} in {1:N0} different locations\n", sumQuantity, uniqueLocations);
+            builder.AppendFormat("Total Volume: {0:N2} m³\n", sumVolume);
             builder.AppendFormat("Closest Location: {0} ({1})\n", closestAsset.Location, closestAsset.JumpsText);
             if (closestAsset.Location != farthestAsset.Location)
                 builder.AppendFormat("Farthest Location: {0} ({1})\n", farthestAsset.Location, farthestAsset.JumpsText);
