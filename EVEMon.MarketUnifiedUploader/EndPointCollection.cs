@@ -111,11 +111,11 @@ namespace EVEMon.MarketUnifiedUploader
         /// <returns></returns>
         private static Dictionary<string, object> GetEndPointsOnline()
         {
-            string responce;
+            string response;
             try
             {
                 Uri url = new Uri(NetworkConstants.UploaderEndPoints);
-                responce = EveMonClient.HttpWebService.DownloadString(url);
+                response = EveMonClient.HttpWebService.DownloadString(url);
             }
             catch (HttpWebServiceException ex)
             {
@@ -124,14 +124,7 @@ namespace EVEMon.MarketUnifiedUploader
                 return new Dictionary<string, object>();
             }
 
-            //responce = "{'endpoints':[" +
-            //           "{'name':'Default','url':'http://127.0.0.1/','key':'0','gzipSupport':'false','enabled':'false'}," +
-            //           "{'name':'EVE Market Data Relay','url':'http://upload.eve-emdr.com/upload/','key':'0','gzipSupport':'true','enabled':'false'}," +
-            //           "{'name':'EVE Central','url':'http://eve-central.com/datainput.py/inputdata/','key':'0','gzipSupport':'false','enabled':'true'}," +
-            //           "{'name':'EVE Addicts','url':'http://upload.addicts.nl/upload/','key':'fd6e2d2d824da46bc229013e3a5c804a','gzipSupport':'true','enabled':'false'}" +
-            //           "]}";
-
-            return Util.DeserializeJSONToObject(responce);
+            return Util.DeserializeJSONToObject(response);
         }
 
         /// <summary>

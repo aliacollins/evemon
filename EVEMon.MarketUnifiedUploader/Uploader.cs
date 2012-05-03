@@ -299,7 +299,8 @@ namespace EVEMon.MarketUnifiedUploader
             string postdata = Util.SerializeObjectToJSON(jsonObj);
 
             // Upload to the selected endpoints
-            foreach (EndPoint endPoint in endPoints)
+            foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
+                                                                     endPoint.NextUploadTimeUtc < DateTime.UtcNow))
             {
                 Status = UploaderStatus.Uploading;
                 ProgressText = GetProcessText(jsonObj, endPoint);
