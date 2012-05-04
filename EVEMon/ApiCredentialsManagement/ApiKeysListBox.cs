@@ -38,6 +38,8 @@ namespace EVEMon.ApiCredentialsManagement
             m_strikeoutFont = FontFactory.GetFont(m_smallFont, FontStyle.Strikeout);
             m_middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f);
             m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
+
+            ItemHeight = m_boldFont.Height + m_middleFont.Height + m_smallBoldFont.Height * 2;
         }
 
         /// <summary>
@@ -148,7 +150,7 @@ namespace EVEMon.ApiCredentialsManagement
 
             Margin = new Padding((ItemHeight - icon.Height) / 2);
             int left = e.Bounds.Left + Margin.Left;
-            int top = e.Bounds.Top;
+            int top = e.Bounds.Top + Margin.Top / 4;
 
             // Draws the checbox
             CheckBoxRenderer.DrawCheckBox(g, new Point(left, (ItemHeight - CheckBoxSize.Height) / 2),

@@ -372,7 +372,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.apiKeysListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.apiKeysListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.apiKeysListBox.FormattingEnabled = true;
-            this.apiKeysListBox.ItemHeight = 43;
             this.apiKeysListBox.Location = new System.Drawing.Point(0, 0);
             this.apiKeysListBox.Name = "apiKeysListBox";
             this.apiKeysListBox.Size = new System.Drawing.Size(806, 363);
