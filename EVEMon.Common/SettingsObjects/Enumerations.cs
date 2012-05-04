@@ -217,11 +217,17 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Group by location (Desc)")]
         LocationDesc = 8,
 
+        [Header("Group by region")]
+        Region = 9,
+
+        [Header("Group by region (Desc)")]
+        RegionDesc = 10,
+
         [Header("Group by jumps")]
-        Jumps = 9,
+        Jumps = 11,
 
         [Header("Group by jumps (Desc)")]
-        JumpsDesc = 10
+        JumpsDesc = 12
     }
 
     #endregion

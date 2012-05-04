@@ -10,6 +10,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.SettingsObjects;
+using Region = EVEMon.Common.Data.Region;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -366,15 +367,25 @@ namespace EVEMon.CharacterMonitoring
                         assets.GroupBy(x => x.Location).OrderByDescending(x => x.Key);
                     UpdateContent(groups8);
                     break;
-                case AssetGrouping.Jumps:
-                    IOrderedEnumerable<IGrouping<int, Asset>> groups9 =
-                        assets.GroupBy(x => x.Jumps).OrderBy(x => x.Key);
+                case AssetGrouping.Region:
+                    IOrderedEnumerable<IGrouping<Region, Asset>> groups9 =
+                        assets.GroupBy(x => x.SolarSystem.Constellation.Region).OrderBy(x => x.Key);
                     UpdateContent(groups9);
                     break;
-                case AssetGrouping.JumpsDesc:
-                    IOrderedEnumerable<IGrouping<int, Asset>> groups10 =
-                        assets.GroupBy(x => x.Jumps).OrderByDescending(x => x.Key);
+                case AssetGrouping.RegionDesc:
+                    IOrderedEnumerable<IGrouping<Region, Asset>> groups10 =
+                        assets.GroupBy(x => x.SolarSystem.Constellation.Region).OrderByDescending(x => x.Key);
                     UpdateContent(groups10);
+                    break;
+                case AssetGrouping.Jumps:
+                    IOrderedEnumerable<IGrouping<int, Asset>> groups11 =
+                        assets.GroupBy(x => x.Jumps).OrderBy(x => x.Key);
+                    UpdateContent(groups11);
+                    break;
+                case AssetGrouping.JumpsDesc:
+                    IOrderedEnumerable<IGrouping<int, Asset>> groups12 =
+                        assets.GroupBy(x => x.Jumps).OrderByDescending(x => x.Key);
+                    UpdateContent(groups12);
                     break;
             }
         }
