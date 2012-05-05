@@ -54,20 +54,22 @@ namespace EVEMon.CharacterMonitoring
             : this()
         {
             m_character = character;
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+
             Header.Character = character;
             skillsList.Character = character;
-            skillQueueList.Character = character;
-            employmentList.Character = character;
-            standingsList.Character = character;
-            assetsList.Character = character;
-            ordersList.Character = character;
-            contractsList.Character = character;
-            walletJournalList.Character = character;
-            walletTransactionsList.Character = character;
-            jobsList.Character = character;
-            researchList.Character = character;
-            mailMessagesList.Character = character;
-            eveNotificationsList.Character = character;
+            skillQueueList.Character = ccpCharacter;
+            employmentList.Character = ccpCharacter;
+            standingsList.Character = ccpCharacter;
+            assetsList.Character = ccpCharacter;
+            ordersList.Character = ccpCharacter;
+            contractsList.Character = ccpCharacter;
+            walletJournalList.Character = ccpCharacter;
+            walletTransactionsList.Character = ccpCharacter;
+            jobsList.Character = ccpCharacter;
+            researchList.Character = ccpCharacter;
+            mailMessagesList.Character = ccpCharacter;
+            eveNotificationsList.Character = ccpCharacter;
             notificationList.Notifications = null;
 
             // Create a list of the advanced features
@@ -85,7 +87,6 @@ namespace EVEMon.CharacterMonitoring
             toolStripContextual.Visible = false;
             warningLabel.Visible = false;
 
-            CCPCharacter ccpCharacter = character as CCPCharacter;
             if (ccpCharacter != null)
                 skillQueueControl.SkillQueue = ccpCharacter.SkillQueue;
             else

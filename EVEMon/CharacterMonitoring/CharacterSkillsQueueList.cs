@@ -32,8 +32,6 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_boldSkillsQueueFont;
         private readonly Font m_skillsQueueFont;
 
-        private CCPCharacter m_ccpCharacter;
-
         private int m_count;
         private Object m_lastTooltipItem;
         private DateTime m_nextRepainting = DateTime.MinValue;
@@ -62,7 +60,7 @@ namespace EVEMon.CharacterMonitoring
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets the item's height.
@@ -123,12 +121,6 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
-            m_ccpCharacter = Character as CCPCharacter;
-
-            // If the character is not a CCPCharacter it does not have a skill queue
-            if (m_ccpCharacter == null)
-                return;
-
             int scrollBarPosition = lbSkillsQueue.TopIndex;
 
             // Update the skills queue list
@@ -137,14 +129,14 @@ namespace EVEMon.CharacterMonitoring
             {
                 // Add items in the list
                 lbSkillsQueue.Items.Clear();
-                foreach (QueuedSkill skill in m_ccpCharacter.SkillQueue)
+                foreach (QueuedSkill skill in Character.SkillQueue)
                 {
                     lbSkillsQueue.Items.Add(skill);
                 }
 
                 // Display or hide the "no queue skills" label.
-                noSkillsQueueLabel.Visible = !m_ccpCharacter.SkillQueue.Any();
-                lbSkillsQueue.Visible = m_ccpCharacter.SkillQueue.Any();
+                noSkillsQueueLabel.Visible = !Character.SkillQueue.Any();
+                lbSkillsQueue.Visible = !noSkillsQueueLabel.Visible;
 
                 // Invalidate display
                 lbSkillsQueue.Invalidate();
@@ -327,13 +319,12 @@ namespace EVEMon.CharacterMonitoring
                     g.FillRectangle(Brushes.DarkGray, brect);
 
                 // Color indicator for a queued level
-                SkillQueue skillQueue = m_ccpCharacter.SkillQueue;
                 if (skill.Skill == null)
                     continue;
 
                 Brush brush = (Settings.UI.SafeForWork ? Brushes.Gray : Brushes.RoyalBlue);
 
-                foreach (QueuedSkill qskill in skillQueue)
+                foreach (QueuedSkill qskill in Character.SkillQueue)
                 {
                     if ((!skill.Skill.IsTraining && skill == qskill && level == qskill.Level)
                         || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level
@@ -774,7 +765,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (!Character.IsTraining || !Visible)
+            if (!Visible || Character == null || !Character.IsTraining)
                 return;
 
             // Retrieves the trained skill for update but quit if the skill is null (was not in our datafiles)

@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Notifications;
+using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
 using Region = EVEMon.Common.Data.Region;
 
@@ -30,6 +32,7 @@ namespace EVEMon.CharacterMonitoring
 
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
+        private bool m_queried;
         private bool m_init;
 
         #endregion
@@ -46,6 +49,7 @@ namespace EVEMon.CharacterMonitoring
 
             m_tooltip = new InfiniteDisplayToolTip(lvAssets);
 
+            noAssetsLabel.Visible = false;
             lvAssets.Visible = false;
             lvAssets.AllowColumnReorder = true;
             lvAssets.Columns.Clear();
@@ -63,10 +67,59 @@ namespace EVEMon.CharacterMonitoring
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
+            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             Disposed += OnDisposed;
         }
 
         #endregion
+
+
+        # region Inherited Events
+
+        /// <summary>
+        /// Unsubscribe events on disposing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            m_tooltip.Dispose();
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
+            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
+            Disposed -= OnDisposed;
+        }
+
+        /// <summary>
+        /// When the control becomes visible again, we update the content.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            if (DesignMode || this.IsDesignModeHosted() || Character == null)
+                return;
+
+            base.OnVisibleChanged(e);
+
+            if (!Visible)
+                return;
+
+            // Prevents the properties to call UpdateColumns() till we set all properties
+            m_init = false;
+
+            Assets = Character == null ? null : Character.Assets;
+            Columns = Settings.UI.MainWindow.Assets.Columns;
+            Grouping = (Character == null ? AssetGrouping.None : Character.UISettings.AssetsGroupBy);
+            TextFilter = String.Empty;
+
+            UpdateColumns();
+
+            m_init = true;
+
+            UpdateListVisibility();
+        }
+
+        # endregion
 
 
         #region Properties
@@ -75,7 +128,7 @@ namespace EVEMon.CharacterMonitoring
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -163,54 +216,6 @@ namespace EVEMon.CharacterMonitoring
         }
 
         #endregion
-
-
-        # region Inherited Events
-
-        /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            m_tooltip.Dispose();
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
-            Disposed -= OnDisposed;
-        }
-
-        /// <summary>
-        /// When the control becomes visible again, we update the content.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (DesignMode || this.IsDesignModeHosted() || Character == null)
-                return;
-
-            base.OnVisibleChanged(e);
-
-            if (!Visible)
-                return;
-
-            // Prevents the properties to call UpdateColumns() till we set all properties
-            m_init = false;
-
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            Assets = (ccpCharacter == null ? null : ccpCharacter.Assets);
-            Columns = Settings.UI.MainWindow.Assets.Columns;
-            Grouping = (Character == null ? AssetGrouping.None : Character.UISettings.AssetsGroupBy);
-            TextFilter = String.Empty;
-
-            UpdateColumns();
-
-            m_init = true;
-
-            UpdateListVisibility();
-        }
-
-        # endregion
 
 
         #region Update Methods
@@ -309,9 +314,11 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateListVisibility()
         {
             // Display or hide the "no assets" label
-            if (!m_init)
+            if (!m_init || !m_queried)
                 return;
 
+            throbber.State = ThrobberState.Stopped;
+            throbber.Visible = false;
             noAssetsLabel.Visible = lvAssets.Items.Count == 0;
             lvAssets.Visible = !noAssetsLabel.Visible;
         }
@@ -784,12 +791,36 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_CharacterAssetsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            Assets = ccpCharacter.Assets;
+            m_queried = true;
+
+            Assets = Character.Assets;
             UpdateColumns();
+        }
+
+        /// <summary>
+        /// On API error update the controls visibility.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
+        {
+            APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
+            if (notification == null)
+                return;
+
+            if (notification.SenderCharacter != Character)
+                return;
+
+            APIResult<SerializableAPIAssetList> result = notification.Result as APIResult<SerializableAPIAssetList>;
+            if (result == null)
+                return;
+
+            m_queried = true;
+
+            UpdateListVisibility();
         }
 
         # endregion

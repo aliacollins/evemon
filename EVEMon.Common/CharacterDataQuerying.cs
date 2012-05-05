@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
@@ -37,10 +38,10 @@ namespace EVEMon.Common
         /// <param name="ccpCharacter">The CCP character.</param>
         public CharacterDataQuerying(CCPCharacter ccpCharacter)
         {
+            // Initializes the query monitors 
             m_ccpCharacter = ccpCharacter;
             m_characterQueryMonitors = new List<IQueryMonitorEx>();
 
-            // Initializes the query monitors 
             m_charSheetMonitor =
                 new CharacterQueryMonitor<SerializableAPICharacterSheet>(ccpCharacter, APICharacterMethods.CharacterSheet,
                                                                          OnCharacterSheetUpdated);
@@ -51,15 +52,15 @@ namespace EVEMon.Common
                                                                      OnSkillQueueUpdated);
             m_characterQueryMonitors.Add(m_skillQueueMonitor);
 
-            m_charStandingsMonitor =
-                new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings,
-                                                                    OnStandingsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charStandingsMonitor);
-
             m_charAssetsMonitor =
                 new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
                                                                     OnAssetsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charAssetsMonitor);
+
+            m_charStandingsMonitor =
+                new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings,
+                                                                    OnStandingsUpdated) { QueryOnStartup = true };
+            m_characterQueryMonitors.Add(m_charStandingsMonitor);
 
             m_charMarketOrdersMonitor =
                 new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,
@@ -394,7 +395,16 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_ccpCharacter.Assets.Import(result.Result.Assets);
+            // Importation can take a serious amount of time depending on the amount of assets,
+            // therefore we invoke it on another thread
+            Dispatcher.BackgroundInvoke(() =>
+                                            {
+                                                m_ccpCharacter.Assets.Import(result.Result.Assets);
+
+                                                // Invoke back to the UI thread
+                                                // Fires the event regarding assets update
+                                                Dispatcher.Invoke(() => EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter));
+                                            });
         }
 
         /// <summary>

@@ -38,6 +38,8 @@
             this.chGroup = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
+            this.throbber = new EVEMon.Common.Controls.Throbber();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
             // 
             // noAssetsLabel
@@ -103,14 +105,28 @@
             this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
             this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
             // 
+            // throbber
+            // 
+            this.throbber.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.throbber.Location = new System.Drawing.Point(215, 205);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Common.ThrobberState.Rotating;
+            this.throbber.TabIndex = 0;
+            this.throbber.TabStop = false;
+            // 
             // CharacterAssetsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lvAssets);
             this.Controls.Add(this.noAssetsLabel);
+            this.Controls.Add(this.throbber);
             this.Name = "CharacterAssetsList";
             this.Size = new System.Drawing.Size(454, 434);
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -125,5 +141,6 @@
         private System.Windows.Forms.ColumnHeader chGroup;
         private System.Windows.Forms.ColumnHeader chCategory;
         private System.Windows.Forms.ImageList ilIcons;
+        private Common.Controls.Throbber throbber;
     }
 }
