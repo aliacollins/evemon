@@ -296,7 +296,7 @@ namespace EVEMon.MarketUnifiedUploader
                                 endpoint => endpoint.endPoint);
 
             // Serialize the JSON object to string
-            string postdata = Util.SerializeObjectToJSON(jsonObj);
+            string postdata = String.Format(CultureConstants.InvariantCulture, "data={0}", Util.SerializeObjectToJSON(jsonObj));
 
             // Upload to the selected endpoints
             foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
