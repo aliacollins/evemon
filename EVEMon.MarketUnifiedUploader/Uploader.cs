@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Web;
 using EVEMon.Common;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
@@ -296,7 +297,8 @@ namespace EVEMon.MarketUnifiedUploader
                                 endpoint => endpoint.endPoint);
 
             // Serialize the JSON object to string
-            string postdata = String.Format(CultureConstants.InvariantCulture, "data={0}", Util.SerializeObjectToJSON(jsonObj));
+            string postdata = String.Format(CultureConstants.InvariantCulture, "data={0}",
+                HttpUtility.UrlEncode(Util.SerializeObjectToJSON(jsonObj)));
 
             // Upload to the selected endpoints
             foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
