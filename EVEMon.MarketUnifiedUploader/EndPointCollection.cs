@@ -86,8 +86,8 @@ namespace EVEMon.MarketUnifiedUploader
                                             endpoint.URL = new Uri(endPoint["url"].ToString());
                                         if (endPoint.Keys.Contains("key"))
                                             endpoint.UploadKey = endPoint["key"].ToString();
-                                        if (endPoint.Keys.Contains("gzipSupport"))
-                                            endpoint.GzipSupport = Convert.ToBoolean(endPoint["gzipSupport"].ToString());
+                                        if (endPoint.Keys.Contains("compressed"))
+                                            endpoint.SupportsCompression = Convert.ToBoolean(endPoint["compressed"].ToString());
 
                                         return endpoint;
                                     }));

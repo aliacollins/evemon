@@ -46,12 +46,12 @@ namespace EVEMon.MarketUnifiedUploader
         internal string UploadKey { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether gzip uploading is supported.
+        /// Gets or sets a value indicating whether compressed uploading is supported.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if gzip uploading is supported; otherwise, <c>false</c>.
+        ///   <c>true</c> if compressed uploading is supported; otherwise, <c>false</c>.
         /// </value>
-        internal bool GzipSupport { get; set; }
+        internal bool SupportsCompression { get; set; }
 
         /// <summary>
         /// Gets or sets the upload interval.

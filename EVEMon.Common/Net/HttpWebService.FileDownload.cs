@@ -15,15 +15,15 @@ namespace EVEMon.Common.Net
         /// <param name="url"></param>
         /// <param name="filePath"></param>
         /// <param name="postdata">The post data.</param>
-        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
+        /// <param name="compressed">if set to <c>true</c> use compressed request.</param>
         /// <returns></returns>
-        public FileInfo DownloadFile(Uri url, string filePath, string postdata = null, bool gzipCompressed = false)
+        public FileInfo DownloadFile(Uri url, string filePath, string postdata = null, bool compressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, gzipCompressed);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compressed);
             HttpWebServiceRequest request = GetRequest();
             try
             {
@@ -36,7 +36,7 @@ namespace EVEMon.Common.Net
                 {
                     throw HttpWebServiceException.FileError(url, ex);
                 }
-                request.GetResponse(url, postData, gzipCompressed, responseStream, FileAccept);
+                request.GetResponse(url, postData, compressed, responseStream, FileAccept);
                 return new FileInfo(filePath);
             }
             finally
@@ -54,10 +54,10 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="progressCallback">The progress callback.</param>
         /// <param name="postdata">The postdata.</param>
-        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
+        /// <param name="compressed">if set to <c>true</c> use compressed request.</param>
         /// <returns></returns>
         public object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
-                                        DownloadProgressChangedCallback progressCallback, string postdata = null, bool gzipCompressed = false)
+                                        DownloadProgressChangedCallback progressCallback, string postdata = null, bool compressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -65,10 +65,10 @@ namespace EVEMon.Common.Net
 
             FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback,
                                                                     DownloadFileAsyncCompleted);
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, gzipCompressed);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compressed);
             HttpWebServiceRequest request = GetRequest();
             FileStream responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write);
-            request.GetResponseAsync(url, postData, gzipCompressed, responseStream, FileAccept, state);
+            request.GetResponseAsync(url, postData, compressed, responseStream, FileAccept, state);
             return request;
         }
 

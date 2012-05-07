@@ -856,7 +856,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Compresses the provided input data using zlib.
+        /// Compresses the provided input data using zlib deflater.
         /// </summary>
         /// <param name="inputData">The input data.</param>
         /// <returns></returns>

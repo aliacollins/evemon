@@ -26,7 +26,7 @@ namespace EVEMon.Common.Net
 
         private int m_redirectsRemaining;
         private bool m_cancelled;
-        private bool m_gzipCompressed;
+        private bool m_compressed;
 
         /// <summary>
         /// Initialises a new instance of HttpWebServiceRequest to be submitted as a POST request.
@@ -75,7 +75,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Delegate for asynchronous invocation of GetResponse.
         /// </summary>
-        private delegate void GetResponseDelegate(Uri url, HttpPostData postData, bool gzipCompressed, Stream responseStream,
+        private delegate void GetResponseDelegate(Uri url, HttpPostData postData, bool compressed, Stream responseStream,
                                                   string accept);
 
         /// <summary>
@@ -83,14 +83,14 @@ namespace EVEMon.Common.Net
         /// If postData is supplied, the request is submitted as a POST request, otherwise it is submitted as a GET request
         /// The download process is broken into chunks for future implementation of asynchronous requests
         /// </summary>
-        internal void GetResponse(Uri url, HttpPostData postData, bool gzipCompressed, Stream responseStream, string accept)
+        internal void GetResponse(Uri url, HttpPostData postData, bool compressed, Stream responseStream, string accept)
         {
             // Store params
             m_url = url;
             BaseUrl = url;
             m_accept = accept;
             m_postData = postData;
-            m_gzipCompressed = postData != null && gzipCompressed;
+            m_compressed = postData != null && compressed;
             ResponseStream = responseStream;
 
             Stream webResponseStream = null;
@@ -153,7 +153,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
-        public void GetResponseAsync(Uri url, HttpPostData postData, bool gzipCompressed, Stream responseStream,
+        public void GetResponseAsync(Uri url, HttpPostData postData, bool compressed, Stream responseStream,
                                      string accept, WebRequestAsyncState state)
         {
             m_asyncState = state;
@@ -161,10 +161,10 @@ namespace EVEMon.Common.Net
             if (Dispatcher.IsMultiThreaded)
             {
                 GetResponseDelegate caller = GetResponse;
-                caller.BeginInvoke(url, postData, gzipCompressed, responseStream, accept, GetResponseAsyncCompleted, caller);
+                caller.BeginInvoke(url, postData, compressed, responseStream, accept, GetResponseAsyncCompleted, caller);
             }
             else
-                GetResponseAsyncCompletedCore(() => GetResponse(url, postData, gzipCompressed, responseStream, accept));
+                GetResponseAsyncCompletedCore(() => GetResponse(url, postData, compressed, responseStream, accept));
         }
 
         /// <summary>
@@ -258,15 +258,16 @@ namespace EVEMon.Common.Net
             if (referer != null)
                 request.Referer = referer;
 
+            // If we are going to send a compressed request set the appropriate header
+            if (m_compressed)
+                request.Headers[HttpRequestHeader.ContentEncoding] = "deflate";
+
             if (m_postData != null)
             {
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = m_postData.Length;
 
-                // If we are going to send a compressed request set the appropriate header
-                if (m_gzipCompressed)
-                    request.Headers[HttpRequestHeader.ContentEncoding] = "gzip";
             }
 
             if (m_webServiceState.Proxy.Enabled)

@@ -18,20 +18,20 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="postdata">The post data.</param>
-        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
+        /// <param name="compressed">if set to <c>true</c> use compressed request.</param>
         /// <returns></returns>
-        public String DownloadString(Uri url, string postdata = null, bool gzipCompressed = false)
+        public String DownloadString(Uri url, string postdata = null, bool compressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, gzipCompressed);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compressed);
             HttpWebServiceRequest request = GetRequest();
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, postData, gzipCompressed, responseStream, StringAccept);
+                request.GetResponse(url, postData, compressed, responseStream, StringAccept);
                 string result = String.Empty;
                 if (request.ResponseStream != null)
                 {
@@ -57,19 +57,19 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <param name="postdata">The postdata.</param>
-        /// <param name="gzipCompressed">if set to <c>true</c> use gzip compressed request.</param>
+        /// <param name="compressed">if set to <c>true</c> use compressed request.</param>
         public void DownloadStringAsync(Uri url, DownloadStringCompletedCallback callback, object userState,
-                                        string postdata = null, bool gzipCompressed = false)
+                                        string postdata = null, bool compressed = false)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
             StringRequestAsyncState state = new StringRequestAsyncState(callback, DownloadStringAsyncCompleted, userState);
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, gzipCompressed);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compressed);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, postData, gzipCompressed, responseStream, StringAccept, state);
+            request.GetResponseAsync(url, postData, compressed, responseStream, StringAccept, state);
         }
 
         /// <summary>

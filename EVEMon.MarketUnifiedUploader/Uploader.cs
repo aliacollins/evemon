@@ -325,7 +325,7 @@ namespace EVEMon.MarketUnifiedUploader
             string response;
             try
             {
-                response = EveMonClient.HttpWebService.DownloadString(endPoint.URL, postdata, endPoint.GzipSupport);
+                response = EveMonClient.HttpWebService.DownloadString(endPoint.URL, postdata, endPoint.SupportsCompression);
             }
             catch (HttpWebServiceException ex)
             {
