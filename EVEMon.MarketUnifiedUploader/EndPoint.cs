@@ -20,14 +20,12 @@ namespace EVEMon.MarketUnifiedUploader
         /// <param name="endPoint">The endpoint.</param>
         internal EndPoint(Dictionary<string, object> endPoint)
         {
-            Name = endPoint["name"].ToString();
-            Enabled = Convert.ToBoolean(endPoint["enabled"].ToString());
+            Name = endPoint.Keys.Contains("name") ? endPoint["name"].ToString() : String.Empty;
+            Enabled = endPoint.Keys.Contains("enabled") && Convert.ToBoolean(endPoint["enabled"].ToString());
+            UploadKey = endPoint.Keys.Contains("key") ? endPoint["key"].ToString() : "0";
 
             if (endPoint.Keys.Contains("url"))
                 URL = new Uri(endPoint["url"].ToString());
-
-            if (endPoint.Keys.Contains("key"))
-                UploadKey = endPoint["key"].ToString();
 
             if (endPoint.Keys.Contains("method") &&
                 Enum.IsDefined(typeof(HttpMethod), endPoint["method"].ToString().ToTitleCase()))
