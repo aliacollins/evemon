@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,11 +17,26 @@ namespace EVEMon.Common.Net
         /// Initializes a new instance of the <see cref="HttpPostData"/> class.
         /// </summary>
         /// <param name="data">The data.</param>
-        /// <param name="compress">if set to <c>true</c> [compress].</param>
-        public HttpPostData(string data, bool compress = false)
+        /// <param name="compression">The compression.</param>
+        public HttpPostData(string data, Compression compression = Compression.None)
         {
             m_data = data;
-            m_content = compress ? Util.ZlibCompress(Encoding.ASCII.GetBytes(data)) : Encoding.ASCII.GetBytes(data);
+
+            byte[] encoded = Encoding.UTF8.GetBytes(data);
+            switch (compression)
+            {
+                case Compression.Gzip:
+                    m_content = Util.GZipCompress(encoded);
+                    break;
+                case Compression.Deflate:
+                    m_content = Util.DeflateCompress(encoded);
+                    break;
+                case Compression.None:
+                    m_content = encoded;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         /// <summary>

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using EVEMon.Common;
 
 namespace EVEMon.MarketUnifiedUploader
 {
@@ -9,9 +12,34 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         internal EndPoint()
         {
-            UploadInterval = TimeSpan.Zero;
-            NextUploadTimeUtc = DateTime.UtcNow;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EndPoint"/> class.
+        /// </summary>
+        /// <param name="endPoint">The endpoint.</param>
+        internal EndPoint(Dictionary<string, object> endPoint)
+        {
+            Name = endPoint["name"].ToString();
+            Enabled = Convert.ToBoolean(endPoint["enabled"].ToString());
+
+            if (endPoint.Keys.Contains("url"))
+                URL = new Uri(endPoint["url"].ToString());
+
+            if (endPoint.Keys.Contains("key"))
+                UploadKey = endPoint["key"].ToString();
+
+            if (endPoint.Keys.Contains("method") &&
+                Enum.IsDefined(typeof(HttpMethod), endPoint["method"].ToString().ToTitleCase()))
+                Method = (HttpMethod)Enum.Parse(typeof(HttpMethod), endPoint["method"].ToString().ToTitleCase());
+
+            if (endPoint.Keys.Contains("compression") &&
+                Enum.IsDefined(typeof(Compression), endPoint["compression"].ToString().ToTitleCase()))
+                Compression = (Compression)Enum.Parse(typeof(Compression), endPoint["compression"].ToString().ToTitleCase());
+        }
+
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="EndPoint"/> is enabled.
@@ -46,12 +74,20 @@ namespace EVEMon.MarketUnifiedUploader
         internal string UploadKey { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether compressed uploading is supported.
+        /// Gets or sets the compression.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if compressed uploading is supported; otherwise, <c>false</c>.
+        /// The compression.
         /// </value>
-        internal bool SupportsCompression { get; set; }
+        internal Compression Compression { get; set; }
+
+        /// <summary>
+        /// Gets or sets the http method.
+        /// </summary>
+        /// <value>
+        /// The method.
+        /// </value>
+        internal HttpMethod Method { get; set; }
 
         /// <summary>
         /// Gets or sets the upload interval.
@@ -69,6 +105,11 @@ namespace EVEMon.MarketUnifiedUploader
         /// </value>
         internal DateTime NextUploadTimeUtc { get; set; }
 
+        #endregion
+
+
+        #region Overriden Methods
+
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
         /// </summary>
@@ -79,5 +120,7 @@ namespace EVEMon.MarketUnifiedUploader
         {
             return Name;
         }
+
+        #endregion
     }
 }

@@ -15,6 +15,7 @@ using System.Xml.Xsl;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
+using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace EVEMon.Common
@@ -291,7 +292,7 @@ namespace EVEMon.Common
                                                url.AbsoluteUri, postData, typeof(T).Name);
                         }
                     },
-                null, postData);
+                null, HttpMethod.Postform, postData);
         }
 
         /// <summary>
@@ -332,7 +333,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null, postData);
+                null, HttpMethod.Postform, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -457,7 +458,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null, postData);
+                null, HttpMethod.Postform, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -503,7 +504,7 @@ namespace EVEMon.Common
                                                url.AbsoluteUri, postData, typeof(T).Name);
                         }
                     },
-                null, postData);
+                null, HttpMethod.Postform, postData);
         }
 
         /// <summary>
@@ -606,7 +607,7 @@ namespace EVEMon.Common
                         // We got the result, let's invoke the callback on this actor
                         Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
                     },
-                null, postData);
+                null, HttpMethod.Postform, postData);
         }
 
         /// <summary>
@@ -856,11 +857,28 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Compresses the provided input data using zlib gzip.
+        /// </summary>
+        /// <param name="inputData">The input data.</param>
+        /// <returns></returns>
+        public static IEnumerable<byte> GZipCompress(byte[] inputData)
+        {
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                GZipOutputStream gZipOutputStream = new GZipOutputStream(outStream);
+                gZipOutputStream.Write(inputData, 0, inputData.Length);
+                gZipOutputStream.Finish();
+
+                return outStream.ToArray();
+            }
+        }
+
+        /// <summary>
         /// Compresses the provided input data using zlib deflater.
         /// </summary>
         /// <param name="inputData">The input data.</param>
         /// <returns></returns>
-        public static IEnumerable<byte> ZlibCompress(byte[] inputData)
+        public static IEnumerable<byte> DeflateCompress(byte[] inputData)
         {
             using (MemoryStream outStream = GetMemoryStream())
             {

@@ -1148,6 +1148,20 @@ namespace EVEMon.Common
         Buy,
         Sell
     }
+    public enum Compression
+    {
+        None,
+        Gzip,
+        Deflate
+    }
+
+    public enum HttpMethod
+    {
+        Get,
+        Postform,
+        Postentity,
+        Put
+    }
 
     #endregion
 

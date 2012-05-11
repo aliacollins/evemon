@@ -19,21 +19,22 @@ namespace EVEMon.Common.Net
         /// Downloads an Xml document from the specified url using the specified POST data.
         /// </summary>
         /// <param name="url">The URL.</param>
+        /// <param name="method">The method.</param>
         /// <param name="postdata">The postdata.</param>
-        /// <param name="compressed">if set to <c>true</c> use compressed request.</param>
+        /// <param name="compression">The compression.</param>
         /// <returns></returns>
-        public IXPathNavigable DownloadXml(Uri url, string postdata = null, bool compressed = false)
+        public IXPathNavigable DownloadXml(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null, Compression compression = Compression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compressed);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compression);
             HttpWebServiceRequest request = GetRequest();
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, postData, compressed, responseStream, XMLAccept);
+                request.GetResponse(url, method, postData, compression, responseStream, XMLAccept);
                 XmlDocument result = new XmlDocument();
                 if (request.ResponseStream != null)
                 {
@@ -55,20 +56,21 @@ namespace EVEMon.Common.Net
         /// <param name="url">The URL.</param>
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
+        /// <param name="method">The method.</param>
         /// <param name="postdata">The postdata.</param>
-        /// <param name="compressed">if set to <c>true</c> use compressed request.</param>
+        /// <param name="compression">The compression.</param>
         public void DownloadXmlAsync(Uri url, DownloadXmlCompletedCallback callback, object userState,
-                                     string postdata = null, bool compressed = false)
+                                     HttpMethod method = HttpMethod.Get, string postdata = null, Compression compression = Compression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
             XmlRequestAsyncState state = new XmlRequestAsyncState(callback, DownloadXmlAsyncCompleted, userState);
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compressed);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compression);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, postData, compressed, responseStream, XMLAccept, state);
+            request.GetResponseAsync(url, method, postData, compression, responseStream, XMLAccept, state);
         }
 
         /// <summary>

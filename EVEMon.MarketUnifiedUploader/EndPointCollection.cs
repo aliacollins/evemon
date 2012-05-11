@@ -72,25 +72,8 @@ namespace EVEMon.MarketUnifiedUploader
                 if (endPointsList == null)
                     return endPoints;
 
-                endPoints.AddRange(
-                    endPointsList.OfType<Dictionary<string, object>>()
-                        .Select(endPoint =>
-                                    {
-                                        EndPoint endpoint = new EndPoint
-                                                                {
-                                                                    Name = endPoint["name"].ToString(),
-                                                                    Enabled = Convert.ToBoolean(endPoint["enabled"].ToString())
-                                                                };
-
-                                        if (endPoint.Keys.Contains("url"))
-                                            endpoint.URL = new Uri(endPoint["url"].ToString());
-                                        if (endPoint.Keys.Contains("key"))
-                                            endpoint.UploadKey = endPoint["key"].ToString();
-                                        if (endPoint.Keys.Contains("compressed"))
-                                            endpoint.SupportsCompression = Convert.ToBoolean(endPoint["compressed"].ToString());
-
-                                        return endpoint;
-                                    }));
+                endPoints.AddRange(endPointsList.OfType<Dictionary<string, object>>()
+                                       .Select(endPoint => new EndPoint(endPoint)));
             }
             return endPoints;
         }

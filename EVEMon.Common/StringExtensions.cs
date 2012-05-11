@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -92,12 +93,43 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static string ConvertUpperToLowerCamelCase(this string text)
         {
             if (text == null)
                 throw new ArgumentNullException("text");
 
             return String.Concat(text.Substring(0, 1).ToLowerInvariant(), text.Substring(1, text.Length - 1));
+        }
+
+        /// <summary>
+        /// Converts the specified string to titlecase.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public static string ToTitleCase(this string text)
+        {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
+            string[] words = text.Split(" ".ToCharArray());
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string word in words)
+            {
+                if (word == String.Empty)
+                {
+                    sb.Append(" ");
+                    continue;
+                }
+
+                sb.Append(String.Concat(word.Substring(0, 1).ToUpperInvariant(), word.Substring(1, word.Length - 1)));
+                if (word != words.Last())
+                    sb.Append(" ");
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>

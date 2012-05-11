@@ -297,13 +297,14 @@ namespace EVEMon.MarketUnifiedUploader
                                 endpoint => endpoint.endPoint);
 
             // Serialize the JSON object to string
-            string postdata = String.Format(CultureConstants.InvariantCulture, "data={0}",
-                HttpUtility.UrlEncode(Util.SerializeObjectToJSON(jsonObj)));
+            string data = Util.SerializeObjectToJSON(jsonObj);
 
             // Upload to the selected endpoints
             foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
                                                                      endPoint.NextUploadTimeUtc < DateTime.UtcNow))
             {
+                string postdata = GetPostDataFormat(endPoint.Method, data);
+
                 Status = UploaderStatus.Uploading;
                 ProgressText = GetProcessText(jsonObj, endPoint);
                 Console.Write(s_progressText);
@@ -312,7 +313,7 @@ namespace EVEMon.MarketUnifiedUploader
                 string response = UploadToEndPoint(postdata, endPoint);
 
                 // On response act accordingly
-                OnUploaded(cachedfile, response, endPoint);
+                OnUploaded(response, cachedfile, endPoint);
             }
         }
 
@@ -327,7 +328,7 @@ namespace EVEMon.MarketUnifiedUploader
             string response;
             try
             {
-                response = EveMonClient.HttpWebService.DownloadString(endPoint.URL, postdata, endPoint.SupportsCompression);
+                response = EveMonClient.HttpWebService.DownloadString(endPoint.URL, endPoint.Method, postdata, endPoint.Compression);
             }
             catch (HttpWebServiceException ex)
             {
@@ -365,7 +366,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// <param name="cachedfile">The cachedfile.</param>
         /// <param name="response">The responce.</param>
         /// <param name="endPoint">The end point.</param>
-        private static void OnUploaded(FileSystemInfo cachedfile, string response, EndPoint endPoint)
+        private static void OnUploaded(string response, FileSystemInfo cachedfile, EndPoint endPoint)
         {
             // Postpone next upload try for 10 minutes accumulatively; up to 1 day if uploading fails repeatedly
             if (response != "1")
@@ -411,6 +412,27 @@ namespace EVEMon.MarketUnifiedUploader
                     Console.WriteLine(ex.Message);
                     Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, false));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the post data format.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
+        private static string GetPostDataFormat(HttpMethod method, string data)
+        {
+            switch (method)
+            {
+                case HttpMethod.Postentity:
+                case HttpMethod.Put:
+                    return data;
+                case HttpMethod.Get:
+                case HttpMethod.Postform:
+                    return String.Format("data={0}", HttpUtility.UrlEncode(data));
+                default:
+                    throw new NotImplementedException();
             }
         }
 
