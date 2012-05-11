@@ -429,7 +429,7 @@ namespace EVEMon.MarketUnifiedUploader
                 case HttpMethod.Put:
                     return data;
                 case HttpMethod.Get:
-                case HttpMethod.Postform:
+                case HttpMethod.Post:
                     return String.Format("data={0}", HttpUtility.UrlEncode(data));
                 default:
                     throw new NotImplementedException();

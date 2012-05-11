@@ -311,7 +311,7 @@ namespace EVEMon.Common.Net
             switch (method)
             {
                 case HttpMethod.Postentity:
-                case HttpMethod.Postform:
+                case HttpMethod.Post:
                     return "POST";
                 case HttpMethod.Put:
                     return "PUT";

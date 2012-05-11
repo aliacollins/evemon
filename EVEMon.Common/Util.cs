@@ -292,7 +292,7 @@ namespace EVEMon.Common
                                                url.AbsoluteUri, postData, typeof(T).Name);
                         }
                     },
-                null, HttpMethod.Postform, postData);
+                null, HttpMethod.Post, postData);
         }
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null, HttpMethod.Postform, postData);
+                null, HttpMethod.Post, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -458,7 +458,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null, HttpMethod.Postform, postData);
+                null, HttpMethod.Post, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -504,7 +504,7 @@ namespace EVEMon.Common
                                                url.AbsoluteUri, postData, typeof(T).Name);
                         }
                     },
-                null, HttpMethod.Postform, postData);
+                null, HttpMethod.Post, postData);
         }
 
         /// <summary>
@@ -607,7 +607,7 @@ namespace EVEMon.Common
                         // We got the result, let's invoke the callback on this actor
                         Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
                     },
-                null, HttpMethod.Postform, postData);
+                null, HttpMethod.Post, postData);
         }
 
         /// <summary>

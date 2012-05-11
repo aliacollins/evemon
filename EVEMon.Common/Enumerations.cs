@@ -1158,7 +1158,7 @@ namespace EVEMon.Common
     public enum HttpMethod
     {
         Get,
-        Postform,
+        Post,
         Postentity,
         Put
     }
