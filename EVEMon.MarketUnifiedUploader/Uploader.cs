@@ -301,7 +301,7 @@ namespace EVEMon.MarketUnifiedUploader
 
             // Upload to the selected endpoints
             foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
-                                                                     endPoint.NextUploadTimeUtc < DateTime.UtcNow))
+                                                                      endPoint.NextUploadTimeUtc < DateTime.UtcNow))
             {
                 string postdata = GetPostDataFormat(endPoint.Method, data);
 
@@ -328,7 +328,8 @@ namespace EVEMon.MarketUnifiedUploader
             string response;
             try
             {
-                response = EveMonClient.HttpWebService.DownloadString(endPoint.URL, endPoint.Method, postdata, endPoint.Compression);
+                response = EveMonClient.HttpWebService.DownloadString(endPoint.Url, endPoint.Method, postdata,
+                                                                      endPoint.Compression);
             }
             catch (HttpWebServiceException ex)
             {
@@ -368,6 +369,9 @@ namespace EVEMon.MarketUnifiedUploader
         /// <param name="endPoint">The end point.</param>
         private static void OnUploaded(string response, FileSystemInfo cachedfile, EndPoint endPoint)
         {
+            // Special cleaning to prevent issues with responses from different platform servers
+            response = response.Replace(Environment.NewLine, String.Empty).Trim();
+
             // Postpone next upload try for 10 minutes accumulatively; up to 1 day if uploading fails repeatedly
             if (response != "1")
             {

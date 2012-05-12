@@ -366,6 +366,7 @@
     <Compile Include="Serialization\Settings\SerializableContract.cs" />
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
+    <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
     <Compile Include="SettingsObjects\AssetColumn.cs" />
     <Compile Include="SettingsObjects\AssetColumnSettings.cs" />

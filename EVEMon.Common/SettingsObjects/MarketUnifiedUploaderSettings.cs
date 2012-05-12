@@ -8,6 +8,9 @@ namespace EVEMon.Common.SettingsObjects
     {
         private readonly Collection<SerializableEndPoint> m_endpoints;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MarketUnifiedUploaderSettings"/> class.
+        /// </summary>
         public MarketUnifiedUploaderSettings()
         {
             Enabled = true;
@@ -21,9 +24,15 @@ namespace EVEMon.Common.SettingsObjects
         [XmlElement("enabled")]
         public bool Enabled { get; set; }
 
+        /// <summary>
+        /// Gets the end points.
+        /// </summary>
         [XmlArray("endpoints")]
-        [XmlArrayItem("endpoint")]
-        public Collection<SerializableEndPoint> EndPoints { get { return m_endpoints; } }
+        [XmlArrayItem("localhost", typeof(SerializableLocalhostEndPoint))]
+        [XmlArrayItem("endpoint", typeof(SerializableEndPoint))]
+        public Collection<SerializableEndPoint> EndPoints
+        {
+            get { return m_endpoints; }
+        }
     }
-
 }

@@ -124,7 +124,7 @@ namespace EVEMon.Common
                     continue;
                 }
 
-                sb.Append(String.Concat(word.Substring(0, 1).ToUpperInvariant(), word.Substring(1, word.Length - 1)));
+                sb.Append(String.Concat(word.Substring(0, 1).ToUpperInvariant(), word.Substring(1, word.Length - 1).ToLowerInvariant()));
                 if (word != words.Last())
                     sb.Append(" ");
             }

@@ -27,10 +27,10 @@ namespace EVEMon.MarketUnifiedUploader
         internal void InitializeEndPoints()
         {
             // Online EndPoints
-            IEnumerable<EndPoint> endpointsOnline = GetOnlineEndPoints();
+            List<EndPoint> endpointsOnline = GetOnlineEndPoints();
 
             // Settings EndPoints
-            IEnumerable<EndPoint> endpointsSettings = GetSettingsEndPoints();
+            List<EndPoint> endpointsSettings = GetSettingsEndPoints();
 
             // Merge online and user configuration
             foreach (EndPoint onlineEndPoint in endpointsOnline)
@@ -46,6 +46,13 @@ namespace EVEMon.MarketUnifiedUploader
                     onlineEndPoint.Enabled = settingsEndpoint.Enabled;
             }
 
+            // If a valid localhost endpoint is specified insert it on top of the list
+            SerializableLocalhostEndPoint localhost =
+                Settings.MarketUnifiedUploader.EndPoints.OfType<SerializableLocalhostEndPoint>().FirstOrDefault(
+                    endPoint => endPoint.Url != null && (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1"));
+            if (localhost != null)
+                endpointsOnline.Insert(0, new EndPoint(localhost));
+
             // Import the merged endpoints
             Import(endpointsOnline);
 
@@ -60,7 +67,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// Gets the online endpoints.
         /// </summary>
         /// <returns></returns>
-        private static IEnumerable<EndPoint> GetOnlineEndPoints()
+        private static List<EndPoint> GetOnlineEndPoints()
         {
             List<EndPoint> endPoints = new List<EndPoint>();
 
@@ -72,8 +79,7 @@ namespace EVEMon.MarketUnifiedUploader
                 if (endPointsList == null)
                     return endPoints;
 
-                endPoints.AddRange(endPointsList.OfType<Dictionary<string, object>>()
-                                       .Select(endPoint => new EndPoint(endPoint)));
+                endPoints.AddRange(endPointsList.OfType<Dictionary<string, object>>().Select(endPoint => new EndPoint(endPoint)));
             }
             return endPoints;
         }
@@ -82,10 +88,11 @@ namespace EVEMon.MarketUnifiedUploader
         /// Gets the settings endpoints.
         /// </summary>
         /// <returns></returns>
-        private static IEnumerable<EndPoint> GetSettingsEndPoints()
+        private static List<EndPoint> GetSettingsEndPoints()
         {
-            return Settings.MarketUnifiedUploader.EndPoints.Select(
-                endPoint => new EndPoint { Name = endPoint.Name, Enabled = endPoint.Enabled });
+            return Settings.MarketUnifiedUploader.EndPoints.Where(
+                endPoint => !(endPoint is SerializableLocalhostEndPoint)).Select(
+                    endPoint => new EndPoint { Name = endPoint.Name, Enabled = endPoint.Enabled }).ToList();
         }
 
         /// <summary>
@@ -129,9 +136,21 @@ namespace EVEMon.MarketUnifiedUploader
         public static void UpdateEndPointSettings()
         {
             Settings.MarketUnifiedUploader.EndPoints.Clear();
-            Settings.MarketUnifiedUploader.EndPoints.AddRange(
-                Uploader.EndPoints.Select(
-                    endPoint => new SerializableEndPoint { Name = endPoint.Name, Enabled = endPoint.Enabled }));
+
+            foreach (EndPoint endPoint in Uploader.EndPoints)
+            {
+                if (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1")
+                {
+                    Settings.MarketUnifiedUploader.EndPoints.Add(endPoint.ExportLocalhostEndpoint());
+                    continue;
+                }
+
+                Settings.MarketUnifiedUploader.EndPoints.Add(new SerializableEndPoint
+                                                                 {
+                                                                     Name = endPoint.Name,
+                                                                     Enabled = endPoint.Enabled
+                                                                 });
+            }
         }
 
         /// <summary>

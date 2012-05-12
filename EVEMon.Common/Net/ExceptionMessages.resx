@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ConnectFailure" xml:space="preserve">
     <value>A request to {0} failed because EVEMon was unable to connect to the server. Please check your network and/or firewall settings.</value>
@@ -158,7 +158,7 @@
     <comment>{0} - the host name of the request.</comment>
   </data>
   <data name="ServerError" xml:space="preserve">
-    <value>The web server at {0} returned an error. The full response returned by the web server was:</value>
+    <value>The web server at {0} returned an error. The full response returned by the web server was: </value>
     <comment>{0} - the host name of the request. </comment>
   </data>
   <data name="Timeout" xml:space="preserve">

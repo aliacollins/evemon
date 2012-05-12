@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common;
+using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.MarketUnifiedUploader
 {
@@ -20,12 +21,12 @@ namespace EVEMon.MarketUnifiedUploader
         /// <param name="endPoint">The endpoint.</param>
         internal EndPoint(Dictionary<string, object> endPoint)
         {
-            Name = endPoint.Keys.Contains("name") ? endPoint["name"].ToString() : String.Empty;
+            Name = endPoint.Keys.Contains("name") ? endPoint["name"].ToString() : "EndPoint";
             Enabled = endPoint.Keys.Contains("enabled") && Convert.ToBoolean(endPoint["enabled"].ToString());
             UploadKey = endPoint.Keys.Contains("key") ? endPoint["key"].ToString() : "0";
 
             if (endPoint.Keys.Contains("url"))
-                URL = new Uri(endPoint["url"].ToString());
+                Url = new Uri(endPoint["url"].ToString());
 
             if (endPoint.Keys.Contains("method") &&
                 Enum.IsDefined(typeof(HttpMethod), endPoint["method"].ToString().ToTitleCase()))
@@ -34,6 +35,16 @@ namespace EVEMon.MarketUnifiedUploader
             if (endPoint.Keys.Contains("compression") &&
                 Enum.IsDefined(typeof(Compression), endPoint["compression"].ToString().ToTitleCase()))
                 Compression = (Compression)Enum.Parse(typeof(Compression), endPoint["compression"].ToString().ToTitleCase());
+        }
+
+        public EndPoint(SerializableLocalhostEndPoint endPoint)
+        {
+            Enabled = endPoint.Enabled;
+            Name = endPoint.Name ?? "Localhost";
+            Url = endPoint.Url;
+            UploadKey = endPoint.UploadKey ?? "0";
+            Method = endPoint.Method;
+            Compression = endPoint.Compression;
         }
 
 
@@ -61,7 +72,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// <value>
         /// The URL.
         /// </value>
-        internal Uri URL { get; set; }
+        internal Uri Url { get; set; }
 
         /// <summary>
         /// Gets or sets the upload key.
@@ -72,20 +83,20 @@ namespace EVEMon.MarketUnifiedUploader
         internal string UploadKey { get; set; }
 
         /// <summary>
-        /// Gets or sets the compression.
-        /// </summary>
-        /// <value>
-        /// The compression.
-        /// </value>
-        internal Compression Compression { get; set; }
-
-        /// <summary>
         /// Gets or sets the http method.
         /// </summary>
         /// <value>
         /// The method.
         /// </value>
         internal HttpMethod Method { get; set; }
+
+        /// <summary>
+        /// Gets or sets the compression.
+        /// </summary>
+        /// <value>
+        /// The compression.
+        /// </value>
+        internal Compression Compression { get; set; }
 
         /// <summary>
         /// Gets or sets the upload interval.
@@ -102,6 +113,28 @@ namespace EVEMon.MarketUnifiedUploader
         /// The next upload time UTC.
         /// </value>
         internal DateTime NextUploadTimeUtc { get; set; }
+
+        #endregion
+
+
+        #region Exportation
+
+        /// <summary>
+        /// Exports the localhost endpoint as a serializable object.
+        /// </summary>
+        /// <returns></returns>
+        public SerializableEndPoint ExportLocalhostEndpoint()
+        {
+            return new SerializableLocalhostEndPoint
+                       {
+                           Enabled = Enabled,
+                           Name = Name,
+                           Url = Url,
+                           UploadKey = UploadKey,
+                           Method = Method,
+                           Compression = Compression
+                       };
+        }
 
         #endregion
 
