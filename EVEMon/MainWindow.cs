@@ -1956,6 +1956,16 @@ namespace EVEMon
             Activate();
         }
 
+        /// <summary>
+        /// Updates the tray icon.
+        /// </summary>
+        private void UpdateTrayIcon()
+        {
+            trayIcon.Icon = m_uploaderStatus == UploaderStatus.Uploading
+                                ? Common.Properties.Resources.EMUU
+                                : Common.Properties.Resources.EVEMon;
+        }
+
         #endregion
 
 
@@ -1964,6 +1974,7 @@ namespace EVEMon
         private void Uploader_StatusChanged(object sender, EventArgs e)
         {
             UpdateUploaderStatus();
+            UpdateTrayIcon();
         }
 
         /// <summary>

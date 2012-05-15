@@ -430,4 +430,10 @@
   <data name="Flags" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\serialization\flags.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1253</value>
   </data>
+  <data name="EMUU" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\icons\emuu.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EVEMon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\icons\evemon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
