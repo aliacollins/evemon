@@ -342,7 +342,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ownsBookMenu_CheckedChanged(object sender, EventArgs e)
+        private void ownsBookMenu_Click(object sender, EventArgs e)
         {
             m_selectedSkill.IsOwned = ownsBookMenu.Checked;
             skillSelectControl.UpdateContent();
