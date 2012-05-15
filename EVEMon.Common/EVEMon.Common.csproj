@@ -961,7 +961,6 @@
     <None Include="Resources\Images\APIKeyWrong.png" />
     <None Include="Resources\Images\AttributeOptimize.png" />
     <None Include="Resources\Images\Blue_Glass_Arrow.png" />
-    <None Include="Resources\Images\Blueprint.png" />
     <None Include="Resources\Images\Calendar.png" />
     <None Include="Resources\Images\Certificate-24.png" />
     <None Include="Resources\Images\Certificate-32.png" />
