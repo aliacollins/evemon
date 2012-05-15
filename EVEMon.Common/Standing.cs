@@ -36,21 +36,6 @@ namespace EVEMon.Common
             Group = src.GroupType;
         }
 
-        /// <summary>
-        /// Constructor from the settings.
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="src"></param>
-        internal Standing(Character character, SerializableStanding src)
-        {
-            m_character = character;
-
-            EntityID = src.EntityID;
-            EntityName = src.EntityName;
-            StandingValue = src.StandingValue;
-            Group = src.Group;
-        }
-
         #endregion
 
 
