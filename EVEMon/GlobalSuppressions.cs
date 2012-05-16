@@ -674,3 +674,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "eveonline", Scope = "resource", Target = "EVEMon.ApiCredentialsManagement.ApiKeyUpdateOrAdditionWindow.resources")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "enviroment", Scope = "resource", Target = "EVEMon.SettingsUI.SettingsForm.resources")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "Preequisites", Scope = "resource", Target = "EVEMon.SkillPlanner.PlanPrioritiesEditorForm.resources")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Scope = "member", Target = "EVEMon.MainWindow.#LayoutTabPages()")]
