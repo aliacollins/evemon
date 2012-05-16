@@ -34,12 +34,12 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlAttribute("compression")]
         public string CompressionXml
         {
-            get { return Compression.ToString(); }
+            get { return DataCompression.ToString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value) &&
-                    Enum.IsDefined(typeof(Compression), value.ToTitleCase()))
-                    Compression = (Compression)Enum.Parse(typeof(Compression), value.ToTitleCase());
+                    Enum.IsDefined(typeof(DataCompression), value.ToTitleCase()))
+                    DataCompression = (DataCompression)Enum.Parse(typeof(DataCompression), value.ToTitleCase());
             }
         }
 
@@ -50,6 +50,6 @@ namespace EVEMon.Common.Serialization.Settings
         public HttpMethod Method { get; set; }
 
         [XmlIgnore]
-        public Compression Compression { get; set; }
+        public DataCompression DataCompression { get; set; }
     }
 }

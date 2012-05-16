@@ -19,21 +19,21 @@ namespace EVEMon.Common.Net
         /// <param name="url">The URL.</param>
         /// <param name="method">The method.</param>
         /// <param name="postdata">The post data.</param>
-        /// <param name="compression">The compression.</param>
+        /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
         public String DownloadString(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null,
-                                     Compression compression = Compression.None)
+                                     DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compression);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, method, postData, compression, responseStream, StringAccept);
+                request.GetResponse(url, method, postData, dataCompression, responseStream, StringAccept);
                 string result = String.Empty;
                 if (request.ResponseStream != null)
                 {
@@ -60,20 +60,20 @@ namespace EVEMon.Common.Net
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <param name="method">The method.</param>
         /// <param name="postdata">The postdata.</param>
-        /// <param name="compression">The compression.</param>
+        /// <param name="dataCompression">The compression.</param>
         public void DownloadStringAsync(Uri url, DownloadStringCompletedCallback callback, object userState,
                                         HttpMethod method = HttpMethod.Get, string postdata = null,
-                                        Compression compression = Compression.None)
+                                        DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
             StringRequestAsyncState state = new StringRequestAsyncState(callback, DownloadStringAsyncCompleted, userState);
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compression);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, method, postData, compression, responseStream, StringAccept, state);
+            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, StringAccept, state);
         }
 
         /// <summary>

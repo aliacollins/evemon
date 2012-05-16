@@ -114,7 +114,7 @@ namespace EVEMon.MarketUnifiedUploader
                 return new Dictionary<string, object>();
             }
 
-            return Util.DeserializeJSONToObject(response);
+            return Util.DeserializeJsonToObject(response);
         }
 
         /// <summary>

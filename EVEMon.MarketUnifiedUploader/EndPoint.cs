@@ -33,8 +33,8 @@ namespace EVEMon.MarketUnifiedUploader
                 Method = (HttpMethod)Enum.Parse(typeof(HttpMethod), endPoint["method"].ToString().ToTitleCase());
 
             if (endPoint.Keys.Contains("compression") &&
-                Enum.IsDefined(typeof(Compression), endPoint["compression"].ToString().ToTitleCase()))
-                Compression = (Compression)Enum.Parse(typeof(Compression), endPoint["compression"].ToString().ToTitleCase());
+                Enum.IsDefined(typeof(DataCompression), endPoint["compression"].ToString().ToTitleCase()))
+                DataCompression = (DataCompression)Enum.Parse(typeof(DataCompression), endPoint["compression"].ToString().ToTitleCase());
         }
 
         public EndPoint(SerializableLocalhostEndPoint endPoint)
@@ -44,7 +44,7 @@ namespace EVEMon.MarketUnifiedUploader
             Url = endPoint.Url;
             UploadKey = endPoint.UploadKey ?? "0";
             Method = endPoint.Method;
-            Compression = endPoint.Compression;
+            DataCompression = endPoint.DataCompression;
         }
 
 
@@ -96,7 +96,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// <value>
         /// The compression.
         /// </value>
-        internal Compression Compression { get; set; }
+        internal DataCompression DataCompression { get; set; }
 
         /// <summary>
         /// Gets or sets the upload interval.
@@ -132,7 +132,7 @@ namespace EVEMon.MarketUnifiedUploader
                            Url = Url,
                            UploadKey = UploadKey,
                            Method = Method,
-                           Compression = Compression
+                           DataCompression = DataCompression
                        };
         }
 

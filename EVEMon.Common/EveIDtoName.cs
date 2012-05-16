@@ -101,7 +101,7 @@ namespace EVEMon.Common
         private static void ImportCacheFile()
         {
             // Deserialize the file
-            SerializableEveIDToName cache = Util.DeserializeXMLFromFile<SerializableEveIDToName>(s_file);
+            SerializableEveIDToName cache = Util.DeserializeXmlFromFile<SerializableEveIDToName>(s_file);
 
             // Reset the cache if anything went wrong
             if (cache == null || cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))

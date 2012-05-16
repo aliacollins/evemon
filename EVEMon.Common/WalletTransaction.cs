@@ -14,6 +14,9 @@ namespace EVEMon.Common
         /// <param name="src">The SRC.</param>
         public WalletTransaction(SerializableWalletTransactionsListItem src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             ID = src.ID;
             JournalID = src.JournalTransactionID;
             Date = src.TransactionDate;

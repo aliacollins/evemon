@@ -332,7 +332,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static XslCompiledTransform RowsetsTransform
         {
-            get { return s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT)); }
+            get { return s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXslt(Properties.Resources.RowsetsXSLT)); }
         }
 
         #endregion

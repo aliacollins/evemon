@@ -83,7 +83,7 @@ namespace EVEMon.Common
         /// <value>
         /// The gender.
         /// </value>
-        public static Gender Gender { private get; set; }
+        public static Gender Gender { get; set; }
 
         /// <summary>
         /// Gets or sets the bloodline.
@@ -99,7 +99,7 @@ namespace EVEMon.Common
         /// <value>
         /// The ancestry.
         /// </value>
-        public static Ancestry Ancestry { private get; set; }
+        public static Ancestry Ancestry { get; set; }
 
         #endregion
 
@@ -219,6 +219,9 @@ namespace EVEMon.Common
         /// </summary>
         public static void Save(Action callback)
         {
+            if (callback == null)
+                throw new ArgumentNullException("callback");
+
             SerializableCCPCharacter serial = CreateCharacter();
 
             using (SaveFileDialog fileDialog = new SaveFileDialog())
@@ -233,7 +236,7 @@ namespace EVEMon.Common
                     return;
 
                 XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializableCCPCharacter), serial);
-                string content = Util.GetXMLStringRepresentation(xmlDoc);
+                string content = Util.GetXmlStringRepresentation(xmlDoc);
                 FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
                                                   fs =>
                                                       {

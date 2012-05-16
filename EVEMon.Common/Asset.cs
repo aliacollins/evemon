@@ -20,13 +20,16 @@ namespace EVEMon.Common
         /// <param name="src">The source.</param>
         public Asset(Character character, SerializableAssetListItem src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             m_character = character;
 
             ID = src.ItemID;
             LocationID = src.LocationID;
             Quantity = src.Quantity;
             Item = StaticItems.GetItemByID(src.TypeID);
-            Flag = EveFlag.GetFlagText(src.Flag);
+            Flag = EveFlag.GetFlagText(src.EVEFlag);
             BlueprintType = GetBlueprintType(src.RawQuantity);
             Container = String.Empty;
             Volume = GetVolume();
@@ -108,7 +111,10 @@ namespace EVEMon.Common
         {
             get
             {
-                return Jumps == -1 ? String.Empty : String.Format("{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
+                return Jumps == -1
+                           ? String.Empty
+                           : String.Format(CultureConstants.DefaultCulture,
+                                           "{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
             }
         }
 
@@ -159,7 +165,7 @@ namespace EVEMon.Common
             if (LocationID == 0)
                 return String.Empty;
 
-            string location = LocationID.ToString();
+            string location = LocationID.ToString(CultureConstants.InvariantCulture);
 
             if (LocationID <= Int32.MaxValue)
             {

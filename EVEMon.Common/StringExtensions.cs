@@ -118,7 +118,7 @@ namespace EVEMon.Common
 
             foreach (string word in words)
             {
-                if (word == String.Empty)
+                if (String.IsNullOrEmpty(word))
                 {
                     sb.Append(" ");
                     continue;

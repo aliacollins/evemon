@@ -87,7 +87,7 @@ namespace EVEMon.Common
                         try
                         {
                             SerializableCCPCharacter ccpResult =
-                                Util.DeserializeXMLFromFile<SerializableCCPCharacter>(uri.LocalPath);
+                                Util.DeserializeXmlFromFile<SerializableCCPCharacter>(uri.LocalPath);
                             callback(null, new UriCharacterEventArgs(uri, ccpResult));
                         }
                         catch (NullReferenceException ex)
@@ -103,7 +103,7 @@ namespace EVEMon.Common
                         try
                         {
                             SerializableUriCharacter uriCharacterResult =
-                                Util.DeserializeXMLFromFile<SerializableUriCharacter>(uri.LocalPath);
+                                Util.DeserializeXmlFromFile<SerializableUriCharacter>(uri.LocalPath);
                             callback(null, new UriCharacterEventArgs(uri, uriCharacterResult));
                         }
                         catch (NullReferenceException ex)

@@ -17,21 +17,21 @@ namespace EVEMon.Common.Net
         /// Initializes a new instance of the <see cref="HttpPostData"/> class.
         /// </summary>
         /// <param name="data">The data.</param>
-        /// <param name="compression">The compression.</param>
-        public HttpPostData(string data, Compression compression = Compression.None)
+        /// <param name="dataCompression">The compression.</param>
+        public HttpPostData(string data, DataCompression dataCompression = DataCompression.None)
         {
             m_data = data;
 
             byte[] encoded = Encoding.UTF8.GetBytes(data);
-            switch (compression)
+            switch (dataCompression)
             {
-                case Compression.Gzip:
+                case DataCompression.Gzip:
                     m_content = Util.GZipCompress(encoded);
                     break;
-                case Compression.Deflate:
+                case DataCompression.Deflate:
                     m_content = Util.DeflateCompress(encoded);
                     break;
-                case Compression.None:
+                case DataCompression.None:
                     m_content = encoded;
                     break;
                 default:

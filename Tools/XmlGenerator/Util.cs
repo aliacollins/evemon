@@ -102,7 +102,7 @@ namespace EVEMon.XmlGenerator
                         stream.Seek(0, SeekOrigin.Begin);
                         XmlDocument doc2 = new XmlDocument();
                         doc2.Load(stream);
-                        Trace.Write(Common.Util.GetXMLStringRepresentation(doc2));
+                        Trace.Write(Common.Util.GetXmlStringRepresentation(doc2));
                     }
 
                     // Deserialize from the given stream

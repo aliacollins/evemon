@@ -297,7 +297,7 @@ namespace EVEMon.MarketUnifiedUploader
                                 endpoint => endpoint.endPoint);
 
             // Serialize the JSON object to string
-            string data = Util.SerializeObjectToJSON(jsonObj);
+            string data = Util.SerializeObjectToJson(jsonObj);
 
             // Upload to the selected endpoints
             foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
@@ -329,7 +329,7 @@ namespace EVEMon.MarketUnifiedUploader
             try
             {
                 response = EveMonClient.HttpWebService.DownloadString(endPoint.Url, endPoint.Method, postdata,
-                                                                      endPoint.Compression);
+                                                                      endPoint.DataCompression);
             }
             catch (HttpWebServiceException ex)
             {

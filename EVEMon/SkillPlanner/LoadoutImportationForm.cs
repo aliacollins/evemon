@@ -314,7 +314,7 @@ namespace EVEMon.SkillPlanner
                     return false;
             }
 
-            s_fittings = Util.DeserializeXMLFromString<SerializableFittings>(text);
+            s_fittings = Util.DeserializeXmlFromString<SerializableFittings>(text);
             return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.Name == s_fittings.Fitting.ShipType.Name);
         }
 

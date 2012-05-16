@@ -16,16 +16,16 @@ namespace EVEMon.Common.Net
         /// <param name="filePath">The file path.</param>
         /// <param name="method">The method.</param>
         /// <param name="postdata">The post data.</param>
-        /// <param name="compression">The compression.</param>
+        /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
         public FileInfo DownloadFile(Uri url, string filePath, HttpMethod method = HttpMethod.Get,
-                                     string postdata = null, Compression compression = Compression.None)
+                                     string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compression);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             try
             {
@@ -38,7 +38,7 @@ namespace EVEMon.Common.Net
                 {
                     throw HttpWebServiceException.FileError(url, ex);
                 }
-                request.GetResponse(url, method, postData, compression, responseStream, FileAccept);
+                request.GetResponse(url, method, postData, dataCompression, responseStream, FileAccept);
                 return new FileInfo(filePath);
             }
             finally
@@ -57,11 +57,11 @@ namespace EVEMon.Common.Net
         /// <param name="progressCallback">The progress callback.</param>
         /// <param name="method">The method.</param>
         /// <param name="postdata">The postdata.</param>
-        /// <param name="compression">The compression.</param>
+        /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
         public object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
                                         DownloadProgressChangedCallback progressCallback, HttpMethod method = HttpMethod.Get,
-                                        string postdata = null, Compression compression = Compression.None)
+                                        string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -69,10 +69,10 @@ namespace EVEMon.Common.Net
 
             FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback,
                                                                     DownloadFileAsyncCompleted);
-            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, compression);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             FileStream responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write);
-            request.GetResponseAsync(url, method, postData, compression, responseStream, FileAccept, state);
+            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, FileAccept, state);
             return request;
         }
 

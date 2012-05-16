@@ -19,6 +19,9 @@ namespace EVEMon.Common
         /// <param name="src">The SRC.</param>
         public WalletJournal(SerializableWalletJournalListItem src)
         {
+            if (src == null)
+                throw new ArgumentNullException("src");
+
             ID = src.ID;
             Date = src.Date;
             Amount = src.Amount;

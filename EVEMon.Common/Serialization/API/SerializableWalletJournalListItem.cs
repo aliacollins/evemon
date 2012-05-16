@@ -41,22 +41,22 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("taxReceiverID")]
         public string TaxReceiverIDXml
         {
-            get { return TaxReceiverID.ToString(); }
+            get { return TaxReceiverID.ToString(CultureConstants.InvariantCulture); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    TaxReceiverID = Convert.ToInt64(value);
+                    TaxReceiverID = Convert.ToInt64(value, CultureConstants.InvariantCulture);
             }
         }
 
         [XmlAttribute("taxAmount")]
         public string TaxAmountXml
         {
-            get { return TaxAmount.ToString(); }
+            get { return TaxAmount.ToString(CultureConstants.InvariantCulture); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    TaxAmount = Convert.ToDecimal(value);
+                    TaxAmount = Convert.ToDecimal(value, CultureConstants.InvariantCulture);
             }
         }
 

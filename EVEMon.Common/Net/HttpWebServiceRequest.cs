@@ -19,7 +19,7 @@ namespace EVEMon.Common.Net
 
         private WebRequestAsyncState m_asyncState;
         private HttpPostData m_postData;
-        private Compression m_compression;
+        private DataCompression m_dataCompression;
         private HttpMethod m_method;
 
         private string m_accept;
@@ -76,7 +76,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Delegate for asynchronous invocation of GetResponse.
         /// </summary>
-        private delegate void GetResponseDelegate(Uri url, HttpMethod method, HttpPostData postData, Compression compression,
+        private delegate void GetResponseDelegate(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
                                                   Stream responseStream, string accept);
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace EVEMon.Common.Net
         /// If postData is supplied, the request is submitted as a POST request, otherwise it is submitted as a GET request
         /// The download process is broken into chunks for future implementation of asynchronous requests
         /// </summary>
-        internal void GetResponse(Uri url, HttpMethod method, HttpPostData postData, Compression compression,
+        internal void GetResponse(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
                                   Stream responseStream, string accept)
         {
             // Store params
@@ -93,7 +93,7 @@ namespace EVEMon.Common.Net
             m_accept = accept;
             m_postData = postData;
             m_method = postData == null ? HttpMethod.Get : method;
-            m_compression = postData == null ? Compression.None : compression;
+            m_dataCompression = postData == null ? DataCompression.None : dataCompression;
             ResponseStream = responseStream;
 
             Stream webResponseStream = null;
@@ -156,7 +156,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
-        public void GetResponseAsync(Uri url, HttpMethod method, HttpPostData postData, Compression compression,
+        public void GetResponseAsync(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
                                      Stream responseStream,
                                      string accept, WebRequestAsyncState state)
         {
@@ -165,10 +165,10 @@ namespace EVEMon.Common.Net
             if (Dispatcher.IsMultiThreaded)
             {
                 GetResponseDelegate caller = GetResponse;
-                caller.BeginInvoke(url, method, postData, compression, responseStream, accept, GetResponseAsyncCompleted, caller);
+                caller.BeginInvoke(url, method, postData, dataCompression, responseStream, accept, GetResponseAsyncCompleted, caller);
             }
             else
-                GetResponseAsyncCompletedCore(() => GetResponse(url, method, postData, compression, responseStream, accept));
+                GetResponseAsyncCompletedCore(() => GetResponse(url, method, postData, dataCompression, responseStream, accept));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace EVEMon.Common.Net
         private HttpWebRequest GetHttpWebRequest()
         {
             if (m_method == HttpMethod.Get && m_postData != null)
-                m_url = new Uri(String.Format("{0}?{1}", m_url.AbsoluteUri, m_postData));
+                m_url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}?{1}", m_url.AbsoluteUri, m_postData));
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(m_url);
             request.AllowAutoRedirect = false;
@@ -268,8 +268,9 @@ namespace EVEMon.Common.Net
                     request.ContentLength = m_postData.Length;
 
                     // If we are going to send a compressed request set the appropriate header
-                    if (Enum.IsDefined(typeof(Compression), m_compression) && m_compression != Compression.None)
-                        request.Headers[HttpRequestHeader.ContentEncoding] = m_compression.ToString().ToLower();
+                    if (Enum.IsDefined(typeof(DataCompression), m_dataCompression) && m_dataCompression != DataCompression.None)
+                        request.Headers[HttpRequestHeader.ContentEncoding] =
+                            m_dataCompression.ToString().ToLower(CultureConstants.InvariantCulture);
 
                     Stream requestStream = request.GetRequestStream();
                     requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);

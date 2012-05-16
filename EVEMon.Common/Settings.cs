@@ -367,7 +367,7 @@ namespace EVEMon.Common
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = revision == 0
                                                 ? (SerializableSettings)ShowNoSupportMessage()
-                                                : Util.DeserializeXMLFromString<SerializableSettings>(fileContent,
+                                                : Util.DeserializeXmlFromString<SerializableSettings>(fileContent,
                                                                                                       SettingsTransform);
 
             if (settings != null)
@@ -439,7 +439,7 @@ namespace EVEMon.Common
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = revision == 0
                                                 ? (SerializableSettings)ShowNoSupportMessage()
-                                                : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile,
+                                                : Util.DeserializeXmlFromFile<SerializableSettings>(settingsFile,
                                                                                                     SettingsTransform);
 
             // If the settings loaded OK, make a backup as 'last good settings' and return
@@ -509,7 +509,7 @@ namespace EVEMon.Common
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = revision == 0
                                                 ? (SerializableSettings)ShowNoSupportMessage()
-                                                : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile,
+                                                : Util.DeserializeXmlFromFile<SerializableSettings>(backupFile,
                                                                                                     SettingsTransform);
 
             // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
@@ -598,7 +598,7 @@ namespace EVEMon.Common
         /// </summary>
         private static XslCompiledTransform SettingsTransform
         {
-            get { return s_settingsTransform ?? (s_settingsTransform = Util.LoadXSLT(Properties.Resources.SettingsXSLT)); }
+            get { return s_settingsTransform ?? (s_settingsTransform = Util.LoadXslt(Properties.Resources.SettingsXSLT)); }
         }
 
         #endregion

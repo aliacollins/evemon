@@ -1148,7 +1148,7 @@ namespace EVEMon.Common
         Buy,
         Sell
     }
-    public enum Compression
+    public enum DataCompression
     {
         None,
         Gzip,

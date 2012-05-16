@@ -32,7 +32,7 @@ namespace EVEMon.Common.Serialization.API
         public long Quantity { get; set; }
 
         [XmlAttribute("flag")]
-        public short Flag { get; set; }
+        public short EVEFlag { get; set; }
 
         [XmlAttribute("singleton")]
         public byte Singleton { get; set; }

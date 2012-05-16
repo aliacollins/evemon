@@ -15,7 +15,7 @@ namespace EVEMon.Common.Serialization
 
         [XmlArray("flags")]
         [XmlArrayItem("flag")]
-        public Collection<SerializableEveFlagsListItem> Flags
+        public Collection<SerializableEveFlagsListItem> EVEFlags
         {
             get { return m_eveFlags; }
         }

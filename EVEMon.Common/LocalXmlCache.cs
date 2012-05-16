@@ -65,7 +65,7 @@ namespace EVEMon.Common
                 EveMonClient.EnsureCacheDirInit();
                 string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir,
                                                String.Format(CultureConstants.DefaultCulture, "{0}.xml", name));
-                string content = Util.GetXMLStringRepresentation(xdoc);
+                string content = Util.GetXmlStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName,
                                                   fs =>
                                                       {

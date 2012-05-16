@@ -57,7 +57,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
-        public static XslCompiledTransform LoadXSLT(string content)
+        public static XslCompiledTransform LoadXslt(string content)
         {
             using (StringReader stringReader = new StringReader(content))
             {
@@ -76,7 +76,7 @@ namespace EVEMon.Common
         /// <param name="filename">The XML document to deserialize from.</param>
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <returns>The result of the deserialization.</returns>
-        public static T DeserializeXMLFromFile<T>(string filename, XslCompiledTransform transform = null)
+        public static T DeserializeXmlFromFile<T>(string filename, XslCompiledTransform transform = null)
             where T : class
         {
             try
@@ -131,7 +131,7 @@ namespace EVEMon.Common
         /// <param name="text">The text.</param>
         /// <param name="transform">The transform.</param>
         /// <returns>The result of the deserialization.</returns>
-        public static T DeserializeXMLFromString<T>(string text, XslCompiledTransform transform = null)
+        public static T DeserializeXmlFromString<T>(string text, XslCompiledTransform transform = null)
             where T : class
         {
             try
@@ -561,7 +561,7 @@ namespace EVEMon.Common
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
         /// <param name="callback">A callback invoked on the UI thread.</param>
         /// <returns></returns>
-        public static void DownloadXMLAsync<T>(Uri url, DownloadCallback<T> callback, string postData = null)
+        public static void DownloadXmlAsync<T>(Uri url, DownloadCallback<T> callback, string postData = null)
             where T : class
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
@@ -615,7 +615,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static string GetXMLStringRepresentation(IXPathNavigable doc)
+        public static string GetXmlStringRepresentation(IXPathNavigable doc)
         {
             if (doc == null)
                 throw new ArgumentNullException("doc");
@@ -863,6 +863,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static IEnumerable<byte> GZipCompress(byte[] inputData)
         {
+            if (inputData == null)
+                throw new ArgumentNullException("inputData");
+
             using (MemoryStream outStream = new MemoryStream())
             {
                 GZipOutputStream gZipOutputStream = new GZipOutputStream(outStream);
@@ -880,6 +883,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static IEnumerable<byte> DeflateCompress(byte[] inputData)
         {
+            if (inputData == null)
+                throw new ArgumentNullException("inputData");
+
             using (MemoryStream outStream = GetMemoryStream())
             {
                 DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(outStream);
@@ -891,14 +897,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Deserializes the JSON to an object.
+        /// Deserializes a JSON string to an object.
         /// </summary>
-        /// <param name="jsonString">The json string.</param>
+        /// <param name="value">The json string.</param>
         /// <returns></returns>
-        public static Dictionary<string, object> DeserializeJSONToObject(string jsonString)
+        public static Dictionary<string, object> DeserializeJsonToObject(string value)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Deserialize<Dictionary<string, object>>(jsonString);
+            return serializer.Deserialize<Dictionary<string, object>>(value);
         }
 
         /// <summary>
@@ -906,7 +912,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="jsonObj">The json object.</param>
         /// <returns></returns>
-        public static string SerializeObjectToJSON(Dictionary<string, object> jsonObj)
+        public static string SerializeObjectToJson(Dictionary<string, object> jsonObj)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Serialize(jsonObj);
