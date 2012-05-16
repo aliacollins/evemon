@@ -356,7 +356,7 @@ namespace EVEMon.MarketUnifiedUploader
             int rowsCount = ((ArrayList)jsonObj["rowsets"]).OfType<Dictionary<string, object>>()
                 .Select(rowset => rowset["rows"]).OfType<ArrayList>().First().Count;
 
-            return String.Format("{5}: Uploading to {0}, {1}: {2}, typeID: {3}, region: {4}{6}",
+            return String.Format(CultureConstants.DefaultCulture, "{5}: Uploading to {0}, {1}: {2}, typeID: {3}, region: {4}{6}",
                                  endPoint.Name, resultType, rowsCount, typeID, regionID,
                                  DateTime.Now.ToUniversalDateTimeString(), Environment.NewLine);
         }
@@ -380,7 +380,8 @@ namespace EVEMon.MarketUnifiedUploader
 
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow.Add(endPoint.UploadInterval);
 
-                ProgressText = String.Format("{3}: {0}{4}Next upload try to {1} at: {2}{4}", response,
+                ProgressText = String.Format(CultureConstants.DefaultCulture, "{3}: {0}{4}Next upload try to {1} at: {2}{4}",
+                                             response,
                                              endPoint.Name,
                                              endPoint.NextUploadTimeUtc.ToLocalTime(),
                                              DateTime.Now.ToUniversalDateTimeString(),
@@ -394,7 +395,7 @@ namespace EVEMon.MarketUnifiedUploader
                 endPoint.UploadInterval = TimeSpan.Zero;
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow;
 
-                ProgressText = String.Format("{1}: Uploaded to {0} succesfully.{2}",
+                ProgressText = String.Format(CultureConstants.DefaultCulture, "{1}: Uploaded to {0} succesfully.{2}",
                                              endPoint.Name, DateTime.Now.ToUniversalDateTimeString(),
                                              Environment.NewLine);
 
@@ -434,7 +435,7 @@ namespace EVEMon.MarketUnifiedUploader
                     return data;
                 case HttpMethod.Get:
                 case HttpMethod.Post:
-                    return String.Format("data={0}", HttpUtility.UrlEncode(data));
+                    return String.Format(CultureConstants.InvariantCulture, "data={0}", HttpUtility.UrlEncode(data));
                 default:
                     throw new NotImplementedException();
             }

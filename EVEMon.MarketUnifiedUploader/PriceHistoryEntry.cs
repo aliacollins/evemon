@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EVEMon.Common;
 
 namespace EVEMon.MarketUnifiedUploader
 {
@@ -11,12 +12,12 @@ namespace EVEMon.MarketUnifiedUploader
         /// <param name="entry">The entry.</param>
         public PriceHistoryEntry(IDictionary<object, object> entry)
         {
-            HistoryDate = DateTime.FromFileTimeUtc(Convert.ToInt64(entry["historyDate"]));
-            LowPrice = Convert.ToDecimal(entry["lowPrice"]);
-            HighPrice = Convert.ToDecimal(entry["highPrice"]);
-            AveragePrice = Convert.ToDecimal(entry["avgPrice"]);
-            Quantity = Convert.ToInt64(entry["volume"]);
-            Orders = Convert.ToInt32(entry["orders"]);
+            HistoryDate = DateTime.FromFileTimeUtc(Convert.ToInt64(entry["historyDate"], CultureConstants.InvariantCulture));
+            LowPrice = Convert.ToDecimal(entry["lowPrice"], CultureConstants.InvariantCulture);
+            HighPrice = Convert.ToDecimal(entry["highPrice"], CultureConstants.InvariantCulture);
+            AveragePrice = Convert.ToDecimal(entry["avgPrice"], CultureConstants.InvariantCulture);
+            Quantity = Convert.ToInt64(entry["volume"], CultureConstants.InvariantCulture);
+            Orders = Convert.ToInt32(entry["orders"], CultureConstants.InvariantCulture);
         }
 
         /// <summary>

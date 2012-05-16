@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using EVEMon.Common;
 
 namespace EVEMon.MarketUnifiedUploader
 {
@@ -30,7 +31,8 @@ namespace EVEMon.MarketUnifiedUploader
         {
             MarketeerFormat marketFormat = new MarketeerFormat(input);
             return String.Join("&", Array.ConvertAll(marketFormat.m_data.AllKeys,
-                                                     key => String.Format("{0}={1}", key, marketFormat.m_data[key])));
+                                                     key => String.Format(CultureConstants.InvariantCulture,
+                                                                          "{0}={1}", key, marketFormat.m_data[key])));
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EVEMon.Common;
 
 namespace EVEMon.MarketUnifiedUploader
 {
@@ -11,20 +12,20 @@ namespace EVEMon.MarketUnifiedUploader
         /// <param name="order">The order.</param>
         public MarketOrder(IDictionary<object, object> order)
         {
-            Price = Convert.ToDecimal(order["price"]);
-            VolumeRemaining = Convert.ToDouble(order["volRemaining"]);
-            OrderID = Convert.ToInt64(order["orderID"]);
-            IssueDate = DateTime.FromFileTimeUtc(Convert.ToInt64(order["issueDate"]));
-            TypeID = Convert.ToInt32(order["typeID"]);
-            VolumeEntered = Convert.ToInt32(order["volEntered"]);
-            MinVolume = Convert.ToInt32(order["minVolume"]);
-            StationID = Convert.ToInt32(order["stationID"]);
-            RegionID = Convert.ToInt32(order["regionID"]);
-            SolarSystemID = Convert.ToInt32(order["solarSystemID"]);
-            Jumps = Convert.ToInt32(order["jumps"]);
-            Range = Convert.ToInt16(order["range"]);
-            Duration = Convert.ToInt16(order["duration"]);
-            Bid = Convert.ToBoolean(order["bid"]);
+            Price = Convert.ToDecimal(order["price"], CultureConstants.InvariantCulture);
+            VolumeRemaining = Convert.ToDouble(order["volRemaining"], CultureConstants.InvariantCulture);
+            OrderID = Convert.ToInt64(order["orderID"], CultureConstants.InvariantCulture);
+            IssueDate = DateTime.FromFileTimeUtc(Convert.ToInt64(order["issueDate"], CultureConstants.InvariantCulture));
+            TypeID = Convert.ToInt32(order["typeID"], CultureConstants.InvariantCulture);
+            VolumeEntered = Convert.ToInt32(order["volEntered"], CultureConstants.InvariantCulture);
+            MinVolume = Convert.ToInt32(order["minVolume"], CultureConstants.InvariantCulture);
+            StationID = Convert.ToInt32(order["stationID"], CultureConstants.InvariantCulture);
+            RegionID = Convert.ToInt32(order["regionID"], CultureConstants.InvariantCulture);
+            SolarSystemID = Convert.ToInt32(order["solarSystemID"], CultureConstants.InvariantCulture);
+            Jumps = Convert.ToInt32(order["jumps"], CultureConstants.InvariantCulture);
+            Range = Convert.ToInt16(order["range"], CultureConstants.InvariantCulture);
+            Duration = Convert.ToInt16(order["duration"], CultureConstants.InvariantCulture);
+            Bid = Convert.ToBoolean(order["bid"], CultureConstants.InvariantCulture);
         }
 
         /// <summary>

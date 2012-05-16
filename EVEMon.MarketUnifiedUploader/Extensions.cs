@@ -1,4 +1,5 @@
 using System;
+using EVEMon.Common;
 
 namespace EVEMon.MarketUnifiedUploader
 {
@@ -11,7 +12,8 @@ namespace EVEMon.MarketUnifiedUploader
         /// <returns></returns>
         internal static string ToIsoDateTimeUTCString(this DateTime dateTimeUTC)
         {
-            return String.Format("{0}+00:00", dateTimeUTC.ToString("s"));
+            return String.Format(CultureConstants.InvariantCulture, "{0}+00:00",
+                                 dateTimeUTC.ToString("s", CultureConstants.InvariantCulture));
         }
 
         /// <summary>
@@ -21,7 +23,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// <returns></returns>
         internal static string ToUniversalDateTimeString(this DateTime dateTime)
         {
-            return dateTime.ToString("u").Replace("Z", String.Empty);
+            return dateTime.ToString("u", CultureConstants.InvariantCulture).Replace("Z", String.Empty);
         }
     }
 }

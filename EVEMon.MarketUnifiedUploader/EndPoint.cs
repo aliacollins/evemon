@@ -22,7 +22,7 @@ namespace EVEMon.MarketUnifiedUploader
         internal EndPoint(Dictionary<string, object> endPoint)
         {
             Name = endPoint.Keys.Contains("name") ? endPoint["name"].ToString() : "EndPoint";
-            Enabled = endPoint.Keys.Contains("enabled") && Convert.ToBoolean(endPoint["enabled"].ToString());
+            Enabled = endPoint.Keys.Contains("enabled") && Convert.ToBoolean(endPoint["enabled"].ToString(), CultureConstants.InvariantCulture);
             UploadKey = endPoint.Keys.Contains("key") ? endPoint["key"].ToString() : "0";
 
             if (endPoint.Keys.Contains("url"))
