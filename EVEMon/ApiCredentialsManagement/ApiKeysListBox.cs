@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using CommonProperties = EVEMon.Common.Properties;
+using EVEMon.Common.Properties;
 
 namespace EVEMon.ApiCredentialsManagement
 {
@@ -262,16 +262,16 @@ namespace EVEMon.ApiCredentialsManagement
             switch (apiKey.Type)
             {
                 default:
-                    icon = CommonProperties.Resources.KeyWrong32;
+                    icon = Resources.KeyWrong32;
                     break;
                 case APIKeyType.Character:
-                    icon = CommonProperties.Resources.DefaultCharacterImage32;
+                    icon = Resources.DefaultCharacterImage32;
                     break;
                 case APIKeyType.Corporation:
-                    icon = CommonProperties.Resources.DefaultCorporationImage32;
+                    icon = Resources.DefaultCorporationImage32;
                     break;
                 case APIKeyType.Account:
-                    icon = CommonProperties.Resources.AccountWide32;
+                    icon = Resources.AccountWide32;
                     break;
             }
             return icon;

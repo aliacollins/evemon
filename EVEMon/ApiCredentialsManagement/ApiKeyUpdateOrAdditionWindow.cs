@@ -6,7 +6,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
-using CommonProperties = EVEMon.Common.Properties;
+using EVEMon.Common.Properties;
 
 namespace EVEMon.ApiCredentialsManagement
 {
@@ -135,7 +135,7 @@ namespace EVEMon.ApiCredentialsManagement
             // Display a warning if the cached timer hasn't expires yet
             if (m_updateMode && m_apiKey.CachedUntil > DateTime.UtcNow)
             {
-                KeyPicture.Image = CommonProperties.Resources.KeyWrong32;
+                KeyPicture.Image = Resources.KeyWrong32;
                 KeyLabel.Text = "Cached timer not expired yet.";
                 CharactersGroupBox.Text = "Warning report";
                 CachedWarningLabel.Text = String.Format(CultureConstants.DefaultCulture, CachedWarningLabel.Text,
@@ -165,7 +165,7 @@ namespace EVEMon.ApiCredentialsManagement
             // Does this API key already exists in our list ?
             if (apiKeyExists)
             {
-                KeyPicture.Image = CommonProperties.Resources.KeyWrong32;
+                KeyPicture.Image = Resources.KeyWrong32;
                 KeyLabel.Text = "API key already in list.";
                 CharactersGroupBox.Text = "Error report";
                 ResultsMultiPanel.SelectedPage = APIKeyExistsErrorPage;
@@ -225,23 +225,23 @@ namespace EVEMon.ApiCredentialsManagement
             switch (e.Type)
             {
                 default:
-                    KeyPicture.Image = CommonProperties.Resources.KeyWrong32;
+                    KeyPicture.Image = Resources.KeyWrong32;
                     KeyLabel.Text = e.KeyTestError;
                     CharactersGroupBox.Text = "Error report";
                     ResultsMultiPanel.SelectedPage = GetErrorPage(e);
                     break;
                 case APIKeyType.Account:
-                    KeyPicture.Image = CommonProperties.Resources.AccountWide32;
+                    KeyPicture.Image = Resources.AccountWide32;
                     KeyLabel.Text = "This is an 'Account' wide API key.";
                     ResultsMultiPanel.SelectedPage = CharactersListPage;
                     break;
                 case APIKeyType.Character:
-                    KeyPicture.Image = CommonProperties.Resources.DefaultCharacterImage32;
+                    KeyPicture.Image = Resources.DefaultCharacterImage32;
                     KeyLabel.Text = "This is a 'Character' restricted API key.";
                     ResultsMultiPanel.SelectedPage = CharactersListPage;
                     break;
                 case APIKeyType.Corporation:
-                    KeyPicture.Image = CommonProperties.Resources.DefaultCorporationImage32;
+                    KeyPicture.Image = Resources.DefaultCorporationImage32;
                     KeyLabel.Text = "This is a 'Corporation' API key.";
                     ResultsMultiPanel.SelectedPage = CharactersListPage;
                     break;

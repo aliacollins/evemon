@@ -21,6 +21,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.IgbService;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
+using EVEMon.Common.Properties;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
@@ -785,7 +786,7 @@ namespace EVEMon
                 return;
 
             // Play the sound
-            using (SoundPlayer sp = new SoundPlayer(Common.Properties.Resources.SkillTrained))
+            using (SoundPlayer sp = new SoundPlayer(Resources.SkillTrained))
             {
                 sp.Play();
             }
@@ -1962,8 +1963,8 @@ namespace EVEMon
         private void UpdateTrayIcon()
         {
             trayIcon.Icon = m_uploaderStatus == UploaderStatus.Uploading
-                                ? Common.Properties.Resources.EMUU
-                                : Common.Properties.Resources.EVEMon;
+                                ? Resources.EMUU
+                                : Resources.EVEMon;
         }
 
         #endregion

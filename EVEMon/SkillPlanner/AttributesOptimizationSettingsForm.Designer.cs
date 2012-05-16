@@ -28,6 +28,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttributesOptimizationSettingsForm));
             this.buttonWholePlan = new System.Windows.Forms.Button();
             this.buttonRemappingPoints = new System.Windows.Forms.Button();
             this.buttonCharacter = new System.Windows.Forms.Button();
@@ -35,10 +36,10 @@ namespace EVEMon.SkillPlanner
             // 
             // buttonWholePlan
             // 
-            this.buttonWholePlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonWholePlan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonWholePlan.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonWholePlan.Image = global::EVEMon.Common.Properties.Resources.BlueGlassArrow;
+            this.buttonWholePlan.Image = ((System.Drawing.Image)(resources.GetObject("buttonWholePlan.Image")));
             this.buttonWholePlan.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonWholePlan.Location = new System.Drawing.Point(12, 67);
             this.buttonWholePlan.Name = "buttonWholePlan";
@@ -51,10 +52,10 @@ namespace EVEMon.SkillPlanner
             // 
             // buttonRemappingPoints
             // 
-            this.buttonRemappingPoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemappingPoints.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemappingPoints.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonRemappingPoints.Image = global::EVEMon.Common.Properties.Resources.BlueGlassArrow;
+            this.buttonRemappingPoints.Image = ((System.Drawing.Image)(resources.GetObject("buttonRemappingPoints.Image")));
             this.buttonRemappingPoints.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonRemappingPoints.Location = new System.Drawing.Point(12, 13);
             this.buttonRemappingPoints.Name = "buttonRemappingPoints";
@@ -67,10 +68,10 @@ namespace EVEMon.SkillPlanner
             // 
             // buttonCharacter
             // 
-            this.buttonCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCharacter.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonCharacter.Image = global::EVEMon.Common.Properties.Resources.BlueGlassArrow;
+            this.buttonCharacter.Image = ((System.Drawing.Image)(resources.GetObject("buttonCharacter.Image")));
             this.buttonCharacter.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonCharacter.Location = new System.Drawing.Point(12, 121);
             this.buttonCharacter.Name = "buttonCharacter";

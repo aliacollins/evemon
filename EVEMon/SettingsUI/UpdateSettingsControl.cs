@@ -5,8 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Properties;
 using EVEMon.Common.SettingsObjects;
-using CommonProperties = EVEMon.Common.Properties;
 
 namespace EVEMon.SettingsUI
 {
@@ -217,14 +217,14 @@ namespace EVEMon.SettingsUI
         /// <param name="height">The height.</param>
         private void AddIcon(Enum method, int height)
         {
-            Bitmap icon = CommonProperties.Resources.KeyGrey16;
+            Bitmap icon = Resources.KeyGrey16;
             string iconToolTip = "This is a basic feature query.";
             if (method is APICharacterMethods)
             {
                 APICharacterMethods apiMethod = (APICharacterMethods)method;
                 if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCharacterFeatures))
                 {
-                    icon = CommonProperties.Resources.KeyGold16;
+                    icon = Resources.KeyGold16;
                     iconToolTip = "This is an advanced feature query.";
                 }
             }
