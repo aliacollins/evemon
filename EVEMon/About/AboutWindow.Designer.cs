@@ -57,6 +57,7 @@ namespace EVEMon.About
             this.stackOverflowLinkLabel = new System.Windows.Forms.LinkLabel();
             this.forgotLabel = new System.Windows.Forms.Label();
             this.OkButton = new System.Windows.Forms.Button();
+            this.DevelopmentTeamLabel = new System.Windows.Forms.Label();
             this.LegalLayoutPanel.SuspendLayout();
             this.HeaderLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).BeginInit();
@@ -119,6 +120,7 @@ namespace EVEMon.About
             this.VerCopyLayoutPanel.Controls.Add(this.EVEMonLabel);
             this.VerCopyLayoutPanel.Controls.Add(this.VersionLabel);
             this.VerCopyLayoutPanel.Controls.Add(this.CopyrightLabel);
+            this.VerCopyLayoutPanel.Controls.Add(this.DevelopmentTeamLabel);
             this.VerCopyLayoutPanel.Controls.Add(this.HomePageLinkLabel);
             this.VerCopyLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.VerCopyLayoutPanel.Location = new System.Drawing.Point(100, 0);
@@ -152,9 +154,9 @@ namespace EVEMon.About
             this.CopyrightLabel.AutoSize = true;
             this.CopyrightLabel.Location = new System.Drawing.Point(3, 51);
             this.CopyrightLabel.Name = "CopyrightLabel";
-            this.CopyrightLabel.Size = new System.Drawing.Size(145, 26);
+            this.CopyrightLabel.Size = new System.Drawing.Size(107, 13);
             this.CopyrightLabel.TabIndex = 5;
-            this.CopyrightLabel.Text = "Copyright © 2006-2012 \r\nEVEMon Development Team";
+            this.CopyrightLabel.Text = "Copyright © 2006-{0}";
             // 
             // HomePageLinkLabel
             // 
@@ -329,9 +331,9 @@ namespace EVEMon.About
             this.eveCentralLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.eveCentralLinkLabel.Name = "eveCentralLinkLabel";
             this.eveCentralLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.eveCentralLinkLabel.Size = new System.Drawing.Size(207, 19);
+            this.eveCentralLinkLabel.Size = new System.Drawing.Size(210, 19);
             this.eveCentralLinkLabel.TabIndex = 12;
-            this.eveCentralLinkLabel.Text = "Eve-central for their market data and API.";
+            this.eveCentralLinkLabel.Text = "EVE-Central for their market data and API.";
             this.eveCentralLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
             // eveDevLinkLabel
@@ -411,6 +413,15 @@ namespace EVEMon.About
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.btnOk_Click);
             // 
+            // DevelopmentTeamLabel
+            // 
+            this.DevelopmentTeamLabel.AutoSize = true;
+            this.DevelopmentTeamLabel.Location = new System.Drawing.Point(3, 64);
+            this.DevelopmentTeamLabel.Name = "DevelopmentTeamLabel";
+            this.DevelopmentTeamLabel.Size = new System.Drawing.Size(145, 13);
+            this.DevelopmentTeamLabel.TabIndex = 6;
+            this.DevelopmentTeamLabel.Text = "EVEMon Development Team";
+            // 
             // AboutWindow
             // 
             this.AcceptButton = this.OkButton;
@@ -479,6 +490,7 @@ namespace EVEMon.About
         private System.Windows.Forms.Label forgotLabel;
         private System.Windows.Forms.LinkLabel lironLeviLinkLabel;
         private System.Windows.Forms.LinkLabel stackOverflowLinkLabel;
+        private System.Windows.Forms.Label DevelopmentTeamLabel;
 
     }
 }
