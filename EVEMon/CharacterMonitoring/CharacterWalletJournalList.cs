@@ -558,7 +558,7 @@ namespace EVEMon.CharacterMonitoring
                                      : walletJournal.TaxAmount.ToString("N2", CultureConstants.DefaultCulture));
                     break;
                 case WalletJournalColumn.ID:
-                    item.Text = walletJournal.ID.ToString();
+                    item.Text = walletJournal.ID.ToString(CultureConstants.DefaultCulture);
                     break;
                 default:
                     throw new NotImplementedException();

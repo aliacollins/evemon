@@ -336,7 +336,13 @@ namespace EVEMon
                         if (pages.TryGetValue(character, out page))
                             tcCharacterTabs.TabPages.Remove(page); // Remove the page from old location
                         else
-                            page = CreateTabPage(character); // Create a new page
+                        { 
+                            // Create a new page
+                            using (TabPage tempPage = CreateTabPage(character))
+                            {
+                                page = tempPage;
+                            }
+                        }
 
                         // Inserts the page in the proper location
                         tcCharacterTabs.TabPages.Insert(index, page);
@@ -413,10 +419,8 @@ namespace EVEMon
         {
             // Create the tab
             TabPage page;
-            TabPage tempPage = null;
-            try
+            using (TabPage tempPage = new TabPage(character.Name))
             {
-                tempPage = new TabPage(character.Name);
                 tempPage.UseVisualStyleBackColor = true;
                 tempPage.Padding = new Padding(5);
                 tempPage.Tag = character;
@@ -425,12 +429,6 @@ namespace EVEMon
                 CreateCharacterMonitor(character, tempPage);
 
                 page = tempPage;
-                tempPage = null;
-            }
-            finally
-            {
-                if (tempPage != null)
-                    tempPage.Dispose();
             }
 
             return page;
@@ -440,26 +438,19 @@ namespace EVEMon
         /// Creates the character monitor.
         /// </summary>
         /// <param name="character">The character.</param>
-        /// <param name="tempPage">The temp page.</param>
-        private static void CreateCharacterMonitor(Character character, Control tempPage)
+        /// <param name="tabPage">The tab page.</param>
+        private static void CreateCharacterMonitor(Character character, Control tabPage)
         {
-            CharacterMonitor tempMonitor = null;
-            try
+            CharacterMonitor monitor;
+            using (CharacterMonitor tempMonitor = new CharacterMonitor(character))
             {
-                tempMonitor = new CharacterMonitor(character);
-                tempMonitor.Parent = tempPage;
+                tempMonitor.Parent = tabPage;
                 tempMonitor.Dock = DockStyle.Fill;
 
-                CharacterMonitor monitor = tempMonitor;
-                tempMonitor = null;
+                monitor = tempMonitor; 
+            }
 
-                tempPage.Controls.Add(monitor);
-            }
-            finally
-            {
-                if (tempMonitor != null)
-                    tempMonitor.Dispose();
-            }
+            tabPage.Controls.Add(monitor);
         }
 
         /// <summary>
