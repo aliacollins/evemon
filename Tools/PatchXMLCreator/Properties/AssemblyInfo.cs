@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon.PatchXMLCreator")]
-[assembly: AssemblyCopyright("Copyright © 2010, Jimi (a.k.a Desmont McCallock)")]
+[assembly: AssemblyCopyright("Copyright © 2010-2012, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

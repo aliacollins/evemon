@@ -73,7 +73,7 @@ namespace EVEMon.About
             this.LegalLayoutPanel.Controls.Add(this.GplLabel);
             this.LegalLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.LegalLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.LegalLayoutPanel.Location = new System.Drawing.Point(0, 102);
+            this.LegalLayoutPanel.Location = new System.Drawing.Point(0, 115);
             this.LegalLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.LegalLayoutPanel.Name = "LegalLayoutPanel";
             this.LegalLayoutPanel.Size = new System.Drawing.Size(304, 230);
@@ -98,7 +98,7 @@ namespace EVEMon.About
             this.HeaderLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.HeaderLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderLayoutPanel.Name = "HeaderLayoutPanel";
-            this.HeaderLayoutPanel.Size = new System.Drawing.Size(264, 102);
+            this.HeaderLayoutPanel.Size = new System.Drawing.Size(263, 115);
             this.HeaderLayoutPanel.TabIndex = 0;
             this.HeaderLayoutPanel.WrapContents = false;
             // 
@@ -125,7 +125,7 @@ namespace EVEMon.About
             this.VerCopyLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.VerCopyLayoutPanel.Name = "VerCopyLayoutPanel";
             this.VerCopyLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 25, 0, 25);
-            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(164, 102);
+            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(163, 115);
             this.VerCopyLayoutPanel.TabIndex = 8;
             this.VerCopyLayoutPanel.WrapContents = false;
             // 
@@ -152,14 +152,14 @@ namespace EVEMon.About
             this.CopyrightLabel.AutoSize = true;
             this.CopyrightLabel.Location = new System.Drawing.Point(3, 51);
             this.CopyrightLabel.Name = "CopyrightLabel";
-            this.CopyrightLabel.Size = new System.Drawing.Size(158, 13);
+            this.CopyrightLabel.Size = new System.Drawing.Size(145, 26);
             this.CopyrightLabel.TabIndex = 5;
-            this.CopyrightLabel.Text = "Copyright © 2006  Timothy Fries";
+            this.CopyrightLabel.Text = "Copyright © 2006-2012 \r\nEVEMon Development Team";
             // 
             // HomePageLinkLabel
             // 
             this.HomePageLinkLabel.AutoSize = true;
-            this.HomePageLinkLabel.Location = new System.Drawing.Point(3, 64);
+            this.HomePageLinkLabel.Location = new System.Drawing.Point(3, 77);
             this.HomePageLinkLabel.Name = "HomePageLinkLabel";
             this.HomePageLinkLabel.Size = new System.Drawing.Size(157, 13);
             this.HomePageLinkLabel.TabIndex = 0;
@@ -210,7 +210,7 @@ namespace EVEMon.About
             this.AuthorsLayoutPanel.Controls.Add(this.DonationsLabel);
             this.AuthorsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.AuthorsLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.AuthorsLayoutPanel.Location = new System.Drawing.Point(0, 332);
+            this.AuthorsLayoutPanel.Location = new System.Drawing.Point(0, 345);
             this.AuthorsLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.AuthorsLayoutPanel.Name = "AuthorsLayoutPanel";
             this.AuthorsLayoutPanel.Size = new System.Drawing.Size(285, 39);

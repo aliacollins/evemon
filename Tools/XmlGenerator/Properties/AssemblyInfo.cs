@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon")]
 [assembly: AssemblyProduct("EVEMon.XmlGenerator")]
-[assembly: AssemblyCopyright("Copyright © Boulba Corp 2009")]
+[assembly: AssemblyCopyright("Copyright © 2009-2012, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
