@@ -8,6 +8,11 @@ namespace EVEMon.XmlGenerator
 {
     internal static class Program
     {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        /// <returns></returns>
+        [STAThread]
         private static void Main()
         {
             DateTime startTime = DateTime.Now;
