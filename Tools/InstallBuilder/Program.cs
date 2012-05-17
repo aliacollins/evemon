@@ -19,7 +19,7 @@ namespace InstallBuilder
         private static readonly string s_programFilesX86Dir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 
         private static string s_projectDir;
-        private static string s_version;
+        private static Version s_version;
         private static string s_nsisExe;
         
         private static bool s_isSnapshot;
@@ -31,7 +31,7 @@ namespace InstallBuilder
         /// <param name="args">The args.</param>
         /// <returns></returns>
         [STAThread]
-        public static int Main(string[] args)
+        private static int Main(string[] args)
         {
             CheckIsDebug();
             CheckIsSnapshot();
@@ -41,15 +41,17 @@ namespace InstallBuilder
 
             if (args.Any())
             {
+                string version = String.Format("{0}.{1}.{2}", s_version.Major, s_version.Minor, s_version.Build);
+
                 if (args[0] == "-version" || args[0] == "-v")
                 {
-                    Console.WriteLine(s_version.Substring(0, s_version.LastIndexOf('.')));
+                    Console.WriteLine(version);
                     return 0;
                 }
 
                 if (args[0] == "-version=tc" || args[0] == "-v=tc")
                 {
-                    Console.WriteLine("##teamcity[buildNumber '{0}']", s_version.Substring(0, s_version.LastIndexOf('.')));
+                    Console.WriteLine("##teamcity[buildNumber '{0}']", version);
                     return 0;
                 }
             }
@@ -171,7 +173,7 @@ namespace InstallBuilder
         {
             try
             {
-                s_version = AssemblyName.GetAssemblyName(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe").Version.ToString();
+                s_version = AssemblyName.GetAssemblyName(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe").Version;
             }
             catch (Exception)
             {
@@ -195,9 +197,7 @@ namespace InstallBuilder
 
             string filename = s_isSnapshot
                                   ? String.Format(CultureInfo.InvariantCulture, "EVEMon_{0}_{1:yyyy-MM-dd}.zip",
-                                                  s_version.Substring(s_version.LastIndexOf('.') + 1,
-                                                                      s_version.Length - s_version.LastIndexOf('.') - 1),
-                                                  DateTime.Now)
+                                                  s_version.Revision, DateTime.Now)
                                   : String.Format(CultureInfo.InvariantCulture, "EVEMon-binaries-{0}.zip", s_version);
 
             string zipFileName = Path.Combine(directory, filename);
@@ -286,11 +286,11 @@ namespace InstallBuilder
                 }
 
                 if (exitCode == 1)
-                    MessageBox.Show("MakeNSIS exited with Errors");
+                    Console.WriteLine("MakeNSIS exited with errors.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Console.WriteLine(ex.Message);
             }
         }
 
