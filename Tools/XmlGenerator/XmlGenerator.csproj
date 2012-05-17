@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EVEMon.XmlGenerator</RootNamespace>
-    <AssemblyName>EVEMon.XmlGenerator</AssemblyName>
+    <AssemblyName>EVEMonXmlGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>

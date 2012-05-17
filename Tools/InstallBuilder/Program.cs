@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace InstallBuilder
+namespace EVEMon.InstallBuilder
 {
     internal static class Program
     {

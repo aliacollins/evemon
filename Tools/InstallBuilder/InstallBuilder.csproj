@@ -8,7 +8,7 @@
     <ProjectGuid>{5CE8E302-3577-41BC-A35F-C88AC625F7A7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InstallBuilder</RootNamespace>
+    <RootNamespace>EVEMon.InstallBuilder</RootNamespace>
     <AssemblyName>EVEMonInstallBuilder</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -16,7 +16,6 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <StartupObject>InstallBuilder.Program</StartupObject>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
