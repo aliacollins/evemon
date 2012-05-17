@@ -5,6 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon", "EVEMon\EVEMon.csp
 	ProjectSection(ProjectDependencies) = postProject
 		{696E929A-6A4A-4C6D-A8B2-C4F25F781940} = {696E929A-6A4A-4C6D-A8B2-C4F25F781940}
 		{8C4A87A0-780E-4765-ADD0-146091FE26F4} = {8C4A87A0-780E-4765-ADD0-146091FE26F4}
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0} = {87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}
 		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66} = {4E359DE3-6C0D-4F87-A48A-82F059D7CF66}
 	EndProjectSection
 EndProject
@@ -20,6 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.EVEMon", "Tests.EVEMo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallBuilder", "Tools\InstallBuilder\InstallBuilder.csproj", "{5CE8E302-3577-41BC-A35F-C88AC625F7A7}"
 	ProjectSection(ProjectDependencies) = postProject
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0} = {87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}
 		{A2E5EFE0-614A-4567-95E5-92A4D94169AC} = {A2E5EFE0-614A-4567-95E5-92A4D94169AC}
 	EndProjectSection
 EndProject
@@ -32,6 +34,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatchXmlCreator", "Tools\PatchXMLCreator\PatchXmlCreator.csproj", "{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.MarketUnifiedUploader", "EVEMon.MarketUnifiedUploader\EVEMon.MarketUnifiedUploader.csproj", "{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResFileCreator", "Tools\ResFileCreator\ResFileCreator.csproj", "{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -247,13 +251,31 @@ Global
 		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|Win32.ActiveCfg = Snapshot|x86
 		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|x86.ActiveCfg = Snapshot|x86
 		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|x86.Build.0 = Snapshot|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|Win32.ActiveCfg = Debug|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|x86.ActiveCfg = Debug|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|x86.Build.0 = Debug|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Release|Any CPU.ActiveCfg = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Release|Mixed Platforms.Build.0 = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Release|Win32.ActiveCfg = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Release|x86.ActiveCfg = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Release|x86.Build.0 = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|Any CPU.ActiveCfg = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|Mixed Platforms.ActiveCfg = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|Mixed Platforms.Build.0 = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|Win32.ActiveCfg = Release|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|x86.ActiveCfg = Snapshot|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|x86.Build.0 = Snapshot|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		CodeStyleEnforcer_Active = 0
 		CodeStyleEnforcer_RulesLocation = 
+		CodeStyleEnforcer_Active = 0
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
