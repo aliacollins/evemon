@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("EVEMon.XmlGenerator")]
+[assembly: AssemblyTitle("XmlGenerator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EVEMon")]
-[assembly: AssemblyProduct("EVEMon.XmlGenerator")]
+[assembly: AssemblyCompany("EVEMon Development Team")]
+[assembly: AssemblyProduct("EVEMonXmlGenerator")]
 [assembly: AssemblyCopyright("Copyright © 2009-2012, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

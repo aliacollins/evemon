@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("EVEMon Patch Xml Creator")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
-[assembly: AssemblyProduct("EVEMon.PatchXMLCreator")]
+[assembly: AssemblyProduct("EVEMonPatchXMLCreator")]
 [assembly: AssemblyCopyright("Copyright © 2010-2012, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
