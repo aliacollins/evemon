@@ -63,7 +63,7 @@ namespace EVEMon.CharacterMonitoring
             lvContracts.ColumnWidthChanged += lvContracts_ColumnWidthChanged;
             lvContracts.ColumnReordered += lvContracts_ColumnReordered;
             lvContracts.MouseMove += listView_MouseMove;
-            lvContracts.MouseLeave += listView_MouseLeave;   
+            lvContracts.MouseLeave += listView_MouseLeave;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
@@ -320,8 +320,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<Contract> contracts = m_list
-                    .Where(x => x.ContractType != ContractType.None &&
-                                x.StartStation != null && x.EndStation != null)
+                    .Where(x => x.ContractType != ContractType.None && x.StartStation != null && x.EndStation != null)
                     .Where(x => IsTextMatching(x, text));
 
                 if (Character != null && Settings.UI.MainWindow.Contracts.HideInactiveContracts)
@@ -969,7 +968,7 @@ namespace EVEMon.CharacterMonitoring
         {
             UpdateColumns();
         }
-        
+
         # endregion
 
 

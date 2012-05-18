@@ -261,9 +261,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<ResearchPoint> researhPoints = m_list
-                    .Where(x => !String.IsNullOrEmpty(x.AgentName) &&
-                                !String.IsNullOrEmpty(x.Field) &&
-                                x.Station != null)
+                    .Where(x => !String.IsNullOrEmpty(x.AgentName) && !String.IsNullOrEmpty(x.Field) && x.Station != null)
                     .Where(x => IsTextMatching(x, text));
 
                 UpdateSort();

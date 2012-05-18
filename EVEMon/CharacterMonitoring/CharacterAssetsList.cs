@@ -63,7 +63,7 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvAssets.ColumnReordered += listView_ColumnReordered;
             lvAssets.MouseMove += listView_MouseMove;
-            lvAssets.MouseLeave += listView_MouseLeave;   
+            lvAssets.MouseLeave += listView_MouseLeave;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
@@ -283,7 +283,9 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<Asset> assets = m_list.Where(x=> x.Item != null).Where(x => IsTextMatching(x, text));
+                IEnumerable<Asset> assets = m_list
+                    .Where(x => x.Item != null && x.SolarSystem != null)
+                    .Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 

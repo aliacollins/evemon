@@ -271,7 +271,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<WalletTransaction> walletTransactions = m_list.Where(x => IsTextMatching(x, text));
+                IEnumerable<WalletTransaction> walletTransactions = m_list
+                    .Where(x => x.Station != null).Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 

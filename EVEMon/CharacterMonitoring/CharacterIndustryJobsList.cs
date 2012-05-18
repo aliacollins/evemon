@@ -78,7 +78,7 @@ namespace EVEMon.CharacterMonitoring
             lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
             lvJobs.ColumnReordered += lvJobs_ColumnReordered;
             lvJobs.MouseMove += listView_MouseMove;
-            lvJobs.MouseLeave += listView_MouseLeave;   
+            lvJobs.MouseLeave += listView_MouseLeave;
 
             m_refreshTimer.Interval = 1000;
             m_refreshTimer.Tick += refresh_TimerTick;
@@ -334,9 +334,8 @@ namespace EVEMon.CharacterMonitoring
             {
                 string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<IndustryJob> jobs = m_list
-                    .Where(x => x.InstalledItem != null &&
-                                x.OutputItem != null &&
-                                x.SolarSystem != null).Where(x => IsTextMatching(x, text));
+                    .Where(x => x.InstalledItem != null && x.OutputItem != null && x.SolarSystem != null)
+                    .Where(x => IsTextMatching(x, text));
 
                 if (Character != null && Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs)
                     jobs = jobs.Where(x => x.IsActive);
