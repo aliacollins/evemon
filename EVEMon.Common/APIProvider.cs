@@ -133,15 +133,6 @@ namespace EVEMon.Common
         #region Queries
 
         /// <summary>
-        /// Query the conquerable station list.
-        /// </summary>
-        public APIResult<SerializableAPIConquerableStationList> QueryConquerableStationList()
-        {
-            return QueryMethod<SerializableAPIConquerableStationList>(APIGenericMethods.ConquerableStationList, null,
-                                                                      RowsetsTransform);
-        }
-
-        /// <summary>
         /// Query a method without arguments.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>

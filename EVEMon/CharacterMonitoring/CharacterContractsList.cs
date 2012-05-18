@@ -68,6 +68,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
             EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
             EveMonClient.CorporationContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
             Disposed += OnDisposed;
@@ -210,6 +211,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
             EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterContractItemsDownloaded -= EveMonClient_ContractItemsDownloaded;
             EveMonClient.CorporationContractItemsDownloaded -= EveMonClient_ContractItemsDownloaded;
             Disposed -= OnDisposed;
@@ -966,6 +968,21 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
         {
+            UpdateColumns();
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            foreach (Contract contract in m_list)
+            {
+                contract.UpdateStation();
+            }
+
             UpdateColumns();
         }
 

@@ -52,15 +52,15 @@ namespace EVEMon.Common
                                                                      OnSkillQueueUpdated);
             m_characterQueryMonitors.Add(m_skillQueueMonitor);
 
-            m_charAssetsMonitor =
-                new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
-                                                                    OnAssetsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charAssetsMonitor);
-
             m_charStandingsMonitor =
                 new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings,
                                                                     OnStandingsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charStandingsMonitor);
+
+            m_charAssetsMonitor =
+                new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
+                                                                    OnAssetsUpdated) { QueryOnStartup = true };
+            m_characterQueryMonitors.Add(m_charAssetsMonitor);
 
             m_charMarketOrdersMonitor =
                 new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,

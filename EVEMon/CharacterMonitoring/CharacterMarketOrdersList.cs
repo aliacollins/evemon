@@ -103,6 +103,7 @@ namespace EVEMon.CharacterMonitoring
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             Disposed += OnDisposed;
         }
 
@@ -253,6 +254,7 @@ namespace EVEMon.CharacterMonitoring
             m_tooltip.Dispose();
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -905,6 +907,21 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             Orders = ccpCharacter.MarketOrders;
+            UpdateColumns();
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            foreach (MarketOrder order in m_list)
+            {
+                order.UpdateStation();
+            }
+
             UpdateColumns();
         }
 

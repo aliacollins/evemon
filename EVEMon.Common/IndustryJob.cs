@@ -7,6 +7,8 @@ namespace EVEMon.Common
 {
     public sealed class IndustryJob
     {
+        private long m_installedItemLocationID;
+
         /// <summary>
         /// The maximum number of days after job ended. Beyond this limit, we do not import jobs anymore.
         /// </summary>
@@ -310,9 +312,6 @@ namespace EVEMon.Common
             OutputItemID = src.OutputTypeID;
             OutputItem = GetOutputItem(src.OutputTypeID);
             Runs = src.Runs;
-            Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
-            BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
-            Installation = GetInstallation(src.InstalledItemLocationID);
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
             InstalledTime = src.InstallTime;
             InstalledME = src.InstalledItemMaterialLevel;
@@ -321,6 +320,13 @@ namespace EVEMon.Common
             EndProductionTime = src.EndProductionTime;
             PauseProductionTime = src.PauseProductionTime;
             IssuedFor = src.IssuedFor;
+            m_installedItemLocationID = src.InstalledItemLocationID;
+
+            UpdateInstallation();
+            if (Enum.IsDefined(typeof(BlueprintActivity), src.ActivityID))
+                Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
+            if (Enum.IsDefined(typeof(BlueprintType), src.InstalledItemCopy))
+                BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
         }
 
         #endregion
@@ -354,7 +360,7 @@ namespace EVEMon.Common
             if (id <= Int32.MaxValue)
             {
                 int stationID = Convert.ToInt32(id);
-                station = ConquerableStation.GetStationByID(stationID) ?? StaticGeography.GetStationByID(stationID);
+                station = Station.GetByID(stationID);
                 outpost = station as ConquerableStation;
             }
 
@@ -416,6 +422,19 @@ namespace EVEMon.Common
             }
 
             return ActiveJobState.None;
+        }
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Updates the installation.
+        /// </summary>
+        public void UpdateInstallation()
+        {
+            Installation = GetInstallation(m_installedItemLocationID);
         }
 
         #endregion

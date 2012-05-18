@@ -119,7 +119,7 @@ namespace EVEMon.Common
                 return "(None)";
 
             // Look into EVEMon's data file if it's an NPC corporation or a players null sec corporation
-            Station station = ConquerableStation.GetStationByID(m_senderID) ?? StaticGeography.GetStationByID(m_senderID); 
+            Station station = Station.GetByID(m_senderID);
             if (station != null)
                 return station.CorporationName;
 

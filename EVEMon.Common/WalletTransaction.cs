@@ -6,6 +6,9 @@ namespace EVEMon.Common
 {
     public sealed class WalletTransaction
     {
+        private int m_stationID;
+
+
         #region Constructor
 
         /// <summary>
@@ -24,9 +27,10 @@ namespace EVEMon.Common
             Quantity = src.Quantity;
             Price = src.Price;
             ClientName = src.ClientName;
-            Station = Station.GetByID(src.StationID);
             TransactionType = src.TransactionType == "buy" ? TransactionType.Buy : TransactionType.Sell;
             TransactionFor = src.TransactionFor == "personal" ? IssuedFor.Character : IssuedFor.Corporation;
+            m_stationID = src.StationID;
+            UpdateStation();
 
             Credit = GetCredit();
         }
@@ -110,6 +114,19 @@ namespace EVEMon.Common
 
             decimal credit = Quantity * Price;
             return TransactionType == TransactionType.Buy ? -credit : credit;
+        }
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Updates the station.
+        /// </summary>
+        public void UpdateStation()
+        {
+            Station = Station.GetByID(m_stationID);
         }
 
         #endregion

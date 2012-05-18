@@ -54,8 +54,24 @@ namespace EVEMon.CharacterMonitoring
             lvWalletTransactions.ColumnReordered += listView_ColumnReordered;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_CharacterWalletTransactionsUpdated;
             Disposed += OnDisposed;
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            foreach (WalletTransaction walletTransaction in m_list)
+            {
+                walletTransaction.UpdateStation();
+            }
+
+            UpdateColumns();
         }
 
         #endregion
@@ -168,6 +184,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_CharacterWalletTransactionsUpdated;
             Disposed -= OnDisposed;
         }

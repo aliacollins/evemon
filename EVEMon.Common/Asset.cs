@@ -54,8 +54,7 @@ namespace EVEMon.Common
             set
             {
                 m_locationID = value;
-                Location = GetLocation();
-                Jumps = GetJumps();
+                UpdateLocation();
             }
         }
 
@@ -170,7 +169,7 @@ namespace EVEMon.Common
             if (LocationID <= Int32.MaxValue)
             {
                 int locationID = Convert.ToInt32(LocationID);
-                Station station = ConquerableStation.GetStationByID(locationID) ?? StaticGeography.GetStationByID(locationID);
+                Station station = Station.GetByID(locationID);
                 ConquerableStation outpost = station as ConquerableStation;
 
                 SolarSystem = station == null
@@ -205,10 +204,24 @@ namespace EVEMon.Common
                 return -1;
 
             return m_character.LastKnownSolarSystem.GetFastestPathTo(SolarSystem, PathSearchCriteria.FewerJumps)
-                                  .Count(system => system != m_character.LastKnownSolarSystem);
+                .Count(system => system != m_character.LastKnownSolarSystem);
         }
 
         #endregion
 
+
+        #region Public Methods
+
+
+        /// <summary>
+        /// Updates the location.
+        /// </summary>
+        public void UpdateLocation()
+        {
+            Location = GetLocation();
+            Jumps = GetJumps();
+        }
+
+        #endregion
     }
 }

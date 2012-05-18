@@ -52,6 +52,7 @@ namespace EVEMon.CharacterMonitoring
             lvResearchPoints.ColumnReordered += lvResearchPoints_ColumnReordered;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
             Disposed += OnDisposed;
         }
@@ -156,6 +157,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
             Disposed -= OnDisposed;
         }
@@ -565,6 +567,21 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             ResearchPoints = ccpCharacter.ResearchPoints;
+            UpdateColumns();
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            foreach (ResearchPoint researchPoint in m_list)
+            {
+                researchPoint.UpdateStation();
+            }
+
             UpdateColumns();
         }
 

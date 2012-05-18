@@ -12,6 +12,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.Common.Threading;
 using Region = EVEMon.Common.Data.Region;
 
 namespace EVEMon.CharacterMonitoring
@@ -66,8 +67,9 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.MouseLeave += listView_MouseLeave;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
+            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             Disposed += OnDisposed;
         }
 
@@ -85,8 +87,9 @@ namespace EVEMon.CharacterMonitoring
         {
             m_tooltip.Dispose();
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
+            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -823,6 +826,24 @@ namespace EVEMon.CharacterMonitoring
             m_queried = true;
 
             UpdateListVisibility();
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            Dispatcher.BackgroundInvoke(() =>
+                                            {
+                                                foreach (Asset asset in m_list)
+                                                {
+                                                    asset.UpdateLocation();
+                                                }
+
+                                                Dispatcher.Invoke(UpdateColumns);
+                                            });
         }
 
         # endregion

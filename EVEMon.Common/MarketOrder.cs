@@ -17,6 +17,7 @@ namespace EVEMon.Common
         public const int MaxExpirationDays = 7;
 
         private OrderState m_state;
+        private int m_stationID;
 
 
         #region Constructors
@@ -277,7 +278,6 @@ namespace EVEMon.Common
             OwnerID = src.OwnerID;
             ID = src.OrderID;
             Item = StaticItems.GetItemByID(src.ItemID);
-            Station = Station.GetByID(src.StationID);
             UnitaryPrice = src.UnitaryPrice;
             InitialVolume = src.InitialVolume;
             RemainingVolume = src.RemainingVolume;
@@ -285,6 +285,8 @@ namespace EVEMon.Common
             Duration = src.Duration;
             Issued = src.Issued;
             IssuedFor = src.IssuedFor;
+            m_stationID = src.StationID;
+            UpdateStation();
 
             if (src.IsBuyOrder == 0)
                 return;
@@ -292,6 +294,19 @@ namespace EVEMon.Common
             BuyOrder buyOrder = (BuyOrder)this;
             buyOrder.Escrow = src.Escrow;
             buyOrder.Range = src.Range;
+        }
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Updates the station.
+        /// </summary>
+        public void UpdateStation()
+        {
+            Station = Station.GetByID(m_stationID);
         }
 
         #endregion

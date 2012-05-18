@@ -85,6 +85,7 @@ namespace EVEMon.CharacterMonitoring
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
             Disposed += OnDisposed;
         }
@@ -239,6 +240,7 @@ namespace EVEMon.CharacterMonitoring
             m_refreshTimer.Dispose();
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             Disposed -= OnDisposed;
         }
@@ -1002,6 +1004,21 @@ namespace EVEMon.CharacterMonitoring
             // Recreate the columns
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             m_columnsChanged = false;
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            foreach (IndustryJob job in m_list)
+            {
+                job.UpdateInstallation();
+            }
+
+            UpdateColumns();
         }
 
         # endregion
