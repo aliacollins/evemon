@@ -68,13 +68,13 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Properties
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -213,8 +213,7 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            EVEMailMessages = (ccpCharacter == null ? null : ccpCharacter.EVEMailMessages);
+            EVEMailMessages = (Character == null ? null : Character.EVEMailMessages);
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;
             Grouping = (Character == null ? EVEMailMessagesGrouping.State : Character.UISettings.EVEMailMessagesGroupBy);
             TextFilter = String.Empty;
@@ -877,11 +876,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            EVEMailMessages = ccpCharacter.EVEMailMessages;
+            EVEMailMessages = Character.EVEMailMessages;
             UpdateColumns();
         }
 
@@ -902,8 +900,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterEVEMailBodyDownloaded(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (e.Character != ccpCharacter)
+            if (e.Character != Character)
                 return;
 
             OnSelectionChanged();
@@ -926,6 +923,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
         {
+            if (Character == null)
+                return;
+
             APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
             if (notification == null)
                 return;

@@ -17,8 +17,6 @@ namespace EVEMon.CharacterMonitoring
     {
         #region Fields
 
-        private CCPCharacter m_ccpCharacter;
-
         // Standings drawing - Region & text padding
         private const int PadTop = 2;
         private const int PadLeft = 6;
@@ -58,13 +56,13 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Properties
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         #endregion
 
@@ -120,19 +118,13 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
-            m_ccpCharacter = Character as CCPCharacter;
-
-            // If the character is not a CCPCharacter it does not have standings
-            if (m_ccpCharacter == null)
-                return;
-
             int scrollBarPosition = lbStandings.TopIndex;
 
             // Update the skills list
             lbStandings.BeginUpdate();
             try
             {
-                IEnumerable<Standing> standings = m_ccpCharacter.Standings;
+                IEnumerable<Standing> standings = Character.Standings;
                 IEnumerable<IGrouping<string, Standing>> groups = standings.GroupBy(
                     x => x.Group).Reverse();
 
@@ -229,8 +221,8 @@ namespace EVEMon.CharacterMonitoring
             // Measure texts
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            Skill diplomacySkill = m_ccpCharacter.Skills[DBConstants.DiplomacySkillID];
-            Skill connectionsSkill = m_ccpCharacter.Skills[DBConstants.ConnectionsSkillID];
+            Skill diplomacySkill = Character.Skills[DBConstants.DiplomacySkillID];
+            Skill connectionsSkill = Character.Skills[DBConstants.ConnectionsSkillID];
             SkillLevel diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.LastConfirmedLvl);
             SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
 

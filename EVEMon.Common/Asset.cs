@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -7,7 +6,6 @@ namespace EVEMon.Common
 {
     public sealed class Asset
     {
-        private readonly Character m_character;
         private long m_locationID;
 
 
@@ -16,16 +14,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="Asset"/> class.
         /// </summary>
-        /// <param name="character">The character.</param>
         /// <param name="src">The source.</param>
-        public Asset(Character character, SerializableAssetListItem src)
+        public Asset(SerializableAssetListItem src)
         {
             if (src == null)
                 throw new ArgumentNullException("src");
 
-            m_character = character;
-
-            ID = src.ItemID;
             LocationID = src.LocationID;
             Quantity = src.Quantity;
             Item = StaticItems.GetItemByID(src.TypeID);
@@ -41,11 +35,6 @@ namespace EVEMon.Common
         #region Properties
 
         /// <summary>
-        /// Gets the ID.
-        /// </summary>
-        private long ID { get; set; }
-
-        /// <summary>
         /// Gets the location ID.
         /// </summary>
         internal long LocationID
@@ -54,7 +43,7 @@ namespace EVEMon.Common
             set
             {
                 m_locationID = value;
-                UpdateLocation();
+                Location = GetLocation();
             }
         }
 
@@ -101,7 +90,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the jumps count.
         /// </summary>
-        public int Jumps { get; private set; }
+        public int Jumps { get; internal set; }
 
         /// <summary>
         /// Gets the jumps text.
@@ -161,12 +150,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         private string GetLocation()
         {
-            if (LocationID == 0)
+            if (m_locationID == 0)
                 return String.Empty;
 
-            string location = LocationID.ToString(CultureConstants.InvariantCulture);
+            string location = m_locationID.ToString(CultureConstants.InvariantCulture);
 
-            if (LocationID <= Int32.MaxValue)
+            if (m_locationID <= Int32.MaxValue)
             {
                 int locationID = Convert.ToInt32(LocationID);
                 Station station = Station.GetByID(locationID);
@@ -192,34 +181,6 @@ namespace EVEMon.Common
             }
 
             return location;
-        }
-
-        /// <summary>
-        /// Gets the jumps.
-        /// </summary>
-        /// <returns></returns>
-        private int GetJumps()
-        {
-            if (m_character.LastKnownSolarSystem == null || SolarSystem == null)
-                return -1;
-
-            return m_character.LastKnownSolarSystem.GetFastestPathTo(SolarSystem, PathSearchCriteria.FewerJumps)
-                .Count(system => system != m_character.LastKnownSolarSystem);
-        }
-
-        #endregion
-
-
-        #region Public Methods
-
-
-        /// <summary>
-        /// Updates the location.
-        /// </summary>
-        public void UpdateLocation()
-        {
-            Location = GetLocation();
-            Jumps = GetJumps();
         }
 
         #endregion

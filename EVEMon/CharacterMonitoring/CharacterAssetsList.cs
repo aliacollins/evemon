@@ -76,56 +76,7 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        # region Inherited Events
-
-        /// <summary>
-        /// Unsubscribe events on disposing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            m_tooltip.Dispose();
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
-            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
-            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
-            Disposed -= OnDisposed;
-        }
-
-        /// <summary>
-        /// When the control becomes visible again, we update the content.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (DesignMode || this.IsDesignModeHosted() || Character == null)
-                return;
-
-            base.OnVisibleChanged(e);
-
-            if (!Visible)
-                return;
-
-            // Prevents the properties to call UpdateColumns() till we set all properties
-            m_init = false;
-
-            Assets = Character == null ? null : Character.Assets;
-            Columns = Settings.UI.MainWindow.Assets.Columns;
-            Grouping = (Character == null ? AssetGrouping.None : Character.UISettings.AssetsGroupBy);
-            TextFilter = String.Empty;
-
-            UpdateColumns();
-
-            m_init = true;
-
-            UpdateListVisibility();
-        }
-
-        # endregion
-
-
-        #region Properties
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
@@ -219,6 +170,55 @@ namespace EVEMon.CharacterMonitoring
         }
 
         #endregion
+
+
+        # region Inherited Events
+
+        /// <summary>
+        /// Unsubscribe events on disposing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            m_tooltip.Dispose();
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
+            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
+            Disposed -= OnDisposed;
+        }
+
+        /// <summary>
+        /// When the control becomes visible again, we update the content.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            if (DesignMode || this.IsDesignModeHosted() || Character == null)
+                return;
+
+            base.OnVisibleChanged(e);
+
+            if (!Visible)
+                return;
+
+            // Prevents the properties to call UpdateColumns() till we set all properties
+            m_init = false;
+
+            Assets = Character == null ? null : Character.Assets;
+            Columns = Settings.UI.MainWindow.Assets.Columns;
+            Grouping = (Character == null ? AssetGrouping.None : Character.UISettings.AssetsGroupBy);
+            TextFilter = String.Empty;
+
+            UpdateColumns();
+
+            m_init = true;
+
+            UpdateListVisibility();
+        }
+
+        # endregion
 
 
         #region Update Methods
@@ -812,6 +812,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
         {
+            if (Character == null)
+                return;
+
             APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
             if (notification == null)
                 return;
@@ -835,13 +838,13 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
         {
+            if (Character == null)
+                return;
+
             Dispatcher.BackgroundInvoke(() =>
                                             {
-                                                foreach (Asset asset in m_list)
-                                                {
-                                                    asset.UpdateLocation();
-                                                }
-
+                                                Character.Assets.UpdateLocation();
+                                                Assets = Character.Assets;
                                                 Dispatcher.Invoke(UpdateColumns);
                                             });
         }

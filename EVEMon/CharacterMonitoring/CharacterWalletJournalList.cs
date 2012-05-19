@@ -62,13 +62,13 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Properties
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -192,8 +192,7 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            WalletJournal = (ccpCharacter == null ? null : ccpCharacter.WalletJournal);
+            WalletJournal = (Character == null ? null : Character.WalletJournal);
             Columns = Settings.UI.MainWindow.WalletJournal.Columns;
             Grouping = (Character == null ? WalletJournalGrouping.None : Character.UISettings.WalletJournalGroupBy);
             TextFilter = String.Empty;
@@ -694,11 +693,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_CharacterWalletJournalUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            WalletJournal = ccpCharacter.WalletJournal;
+            WalletJournal = Character.WalletJournal;
             UpdateColumns();
         }
 

@@ -77,13 +77,13 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Properties
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvContracts"/> is visible.
@@ -234,8 +234,7 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            Contracts = (ccpCharacter == null ? null : ccpCharacter.Contracts);
+            Contracts = (Character == null ? null : Character.Contracts);
             Columns = Settings.UI.MainWindow.Contracts.Columns;
             Grouping = (Character == null ? ContractGrouping.State : Character.UISettings.ContractsGroupBy);
             TextFilter = String.Empty;
@@ -939,11 +938,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.ContractsEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_ContractsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            Contracts = ccpCharacter.Contracts;
+            Contracts = Character.Contracts;
             UpdateColumns();
         }
 
@@ -954,8 +952,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_ContractItemsDownloaded(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
             UpdateContent();
@@ -978,6 +975,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
         {
+            if (Character == null)
+                return;
+
             foreach (Contract contract in m_list)
             {
                 contract.UpdateStation();

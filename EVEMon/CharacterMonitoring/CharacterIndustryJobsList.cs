@@ -99,7 +99,7 @@ namespace EVEMon.CharacterMonitoring
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvJobs"/> is visible.
@@ -262,8 +262,7 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            Jobs = (ccpCharacter == null ? null : ccpCharacter.IndustryJobs);
+            Jobs = (Character == null ? null : Character.IndustryJobs);
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             Grouping = (Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy);
             TextFilter = String.Empty;
@@ -963,11 +962,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_IndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            Jobs = ccpCharacter.IndustryJobs;
+            Jobs = Character.IndustryJobs;
             UpdateColumns();
         }
 
@@ -1013,6 +1011,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
         {
+            if (Character == null)
+                return;
+
             foreach (IndustryJob job in m_list)
             {
                 job.UpdateInstallation();

@@ -60,13 +60,13 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Properties
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -179,8 +179,7 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            ResearchPoints = (ccpCharacter == null ? null : ccpCharacter.ResearchPoints);
+            ResearchPoints = (Character == null ? null : Character.ResearchPoints);
             Columns = Settings.UI.MainWindow.Research.Columns;
             TextFilter = String.Empty;
 
@@ -562,11 +561,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            ResearchPoints = ccpCharacter.ResearchPoints;
+            ResearchPoints = Character.ResearchPoints;
             UpdateColumns();
         }
 
@@ -577,6 +575,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
         {
+            if (Character == null)
+                return;
+
             foreach (ResearchPoint researchPoint in m_list)
             {
                 researchPoint.UpdateStation();
