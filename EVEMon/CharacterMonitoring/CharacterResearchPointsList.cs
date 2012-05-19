@@ -50,11 +50,6 @@ namespace EVEMon.CharacterMonitoring
             lvResearchPoints.ColumnClick += lvResearchPoints_ColumnClick;
             lvResearchPoints.ColumnWidthChanged += lvResearchPoints_ColumnWidthChanged;
             lvResearchPoints.ColumnReordered += lvResearchPoints_ColumnReordered;
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
-            EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -148,6 +143,20 @@ namespace EVEMon.CharacterMonitoring
 
 
         # region Inherited Events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.

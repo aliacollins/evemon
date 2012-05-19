@@ -53,13 +53,6 @@ namespace EVEMon.CharacterMonitoring
             noEVENotificationsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             ListViewHelper.EnableDoubleBuffer(lvNotifications);
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_CharacterEVENotificationsUpdated;
-            EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;
-            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
-            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -176,6 +169,22 @@ namespace EVEMon.CharacterMonitoring
 
 
         # region Inherited Events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_CharacterEVENotificationsUpdated;
+            EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
+            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.

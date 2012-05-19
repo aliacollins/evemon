@@ -20,9 +20,9 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
-        private readonly InfiniteDisplayToolTip m_tooltip;
-        private readonly Timer m_refreshTimer;
-
+        
+        private InfiniteDisplayToolTip m_tooltip;
+        private Timer m_refreshTimer;
         private IndustryJobGrouping m_grouping;
         private IndustryJobColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
@@ -59,8 +59,6 @@ namespace EVEMon.CharacterMonitoring
             InitializeComponent();
             InitializeExpandablePanelControls();
 
-            m_tooltip = new InfiniteDisplayToolTip(lvJobs);
-            m_refreshTimer = new Timer();
 
             lvJobs.Visible = false;
             lvJobs.AllowColumnReorder = true;
@@ -79,15 +77,6 @@ namespace EVEMon.CharacterMonitoring
             lvJobs.ColumnReordered += lvJobs_ColumnReordered;
             lvJobs.MouseMove += listView_MouseMove;
             lvJobs.MouseLeave += listView_MouseLeave;
-
-            m_refreshTimer.Interval = 1000;
-            m_refreshTimer.Tick += refresh_TimerTick;
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
-            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
-            EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -230,6 +219,27 @@ namespace EVEMon.CharacterMonitoring
         # region Inherited Events
 
         /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            m_tooltip = new InfiniteDisplayToolTip(lvJobs);
+            m_refreshTimer = new Timer();
+
+            m_refreshTimer.Tick += refresh_TimerTick;
+            m_refreshTimer.Interval = 1000;
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
+            Disposed += OnDisposed;
+        }
+
+        /// <summary>
         /// Unsubscribe events on disposing.
         /// </summary>
         /// <param name="sender"></param>
@@ -238,6 +248,7 @@ namespace EVEMon.CharacterMonitoring
         {
             m_tooltip.Dispose();
             m_refreshTimer.Dispose();
+
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;

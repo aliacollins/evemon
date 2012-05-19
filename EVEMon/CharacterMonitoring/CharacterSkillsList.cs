@@ -15,6 +15,8 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterSkillsList : UserControl
     {
+        #region Fields
+
         private const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
         private const byte SkillsSummaryTextWidth = 75;
         private const byte SkillGroupTotalSPTextWidth = 100;
@@ -45,6 +47,11 @@ namespace EVEMon.CharacterMonitoring
 
         private int m_maxGroupNameWidth;
 
+        #endregion
+
+
+        #region Constructor
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -59,12 +66,12 @@ namespace EVEMon.CharacterMonitoring
             noSkillsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             m_requireRefresh = true;
-
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            Disposed += OnDisposed;
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
@@ -72,8 +79,24 @@ namespace EVEMon.CharacterMonitoring
         [Browsable(false)]
         public Character Character { get; set; }
 
+        #endregion
+
 
         #region Inherited events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -137,7 +160,7 @@ namespace EVEMon.CharacterMonitoring
 
                 m_maxGroupNameWidth = (groups.Select(
                     group => TextRenderer.MeasureText(group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
-                                                 groupNameSize => groupNameSize.Width)).Concat(new[] { 0 }).Max();
+                        groupNameSize => groupNameSize.Width)).Concat(new[] { 0 }).Max();
 
                 // Scroll through groups
                 lbSkills.Items.Clear();
@@ -740,7 +763,7 @@ namespace EVEMon.CharacterMonitoring
                 tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill &Explorer...", Resources.LeadsTo);
                 tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
                 tmSkillExplorerTemp.Tag = skill;
-                
+
                 ToolStripMenuItem tmSkillExplorer = tmSkillExplorerTemp;
                 tmSkillExplorerTemp = null;
 
@@ -781,7 +804,8 @@ namespace EVEMon.CharacterMonitoring
                                                   {
                                                       menuPlanItem.Click += menuPlanItem_Click;
                                                       menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
-                                                                                                    new SkillLevel(skill, level));
+                                                                                                            new SkillLevel(skill,
+                                                                                                                           level));
                                                   });
 
                         ToolStripMenuItem menuLevel = tempMenuLevel;

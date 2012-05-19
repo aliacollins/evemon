@@ -47,10 +47,6 @@ namespace EVEMon.CharacterMonitoring
             m_standingsFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_standingsBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noStandingsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            EveMonClient.CharacterStandingsUpdated += EveMonClient_CharacterStandingsUpdated;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -68,6 +64,19 @@ namespace EVEMon.CharacterMonitoring
 
 
         #region Inherited events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            EveMonClient.CharacterStandingsUpdated += EveMonClient_CharacterStandingsUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.

@@ -21,8 +21,8 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<ContractColumnSettings> m_columns = new List<ContractColumnSettings>();
         private readonly List<Contract> m_list = new List<Contract>();
-        private readonly InfiniteDisplayToolTip m_tooltip;
-
+        
+        private InfiniteDisplayToolTip m_tooltip;
         private ContractGrouping m_grouping;
         private ContractColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
@@ -46,8 +46,6 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            m_tooltip = new InfiniteDisplayToolTip(lvContracts);
-
             lvContracts.Visible = false;
             lvContracts.AllowColumnReorder = true;
             lvContracts.Columns.Clear();
@@ -64,14 +62,6 @@ namespace EVEMon.CharacterMonitoring
             lvContracts.ColumnReordered += lvContracts_ColumnReordered;
             lvContracts.MouseMove += listView_MouseMove;
             lvContracts.MouseLeave += listView_MouseLeave;
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
-            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
-            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
-            EveMonClient.CharacterContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
-            EveMonClient.CorporationContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -201,6 +191,25 @@ namespace EVEMon.CharacterMonitoring
         # region Inherited Events
 
         /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            m_tooltip = new InfiniteDisplayToolTip(lvContracts);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.CharacterContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
+            EveMonClient.CorporationContractItemsDownloaded += EveMonClient_ContractItemsDownloaded;
+            Disposed += OnDisposed;
+        }
+
+        /// <summary>
         /// Unsubscribe events on disposing.
         /// </summary>
         /// <param name="sender"></param>
@@ -208,6 +217,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             m_tooltip.Dispose();
+
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
             EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;

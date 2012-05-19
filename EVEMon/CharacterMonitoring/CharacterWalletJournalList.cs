@@ -51,12 +51,6 @@ namespace EVEMon.CharacterMonitoring
             lvWalletJournal.ColumnClick += listView_ColumnClick;
             lvWalletJournal.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvWalletJournal.ColumnReordered += listView_ColumnReordered;
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.RefTypesUpdated += EveMonClient_RefTypesUpdated;
-            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
-            EveMonClient.CharacterWalletJournalUpdated += EveMonClient_CharacterWalletJournalUpdated;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -160,6 +154,21 @@ namespace EVEMon.CharacterMonitoring
 
 
         # region Inherited Events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.RefTypesUpdated += EveMonClient_RefTypesUpdated;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
+            EveMonClient.CharacterWalletJournalUpdated += EveMonClient_CharacterWalletJournalUpdated;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.

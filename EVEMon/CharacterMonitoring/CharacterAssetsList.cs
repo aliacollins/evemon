@@ -23,8 +23,8 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<AssetColumnSettings> m_columns = new List<AssetColumnSettings>();
         private readonly List<Asset> m_list = new List<Asset>();
-        private readonly InfiniteDisplayToolTip m_tooltip;
-
+        
+        private InfiniteDisplayToolTip m_tooltip;
         private AssetGrouping m_grouping;
         private AssetColumn m_sortCriteria;
 
@@ -48,8 +48,6 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            m_tooltip = new InfiniteDisplayToolTip(lvAssets);
-
             noAssetsLabel.Visible = false;
             lvAssets.Visible = false;
             lvAssets.AllowColumnReorder = true;
@@ -65,13 +63,6 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.ColumnReordered += listView_ColumnReordered;
             lvAssets.MouseMove += listView_MouseMove;
             lvAssets.MouseLeave += listView_MouseLeave;
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
-            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -176,6 +167,24 @@ namespace EVEMon.CharacterMonitoring
         # region Inherited Events
 
         /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            m_tooltip = new InfiniteDisplayToolTip(lvAssets);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
+            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            Disposed += OnDisposed;
+        }
+
+        /// <summary>
         /// Unsubscribe events on disposing.
         /// </summary>
         /// <param name="sender"></param>
@@ -183,6 +192,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             m_tooltip.Dispose();
+
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;

@@ -15,6 +15,8 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterSkillsQueueList : UserControl
     {
+        #region Fields
+
         // Skills drawing - Region & text padding
         private const int PadTop = 2;
         private const int PadLeft = 6;
@@ -36,6 +38,11 @@ namespace EVEMon.CharacterMonitoring
         private Object m_lastTooltipItem;
         private DateTime m_nextRepainting = DateTime.MinValue;
 
+        #endregion
+
+
+        #region Constructor
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -48,13 +55,12 @@ namespace EVEMon.CharacterMonitoring
             m_skillsQueueFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_boldSkillsQueueFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noSkillsQueueLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
-            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            Disposed += OnDisposed;
         }
+
+        #endregion
+
+
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
@@ -70,8 +76,25 @@ namespace EVEMon.CharacterMonitoring
             get { return Math.Max(m_skillsQueueFont.Height * 2 + PadTop * 2 + LowerBoxHeight, MinimumHeight); }
         }
 
+        #endregion
+
 
         #region Inherited events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
+            EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -551,11 +574,12 @@ namespace EVEMon.CharacterMonitoring
 
                         Character.Plans.AddTo(tempMenuLevel.DropDownItems,
                                               (menuPlanItem, plan) =>
-                                              {
-                                                  menuPlanItem.Click += menuPlanItem_Click;
-                                                  menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
-                                                                                                new SkillLevel(skill, level));
-                                              });
+                                                  {
+                                                      menuPlanItem.Click += menuPlanItem_Click;
+                                                      menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
+                                                                                                            new SkillLevel(skill,
+                                                                                                                           level));
+                                                  });
 
                         ToolStripMenuItem menuLevel = tempMenuLevel;
                         tempMenuLevel = null;

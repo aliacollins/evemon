@@ -100,11 +100,6 @@ namespace EVEMon.CharacterMonitoring
             lvOrders.ColumnReordered += listView_ColumnReordered;
             lvOrders.MouseMove += listView_MouseMove;
             lvOrders.MouseLeave += listView_MouseLeave;   
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
-            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -243,6 +238,20 @@ namespace EVEMon.CharacterMonitoring
 
 
         # region Inherited Events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.

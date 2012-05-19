@@ -43,11 +43,6 @@ namespace EVEMon.CharacterMonitoring
             m_recordFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_recordBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noEmploymentHistoryLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
-            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -74,6 +69,20 @@ namespace EVEMon.CharacterMonitoring
 
 
         #region Inherited events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
