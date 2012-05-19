@@ -69,6 +69,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             Disposed += OnDisposed;
         }
@@ -185,6 +186,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             Disposed -= OnDisposed;
         }
@@ -667,6 +669,23 @@ namespace EVEMon.CharacterMonitoring
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Updates the asset location.
+        /// </summary>
+        private void UpdateAssetLocation()
+        {
+            // Invoke it to a background thread cause it may be time intensive
+            // if character owns many stuff in several locations
+            Dispatcher.BackgroundInvoke(() =>
+                                            {
+                                                Character.Assets.UpdateLocation();
+                                                Assets = Character.Assets;
+
+                                                // Return to the UI thread
+                                                Dispatcher.Invoke(UpdateColumns);
+                                            });
+        }
+
         #endregion
 
 
@@ -841,12 +860,21 @@ namespace EVEMon.CharacterMonitoring
             if (Character == null)
                 return;
 
-            Dispatcher.BackgroundInvoke(() =>
-                                            {
-                                                Character.Assets.UpdateLocation();
-                                                Assets = Character.Assets;
-                                                Dispatcher.Invoke(UpdateColumns);
-                                            });
+            UpdateAssetLocation();
+        }
+
+        /// <summary>
+        /// When Character Info updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <remarks>Mainly to update the jumps from charater last known location to assets.</remarks>
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (Character == null || e.Character != Character)
+                return;
+
+            UpdateAssetLocation();
         }
 
         # endregion
