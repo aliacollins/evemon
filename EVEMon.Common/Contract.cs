@@ -241,7 +241,7 @@ namespace EVEMon.Common
                     return String.Format(CultureConstants.DefaultCulture, "{0} >> {1} ({2} m³)",
                                          StartStation.SolarSystem.Name, EndStation.SolarSystem.Name, Math.Round(Volume));
 
-                if (!m_contractItems.Any())
+                if (!m_contractItems.Any() || !ContractItems.Any())
                     return "Unknown";
 
                 if (IsTrading)
