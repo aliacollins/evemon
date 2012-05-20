@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of asset list. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIAssetList
     {
         private readonly Collection<SerializableAssetListItem> m_assets;

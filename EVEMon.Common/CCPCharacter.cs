@@ -43,6 +43,7 @@ namespace EVEMon.Common
             QueryMonitors = new QueryMonitorCollection();
             SkillQueue = new SkillQueue(this);
             Standings = new StandingCollection(this);
+            FactionalWarfareStats = new FactionalWarfareStatsCollection(this);
             Assets = new AssetCollection(this);
             WalletJournal = new WalletJournalCollection(this);
             WalletTransactions = new WalletTransactionsCollection(this);
@@ -134,6 +135,11 @@ namespace EVEMon.Common
         /// Gets the assets for this character.
         /// </summary>
         public AssetCollection Assets { get; private set; }
+
+        /// <summary>
+        /// Gets the factional warfare stats for this character.
+        /// </summary>
+        public FactionalWarfareStatsCollection FactionalWarfareStats { get; private set; }
 
         /// <summary>
         /// Gets the wallet journal for this character.
@@ -265,8 +271,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true when character has insufficient balance to complete its buy orders.
+        /// Gets a value indicating whether the character has insufficient balance to complete its buy orders.
         /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the character has sufficient balance; otherwise, <c>false</c>.
+        /// </value>
         public bool HasSufficientBalance
         {
             get
@@ -281,6 +290,14 @@ namespace EVEMon.Common
             }
 
         }
+        
+        /// <summary>
+        /// Gets a value indicating whether the character is enlisted in factional warfare.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if character is enlisted in factional warfare; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsFactionalWarfareEnlisted { get; internal set; }
 
         /// <summary>
         /// Gets true when a new character is created.
@@ -517,6 +534,10 @@ namespace EVEMon.Common
 
             // We don't want to be notified about corp roles error
             if (result.CCPError != null && result.CCPError.IsCorpRolesError)
+                return false;
+
+            // We don't want to be notified about not enlisted in factional warfare error
+            if (result.CCPError != null && result.CCPError.IsFactionalWarfareEnlistedError)
                 return false;
 
             // Notify an error occurred

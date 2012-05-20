@@ -362,6 +362,22 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Notifies a factional warfare stats querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterFactionalWarfareStatsError(CCPCharacter character, APIResult<SerializableAPIFactionalWarfareStats> result)
+        {
+            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
+            {
+                Description = "An error occurred while querying the personal factional warfare stats.",
+                Behaviour = NotificationBehaviour.Overwrite,
+                Priority = NotificationPriority.Error
+            };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies an assets querying error.
         /// </summary>
         /// <param name="character">The character.</param>

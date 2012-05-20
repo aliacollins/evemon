@@ -246,6 +246,8 @@
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
     <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\OutlookAppointmentFilter.cs" />
+    <Compile Include="FactionalWarfareStats.cs" />
+    <Compile Include="FactionalWarfareStatsCollection.cs" />
     <Compile Include="FormatHelper.cs" />
     <Compile Include="GlobalAPIKeyCollection.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -283,6 +285,7 @@
     <Compile Include="Serialization\API\SerializableAPIAssetList.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
+    <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
     <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
     <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />

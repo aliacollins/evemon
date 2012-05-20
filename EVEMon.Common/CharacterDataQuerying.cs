@@ -14,6 +14,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPISkillQueue> m_skillQueueMonitor;
         private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIStandings> m_charStandingsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIFactionalWarfareStats> m_charFacWarStatsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIAssetList> m_charAssetsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIResearch> m_charResearchPointsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_charMarketOrdersMonitor;
@@ -57,6 +58,13 @@ namespace EVEMon.Common
                                                                     OnStandingsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charStandingsMonitor);
 
+            m_charFacWarStatsMonitor =
+                new CharacterQueryMonitor<SerializableAPIFactionalWarfareStats>(ccpCharacter,
+                                                                                APICharacterMethods.FactionalWarfareStats,
+                                                                                OnFactionalWarfareStatsUpdated)
+                    { QueryOnStartup = true };
+            m_characterQueryMonitors.Add(m_charFacWarStatsMonitor);
+
             m_charAssetsMonitor =
                 new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
                                                                     OnAssetsUpdated) { QueryOnStartup = true };
@@ -74,12 +82,12 @@ namespace EVEMon.Common
 
             m_charWalletJournalMonitor =
                 new CharacterQueryMonitor<SerializableAPIWalletJournal>(ccpCharacter, APICharacterMethods.WalletJournal,
-                                                                       OnWalletJournalUpdated) { QueryOnStartup = true };
+                                                                        OnWalletJournalUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charWalletJournalMonitor);
 
             m_charWalletTransactionsMonitor =
                 new CharacterQueryMonitor<SerializableAPIWalletTransactions>(ccpCharacter, APICharacterMethods.WalletTransactions,
-                                                                       OnWalletTransactionsUpdated) { QueryOnStartup = true };
+                                                                             OnWalletTransactionsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charWalletTransactionsMonitor);
 
             m_charIndustryJobsMonitor =
@@ -94,14 +102,12 @@ namespace EVEMon.Common
 
             m_charEVEMailMessagesMonitor =
                 new CharacterQueryMonitor<SerializableAPIMailMessages>(ccpCharacter, APICharacterMethods.MailMessages,
-                                                                       OnEVEMailMessagesUpdated)
-                    { QueryOnStartup = true };
+                                                                       OnEVEMailMessagesUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charEVEMailMessagesMonitor);
 
             m_charEVENotificationsMonitor =
                 new CharacterQueryMonitor<SerializableAPINotifications>(ccpCharacter, APICharacterMethods.Notifications,
-                                                                        OnEVENotificationsUpdated)
-                    { QueryOnStartup = true };
+                                                                        OnEVENotificationsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charEVENotificationsMonitor);
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
@@ -208,7 +214,7 @@ namespace EVEMon.Common
                 apiKey.ID,
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
-                OnCharacterMailingListsUpdated);
+                OnMailingListsUpdated);
         }
 
         /// <summary>
@@ -252,11 +258,11 @@ namespace EVEMon.Common
                 apiKey.ID,
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
-                OnCharacterContractBidsUpdated);
+                OnContractBidsUpdated);
         }
 
         /// <summary>
-        /// Processed the queried skill queue information.
+        /// Processed the queried character's skill queue information.
         /// </summary>
         /// <param name="result"></param>
         private void OnCharacterSheetUpdated(APIResult<SerializableAPICharacterSheet> result)
@@ -316,7 +322,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried skill queue information.
+        /// Processes the queried character's skill queue information.
         /// </summary>
         /// <param name="result"></param>
         private void OnSkillQueueUpdated(APIResult<SerializableAPISkillQueue> result)
@@ -352,7 +358,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried standings information.
+        /// Processes the queried character's standings information.
         /// </summary>
         /// <param name="result"></param>
         private void OnStandingsUpdated(APIResult<SerializableAPIStandings> result)
@@ -377,7 +383,45 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried assets information.
+        /// Processes the queried character's factional warfare statistic information.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnFactionalWarfareStatsUpdated(APIResult<SerializableAPIFactionalWarfareStats> result)
+        {           
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
+                return;
+
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.FactionalWarfareStats))
+                EveMonClient.Notifications.NotifyCharacterFactionalWarfareStatsError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+            {
+                if (result.CCPError != null && result.CCPError.IsFactionalWarfareEnlistedError)
+                {
+                    // Update the enlisted in factional warfare flag
+                    m_ccpCharacter.IsFactionalWarfareEnlisted = false;
+
+                    // Fires the event regarding factional warfare stats update
+                    EveMonClient.OnCharacterFactionalWarfareStatsUpdated(m_ccpCharacter);
+                }
+                return;
+            }
+
+            // Update the enlisted in factional warfare flag
+            m_ccpCharacter.IsFactionalWarfareEnlisted = true;
+
+            // Import the data
+            m_ccpCharacter.FactionalWarfareStats.Import(result.Result);
+
+            // Fires the event regarding factional warfare stats update
+            EveMonClient.OnCharacterFactionalWarfareStatsUpdated(m_ccpCharacter);
+        }
+
+        /// <summary>
+        /// Processes the queried character's assets information.
         /// </summary>
         /// <param name="result"></param>
         private void OnAssetsUpdated(APIResult<SerializableAPIAssetList> result)
@@ -395,7 +439,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            // Importation can take a serious amount of time depending on the amount of assets,
+            // Importation can take a serious amount of time depending on the amount of assets;
             // therefore we invoke it on another thread
             Dispatcher.BackgroundInvoke(() =>
                                             {
@@ -408,7 +452,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried character's personal market orders.
+        /// Processes the queried character's market orders.
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" orders gets queried first</remarks>
@@ -437,7 +481,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried character's personal contracts.
+        /// Processes the queried character's contracts.
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" contracts gets queried first</remarks>
@@ -473,7 +517,7 @@ namespace EVEMon.Common
         /// Processes the queried character's contract bids.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnCharacterContractBidsUpdated(APIResult<SerializableAPIContractBids> result)
+        private void OnContractBidsUpdated(APIResult<SerializableAPIContractBids> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
@@ -495,7 +539,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried wallet journal information.
+        /// Processes the queried character's wallet journal information.
         /// </summary>
         /// <param name="result"></param>
         private void OnWalletJournalUpdated(APIResult<SerializableAPIWalletJournal> result)
@@ -520,7 +564,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried wallet transactions information.
+        /// Processes the queried character's wallet transactions information.
         /// </summary>
         /// <param name="result"></param>
         private void OnWalletTransactionsUpdated(APIResult<SerializableAPIWalletTransactions> result)
@@ -628,7 +672,7 @@ namespace EVEMon.Common
         /// Processes the queried character's EVE mailing lists.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnCharacterMailingListsUpdated(APIResult<SerializableAPIMailingLists> result)
+        private void OnMailingListsUpdated(APIResult<SerializableAPIMailingLists> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))

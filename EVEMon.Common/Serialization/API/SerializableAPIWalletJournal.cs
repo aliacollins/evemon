@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of wallet journal. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIWalletJournal
     {
         private readonly Collection<SerializableWalletJournalListItem> m_walletJournal;

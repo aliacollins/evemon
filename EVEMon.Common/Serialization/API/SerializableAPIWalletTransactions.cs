@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of wallet transactions. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIWalletTransactions
     {
         private readonly Collection<SerializableWalletTransactionsListItem> m_walletTransactions;
