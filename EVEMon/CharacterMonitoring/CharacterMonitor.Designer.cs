@@ -703,11 +703,14 @@ namespace EVEMon.CharacterMonitoring
             // 
             // walletJournalList
             // 
+            this.walletJournalList.Character = null;
             this.walletJournalList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.walletJournalList.Grouping = EVEMon.Common.SettingsObjects.WalletJournalGrouping.None;
             this.walletJournalList.Location = new System.Drawing.Point(0, 0);
             this.walletJournalList.Name = "walletJournalList";
             this.walletJournalList.Size = new System.Drawing.Size(568, 86);
             this.walletJournalList.TabIndex = 0;
+            this.walletJournalList.TextFilter = "";
             // 
             // walletTransactionsPage
             // 
@@ -722,11 +725,14 @@ namespace EVEMon.CharacterMonitoring
             // 
             // walletTransactionsList
             // 
+            this.walletTransactionsList.Character = null;
             this.walletTransactionsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.walletTransactionsList.Grouping = EVEMon.Common.SettingsObjects.WalletTransactionGrouping.None;
             this.walletTransactionsList.Location = new System.Drawing.Point(0, 0);
             this.walletTransactionsList.Name = "walletTransactionsList";
             this.walletTransactionsList.Size = new System.Drawing.Size(568, 86);
             this.walletTransactionsList.TabIndex = 0;
+            this.walletTransactionsList.TextFilter = "";
             // 
             // warningLabel
             // 
