@@ -59,7 +59,6 @@ namespace EVEMon.CharacterMonitoring
             InitializeComponent();
             InitializeExpandablePanelControls();
 
-
             lvJobs.Visible = false;
             lvJobs.AllowColumnReorder = true;
             lvJobs.Columns.Clear();
@@ -225,6 +224,9 @@ namespace EVEMon.CharacterMonitoring
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
 
             m_tooltip = new InfiniteDisplayToolTip(lvJobs);
             m_refreshTimer = new Timer();

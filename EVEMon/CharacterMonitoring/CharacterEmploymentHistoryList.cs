@@ -78,6 +78,9 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnLoad(e);
 
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;

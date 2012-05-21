@@ -152,6 +152,9 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnLoad(e);
 
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;

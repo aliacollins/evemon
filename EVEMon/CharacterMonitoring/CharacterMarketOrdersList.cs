@@ -23,8 +23,8 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<MarketOrderColumnSettings> m_columns = new List<MarketOrderColumnSettings>();
         private readonly List<MarketOrder> m_list = new List<MarketOrder>();
-        private readonly InfiniteDisplayToolTip m_tooltip;
 
+        private InfiniteDisplayToolTip m_tooltip;
         private MarketOrderGrouping m_grouping;
         private MarketOrderColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
@@ -80,8 +80,6 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
             InitializeExpandablePanelControls();
-
-            m_tooltip = new InfiniteDisplayToolTip(lvOrders);
 
             lvOrders.Visible = false;
             lvOrders.AllowColumnReorder = true;
@@ -247,6 +245,11 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnLoad(e);
 
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            m_tooltip = new InfiniteDisplayToolTip(lvOrders);
+
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
@@ -261,6 +264,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             m_tooltip.Dispose();
+
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;

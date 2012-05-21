@@ -180,6 +180,9 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnLoad(e);
 
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_CharacterEVEMailMessagesUpdated;
             EveMonClient.CharacterEVEMailingListsUpdated += EveMonClient_CharacterEVEMailingListsUpdated;

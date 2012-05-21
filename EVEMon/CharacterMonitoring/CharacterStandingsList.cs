@@ -73,6 +73,9 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnLoad(e);
 
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             EveMonClient.CharacterStandingsUpdated += EveMonClient_CharacterStandingsUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;

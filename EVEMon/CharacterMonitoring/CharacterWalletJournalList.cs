@@ -163,6 +163,9 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnLoad(e);
 
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.RefTypesUpdated += EveMonClient_RefTypesUpdated;
             EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;

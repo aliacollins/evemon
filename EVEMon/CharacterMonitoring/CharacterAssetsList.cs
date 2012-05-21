@@ -48,7 +48,6 @@ namespace EVEMon.CharacterMonitoring
         {
             InitializeComponent();
 
-            noAssetsLabel.Visible = false;
             lvAssets.Visible = false;
             lvAssets.AllowColumnReorder = true;
             lvAssets.Columns.Clear();
@@ -173,6 +172,11 @@ namespace EVEMon.CharacterMonitoring
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            noAssetsLabel.Visible = false;
 
             m_tooltip = new InfiniteDisplayToolTip(lvAssets);
 

@@ -198,6 +198,9 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnLoad(e);
 
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             m_tooltip = new InfiniteDisplayToolTip(lvContracts);
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
