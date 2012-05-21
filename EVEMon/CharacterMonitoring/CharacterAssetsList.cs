@@ -9,8 +9,6 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Notifications;
-using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using Region = EVEMon.Common.Data.Region;
@@ -33,7 +31,6 @@ namespace EVEMon.CharacterMonitoring
 
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
-        private bool m_queried;
         private bool m_init;
 
         #endregion
@@ -176,12 +173,9 @@ namespace EVEMon.CharacterMonitoring
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            noAssetsLabel.Visible = false;
-
             m_tooltip = new InfiniteDisplayToolTip(lvAssets);
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
@@ -198,7 +192,6 @@ namespace EVEMon.CharacterMonitoring
             m_tooltip.Dispose();
 
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
@@ -335,11 +328,9 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateListVisibility()
         {
             // Display or hide the "no assets" label
-            if (!m_init || !m_queried)
+            if (!m_init)
                 return;
 
-            throbber.State = ThrobberState.Stopped;
-            throbber.Visible = false;
             noAssetsLabel.Visible = lvAssets.Items.Count == 0;
             lvAssets.Visible = !noAssetsLabel.Visible;
         }
@@ -823,7 +814,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// When the assets change update the list.
+        /// When the assets update, update the list.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -832,40 +823,12 @@ namespace EVEMon.CharacterMonitoring
             if (Character == null || e.Character != Character)
                 return;
 
-            m_queried = true;
-
             Assets = Character.Assets;
             UpdateColumns();
         }
 
         /// <summary>
-        /// On API error update the controls visibility.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.Notifications.NotificationEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_NotificationSent(object sender, NotificationEventArgs e)
-        {
-            if (Character == null)
-                return;
-
-            APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
-            if (notification == null)
-                return;
-
-            if (notification.SenderCharacter != Character)
-                return;
-
-            APIResult<SerializableAPIAssetList> result = notification.Result as APIResult<SerializableAPIAssetList>;
-            if (result == null)
-                return;
-
-            m_queried = true;
-
-            UpdateListVisibility();
-        }
-
-        /// <summary>
-        /// When Conquerable Station List updates, update the list.
+        /// When the conquerable station list updates, update the list.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
@@ -878,7 +841,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// When Character Info updates, update the list.
+        /// When the character info updates, update the list.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
