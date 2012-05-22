@@ -433,8 +433,11 @@ namespace EVEMon.CharacterMonitoring
             if (featuresMenu.DropDownItems.Count == 0)
                 return;
 
-            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
-                item => item.Text == button.Text && item.Checked))
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
+
+            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
+                .Skip(index).Cast<ToolStripMenuItem>().Where(
+                    item => item.Text == button.Text && item.Checked))
             {
                 item.Checked = !item.Checked;
 
@@ -538,9 +541,11 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateAdvancedFeaturesPagesSettings()
         {
             UpdateSelectedPage();
+                        
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
 
             List<string> enabledAdvancedFeaturesPages =
-                featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
+                featuresMenu.DropDownItems.Cast<ToolStripItem>().Skip(index).Cast<ToolStripMenuItem>().Where(
                     menuItem => menuItem.Checked).Select(menuItem => menuItem.Text).ToList();
 
             m_character.UISettings.AdvancedFeaturesEnabledPages.Clear();
@@ -948,35 +953,44 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void featureMenu_DropDownOpening(object sender, EventArgs e)
         {
-            featuresMenu.DropDownItems.Clear();
+            // Remove everything after the separator
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
+            while (featuresMenu.DropDownItems.Count > index)
+            {
+                featuresMenu.DropDownItems.RemoveAt(index);
+            }
 
             // Create the menu items
-            foreach (ToolStripMenuItem item in m_advancedFeatures.Select(
+            List<ToolStripMenuItem> toolStripMenuItems = m_advancedFeatures.Select(
                 button => new { button, monitor = ButtonToMonitors(button) }).Where(
                     item => item.monitor != null).Select(
                         item =>
                             {
-                                ToolStripMenuItem tsi;
-                                ToolStripMenuItem tempToolStripItem = null;
+                                ToolStripMenuItem tsmi;
+                                ToolStripMenuItem tempToolStripMenuItem = null;
                                 try
                                 {
-                                    tempToolStripItem = new ToolStripMenuItem(item.button.Text);
-                                    tempToolStripItem.Checked = IsEnabledFeature(item.button.Text);
-                                    tempToolStripItem.Enabled = item.monitor.Any(monitor => monitor.HasAccess);
+                                    tempToolStripMenuItem = new ToolStripMenuItem(item.button.Text);
+                                    tempToolStripMenuItem.Checked = IsEnabledFeature(item.button.Text);
+                                    tempToolStripMenuItem.Enabled = item.monitor.Any(monitor => monitor.HasAccess);
 
-                                    tsi = tempToolStripItem;
-                                    tempToolStripItem = null;
+                                    tsmi = tempToolStripMenuItem;
+                                    tempToolStripMenuItem = null;
                                 }
                                 finally
                                 {
-                                    if (tempToolStripItem != null)
-                                        tempToolStripItem.Dispose();
+                                    if (tempToolStripMenuItem != null)
+                                        tempToolStripMenuItem.Dispose();
                                 }
-                                return tsi;
-                            }))
-            {
-                featuresMenu.DropDownItems.Add(item);
-            }
+                                return tsmi;
+                            }).ToList();
+
+            // Add items to dropdown menu
+            featuresMenu.DropDownItems.AddRange(toolStripMenuItems.ToArray<ToolStripItem>());
+            
+            // Enable or Disable controls
+            EnableAllToolStripMenuItem.Enabled = toolStripMenuItems.Where(item => item.Enabled).Any(item => !item.Checked);
+            DisableAllToolStripMenuItem.Enabled = toolStripMenuItems.Where(item => item.Enabled).Any(item => item.Checked);
         }
 
         /// <summary>
@@ -987,12 +1001,54 @@ namespace EVEMon.CharacterMonitoring
         private void featuresMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)e.ClickedItem;
+
+            if (item.Equals(EnableAllToolStripMenuItem) || item.Equals(DisableAllToolStripMenuItem))
+                return;
+
             item.Checked = !item.Checked;
 
             m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = (item.Text == featureIcon.Text
                                                                                  ? item.Checked
                                                                                  : featureIcon.Visible));
 
+            UpdateAdvancedFeaturesPagesSettings();
+            ToggleAdvancedFeaturesMonitoring();
+        }
+
+        /// <summary>
+        /// Occurs when the user click the 'Enable All' menu item in features menu.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EnableAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
+            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
+                .Skip(index).Cast<ToolStripMenuItem>().Where(item => item.Enabled))
+            {
+                item.Checked = true;
+            }
+
+            m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = true);
+            UpdateAdvancedFeaturesPagesSettings();
+            ToggleAdvancedFeaturesMonitoring();
+        }
+
+        /// <summary>
+        /// Occurs when the user click the 'Disable All' menu item in features menu.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void DisableAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
+            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
+                .Skip(index).Cast<ToolStripMenuItem>().Where(item => item.Enabled))
+            {
+                item.Checked = false;
+            }
+
+            m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = false);
             UpdateAdvancedFeaturesPagesSettings();
             ToggleAdvancedFeaturesMonitoring();
         }

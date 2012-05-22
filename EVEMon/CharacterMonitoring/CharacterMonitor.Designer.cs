@@ -46,49 +46,14 @@ namespace EVEMon.CharacterMonitoring
             this.lblTrainingEst = new System.Windows.Forms.Label();
             this.btnAddToCalendar = new System.Windows.Forms.Button();
             this.upperPanel = new System.Windows.Forms.Panel();
+            this.Header = new EVEMon.CharacterMonitoring.CharacterMonitorHeader();
             this.skillQueuePanel = new System.Windows.Forms.Panel();
             this.lblPaused = new System.Windows.Forms.Label();
             this.skillQueueTimePanel = new System.Windows.Forms.Panel();
             this.lblQueueCompletionTime = new System.Windows.Forms.Label();
             this.lblQueueRemaining = new System.Windows.Forms.Label();
+            this.skillQueueControl = new EVEMon.Common.Controls.SkillQueueControl();
             this.lowerPanel = new System.Windows.Forms.Panel();
-            this.toolstripPanel = new System.Windows.Forms.Panel();
-            this.toolStripContextual = new System.Windows.Forms.ToolStrip();
-            this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.columnSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.autoSizeColumnMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsColumnSettingsSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.hideInactiveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.numberAbsFormatMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsOptionsSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.showOnlyCharMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showOnlyCorpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsReadingPaneSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.readingPaneMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paneRightMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paneBottomMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paneOffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
-            this.groupMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripFeatures = new System.Windows.Forms.ToolStrip();
-            this.skillsIcon = new System.Windows.Forms.ToolStripButton();
-            this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
-            this.employmentIcon = new System.Windows.Forms.ToolStripButton();
-            this.standingsIcon = new System.Windows.Forms.ToolStripButton();
-            this.assetsIcon = new System.Windows.Forms.ToolStripButton();
-            this.ordersIcon = new System.Windows.Forms.ToolStripButton();
-            this.contractsIcon = new System.Windows.Forms.ToolStripButton();
-            this.walletJournalIcon = new System.Windows.Forms.ToolStripButton();
-            this.walletTransactionsIcon = new System.Windows.Forms.ToolStripButton();
-            this.jobsIcon = new System.Windows.Forms.ToolStripButton();
-            this.researchIcon = new System.Windows.Forms.ToolStripButton();
-            this.mailMessagesIcon = new System.Windows.Forms.ToolStripButton();
-            this.eveNotificationsIcon = new System.Windows.Forms.ToolStripButton();
-            this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
-            this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.filterTimer = new System.Windows.Forms.Timer(this.components);
-            this.factionalWarfareStatsIcon = new System.Windows.Forms.ToolStripButton();
             this.borderPanel = new EVEMon.Common.Controls.BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
@@ -122,8 +87,46 @@ namespace EVEMon.CharacterMonitoring
             this.factionalWarfareStatsList = new EVEMon.CharacterMonitoring.CharacterFactionalWarfareStatsList();
             this.warningLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.Controls.NotificationList();
-            this.skillQueueControl = new EVEMon.Common.Controls.SkillQueueControl();
-            this.Header = new EVEMon.CharacterMonitoring.CharacterMonitorHeader();
+            this.toolstripPanel = new System.Windows.Forms.Panel();
+            this.toolStripContextual = new System.Windows.Forms.ToolStrip();
+            this.preferencesMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.columnSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoSizeColumnMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsColumnSettingsSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.hideInactiveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.numberAbsFormatMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsOptionsSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showOnlyCharMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showOnlyCorpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsReadingPaneSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.readingPaneMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paneRightMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paneBottomMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paneOffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
+            this.groupMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripFeatures = new System.Windows.Forms.ToolStrip();
+            this.skillsIcon = new System.Windows.Forms.ToolStripButton();
+            this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
+            this.employmentIcon = new System.Windows.Forms.ToolStripButton();
+            this.standingsIcon = new System.Windows.Forms.ToolStripButton();
+            this.factionalWarfareStatsIcon = new System.Windows.Forms.ToolStripButton();
+            this.assetsIcon = new System.Windows.Forms.ToolStripButton();
+            this.ordersIcon = new System.Windows.Forms.ToolStripButton();
+            this.contractsIcon = new System.Windows.Forms.ToolStripButton();
+            this.walletJournalIcon = new System.Windows.Forms.ToolStripButton();
+            this.walletTransactionsIcon = new System.Windows.Forms.ToolStripButton();
+            this.jobsIcon = new System.Windows.Forms.ToolStripButton();
+            this.researchIcon = new System.Windows.Forms.ToolStripButton();
+            this.mailMessagesIcon = new System.Windows.Forms.ToolStripButton();
+            this.eveNotificationsIcon = new System.Windows.Forms.ToolStripButton();
+            this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
+            this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.EnableAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DisableAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SelectionToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.filterTimer = new System.Windows.Forms.Timer(this.components);
             this.pnlTraining.SuspendLayout();
             this.tlpStatus.SuspendLayout();
             this.flpStatusLabels.SuspendLayout();
@@ -132,9 +135,6 @@ namespace EVEMon.CharacterMonitoring
             this.skillQueuePanel.SuspendLayout();
             this.skillQueueTimePanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
-            this.toolstripPanel.SuspendLayout();
-            this.toolStripContextual.SuspendLayout();
-            this.toolStripFeatures.SuspendLayout();
             this.borderPanel.SuspendLayout();
             this.corePanel.SuspendLayout();
             this.multiPanel.SuspendLayout();
@@ -152,6 +152,9 @@ namespace EVEMon.CharacterMonitoring
             this.walletJournalPage.SuspendLayout();
             this.walletTransactionsPage.SuspendLayout();
             this.factionalWarfareStatsPage.SuspendLayout();
+            this.toolstripPanel.SuspendLayout();
+            this.toolStripContextual.SuspendLayout();
+            this.toolStripFeatures.SuspendLayout();
             this.SuspendLayout();
             // 
             // tsPagesSeparator
@@ -312,6 +315,16 @@ namespace EVEMon.CharacterMonitoring
             this.upperPanel.Size = new System.Drawing.Size(574, 165);
             this.upperPanel.TabIndex = 14;
             // 
+            // Header
+            // 
+            this.Header.AutoSize = true;
+            this.Header.Character = null;
+            this.Header.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Header.Location = new System.Drawing.Point(0, 0);
+            this.Header.Name = "Header";
+            this.Header.Size = new System.Drawing.Size(574, 165);
+            this.Header.TabIndex = 15;
+            // 
             // skillQueuePanel
             // 
             this.skillQueuePanel.AutoSize = true;
@@ -368,6 +381,20 @@ namespace EVEMon.CharacterMonitoring
             this.lblQueueRemaining.TabIndex = 16;
             this.lblQueueRemaining.Text = "Nothing";
             // 
+            // skillQueueControl
+            // 
+            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
+            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
+            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
+            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
+            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
+            this.skillQueueControl.Name = "skillQueueControl";
+            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
+            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
+            this.skillQueueControl.SkillQueue = null;
+            this.skillQueueControl.TabIndex = 13;
+            // 
             // lowerPanel
             // 
             this.lowerPanel.Controls.Add(this.borderPanel);
@@ -379,415 +406,6 @@ namespace EVEMon.CharacterMonitoring
             this.lowerPanel.Name = "lowerPanel";
             this.lowerPanel.Size = new System.Drawing.Size(574, 404);
             this.lowerPanel.TabIndex = 3;
-            // 
-            // toolstripPanel
-            // 
-            this.toolstripPanel.AutoSize = true;
-            this.toolstripPanel.Controls.Add(this.toolStripContextual);
-            this.toolstripPanel.Controls.Add(this.toolStripFeatures);
-            this.toolstripPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.toolstripPanel.Location = new System.Drawing.Point(0, 0);
-            this.toolstripPanel.Name = "toolstripPanel";
-            this.toolstripPanel.Size = new System.Drawing.Size(574, 56);
-            this.toolstripPanel.TabIndex = 16;
-            // 
-            // toolStripContextual
-            // 
-            this.toolStripContextual.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStripContextual.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.preferencesMenu,
-            this.searchTextBox,
-            this.groupMenu});
-            this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStripContextual.Location = new System.Drawing.Point(0, 31);
-            this.toolStripContextual.Name = "toolStripContextual";
-            this.toolStripContextual.Size = new System.Drawing.Size(574, 25);
-            this.toolStripContextual.TabIndex = 15;
-            // 
-            // preferencesMenu
-            // 
-            this.preferencesMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.preferencesMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.preferencesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.columnSettingsMenuItem,
-            this.autoSizeColumnMenuItem,
-            this.tsColumnSettingsSeparator,
-            this.hideInactiveMenuItem,
-            this.numberAbsFormatMenuItem,
-            this.tsOptionsSeparator,
-            this.showOnlyCharMenuItem,
-            this.showOnlyCorpMenuItem,
-            this.tsReadingPaneSeparator,
-            this.readingPaneMenuItem});
-            this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
-            this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.preferencesMenu.Name = "preferencesMenu";
-            this.preferencesMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.preferencesMenu.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.preferencesMenu.Size = new System.Drawing.Size(29, 22);
-            this.preferencesMenu.Text = "Preferences";
-            this.preferencesMenu.ToolTipText = "Preferences";
-            this.preferencesMenu.DropDownOpening += new System.EventHandler(this.preferencesMenu_DropDownOpening);
-            // 
-            // columnSettingsMenuItem
-            // 
-            this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
-            this.columnSettingsMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.columnSettingsMenuItem.Text = "Column Settings";
-            this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
-            // 
-            // autoSizeColumnMenuItem
-            // 
-            this.autoSizeColumnMenuItem.Name = "autoSizeColumnMenuItem";
-            this.autoSizeColumnMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.autoSizeColumnMenuItem.Text = "Auto-Size Columns";
-            this.autoSizeColumnMenuItem.Click += new System.EventHandler(this.autoSizeColumnMenuItem_Click);
-            // 
-            // tsColumnSettingsSeparator
-            // 
-            this.tsColumnSettingsSeparator.Name = "tsColumnSettingsSeparator";
-            this.tsColumnSettingsSeparator.Size = new System.Drawing.Size(249, 6);
-            // 
-            // hideInactiveMenuItem
-            // 
-            this.hideInactiveMenuItem.Name = "hideInactiveMenuItem";
-            this.hideInactiveMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.hideInactiveMenuItem.Text = "Hide Inactive Orders";
-            this.hideInactiveMenuItem.Click += new System.EventHandler(this.hideInactiveMenuItem_Click);
-            // 
-            // numberAbsFormatMenuItem
-            // 
-            this.numberAbsFormatMenuItem.Name = "numberAbsFormatMenuItem";
-            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
-            this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
-            // 
-            // tsOptionsSeparator
-            // 
-            this.tsOptionsSeparator.Name = "tsOptionsSeparator";
-            this.tsOptionsSeparator.Size = new System.Drawing.Size(249, 6);
-            // 
-            // showOnlyCharMenuItem
-            // 
-            this.showOnlyCharMenuItem.CheckOnClick = true;
-            this.showOnlyCharMenuItem.Name = "showOnlyCharMenuItem";
-            this.showOnlyCharMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.showOnlyCharMenuItem.Text = "Show Only Issued for Character";
-            this.showOnlyCharMenuItem.Click += new System.EventHandler(this.showOnlyCharMenuItem_Click);
-            // 
-            // showOnlyCorpMenuItem
-            // 
-            this.showOnlyCorpMenuItem.CheckOnClick = true;
-            this.showOnlyCorpMenuItem.Name = "showOnlyCorpMenuItem";
-            this.showOnlyCorpMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.showOnlyCorpMenuItem.Text = "Show Only Issued for Corporation";
-            this.showOnlyCorpMenuItem.Click += new System.EventHandler(this.showOnlyCorpMenuItem_Click);
-            // 
-            // tsReadingPaneSeparator
-            // 
-            this.tsReadingPaneSeparator.Name = "tsReadingPaneSeparator";
-            this.tsReadingPaneSeparator.Size = new System.Drawing.Size(249, 6);
-            // 
-            // readingPaneMenuItem
-            // 
-            this.readingPaneMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.paneRightMenuItem,
-            this.paneBottomMenuItem,
-            this.paneOffMenuItem});
-            this.readingPaneMenuItem.Name = "readingPaneMenuItem";
-            this.readingPaneMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.readingPaneMenuItem.Text = "Reading Pane";
-            this.readingPaneMenuItem.DropDownOpening += new System.EventHandler(this.readingPaneMenuItem_DropDownOpening);
-            // 
-            // paneRightMenuItem
-            // 
-            this.paneRightMenuItem.CheckOnClick = true;
-            this.paneRightMenuItem.Name = "paneRightMenuItem";
-            this.paneRightMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.paneRightMenuItem.Tag = "Right";
-            this.paneRightMenuItem.Text = "Right";
-            this.paneRightMenuItem.Click += new System.EventHandler(this.paneRightMenuItem_Click);
-            // 
-            // paneBottomMenuItem
-            // 
-            this.paneBottomMenuItem.CheckOnClick = true;
-            this.paneBottomMenuItem.Name = "paneBottomMenuItem";
-            this.paneBottomMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.paneBottomMenuItem.Tag = "Bottom";
-            this.paneBottomMenuItem.Text = "Bottom";
-            this.paneBottomMenuItem.Click += new System.EventHandler(this.paneBottomMenuItem_Click);
-            // 
-            // paneOffMenuItem
-            // 
-            this.paneOffMenuItem.CheckOnClick = true;
-            this.paneOffMenuItem.Name = "paneOffMenuItem";
-            this.paneOffMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.paneOffMenuItem.Tag = "Off";
-            this.paneOffMenuItem.Text = "Off";
-            this.paneOffMenuItem.Click += new System.EventHandler(this.paneOffMenuItem_Click);
-            // 
-            // searchTextBox
-            // 
-            this.searchTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.searchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.searchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
-            this.searchTextBox.AutoSize = false;
-            this.searchTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.searchTextBox.Size = new System.Drawing.Size(120, 21);
-            this.searchTextBox.ToolTipText = "Search";
-            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
-            // 
-            // groupMenu
-            // 
-            this.groupMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.groupMenu.Image = ((System.Drawing.Image)(resources.GetObject("groupMenu.Image")));
-            this.groupMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.groupMenu.Name = "groupMenu";
-            this.groupMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.groupMenu.Size = new System.Drawing.Size(94, 22);
-            this.groupMenu.Text = "Group By...";
-            this.groupMenu.DropDownOpening += new System.EventHandler(this.groupMenu_DropDownOpening);
-            this.groupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.groupMenu_DropDownItemClicked);
-            // 
-            // toolStripFeatures
-            // 
-            this.toolStripFeatures.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStripFeatures.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.toolStripFeatures.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.skillsIcon,
-            this.skillQueueIcon,
-            this.employmentIcon,
-            this.standingsIcon,
-            this.factionalWarfareStatsIcon,
-            this.assetsIcon,
-            this.ordersIcon,
-            this.contractsIcon,
-            this.walletJournalIcon,
-            this.walletTransactionsIcon,
-            this.jobsIcon,
-            this.researchIcon,
-            this.mailMessagesIcon,
-            this.eveNotificationsIcon,
-            this.toggleSkillsIcon,
-            this.tsToggleSeparator,
-            this.featuresMenu,
-            this.tsPagesSeparator});
-            this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStripFeatures.Location = new System.Drawing.Point(0, 0);
-            this.toolStripFeatures.Name = "toolStripFeatures";
-            this.toolStripFeatures.Size = new System.Drawing.Size(574, 31);
-            this.toolStripFeatures.TabIndex = 13;
-            // 
-            // skillsIcon
-            // 
-            this.skillsIcon.Checked = true;
-            this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.skillsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.skillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillsIcon.Image")));
-            this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillsIcon.Name = "skillsIcon";
-            this.skillsIcon.Size = new System.Drawing.Size(28, 28);
-            this.skillsIcon.Tag = "skillsPage";
-            this.skillsIcon.Text = "Skills";
-            this.skillsIcon.ToolTipText = "Display skills list";
-            this.skillsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // skillQueueIcon
-            // 
-            this.skillQueueIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.skillQueueIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillQueueIcon.Image")));
-            this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.skillQueueIcon.Name = "skillQueueIcon";
-            this.skillQueueIcon.Size = new System.Drawing.Size(28, 28);
-            this.skillQueueIcon.Tag = "skillQueuePage";
-            this.skillQueueIcon.Text = "Queue";
-            this.skillQueueIcon.ToolTipText = "Display skills in queue";
-            this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // employmentIcon
-            // 
-            this.employmentIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.employmentIcon.Image = ((System.Drawing.Image)(resources.GetObject("employmentIcon.Image")));
-            this.employmentIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.employmentIcon.Name = "employmentIcon";
-            this.employmentIcon.Size = new System.Drawing.Size(28, 28);
-            this.employmentIcon.Tag = "employmentPage";
-            this.employmentIcon.Text = "Employment History";
-            this.employmentIcon.ToolTipText = "Display employment history";
-            this.employmentIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // standingsIcon
-            // 
-            this.standingsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.standingsIcon.Image = ((System.Drawing.Image)(resources.GetObject("standingsIcon.Image")));
-            this.standingsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.standingsIcon.Name = "standingsIcon";
-            this.standingsIcon.Size = new System.Drawing.Size(28, 28);
-            this.standingsIcon.Tag = "standingsPage";
-            this.standingsIcon.Text = "Standings";
-            this.standingsIcon.ToolTipText = "Display standings";
-            this.standingsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // assetsIcon
-            // 
-            this.assetsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.assetsIcon.Image = ((System.Drawing.Image)(resources.GetObject("assetsIcon.Image")));
-            this.assetsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.assetsIcon.Name = "assetsIcon";
-            this.assetsIcon.Size = new System.Drawing.Size(28, 28);
-            this.assetsIcon.Tag = "assetsPage";
-            this.assetsIcon.Text = "Assets";
-            this.assetsIcon.ToolTipText = "Display assets";
-            this.assetsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // ordersIcon
-            // 
-            this.ordersIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ordersIcon.Image = ((System.Drawing.Image)(resources.GetObject("ordersIcon.Image")));
-            this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ordersIcon.Name = "ordersIcon";
-            this.ordersIcon.Size = new System.Drawing.Size(28, 28);
-            this.ordersIcon.Tag = "ordersPage";
-            this.ordersIcon.Text = "Market";
-            this.ordersIcon.ToolTipText = "Display market orders";
-            this.ordersIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // contractsIcon
-            // 
-            this.contractsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.contractsIcon.Image = ((System.Drawing.Image)(resources.GetObject("contractsIcon.Image")));
-            this.contractsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.contractsIcon.Name = "contractsIcon";
-            this.contractsIcon.Size = new System.Drawing.Size(28, 28);
-            this.contractsIcon.Tag = "contractsPage";
-            this.contractsIcon.Text = "Contracts";
-            this.contractsIcon.ToolTipText = "Display contracts";
-            this.contractsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // walletJournalIcon
-            // 
-            this.walletJournalIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.walletJournalIcon.Image = ((System.Drawing.Image)(resources.GetObject("walletJournalIcon.Image")));
-            this.walletJournalIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.walletJournalIcon.Name = "walletJournalIcon";
-            this.walletJournalIcon.Size = new System.Drawing.Size(28, 28);
-            this.walletJournalIcon.Tag = "walletJournalPage";
-            this.walletJournalIcon.Text = "Wallet Journal";
-            this.walletJournalIcon.ToolTipText = "Display wallet journal";
-            this.walletJournalIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // walletTransactionsIcon
-            // 
-            this.walletTransactionsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.walletTransactionsIcon.Image = ((System.Drawing.Image)(resources.GetObject("walletTransactionsIcon.Image")));
-            this.walletTransactionsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.walletTransactionsIcon.Name = "walletTransactionsIcon";
-            this.walletTransactionsIcon.Size = new System.Drawing.Size(28, 28);
-            this.walletTransactionsIcon.Tag = "walletTransactionsPage";
-            this.walletTransactionsIcon.Text = "Wallet Transactions";
-            this.walletTransactionsIcon.ToolTipText = "Display wallet transactions";
-            this.walletTransactionsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // jobsIcon
-            // 
-            this.jobsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.jobsIcon.Image = ((System.Drawing.Image)(resources.GetObject("jobsIcon.Image")));
-            this.jobsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.jobsIcon.Name = "jobsIcon";
-            this.jobsIcon.Size = new System.Drawing.Size(28, 28);
-            this.jobsIcon.Tag = "jobsPage";
-            this.jobsIcon.Text = "Industry";
-            this.jobsIcon.ToolTipText = "Display industry jobs";
-            this.jobsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // researchIcon
-            // 
-            this.researchIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.researchIcon.Image = ((System.Drawing.Image)(resources.GetObject("researchIcon.Image")));
-            this.researchIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.researchIcon.Name = "researchIcon";
-            this.researchIcon.Size = new System.Drawing.Size(28, 28);
-            this.researchIcon.Tag = "researchPage";
-            this.researchIcon.Text = "Research";
-            this.researchIcon.ToolTipText = "Display research points";
-            this.researchIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // mailMessagesIcon
-            // 
-            this.mailMessagesIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.mailMessagesIcon.Image = ((System.Drawing.Image)(resources.GetObject("mailMessagesIcon.Image")));
-            this.mailMessagesIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mailMessagesIcon.Name = "mailMessagesIcon";
-            this.mailMessagesIcon.Size = new System.Drawing.Size(28, 28);
-            this.mailMessagesIcon.Tag = "mailMessagesPage";
-            this.mailMessagesIcon.Text = "Mail";
-            this.mailMessagesIcon.ToolTipText = "Display EVE mails";
-            this.mailMessagesIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // eveNotificationsIcon
-            // 
-            this.eveNotificationsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.eveNotificationsIcon.Image = ((System.Drawing.Image)(resources.GetObject("eveNotificationsIcon.Image")));
-            this.eveNotificationsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.eveNotificationsIcon.Name = "eveNotificationsIcon";
-            this.eveNotificationsIcon.Size = new System.Drawing.Size(28, 28);
-            this.eveNotificationsIcon.Tag = "eveNotificationsPage";
-            this.eveNotificationsIcon.Text = "Notification";
-            this.eveNotificationsIcon.ToolTipText = "Display EVE notifications";
-            this.eveNotificationsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // toggleSkillsIcon
-            // 
-            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toggleSkillsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
-            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
-            this.toggleSkillsIcon.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toggleSkillsIcon.Size = new System.Drawing.Size(28, 28);
-            this.toggleSkillsIcon.Text = "Toggle All Skills";
-            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
-            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
-            // 
-            // tsToggleSeparator
-            // 
-            this.tsToggleSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsToggleSeparator.Name = "tsToggleSeparator";
-            this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.tsToggleSeparator.Size = new System.Drawing.Size(6, 31);
-            // 
-            // featuresMenu
-            // 
-            this.featuresMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.featuresMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.featuresMenu.Image = ((System.Drawing.Image)(resources.GetObject("featuresMenu.Image")));
-            this.featuresMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.featuresMenu.Name = "featuresMenu";
-            this.featuresMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.featuresMenu.Size = new System.Drawing.Size(37, 28);
-            this.featuresMenu.Text = "More features";
-            this.featuresMenu.ToolTipText = "Advanced features";
-            this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
-            this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
-            // 
-            // filterTimer
-            // 
-            this.filterTimer.Interval = 300;
-            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
-            // 
-            // factionalWarfareStatsIcon
-            // 
-            this.factionalWarfareStatsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.factionalWarfareStatsIcon.Image = ((System.Drawing.Image)(resources.GetObject("factionalWarfareStatsIcon.Image")));
-            this.factionalWarfareStatsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.factionalWarfareStatsIcon.Name = "factionalWarfareStatsIcon";
-            this.factionalWarfareStatsIcon.Size = new System.Drawing.Size(28, 28);
-            this.factionalWarfareStatsIcon.Tag = "factionalWarfareStatsPage";
-            this.factionalWarfareStatsIcon.Text = "Factional Warfare";
-            this.factionalWarfareStatsIcon.ToolTipText = "Display factional warfare stats";
-            this.factionalWarfareStatsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
             // borderPanel
             // 
@@ -1169,29 +787,437 @@ namespace EVEMon.CharacterMonitoring
             this.notificationList.Size = new System.Drawing.Size(571, 72);
             this.notificationList.TabIndex = 13;
             // 
-            // skillQueueControl
+            // toolstripPanel
             // 
-            this.skillQueueControl.BackColor = System.Drawing.SystemColors.Control;
-            this.skillQueueControl.BorderColor = System.Drawing.Color.Gray;
-            this.skillQueueControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.skillQueueControl.EmptyColor = System.Drawing.Color.DimGray;
-            this.skillQueueControl.FirstColor = System.Drawing.Color.LightSteelBlue;
-            this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
-            this.skillQueueControl.Name = "skillQueueControl";
-            this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
-            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
-            this.skillQueueControl.SkillQueue = null;
-            this.skillQueueControl.TabIndex = 13;
+            this.toolstripPanel.AutoSize = true;
+            this.toolstripPanel.Controls.Add(this.toolStripContextual);
+            this.toolstripPanel.Controls.Add(this.toolStripFeatures);
+            this.toolstripPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.toolstripPanel.Location = new System.Drawing.Point(0, 0);
+            this.toolstripPanel.Name = "toolstripPanel";
+            this.toolstripPanel.Size = new System.Drawing.Size(574, 56);
+            this.toolstripPanel.TabIndex = 16;
             // 
-            // Header
+            // toolStripContextual
             // 
-            this.Header.AutoSize = true;
-            this.Header.Character = null;
-            this.Header.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Header.Location = new System.Drawing.Point(0, 0);
-            this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(574, 165);
-            this.Header.TabIndex = 15;
+            this.toolStripContextual.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStripContextual.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.preferencesMenu,
+            this.searchTextBox,
+            this.groupMenu});
+            this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolStripContextual.Location = new System.Drawing.Point(0, 31);
+            this.toolStripContextual.Name = "toolStripContextual";
+            this.toolStripContextual.Size = new System.Drawing.Size(574, 25);
+            this.toolStripContextual.TabIndex = 15;
+            // 
+            // preferencesMenu
+            // 
+            this.preferencesMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.preferencesMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.preferencesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.columnSettingsMenuItem,
+            this.autoSizeColumnMenuItem,
+            this.tsColumnSettingsSeparator,
+            this.hideInactiveMenuItem,
+            this.numberAbsFormatMenuItem,
+            this.tsOptionsSeparator,
+            this.showOnlyCharMenuItem,
+            this.showOnlyCorpMenuItem,
+            this.tsReadingPaneSeparator,
+            this.readingPaneMenuItem});
+            this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
+            this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.preferencesMenu.Name = "preferencesMenu";
+            this.preferencesMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.preferencesMenu.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.preferencesMenu.Size = new System.Drawing.Size(29, 22);
+            this.preferencesMenu.Text = "Preferences";
+            this.preferencesMenu.ToolTipText = "Preferences";
+            this.preferencesMenu.DropDownOpening += new System.EventHandler(this.preferencesMenu_DropDownOpening);
+            // 
+            // columnSettingsMenuItem
+            // 
+            this.columnSettingsMenuItem.Name = "columnSettingsMenuItem";
+            this.columnSettingsMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.columnSettingsMenuItem.Text = "Column Settings";
+            this.columnSettingsMenuItem.Click += new System.EventHandler(this.columnSettingsMenuItem_Click);
+            // 
+            // autoSizeColumnMenuItem
+            // 
+            this.autoSizeColumnMenuItem.Name = "autoSizeColumnMenuItem";
+            this.autoSizeColumnMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.autoSizeColumnMenuItem.Text = "Auto-Size Columns";
+            this.autoSizeColumnMenuItem.Click += new System.EventHandler(this.autoSizeColumnMenuItem_Click);
+            // 
+            // tsColumnSettingsSeparator
+            // 
+            this.tsColumnSettingsSeparator.Name = "tsColumnSettingsSeparator";
+            this.tsColumnSettingsSeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // hideInactiveMenuItem
+            // 
+            this.hideInactiveMenuItem.Name = "hideInactiveMenuItem";
+            this.hideInactiveMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.hideInactiveMenuItem.Text = "Hide Inactive Orders";
+            this.hideInactiveMenuItem.Click += new System.EventHandler(this.hideInactiveMenuItem_Click);
+            // 
+            // numberAbsFormatMenuItem
+            // 
+            this.numberAbsFormatMenuItem.Name = "numberAbsFormatMenuItem";
+            this.numberAbsFormatMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.numberAbsFormatMenuItem.Text = "Number Abbreviating Format";
+            this.numberAbsFormatMenuItem.Click += new System.EventHandler(this.numberAbsFormatMenuItem_Click);
+            // 
+            // tsOptionsSeparator
+            // 
+            this.tsOptionsSeparator.Name = "tsOptionsSeparator";
+            this.tsOptionsSeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // showOnlyCharMenuItem
+            // 
+            this.showOnlyCharMenuItem.CheckOnClick = true;
+            this.showOnlyCharMenuItem.Name = "showOnlyCharMenuItem";
+            this.showOnlyCharMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.showOnlyCharMenuItem.Text = "Show Only Issued for Character";
+            this.showOnlyCharMenuItem.Click += new System.EventHandler(this.showOnlyCharMenuItem_Click);
+            // 
+            // showOnlyCorpMenuItem
+            // 
+            this.showOnlyCorpMenuItem.CheckOnClick = true;
+            this.showOnlyCorpMenuItem.Name = "showOnlyCorpMenuItem";
+            this.showOnlyCorpMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.showOnlyCorpMenuItem.Text = "Show Only Issued for Corporation";
+            this.showOnlyCorpMenuItem.Click += new System.EventHandler(this.showOnlyCorpMenuItem_Click);
+            // 
+            // tsReadingPaneSeparator
+            // 
+            this.tsReadingPaneSeparator.Name = "tsReadingPaneSeparator";
+            this.tsReadingPaneSeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // readingPaneMenuItem
+            // 
+            this.readingPaneMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.paneRightMenuItem,
+            this.paneBottomMenuItem,
+            this.paneOffMenuItem});
+            this.readingPaneMenuItem.Name = "readingPaneMenuItem";
+            this.readingPaneMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.readingPaneMenuItem.Text = "Reading Pane";
+            this.readingPaneMenuItem.DropDownOpening += new System.EventHandler(this.readingPaneMenuItem_DropDownOpening);
+            // 
+            // paneRightMenuItem
+            // 
+            this.paneRightMenuItem.CheckOnClick = true;
+            this.paneRightMenuItem.Name = "paneRightMenuItem";
+            this.paneRightMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.paneRightMenuItem.Tag = "Right";
+            this.paneRightMenuItem.Text = "Right";
+            this.paneRightMenuItem.Click += new System.EventHandler(this.paneRightMenuItem_Click);
+            // 
+            // paneBottomMenuItem
+            // 
+            this.paneBottomMenuItem.CheckOnClick = true;
+            this.paneBottomMenuItem.Name = "paneBottomMenuItem";
+            this.paneBottomMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.paneBottomMenuItem.Tag = "Bottom";
+            this.paneBottomMenuItem.Text = "Bottom";
+            this.paneBottomMenuItem.Click += new System.EventHandler(this.paneBottomMenuItem_Click);
+            // 
+            // paneOffMenuItem
+            // 
+            this.paneOffMenuItem.CheckOnClick = true;
+            this.paneOffMenuItem.Name = "paneOffMenuItem";
+            this.paneOffMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.paneOffMenuItem.Tag = "Off";
+            this.paneOffMenuItem.Text = "Off";
+            this.paneOffMenuItem.Click += new System.EventHandler(this.paneOffMenuItem_Click);
+            // 
+            // searchTextBox
+            // 
+            this.searchTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.searchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.searchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
+            this.searchTextBox.AutoSize = false;
+            this.searchTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.searchTextBox.Name = "searchTextBox";
+            this.searchTextBox.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.searchTextBox.Size = new System.Drawing.Size(120, 21);
+            this.searchTextBox.ToolTipText = "Search";
+            this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
+            // 
+            // groupMenu
+            // 
+            this.groupMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.groupMenu.Image = ((System.Drawing.Image)(resources.GetObject("groupMenu.Image")));
+            this.groupMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.groupMenu.Name = "groupMenu";
+            this.groupMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.groupMenu.Size = new System.Drawing.Size(94, 22);
+            this.groupMenu.Text = "Group By...";
+            this.groupMenu.DropDownOpening += new System.EventHandler(this.groupMenu_DropDownOpening);
+            this.groupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.groupMenu_DropDownItemClicked);
+            // 
+            // toolStripFeatures
+            // 
+            this.toolStripFeatures.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStripFeatures.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.toolStripFeatures.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.skillsIcon,
+            this.skillQueueIcon,
+            this.employmentIcon,
+            this.standingsIcon,
+            this.factionalWarfareStatsIcon,
+            this.assetsIcon,
+            this.ordersIcon,
+            this.contractsIcon,
+            this.walletJournalIcon,
+            this.walletTransactionsIcon,
+            this.jobsIcon,
+            this.researchIcon,
+            this.mailMessagesIcon,
+            this.eveNotificationsIcon,
+            this.toggleSkillsIcon,
+            this.tsToggleSeparator,
+            this.featuresMenu,
+            this.tsPagesSeparator});
+            this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolStripFeatures.Location = new System.Drawing.Point(0, 0);
+            this.toolStripFeatures.Name = "toolStripFeatures";
+            this.toolStripFeatures.Size = new System.Drawing.Size(574, 31);
+            this.toolStripFeatures.TabIndex = 13;
+            // 
+            // skillsIcon
+            // 
+            this.skillsIcon.Checked = true;
+            this.skillsIcon.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.skillsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.skillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillsIcon.Image")));
+            this.skillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillsIcon.Name = "skillsIcon";
+            this.skillsIcon.Size = new System.Drawing.Size(28, 28);
+            this.skillsIcon.Tag = "skillsPage";
+            this.skillsIcon.Text = "Skills";
+            this.skillsIcon.ToolTipText = "Display skills list";
+            this.skillsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // skillQueueIcon
+            // 
+            this.skillQueueIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.skillQueueIcon.Image = ((System.Drawing.Image)(resources.GetObject("skillQueueIcon.Image")));
+            this.skillQueueIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.skillQueueIcon.Name = "skillQueueIcon";
+            this.skillQueueIcon.Size = new System.Drawing.Size(28, 28);
+            this.skillQueueIcon.Tag = "skillQueuePage";
+            this.skillQueueIcon.Text = "Queue";
+            this.skillQueueIcon.ToolTipText = "Display skills in queue";
+            this.skillQueueIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // employmentIcon
+            // 
+            this.employmentIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.employmentIcon.Image = ((System.Drawing.Image)(resources.GetObject("employmentIcon.Image")));
+            this.employmentIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.employmentIcon.Name = "employmentIcon";
+            this.employmentIcon.Size = new System.Drawing.Size(28, 28);
+            this.employmentIcon.Tag = "employmentPage";
+            this.employmentIcon.Text = "Employment History";
+            this.employmentIcon.ToolTipText = "Display employment history";
+            this.employmentIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // standingsIcon
+            // 
+            this.standingsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.standingsIcon.Image = ((System.Drawing.Image)(resources.GetObject("standingsIcon.Image")));
+            this.standingsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.standingsIcon.Name = "standingsIcon";
+            this.standingsIcon.Size = new System.Drawing.Size(28, 28);
+            this.standingsIcon.Tag = "standingsPage";
+            this.standingsIcon.Text = "Standings";
+            this.standingsIcon.ToolTipText = "Display standings";
+            this.standingsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // factionalWarfareStatsIcon
+            // 
+            this.factionalWarfareStatsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.factionalWarfareStatsIcon.Image = ((System.Drawing.Image)(resources.GetObject("factionalWarfareStatsIcon.Image")));
+            this.factionalWarfareStatsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.factionalWarfareStatsIcon.Name = "factionalWarfareStatsIcon";
+            this.factionalWarfareStatsIcon.Size = new System.Drawing.Size(28, 28);
+            this.factionalWarfareStatsIcon.Tag = "factionalWarfareStatsPage";
+            this.factionalWarfareStatsIcon.Text = "Factional Warfare";
+            this.factionalWarfareStatsIcon.ToolTipText = "Display factional warfare stats";
+            this.factionalWarfareStatsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // assetsIcon
+            // 
+            this.assetsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.assetsIcon.Image = ((System.Drawing.Image)(resources.GetObject("assetsIcon.Image")));
+            this.assetsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.assetsIcon.Name = "assetsIcon";
+            this.assetsIcon.Size = new System.Drawing.Size(28, 28);
+            this.assetsIcon.Tag = "assetsPage";
+            this.assetsIcon.Text = "Assets";
+            this.assetsIcon.ToolTipText = "Display assets";
+            this.assetsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // ordersIcon
+            // 
+            this.ordersIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ordersIcon.Image = ((System.Drawing.Image)(resources.GetObject("ordersIcon.Image")));
+            this.ordersIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ordersIcon.Name = "ordersIcon";
+            this.ordersIcon.Size = new System.Drawing.Size(28, 28);
+            this.ordersIcon.Tag = "ordersPage";
+            this.ordersIcon.Text = "Market";
+            this.ordersIcon.ToolTipText = "Display market orders";
+            this.ordersIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // contractsIcon
+            // 
+            this.contractsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contractsIcon.Image = ((System.Drawing.Image)(resources.GetObject("contractsIcon.Image")));
+            this.contractsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contractsIcon.Name = "contractsIcon";
+            this.contractsIcon.Size = new System.Drawing.Size(28, 28);
+            this.contractsIcon.Tag = "contractsPage";
+            this.contractsIcon.Text = "Contracts";
+            this.contractsIcon.ToolTipText = "Display contracts";
+            this.contractsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // walletJournalIcon
+            // 
+            this.walletJournalIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.walletJournalIcon.Image = ((System.Drawing.Image)(resources.GetObject("walletJournalIcon.Image")));
+            this.walletJournalIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.walletJournalIcon.Name = "walletJournalIcon";
+            this.walletJournalIcon.Size = new System.Drawing.Size(28, 28);
+            this.walletJournalIcon.Tag = "walletJournalPage";
+            this.walletJournalIcon.Text = "Wallet Journal";
+            this.walletJournalIcon.ToolTipText = "Display wallet journal";
+            this.walletJournalIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // walletTransactionsIcon
+            // 
+            this.walletTransactionsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.walletTransactionsIcon.Image = ((System.Drawing.Image)(resources.GetObject("walletTransactionsIcon.Image")));
+            this.walletTransactionsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.walletTransactionsIcon.Name = "walletTransactionsIcon";
+            this.walletTransactionsIcon.Size = new System.Drawing.Size(28, 28);
+            this.walletTransactionsIcon.Tag = "walletTransactionsPage";
+            this.walletTransactionsIcon.Text = "Wallet Transactions";
+            this.walletTransactionsIcon.ToolTipText = "Display wallet transactions";
+            this.walletTransactionsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // jobsIcon
+            // 
+            this.jobsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.jobsIcon.Image = ((System.Drawing.Image)(resources.GetObject("jobsIcon.Image")));
+            this.jobsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.jobsIcon.Name = "jobsIcon";
+            this.jobsIcon.Size = new System.Drawing.Size(28, 28);
+            this.jobsIcon.Tag = "jobsPage";
+            this.jobsIcon.Text = "Industry";
+            this.jobsIcon.ToolTipText = "Display industry jobs";
+            this.jobsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // researchIcon
+            // 
+            this.researchIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.researchIcon.Image = ((System.Drawing.Image)(resources.GetObject("researchIcon.Image")));
+            this.researchIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.researchIcon.Name = "researchIcon";
+            this.researchIcon.Size = new System.Drawing.Size(28, 28);
+            this.researchIcon.Tag = "researchPage";
+            this.researchIcon.Text = "Research";
+            this.researchIcon.ToolTipText = "Display research points";
+            this.researchIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // mailMessagesIcon
+            // 
+            this.mailMessagesIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mailMessagesIcon.Image = ((System.Drawing.Image)(resources.GetObject("mailMessagesIcon.Image")));
+            this.mailMessagesIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mailMessagesIcon.Name = "mailMessagesIcon";
+            this.mailMessagesIcon.Size = new System.Drawing.Size(28, 28);
+            this.mailMessagesIcon.Tag = "mailMessagesPage";
+            this.mailMessagesIcon.Text = "Mail";
+            this.mailMessagesIcon.ToolTipText = "Display EVE mails";
+            this.mailMessagesIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // eveNotificationsIcon
+            // 
+            this.eveNotificationsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.eveNotificationsIcon.Image = ((System.Drawing.Image)(resources.GetObject("eveNotificationsIcon.Image")));
+            this.eveNotificationsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.eveNotificationsIcon.Name = "eveNotificationsIcon";
+            this.eveNotificationsIcon.Size = new System.Drawing.Size(28, 28);
+            this.eveNotificationsIcon.Tag = "eveNotificationsPage";
+            this.eveNotificationsIcon.Text = "Notification";
+            this.eveNotificationsIcon.ToolTipText = "Display EVE notifications";
+            this.eveNotificationsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // toggleSkillsIcon
+            // 
+            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toggleSkillsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
+            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
+            this.toggleSkillsIcon.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toggleSkillsIcon.Size = new System.Drawing.Size(28, 28);
+            this.toggleSkillsIcon.Text = "Toggle All Skills";
+            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
+            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
+            // 
+            // tsToggleSeparator
+            // 
+            this.tsToggleSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsToggleSeparator.Name = "tsToggleSeparator";
+            this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.tsToggleSeparator.Size = new System.Drawing.Size(6, 31);
+            // 
+            // featuresMenu
+            // 
+            this.featuresMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.featuresMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.featuresMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.EnableAllToolStripMenuItem,
+            this.DisableAllToolStripMenuItem,
+            this.SelectionToolStripSeparator});
+            this.featuresMenu.Image = ((System.Drawing.Image)(resources.GetObject("featuresMenu.Image")));
+            this.featuresMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.featuresMenu.Name = "featuresMenu";
+            this.featuresMenu.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.featuresMenu.Size = new System.Drawing.Size(37, 28);
+            this.featuresMenu.Text = "More features";
+            this.featuresMenu.ToolTipText = "Advanced features";
+            this.featuresMenu.DropDownOpening += new System.EventHandler(this.featureMenu_DropDownOpening);
+            this.featuresMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.featuresMenu_DropDownItemClicked);
+            // 
+            // EnableAllToolStripMenuItem
+            // 
+            this.EnableAllToolStripMenuItem.Name = "EnableAllToolStripMenuItem";
+            this.EnableAllToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.EnableAllToolStripMenuItem.Text = "Enable All";
+            this.EnableAllToolStripMenuItem.Click += new System.EventHandler(this.EnableAllToolStripMenuItem_Click);
+            // 
+            // DisableAllToolStripMenuItem
+            // 
+            this.DisableAllToolStripMenuItem.Name = "DisableAllToolStripMenuItem";
+            this.DisableAllToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.DisableAllToolStripMenuItem.Text = "Disable All";
+            this.DisableAllToolStripMenuItem.Click += new System.EventHandler(this.DisableAllToolStripMenuItem_Click);
+            // 
+            // SelectionToolStripSeparator
+            // 
+            this.SelectionToolStripSeparator.Name = "SelectionToolStripSeparator";
+            this.SelectionToolStripSeparator.Size = new System.Drawing.Size(126, 6);
+            // 
+            // filterTimer
+            // 
+            this.filterTimer.Interval = 300;
+            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
             // 
             // CharacterMonitor
             // 
@@ -1217,12 +1243,6 @@ namespace EVEMon.CharacterMonitoring
             this.skillQueueTimePanel.PerformLayout();
             this.lowerPanel.ResumeLayout(false);
             this.lowerPanel.PerformLayout();
-            this.toolstripPanel.ResumeLayout(false);
-            this.toolstripPanel.PerformLayout();
-            this.toolStripContextual.ResumeLayout(false);
-            this.toolStripContextual.PerformLayout();
-            this.toolStripFeatures.ResumeLayout(false);
-            this.toolStripFeatures.PerformLayout();
             this.borderPanel.ResumeLayout(false);
             this.corePanel.ResumeLayout(false);
             this.multiPanel.ResumeLayout(false);
@@ -1240,6 +1260,12 @@ namespace EVEMon.CharacterMonitoring
             this.walletJournalPage.ResumeLayout(false);
             this.walletTransactionsPage.ResumeLayout(false);
             this.factionalWarfareStatsPage.ResumeLayout(false);
+            this.toolstripPanel.ResumeLayout(false);
+            this.toolstripPanel.PerformLayout();
+            this.toolStripContextual.ResumeLayout(false);
+            this.toolStripContextual.PerformLayout();
+            this.toolStripFeatures.ResumeLayout(false);
+            this.toolStripFeatures.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1337,5 +1363,8 @@ namespace EVEMon.CharacterMonitoring
         private MultiPanelPage factionalWarfareStatsPage;
         private CharacterFactionalWarfareStatsList factionalWarfareStatsList;
         private System.Windows.Forms.ToolStripButton factionalWarfareStatsIcon;
+        private System.Windows.Forms.ToolStripMenuItem EnableAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DisableAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator SelectionToolStripSeparator;
     }
 }
