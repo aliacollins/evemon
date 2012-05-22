@@ -24,6 +24,8 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public static class EveMonClient
     {
+        #region Fields
+
         private static StreamWriter s_traceStream;
         private static TextWriterTraceListener s_traceListener;
         private static readonly DateTime s_startTime = DateTime.UtcNow;
@@ -34,6 +36,9 @@ namespace EVEMon.Common
         private static string s_traceFile;
 
         public const int DefaultDpi = 96;
+
+        #endregion
+
 
         #region Initialization and threading
 

@@ -63,7 +63,7 @@ namespace EVEMon.Common
                                                                                 OnFactionalWarfareStatsUpdated)
                     { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charFacWarStatsMonitor);
-           
+
             m_charAssetsMonitor =
                 new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
                                                                     OnAssetsUpdated) { QueryOnStartup = true };
@@ -86,7 +86,8 @@ namespace EVEMon.Common
 
             m_charWalletTransactionsMonitor =
                 new CharacterQueryMonitor<SerializableAPIWalletTransactions>(ccpCharacter, APICharacterMethods.WalletTransactions,
-                                                                             OnWalletTransactionsUpdated) { QueryOnStartup = true };
+                                                                             OnWalletTransactionsUpdated)
+                    { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charWalletTransactionsMonitor);
 
             m_charIndustryJobsMonitor =
@@ -389,7 +390,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="result"></param>
         private void OnFactionalWarfareStatsUpdated(APIResult<SerializableAPIFactionalWarfareStats> result)
-        {           
+        {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !EveMonClient.MonitoredCharacters.Contains(m_ccpCharacter))
                 return;
