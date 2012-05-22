@@ -1,3 +1,5 @@
+using System;
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -14,10 +16,14 @@ namespace EVEMon.Common
             FactionName = src.FactionName;
             AgainstID = src.AgainstID;
             AgainstName = src.AgainstName;
+
+            SetPrimeEnemy();
         }
 
 
         #region Public Properties
+
+        public int PrimeAgainstID { get; set; }
 
         /// <summary>
         /// Gets or sets the faction ID.
@@ -40,6 +46,34 @@ namespace EVEMon.Common
         public string AgainstName { get; set; }
 
         #endregion
-   
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Sets the prime enemy of a faction.
+        /// </summary>
+        private void SetPrimeEnemy()
+        {
+            switch (FactionID)
+            {
+                case DBConstants.AmarrFactionID:
+                    PrimeAgainstID = DBConstants.MinmatarFactionID;
+                    break;
+                case DBConstants.CaldariFactionID:
+                    PrimeAgainstID = DBConstants.GallenteFactionID;
+                    break;
+                case DBConstants.GallenteFactionID:
+                    PrimeAgainstID = DBConstants.CaldariFactionID;
+                    break;
+                case DBConstants.MinmatarFactionID:
+                    PrimeAgainstID = DBConstants.AmarrFactionID;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

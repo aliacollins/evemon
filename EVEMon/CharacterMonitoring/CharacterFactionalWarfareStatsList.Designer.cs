@@ -66,8 +66,8 @@
             this.FightingPartiesPanel = new System.Windows.Forms.Panel();
             this.PlusPictureBox = new System.Windows.Forms.PictureBox();
             this.AgainstPictureBox = new System.Windows.Forms.PictureBox();
-            this.SecondAgainstFactionPictureBox = new System.Windows.Forms.PictureBox();
-            this.FirstAgainstFactionPictureBox = new System.Windows.Forms.PictureBox();
+            this.AllyAgainstFactionPictureBox = new System.Windows.Forms.PictureBox();
+            this.PrimeAgainstFactionPictureBox = new System.Windows.Forms.PictureBox();
             this.EnlistedFactionPictureBox = new System.Windows.Forms.PictureBox();
             this.FactionPictureBox = new System.Windows.Forms.PictureBox();
             this.CorporationPictureBox = new System.Windows.Forms.PictureBox();
@@ -84,8 +84,8 @@
             this.FightingPartiesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PlusPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AgainstPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SecondAgainstFactionPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.FirstAgainstFactionPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AllyAgainstFactionPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PrimeAgainstFactionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EnlistedFactionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FactionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CorporationPictureBox)).BeginInit();
@@ -307,8 +307,8 @@
             this.HeaderTableLayoutPanel.SetColumnSpan(this.FightingPartiesPanel, 2);
             this.FightingPartiesPanel.Controls.Add(this.PlusPictureBox);
             this.FightingPartiesPanel.Controls.Add(this.AgainstPictureBox);
-            this.FightingPartiesPanel.Controls.Add(this.SecondAgainstFactionPictureBox);
-            this.FightingPartiesPanel.Controls.Add(this.FirstAgainstFactionPictureBox);
+            this.FightingPartiesPanel.Controls.Add(this.AllyAgainstFactionPictureBox);
+            this.FightingPartiesPanel.Controls.Add(this.PrimeAgainstFactionPictureBox);
             this.FightingPartiesPanel.Controls.Add(this.EnlistedFactionPictureBox);
             this.FightingPartiesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FightingPartiesPanel.Location = new System.Drawing.Point(64, 3);
@@ -341,27 +341,27 @@
             // 
             // SecondAgainstFactionPictureBox
             // 
-            this.SecondAgainstFactionPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.SecondAgainstFactionPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("SecondAgainstFactionPictureBox.Image")));
-            this.SecondAgainstFactionPictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("SecondAgainstFactionPictureBox.InitialImage")));
-            this.SecondAgainstFactionPictureBox.Location = new System.Drawing.Point(188, 2);
-            this.SecondAgainstFactionPictureBox.Margin = new System.Windows.Forms.Padding(0);
-            this.SecondAgainstFactionPictureBox.Name = "SecondAgainstFactionPictureBox";
-            this.SecondAgainstFactionPictureBox.Size = new System.Drawing.Size(32, 32);
-            this.SecondAgainstFactionPictureBox.TabIndex = 4;
-            this.SecondAgainstFactionPictureBox.TabStop = false;
+            this.AllyAgainstFactionPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.AllyAgainstFactionPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("SecondAgainstFactionPictureBox.Image")));
+            this.AllyAgainstFactionPictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("SecondAgainstFactionPictureBox.InitialImage")));
+            this.AllyAgainstFactionPictureBox.Location = new System.Drawing.Point(188, 2);
+            this.AllyAgainstFactionPictureBox.Margin = new System.Windows.Forms.Padding(0);
+            this.AllyAgainstFactionPictureBox.Name = "AllyAgainstFactionPictureBox";
+            this.AllyAgainstFactionPictureBox.Size = new System.Drawing.Size(32, 32);
+            this.AllyAgainstFactionPictureBox.TabIndex = 4;
+            this.AllyAgainstFactionPictureBox.TabStop = false;
             // 
             // FirstAgainstFactionPictureBox
             // 
-            this.FirstAgainstFactionPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.FirstAgainstFactionPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("FirstAgainstFactionPictureBox.Image")));
-            this.FirstAgainstFactionPictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("FirstAgainstFactionPictureBox.InitialImage")));
-            this.FirstAgainstFactionPictureBox.Location = new System.Drawing.Point(124, 2);
-            this.FirstAgainstFactionPictureBox.Margin = new System.Windows.Forms.Padding(0);
-            this.FirstAgainstFactionPictureBox.Name = "FirstAgainstFactionPictureBox";
-            this.FirstAgainstFactionPictureBox.Size = new System.Drawing.Size(32, 32);
-            this.FirstAgainstFactionPictureBox.TabIndex = 1;
-            this.FirstAgainstFactionPictureBox.TabStop = false;
+            this.PrimeAgainstFactionPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.PrimeAgainstFactionPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("FirstAgainstFactionPictureBox.Image")));
+            this.PrimeAgainstFactionPictureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("FirstAgainstFactionPictureBox.InitialImage")));
+            this.PrimeAgainstFactionPictureBox.Location = new System.Drawing.Point(124, 2);
+            this.PrimeAgainstFactionPictureBox.Margin = new System.Windows.Forms.Padding(0);
+            this.PrimeAgainstFactionPictureBox.Name = "PrimeAgainstFactionPictureBox";
+            this.PrimeAgainstFactionPictureBox.Size = new System.Drawing.Size(32, 32);
+            this.PrimeAgainstFactionPictureBox.TabIndex = 1;
+            this.PrimeAgainstFactionPictureBox.TabStop = false;
             // 
             // EnlistedFactionPictureBox
             // 
@@ -462,8 +462,8 @@
             this.FightingPartiesPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PlusPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.AgainstPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SecondAgainstFactionPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.FirstAgainstFactionPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AllyAgainstFactionPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PrimeAgainstFactionPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EnlistedFactionPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FactionPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CorporationPictureBox)).EndInit();
@@ -491,8 +491,8 @@
         private Common.Controls.PersistentSplitContainer ListSplitContainer;
         private System.Windows.Forms.Label TimeServedLabel;
         private System.Windows.Forms.Panel FightingPartiesPanel;
-        private System.Windows.Forms.PictureBox SecondAgainstFactionPictureBox;
-        private System.Windows.Forms.PictureBox FirstAgainstFactionPictureBox;
+        private System.Windows.Forms.PictureBox AllyAgainstFactionPictureBox;
+        private System.Windows.Forms.PictureBox PrimeAgainstFactionPictureBox;
         private System.Windows.Forms.PictureBox EnlistedFactionPictureBox;
         private System.Windows.Forms.PictureBox PlusPictureBox;
         private System.Windows.Forms.PictureBox AgainstPictureBox;

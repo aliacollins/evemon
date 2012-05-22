@@ -251,14 +251,25 @@ namespace EVEMon.Common
         #region Public Finders
 
         /// <summary>
-        /// Gets the against enlisted faction IDs.
+        /// Gets the against faction IDs.
         /// </summary>
         /// <param name="factionID">The faction ID.</param>
         /// <returns></returns>
-        public static IEnumerable<int> GetAgainstEnlistedFactionIDs(long factionID)
+        public static IEnumerable<int> GetAgainstFactionIDs(long factionID)
         {
             EnsureImportation();
-            return s_eveFactionWars.Where(faction => faction.FactionID == factionID).Select(faction => faction.AgainstID);
+
+            List<int> againstIDs = new List<int>();
+            foreach (EveFactionWar factionWar in s_eveFactionWars.Where(faction => faction.FactionID == factionID))
+            {
+                if (factionWar.AgainstID == factionWar.PrimeAgainstID)
+                {
+                    againstIDs.Insert(0, factionWar.AgainstID);
+                    continue;
+                }
+                againstIDs.Add(factionWar.AgainstID);
+            }
+            return againstIDs;
         }
 
         /// <summary>

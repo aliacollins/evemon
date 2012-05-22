@@ -147,7 +147,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             List<int> factionsAgainstEnlisted =
-                EveFactionalWarfareStats.GetAgainstEnlistedFactionIDs(m_charFacWarStats.FactionID).ToList();
+                EveFactionalWarfareStats.GetAgainstFactionIDs(m_charFacWarStats.FactionID).ToList();
 
             FactionPictureBox.Visible = !Settings.UI.SafeForWork;
             CorporationPictureBox.Visible = !Settings.UI.SafeForWork;
@@ -160,8 +160,8 @@ namespace EVEMon.CharacterMonitoring
 
             if (factionsAgainstEnlisted.Any())
             {
-                ImageService.GetAllianceImage(FirstAgainstFactionPictureBox, factionsAgainstEnlisted[0]);
-                ImageService.GetAllianceImage(SecondAgainstFactionPictureBox, factionsAgainstEnlisted[1]);
+                ImageService.GetAllianceImage(PrimeAgainstFactionPictureBox, factionsAgainstEnlisted[0]);
+                ImageService.GetAllianceImage(AllyAgainstFactionPictureBox, factionsAgainstEnlisted[1]);
             }
 
             // Update the labels
