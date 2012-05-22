@@ -14,7 +14,6 @@ namespace EVEMon.Common
     public class QueryMonitor<T> : IQueryMonitorEx, INetworkChangeSubscriber
     {
         private readonly QueryCallback<T> m_onUpdated;
-        private readonly string m_methodHeader;
 
         private bool m_forceUpdate;
         private bool m_retryOnForceUpdateError;
@@ -35,7 +34,6 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             LastUpdate = DateTime.MinValue;
-            m_methodHeader = (method.HasHeader() ? method.GetHeader() : String.Empty);
             m_forceUpdate = true;
             m_onUpdated = callback;
             Method = method;
@@ -343,7 +341,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public override string ToString()
         {
-            return m_methodHeader;
+            return Method.HasHeader() ? Method.GetHeader() : Method.ToString();
         }
 
         #endregion

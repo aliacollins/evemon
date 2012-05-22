@@ -16,7 +16,7 @@ namespace EVEMon.Common
     /// Represents a player API key.
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class APIKey
+    public sealed class APIKey : IDisposable
     {
         private readonly APIKeyQueryMonitor<SerializableAPIKeyInfo> m_apiKeyInfoMonitor;
         private readonly APIKeyQueryMonitor<SerializableAPIAccountStatus> m_accountStatusMonitor;
@@ -81,7 +81,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
-        internal void Dispose()
+        public void Dispose()
         {
             // Unsubscribe events
             EveMonClient.TimerTick -= EveMonClient_TimerTick;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Net;
@@ -5,7 +6,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class CorporationDataQuerying
+    public sealed class CorporationDataQuerying : IDisposable
     {
         #region Fields
 
@@ -55,7 +56,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
-        internal void Dispose()
+        public void Dispose()
         {
             // Unsubscribe events in monitors
             foreach (IQueryMonitorEx monitor in m_corporationQueryMonitors)

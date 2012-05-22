@@ -57,6 +57,9 @@ namespace EVEMon.Common
             if (character is CCPCharacter)
                 character.Identity.APIKeys.ToList().ForEach(apiKey => apiKey.IdentityIgnoreList.Add(character));
 
+            // Dispose
+            character.Dispose();
+            
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
         }

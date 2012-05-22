@@ -4,7 +4,7 @@ using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
-    public abstract class BaseCharacter
+    public abstract class BaseCharacter : IDisposable
     {
         #region Abstract methods and properties
 
@@ -13,6 +13,8 @@ namespace EVEMon.Common
 
         public abstract int GetSkillLevel(StaticSkill skill);
         public abstract int GetSkillPoints(StaticSkill skill);
+
+        public abstract void Dispose();
 
         #endregion
 

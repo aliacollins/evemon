@@ -493,7 +493,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
-        internal override void Dispose()
+        public override void Dispose()
         {
             // Unsubscribe events
             EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
@@ -513,10 +513,16 @@ namespace EVEMon.Common
 
             // Unsubscribe events
             if (m_characterDataQuerying != null)
+            {
                 m_characterDataQuerying.Dispose();
+                m_characterDataQuerying = null;
+            }
 
             if (m_corporationDataQuerying != null)
+            {
                 m_corporationDataQuerying.Dispose();
+                m_corporationDataQuerying = null;
+            }
         }
 
         /// <summary>
