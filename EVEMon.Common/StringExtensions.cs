@@ -133,6 +133,29 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Convert an Int32 number to string with the specified decimals.
+        /// </summary>
+        /// <param name="number">The number.</param>
+        /// <param name="decimals">The decimals.</param>
+        /// <returns></returns>
+        public static string ToNumericString(this int number, int decimals)
+        {
+            return ToNumericString(Convert.ToInt64(number), decimals);
+        }
+
+        /// <summary>
+        /// Convert an Int64 number to string with the specified decimals.
+        /// </summary>
+        /// <param name="number">The number.</param>
+        /// <param name="decimals">The decimals.</param>
+        /// <returns></returns>
+        public static string ToNumericString(this long number, int decimals)
+        {
+            string decimalsString = String.Format("N{0}", decimals);
+            return number.ToString(decimalsString, CultureConstants.DefaultCulture);
+        }
+
+        /// <summary>
         /// Remove line feeds and some other characters to format the string.
         /// </summary>
         /// <param name="text"></param>

@@ -30,9 +30,6 @@ namespace EVEMon.Common
             {
                 Items.Add(new ResearchPoint(srcResearchPoint));
             }
-
-            // Fires the event regarding research points update
-            EveMonClient.OnCharacterResearchPointsUpdated(m_character);
         }
     }
 }

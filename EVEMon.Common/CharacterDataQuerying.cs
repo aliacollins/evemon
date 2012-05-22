@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
@@ -64,7 +63,7 @@ namespace EVEMon.Common
                                                                                 OnFactionalWarfareStatsUpdated)
                     { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charFacWarStatsMonitor);
-
+           
             m_charAssetsMonitor =
                 new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
                                                                     OnAssetsUpdated) { QueryOnStartup = true };
@@ -282,6 +281,9 @@ namespace EVEMon.Common
             // Query the Character's info
             QueryCharacterInfo();
 
+            // Save the file to our cache
+            LocalXmlCache.Save(result.Result.Name, result.XmlDocument);
+
             // Imports the data
             m_ccpCharacter.Import(result);
 
@@ -402,7 +404,7 @@ namespace EVEMon.Common
                 if (result.CCPError != null && result.CCPError.IsFactionalWarfareEnlistedError)
                 {
                     // Update the enlisted in factional warfare flag
-                    m_ccpCharacter.IsFactionalWarfareEnlisted = false;
+                    m_ccpCharacter.IsFactionalWarfareNotEnlisted = true;
 
                     // Fires the event regarding factional warfare stats update
                     EveMonClient.OnCharacterFactionalWarfareStatsUpdated(m_ccpCharacter);
@@ -411,10 +413,10 @@ namespace EVEMon.Common
             }
 
             // Update the enlisted in factional warfare flag
-            m_ccpCharacter.IsFactionalWarfareEnlisted = true;
+            m_ccpCharacter.IsFactionalWarfareNotEnlisted = false;
 
             // Import the data
-            m_ccpCharacter.FactionalWarfareStats.Import(result.Result);
+            m_ccpCharacter.FactionalWarfareStats = new FactionalWarfareStats(result.Result);
 
             // Fires the event regarding factional warfare stats update
             EveMonClient.OnCharacterFactionalWarfareStatsUpdated(m_ccpCharacter);
@@ -439,16 +441,10 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            // Importation can take a serious amount of time depending on the amount of assets;
-            // therefore we invoke it on another thread
-            Dispatcher.BackgroundInvoke(() =>
-                                            {
-                                                m_ccpCharacter.Assets.Import(result.Result.Assets);
+            m_ccpCharacter.Assets.Import(result.Result.Assets);
 
-                                                // Invoke back to the UI thread
-                                                // Fires the event regarding assets update
-                                                Dispatcher.Invoke(() => EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter));
-                                            });
+            // Fires the event regarding assets update
+            EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter);
         }
 
         /// <summary>
@@ -636,6 +632,9 @@ namespace EVEMon.Common
 
             // Import the data
             m_ccpCharacter.ResearchPoints.Import(result.Result.ResearchPoints);
+
+            // Fires the event regarding research points update
+            EveMonClient.OnCharacterResearchPointsUpdated(m_ccpCharacter);
         }
 
         /// <summary>

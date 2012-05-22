@@ -499,6 +499,11 @@ namespace EVEMon.Common
         public static event EventHandler ConquerableStationListUpdated;
 
         /// <summary>
+        /// Occurs when the EVE factional warfare statistics has been updated.
+        /// </summary>
+        public static event EventHandler EveFactionalWarfareStatsUpdated;
+
+        /// <summary>
         /// Occurs when the API key info have been updated.
         /// </summary>
         public static event EventHandler APIKeyInfoUpdated;
@@ -804,6 +809,16 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnConquerableStationListUpdated");
             if (ConquerableStationListUpdated != null)
                 ConquerableStationListUpdated(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when the EVE factional warfare statistics have been updated.
+        /// </summary>
+        internal static void OnEveFactionalWarfareStatsUpdated()
+        {
+            Trace("EveMonClient.OnEveFactionalWarfareStatsUpdated");
+            if (EveFactionalWarfareStatsUpdated != null)
+                EveFactionalWarfareStatsUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>

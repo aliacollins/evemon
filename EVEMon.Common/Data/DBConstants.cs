@@ -182,6 +182,16 @@ namespace EVEMon.Common.Data
         #endregion
 
 
+        #region Faction IDs
+
+        public const int CaldariFactionID = 500001;
+        public const int MinmatarFactionID = 500002;
+        public const int AmarrFactionID = 500003;
+        public const int GallenteFactionID = 500004;
+
+        #endregion
+
+
         #region Attribute Category IDs
 
         public const int FittingAtributeCategoryID = 1;

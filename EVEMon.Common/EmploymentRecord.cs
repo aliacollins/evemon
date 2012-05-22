@@ -128,19 +128,19 @@ namespace EVEMon.Common
         private void GetImage()
         {
             m_image = Properties.Resources.DefaultCorporationImage32;
-            ImageService.GetImageAsync(GetImageUrl(), true, img =>
-                                                                {
-                                                                    if (img == null)
-                                                                        return;
+            ImageService.GetImageAsync(GetImageUrl(), img =>
+                                                          {
+                                                              if (img == null)
+                                                                  return;
 
-                                                                    m_image = img;
+                                                              m_image = img;
 
-                                                                    // Notify the subscriber that we got the image
-                                                                    // Note that if the image is in cache the event doesn't get fired
-                                                                    // as the event object is null
-                                                                    if (EmploymentRecordImageUpdated != null)
-                                                                        EmploymentRecordImageUpdated(this, EventArgs.Empty);
-                                                                });
+                                                              // Notify the subscriber that we got the image
+                                                              // Note that if the image is in cache the event doesn't get fired
+                                                              // as the event object is null
+                                                              if (EmploymentRecordImageUpdated != null)
+                                                                  EmploymentRecordImageUpdated(this, EventArgs.Empty);
+                                                          });
         }
 
         /// <summary>

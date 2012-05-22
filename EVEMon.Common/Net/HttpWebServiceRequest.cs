@@ -157,8 +157,7 @@ namespace EVEMon.Common.Net
         /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
         public void GetResponseAsync(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
-                                     Stream responseStream,
-                                     string accept, WebRequestAsyncState state)
+                                     Stream responseStream, string accept, WebRequestAsyncState state)
         {
             m_asyncState = state;
             m_asyncState.Request = this;

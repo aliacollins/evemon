@@ -61,6 +61,7 @@ namespace EVEMon.CharacterMonitoring
             skillQueueList.Character = ccpCharacter;
             employmentList.Character = ccpCharacter;
             standingsList.Character = ccpCharacter;
+            factionalWarfareStatsList.Character = ccpCharacter;
             assetsList.Character = ccpCharacter;
             ordersList.Character = ccpCharacter;
             contractsList.Character = ccpCharacter;
@@ -75,9 +76,9 @@ namespace EVEMon.CharacterMonitoring
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
                                             {
-                                                standingsIcon, assetsIcon, ordersIcon, contractsIcon,
-                                                walletJournalIcon, walletTransactionsIcon, jobsIcon,
-                                                researchIcon, mailMessagesIcon, eveNotificationsIcon
+                                                standingsIcon, factionalWarfareStatsIcon, assetsIcon,
+                                                ordersIcon, contractsIcon, walletJournalIcon, walletTransactionsIcon,
+                                                jobsIcon, researchIcon, mailMessagesIcon, eveNotificationsIcon
                                             });
 
             // Hide all advanced features related controls
@@ -517,7 +518,7 @@ namespace EVEMon.CharacterMonitoring
 
             foreach (ToolStripButton button in m_advancedFeatures)
             {
-                List<IQueryMonitor> monitors = ButtonToMonitors(button).ToList();
+                List<IQueryMonitor> monitors = ButtonToMonitors(button);
 
                 if (!monitors.Any())
                     continue;
@@ -539,8 +540,8 @@ namespace EVEMon.CharacterMonitoring
             UpdateSelectedPage();
 
             List<string> enabledAdvancedFeaturesPages =
-                (featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
-                    menuItem => menuItem.Checked).Select(menuItem => menuItem.Text)).ToList();
+                featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
+                    menuItem => menuItem.Checked).Select(menuItem => menuItem.Text).ToList();
 
             m_character.UISettings.AdvancedFeaturesEnabledPages.Clear();
             enabledAdvancedFeaturesPages.ForEach(page => m_character.UISettings.AdvancedFeaturesEnabledPages.Add(page));
@@ -816,6 +817,7 @@ namespace EVEMon.CharacterMonitoring
             tsPagesSeparator.Visible = featuresMenu.Visible;
             tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
+                                                                           (string)button.Tag != factionalWarfareStatsPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
             // Reset the text filter
@@ -873,7 +875,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="button">The button.</param>
         /// <returns></returns>
-        private IEnumerable<IQueryMonitor> ButtonToMonitors(ToolStripItem button)
+        private List<IQueryMonitor> ButtonToMonitors(ToolStripItem button)
         {
             MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(x => x.Name == (string)button.Tag);
             CCPCharacter ccpCharacter = (CCPCharacter)m_character;
@@ -888,13 +890,10 @@ namespace EVEMon.CharacterMonitoring
                         monitors.Add(ccpCharacter.QueryMonitors[method]);
                 }
 
-                if (Enum.IsDefined(typeof(APICorporationMethods),
-                                   String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag)))
+                string corpMethod = String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag);
+                if (Enum.IsDefined(typeof(APICorporationMethods), corpMethod))
                 {
-                    APICorporationMethods method =
-                        (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods),
-                                                          String.Format(CultureConstants.InvariantCulture, "Corporation{0}",
-                                                                        page.Tag));
+                    APICorporationMethods method = (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods), corpMethod);
                     if (ccpCharacter.QueryMonitors[method] != null)
                         monitors.Add(ccpCharacter.QueryMonitors[method]);
                 }

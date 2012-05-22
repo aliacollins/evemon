@@ -179,7 +179,7 @@ namespace EVEMon.Common
             APICharacterMethods.Contracts | APICharacterMethods.WalletJournal | APICharacterMethods.WalletTransactions |
             APICharacterMethods.IndustryJobs | APICharacterMethods.ResearchPoints | APICharacterMethods.Standings |
             APICharacterMethods.MailMessages | APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
-            APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts,
+            APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts | APICharacterMethods.FactionalWarfareStats,
 
         /// <summary>
         /// The advanced corporation features of APIMethods.
@@ -221,10 +221,10 @@ namespace EVEMon.Common
         CharacterSheet = 1 << 3,
 
         /// <summary>
-        /// A character's skill queue.
+        /// The skill queue of a character.
         /// </summary>
         [Header("Skill Queue")]
-        [Description("A character's skill queue.")]
+        [Description("The skill queue of a character.")]
         [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
         SkillQueue = 1 << 18,
 
@@ -232,12 +232,20 @@ namespace EVEMon.Common
         /// A character's standings towards NPC's.
         /// </summary>
         [Header("NPC Standings")]
-        [Description("A character's NPC standings.")]
+        [Description("The NPC standings of a character.")]
         [Update(UpdatePeriod.Hours3, UpdatePeriod.Hours3, CacheStyle.Short)]
         Standings = 1 << 19,
 
         /// <summary>
-        /// Asset list of a character.
+        /// The factional warfare stats of a character.
+        /// </summary>
+        [Header("Factional Warfare Stats")]
+        [Description("The factional warfare stats of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        FactionalWarfareStats = 1 << 6,
+
+        /// <summary>
+        /// The assets of a character.
         /// </summary>
         [Header("Assets")]
         [Description("The assets of a character.")]
@@ -272,7 +280,7 @@ namespace EVEMon.Common
         /// The research points of a character.
         /// </summary>
         [Header("Research Points")]
-        [Description("Research Points for a character.")]
+        [Description("The research points of a character.")]
         [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
         ResearchPoints = 1 << 16,
 
@@ -280,31 +288,31 @@ namespace EVEMon.Common
         /// Mail messages for a character.
         /// </summary>
         [Header("EVE Mail Messages")]
-        [Description("Mail messages for a character.")]
+        [Description("The EVE mails of a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         MailMessages = 1 << 11,
 
         /// <summary>
-        /// Notifications for a character.
+        /// The EVE notifications of a character.
         /// </summary>
         [Header("EVE Notifications")]
-        [Description("Notifications messages for a character.")]
+        [Description("The EVE notifications of a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         Notifications = 1 << 14,
 
         /// <summary>
-        /// A character's wallet journal.
+        /// The wallet journal of a character.
         /// </summary>
         [Header("Wallet Journal")]
-        [Description("Wallet journal for a character.")]
+        [Description("The wallet journal of a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         WalletJournal = 1 << 21,
 
         /// <summary>
-        /// A character's wallet transactions.
+        /// The wallet transactions of a character.
         /// </summary>
         [Header("Wallet Transactions")]
-        [Description("Wallet transactions for a character.")]
+        [Description("The wallet transactions of a character.")]
         [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         WalletTransactions = 1 << 22,
 
@@ -352,11 +360,6 @@ namespace EVEMon.Common
         /// Contact notifications for a character.
         /// </summary>
         ContactNotifications = 1 << 5,
-
-        /// <summary>
-        /// Factional warfare statistics for a character.
-        /// </summary>
-        FactionalWarfareStats = 1 << 6,
 
         /// <summary>
         /// The Kill log for a character (Kill mails).

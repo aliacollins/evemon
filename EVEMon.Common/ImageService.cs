@@ -5,6 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
 
@@ -24,7 +25,41 @@ namespace EVEMon.Common
         public static void GetCharacterImageAsync(long charId, GetImageCallback callback)
         {
             GetImageAsync(new Uri(String.Format(CultureConstants.InvariantCulture,
-                                                NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128)), false, callback);
+                                                NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128)), callback, false);
+        }
+
+        /// <summary>
+        /// Asynchronously downloads an alliance image.
+        /// </summary>
+        /// <param name="pictureBox">The picture box.</param>
+        /// <param name="allianceID">The alliance ID.</param>
+        public static void GetAllianceImage(PictureBox pictureBox, long allianceID)
+        {
+            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
+                                            "alliance", allianceID, pictureBox.Width));
+
+            GetImageAsync(url, (img =>
+                                    {
+                                        pictureBox.Image = img ?? pictureBox.InitialImage;
+                                        pictureBox.Update();
+                                    }));
+        }
+
+        /// <summary>
+        /// Asynchronously downloads a corporation image.
+        /// </summary>
+        /// <param name="pictureBox">The picture box.</param>
+        /// <param name="corporationID">The corporation ID.</param>
+        public static void GetCorporationImage(PictureBox pictureBox, long corporationID)
+        {
+            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
+                                            "corporation", corporationID, pictureBox.Width));
+
+            GetImageAsync(url, (img =>
+                                    {
+                                        pictureBox.Image = img ?? pictureBox.InitialImage;
+                                        pictureBox.Update();
+                                    }));
         }
 
         /// <summary>
@@ -33,7 +68,7 @@ namespace EVEMon.Common
         /// <param name="url">The URL.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
-        public static void GetImageAsync(Uri url, bool useCache, GetImageCallback callback)
+        public static void GetImageAsync(Uri url, GetImageCallback callback, bool useCache = true)
         {
             // Cache not to be used ?
             if (!useCache)

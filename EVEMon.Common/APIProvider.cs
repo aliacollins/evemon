@@ -226,24 +226,7 @@ namespace EVEMon.Common
             APIResult<T> result = Util.DownloadAPIResult<T>(url, postData, transform);
 
             // On failure with a custom method, fallback to CCP
-            if (ShouldRetryWithCCP(result))
-                return s_ccpProvider.QueryMethod<T>(method, postData, transform);
-
-            // If the result is a character sheet, we store the result
-            if (method is APICharacterMethods && (APICharacterMethods)method == APICharacterMethods.CharacterSheet &&
-                !result.HasError)
-            {
-                SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
-                LocalXmlCache.Save(sheet.Name, result.XmlDocument);
-            }
-
-            // If the result is a conquerable station list, we store the result
-            if (method is APIGenericMethods && (APIGenericMethods)method == APIGenericMethods.ConquerableStationList &&
-                !result.HasError)
-                LocalXmlCache.Save(method.ToString(), result.XmlDocument);
-
-            // Returns
-            return result;
+            return ShouldRetryWithCCP(result) ? s_ccpProvider.QueryMethod<T>(method, postData, transform) : result;
         }
 
         /// <summary>
@@ -275,19 +258,6 @@ namespace EVEMon.Common
                             ccpProvider.QueryMethodAsync(method, callback, postData, transform);
                             return;
                         }
-
-                        // If the result is a character sheet, we store the result
-                        if (method is APICharacterMethods && (APICharacterMethods)method == APICharacterMethods.CharacterSheet &&
-                            !result.HasError)
-                        {
-                            SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
-                            LocalXmlCache.Save(sheet.Name, result.XmlDocument);
-                        }
-
-                        // If the result is a conquerable station list, we store the result
-                        if (method is APIGenericMethods && (APIGenericMethods)method == APIGenericMethods.ConquerableStationList &&
-                            !result.HasError)
-                            LocalXmlCache.Save(method.ToString(), result.XmlDocument);
 
                         // Invokes the callback
                         callback(result);

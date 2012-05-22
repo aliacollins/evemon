@@ -43,7 +43,6 @@ namespace EVEMon.Common
             QueryMonitors = new QueryMonitorCollection();
             SkillQueue = new SkillQueue(this);
             Standings = new StandingCollection(this);
-            FactionalWarfareStats = new FactionalWarfareStatsCollection(this);
             Assets = new AssetCollection(this);
             WalletJournal = new WalletJournalCollection(this);
             WalletTransactions = new WalletTransactionsCollection(this);
@@ -139,7 +138,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the factional warfare stats for this character.
         /// </summary>
-        public FactionalWarfareStatsCollection FactionalWarfareStats { get; private set; }
+        public FactionalWarfareStats FactionalWarfareStats { get; internal set; }
 
         /// <summary>
         /// Gets the wallet journal for this character.
@@ -295,9 +294,9 @@ namespace EVEMon.Common
         /// Gets a value indicating whether the character is enlisted in factional warfare.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if character is enlisted in factional warfare; otherwise, <c>false</c>.
+        ///   <c>true</c> if character is not enlisted in factional warfare; otherwise, <c>false</c>.
         /// </value>
-        public bool IsFactionalWarfareEnlisted { get; internal set; }
+        public bool IsFactionalWarfareNotEnlisted { get; internal set; }
 
         /// <summary>
         /// Gets true when a new character is created.

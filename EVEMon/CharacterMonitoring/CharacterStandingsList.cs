@@ -111,11 +111,8 @@ namespace EVEMon.CharacterMonitoring
         #region Content Management
 
         /// <summary>
-        /// Updates all the content
+        /// Updates the content.
         /// </summary>
-        /// <remarks>
-        /// Another high-complexity method for us to look at.
-        /// </remarks>
         private void UpdateContent()
         {
             // Returns if not visible
@@ -132,7 +129,7 @@ namespace EVEMon.CharacterMonitoring
 
             int scrollBarPosition = lbStandings.TopIndex;
 
-            // Update the skills list
+            // Update the standings list
             lbStandings.BeginUpdate();
             try
             {
@@ -157,7 +154,7 @@ namespace EVEMon.CharacterMonitoring
                     }
                 }
 
-                // Display or hide the "no skills" label.
+                // Display or hide the "no standings" label.
                 noStandingsLabel.Visible = !standings.Any();
                 lbStandings.Visible = standings.Any();
 

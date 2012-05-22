@@ -119,6 +119,9 @@ namespace EVEMon.Common
 
             EveMonClient.Notifications.InvalidateAPIError();
 
+            // Save the file to our cache
+            LocalXmlCache.Save(Filename, result.XmlDocument);
+
             // Deserialize the list
             Import(result.Result.Outposts);
 

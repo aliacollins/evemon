@@ -13,8 +13,8 @@ namespace EVEMon.Common
         /// <param name="src"></param>
         internal FactionalWarfareStats(SerializableAPIFactionalWarfareStats src)
         {
-            ID = src.FactionID;
-            Name = src.FactionName;
+            FactionID = src.FactionID;
+            FactionName = src.FactionName;
             EnlistedDate = src.EnlistedDate;
             CurrentRank = src.CurrentRank;
             HighestRank = src.HighestRank;
@@ -31,26 +31,59 @@ namespace EVEMon.Common
 
         #region Properties
 
-        public int ID { get; private set; }
+        /// <summary>
+        /// Gets the faction ID.
+        /// </summary>
+        public int FactionID { get; private set; }
 
-        public string Name { get; private set; }
+        /// <summary>
+        /// Gets the name of the faction.
+        /// </summary>
+        public string FactionName { get; private set; }
 
+        /// <summary>
+        /// Gets the enlisted date.
+        /// </summary>
         public DateTime EnlistedDate { get; private set; }
 
+        /// <summary>
+        /// Gets the current rank.
+        /// </summary>
         public int CurrentRank { get; private set; }
 
+        /// <summary>
+        /// Gets the highest rank.
+        /// </summary>
         public int HighestRank { get; private set; }
 
+        /// <summary>
+        /// Gets the kills yesterday.
+        /// </summary>
         public int KillsYesterday { get; private set; }
 
+        /// <summary>
+        /// Gets the kills last week.
+        /// </summary>
         public int KillsLastWeek { get; private set; }
 
+        /// <summary>
+        /// Gets the kills total.
+        /// </summary>
         public int KillsTotal { get; private set; }
 
+        /// <summary>
+        /// Gets the victory points yesterday.
+        /// </summary>
         public int VictoryPointsYesterday { get; private set; }
 
+        /// <summary>
+        /// Gets the victory points last week.
+        /// </summary>
         public int VictoryPointsLastWeek { get; private set; }
 
+        /// <summary>
+        /// Gets the victory points total.
+        /// </summary>
         public int VictoryPointsTotal { get; private set; }
 
         #endregion

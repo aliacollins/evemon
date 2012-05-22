@@ -342,6 +342,10 @@ namespace EVEMon.SkillPlanner
             }
         }
 
+        /// <summary>
+        /// Adds the groups.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerable<ListViewItem> AddGroups()
         {
             int perfectME = 0;

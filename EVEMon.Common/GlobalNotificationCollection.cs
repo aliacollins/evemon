@@ -131,6 +131,22 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Notifies an EVE factional warfare stats querying error.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        internal void NotifyEveFactionalWarfareStatsError(APIResult<SerializableAPIEveFactionalWarfareStats> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(null, result)
+                {
+                    Description = "An error occurred while querying the EVE factional warfare statistics.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies a character Id to name querying error.
         /// </summary>
         /// <param name="result">The result.</param>

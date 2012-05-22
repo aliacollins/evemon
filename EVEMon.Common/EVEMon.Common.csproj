@@ -237,6 +237,10 @@
     <Compile Include="EmailProvider\YahooProvider.cs" />
     <Compile Include="EmploymentRecordCollection.cs" />
     <Compile Include="EmploymentRecord.cs" />
+    <Compile Include="EveFactionWarfareStats.cs" />
+    <Compile Include="EveFactionWarfareStatsCollection.cs" />
+    <Compile Include="EveFactionWar.cs" />
+    <Compile Include="EveFactionWarsCollection.cs" />
     <Compile Include="EveFlag.cs" />
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
@@ -246,8 +250,8 @@
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
     <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\OutlookAppointmentFilter.cs" />
+    <Compile Include="EveFactionalWarfareStats.cs" />
     <Compile Include="FactionalWarfareStats.cs" />
-    <Compile Include="FactionalWarfareStatsCollection.cs" />
     <Compile Include="FormatHelper.cs" />
     <Compile Include="GlobalAPIKeyCollection.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -282,12 +286,16 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAPIEveFactionalWarfareStats.cs" />
     <Compile Include="Serialization\API\SerializableAPIAssetList.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
     <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
     <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
+    <Compile Include="Serialization\API\SerializableEveFactionalWarfareStatsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableEveFactionWarsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableEveFacWarfareTotals.cs" />
     <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />
     <Compile Include="Serialization\API\SerializableWalletJournalListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletTransactions.cs" />
