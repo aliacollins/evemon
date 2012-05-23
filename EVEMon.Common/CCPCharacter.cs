@@ -289,7 +289,7 @@ namespace EVEMon.Common
             }
 
         }
-        
+
         /// <summary>
         /// Gets a value indicating whether the character is enlisted in factional warfare.
         /// </summary>
@@ -488,7 +488,7 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Helper Methods
+        #region Inherited Events
 
         /// <summary>
         /// Called when the object gets disposed.
@@ -524,6 +524,11 @@ namespace EVEMon.Common
                 m_corporationDataQuerying = null;
             }
         }
+
+        #endregion
+
+
+        #region Helper Methods
 
         /// <summary>
         /// Checks whether we should notify an error.
