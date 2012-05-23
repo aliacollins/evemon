@@ -667,7 +667,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies for insufficient balance.
         /// </summary>
-        private void NotifyInsufficientBalance()
+        internal void NotifyInsufficientBalance()
         {
             // Check the character has sufficient balance
             // for its buying orders and send a notification if not
