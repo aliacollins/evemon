@@ -75,7 +75,7 @@ namespace EVEMon.Common
             EveMonClient.CorporationIndustryJobsUpdated += EveMonClient_CorporationIndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted += EveMonClient_CorporationIndustryJobsCompleted;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
         }
 
         /// <summary>
@@ -504,7 +504,7 @@ namespace EVEMon.Common
             EveMonClient.CorporationIndustryJobsUpdated -= EveMonClient_CorporationIndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
 
             // Unsubscribe events
             SkillQueue.Dispose();
@@ -722,7 +722,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
         {
             if (EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed))
                 return;

@@ -31,8 +31,8 @@ namespace EVEMon.Common
                 if (Method is APIGenericMethods)
                     return true;
 
-                APICharacterMethods method = (APICharacterMethods)Method;
-                return (int)method == (m_apiKey.AccessMask & (int)method);
+                int method = (int)((APICharacterMethods)Method);
+                return method == (m_apiKey.AccessMask & method);
             }
         }
 

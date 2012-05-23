@@ -100,6 +100,7 @@ namespace EVEMon.CharacterMonitoring
 
             // Subscribe events
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
@@ -126,6 +127,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
@@ -218,9 +220,6 @@ namespace EVEMon.CharacterMonitoring
 
                 // Update the training controls
                 UpdateTrainingControls();
-
-                // Update the advanced features enabled pages
-                UpdateFeaturesMenu();
             }
             finally
             {
@@ -399,7 +398,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
-            if (ccpCharacter == null || !ccpCharacter.QueryMonitors.Any())
+            if (ccpCharacter == null)
                 return;
 
             tsPagesSeparator.Visible = featuresMenu.Visible = ccpCharacter.QueryMonitors.Any();
@@ -567,8 +566,8 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Updates on global events
-
+        #region Global events
+        
         /// <summary>
         /// Occur on every second. We update the total SP, remaining time and the matching item in skill list.
         /// </summary>
@@ -577,6 +576,16 @@ namespace EVEMon.CharacterMonitoring
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             UpdateFrequentControls();
+        }
+
+        /// <summary>
+        /// When the API key info updates, update the features menu.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
+        {
+            UpdateFeaturesMenu();
         }
 
         /// <summary>
@@ -1027,9 +1036,9 @@ namespace EVEMon.CharacterMonitoring
                 .Skip(index).Cast<ToolStripMenuItem>().Where(item => item.Enabled))
             {
                 item.Checked = true;
+                m_advancedFeatures.First(featureIcon => item.Text == featureIcon.Text).Visible = true;
             }
 
-            m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = true);
             UpdateAdvancedFeaturesPagesSettings();
             ToggleAdvancedFeaturesMonitoring();
         }
@@ -1046,9 +1055,9 @@ namespace EVEMon.CharacterMonitoring
                 .Skip(index).Cast<ToolStripMenuItem>().Where(item => item.Enabled))
             {
                 item.Checked = false;
+                m_advancedFeatures.First(featureIcon => item.Text == featureIcon.Text).Visible = false;
             }
 
-            m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = false);
             UpdateAdvancedFeaturesPagesSettings();
             ToggleAdvancedFeaturesMonitoring();
         }
