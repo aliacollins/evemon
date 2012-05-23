@@ -638,10 +638,10 @@ namespace EVEMon.XmlGenerator
             foreach (mapConstellations constellation in Context.mapConstellations)
             {
                 MapConstellations item = new MapConstellations
-                                            {
-                                                ID = constellation.constellationID,
-                                                Name = constellation.constellationName,
-                                            };
+                                             {
+                                                 ID = constellation.constellationID,
+                                                 Name = constellation.constellationName,
+                                             };
 
                 if (constellation.regionID.HasValue)
                     item.RegionID = constellation.regionID.Value;
@@ -663,10 +663,10 @@ namespace EVEMon.XmlGenerator
             foreach (mapSolarSystems solarsystem in Context.mapSolarSystems)
             {
                 MapSolarSystems item = new MapSolarSystems
-                                          {
-                                              ID = solarsystem.solarSystemID,
-                                              Name = solarsystem.solarSystemName
-                                          };
+                                           {
+                                               ID = solarsystem.solarSystemID,
+                                               Name = solarsystem.solarSystemName
+                                           };
 
                 if (solarsystem.constellationID.HasValue)
                     item.ConstellationID = solarsystem.constellationID.Value;
@@ -700,10 +700,10 @@ namespace EVEMon.XmlGenerator
             foreach (staStations station in Context.staStations)
             {
                 StaStations item = new StaStations
-                                      {
-                                          ID = station.stationID,
-                                          Name = station.stationName,
-                                      };
+                                       {
+                                           ID = station.stationID,
+                                           Name = station.stationName,
+                                       };
 
                 if (station.reprocessingEfficiency.HasValue)
                     item.ReprocessingEfficiency = (float)station.reprocessingEfficiency.Value;
@@ -829,11 +829,11 @@ namespace EVEMon.XmlGenerator
             foreach (invCategories category in Context.invCategories)
             {
                 InvCategories item = new InvCategories
-                {
-                    ID = category.categoryID,
-                    Name = category.categoryName,
-                    Description = category.description
-                };
+                                         {
+                                             ID = category.categoryID,
+                                             Name = category.categoryName,
+                                             Description = category.description
+                                         };
 
                 if (category.iconID.HasValue)
                     item.IconID = category.iconID.Value;
@@ -858,10 +858,10 @@ namespace EVEMon.XmlGenerator
             foreach (invFlags flag in Context.invFlags)
             {
                 InvFlags item = new InvFlags
-                {
-                    ID = flag.flagID,
-                    Name = flag.flagName,
-                };
+                                    {
+                                        ID = flag.flagID,
+                                        Name = flag.flagName,
+                                    };
 
                 item.Text = flag.flagText.Clean();
 
@@ -882,10 +882,10 @@ namespace EVEMon.XmlGenerator
             foreach (invGroups group in Context.invGroups)
             {
                 InvGroups item = new InvGroups
-                {
-                    ID = group.groupID,
-                    Name = group.groupName
-                };
+                                     {
+                                         ID = group.groupID,
+                                         Name = group.groupName
+                                     };
 
                 if (group.published.HasValue)
                     item.Published = group.published.Value;
@@ -910,14 +910,14 @@ namespace EVEMon.XmlGenerator
             foreach (invTypes type in Context.invTypes)
             {
                 InvTypes item = new InvTypes
-                                   {
-                                       ID = type.typeID,
-                                       Description = type.description,
-                                       IconID = type.iconID,
-                                       MarketGroupID = type.marketGroupID,
-                                       Name = type.typeName,
-                                       RaceID = type.raceID
-                                   };
+                                    {
+                                        ID = type.typeID,
+                                        Description = type.description,
+                                        IconID = type.iconID,
+                                        MarketGroupID = type.marketGroupID,
+                                        Name = type.typeName,
+                                        RaceID = type.raceID
+                                    };
                 item.Description = item.Description.Clean();
 
                 if (type.basePrice.HasValue)
@@ -1137,14 +1137,14 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>RelationSet</c> of attributes for types.</returns>
         private static RelationSet<DgmTypeAttributes> TypeAttributes()
         {
-            List<DgmTypeAttributes> list = Context.dgmTypeAttributes.Select(
+            IEnumerable<DgmTypeAttributes> list = Context.dgmTypeAttributes.Select(
                 typeAttribute => new DgmTypeAttributes
                                      {
                                          AttributeID = typeAttribute.attributeID,
                                          ItemID = typeAttribute.typeID,
                                          ValueFloat = typeAttribute.valueFloat,
                                          ValueInt = typeAttribute.valueInt
-                                     }).ToList();
+                                     });
 
             return new RelationSet<DgmTypeAttributes>(list);
         }

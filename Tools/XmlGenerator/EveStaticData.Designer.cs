@@ -6696,7 +6696,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="typeID">Initial value of the typeID property.</param>
         /// <param name="attributeID">Initial value of the attributeID property.</param>
-        public static dgmTypeAttributes CreatedgmTypeAttributes(global::System.Int16 typeID, global::System.Int16 attributeID)
+        public static dgmTypeAttributes CreatedgmTypeAttributes(global::System.Int32 typeID, global::System.Int16 attributeID)
         {
             dgmTypeAttributes dgmTypeAttributes = new dgmTypeAttributes();
             dgmTypeAttributes.typeID = typeID;
@@ -6712,7 +6712,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -6730,8 +6730,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -6828,7 +6828,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="typeID">Initial value of the typeID property.</param>
         /// <param name="effectID">Initial value of the effectID property.</param>
-        public static dgmTypeEffects CreatedgmTypeEffects(global::System.Int16 typeID, global::System.Int16 effectID)
+        public static dgmTypeEffects CreatedgmTypeEffects(global::System.Int32 typeID, global::System.Int16 effectID)
         {
             dgmTypeEffects dgmTypeEffects = new dgmTypeEffects();
             dgmTypeEffects.typeID = typeID;
@@ -6844,7 +6844,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -6862,8 +6862,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -7424,7 +7424,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new invBlueprintTypes object.
         /// </summary>
         /// <param name="blueprintTypeID">Initial value of the blueprintTypeID property.</param>
-        public static invBlueprintTypes CreateinvBlueprintTypes(global::System.Int16 blueprintTypeID)
+        public static invBlueprintTypes CreateinvBlueprintTypes(global::System.Int32 blueprintTypeID)
         {
             invBlueprintTypes invBlueprintTypes = new invBlueprintTypes();
             invBlueprintTypes.blueprintTypeID = blueprintTypeID;
@@ -7439,7 +7439,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 blueprintTypeID
+        public global::System.Int32 blueprintTypeID
         {
             get
             {
@@ -7457,8 +7457,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _blueprintTypeID;
-        partial void OnblueprintTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _blueprintTypeID;
+        partial void OnblueprintTypeIDChanging(global::System.Int32 value);
         partial void OnblueprintTypeIDChanged();
     
         /// <summary>
@@ -7466,7 +7466,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> parentBlueprintTypeID
+        public Nullable<global::System.Int32> parentBlueprintTypeID
         {
             get
             {
@@ -7481,8 +7481,8 @@ namespace EVEMon.XmlGenerator
                 OnparentBlueprintTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _parentBlueprintTypeID;
-        partial void OnparentBlueprintTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _parentBlueprintTypeID;
+        partial void OnparentBlueprintTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnparentBlueprintTypeIDChanged();
     
         /// <summary>
@@ -7490,7 +7490,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> productTypeID
+        public Nullable<global::System.Int32> productTypeID
         {
             get
             {
@@ -7505,8 +7505,8 @@ namespace EVEMon.XmlGenerator
                 OnproductTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _productTypeID;
-        partial void OnproductTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _productTypeID;
+        partial void OnproductTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnproductTypeIDChanged();
     
         /// <summary>
@@ -8988,7 +8988,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new invMarketGroups object.
         /// </summary>
         /// <param name="marketGroupID">Initial value of the marketGroupID property.</param>
-        public static invMarketGroups CreateinvMarketGroups(global::System.Int16 marketGroupID)
+        public static invMarketGroups CreateinvMarketGroups(global::System.Int32 marketGroupID)
         {
             invMarketGroups invMarketGroups = new invMarketGroups();
             invMarketGroups.marketGroupID = marketGroupID;
@@ -9003,7 +9003,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 marketGroupID
+        public global::System.Int32 marketGroupID
         {
             get
             {
@@ -9021,8 +9021,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _marketGroupID;
-        partial void OnmarketGroupIDChanging(global::System.Int16 value);
+        private global::System.Int32 _marketGroupID;
+        partial void OnmarketGroupIDChanging(global::System.Int32 value);
         partial void OnmarketGroupIDChanged();
     
         /// <summary>
@@ -9030,7 +9030,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> parentGroupID
+        public Nullable<global::System.Int32> parentGroupID
         {
             get
             {
@@ -9045,8 +9045,8 @@ namespace EVEMon.XmlGenerator
                 OnparentGroupIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _parentGroupID;
-        partial void OnparentGroupIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _parentGroupID;
+        partial void OnparentGroupIDChanging(Nullable<global::System.Int32> value);
         partial void OnparentGroupIDChanged();
     
         /// <summary>
@@ -9681,7 +9681,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="typeID">Initial value of the typeID property.</param>
         /// <param name="materialTypeID">Initial value of the materialTypeID property.</param>
         /// <param name="quantity">Initial value of the quantity property.</param>
-        public static invTypeMaterials CreateinvTypeMaterials(global::System.Int16 typeID, global::System.Int16 materialTypeID, global::System.Int32 quantity)
+        public static invTypeMaterials CreateinvTypeMaterials(global::System.Int32 typeID, global::System.Int32 materialTypeID, global::System.Int32 quantity)
         {
             invTypeMaterials invTypeMaterials = new invTypeMaterials();
             invTypeMaterials.typeID = typeID;
@@ -9698,7 +9698,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -9716,8 +9716,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -9725,7 +9725,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 materialTypeID
+        public global::System.Int32 materialTypeID
         {
             get
             {
@@ -9743,8 +9743,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _materialTypeID;
-        partial void OnmaterialTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _materialTypeID;
+        partial void OnmaterialTypeIDChanging(global::System.Int32 value);
         partial void OnmaterialTypeIDChanged();
     
         /// <summary>
@@ -9926,7 +9926,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new invTypes object.
         /// </summary>
         /// <param name="typeID">Initial value of the typeID property.</param>
-        public static invTypes CreateinvTypes(global::System.Int16 typeID)
+        public static invTypes CreateinvTypes(global::System.Int32 typeID)
         {
             invTypes invTypes = new invTypes();
             invTypes.typeID = typeID;
@@ -9941,7 +9941,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -9959,8 +9959,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -9968,7 +9968,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> groupID
+        public Nullable<global::System.Int32> groupID
         {
             get
             {
@@ -9983,8 +9983,8 @@ namespace EVEMon.XmlGenerator
                 OngroupIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _groupID;
-        partial void OngroupIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _groupID;
+        partial void OngroupIDChanging(Nullable<global::System.Int32> value);
         partial void OngroupIDChanged();
     
         /// <summary>
@@ -10034,30 +10034,6 @@ namespace EVEMon.XmlGenerator
         private global::System.String _description;
         partial void OndescriptionChanging(global::System.String value);
         partial void OndescriptionChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int16> graphicID
-        {
-            get
-            {
-                return _graphicID;
-            }
-            set
-            {
-                OngraphicIDChanging(value);
-                ReportPropertyChanging("graphicID");
-                _graphicID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("graphicID");
-                OngraphicIDChanged();
-            }
-        }
-        private Nullable<global::System.Int16> _graphicID;
-        partial void OngraphicIDChanging(Nullable<global::System.Int16> value);
-        partial void OngraphicIDChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -10256,7 +10232,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> marketGroupID
+        public Nullable<global::System.Int32> marketGroupID
         {
             get
             {
@@ -10271,8 +10247,8 @@ namespace EVEMon.XmlGenerator
                 OnmarketGroupIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _marketGroupID;
-        partial void OnmarketGroupIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _marketGroupID;
+        partial void OnmarketGroupIDChanging(Nullable<global::System.Int32> value);
         partial void OnmarketGroupIDChanged();
     
         /// <summary>
@@ -15646,7 +15622,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="typeID">Initial value of the typeID property.</param>
         /// <param name="activityID">Initial value of the activityID property.</param>
         /// <param name="requiredTypeID">Initial value of the requiredTypeID property.</param>
-        public static ramTypeRequirements CreateramTypeRequirements(global::System.Int16 typeID, global::System.Byte activityID, global::System.Int16 requiredTypeID)
+        public static ramTypeRequirements CreateramTypeRequirements(global::System.Int32 typeID, global::System.Byte activityID, global::System.Int32 requiredTypeID)
         {
             ramTypeRequirements ramTypeRequirements = new ramTypeRequirements();
             ramTypeRequirements.typeID = typeID;
@@ -15663,7 +15639,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -15681,8 +15657,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -15717,7 +15693,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 requiredTypeID
+        public global::System.Int32 requiredTypeID
         {
             get
             {
@@ -15735,8 +15711,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _requiredTypeID;
-        partial void OnrequiredTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _requiredTypeID;
+        partial void OnrequiredTypeIDChanging(global::System.Int32 value);
         partial void OnrequiredTypeIDChanged();
     
         /// <summary>

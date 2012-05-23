@@ -518,8 +518,8 @@
           <Key>
             <PropertyRef Name="marketGroupID" />
           </Key>
-          <Property Name="marketGroupID" Type="smallint" Nullable="false" />
-          <Property Name="parentGroupID" Type="smallint" />
+          <Property Name="marketGroupID" Type="int" Nullable="false" />
+          <Property Name="parentGroupID" Type="int" />
           <Property Name="marketGroupName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
           <Property Name="iconID" Type="int" />
@@ -589,7 +589,6 @@
           <Property Name="groupID" Type="int" />
           <Property Name="typeName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
-          <Property Name="graphicID" Type="int" />
           <Property Name="radius" Type="float" />
           <Property Name="mass" Type="float" />
           <Property Name="volume" Type="float" />
@@ -598,7 +597,7 @@
           <Property Name="raceID" Type="tinyint" />
           <Property Name="basePrice" Type="money" />
           <Property Name="published" Type="bit" />
-          <Property Name="marketGroupID" Type="smallint" />
+          <Property Name="marketGroupID" Type="int" />
           <Property Name="chanceOfDuplicating" Type="float" />
           <Property Name="iconID" Type="int" />
         </EntityType>
@@ -1438,7 +1437,7 @@
             <PropertyRef Name="typeID" />
             <PropertyRef Name="attributeID" />
           </Key>
-          <Property Name="typeID" Type="Int16" Nullable="false" />
+          <Property Name="typeID" Type="Int32" Nullable="false" />
           <Property Name="attributeID" Type="Int16" Nullable="false" />
           <Property Name="valueInt" Type="Int32" />
           <Property Name="valueFloat" Type="Double" />
@@ -1448,7 +1447,7 @@
             <PropertyRef Name="typeID" />
             <PropertyRef Name="effectID" />
           </Key>
-          <Property Name="typeID" Type="Int16" Nullable="false" />
+          <Property Name="typeID" Type="Int32" Nullable="false" />
           <Property Name="effectID" Type="Int16" Nullable="false" />
           <Property Name="isDefault" Type="Boolean" />
         </EntityType>
@@ -1465,9 +1464,9 @@
           <Key>
             <PropertyRef Name="blueprintTypeID" />
           </Key>
-          <Property Name="blueprintTypeID" Type="Int16" Nullable="false" />
-          <Property Name="parentBlueprintTypeID" Type="Int16" />
-          <Property Name="productTypeID" Type="Int16" />
+          <Property Name="blueprintTypeID" Type="Int32" Nullable="false" />
+          <Property Name="parentBlueprintTypeID" Type="Int32" />
+          <Property Name="productTypeID" Type="Int32" />
           <Property Name="productionTime" Type="Int32" />
           <Property Name="techLevel" Type="Int16" />
           <Property Name="researchProductivityTime" Type="Int32" />
@@ -1550,8 +1549,8 @@
           <Key>
             <PropertyRef Name="marketGroupID" />
           </Key>
-          <Property Name="marketGroupID" Type="Int16" Nullable="false" />
-          <Property Name="parentGroupID" Type="Int16" />
+          <Property Name="marketGroupID" Type="Int32" Nullable="false" />
+          <Property Name="parentGroupID" Type="Int32" />
           <Property Name="marketGroupName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="3000" Unicode="true" FixedLength="false" />
           <Property Name="hasTypes" Type="Boolean" />
@@ -1579,8 +1578,8 @@
             <PropertyRef Name="typeID" />
             <PropertyRef Name="materialTypeID" />
           </Key>
-          <Property Name="typeID" Type="Int16" Nullable="false" />
-          <Property Name="materialTypeID" Type="Int16" Nullable="false" />
+          <Property Name="typeID" Type="Int32" Nullable="false" />
+          <Property Name="materialTypeID" Type="Int32" Nullable="false" />
           <Property Name="quantity" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="invTypeReactions">
@@ -1598,11 +1597,10 @@
           <Key>
             <PropertyRef Name="typeID" />
           </Key>
-          <Property Name="typeID" Type="Int16" Nullable="false" />
-          <Property Name="groupID" Type="Int16" />
+          <Property Name="typeID" Type="Int32" Nullable="false" />
+          <Property Name="groupID" Type="Int32" />
           <Property Name="typeName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="3000" Unicode="true" FixedLength="false" />
-          <Property Name="graphicID" Type="Int16" />
           <Property Name="radius" Type="Double" />
           <Property Name="mass" Type="Double" />
           <Property Name="volume" Type="Double" />
@@ -1611,7 +1609,7 @@
           <Property Name="raceID" Type="Byte" />
           <Property Name="basePrice" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="published" Type="Boolean" />
-          <Property Name="marketGroupID" Type="Int16" />
+          <Property Name="marketGroupID" Type="Int32" />
           <Property Name="chanceOfDuplicating" Type="Double" />
           <Property Type="Int32" Name="iconID" />
         </EntityType>
@@ -1904,9 +1902,9 @@
             <PropertyRef Name="activityID" />
             <PropertyRef Name="requiredTypeID" />
           </Key>
-          <Property Name="typeID" Type="Int16" Nullable="false" />
+          <Property Name="typeID" Type="Int32" Nullable="false" />
           <Property Name="activityID" Type="Byte" Nullable="false" />
-          <Property Name="requiredTypeID" Type="Int16" Nullable="false" />
+          <Property Name="requiredTypeID" Type="Int32" Nullable="false" />
           <Property Name="quantity" Type="Int32" />
           <Property Name="damagePerJob" Type="Double" />
           <Property Name="recycle" Type="Boolean" />
@@ -2614,7 +2612,6 @@
                 <ScalarProperty Name="groupID" ColumnName="groupID" />
                 <ScalarProperty Name="typeName" ColumnName="typeName" />
                 <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
                 <ScalarProperty Name="radius" ColumnName="radius" />
                 <ScalarProperty Name="mass" ColumnName="mass" />
                 <ScalarProperty Name="volume" ColumnName="volume" />
@@ -3263,7 +3260,7 @@
         <EntityTypeShape EntityType="EveStaticDataModel.invTypeReactions" Width="1.5" PointX="16.75" PointY="14.75"
                          Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invTypes" Width="1.5" PointX="8.875" PointY="14.875"
-                         Height="4.0956022135416674" IsExpanded="true" />
+                         Height="3.9033007812500031" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapCelestialStatistics" Width="1.5" PointX="10.875"
                          PointY="14.875" Height="4.8648079427083317" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapConstellationJumps" Width="1.5" PointX="12.75"

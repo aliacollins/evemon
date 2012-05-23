@@ -59,7 +59,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The produce item ID.</value>
         [XmlAttribute("productTypeID")]
-        public short ProduceItemID { get; set; }
+        public int ProduceItemID { get; set; }
 
         /// <summary>
         /// Gets or sets the production time.

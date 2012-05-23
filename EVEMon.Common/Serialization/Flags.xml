@@ -129,7 +129,7 @@
     <row flagID="149" flagName="SpecializedPlanetaryCommoditiesHold" flagText="Specialized Planetary Commodities Hold" />
     <row flagID="150" flagName="PlanetSurface" flagText="Planet Surface" />
     <row flagID="151" flagName="SpecializedMaterialBay" flagText="Specialized Material Bay" />
-    <row flagID="152" flagName="DustCharacterBackpack" flagText="Dust Character Backpack" />
+    <row flagID="152" flagName="DustCharacterDatabank" flagText="Dust Character Databank" />
     <row flagID="153" flagName="DustCharacterBattle" flagText="Dust Character Battle" />
     <row flagID="154" flagName="QuafeBay" flagText="Quafe Bay" />
   </rowset>
