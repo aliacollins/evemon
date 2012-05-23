@@ -275,8 +275,4 @@ Global
 		CodeStyleEnforcer_RulesLocation = 
 		CodeStyleEnforcer_Active = 0
 	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 EndGlobal
