@@ -154,6 +154,7 @@
             this.chCharacter});
             this.lvCharacterInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvCharacterInfo.FullRowSelect = true;
+            this.lvCharacterInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvCharacterInfo.HideSelection = false;
             this.lvCharacterInfo.Location = new System.Drawing.Point(3, 16);
             this.lvCharacterInfo.Name = "lvCharacterInfo";
@@ -162,6 +163,7 @@
             this.lvCharacterInfo.TabIndex = 0;
             this.lvCharacterInfo.UseCompatibleStateImageBehavior = false;
             this.lvCharacterInfo.View = System.Windows.Forms.View.Details;
+            this.lvCharacterInfo.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.lvCharacterInfo_ColumnWidthChanging);
             this.lvCharacterInfo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvCharacterInfo_MouseClick);
             // 
             // chAttribute
