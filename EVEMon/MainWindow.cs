@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -65,6 +66,8 @@ namespace EVEMon
             RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
             Visible = false;
+
+            tabCreationLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
