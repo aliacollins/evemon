@@ -51,6 +51,18 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
+        /// On visibility, we may need to refresh the display.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            if (Visible)
+                UpdateContent();
+        }
+
+        /// <summary>
         /// On disposing, unsubscribe events.
         /// </summary>
         /// <param name="sender"></param>
