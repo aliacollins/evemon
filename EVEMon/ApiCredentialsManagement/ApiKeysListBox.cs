@@ -193,7 +193,7 @@ namespace EVEMon.ApiCredentialsManagement
             g.DrawString(apiKeyExpiration, Font, fontBrush, new Point(indentedLeft, top));
 
             // Draw the texts on the middle third
-            top += g.MeasureString(apiKey.VerificationCode, Font).ToSize().Height;
+            top += g.MeasureString(apiKeyExpiration, Font).ToSize().Height;
             string accountCreated = String.Format(CultureConstants.DefaultCulture, "Account Created: {0}",
                                                   (apiKey.AccountCreated != DateTime.MinValue
                                                        ? apiKey.AccountCreated.ToLocalTime().ToString()
