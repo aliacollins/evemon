@@ -58,6 +58,9 @@ namespace EVEMon.Controls
         {
             base.OnVisibleChanged(e);
 
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             if (Visible)
                 UpdateContent();
         }

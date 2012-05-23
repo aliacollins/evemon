@@ -133,10 +133,11 @@ namespace EVEMon
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.tcCharacterTabs = new EVEMon.Common.Controls.DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
-            this.overview = new EVEMon.Controls.Overview();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
             this.tabCreationLabel = new System.Windows.Forms.Label();
             this.UploaderStatusImageList = new System.Windows.Forms.ImageList(this.components);
+            this.noCharactersLabel = new System.Windows.Forms.Label();
+            this.overview = new EVEMon.Controls.Overview();
             this.notificationList = new EVEMon.Controls.NotificationList();
             this.trayIconToolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -1044,18 +1045,6 @@ namespace EVEMon
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
             // 
-            // overview
-            // 
-            this.overview.AutoScroll = true;
-            this.overview.BackColor = System.Drawing.Color.Transparent;
-            this.overview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.overview.Location = new System.Drawing.Point(0, 0);
-            this.overview.Name = "overview";
-            this.overview.Size = new System.Drawing.Size(546, 477);
-            this.overview.TabIndex = 0;
-            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
-            // 
             // trayIcon
             // 
             this.trayIcon.ContextMenuStrip = this.trayIconToolStrip;
@@ -1087,6 +1076,31 @@ namespace EVEMon
             this.UploaderStatusImageList.Images.SetKeyName(2, "Idle.png");
             this.UploaderStatusImageList.Images.SetKeyName(3, "Uploading.png");
             // 
+            // noCharactersLabel
+            // 
+            this.noCharactersLabel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.noCharactersLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.noCharactersLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.noCharactersLabel.Location = new System.Drawing.Point(0, 0);
+            this.noCharactersLabel.Name = "noCharactersLabel";
+            this.noCharactersLabel.Size = new System.Drawing.Size(554, 646);
+            this.noCharactersLabel.TabIndex = 8;
+            this.noCharactersLabel.Text = "No character loaded.\r\nTo add characters, click the File|Add API key... menu optio" +
+    "n";
+            this.noCharactersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // overview
+            // 
+            this.overview.AutoScroll = true;
+            this.overview.BackColor = System.Drawing.Color.Transparent;
+            this.overview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.overview.Location = new System.Drawing.Point(0, 0);
+            this.overview.Name = "overview";
+            this.overview.Size = new System.Drawing.Size(546, 477);
+            this.overview.TabIndex = 0;
+            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
+            // 
             // notificationList
             // 
             this.notificationList.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -1108,6 +1122,7 @@ namespace EVEMon
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.mainToolBar);
             this.Controls.Add(this.mainMenuBar);
+            this.Controls.Add(this.noCharactersLabel);
             this.MainMenuStrip = this.mainMenuBar;
             this.MinimumSize = new System.Drawing.Size(570, 350);
             this.Name = "MainWindow";
@@ -1188,8 +1203,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySkillsToClipboardBBFormatToolStripMenuItem;
         private EVEMon.Common.Controls.TrayIcon trayIcon;
-        private System.Windows.Forms.TabPage tpOverview;
-        private EVEMon.Controls.Overview overview;
         private System.Windows.Forms.ToolStripSeparator helpAboutKnownProblemsToolStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem knownProblemsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forumsMenuItem;
@@ -1239,5 +1252,8 @@ namespace EVEMon
         private System.Windows.Forms.Label tabCreationLabel;
         private System.Windows.Forms.ToolStripStatusLabel UploaderToolStripStatusLabel;
         private System.Windows.Forms.ImageList UploaderStatusImageList;
+        private System.Windows.Forms.Label noCharactersLabel;
+        private System.Windows.Forms.TabPage tpOverview;
+        private Controls.Overview overview;
     }
 }

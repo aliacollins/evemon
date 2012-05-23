@@ -68,6 +68,7 @@ namespace EVEMon
             Visible = false;
 
             tabCreationLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            noCharactersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
@@ -315,6 +316,8 @@ namespace EVEMon
                 page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
 
             tcCharacterTabs.Hide();
+            tabCreationLabel.Visible = true;
+
             try
             {
                 // Rebuild the pages
@@ -367,7 +370,17 @@ namespace EVEMon
             }
             finally
             {
-                tcCharacterTabs.Show();
+                tabCreationLabel.Visible = false;
+
+                if (tcCharacterTabs.Controls.Count > 0)
+                {
+                    tcCharacterTabs.Show();
+                    noCharactersLabel.Visible = false;
+                }
+                else
+                {
+                    noCharactersLabel.Visible = true;
+                }
             }
         }
 
