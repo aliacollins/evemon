@@ -44,7 +44,8 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Pick the family
-            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsMarketGroupID], ItemFamily.Blueprint);
+            // TODO: ItemFamily 'Bpo' to be switched to 'Blueprint' after year 2013
+            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsMarketGroupID], ItemFamily.Bpo);
             SetItemFamilyByMarketGroup(groups[DBConstants.ShipsMarketGroupID], ItemFamily.Ship);
             SetItemFamilyByMarketGroup(groups[DBConstants.ImplantsMarketGroupID], ItemFamily.Implant);
             SetItemFamilyByMarketGroup(groups[DBConstants.DronesMarketGroupID], ItemFamily.Drone);

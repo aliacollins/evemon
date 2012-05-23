@@ -123,7 +123,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private string GetBlueprintType(short rawQuantity)
         {
-            return Item != null && Item.CategoryName == ItemFamily.Blueprint.ToString()
+            return Item != null && Item.Family == ItemFamily.Blueprint
                        ? rawQuantity == -2 ? Common.BlueprintType.Copy.ToString() : Common.BlueprintType.Original.ToString()
                        : String.Empty;
         }

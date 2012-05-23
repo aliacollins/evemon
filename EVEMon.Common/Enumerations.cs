@@ -616,7 +616,10 @@ namespace EVEMon.Common
         StarbaseStructure = 2,
         Drone = 3,
         Ship = 4,
-        Blueprint = 5
+        Blueprint = 5,
+
+        // Obsolete; to be removed after year 2013
+        Bpo = 6
     }
 
     /// <summary>
