@@ -76,6 +76,7 @@ namespace EVEMon.Common
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted += EveMonClient_CorporationIndustryJobsCompleted;
             EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
         /// <summary>
@@ -505,6 +506,7 @@ namespace EVEMon.Common
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
             EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
 
             // Unsubscribe events
             SkillQueue.Dispose();
@@ -722,6 +724,21 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            // Force update a monitor if the last update exceed the current datetime
+            foreach (IQueryMonitorEx monitor in QueryMonitors.Where(
+                monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow))
+            {
+                monitor.ForceUpdate(true);
+            }
+        }
+
+        /// <summary>
+        /// Handles the APIKeyInfoUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
         {
             if (EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed))
@@ -729,13 +746,6 @@ namespace EVEMon.Common
 
             if (!Identity.APIKeys.Any() || Identity.APIKeys.Any(apiKey => apiKey.Type == APIKeyType.Unknown))
                 return;
-
-            // Force update a monitor if the last update exceed the current datetime
-            foreach (IQueryMonitorEx monitor in QueryMonitors.Where(
-                monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow))
-            {
-                monitor.ForceUpdate(true);
-            }
 
             if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
             {
