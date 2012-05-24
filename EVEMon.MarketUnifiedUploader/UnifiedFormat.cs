@@ -8,7 +8,7 @@ namespace EVEMon.MarketUnifiedUploader
 {
     internal class UnifiedFormat
     {
-        private const string UnifiedFormatVersion = "0.1alpha";
+        private const string UnifiedFormatVersion = "0.1";
         private readonly AssemblyName m_assembly = Assembly.GetExecutingAssembly().GetName();
         private readonly Dictionary<string, object> m_data = new Dictionary<string, object>();
         private readonly string[] m_orderColumns = new[]
