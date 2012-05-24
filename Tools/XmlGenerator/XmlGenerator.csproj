@@ -130,7 +130,6 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EveStaticData.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="app.config" />
     <None Include="Properties\DataSources\EveStaticDataEntities.datasource" />
   </ItemGroup>
   <ItemGroup />

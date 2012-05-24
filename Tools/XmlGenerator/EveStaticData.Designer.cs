@@ -33,6 +33,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         public EveStaticDataEntities() : base("name=EveStaticDataEntities", "EveStaticDataEntities")
         {
+            this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
         }
     
@@ -41,6 +42,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         public EveStaticDataEntities(string connectionString) : base(connectionString, "EveStaticDataEntities")
         {
+            this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
         }
     
@@ -49,6 +51,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         public EveStaticDataEntities(EntityConnection connection) : base(connection, "EveStaticDataEntities")
         {
+            this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
         }
     
@@ -65,22 +68,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<agtAgentTypes> agtAgentTypes
-        {
-            get
-            {
-                if ((_agtAgentTypes == null))
-                {
-                    _agtAgentTypes = base.CreateObjectSet<agtAgentTypes>("agtAgentTypes");
-                }
-                return _agtAgentTypes;
-            }
-        }
-        private ObjectSet<agtAgentTypes> _agtAgentTypes;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<agtAgents> agtAgents
         {
             get
@@ -93,6 +80,22 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<agtAgents> _agtAgents;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<agtAgentTypes> agtAgentTypes
+        {
+            get
+            {
+                if ((_agtAgentTypes == null))
+                {
+                    _agtAgentTypes = base.CreateObjectSet<agtAgentTypes>("agtAgentTypes");
+                }
+                return _agtAgentTypes;
+            }
+        }
+        private ObjectSet<agtAgentTypes> _agtAgentTypes;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -241,22 +244,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<crpNPCCorporationTrades> crpNPCCorporationTrades
-        {
-            get
-            {
-                if ((_crpNPCCorporationTrades == null))
-                {
-                    _crpNPCCorporationTrades = base.CreateObjectSet<crpNPCCorporationTrades>("crpNPCCorporationTrades");
-                }
-                return _crpNPCCorporationTrades;
-            }
-        }
-        private ObjectSet<crpNPCCorporationTrades> _crpNPCCorporationTrades;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<crpNPCCorporations> crpNPCCorporations
         {
             get
@@ -269,6 +256,22 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<crpNPCCorporations> _crpNPCCorporations;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<crpNPCCorporationTrades> crpNPCCorporationTrades
+        {
+            get
+            {
+                if ((_crpNPCCorporationTrades == null))
+                {
+                    _crpNPCCorporationTrades = base.CreateObjectSet<crpNPCCorporationTrades>("crpNPCCorporationTrades");
+                }
+                return _crpNPCCorporationTrades;
+            }
+        }
+        private ObjectSet<crpNPCCorporationTrades> _crpNPCCorporationTrades;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -449,6 +452,38 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<eveGraphics> eveGraphics
+        {
+            get
+            {
+                if ((_eveGraphics == null))
+                {
+                    _eveGraphics = base.CreateObjectSet<eveGraphics>("eveGraphics");
+                }
+                return _eveGraphics;
+            }
+        }
+        private ObjectSet<eveGraphics> _eveGraphics;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<eveIcons> eveIcons
+        {
+            get
+            {
+                if ((_eveIcons == null))
+                {
+                    _eveIcons = base.CreateObjectSet<eveIcons>("eveIcons");
+                }
+                return _eveIcons;
+            }
+        }
+        private ObjectSet<eveIcons> _eveIcons;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<eveUnits> eveUnits
         {
             get
@@ -577,6 +612,22 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<invItems> invItems
+        {
+            get
+            {
+                if ((_invItems == null))
+                {
+                    _invItems = base.CreateObjectSet<invItems>("invItems");
+                }
+                return _invItems;
+            }
+        }
+        private ObjectSet<invItems> _invItems;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<invMarketGroups> invMarketGroups
         {
             get
@@ -625,6 +676,38 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<invNames> invNames
+        {
+            get
+            {
+                if ((_invNames == null))
+                {
+                    _invNames = base.CreateObjectSet<invNames>("invNames");
+                }
+                return _invNames;
+            }
+        }
+        private ObjectSet<invNames> _invNames;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<invPositions> invPositions
+        {
+            get
+            {
+                if ((_invPositions == null))
+                {
+                    _invPositions = base.CreateObjectSet<invPositions>("invPositions");
+                }
+                return _invPositions;
+            }
+        }
+        private ObjectSet<invPositions> _invPositions;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<invTypeMaterials> invTypeMaterials
         {
             get
@@ -669,6 +752,22 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<invTypes> _invTypes;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<invUniqueNames> invUniqueNames
+        {
+            get
+            {
+                if ((_invUniqueNames == null))
+                {
+                    _invUniqueNames = base.CreateObjectSet<invUniqueNames>("invUniqueNames");
+                }
+                return _invUniqueNames;
+            }
+        }
+        private ObjectSet<invUniqueNames> _invUniqueNames;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -881,6 +980,54 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<planetSchematics> planetSchematics
+        {
+            get
+            {
+                if ((_planetSchematics == null))
+                {
+                    _planetSchematics = base.CreateObjectSet<planetSchematics>("planetSchematics");
+                }
+                return _planetSchematics;
+            }
+        }
+        private ObjectSet<planetSchematics> _planetSchematics;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<planetSchematicsPinMap> planetSchematicsPinMap
+        {
+            get
+            {
+                if ((_planetSchematicsPinMap == null))
+                {
+                    _planetSchematicsPinMap = base.CreateObjectSet<planetSchematicsPinMap>("planetSchematicsPinMap");
+                }
+                return _planetSchematicsPinMap;
+            }
+        }
+        private ObjectSet<planetSchematicsPinMap> _planetSchematicsPinMap;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<planetSchematicsTypeMap> planetSchematicsTypeMap
+        {
+            get
+            {
+                if ((_planetSchematicsTypeMap == null))
+                {
+                    _planetSchematicsTypeMap = base.CreateObjectSet<planetSchematicsTypeMap>("planetSchematicsTypeMap");
+                }
+                return _planetSchematicsTypeMap;
+            }
+        }
+        private ObjectSet<planetSchematicsTypeMap> _planetSchematicsTypeMap;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<ramActivities> ramActivities
         {
             get
@@ -893,6 +1040,22 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<ramActivities> _ramActivities;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<ramAssemblyLines> ramAssemblyLines
+        {
+            get
+            {
+                if ((_ramAssemblyLines == null))
+                {
+                    _ramAssemblyLines = base.CreateObjectSet<ramAssemblyLines>("ramAssemblyLines");
+                }
+                return _ramAssemblyLines;
+            }
+        }
+        private ObjectSet<ramAssemblyLines> _ramAssemblyLines;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -961,22 +1124,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<ramAssemblyLines> ramAssemblyLines
-        {
-            get
-            {
-                if ((_ramAssemblyLines == null))
-                {
-                    _ramAssemblyLines = base.CreateObjectSet<ramAssemblyLines>("ramAssemblyLines");
-                }
-                return _ramAssemblyLines;
-            }
-        }
-        private ObjectSet<ramAssemblyLines> _ramAssemblyLines;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<ramInstallationTypeContents> ramInstallationTypeContents
         {
             get
@@ -1009,22 +1156,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<staOperationServices> staOperationServices
-        {
-            get
-            {
-                if ((_staOperationServices == null))
-                {
-                    _staOperationServices = base.CreateObjectSet<staOperationServices>("staOperationServices");
-                }
-                return _staOperationServices;
-            }
-        }
-        private ObjectSet<staOperationServices> _staOperationServices;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<staOperations> staOperations
         {
             get
@@ -1037,6 +1168,22 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<staOperations> _staOperations;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<staOperationServices> staOperationServices
+        {
+            get
+            {
+                if ((_staOperationServices == null))
+                {
+                    _staOperationServices = base.CreateObjectSet<staOperationServices>("staOperationServices");
+                }
+                return _staOperationServices;
+            }
+        }
+        private ObjectSet<staOperationServices> _staOperationServices;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1057,22 +1204,6 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<staStationTypes> staStationTypes
-        {
-            get
-            {
-                if ((_staStationTypes == null))
-                {
-                    _staStationTypes = base.CreateObjectSet<staStationTypes>("staStationTypes");
-                }
-                return _staStationTypes;
-            }
-        }
-        private ObjectSet<staStationTypes> _staStationTypes;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<staStations> staStations
         {
             get
@@ -1089,178 +1220,18 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<trnTranslationColumns> trnTranslationColumns
+        public ObjectSet<staStationTypes> staStationTypes
         {
             get
             {
-                if ((_trnTranslationColumns == null))
+                if ((_staStationTypes == null))
                 {
-                    _trnTranslationColumns = base.CreateObjectSet<trnTranslationColumns>("trnTranslationColumns");
+                    _staStationTypes = base.CreateObjectSet<staStationTypes>("staStationTypes");
                 }
-                return _trnTranslationColumns;
+                return _staStationTypes;
             }
         }
-        private ObjectSet<trnTranslationColumns> _trnTranslationColumns;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<trnTranslations> trnTranslations
-        {
-            get
-            {
-                if ((_trnTranslations == null))
-                {
-                    _trnTranslations = base.CreateObjectSet<trnTranslations>("trnTranslations");
-                }
-                return _trnTranslations;
-            }
-        }
-        private ObjectSet<trnTranslations> _trnTranslations;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<eveIcons> eveIcons
-        {
-            get
-            {
-                if ((_eveIcons == null))
-                {
-                    _eveIcons = base.CreateObjectSet<eveIcons>("eveIcons");
-                }
-                return _eveIcons;
-            }
-        }
-        private ObjectSet<eveIcons> _eveIcons;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<planetSchematics> planetSchematics
-        {
-            get
-            {
-                if ((_planetSchematics == null))
-                {
-                    _planetSchematics = base.CreateObjectSet<planetSchematics>("planetSchematics");
-                }
-                return _planetSchematics;
-            }
-        }
-        private ObjectSet<planetSchematics> _planetSchematics;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<planetSchematicsPinMap> planetSchematicsPinMap
-        {
-            get
-            {
-                if ((_planetSchematicsPinMap == null))
-                {
-                    _planetSchematicsPinMap = base.CreateObjectSet<planetSchematicsPinMap>("planetSchematicsPinMap");
-                }
-                return _planetSchematicsPinMap;
-            }
-        }
-        private ObjectSet<planetSchematicsPinMap> _planetSchematicsPinMap;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<planetSchematicsTypeMap> planetSchematicsTypeMap
-        {
-            get
-            {
-                if ((_planetSchematicsTypeMap == null))
-                {
-                    _planetSchematicsTypeMap = base.CreateObjectSet<planetSchematicsTypeMap>("planetSchematicsTypeMap");
-                }
-                return _planetSchematicsTypeMap;
-            }
-        }
-        private ObjectSet<planetSchematicsTypeMap> _planetSchematicsTypeMap;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<eveGraphics> eveGraphics
-        {
-            get
-            {
-                if ((_eveGraphics == null))
-                {
-                    _eveGraphics = base.CreateObjectSet<eveGraphics>("eveGraphics");
-                }
-                return _eveGraphics;
-            }
-        }
-        private ObjectSet<eveGraphics> _eveGraphics;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<invItems> invItems
-        {
-            get
-            {
-                if ((_invItems == null))
-                {
-                    _invItems = base.CreateObjectSet<invItems>("invItems");
-                }
-                return _invItems;
-            }
-        }
-        private ObjectSet<invItems> _invItems;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<invNames> invNames
-        {
-            get
-            {
-                if ((_invNames == null))
-                {
-                    _invNames = base.CreateObjectSet<invNames>("invNames");
-                }
-                return _invNames;
-            }
-        }
-        private ObjectSet<invNames> _invNames;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<invPositions> invPositions
-        {
-            get
-            {
-                if ((_invPositions == null))
-                {
-                    _invPositions = base.CreateObjectSet<invPositions>("invPositions");
-                }
-                return _invPositions;
-            }
-        }
-        private ObjectSet<invPositions> _invPositions;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<invUniqueNames> invUniqueNames
-        {
-            get
-            {
-                if ((_invUniqueNames == null))
-                {
-                    _invUniqueNames = base.CreateObjectSet<invUniqueNames>("invUniqueNames");
-                }
-                return _invUniqueNames;
-            }
-        }
-        private ObjectSet<invUniqueNames> _invUniqueNames;
+        private ObjectSet<staStationTypes> _staStationTypes;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1281,6 +1252,22 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<trnTranslationColumns> trnTranslationColumns
+        {
+            get
+            {
+                if ((_trnTranslationColumns == null))
+                {
+                    _trnTranslationColumns = base.CreateObjectSet<trnTranslationColumns>("trnTranslationColumns");
+                }
+                return _trnTranslationColumns;
+            }
+        }
+        private ObjectSet<trnTranslationColumns> _trnTranslationColumns;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<trnTranslationLanguages> trnTranslationLanguages
         {
             get
@@ -1293,6 +1280,22 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<trnTranslationLanguages> _trnTranslationLanguages;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<trnTranslations> trnTranslations
+        {
+            get
+            {
+                if ((_trnTranslations == null))
+                {
+                    _trnTranslations = base.CreateObjectSet<trnTranslations>("trnTranslations");
+                }
+                return _trnTranslations;
+            }
+        }
+        private ObjectSet<trnTranslations> _trnTranslations;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1330,19 +1333,19 @@ namespace EVEMon.XmlGenerator
         #region AddTo Methods
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the agtAgentTypes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToagtAgentTypes(agtAgentTypes agtAgentTypes)
-        {
-            base.AddObject("agtAgentTypes", agtAgentTypes);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the agtAgents EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToagtAgents(agtAgents agtAgents)
         {
             base.AddObject("agtAgents", agtAgents);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the agtAgentTypes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToagtAgentTypes(agtAgentTypes agtAgentTypes)
+        {
+            base.AddObject("agtAgentTypes", agtAgentTypes);
         }
     
         /// <summary>
@@ -1418,19 +1421,19 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the crpNPCCorporationTrades EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTocrpNPCCorporationTrades(crpNPCCorporationTrades crpNPCCorporationTrades)
-        {
-            base.AddObject("crpNPCCorporationTrades", crpNPCCorporationTrades);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the crpNPCCorporations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTocrpNPCCorporations(crpNPCCorporations crpNPCCorporations)
         {
             base.AddObject("crpNPCCorporations", crpNPCCorporations);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the crpNPCCorporationTrades EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTocrpNPCCorporationTrades(crpNPCCorporationTrades crpNPCCorporationTrades)
+        {
+            base.AddObject("crpNPCCorporationTrades", crpNPCCorporationTrades);
         }
     
         /// <summary>
@@ -1522,6 +1525,22 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
+        /// Deprecated Method for adding a new object to the eveGraphics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToeveGraphics(eveGraphics eveGraphics)
+        {
+            base.AddObject("eveGraphics", eveGraphics);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the eveIcons EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToeveIcons(eveIcons eveIcons)
+        {
+            base.AddObject("eveIcons", eveIcons);
+        }
+    
+        /// <summary>
         /// Deprecated Method for adding a new object to the eveUnits EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToeveUnits(eveUnits eveUnits)
@@ -1586,6 +1605,14 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
+        /// Deprecated Method for adding a new object to the invItems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToinvItems(invItems invItems)
+        {
+            base.AddObject("invItems", invItems);
+        }
+    
+        /// <summary>
         /// Deprecated Method for adding a new object to the invMarketGroups EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToinvMarketGroups(invMarketGroups invMarketGroups)
@@ -1610,6 +1637,22 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
+        /// Deprecated Method for adding a new object to the invNames EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToinvNames(invNames invNames)
+        {
+            base.AddObject("invNames", invNames);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the invPositions EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToinvPositions(invPositions invPositions)
+        {
+            base.AddObject("invPositions", invPositions);
+        }
+    
+        /// <summary>
         /// Deprecated Method for adding a new object to the invTypeMaterials EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToinvTypeMaterials(invTypeMaterials invTypeMaterials)
@@ -1631,6 +1674,14 @@ namespace EVEMon.XmlGenerator
         public void AddToinvTypes(invTypes invTypes)
         {
             base.AddObject("invTypes", invTypes);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the invUniqueNames EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToinvUniqueNames(invUniqueNames invUniqueNames)
+        {
+            base.AddObject("invUniqueNames", invUniqueNames);
         }
     
         /// <summary>
@@ -1738,11 +1789,43 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
+        /// Deprecated Method for adding a new object to the planetSchematics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToplanetSchematics(planetSchematics planetSchematics)
+        {
+            base.AddObject("planetSchematics", planetSchematics);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the planetSchematicsPinMap EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToplanetSchematicsPinMap(planetSchematicsPinMap planetSchematicsPinMap)
+        {
+            base.AddObject("planetSchematicsPinMap", planetSchematicsPinMap);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the planetSchematicsTypeMap EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToplanetSchematicsTypeMap(planetSchematicsTypeMap planetSchematicsTypeMap)
+        {
+            base.AddObject("planetSchematicsTypeMap", planetSchematicsTypeMap);
+        }
+    
+        /// <summary>
         /// Deprecated Method for adding a new object to the ramActivities EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToramActivities(ramActivities ramActivities)
         {
             base.AddObject("ramActivities", ramActivities);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the ramAssemblyLines EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToramAssemblyLines(ramAssemblyLines ramAssemblyLines)
+        {
+            base.AddObject("ramAssemblyLines", ramAssemblyLines);
         }
     
         /// <summary>
@@ -1778,14 +1861,6 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the ramAssemblyLines EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToramAssemblyLines(ramAssemblyLines ramAssemblyLines)
-        {
-            base.AddObject("ramAssemblyLines", ramAssemblyLines);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the ramInstallationTypeContents EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToramInstallationTypeContents(ramInstallationTypeContents ramInstallationTypeContents)
@@ -1802,19 +1877,19 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the staOperationServices EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTostaOperationServices(staOperationServices staOperationServices)
-        {
-            base.AddObject("staOperationServices", staOperationServices);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the staOperations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTostaOperations(staOperations staOperations)
         {
             base.AddObject("staOperations", staOperations);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the staOperationServices EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTostaOperationServices(staOperationServices staOperationServices)
+        {
+            base.AddObject("staOperationServices", staOperationServices);
         }
     
         /// <summary>
@@ -1826,14 +1901,6 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the staStationTypes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTostaStationTypes(staStationTypes staStationTypes)
-        {
-            base.AddObject("staStationTypes", staStationTypes);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the staStations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTostaStations(staStations staStations)
@@ -1842,91 +1909,11 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the trnTranslationColumns EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the staStationTypes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddTotrnTranslationColumns(trnTranslationColumns trnTranslationColumns)
+        public void AddTostaStationTypes(staStationTypes staStationTypes)
         {
-            base.AddObject("trnTranslationColumns", trnTranslationColumns);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the trnTranslations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTotrnTranslations(trnTranslations trnTranslations)
-        {
-            base.AddObject("trnTranslations", trnTranslations);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the eveIcons EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToeveIcons(eveIcons eveIcons)
-        {
-            base.AddObject("eveIcons", eveIcons);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the planetSchematics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToplanetSchematics(planetSchematics planetSchematics)
-        {
-            base.AddObject("planetSchematics", planetSchematics);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the planetSchematicsPinMap EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToplanetSchematicsPinMap(planetSchematicsPinMap planetSchematicsPinMap)
-        {
-            base.AddObject("planetSchematicsPinMap", planetSchematicsPinMap);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the planetSchematicsTypeMap EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToplanetSchematicsTypeMap(planetSchematicsTypeMap planetSchematicsTypeMap)
-        {
-            base.AddObject("planetSchematicsTypeMap", planetSchematicsTypeMap);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the eveGraphics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToeveGraphics(eveGraphics eveGraphics)
-        {
-            base.AddObject("eveGraphics", eveGraphics);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the invItems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToinvItems(invItems invItems)
-        {
-            base.AddObject("invItems", invItems);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the invNames EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToinvNames(invNames invNames)
-        {
-            base.AddObject("invNames", invNames);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the invPositions EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToinvPositions(invPositions invPositions)
-        {
-            base.AddObject("invPositions", invPositions);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the invUniqueNames EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToinvUniqueNames(invUniqueNames invUniqueNames)
-        {
-            base.AddObject("invUniqueNames", invUniqueNames);
+            base.AddObject("staStationTypes", staStationTypes);
         }
     
         /// <summary>
@@ -1938,11 +1925,27 @@ namespace EVEMon.XmlGenerator
         }
     
         /// <summary>
+        /// Deprecated Method for adding a new object to the trnTranslationColumns EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTotrnTranslationColumns(trnTranslationColumns trnTranslationColumns)
+        {
+            base.AddObject("trnTranslationColumns", trnTranslationColumns);
+        }
+    
+        /// <summary>
         /// Deprecated Method for adding a new object to the trnTranslationLanguages EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTotrnTranslationLanguages(trnTranslationLanguages trnTranslationLanguages)
         {
             base.AddObject("trnTranslationLanguages", trnTranslationLanguages);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the trnTranslations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTotrnTranslations(trnTranslations trnTranslations)
+        {
+            base.AddObject("trnTranslations", trnTranslations);
         }
     
         /// <summary>
@@ -2145,7 +2148,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Byte> agentTypeID
+        public Nullable<global::System.Int32> agentTypeID
         {
             get
             {
@@ -2160,8 +2163,8 @@ namespace EVEMon.XmlGenerator
                 OnagentTypeIDChanged();
             }
         }
-        private Nullable<global::System.Byte> _agentTypeID;
-        partial void OnagentTypeIDChanging(Nullable<global::System.Byte> value);
+        private Nullable<global::System.Int32> _agentTypeID;
+        partial void OnagentTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnagentTypeIDChanged();
     
         /// <summary>
@@ -2206,7 +2209,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new agtAgentTypes object.
         /// </summary>
         /// <param name="agentTypeID">Initial value of the agentTypeID property.</param>
-        public static agtAgentTypes CreateagtAgentTypes(global::System.Byte agentTypeID)
+        public static agtAgentTypes CreateagtAgentTypes(global::System.Int32 agentTypeID)
         {
             agtAgentTypes agtAgentTypes = new agtAgentTypes();
             agtAgentTypes.agentTypeID = agentTypeID;
@@ -2221,7 +2224,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Byte agentTypeID
+        public global::System.Int32 agentTypeID
         {
             get
             {
@@ -2239,8 +2242,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Byte _agentTypeID;
-        partial void OnagentTypeIDChanging(global::System.Byte value);
+        private global::System.Int32 _agentTypeID;
+        partial void OnagentTypeIDChanging(global::System.Int32 value);
         partial void OnagentTypeIDChanged();
     
         /// <summary>
@@ -2286,7 +2289,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="agentID">Initial value of the agentID property.</param>
         /// <param name="typeID">Initial value of the typeID property.</param>
-        public static agtResearchAgents CreateagtResearchAgents(global::System.Int32 agentID, global::System.Int16 typeID)
+        public static agtResearchAgents CreateagtResearchAgents(global::System.Int32 agentID, global::System.Int32 typeID)
         {
             agtResearchAgents agtResearchAgents = new agtResearchAgents();
             agtResearchAgents.agentID = agentID;
@@ -2329,7 +2332,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -2347,8 +2350,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
 
         #endregion
@@ -2603,30 +2606,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String shortDescription
-        {
-            get
-            {
-                return _shortDescription;
-            }
-            set
-            {
-                OnshortDescriptionChanging(value);
-                ReportPropertyChanging("shortDescription");
-                _shortDescription = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("shortDescription");
-                OnshortDescriptionChanged();
-            }
-        }
-        private global::System.String _shortDescription;
-        partial void OnshortDescriptionChanging(global::System.String value);
-        partial void OnshortDescriptionChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Int32> iconID
         {
             get
@@ -2645,6 +2624,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int32> _iconID;
         partial void OniconIDChanging(Nullable<global::System.Int32> value);
         partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String shortDescription
+        {
+            get
+            {
+                return _shortDescription;
+            }
+            set
+            {
+                OnshortDescriptionChanging(value);
+                ReportPropertyChanging("shortDescription");
+                _shortDescription = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("shortDescription");
+                OnshortDescriptionChanged();
+            }
+        }
+        private global::System.String _shortDescription;
+        partial void OnshortDescriptionChanging(global::System.String value);
+        partial void OnshortDescriptionChanged();
 
         #endregion
     
@@ -2754,6 +2757,30 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
         public global::System.String shortDescription
         {
             get
@@ -2796,30 +2823,6 @@ namespace EVEMon.XmlGenerator
         private global::System.String _notes;
         partial void OnnotesChanging(global::System.String value);
         partial void OnnotesChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> iconID
-        {
-            get
-            {
-                return _iconID;
-            }
-            set
-            {
-                OniconIDChanging(value);
-                ReportPropertyChanging("iconID");
-                _iconID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("iconID");
-                OniconIDChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _iconID;
-        partial void OniconIDChanging(Nullable<global::System.Int32> value);
-        partial void OniconIDChanged();
 
         #endregion
     
@@ -3001,7 +3004,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> shipTypeID
+        public Nullable<global::System.Int32> shipTypeID
         {
             get
             {
@@ -3016,8 +3019,8 @@ namespace EVEMon.XmlGenerator
                 OnshipTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _shipTypeID;
-        partial void OnshipTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _shipTypeID;
+        partial void OnshipTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnshipTypeIDChanged();
     
         /// <summary>
@@ -3169,6 +3172,30 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
         public global::System.String shortDescription
         {
             get
@@ -3235,30 +3262,6 @@ namespace EVEMon.XmlGenerator
         private global::System.String _shortFemaleDescription;
         partial void OnshortFemaleDescriptionChanging(global::System.String value);
         partial void OnshortFemaleDescriptionChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> iconID
-        {
-            get
-            {
-                return _iconID;
-            }
-            set
-            {
-                OniconIDChanging(value);
-                ReportPropertyChanging("iconID");
-                _iconID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("iconID");
-                OniconIDChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _iconID;
-        partial void OniconIDChanging(Nullable<global::System.Int32> value);
-        partial void OniconIDChanged();
 
         #endregion
     
@@ -3663,30 +3666,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String shortDescription
-        {
-            get
-            {
-                return _shortDescription;
-            }
-            set
-            {
-                OnshortDescriptionChanging(value);
-                ReportPropertyChanging("shortDescription");
-                _shortDescription = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("shortDescription");
-                OnshortDescriptionChanged();
-            }
-        }
-        private global::System.String _shortDescription;
-        partial void OnshortDescriptionChanging(global::System.String value);
-        partial void OnshortDescriptionChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Int32> iconID
         {
             get
@@ -3705,6 +3684,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int32> _iconID;
         partial void OniconIDChanging(Nullable<global::System.Int32> value);
         partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String shortDescription
+        {
+            get
+            {
+                return _shortDescription;
+            }
+            set
+            {
+                OnshortDescriptionChanging(value);
+                ReportPropertyChanging("shortDescription");
+                _shortDescription = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("shortDescription");
+                OnshortDescriptionChanged();
+            }
+        }
+        private global::System.String _shortDescription;
+        partial void OnshortDescriptionChanging(global::System.String value);
+        partial void OnshortDescriptionChanged();
 
         #endregion
     
@@ -3936,7 +3939,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="skillID">Initial value of the skillID property.</param>
         /// <param name="corporationID">Initial value of the corporationID property.</param>
-        public static crpNPCCorporationResearchFields CreatecrpNPCCorporationResearchFields(global::System.Int16 skillID, global::System.Int32 corporationID)
+        public static crpNPCCorporationResearchFields CreatecrpNPCCorporationResearchFields(global::System.Int32 skillID, global::System.Int32 corporationID)
         {
             crpNPCCorporationResearchFields crpNPCCorporationResearchFields = new crpNPCCorporationResearchFields();
             crpNPCCorporationResearchFields.skillID = skillID;
@@ -3952,7 +3955,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 skillID
+        public global::System.Int32 skillID
         {
             get
             {
@@ -3970,8 +3973,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _skillID;
-        partial void OnskillIDChanging(global::System.Int16 value);
+        private global::System.Int32 _skillID;
+        partial void OnskillIDChanging(global::System.Int32 value);
         partial void OnskillIDChanged();
     
         /// <summary>
@@ -4723,7 +4726,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="corporationID">Initial value of the corporationID property.</param>
         /// <param name="typeID">Initial value of the typeID property.</param>
-        public static crpNPCCorporationTrades CreatecrpNPCCorporationTrades(global::System.Int32 corporationID, global::System.Int16 typeID)
+        public static crpNPCCorporationTrades CreatecrpNPCCorporationTrades(global::System.Int32 corporationID, global::System.Int32 typeID)
         {
             crpNPCCorporationTrades crpNPCCorporationTrades = new crpNPCCorporationTrades();
             crpNPCCorporationTrades.corporationID = corporationID;
@@ -4766,7 +4769,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -4784,8 +4787,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
 
         #endregion
@@ -5382,7 +5385,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> shipTypeID
+        public Nullable<global::System.Int32> shipTypeID
         {
             get
             {
@@ -5397,8 +5400,8 @@ namespace EVEMon.XmlGenerator
                 OnshipTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _shipTypeID;
-        partial void OnshipTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _shipTypeID;
+        partial void OnshipTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnshipTypeIDChanged();
     
         /// <summary>
@@ -5533,7 +5536,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> parentTypeID
+        public Nullable<global::System.Int32> parentTypeID
         {
             get
             {
@@ -5548,8 +5551,8 @@ namespace EVEMon.XmlGenerator
                 OnparentTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _parentTypeID;
-        partial void OnparentTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _parentTypeID;
+        partial void OnparentTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnparentTypeIDChanged();
     
         /// <summary>
@@ -5811,6 +5814,30 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
         public Nullable<global::System.Double> defaultValue
         {
             get
@@ -5973,30 +6000,6 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Byte> _categoryID;
         partial void OncategoryIDChanging(Nullable<global::System.Byte> value);
         partial void OncategoryIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> iconID
-        {
-            get
-            {
-                return _iconID;
-            }
-            set
-            {
-                OniconIDChanging(value);
-                ReportPropertyChanging("iconID");
-                _iconID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("iconID");
-                OniconIDChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _iconID;
-        partial void OniconIDChanging(Nullable<global::System.Int32> value);
-        partial void OniconIDChanged();
 
         #endregion
     
@@ -6196,6 +6199,30 @@ namespace EVEMon.XmlGenerator
         private global::System.String _guid;
         partial void OnguidChanging(global::System.String value);
         partial void OnguidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6652,30 +6679,6 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int16> _fittingUsageChanceAttributeID;
         partial void OnfittingUsageChanceAttributeIDChanging(Nullable<global::System.Int16> value);
         partial void OnfittingUsageChanceAttributeIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> iconID
-        {
-            get
-            {
-                return _iconID;
-            }
-            set
-            {
-                OniconIDChanging(value);
-                ReportPropertyChanging("iconID");
-                _iconID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("iconID");
-                OniconIDChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _iconID;
-        partial void OniconIDChanging(Nullable<global::System.Int32> value);
-        partial void OniconIDChanged();
 
         #endregion
     
@@ -7857,30 +7860,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Boolean> published
-        {
-            get
-            {
-                return _published;
-            }
-            set
-            {
-                OnpublishedChanging(value);
-                ReportPropertyChanging("published");
-                _published = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("published");
-                OnpublishedChanged();
-            }
-        }
-        private Nullable<global::System.Boolean> _published;
-        partial void OnpublishedChanging(Nullable<global::System.Boolean> value);
-        partial void OnpublishedChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Int32> iconID
         {
             get
@@ -7899,6 +7878,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int32> _iconID;
         partial void OniconIDChanging(Nullable<global::System.Int32> value);
         partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> published
+        {
+            get
+            {
+                return _published;
+            }
+            set
+            {
+                OnpublishedChanging(value);
+                ReportPropertyChanging("published");
+                _published = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("published");
+                OnpublishedChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _published;
+        partial void OnpublishedChanging(Nullable<global::System.Boolean> value);
+        partial void OnpublishedChanged();
 
         #endregion
     
@@ -7919,7 +7922,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="factionID">Initial value of the factionID property.</param>
         /// <param name="typeID">Initial value of the typeID property.</param>
-        public static invContrabandTypes CreateinvContrabandTypes(global::System.Int32 factionID, global::System.Int16 typeID)
+        public static invContrabandTypes CreateinvContrabandTypes(global::System.Int32 factionID, global::System.Int32 typeID)
         {
             invContrabandTypes invContrabandTypes = new invContrabandTypes();
             invContrabandTypes.factionID = factionID;
@@ -7962,7 +7965,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -7980,8 +7983,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -8178,7 +8181,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="controlTowerTypeID">Initial value of the controlTowerTypeID property.</param>
         /// <param name="resourceTypeID">Initial value of the resourceTypeID property.</param>
-        public static invControlTowerResources CreateinvControlTowerResources(global::System.Int16 controlTowerTypeID, global::System.Int16 resourceTypeID)
+        public static invControlTowerResources CreateinvControlTowerResources(global::System.Int32 controlTowerTypeID, global::System.Int32 resourceTypeID)
         {
             invControlTowerResources invControlTowerResources = new invControlTowerResources();
             invControlTowerResources.controlTowerTypeID = controlTowerTypeID;
@@ -8194,7 +8197,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 controlTowerTypeID
+        public global::System.Int32 controlTowerTypeID
         {
             get
             {
@@ -8212,8 +8215,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _controlTowerTypeID;
-        partial void OncontrolTowerTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _controlTowerTypeID;
+        partial void OncontrolTowerTypeIDChanging(global::System.Int32 value);
         partial void OncontrolTowerTypeIDChanged();
     
         /// <summary>
@@ -8221,7 +8224,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 resourceTypeID
+        public global::System.Int32 resourceTypeID
         {
             get
             {
@@ -8239,8 +8242,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _resourceTypeID;
-        partial void OnresourceTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _resourceTypeID;
+        partial void OnresourceTypeIDChanging(global::System.Int32 value);
         partial void OnresourceTypeIDChanged();
     
         /// <summary>
@@ -8357,7 +8360,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new invFlags object.
         /// </summary>
         /// <param name="flagID">Initial value of the flagID property.</param>
-        public static invFlags CreateinvFlags(global::System.Byte flagID)
+        public static invFlags CreateinvFlags(global::System.Int16 flagID)
         {
             invFlags invFlags = new invFlags();
             invFlags.flagID = flagID;
@@ -8372,7 +8375,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Byte flagID
+        public global::System.Int16 flagID
         {
             get
             {
@@ -8390,8 +8393,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Byte _flagID;
-        partial void OnflagIDChanging(global::System.Byte value);
+        private global::System.Int16 _flagID;
+        partial void OnflagIDChanging(global::System.Int16 value);
         partial void OnflagIDChanged();
     
         /// <summary>
@@ -8447,7 +8450,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> orderID
+        public Nullable<global::System.Int32> orderID
         {
             get
             {
@@ -8462,8 +8465,8 @@ namespace EVEMon.XmlGenerator
                 OnorderIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _orderID;
-        partial void OnorderIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _orderID;
+        partial void OnorderIDChanging(Nullable<global::System.Int32> value);
         partial void OnorderIDChanged();
 
         #endregion
@@ -8592,6 +8595,30 @@ namespace EVEMon.XmlGenerator
         private global::System.String _description;
         partial void OndescriptionChanging(global::System.String value);
         partial void OndescriptionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -8760,30 +8787,6 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Boolean> _published;
         partial void OnpublishedChanging(Nullable<global::System.Boolean> value);
         partial void OnpublishedChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> iconID
-        {
-            get
-            {
-                return _iconID;
-            }
-            set
-            {
-                OniconIDChanging(value);
-                ReportPropertyChanging("iconID");
-                _iconID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("iconID");
-                OniconIDChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _iconID;
-        partial void OniconIDChanging(Nullable<global::System.Int32> value);
-        partial void OniconIDChanged();
 
         #endregion
     
@@ -9102,30 +9105,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Boolean> hasTypes
-        {
-            get
-            {
-                return _hasTypes;
-            }
-            set
-            {
-                OnhasTypesChanging(value);
-                ReportPropertyChanging("hasTypes");
-                _hasTypes = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("hasTypes");
-                OnhasTypesChanged();
-            }
-        }
-        private Nullable<global::System.Boolean> _hasTypes;
-        partial void OnhasTypesChanging(Nullable<global::System.Boolean> value);
-        partial void OnhasTypesChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Int32> iconID
         {
             get
@@ -9144,6 +9123,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int32> _iconID;
         partial void OniconIDChanging(Nullable<global::System.Int32> value);
         partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> hasTypes
+        {
+            get
+            {
+                return _hasTypes;
+            }
+            set
+            {
+                OnhasTypesChanging(value);
+                ReportPropertyChanging("hasTypes");
+                _hasTypes = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("hasTypes");
+                OnhasTypesChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _hasTypes;
+        partial void OnhasTypesChanging(Nullable<global::System.Boolean> value);
+        partial void OnhasTypesChanged();
 
         #endregion
     
@@ -9290,7 +9293,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new invMetaTypes object.
         /// </summary>
         /// <param name="typeID">Initial value of the typeID property.</param>
-        public static invMetaTypes CreateinvMetaTypes(global::System.Int16 typeID)
+        public static invMetaTypes CreateinvMetaTypes(global::System.Int32 typeID)
         {
             invMetaTypes invMetaTypes = new invMetaTypes();
             invMetaTypes.typeID = typeID;
@@ -9305,7 +9308,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -9323,8 +9326,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -9332,7 +9335,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> parentTypeID
+        public Nullable<global::System.Int32> parentTypeID
         {
             get
             {
@@ -9347,8 +9350,8 @@ namespace EVEMon.XmlGenerator
                 OnparentTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _parentTypeID;
-        partial void OnparentTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _parentTypeID;
+        partial void OnparentTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnparentTypeIDChanged();
     
         /// <summary>
@@ -9791,7 +9794,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="reactionTypeID">Initial value of the reactionTypeID property.</param>
         /// <param name="input">Initial value of the input property.</param>
         /// <param name="typeID">Initial value of the typeID property.</param>
-        public static invTypeReactions CreateinvTypeReactions(global::System.Int16 reactionTypeID, global::System.Boolean input, global::System.Int16 typeID)
+        public static invTypeReactions CreateinvTypeReactions(global::System.Int32 reactionTypeID, global::System.Boolean input, global::System.Int32 typeID)
         {
             invTypeReactions invTypeReactions = new invTypeReactions();
             invTypeReactions.reactionTypeID = reactionTypeID;
@@ -9808,7 +9811,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 reactionTypeID
+        public global::System.Int32 reactionTypeID
         {
             get
             {
@@ -9826,8 +9829,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _reactionTypeID;
-        partial void OnreactionTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _reactionTypeID;
+        partial void OnreactionTypeIDChanging(global::System.Int32 value);
         partial void OnreactionTypeIDChanged();
     
         /// <summary>
@@ -9862,7 +9865,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -9880,8 +9883,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -11474,7 +11477,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> typeID
+        public Nullable<global::System.Int32> typeID
         {
             get
             {
@@ -11489,8 +11492,8 @@ namespace EVEMon.XmlGenerator
                 OntypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _typeID;
-        partial void OntypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _typeID;
+        partial void OntypeIDChanging(Nullable<global::System.Int32> value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -11498,7 +11501,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> groupID
+        public Nullable<global::System.Int32> groupID
         {
             get
             {
@@ -11513,8 +11516,8 @@ namespace EVEMon.XmlGenerator
                 OngroupIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _groupID;
-        partial void OngroupIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _groupID;
+        partial void OngroupIDChanging(Nullable<global::System.Int32> value);
         partial void OngroupIDChanged();
     
         /// <summary>
@@ -12112,30 +12115,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Byte> importance
-        {
-            get
-            {
-                return _importance;
-            }
-            set
-            {
-                OnimportanceChanging(value);
-                ReportPropertyChanging("importance");
-                _importance = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("importance");
-                OnimportanceChanged();
-            }
-        }
-        private Nullable<global::System.Byte> _importance;
-        partial void OnimportanceChanging(Nullable<global::System.Byte> value);
-        partial void OnimportanceChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Int32> iconID
         {
             get
@@ -12154,6 +12133,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int32> _iconID;
         partial void OniconIDChanging(Nullable<global::System.Int32> value);
         partial void OniconIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Byte> importance
+        {
+            get
+            {
+                return _importance;
+            }
+            set
+            {
+                OnimportanceChanging(value);
+                ReportPropertyChanging("importance");
+                _importance = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("importance");
+                OnimportanceChanged();
+            }
+        }
+        private Nullable<global::System.Byte> _importance;
+        partial void OnimportanceChanging(Nullable<global::System.Byte> value);
+        partial void OnimportanceChanged();
 
         #endregion
     
@@ -13532,7 +13535,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> sunTypeID
+        public Nullable<global::System.Int32> sunTypeID
         {
             get
             {
@@ -13547,8 +13550,8 @@ namespace EVEMon.XmlGenerator
                 OnsunTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _sunTypeID;
-        partial void OnsunTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _sunTypeID;
+        partial void OnsunTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnsunTypeIDChanged();
     
         /// <summary>
@@ -14016,7 +14019,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="schematicID">Initial value of the schematicID property.</param>
         /// <param name="pinTypeID">Initial value of the pinTypeID property.</param>
-        public static planetSchematicsPinMap CreateplanetSchematicsPinMap(global::System.Int16 schematicID, global::System.Int16 pinTypeID)
+        public static planetSchematicsPinMap CreateplanetSchematicsPinMap(global::System.Int16 schematicID, global::System.Int32 pinTypeID)
         {
             planetSchematicsPinMap planetSchematicsPinMap = new planetSchematicsPinMap();
             planetSchematicsPinMap.schematicID = schematicID;
@@ -14059,7 +14062,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 pinTypeID
+        public global::System.Int32 pinTypeID
         {
             get
             {
@@ -14077,8 +14080,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _pinTypeID;
-        partial void OnpinTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _pinTypeID;
+        partial void OnpinTypeIDChanging(global::System.Int32 value);
         partial void OnpinTypeIDChanged();
 
         #endregion
@@ -14100,7 +14103,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="schematicID">Initial value of the schematicID property.</param>
         /// <param name="typeID">Initial value of the typeID property.</param>
-        public static planetSchematicsTypeMap CreateplanetSchematicsTypeMap(global::System.Int16 schematicID, global::System.Int16 typeID)
+        public static planetSchematicsTypeMap CreateplanetSchematicsTypeMap(global::System.Int16 schematicID, global::System.Int32 typeID)
         {
             planetSchematicsTypeMap planetSchematicsTypeMap = new planetSchematicsTypeMap();
             planetSchematicsTypeMap.schematicID = schematicID;
@@ -14143,7 +14146,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 typeID
+        public global::System.Int32 typeID
         {
             get
             {
@@ -14161,8 +14164,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _typeID;
-        partial void OntypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _typeID;
+        partial void OntypeIDChanging(global::System.Int32 value);
         partial void OntypeIDChanged();
     
         /// <summary>
@@ -14916,7 +14919,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> stationTypeID
+        public Nullable<global::System.Int32> stationTypeID
         {
             get
             {
@@ -14931,8 +14934,8 @@ namespace EVEMon.XmlGenerator
                 OnstationTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _stationTypeID;
-        partial void OnstationTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _stationTypeID;
+        partial void OnstationTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnstationTypeIDChanged();
     
         /// <summary>
@@ -15026,7 +15029,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="assemblyLineTypeID">Initial value of the assemblyLineTypeID property.</param>
         /// <param name="categoryID">Initial value of the categoryID property.</param>
-        public static ramAssemblyLineTypeDetailPerCategory CreateramAssemblyLineTypeDetailPerCategory(global::System.Byte assemblyLineTypeID, global::System.Byte categoryID)
+        public static ramAssemblyLineTypeDetailPerCategory CreateramAssemblyLineTypeDetailPerCategory(global::System.Byte assemblyLineTypeID, global::System.Int32 categoryID)
         {
             ramAssemblyLineTypeDetailPerCategory ramAssemblyLineTypeDetailPerCategory = new ramAssemblyLineTypeDetailPerCategory();
             ramAssemblyLineTypeDetailPerCategory.assemblyLineTypeID = assemblyLineTypeID;
@@ -15069,7 +15072,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Byte categoryID
+        public global::System.Int32 categoryID
         {
             get
             {
@@ -15087,8 +15090,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Byte _categoryID;
-        partial void OncategoryIDChanging(global::System.Byte value);
+        private global::System.Int32 _categoryID;
+        partial void OncategoryIDChanging(global::System.Int32 value);
         partial void OncategoryIDChanged();
     
         /// <summary>
@@ -15158,7 +15161,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="assemblyLineTypeID">Initial value of the assemblyLineTypeID property.</param>
         /// <param name="groupID">Initial value of the groupID property.</param>
-        public static ramAssemblyLineTypeDetailPerGroup CreateramAssemblyLineTypeDetailPerGroup(global::System.Byte assemblyLineTypeID, global::System.Int16 groupID)
+        public static ramAssemblyLineTypeDetailPerGroup CreateramAssemblyLineTypeDetailPerGroup(global::System.Byte assemblyLineTypeID, global::System.Int32 groupID)
         {
             ramAssemblyLineTypeDetailPerGroup ramAssemblyLineTypeDetailPerGroup = new ramAssemblyLineTypeDetailPerGroup();
             ramAssemblyLineTypeDetailPerGroup.assemblyLineTypeID = assemblyLineTypeID;
@@ -15201,7 +15204,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 groupID
+        public global::System.Int32 groupID
         {
             get
             {
@@ -15219,8 +15222,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _groupID;
-        partial void OngroupIDChanging(global::System.Int16 value);
+        private global::System.Int32 _groupID;
+        partial void OngroupIDChanging(global::System.Int32 value);
         partial void OngroupIDChanged();
     
         /// <summary>
@@ -15513,7 +15516,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <param name="installationTypeID">Initial value of the installationTypeID property.</param>
         /// <param name="assemblyLineTypeID">Initial value of the assemblyLineTypeID property.</param>
-        public static ramInstallationTypeContents CreateramInstallationTypeContents(global::System.Int16 installationTypeID, global::System.Byte assemblyLineTypeID)
+        public static ramInstallationTypeContents CreateramInstallationTypeContents(global::System.Int32 installationTypeID, global::System.Byte assemblyLineTypeID)
         {
             ramInstallationTypeContents ramInstallationTypeContents = new ramInstallationTypeContents();
             ramInstallationTypeContents.installationTypeID = installationTypeID;
@@ -15529,7 +15532,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 installationTypeID
+        public global::System.Int32 installationTypeID
         {
             get
             {
@@ -15547,8 +15550,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _installationTypeID;
-        partial void OninstallationTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _installationTypeID;
+        partial void OninstallationTypeIDChanging(global::System.Int32 value);
         partial void OninstallationTypeIDChanged();
     
         /// <summary>
@@ -16039,7 +16042,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> caldariStationTypeID
+        public Nullable<global::System.Int32> caldariStationTypeID
         {
             get
             {
@@ -16054,8 +16057,8 @@ namespace EVEMon.XmlGenerator
                 OncaldariStationTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _caldariStationTypeID;
-        partial void OncaldariStationTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _caldariStationTypeID;
+        partial void OncaldariStationTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OncaldariStationTypeIDChanged();
     
         /// <summary>
@@ -16063,7 +16066,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> minmatarStationTypeID
+        public Nullable<global::System.Int32> minmatarStationTypeID
         {
             get
             {
@@ -16078,8 +16081,8 @@ namespace EVEMon.XmlGenerator
                 OnminmatarStationTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _minmatarStationTypeID;
-        partial void OnminmatarStationTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _minmatarStationTypeID;
+        partial void OnminmatarStationTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnminmatarStationTypeIDChanged();
     
         /// <summary>
@@ -16087,7 +16090,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> amarrStationTypeID
+        public Nullable<global::System.Int32> amarrStationTypeID
         {
             get
             {
@@ -16102,8 +16105,8 @@ namespace EVEMon.XmlGenerator
                 OnamarrStationTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _amarrStationTypeID;
-        partial void OnamarrStationTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _amarrStationTypeID;
+        partial void OnamarrStationTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnamarrStationTypeIDChanged();
     
         /// <summary>
@@ -16111,7 +16114,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> gallenteStationTypeID
+        public Nullable<global::System.Int32> gallenteStationTypeID
         {
             get
             {
@@ -16126,8 +16129,8 @@ namespace EVEMon.XmlGenerator
                 OngallenteStationTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _gallenteStationTypeID;
-        partial void OngallenteStationTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _gallenteStationTypeID;
+        partial void OngallenteStationTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OngallenteStationTypeIDChanged();
     
         /// <summary>
@@ -16135,7 +16138,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> joveStationTypeID
+        public Nullable<global::System.Int32> joveStationTypeID
         {
             get
             {
@@ -16150,8 +16153,8 @@ namespace EVEMon.XmlGenerator
                 OnjoveStationTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _joveStationTypeID;
-        partial void OnjoveStationTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _joveStationTypeID;
+        partial void OnjoveStationTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnjoveStationTypeIDChanged();
 
         #endregion
@@ -16521,7 +16524,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int16> stationTypeID
+        public Nullable<global::System.Int32> stationTypeID
         {
             get
             {
@@ -16536,8 +16539,8 @@ namespace EVEMon.XmlGenerator
                 OnstationTypeIDChanged();
             }
         }
-        private Nullable<global::System.Int16> _stationTypeID;
-        partial void OnstationTypeIDChanging(Nullable<global::System.Int16> value);
+        private Nullable<global::System.Int32> _stationTypeID;
+        partial void OnstationTypeIDChanging(Nullable<global::System.Int32> value);
         partial void OnstationTypeIDChanged();
     
         /// <summary>
@@ -16822,7 +16825,7 @@ namespace EVEMon.XmlGenerator
         /// Create a new staStationTypes object.
         /// </summary>
         /// <param name="stationTypeID">Initial value of the stationTypeID property.</param>
-        public static staStationTypes CreatestaStationTypes(global::System.Int16 stationTypeID)
+        public static staStationTypes CreatestaStationTypes(global::System.Int32 stationTypeID)
         {
             staStationTypes staStationTypes = new staStationTypes();
             staStationTypes.stationTypeID = stationTypeID;
@@ -16837,7 +16840,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int16 stationTypeID
+        public global::System.Int32 stationTypeID
         {
             get
             {
@@ -16855,8 +16858,8 @@ namespace EVEMon.XmlGenerator
                 }
             }
         }
-        private global::System.Int16 _stationTypeID;
-        partial void OnstationTypeIDChanging(global::System.Int16 value);
+        private global::System.Int32 _stationTypeID;
+        partial void OnstationTypeIDChanging(global::System.Int32 value);
         partial void OnstationTypeIDChanged();
     
         /// <summary>
