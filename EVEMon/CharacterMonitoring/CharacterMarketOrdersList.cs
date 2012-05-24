@@ -303,7 +303,7 @@ namespace EVEMon.CharacterMonitoring
         # endregion
 
 
-        #region Updates Main Market Window On Global Events
+        #region Updates Main Market Window
 
         /// <summary>
         /// Updates the columns.
@@ -692,6 +692,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case MarketOrderColumn.SolarSystem:
                     item.Text = order.Station.SolarSystem.Name;
+                    item.ForeColor = order.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case MarketOrderColumn.Station:
                     item.Text = (outpost != null

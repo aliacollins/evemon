@@ -570,6 +570,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case WalletTransactionColumn.SolarSystem:
                     item.Text = walletTransaction.Station.SolarSystem.Name;
+                    item.ForeColor = walletTransaction.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case WalletTransactionColumn.Station:
                     item.Text = (outpost != null

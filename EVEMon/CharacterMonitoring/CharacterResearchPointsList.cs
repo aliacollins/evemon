@@ -450,6 +450,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case ResearchColumn.SolarSystem:
                     item.Text = researchPoint.Station.SolarSystem.Name;
+                    item.ForeColor = researchPoint.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case ResearchColumn.Station:
                     item.Text = (outpost != null

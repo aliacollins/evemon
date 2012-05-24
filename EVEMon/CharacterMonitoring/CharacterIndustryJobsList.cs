@@ -290,7 +290,7 @@ namespace EVEMon.CharacterMonitoring
         # endregion
 
 
-        #region Updates Main Industry Window On Global Events
+        #region Updates Main Industry Window
 
         /// <summary>
         /// Updates the columns.
@@ -701,6 +701,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobColumn.SolarSystem:
                     item.Text = job.SolarSystem.Name;
+                    item.ForeColor = job.SolarSystem.SecurityLevelColor;
                     break;
                 case IndustryJobColumn.Installation:
                     item.Text = job.Installation;

@@ -594,12 +594,14 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case AssetColumn.Location:
                     item.Text = asset.Location;
+                    item.ForeColor = asset.SolarSystem.SecurityLevelColor;
                     break;
                 case AssetColumn.Region:
                     item.Text = asset.SolarSystem.Constellation.Region.Name;
                     break;
                 case AssetColumn.SolarSystem:
                     item.Text = asset.SolarSystem.Name;
+                    item.ForeColor = asset.SolarSystem.SecurityLevelColor;
                     break;
                 case AssetColumn.FullLocation:
                     item.Text = asset.FullLocation;

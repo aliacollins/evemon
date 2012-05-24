@@ -666,6 +666,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case ContractColumn.StartSolarSystem:
                     item.Text = contract.StartStation.SolarSystem.Name;
+                    item.ForeColor = contract.StartStation.SolarSystem.SecurityLevelColor;
                     break;
                 case ContractColumn.StartStation:
                     item.Text = (startOutpost != null
@@ -682,6 +683,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case ContractColumn.EndSolarSystem:
                     item.Text = contract.EndStation.SolarSystem.Name;
+                    item.ForeColor = contract.EndStation.SolarSystem.SecurityLevelColor;
                     break;
                 case ContractColumn.EndStation:
                     item.Text = (endOutpost != null
