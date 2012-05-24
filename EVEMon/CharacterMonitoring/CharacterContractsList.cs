@@ -814,6 +814,16 @@ namespace EVEMon.CharacterMonitoring
         #region Local Event Handlers
 
         /// <summary>
+        /// Exports item info to CSV format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(lvContracts);
+        }
+
+        /// <summary>
         /// On double click shows the contract details window.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -908,7 +918,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            e.Cancel = lvContracts.SelectedItems.Count == 0;
+            showDetailsToolStripMenuItem.Enabled = lvContracts.SelectedItems.Count != 0;
         }
 
         /// <summary>

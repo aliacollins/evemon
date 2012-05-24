@@ -861,6 +861,16 @@ namespace EVEMon.CharacterMonitoring
         #region Event Handlers
 
         /// <summary>
+        /// Exports item info to CSV format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(lvJobs);
+        }
+
+        /// <summary>
         /// Handles the Tick event of the m_timer control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>

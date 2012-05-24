@@ -600,6 +600,16 @@ namespace EVEMon.CharacterMonitoring
         #region Local Event Handlers
 
         /// <summary>
+        /// Exports item info to CSV format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(lvNotifications);
+        }
+
+        /// <summary>
         /// When the selection update timer ticks, we process the changes caused by a selection change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>

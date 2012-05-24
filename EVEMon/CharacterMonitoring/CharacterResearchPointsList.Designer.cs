@@ -38,6 +38,9 @@ namespace EVEMon.CharacterMonitoring
             this.chCurrentRP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPRPerDay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvResearchPoints = new System.Windows.Forms.ListView();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // noResearchPointsLabel
@@ -101,14 +104,30 @@ namespace EVEMon.CharacterMonitoring
             this.lvResearchPoints.View = System.Windows.Forms.View.Details;
             this.lvResearchPoints.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvResearchPoints_ColumnReordered);
             // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(158, 48);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // CharacterResearchPointsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvResearchPoints);
             this.Controls.Add(this.noResearchPointsLabel);
             this.Name = "CharacterResearchPointsList";
             this.Size = new System.Drawing.Size(454, 434);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -123,5 +142,7 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ColumnHeader chCurrentRP;
         private System.Windows.Forms.ColumnHeader chPRPerDay;
         private System.Windows.Forms.ListView lvResearchPoints;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

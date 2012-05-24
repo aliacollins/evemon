@@ -37,7 +37,10 @@
             this.chVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chGroup = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // noAssetsLabel
@@ -60,6 +63,7 @@
             this.chVolume,
             this.chGroup,
             this.chCategory});
+            this.lvAssets.ContextMenuStrip = this.contextMenu;
             this.lvAssets.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvAssets.FullRowSelect = true;
             this.lvAssets.HideSelection = false;
@@ -95,6 +99,20 @@
             // 
             this.chCategory.Text = "Category";
             // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ItemAttributeContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(155, 48);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export to CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // ilIcons
             // 
             this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
@@ -107,10 +125,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvAssets);
             this.Controls.Add(this.noAssetsLabel);
             this.Name = "CharacterAssetsList";
             this.Size = new System.Drawing.Size(454, 434);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -125,5 +145,7 @@
         private System.Windows.Forms.ColumnHeader chGroup;
         private System.Windows.Forms.ColumnHeader chCategory;
         private System.Windows.Forms.ImageList ilIcons;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

@@ -39,9 +39,12 @@ namespace EVEMon.CharacterMonitoring
             this.locationColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.unitaryPriceColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.quantityColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noOrdersLabel = new System.Windows.Forms.Label();
             this.marketExpPanelControl = new EVEMon.Common.Controls.ExpandablePanelControl();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // lvOrders
@@ -52,6 +55,7 @@ namespace EVEMon.CharacterMonitoring
             this.locationColumn,
             this.unitaryPriceColumn,
             this.quantityColumn});
+            this.lvOrders.ContextMenuStrip = this.contextMenu;
             this.lvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvOrders.FullRowSelect = true;
             listViewGroup1.Header = "Sell Orders";
@@ -90,6 +94,20 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.quantityColumn.Text = "Quantity";
             this.quantityColumn.Width = 88;
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(161, 26);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV ...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // ilIcons
             // 
@@ -136,6 +154,7 @@ namespace EVEMon.CharacterMonitoring
             this.Controls.Add(this.noOrdersLabel);
             this.Name = "CharacterMarketOrdersList";
             this.Size = new System.Drawing.Size(454, 434);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -150,5 +169,7 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ColumnHeader unitaryPriceColumn;
         private System.Windows.Forms.ImageList ilIcons;
         private ExpandablePanelControl marketExpPanelControl;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

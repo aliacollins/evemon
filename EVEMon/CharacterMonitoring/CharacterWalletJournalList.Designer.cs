@@ -32,11 +32,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterWalletJournalList));
             this.noWalletJournalLabel = new System.Windows.Forms.Label();
             this.lvWalletJournal = new System.Windows.Forms.ListView();
-            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.chDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chAmount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBalance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // noWalletJournalLabel
@@ -70,14 +73,6 @@
             this.lvWalletJournal.UseCompatibleStateImageBehavior = false;
             this.lvWalletJournal.View = System.Windows.Forms.View.Details;
             // 
-            // ilIcons
-            // 
-            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
-            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
-            this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
-            this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
-            // 
             // chDate
             // 
             this.chDate.Text = "Date";
@@ -98,14 +93,38 @@
             this.chBalance.Text = "Balance";
             this.chBalance.Width = 106;
             // 
+            // ilIcons
+            // 
+            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
+            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
+            this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
+            this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(158, 26);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // CharacterWalletJournalList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvWalletJournal);
             this.Controls.Add(this.noWalletJournalLabel);
             this.Name = "CharacterWalletJournalList";
             this.Size = new System.Drawing.Size(454, 434);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -119,5 +138,7 @@
         private System.Windows.Forms.ColumnHeader chType;
         private System.Windows.Forms.ColumnHeader chAmount;
         private System.Windows.Forms.ColumnHeader chBalance;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

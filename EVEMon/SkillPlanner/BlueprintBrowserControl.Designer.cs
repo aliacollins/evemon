@@ -291,13 +291,13 @@ namespace EVEMon.SkillPlanner
             this.ActivityContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportToCSVToolStripMenuItem});
             this.ActivityContextMenu.Name = "ShipPropertiesContextMenu";
-            this.ActivityContextMenu.Size = new System.Drawing.Size(161, 26);
+            this.ActivityContextMenu.Size = new System.Drawing.Size(161, 48);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
             this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.exportToCSVToolStripMenuItem.Text = "Export To CSV ...";
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // tpCopying
@@ -594,8 +594,8 @@ namespace EVEMon.SkillPlanner
             // 
             // cbFacility
             // 
-            this.cbFacility.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbFacility.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbFacility.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFacility.FormattingEnabled = true;
             this.cbFacility.Location = new System.Drawing.Point(3, 3);
@@ -606,8 +606,8 @@ namespace EVEMon.SkillPlanner
             // 
             // cbImplantSet
             // 
-            this.cbImplantSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbImplantSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbImplantSet.DisplayMember = "Name";
             this.cbImplantSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbImplantSet.FormattingEnabled = true;
@@ -671,8 +671,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblItem
             // 
-            this.lblItem.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblItem.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblItem.AutoEllipsis = true;
             this.lblItem.BackColor = System.Drawing.SystemColors.Control;
             this.lblItem.ForeColor = System.Drawing.Color.Blue;
@@ -706,8 +706,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblProductionBaseTime
             // 
-            this.lblProductionBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProductionBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblProductionBaseTime.AutoEllipsis = true;
             this.lblProductionBaseTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblProductionBaseTime.Location = new System.Drawing.Point(16, 29);
@@ -718,8 +718,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblProductionCharTime
             // 
-            this.lblProductionCharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProductionCharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblProductionCharTime.AutoEllipsis = true;
             this.lblProductionCharTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblProductionCharTime.Location = new System.Drawing.Point(16, 42);
@@ -730,8 +730,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblResearchMECharTime
             // 
-            this.lblResearchMECharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblResearchMECharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblResearchMECharTime.AutoEllipsis = true;
             this.lblResearchMECharTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblResearchMECharTime.Location = new System.Drawing.Point(16, 42);
@@ -742,8 +742,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblResearchMEBaseTime
             // 
-            this.lblResearchMEBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblResearchMEBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblResearchMEBaseTime.AutoEllipsis = true;
             this.lblResearchMEBaseTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblResearchMEBaseTime.Location = new System.Drawing.Point(16, 29);
@@ -764,8 +764,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblResearchCopyCharTime
             // 
-            this.lblResearchCopyCharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblResearchCopyCharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblResearchCopyCharTime.AutoEllipsis = true;
             this.lblResearchCopyCharTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblResearchCopyCharTime.Location = new System.Drawing.Point(16, 88);
@@ -776,8 +776,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblResearchCopyBaseTime
             // 
-            this.lblResearchCopyBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblResearchCopyBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblResearchCopyBaseTime.AutoEllipsis = true;
             this.lblResearchCopyBaseTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblResearchCopyBaseTime.Location = new System.Drawing.Point(16, 75);
@@ -798,8 +798,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblResearchPECharTime
             // 
-            this.lblResearchPECharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblResearchPECharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblResearchPECharTime.AutoEllipsis = true;
             this.lblResearchPECharTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblResearchPECharTime.Location = new System.Drawing.Point(16, 134);
@@ -810,8 +810,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblResearchPEBaseTime
             // 
-            this.lblResearchPEBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblResearchPEBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblResearchPEBaseTime.AutoEllipsis = true;
             this.lblResearchPEBaseTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblResearchPEBaseTime.Location = new System.Drawing.Point(16, 121);
@@ -842,8 +842,8 @@ namespace EVEMon.SkillPlanner
             // 
             // gbGeneralInfo
             // 
-            this.gbGeneralInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbGeneralInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbGeneralInfo.BackColor = System.Drawing.SystemColors.Control;
             this.gbGeneralInfo.Controls.Add(this.lblPerfectMEValue);
             this.gbGeneralInfo.Controls.Add(this.lblPerfectME);
@@ -885,8 +885,8 @@ namespace EVEMon.SkillPlanner
             // 
             // InventBlueprintListBox
             // 
-            this.InventBlueprintListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.InventBlueprintListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.InventBlueprintListBox.BackColor = System.Drawing.SystemColors.Control;
             this.InventBlueprintListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.InventBlueprintListBox.ForeColor = System.Drawing.Color.Blue;
@@ -900,8 +900,8 @@ namespace EVEMon.SkillPlanner
             // 
             // gbResearching
             // 
-            this.gbResearching.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbResearching.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbResearching.BackColor = System.Drawing.SystemColors.Control;
             this.gbResearching.Controls.Add(this.lblResearchME);
             this.gbResearching.Controls.Add(this.lblResearchPECharTime);
@@ -921,8 +921,8 @@ namespace EVEMon.SkillPlanner
             // 
             // gbManufacturing
             // 
-            this.gbManufacturing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbManufacturing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbManufacturing.BackColor = System.Drawing.SystemColors.Control;
             this.gbManufacturing.Controls.Add(this.lblProductionCharTime);
             this.gbManufacturing.Controls.Add(this.lblProductionTime);
@@ -951,8 +951,8 @@ namespace EVEMon.SkillPlanner
             // 
             // gbInvention
             // 
-            this.gbInvention.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbInvention.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gbInvention.BackColor = System.Drawing.SystemColors.Control;
             this.gbInvention.Controls.Add(this.lblInventionTime);
             this.gbInvention.Controls.Add(this.lblInventionBaseTime);
@@ -975,8 +975,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblInventionBaseTime
             // 
-            this.lblInventionBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblInventionBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblInventionBaseTime.AutoEllipsis = true;
             this.lblInventionBaseTime.BackColor = System.Drawing.SystemColors.Control;
             this.lblInventionBaseTime.Location = new System.Drawing.Point(16, 29);

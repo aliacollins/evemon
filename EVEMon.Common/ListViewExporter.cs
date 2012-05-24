@@ -9,8 +9,6 @@ namespace EVEMon.Common
 {
     public static class ListViewExporter
     {
-        private static readonly SaveFileDialog s_saveFileDialog = new SaveFileDialog();
-
         /// <summary>
         /// This method takes a list view and returns a multi-line string that represents the listview as a CSV (comma-delimited) file.  The major
         /// difference is that the list view assumes to contain units, so if the values in each column contain two values seperated by a space
@@ -18,85 +16,94 @@ namespace EVEMon.Common
         /// values to be imported into the spreadsheet software as a number, instead of a string enabling numerical analysis of the export.
         /// </summary>
         /// <param name="listViewToExport">as noted.</param>
-        /// <returns>A CSV text file.</returns>
-        public static void CreateCSV(ListView listViewToExport)
+        /// <param name="withUnit">if set to <c>true</c> listView is exported with unit column.</param>
+        public static void CreateCSV(ListView listViewToExport, bool withUnit = false)
         {
             if (listViewToExport == null)
                 throw new ArgumentNullException("listViewToExport");
 
-            s_saveFileDialog.Filter = "Comma Delimited Files (*.csv)|*.csv";
-            if (s_saveFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-
-            StringBuilder sb = new StringBuilder();
-
-            // Export the column headers
-            bool ignoreComma = true;
-            for (int i = 0; i < listViewToExport.Columns.Count; i++)
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
-                ColumnHeader myColumn = listViewToExport.Columns[i];
-                sb.Append(MakeCSVString(ignoreComma, myColumn.Text));
-                ignoreComma = false;
+                saveFileDialog.Filter = "Comma Delimited Files (*.csv)|*.csv";
+                if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                    return;
 
-                if (i == 0)
-                    sb.Append(MakeCSVString(false, "Unit"));
-            }
-            sb.AppendLine();
+                StringBuilder sb = new StringBuilder();
 
-            for (int line = 0; line < listViewToExport.Items.Count; line++)
-            {
-                // Determine if the items have a unit description
-                string[] elements = listViewToExport.Items[line].SubItems[1].Text.Split(" ".ToCharArray());
-                string possibleUnit = String.Join(" ", elements.Skip(1));
-                bool hasUnit = elements.Length > 1 && StaticProperties.AllProperties.Any(prop => prop.Unit == possibleUnit);
-                string unit = (hasUnit ? possibleUnit : String.Empty);
-
-                // Export the lines
-                ignoreComma = true;
-                int maxElements = listViewToExport.Columns.Count;
-
-                if (listViewToExport.Items[line].SubItems.Count < maxElements)
-                    maxElements = listViewToExport.Items[line].SubItems.Count;
-
-                for (int subitem = 0; (subitem < maxElements); subitem++)
+                // Export the column headers
+                bool ignoreComma = true;
+                for (int i = 0; i < listViewToExport.Columns.Count; i++)
                 {
-                    elements = listViewToExport.Items[line].SubItems[subitem].Text.Split(" ".ToCharArray());
-
-                    double number;
-                    // If the value is a number format it as so; as string otherwise
-                    sb.Append(Double.TryParse(elements[0], out number)
-                                  ? MakeCSVNumber(ignoreComma, number.ToString(CultureConstants.InvariantCulture))
-                                  : MakeCSVString(ignoreComma, listViewToExport.Items[line].SubItems[subitem].Text));
-
+                    ColumnHeader myColumn = listViewToExport.Columns[i];
+                    sb.Append(MakeCSVString(myColumn.Text, ignoreComma));
                     ignoreComma = false;
 
-                    if (subitem == 0)
-                        sb.Append(MakeCSVString(false, unit));
+                    if (i == 0 && withUnit)
+                        sb.Append(MakeCSVString("Unit"));
                 }
                 sb.AppendLine();
-            }
 
-            File.WriteAllText(s_saveFileDialog.FileName, sb.ToString());
+                for (int line = 0; line < listViewToExport.Items.Count; line++)
+                {
+                    string[] elements = listViewToExport.Items[line].SubItems[1].Text.Split(" ".ToCharArray());
+                    string unit = String.Empty;
+                    if (withUnit)
+                    {
+                        // Determine if the items have a unit description
+                        string possibleUnit = String.Join(" ", elements.Skip(1));
+                        bool hasUnit = elements.Length > 1 &&
+                                       StaticProperties.AllProperties.Any(prop => prop.Unit == possibleUnit);
+                        if (hasUnit)
+                            unit = possibleUnit;
+                    }
+
+                    // Export the lines
+                    ignoreComma = true;
+                    int maxElements = listViewToExport.Columns.Count;
+
+                    if (listViewToExport.Items[line].SubItems.Count < maxElements)
+                        maxElements = listViewToExport.Items[line].SubItems.Count;
+
+                    for (int subitem = 0; (subitem < maxElements); subitem++)
+                    {
+                        elements = listViewToExport.Items[line].SubItems[subitem].Text.Split(" ".ToCharArray());
+
+                        // If the value is a number format it as so; as string otherwise
+                        double number;
+                        sb.Append(Double.TryParse(elements[0], out number)
+                                      ? MakeCSVNumber(number.ToString(CultureConstants.InvariantCulture), ignoreComma)
+                                      : MakeCSVString(listViewToExport.Items[line].SubItems[subitem].Text, ignoreComma));
+
+                        ignoreComma = false;
+
+                        if (subitem == 0 && withUnit)
+                            sb.Append(MakeCSVString(unit));
+                    }
+                    sb.AppendLine();
+                }
+
+                File.WriteAllText(saveFileDialog.FileName, sb.ToString());
+            }
         }
 
         /// <summary>
         /// Makes the CSV string.
         /// </summary>
-        /// <param name="ignoreComma">if set to <c>true</c> ignore comma.</param>
         /// <param name="text">The text.</param>
+        /// <param name="ignoreComma">if set to <c>true</c> ignore comma.</param>
         /// <returns></returns>
-        private static String MakeCSVString(bool ignoreComma, string text)
+        private static String MakeCSVString(string text, bool ignoreComma = false)
         {
-            return MakeCSVNumber(ignoreComma, String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text));
+            return MakeCSVNumber(String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text), ignoreComma);
         }
 
         /// <summary>
         /// Makes the CSV number.
         /// </summary>
-        /// <param name="ignoreComma">if set to <c>true</c> ignore comma.</param>
         /// <param name="text">The text.</param>
+        /// <param name="ignoreComma">if set to <c>true</c> ignore comma.</param>
         /// <returns></returns>
-        private static String MakeCSVNumber(bool ignoreComma, string text)
+        private static String MakeCSVNumber(string text, bool ignoreComma = false)
         {
             return String.Format(CultureConstants.DefaultCulture, "{0}{1}", ignoreComma ? String.Empty : ",", text);
         }

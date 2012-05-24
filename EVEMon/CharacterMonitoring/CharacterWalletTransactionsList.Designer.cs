@@ -32,11 +32,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterWalletTransactionsList));
             this.noWalletTransactionsLabel = new System.Windows.Forms.Label();
             this.lvWalletTransactions = new System.Windows.Forms.ListView();
-            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.chDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ilIcons = new System.Windows.Forms.ImageList(this.components);
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // noWalletTransactionsLabel
@@ -58,6 +61,7 @@
             this.chItem,
             this.chPrice,
             this.chQuantity});
+            this.lvWalletTransactions.ContextMenuStrip = this.contextMenu;
             this.lvWalletTransactions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvWalletTransactions.FullRowSelect = true;
             this.lvWalletTransactions.HideSelection = false;
@@ -69,14 +73,6 @@
             this.lvWalletTransactions.TabIndex = 4;
             this.lvWalletTransactions.UseCompatibleStateImageBehavior = false;
             this.lvWalletTransactions.View = System.Windows.Forms.View.Details;
-            // 
-            // ilIcons
-            // 
-            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
-            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
-            this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
-            this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
             // 
             // chDate
             // 
@@ -98,6 +94,28 @@
             this.chQuantity.Text = "Quantity";
             this.chQuantity.Width = 81;
             // 
+            // ilIcons
+            // 
+            this.ilIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilIcons.ImageStream")));
+            this.ilIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilIcons.Images.SetKeyName(0, "arrow_up.png");
+            this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
+            this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(161, 48);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
             // CharacterWalletTransactionsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -106,6 +124,7 @@
             this.Controls.Add(this.noWalletTransactionsLabel);
             this.Name = "CharacterWalletTransactionsList";
             this.Size = new System.Drawing.Size(454, 434);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -119,5 +138,7 @@
         private System.Windows.Forms.ColumnHeader chItem;
         private System.Windows.Forms.ColumnHeader chPrice;
         private System.Windows.Forms.ColumnHeader chQuantity;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

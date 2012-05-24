@@ -493,6 +493,16 @@ namespace EVEMon.CharacterMonitoring
         #region Local Event Handlers
 
         /// <summary>
+        /// Exports item info to CSV format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(lvResearchPoints);
+        }
+
+        /// <summary>
         /// On column reorder we update the settings.
         /// </summary>
         /// <param name="sender"></param>
