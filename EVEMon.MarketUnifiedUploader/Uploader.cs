@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Web;
 using EVEMon.Common;
@@ -381,14 +382,20 @@ namespace EVEMon.MarketUnifiedUploader
             // Special cleaning to prevent issues with responses from different platform servers
             response = response.Replace(Environment.NewLine, String.Empty).Trim();
 
-            // Postpone next upload try for 10 minutes accumulatively; up to 1 day if uploading fails repeatedly
+            // Suspend next upload try for 10 minutes accumulatively; up to 1 day if uploading fails repeatedly
             if (response != "1")
             {
+                // Suspend uploading according to error type
                 if (endPoint.UploadInterval < TimeSpan.FromDays(1))
-                    endPoint.UploadInterval = endPoint.UploadInterval.Add(TimeSpan.FromMinutes(10));
+                {
+                    endPoint.UploadInterval = !response.Contains(WebExceptionStatus.KeepAliveFailure.ToString()) &&
+                                              !response.Contains(WebExceptionStatus.ReceiveFailure.ToString())
+                                                  ? endPoint.UploadInterval.Add(TimeSpan.FromMinutes(10))
+                                                  : endPoint.UploadInterval.Add(TimeSpan.FromMinutes(1));
+                }
 
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow.Add(endPoint.UploadInterval);
-
+                
                 ProgressText = String.Format(CultureConstants.DefaultCulture, "{3}: {0}{4}Next upload try to {1} at: {2}{4}",
                                              response,
                                              endPoint.Name,
