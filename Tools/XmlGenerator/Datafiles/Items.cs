@@ -44,8 +44,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Pick the family
-            // TODO: ItemFamily 'Bpo' to be switched to 'Blueprint' after year 2013
-            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsMarketGroupID], ItemFamily.Bpo);
+            SetItemFamilyByMarketGroup(groups[DBConstants.BlueprintsMarketGroupID], ItemFamily.Blueprint);
             SetItemFamilyByMarketGroup(groups[DBConstants.ShipsMarketGroupID], ItemFamily.Ship);
             SetItemFamilyByMarketGroup(groups[DBConstants.ImplantsMarketGroupID], ItemFamily.Implant);
             SetItemFamilyByMarketGroup(groups[DBConstants.DronesMarketGroupID], ItemFamily.Drone);
@@ -332,7 +331,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             else if (Database.DgmTypeEffectsTable.Contains(srcItem.ID, DBConstants.HiSlotEffectID))
                 item.Slot = ItemSlot.High;
             else
-                item.Slot = ItemSlot.None; // Replace with 'ItemSlot.NoSlot' after year 2013
+                item.Slot = ItemSlot.NoSlot;
 
             // Add this item
             groupItems.Add(item);

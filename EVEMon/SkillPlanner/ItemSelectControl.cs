@@ -87,7 +87,6 @@ namespace EVEMon.SkillPlanner
                     case ItemSlot.Low:
                         cbSlotFilter.SelectedIndex = 3;
                         break;
-                    case ItemSlot.None:
                     case ItemSlot.NoSlot:
                         cbSlotFilter.SelectedIndex = 4;
                         break;

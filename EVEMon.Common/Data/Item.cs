@@ -64,7 +64,7 @@ namespace EVEMon.Common.Data
             MarketGroup = group;
             Icon = src.Icon;
             Race = src.Race;
-            FittingSlot = src.Slot == ItemSlot.None ? ItemSlot.NoSlot : src.Slot;
+            FittingSlot = src.Slot;
             Family = src.Family;
             Description = src.Description;
             CategoryName = src.Category;

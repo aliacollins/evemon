@@ -330,12 +330,10 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Look for the tech 2 variations that this blueprint invents
             IEnumerable<int> listOfInventionTypeID = Database.InvMetaTypesTable.Where(
                 x => x.ParentItemID == blueprint.ProduceItemID &&
-                     x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(
-                         x => x.ItemID).SelectMany(
-                             relationItemID =>
-                             Database.InvBlueprintTypesTable.Where(x => x.ProductTypeID == relationItemID).Select(
-                                 x => x.ID),
-                             (relationItemID, variationItemID) => Database.InvTypesTable[variationItemID].ID);
+                     x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(x => x.ItemID).SelectMany(
+                         relationItemID => Database.InvBlueprintTypesTable.Where(
+                             x => x.ProductTypeID == relationItemID).Select(x => x.ID),
+                         (relationItemID, variationItemID) => Database.InvTypesTable[variationItemID].ID);
 
             // Add invention blueprints to item
             blueprint.InventionTypeID.AddRange(listOfInventionTypeID);

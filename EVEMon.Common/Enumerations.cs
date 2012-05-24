@@ -54,7 +54,7 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Represents the metagroup of an item
+    /// Represents the metagroup of an item.
     /// </summary>
     [Flags]
     public enum ItemMetaGroup
@@ -67,11 +67,6 @@ namespace EVEMon.Common
         Deadspace = 0x40,
         Storyline = 0x80,
 
-        // Obsolete enumerations, can be safely removed
-        // after version 1.3.4
-        Named = 257,
-        Other = 513,
-
         None = 0,
         AllTechLevel = T1 | T2 | T3,
         AllNonTechLevel = Faction | Officer | Deadspace | Storyline,
@@ -79,7 +74,7 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Flags for the items slots
+    /// Flags for the items slots.
     /// </summary>
     [Flags]
     public enum ItemSlot
@@ -94,7 +89,7 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Flags options for the text representation format of a skill
+    /// Flags options for the text representation format of a skill.
     /// </summary>
     [Flags]
     public enum DescriptiveTextOptions
@@ -110,7 +105,7 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Represents the options one can use with <see cref="CharacterScratchpad.SetSkillLevel"/>. Those are only optimizations
+    /// Represents the options one can use with <see cref="CharacterScratchpad.SetSkillLevel"/>. Those are only optimizations.
     /// </summary>
     [Flags]
     public enum LearningOptions
@@ -188,7 +183,7 @@ namespace EVEMon.Common
                                       | APICorporationMethods.CorporationIndustryJobs,
 
         /// <summary>
-        /// All character features of APIMethods.
+        /// All character features of APIMethods
         /// </summary>
         AllCharacterFeatures = BasicCharacterFeatures | AdvancedCharacterFeatures,
     }
@@ -616,10 +611,7 @@ namespace EVEMon.Common
         StarbaseStructure = 2,
         Drone = 3,
         Ship = 4,
-        Blueprint = 5,
-
-        // Obsolete; to be removed after year 2013
-        Bpo = 6
+        Blueprint = 5
     }
 
     /// <summary>
