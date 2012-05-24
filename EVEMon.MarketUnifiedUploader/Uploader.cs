@@ -147,7 +147,7 @@ namespace EVEMon.MarketUnifiedUploader
         #endregion
 
 
-        #region Uploader methods
+        #region Uploader Methods
 
         /// <summary>
         /// Initializes the uploader.
@@ -299,14 +299,23 @@ namespace EVEMon.MarketUnifiedUploader
             // Serialize the JSON object to string
             string data = Util.SerializeObjectToJson(jsonObj);
 
+            // Inform about suspended endpoints
+            foreach (EndPoint endPoint in s_endPoints.Where(endPoint => endPoint.Enabled &&
+                endPoint.NextUploadTimeUtc != DateTime.MinValue &&
+                endPoint.NextUploadTimeUtc >= DateTime.UtcNow ))
+            {
+                ProgressText = String.Format(CultureConstants.DefaultCulture, "{2}: Uploading to {0} is suspended until {1}{3}",
+                             endPoint.Name, endPoint.NextUploadTimeUtc.ToLocalTime(),
+                             DateTime.Now.ToUniversalDateTimeString(), Environment.NewLine);
+            }
+
             // Upload to the selected endpoints
-            foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
-                                                                      endPoint.NextUploadTimeUtc < DateTime.UtcNow))
+            foreach (EndPoint endPoint in endPoints)
             {
                 string postdata = GetPostDataFormat(endPoint.Method, data);
 
                 Status = UploaderStatus.Uploading;
-                ProgressText = GetProcessText(jsonObj, endPoint);
+                ProgressText = GetProgressText(jsonObj, endPoint);
                 Console.Write(s_progressText);
 
                 // Upload to endpoint
@@ -345,7 +354,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// <param name="jsonObj">The json obj.</param>
         /// <param name="endPoint">The endpoint.</param>
         /// <returns></returns>
-        private static string GetProcessText(IDictionary<string, object> jsonObj, EndPoint endPoint)
+        private static string GetProgressText(IDictionary<string, object> jsonObj, EndPoint endPoint)
         {
             // Gather info to use in progress message
             string resultType = jsonObj["resultType"].ToString();
