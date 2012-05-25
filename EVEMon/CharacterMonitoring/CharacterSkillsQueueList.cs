@@ -223,9 +223,9 @@ namespace EVEMon.CharacterMonitoring
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
             double percentCompleted = 0;
-            int skillPoints = (skill.Skill == null ? 0 : skill.Skill.SkillPoints);
+            int skillPoints = (skill.Skill == null ? skill.StartSP : skill.Skill.SkillPoints);
             int skillPointsToNextLevel = (skill.Skill == null
-                                              ? 0
+                                              ? skill.EndSP
                                               : skill.Skill.StaticData.GetPointsRequiredForLevel(
                                                   Math.Min(skill.Level, 5)));
 
@@ -339,10 +339,8 @@ namespace EVEMon.CharacterMonitoring
                     new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2 + (LevelBoxWidth * (level - 1)) + (level - 1),
                                   e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
 
-                if (skill.Skill != null && level <= skill.Skill.Level)
-                    g.FillRectangle(Brushes.Black, brect);
-                else
-                    g.FillRectangle(Brushes.DarkGray, brect);
+                // Box color
+                g.FillRectangle(skill.Skill != null && level <= skill.Skill.Level ? Brushes.Black : Brushes.DarkGray, brect);
 
                 // Color indicator for a queued level
                 if (skill.Skill == null)
