@@ -200,7 +200,7 @@ namespace EVEMon.SkillPlanner
 
             // Update the predicate
             ItemSlot slot = Settings.UI.ItemBrowser.SlotFilter;
-            m_slotPredicate = x => (x.FittingSlot & slot) != ItemSlot.None;
+            m_slotPredicate = x => slot == ItemSlot.All || (x.FittingSlot & slot) != ItemSlot.None;
 
             // Update the control's content
             if (m_init)
