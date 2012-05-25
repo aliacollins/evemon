@@ -256,7 +256,7 @@ namespace EVEMon
             this.UploaderToolStripStatusLabel.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.UploaderToolStripStatusLabel.Name = "UploaderToolStripStatusLabel";
             this.UploaderToolStripStatusLabel.Size = new System.Drawing.Size(122, 17);
-            this.UploaderToolStripStatusLabel.Text = "// Uploader Status:";
+            this.UploaderToolStripStatusLabel.Text = "// Market Uploader Status:";
             this.UploaderToolStripStatusLabel.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.UploaderToolStripStatusLabel.ToolTipText = "Disabled";
             // 
