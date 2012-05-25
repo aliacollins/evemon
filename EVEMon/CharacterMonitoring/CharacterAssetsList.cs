@@ -574,8 +574,8 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case AssetColumn.Volume:
                     item.Text = (numberFormat
-                                     ? FormatHelper.Format(asset.Volume, AbbreviationFormat.AbbreviationSymbols)
-                                     : asset.Volume.ToString("N2", CultureConstants.DefaultCulture));
+                                     ? FormatHelper.Format(asset.TotalVolume, AbbreviationFormat.AbbreviationSymbols)
+                                     : asset.TotalVolume.ToString("N2", CultureConstants.DefaultCulture));
                     break;
                 case AssetColumn.BlueprintType:
                     item.Text = asset.BlueprintType;
@@ -658,7 +658,7 @@ namespace EVEMon.CharacterMonitoring
 
             IEnumerable<Asset> selectedAssets = selectedItems.Select(selectedItem => selectedItem.Tag).OfType<Asset>();
             long sumQuantity = selectedAssets.Sum(selectedAsset => selectedAsset.Quantity);
-            decimal sumVolume = selectedAssets.Select(selectedAsset => selectedAsset.Volume).First() * sumQuantity;
+            decimal sumVolume = selectedAssets.Sum(selectedAsset => selectedAsset.TotalVolume);
             int uniqueLocations = selectedAssets.Count();
             int minJumps = selectedAssets.Min(asset => asset.Jumps);
             int maxJumps = selectedAssets.Max(asset => asset.Jumps);
@@ -666,12 +666,12 @@ namespace EVEMon.CharacterMonitoring
             Asset farthestAsset = selectedAssets.Last(asset => asset.Jumps == maxJumps);
 
             StringBuilder builder = new StringBuilder();
-            builder.AppendLine(item.Text);
-            builder.AppendFormat("Total Quantity: {0:N0} in {1:N0} different locations\n", sumQuantity, uniqueLocations);
-            builder.AppendFormat("Total Volume: {0:N2} m³\n", sumVolume);
-            builder.AppendFormat("Closest Location: {0} ({1})\n", closestAsset.Location, closestAsset.JumpsText);
+            builder.AppendFormat("{0} ({1:N2} m³)", item.Text, selectedAssets.First().Volume).AppendLine();
+            builder.AppendFormat("Total Quantity: {0:N0} in {1:N0} different locations", sumQuantity, uniqueLocations).AppendLine();
+            builder.AppendFormat("Total Volume: {0:N2} m³", sumVolume).AppendLine();
+            builder.AppendFormat("Closest Location: {0} ({1})", closestAsset.Location, closestAsset.JumpsText).AppendLine();
             if (closestAsset.Location != farthestAsset.Location)
-                builder.AppendFormat("Farthest Location: {0} ({1})\n", farthestAsset.Location, farthestAsset.JumpsText);
+                builder.AppendFormat("Farthest Location: {0} ({1})", farthestAsset.Location, farthestAsset.JumpsText);
 
             return builder.ToString();
         }

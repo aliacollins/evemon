@@ -16,7 +16,7 @@ namespace EVEMon.Common.SettingsObjects
         Quantity = 1,
 
         [Header("Volume (m³)")]
-        [Description("Volume")]
+        [Description("Total Volume")]
         Volume = 2,
 
         [Header("Blueprint type")]

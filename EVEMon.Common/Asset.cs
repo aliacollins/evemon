@@ -27,6 +27,7 @@ namespace EVEMon.Common
             BlueprintType = GetBlueprintType(src.RawQuantity);
             Container = String.Empty;
             Volume = GetVolume();
+            TotalVolume = Quantity * Volume;
         }
 
         #endregion
@@ -110,6 +111,11 @@ namespace EVEMon.Common
         /// Gets the volume.
         /// </summary>
         public decimal Volume { get; private set; }
+
+        /// <summary>
+        /// Gets the total volume.
+        /// </summary>
+        public decimal TotalVolume { get; private set; }
 
         #endregion
 
