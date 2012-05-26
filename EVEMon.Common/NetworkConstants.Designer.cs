@@ -1060,7 +1060,7 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://www.google.com/calendar/feeds/default/private/full.
+        ///   Looks up a localized string similar to https://www.google.com/calendar/feeds/default/private/full.
         /// </summary>
         public static string GoogleCalendarURL {
             get {
@@ -1164,6 +1164,15 @@ namespace EVEMon.Common {
         public static string PostDataWithItemID {
             get {
                 return ResourceManager.GetString("PostDataWithItemID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/endpoints.json.
+        /// </summary>
+        public static string UploaderEndPoints {
+            get {
+                return ResourceManager.GetString("UploaderEndPoints", resourceCulture);
             }
         }
     }

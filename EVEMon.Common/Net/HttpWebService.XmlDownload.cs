@@ -12,26 +12,29 @@ namespace EVEMon.Common.Net
     /// </summary>
     partial class HttpWebService
     {
-        private const string XML_ACCEPT =
+        private const string XMLAccept =
             "text/xml,application/xml,application/xhtml+xml;q=0.8,*/*;q=0.5";
 
         /// <summary>
         /// Downloads an Xml document from the specified url using the specified POST data.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="postData"></param>
+        /// <param name="url">The URL.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="postdata">The postdata.</param>
+        /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public IXPathNavigable DownloadXml(Uri url, HttpPostData postData = null)
+        public IXPathNavigable DownloadXml(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, responseStream, XML_ACCEPT, postData);
+                request.GetResponse(url, method, postData, dataCompression, responseStream, XMLAccept);
                 XmlDocument result = new XmlDocument();
                 if (request.ResponseStream != null)
                 {
@@ -51,20 +54,23 @@ namespace EVEMon.Common.Net
         /// Asynchronously downloads an xml file from the specified url.
         /// </summary>
         /// <param name="url">The URL.</param>
-        /// <param name="postData">The post data.</param>
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
-        /// <returns></returns>
-        public void DownloadXmlAsync(Uri url, HttpPostData postData, DownloadXmlCompletedCallback callback, object userState)
+        /// <param name="method">The method.</param>
+        /// <param name="postdata">The postdata.</param>
+        /// <param name="dataCompression">The compression.</param>
+        public void DownloadXmlAsync(Uri url, DownloadXmlCompletedCallback callback, object userState,
+                                     HttpMethod method = HttpMethod.Get, string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
             XmlRequestAsyncState state = new XmlRequestAsyncState(callback, DownloadXmlAsyncCompleted, userState);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, responseStream, XML_ACCEPT, postData, state);
+            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, XMLAccept, state);
         }
 
         /// <summary>

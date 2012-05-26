@@ -16,8 +16,10 @@ namespace EVEMon.Common
     /// Represents a player API key.
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class APIKey
+    public sealed class APIKey : IDisposable
     {
+        #region Fields
+
         private readonly APIKeyQueryMonitor<SerializableAPIKeyInfo> m_apiKeyInfoMonitor;
         private readonly APIKeyQueryMonitor<SerializableAPIAccountStatus> m_accountStatusMonitor;
 
@@ -28,6 +30,8 @@ namespace EVEMon.Common
         private bool m_monitored;
         private bool m_updatePending;
         private bool m_characterListUpdated;
+
+        #endregion
 
 
         #region Constructors
@@ -78,16 +82,6 @@ namespace EVEMon.Common
 
         #endregion
 
-        /// <summary>
-        /// Called when the object gets disposed.
-        /// </summary>
-        internal void Dispose()
-        {
-            // Unsubscribe events
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            m_apiKeyInfoMonitor.Dispose();
-            m_accountStatusMonitor.Dispose();
-        }
 
         #region Properties
 
@@ -264,6 +258,26 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Inherited events
+
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        public void Dispose()
+        {
+            // Unsubscribe events
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+
+            // Dispose monitor events
+            m_apiKeyInfoMonitor.Dispose();
+            m_accountStatusMonitor.Dispose();
+        }
+
+        #endregion
+
+
+        #region Global Events
+
         /// <summary>
         /// Updates the API key info and account status on a timer tick.
         /// </summary>
@@ -277,6 +291,8 @@ namespace EVEMon.Common
             // in order to have better API key related info in the trace file
             m_accountStatusMonitor.Enabled = m_characterListUpdated && m_monitored && IsCharacterOrAccountType;
         }
+
+        #endregion
 
 
         #region Queries response
@@ -312,6 +328,9 @@ namespace EVEMon.Common
 
             // Notifies for the API key expiration
             NotifyAPIKeyExpiration();
+
+            // Fires the event regarding the API key info update
+            EveMonClient.OnAPIKeyInfoUpdated(this);
         }
 
         /// <summary>
@@ -323,7 +342,7 @@ namespace EVEMon.Common
             // Quit if the API key was deleted while it was updating
             if (!EveMonClient.APIKeys.Contains(this))
                 return;
-            
+
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
                 return;
@@ -357,7 +376,7 @@ namespace EVEMon.Common
             // Quit if the API key was deleted while it was updating
             if (!EveMonClient.APIKeys.Contains(this))
                 return;
-            
+
             CCPCharacter ccpCharacter = EveMonClient.Characters.OfType<CCPCharacter>().FirstOrDefault(x => x.Name == characterName);
 
             // Checks if EVE database is out of service
@@ -564,9 +583,6 @@ namespace EVEMon.Common
             Expiration = result.Result.Key.Expiration;
 
             ImportIdentities(result.HasError ? null : result.Result.Key.Characters);
-
-            // Fires the event regarding the API key info update
-            EveMonClient.OnAPIKeyInfoUpdated(this);
         }
 
         /// <summary>

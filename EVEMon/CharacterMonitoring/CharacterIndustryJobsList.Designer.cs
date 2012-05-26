@@ -39,7 +39,10 @@ namespace EVEMon.CharacterMonitoring
             this.chOutputItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noJobsLabel = new System.Windows.Forms.Label();
-            this.industryExpPanelControl = new ExpandablePanelControl();
+            this.industryExpPanelControl = new EVEMon.Common.Controls.ExpandablePanelControl();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // lvJobs
@@ -54,6 +57,7 @@ namespace EVEMon.CharacterMonitoring
             this.lvJobs.FullRowSelect = true;
             this.lvJobs.HideSelection = false;
             this.lvJobs.Location = new System.Drawing.Point(0, 0);
+            this.lvJobs.MultiSelect = false;
             this.lvJobs.Name = "lvJobs";
             this.lvJobs.Size = new System.Drawing.Size(454, 334);
             this.lvJobs.SmallImageList = this.ilIcons;
@@ -98,12 +102,14 @@ namespace EVEMon.CharacterMonitoring
             // 
             // industryExpPanelControl
             // 
-            this.industryExpPanelControl.AnimationSpeed = AnimationSpeed.Medium;
+            this.industryExpPanelControl.AnimationSpeed = EVEMon.Common.Controls.AnimationSpeed.Medium;
             this.industryExpPanelControl.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.industryExpPanelControl.EnableContextMenu = false;
-            this.industryExpPanelControl.ExpandDirection = Direction.Down;
+            this.industryExpPanelControl.ExpandDirection = EVEMon.Common.Controls.Direction.Down;
+            this.industryExpPanelControl.ExpandedHeight = 100;
             this.industryExpPanelControl.ExpandedOnStartup = false;
             this.industryExpPanelControl.HeaderHeight = 30;
+            this.industryExpPanelControl.HeaderText = "Header Text";
             this.industryExpPanelControl.ImageCollapse = ((System.Drawing.Bitmap)(resources.GetObject("industryExpPanelControl.ImageCollapse")));
             this.industryExpPanelControl.ImageExpand = ((System.Drawing.Bitmap)(resources.GetObject("industryExpPanelControl.ImageExpand")));
             this.industryExpPanelControl.Location = new System.Drawing.Point(0, 334);
@@ -111,15 +117,31 @@ namespace EVEMon.CharacterMonitoring
             this.industryExpPanelControl.Size = new System.Drawing.Size(454, 100);
             this.industryExpPanelControl.TabIndex = 1;
             // 
-            // MainWindowIndustryJobsList
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(158, 48);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
+            // CharacterIndustryJobsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvJobs);
             this.Controls.Add(this.industryExpPanelControl);
             this.Controls.Add(this.noJobsLabel);
-            this.Name = "MainWindowIndustryJobsList";
+            this.Name = "CharacterIndustryJobsList";
             this.Size = new System.Drawing.Size(454, 434);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -134,5 +156,7 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ColumnHeader chOutputItem;
         private System.Windows.Forms.ImageList ilIcons;
         private ExpandablePanelControl industryExpPanelControl;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

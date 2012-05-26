@@ -3,7 +3,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public interface IQueryMonitor
+    public interface IQueryMonitor : IDisposable
     {
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="IQueryMonitor"/> is enabled.

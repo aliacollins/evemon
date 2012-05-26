@@ -16,10 +16,13 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterIndustryJobsList : UserControl, IListView
     {
+        #region Fields
+
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
-        private readonly Timer m_timer = new Timer();
-
+        
+        private InfiniteDisplayToolTip m_tooltip;
+        private Timer m_refreshTimer;
         private IndustryJobGrouping m_grouping;
         private IndustryJobColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
@@ -27,7 +30,6 @@ namespace EVEMon.CharacterMonitoring
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
 
-        private bool m_hideInactive;
         private bool m_isUpdatingColumns;
         private bool m_columnsChanged;
         private bool m_init;
@@ -47,6 +49,8 @@ namespace EVEMon.CharacterMonitoring
         private int m_activeResearchJobsIssuedForCharacterCount,
                     m_activeResearchJobsIssuedForCorporationCount;
 
+        #endregion
+
 
         # region Constructor
 
@@ -56,7 +60,6 @@ namespace EVEMon.CharacterMonitoring
             InitializeExpandablePanelControls();
 
             lvJobs.Visible = false;
-            lvJobs.ShowItemToolTips = true;
             lvJobs.AllowColumnReorder = true;
             lvJobs.Columns.Clear();
 
@@ -69,17 +72,10 @@ namespace EVEMon.CharacterMonitoring
             ListViewHelper.EnableDoubleBuffer(lvJobs);
 
             lvJobs.ColumnClick += lvJobs_ColumnClick;
-            lvJobs.KeyDown += lvJobs_KeyDown;
             lvJobs.ColumnWidthChanged += lvJobs_ColumnWidthChanged;
             lvJobs.ColumnReordered += lvJobs_ColumnReordered;
-
-            m_timer.Interval = 1000;
-            m_timer.Tick += m_timer_Tick;
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
-            EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
-            Disposed += OnDisposed;
+            lvJobs.MouseMove += listView_MouseMove;
+            lvJobs.MouseLeave += listView_MouseLeave;
         }
 
         #endregion
@@ -91,7 +87,7 @@ namespace EVEMon.CharacterMonitoring
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvJobs"/> is visible.
@@ -222,14 +218,42 @@ namespace EVEMon.CharacterMonitoring
         # region Inherited Events
 
         /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            m_tooltip = new InfiniteDisplayToolTip(lvJobs);
+            m_refreshTimer = new Timer();
+
+            m_refreshTimer.Tick += refresh_TimerTick;
+            m_refreshTimer.Interval = 1000;
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
+            Disposed += OnDisposed;
+        }
+
+        /// <summary>
         /// Unsubscribe events on disposing.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            m_tooltip.Dispose();
+            m_refreshTimer.Dispose();
+
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             Disposed -= OnDisposed;
         }
@@ -251,22 +275,22 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            Jobs = (ccpCharacter == null ? null : ccpCharacter.IndustryJobs);
+            Jobs = (Character == null ? null : Character.IndustryJobs);
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             Grouping = (Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy);
+            TextFilter = String.Empty;
 
             UpdateColumns();
 
             m_init = true;
 
-            UpdateContent();
+            UpdateListVisibility();
         }
 
         # endregion
 
 
-        #region Updates Main Industry Window On Global Events
+        #region Updates Main Industry Window
 
         /// <summary>
         /// Updates the columns.
@@ -319,15 +343,15 @@ namespace EVEMon.CharacterMonitoring
                                     ? lvJobs.SelectedItems[0].Tag.GetHashCode()
                                     : 0);
 
-            m_hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
-
             lvJobs.BeginUpdate();
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<IndustryJob> jobs = m_list.Where(x => IsTextMatching(x, text));
+                IEnumerable<IndustryJob> jobs = m_list
+                    .Where(x => x.InstalledItem != null && x.OutputItem != null && x.SolarSystem != null)
+                    .Where(x => IsTextMatching(x, text));
 
-                if (Character != null && m_hideInactive)
+                if (Character != null && Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs)
                     jobs = jobs.Where(x => x.IsActive);
 
                 if (m_showIssuedFor != IssuedFor.All)
@@ -350,21 +374,29 @@ namespace EVEMon.CharacterMonitoring
                 // Update the expandable panel info
                 UpdateExpPanelContent();
 
-                // Display or hide the "no jobs" label
-                if (m_init)
-                {
-                    noJobsLabel.Visible = lvJobs.Items.Count == 0;
-                    lvJobs.Visible = !noJobsLabel.Visible;
-                    m_timer.Enabled = lvJobs.Visible;
-                    industryExpPanelControl.Visible = true;
-                    industryExpPanelControl.Header.Visible = true;
-                }
+                UpdateListVisibility();
             }
             finally
             {
                 lvJobs.EndUpdate();
                 lvJobs.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Updates the list visibility.
+        /// </summary>
+        private void UpdateListVisibility()
+        {
+            // Display or hide the "no jobs" label
+            if (!m_init)
+                return;
+
+            noJobsLabel.Visible = lvJobs.Items.Count == 0;
+            lvJobs.Visible = !noJobsLabel.Visible;
+            m_refreshTimer.Enabled = lvJobs.Visible;
+            industryExpPanelControl.Visible = true;
+            industryExpPanelControl.Header.Visible = true;
         }
 
         /// <summary>
@@ -387,12 +419,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobGrouping.EndDate:
                     IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups2 =
-                        jobs.GroupBy(x => x.EndProductionTime.Date).OrderBy(x => x.Key);
+                        jobs.GroupBy(x => x.EndProductionTime.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups2);
                     break;
                 case IndustryJobGrouping.EndDateDesc:
                     IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups3 =
-                        jobs.GroupBy(x => x.EndProductionTime.Date).OrderByDescending(x => x.Key);
+                        jobs.GroupBy(x => x.EndProductionTime.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups3);
                     break;
                 case IndustryJobGrouping.InstalledItemType:
@@ -463,62 +495,73 @@ namespace EVEMon.CharacterMonitoring
                 lvJobs.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (IndustryJob job in group)
-                {
-                    if (job.InstalledItem == null || job.OutputItem == null || job.SolarSystem == null)
-                        continue;
+                lvJobs.Items.AddRange(
+                    group.Select(job => new
+                                            {
+                                                job,
+                                                item = new ListViewItem(job.InstalledItem.Name, listGroup)
+                                                           {
+                                                               UseItemStyleForSubItems = false,
+                                                               Tag = job
+                                                           }
 
-                    ListViewItem item = new ListViewItem(job.InstalledItem.Name, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = job };
-
-                    // Display text as dimmed if the job is no longer available
-                    if (!job.IsActive)
-                        item.ForeColor = SystemColors.GrayText;
-
-                    // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < lvJobs.Columns.Count + 1)
-                    {
-                        item.SubItems.Add(String.Empty);
-                    }
-
-                    // Creates the subitems
-                    for (int i = 0; i < lvJobs.Columns.Count; i++)
-                    {
-                        ColumnHeader header = lvJobs.Columns[i];
-                        IndustryJobColumn column = (IndustryJobColumn)header.Tag;
-                        SetColumn(job, item.SubItems[i], column);
-                    }
-
-                    // Tooltip
-                    StringBuilder builder = new StringBuilder();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", job.IssuedFor).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Installed: {0}",
-                                         job.InstalledTime.ToLocalTime()).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
-                                         job.EndProductionTime.ToLocalTime()).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity).AppendLine();
-                    if (job.Activity == BlueprintActivity.ResearchingMaterialProductivity)
-                    {
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
-                                             job.InstalledME).AppendLine();
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
-                                             job.InstalledME + job.Runs).AppendLine();
-                    }
-                    if (job.Activity == BlueprintActivity.ResearchingTimeProductivity)
-                    {
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
-                                             job.InstalledPE).AppendLine();
-                        builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
-                                             job.InstalledPE + job.Runs).AppendLine();
-                    }
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
-                                         job.SolarSystem.FullLocation).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Installation: {0}", job.Installation).AppendLine();
-                    item.ToolTipText = builder.ToString();
-
-                    lvJobs.Items.Add(item);
-                }
+                                            }).Select(x => CreateSubItems(x.job, x.item)).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Creates the list view sub items.
+        /// </summary>
+        /// <param name="job">The job.</param>
+        /// <param name="item">The item.</param>
+        private ListViewItem CreateSubItems(IndustryJob job, ListViewItem item)
+        {
+            // Display text as dimmed if the job is no longer available
+            if (!job.IsActive)
+                item.ForeColor = SystemColors.GrayText;
+
+            // Add enough subitems to match the number of columns
+            while (item.SubItems.Count < lvJobs.Columns.Count + 1)
+            {
+                item.SubItems.Add(String.Empty);
+            }
+
+            // Creates the subitems
+            for (int i = 0; i < lvJobs.Columns.Count; i++)
+            {
+                ColumnHeader header = lvJobs.Columns[i];
+                IndustryJobColumn column = (IndustryJobColumn)header.Tag;
+                SetColumn(job, item.SubItems[i], column);
+            }
+
+            // Tooltip
+            StringBuilder builder = new StringBuilder();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", job.IssuedFor).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Installed: {0}",
+                                 job.InstalledTime.ToLocalTime()).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
+                                 job.EndProductionTime.ToLocalTime()).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity).AppendLine();
+            if (job.Activity == BlueprintActivity.ResearchingMaterialProductivity)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
+                                     job.InstalledME).AppendLine();
+                builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
+                                     job.InstalledME + job.Runs).AppendLine();
+            }
+            if (job.Activity == BlueprintActivity.ResearchingTimeProductivity)
+            {
+                builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
+                                     job.InstalledPE).AppendLine();
+                builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
+                                     job.InstalledPE + job.Runs).AppendLine();
+            }
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
+                                 job.SolarSystem.FullLocation).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Installation: {0}", job.Installation).AppendLine();
+            item.ToolTipText = builder.ToString();
+
+            return item;
         }
 
         /// <summary>
@@ -658,6 +701,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobColumn.SolarSystem:
                     item.Text = job.SolarSystem.Name;
+                    item.ForeColor = job.SolarSystem.SecurityLevelColor;
                     break;
                 case IndustryJobColumn.Installation:
                     item.Text = job.Installation;
@@ -818,11 +862,21 @@ namespace EVEMon.CharacterMonitoring
         #region Event Handlers
 
         /// <summary>
+        /// Exports item info to CSV format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(lvJobs);
+        }
+
+        /// <summary>
         /// Handles the Tick event of the m_timer control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void m_timer_Tick(object sender, EventArgs e)
+        private void refresh_TimerTick(object sender, EventArgs e)
         {
             UpdateTimeToCompletion();
         }
@@ -851,6 +905,9 @@ namespace EVEMon.CharacterMonitoring
             if (e.ColumnIndex == m_columnTTCDisplayIndex)
                 return;
 
+            if (m_columns[e.ColumnIndex].Width == lvJobs.Columns[e.ColumnIndex].Width)
+                return;
+
             m_columns[e.ColumnIndex].Width = lvJobs.Columns[e.ColumnIndex].Width;
             m_columnsChanged = true;
         }
@@ -871,23 +928,39 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
-            UpdateContent();
+            m_isUpdatingColumns = true;
+
+            // Updates the item sorter
+            UpdateSort();
+
+            m_isUpdatingColumns = false;
         }
 
         /// <summary>
-        /// Handles key press
+        /// When the mouse moves over the list, we show the item's tooltip if over an item.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lvJobs_KeyDown(object sender, KeyEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
         {
-            switch (e.KeyCode)
+            ListViewItem item = lvJobs.GetItemAt(e.Location.X, e.Location.Y);
+            if (item == null)
             {
-                case Keys.A:
-                    if (e.Control)
-                        lvJobs.SelectAll();
-                    break;
+                m_tooltip.Hide();
+                return;
             }
+
+            m_tooltip.Show(item.ToolTipText, e.Location);
+        }
+
+        /// <summary>
+        /// When the mouse leaves the list, we hide the item's tooltip.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void listView_MouseLeave(object sender, EventArgs e)
+        {
+            m_tooltip.Hide();
         }
 
         # endregion
@@ -913,11 +986,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_IndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            Jobs = ccpCharacter.IndustryJobs;
+            Jobs = Character.IndustryJobs;
             UpdateColumns();
         }
 
@@ -931,8 +1003,8 @@ namespace EVEMon.CharacterMonitoring
         {
             if (!Visible)
             {
-                if (m_timer.Enabled)
-                    m_timer.Stop();
+                if (m_refreshTimer.Enabled)
+                    m_refreshTimer.Stop();
 
                 return;
             }
@@ -943,7 +1015,7 @@ namespace EVEMon.CharacterMonitoring
 
             // We use time dilation according to the ammount of active jobs that are not ready,
             // due to excess CPU usage for computing the 'time to completion' when there are too many jobs
-            m_timer.Interval = 900 + (100 * activeJobs);
+            m_refreshTimer.Interval = 900 + (100 * activeJobs);
 
             if (!m_columnsChanged)
                 return;
@@ -954,6 +1026,24 @@ namespace EVEMon.CharacterMonitoring
             // Recreate the columns
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             m_columnsChanged = false;
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            if (Character == null)
+                return;
+
+            foreach (IndustryJob job in m_list)
+            {
+                job.UpdateInstallation();
+            }
+
+            UpdateColumns();
         }
 
         # endregion

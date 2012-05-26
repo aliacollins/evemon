@@ -43,6 +43,9 @@ namespace EVEMon.Common
             QueryMonitors = new QueryMonitorCollection();
             SkillQueue = new SkillQueue(this);
             Standings = new StandingCollection(this);
+            Assets = new AssetCollection(this);
+            WalletJournal = new WalletJournalCollection(this);
+            WalletTransactions = new WalletTransactionsCollection(this);
             CharacterMarketOrders = new MarketOrderCollection(this);
             CorporationMarketOrders = new MarketOrderCollection(this);
             CharacterContracts = new ContractCollection(this);
@@ -72,6 +75,7 @@ namespace EVEMon.Common
             EveMonClient.CorporationIndustryJobsUpdated += EveMonClient_CorporationIndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted += EveMonClient_CorporationIndustryJobsCompleted;
+            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
@@ -126,6 +130,26 @@ namespace EVEMon.Common
         /// Gets the standings for this character.
         /// </summary>
         public StandingCollection Standings { get; private set; }
+
+        /// <summary>
+        /// Gets the assets for this character.
+        /// </summary>
+        public AssetCollection Assets { get; private set; }
+
+        /// <summary>
+        /// Gets the factional warfare stats for this character.
+        /// </summary>
+        public FactionalWarfareStats FactionalWarfareStats { get; internal set; }
+
+        /// <summary>
+        /// Gets the wallet journal for this character.
+        /// </summary>
+        public WalletJournalCollection WalletJournal { get; private set; }
+
+        /// <summary>
+        /// Gets the wallet transactions for this character.
+        /// </summary>
+        public WalletTransactionsCollection WalletTransactions { get; private set; }
 
         /// <summary>
         /// Gets the collection of market orders.
@@ -247,8 +271,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets true when character has insufficient balance to complete its buy orders.
+        /// Gets a value indicating whether the character has insufficient balance to complete its buy orders.
         /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the character has sufficient balance; otherwise, <c>false</c>.
+        /// </value>
         public bool HasSufficientBalance
         {
             get
@@ -263,6 +290,14 @@ namespace EVEMon.Common
             }
 
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the character is enlisted in factional warfare.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if character is not enlisted in factional warfare; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsFactionalWarfareNotEnlisted { get; internal set; }
 
         /// <summary>
         /// Gets true when a new character is created.
@@ -454,12 +489,12 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Helper Methods
+        #region Inherited Events
 
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
-        internal override void Dispose()
+        public override void Dispose()
         {
             // Unsubscribe events
             EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
@@ -470,6 +505,7 @@ namespace EVEMon.Common
             EveMonClient.CorporationIndustryJobsUpdated -= EveMonClient_CorporationIndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
+            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
 
             // Unsubscribe events
@@ -479,11 +515,22 @@ namespace EVEMon.Common
 
             // Unsubscribe events
             if (m_characterDataQuerying != null)
+            {
                 m_characterDataQuerying.Dispose();
+                m_characterDataQuerying = null;
+            }
 
             if (m_corporationDataQuerying != null)
+            {
                 m_corporationDataQuerying.Dispose();
+                m_corporationDataQuerying = null;
+            }
         }
+
+        #endregion
+
+
+        #region Helper Methods
 
         /// <summary>
         /// Checks whether we should notify an error.
@@ -499,6 +546,10 @@ namespace EVEMon.Common
 
             // We don't want to be notified about corp roles error
             if (result.CCPError != null && result.CCPError.IsCorpRolesError)
+                return false;
+
+            // We don't want to be notified about not enlisted in factional warfare error
+            if (result.CCPError != null && result.CCPError.IsFactionalWarfareEnlistedError)
                 return false;
 
             // Notify an error occurred
@@ -623,7 +674,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Notifies for insufficient balance.
         /// </summary>
-        private void NotifyInsufficientBalance()
+        internal void NotifyInsufficientBalance()
         {
             // Check the character has sufficient balance
             // for its buying orders and send a notification if not
@@ -675,31 +726,39 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            if (EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed))
-                return;
-
-            if (!Identity.APIKeys.Any() || Identity.APIKeys.Any(apiKey => apiKey.Type == APIKeyType.Unknown))
-                return;
-
             // Force update a monitor if the last update exceed the current datetime
             foreach (IQueryMonitorEx monitor in QueryMonitors.Where(
                 monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow))
             {
                 monitor.ForceUpdate(true);
             }
+        }
+
+        /// <summary>
+        /// Handles the APIKeyInfoUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
+        {
+            if (EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed))
+                return;
+
+            if (!Identity.APIKeys.Any() || Identity.APIKeys.Any(apiKey => apiKey.Type == APIKeyType.Unknown))
+                return;
 
             if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(
-                    m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods),
+                                                                                        lastUpdate.Method)));
             }
 
             if (m_corporationDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType))
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(
-                    m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods), lastUpdate.Method)));
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods),
+                                                                                        lastUpdate.Method)));
             }
         }
 

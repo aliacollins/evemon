@@ -30,7 +30,7 @@ namespace EVEMon.CharacterMonitoring
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterResearchPointsList));
-            this.noResearchLabel = new System.Windows.Forms.Label();
+            this.noResearchPointsLabel = new System.Windows.Forms.Label();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.chAgentName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSolarSystem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -38,18 +38,21 @@ namespace EVEMon.CharacterMonitoring
             this.chCurrentRP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPRPerDay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvResearchPoints = new System.Windows.Forms.ListView();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // noResearchLabel
+            // noResearchPointsLabel
             // 
-            this.noResearchLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.noResearchLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.noResearchLabel.Location = new System.Drawing.Point(0, 0);
-            this.noResearchLabel.Name = "noResearchLabel";
-            this.noResearchLabel.Size = new System.Drawing.Size(454, 434);
-            this.noResearchLabel.TabIndex = 1;
-            this.noResearchLabel.Text = "No research points are available.";
-            this.noResearchLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.noResearchPointsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.noResearchPointsLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.noResearchPointsLabel.Location = new System.Drawing.Point(0, 0);
+            this.noResearchPointsLabel.Name = "noResearchPointsLabel";
+            this.noResearchPointsLabel.Size = new System.Drawing.Size(454, 434);
+            this.noResearchPointsLabel.TabIndex = 1;
+            this.noResearchPointsLabel.Text = "No research points are available.";
+            this.noResearchPointsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ilIcons
             // 
@@ -92,6 +95,7 @@ namespace EVEMon.CharacterMonitoring
             this.lvResearchPoints.FullRowSelect = true;
             this.lvResearchPoints.HideSelection = false;
             this.lvResearchPoints.Location = new System.Drawing.Point(0, 0);
+            this.lvResearchPoints.MultiSelect = false;
             this.lvResearchPoints.Name = "lvResearchPoints";
             this.lvResearchPoints.Size = new System.Drawing.Size(454, 434);
             this.lvResearchPoints.SmallImageList = this.ilIcons;
@@ -100,21 +104,37 @@ namespace EVEMon.CharacterMonitoring
             this.lvResearchPoints.View = System.Windows.Forms.View.Details;
             this.lvResearchPoints.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.lvResearchPoints_ColumnReordered);
             // 
-            // MainWindowResearchPointsList
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(158, 48);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
+            // CharacterResearchPointsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvResearchPoints);
-            this.Controls.Add(this.noResearchLabel);
-            this.Name = "MainWindowResearchPointsList";
+            this.Controls.Add(this.noResearchPointsLabel);
+            this.Name = "CharacterResearchPointsList";
             this.Size = new System.Drawing.Size(454, 434);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label noResearchLabel;
+        private System.Windows.Forms.Label noResearchPointsLabel;
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.ColumnHeader chAgentName;
         private System.Windows.Forms.ColumnHeader chSolarSystem;
@@ -122,5 +142,7 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ColumnHeader chCurrentRP;
         private System.Windows.Forms.ColumnHeader chPRPerDay;
         private System.Windows.Forms.ListView lvResearchPoints;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

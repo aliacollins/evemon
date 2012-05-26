@@ -31,21 +31,22 @@ namespace EVEMon.Common.Serialization.API
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        /// Gets true whether a full key was required.
-        /// </summary>
-        [XmlIgnore]
-        public bool IsLimitedKeyError
-        {
-            get { return ErrorCode == 200; }
-        }
-
-        /// <summary>
         /// Gets true when character has no corporation roles.
         /// </summary>
         [XmlIgnore]
         public bool IsCorpRolesError
         {
             get { return (ErrorCode >= 206 && ErrorCode <= 209) || ErrorCode == 213; }
+        }
+        
+        
+        /// <summary>
+        /// Gets true when character is not enlisted in factional warfare.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsFactionalWarfareEnlistedError
+        {
+            get { return ErrorCode == 124; }
         }
 
         /// <summary>

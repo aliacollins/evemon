@@ -195,16 +195,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets a specially formatted description,
-        /// used when showing description in tooltip
-        /// so the tooltip won't get too long.
-        /// </summary>
-        public string DescriptionNL
-        {
-            get { return StaticData.DescriptionNL.Trim(); }
-        }
-
-        /// <summary>
         /// Gets the skill cost in ISK.
         /// </summary>
         public long Cost

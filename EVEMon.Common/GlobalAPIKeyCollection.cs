@@ -49,6 +49,9 @@ namespace EVEMon.Common
             if (!Items.Remove(apiKey.ID))
                 throw new InvalidOperationException("This API key does not exist in the list.");
 
+            // Dispose
+            apiKey.Dispose();
+
             EveMonClient.OnAPIKeyCollectionChanged();
         }
 

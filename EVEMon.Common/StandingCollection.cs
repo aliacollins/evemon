@@ -11,6 +11,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal StandingCollection(CCPCharacter character)
         {
             m_character = character;
@@ -29,9 +30,6 @@ namespace EVEMon.Common
             {
                 Items.Add(new Standing(m_character, srcStanding));
             }
-
-            // Fires the event regarding standings update
-            EveMonClient.OnCharacterStandingsUpdated(m_character);
         }
     }
 }

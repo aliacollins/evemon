@@ -54,24 +54,31 @@ namespace EVEMon.CharacterMonitoring
             : this()
         {
             m_character = character;
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+
             Header.Character = character;
             skillsList.Character = character;
-            skillQueueList.Character = character;
-            employmentList.Character = character;
-            standingsList.Character = character;
-            ordersList.Character = character;
-            contractsList.Character = character;
-            jobsList.Character = character;
-            researchList.Character = character;
-            mailMessagesList.Character = character;
-            eveNotificationsList.Character = character;
+            skillQueueList.Character = ccpCharacter;
+            employmentList.Character = ccpCharacter;
+            standingsList.Character = ccpCharacter;
+            factionalWarfareStatsList.Character = ccpCharacter;
+            assetsList.Character = ccpCharacter;
+            ordersList.Character = ccpCharacter;
+            contractsList.Character = ccpCharacter;
+            walletJournalList.Character = ccpCharacter;
+            walletTransactionsList.Character = ccpCharacter;
+            jobsList.Character = ccpCharacter;
+            researchList.Character = ccpCharacter;
+            mailMessagesList.Character = ccpCharacter;
+            eveNotificationsList.Character = ccpCharacter;
             notificationList.Notifications = null;
 
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
                                             {
-                                                standingsIcon, ordersIcon, contractsIcon, jobsIcon,
-                                                researchIcon, mailMessagesIcon, eveNotificationsIcon
+                                                standingsIcon, factionalWarfareStatsIcon, assetsIcon,
+                                                ordersIcon, contractsIcon, walletJournalIcon, walletTransactionsIcon,
+                                                jobsIcon, researchIcon, mailMessagesIcon, eveNotificationsIcon
                                             });
 
             // Hide all advanced features related controls
@@ -81,7 +88,6 @@ namespace EVEMon.CharacterMonitoring
             toolStripContextual.Visible = false;
             warningLabel.Visible = false;
 
-            CCPCharacter ccpCharacter = character as CCPCharacter;
             if (ccpCharacter != null)
                 skillQueueControl.SkillQueue = ccpCharacter.SkillQueue;
             else
@@ -94,11 +100,16 @@ namespace EVEMon.CharacterMonitoring
 
             // Subscribe events
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.SchedulerChanged += EveMonClient_SchedulerChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
+            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
+            EveMonClient.CharacterWalletJournalUpdated += EveMonClient_CharacterWalletJournalUpdated;
+            EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_CharacterWalletTransactionsUpdated;
             EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
             EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_CharacterEVEMailMessagesUpdated;
@@ -116,11 +127,16 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.SchedulerChanged -= EveMonClient_SchedulerChanged;
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
+            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
+            EveMonClient.CharacterWalletJournalUpdated -= EveMonClient_CharacterWalletJournalUpdated;
+            EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_CharacterWalletTransactionsUpdated;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
             EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_CharacterEVEMailMessagesUpdated;
@@ -151,13 +167,13 @@ namespace EVEMon.CharacterMonitoring
 
             // Picks the last selected page
             multiPanel.SelectedPage = null;
-            string tag = m_character.UISettings.SelectedPage;
             ToolStripItem item = null;
 
             // Only for CCP characters
             if (m_character is CCPCharacter)
             {
-                item = toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(x => tag == (string)x.Tag);
+                item = toolStripFeatures.Items.Cast<ToolStripItem>().FirstOrDefault(
+                    x => m_character.UISettings.SelectedPage == (string)x.Tag);
 
                 // If it's not an advanced feature page make it visible
                 if (item != null && !m_advancedFeatures.Contains(item))
@@ -204,9 +220,6 @@ namespace EVEMon.CharacterMonitoring
 
                 // Update the training controls
                 UpdateTrainingControls();
-
-                // Update the advanced features enabled pages
-                UpdateFeaturesMenu();
             }
             finally
             {
@@ -336,6 +349,10 @@ namespace EVEMon.CharacterMonitoring
                 // "Update Calendar" button
                 btnAddToCalendar.Visible = Settings.Calendar.Enabled;
 
+                // Reset the text filter
+                if (toolStripContextual.Visible)
+                    searchTextBox.Text = String.Empty;
+
                 // Read the settings
                 if (Settings.UI.SafeForWork)
                 {
@@ -415,8 +432,11 @@ namespace EVEMon.CharacterMonitoring
             if (featuresMenu.DropDownItems.Count == 0)
                 return;
 
-            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
-                item => item.Text == button.Text && item.Checked))
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
+
+            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
+                .Skip(index).Cast<ToolStripMenuItem>().Where(
+                    item => item.Text == button.Text && item.Checked))
             {
                 item.Checked = !item.Checked;
 
@@ -430,6 +450,10 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void UpdatePageControls()
         {
+            // No need to do anything when the control is not visible
+            if (!Visible)
+                return;
+
             // Enables / Disables the skill page controls
             toggleSkillsIcon.Enabled = m_character.Skills.Any();
 
@@ -444,6 +468,10 @@ namespace EVEMon.CharacterMonitoring
                 item.Visible = true;
             }
 
+            // Enables / Disables the assets page related controls
+            if (multiPanel.SelectedPage == assetsPage)
+                toolStripContextual.Enabled = ccpCharacter.Assets.Any();
+
             // Enables / Disables the market orders page related controls
             if (multiPanel.SelectedPage == ordersPage)
                 toolStripContextual.Enabled = ccpCharacter.MarketOrders.Any();
@@ -451,6 +479,14 @@ namespace EVEMon.CharacterMonitoring
             // Enables / Disables the contracts page related controls
             if (multiPanel.SelectedPage == contractsPage)
                 toolStripContextual.Enabled = ccpCharacter.Contracts.Any();
+
+            // Enables / Disables the wallet journal page related controls
+            if (multiPanel.SelectedPage == walletJournalPage)
+                toolStripContextual.Enabled = ccpCharacter.WalletJournal.Any();
+
+            // Enables / Disables the wallet transactions page related controls
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+                toolStripContextual.Enabled = ccpCharacter.WalletTransactions.Any();
 
             // Enables / Disables the industry jobs page related controls
             if (multiPanel.SelectedPage == jobsPage)
@@ -484,7 +520,7 @@ namespace EVEMon.CharacterMonitoring
 
             foreach (ToolStripButton button in m_advancedFeatures)
             {
-                List<IQueryMonitor> monitors = ButtonToMonitors(button).ToList();
+                List<IQueryMonitor> monitors = ButtonToMonitors(button);
 
                 if (!monitors.Any())
                     continue;
@@ -504,10 +540,12 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateAdvancedFeaturesPagesSettings()
         {
             UpdateSelectedPage();
+                        
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
 
             List<string> enabledAdvancedFeaturesPages =
-                (featuresMenu.DropDownItems.Cast<ToolStripMenuItem>().Where(
-                    menuItem => menuItem.Checked).Select(menuItem => menuItem.Text)).ToList();
+                featuresMenu.DropDownItems.Cast<ToolStripItem>().Skip(index).Cast<ToolStripMenuItem>().Where(
+                    menuItem => menuItem.Checked).Select(menuItem => menuItem.Text).ToList();
 
             m_character.UISettings.AdvancedFeaturesEnabledPages.Clear();
             enabledAdvancedFeaturesPages.ForEach(page => m_character.UISettings.AdvancedFeaturesEnabledPages.Add(page));
@@ -528,8 +566,8 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Updates on global events
-
+        #region Global events
+        
         /// <summary>
         /// Occur on every second. We update the total SP, remaining time and the matching item in skill list.
         /// </summary>
@@ -538,6 +576,16 @@ namespace EVEMon.CharacterMonitoring
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
             UpdateFrequentControls();
+        }
+
+        /// <summary>
+        /// When the API key info updates, update the features menu.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
+        {
+            UpdateFeaturesMenu();
         }
 
         /// <summary>
@@ -577,7 +625,7 @@ namespace EVEMon.CharacterMonitoring
         /// Occur when the character skill queue updates.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
@@ -587,11 +635,63 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// Updates the page controls on assets change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterAssetsUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
         /// Updates the page controls on market orders change.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
         private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
+        /// Updates the page controls on contracts change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ContractsUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
+        /// Updates the page controls on wallet journal change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterWalletJournalUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_character)
+                return;
+
+            UpdatePageControls();
+        }
+
+        /// <summary>
+        /// Updates the page controls on wallet transactions change.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterWalletTransactionsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -693,6 +793,10 @@ namespace EVEMon.CharacterMonitoring
                 ToolStripButton button = item as ToolStripButton;
                 if (button != null && item == sender)
                 {
+                    // Page is already selected
+                    if (button.Checked && multiPanel.SelectedPage != null)
+                        continue;
+
                     // Selects the proper page
                     multiPanel.SelectedPage =
                         multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string)item.Tag);
@@ -727,8 +831,12 @@ namespace EVEMon.CharacterMonitoring
             tsPagesSeparator.Visible = featuresMenu.Visible;
             tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
+                                                                           (string)button.Tag != factionalWarfareStatsPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
+            // Reset the text filter
+            searchTextBox.Text = String.Empty;
+            
             // Update the page controls
             UpdatePageControls();
         }
@@ -781,27 +889,28 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="button">The button.</param>
         /// <returns></returns>
-        private IEnumerable<IQueryMonitor> ButtonToMonitors(ToolStripItem button)
+        private List<IQueryMonitor> ButtonToMonitors(ToolStripItem button)
         {
-            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().First(x => x.Name == (string)button.Tag);
+            MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(x => x.Name == (string)button.Tag);
             CCPCharacter ccpCharacter = (CCPCharacter)m_character;
 
             List<IQueryMonitor> monitors = new List<IQueryMonitor>();
-            if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
+            if (page != null)
             {
-                APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
-            }
+                if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
+                {
+                    APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
+                    if (ccpCharacter.QueryMonitors[method] != null)
+                        monitors.Add(ccpCharacter.QueryMonitors[method]);
+                }
 
-            if (Enum.IsDefined(typeof(APICorporationMethods),
-                               String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag)))
-            {
-                APICorporationMethods method =
-                    (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods),
-                                                      String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag));
-                if (ccpCharacter.QueryMonitors[method] != null)
-                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+                string corpMethod = String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag);
+                if (Enum.IsDefined(typeof(APICorporationMethods), corpMethod))
+                {
+                    APICorporationMethods method = (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods), corpMethod);
+                    if (ccpCharacter.QueryMonitors[method] != null)
+                        monitors.Add(ccpCharacter.QueryMonitors[method]);
+                }
             }
 
             return monitors;
@@ -853,35 +962,44 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void featureMenu_DropDownOpening(object sender, EventArgs e)
         {
-            featuresMenu.DropDownItems.Clear();
+            // Remove everything after the separator
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
+            while (featuresMenu.DropDownItems.Count > index)
+            {
+                featuresMenu.DropDownItems.RemoveAt(index);
+            }
 
             // Create the menu items
-            foreach (ToolStripMenuItem item in m_advancedFeatures.Select(
+            List<ToolStripMenuItem> toolStripMenuItems = m_advancedFeatures.Select(
                 button => new { button, monitor = ButtonToMonitors(button) }).Where(
                     item => item.monitor != null).Select(
                         item =>
                             {
-                                ToolStripMenuItem tsi;
-                                ToolStripMenuItem tempToolStripItem = null;
+                                ToolStripMenuItem tsmi;
+                                ToolStripMenuItem tempToolStripMenuItem = null;
                                 try
                                 {
-                                    tempToolStripItem = new ToolStripMenuItem(item.button.Text);
-                                    tempToolStripItem.Checked = IsEnabledFeature(item.button.Text);
-                                    tempToolStripItem.Enabled = item.monitor.Any(monitor => monitor.HasAccess);
+                                    tempToolStripMenuItem = new ToolStripMenuItem(item.button.Text);
+                                    tempToolStripMenuItem.Checked = IsEnabledFeature(item.button.Text);
+                                    tempToolStripMenuItem.Enabled = item.monitor.Any(monitor => monitor.HasAccess);
 
-                                    tsi = tempToolStripItem;
-                                    tempToolStripItem = null;
+                                    tsmi = tempToolStripMenuItem;
+                                    tempToolStripMenuItem = null;
                                 }
                                 finally
                                 {
-                                    if (tempToolStripItem != null)
-                                        tempToolStripItem.Dispose();
+                                    if (tempToolStripMenuItem != null)
+                                        tempToolStripMenuItem.Dispose();
                                 }
-                                return tsi;
-                            }))
-            {
-                featuresMenu.DropDownItems.Add(item);
-            }
+                                return tsmi;
+                            }).ToList();
+
+            // Add items to dropdown menu
+            featuresMenu.DropDownItems.AddRange(toolStripMenuItems.ToArray<ToolStripItem>());
+            
+            // Enable or Disable controls
+            EnableAllToolStripMenuItem.Enabled = toolStripMenuItems.Where(item => item.Enabled).Any(item => !item.Checked);
+            DisableAllToolStripMenuItem.Enabled = toolStripMenuItems.Where(item => item.Enabled).Any(item => item.Checked);
         }
 
         /// <summary>
@@ -892,11 +1010,53 @@ namespace EVEMon.CharacterMonitoring
         private void featuresMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)e.ClickedItem;
+
+            if (item.Equals(EnableAllToolStripMenuItem) || item.Equals(DisableAllToolStripMenuItem))
+                return;
+
             item.Checked = !item.Checked;
 
             m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = (item.Text == featureIcon.Text
                                                                                  ? item.Checked
                                                                                  : featureIcon.Visible));
+
+            UpdateAdvancedFeaturesPagesSettings();
+            ToggleAdvancedFeaturesMonitoring();
+        }
+
+        /// <summary>
+        /// Occurs when the user click the 'Enable All' menu item in features menu.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EnableAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
+            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
+                .Skip(index).Cast<ToolStripMenuItem>().Where(item => item.Enabled))
+            {
+                item.Checked = true;
+                m_advancedFeatures.First(featureIcon => item.Text == featureIcon.Text).Visible = true;
+            }
+
+            UpdateAdvancedFeaturesPagesSettings();
+            ToggleAdvancedFeaturesMonitoring();
+        }
+
+        /// <summary>
+        /// Occurs when the user click the 'Disable All' menu item in features menu.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void DisableAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = featuresMenu.DropDownItems.IndexOf(SelectionToolStripSeparator) + 1;
+            foreach (ToolStripMenuItem item in featuresMenu.DropDownItems.Cast<ToolStripItem>()
+                .Skip(index).Cast<ToolStripMenuItem>().Where(item => item.Enabled))
+            {
+                item.Checked = false;
+                m_advancedFeatures.First(featureIcon => item.Text == featureIcon.Text).Visible = false;
+            }
 
             UpdateAdvancedFeaturesPagesSettings();
             ToggleAdvancedFeaturesMonitoring();
@@ -911,11 +1071,20 @@ namespace EVEMon.CharacterMonitoring
         {
             groupMenu.DropDownItems.Clear();
 
+            if (multiPanel.SelectedPage == assetsPage)
+                CreateGroupMenuList<AssetGrouping, Enum>(assetsList);
+
             if (multiPanel.SelectedPage == ordersPage)
                 CreateGroupMenuList<MarketOrderGrouping, Enum>(ordersList);
 
             if (multiPanel.SelectedPage == contractsPage)
                 CreateGroupMenuList<ContractGrouping, Enum>(contractsList);
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+                CreateGroupMenuList<WalletJournalGrouping, Enum>(walletJournalList);
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+                CreateGroupMenuList<WalletTransactionGrouping, Enum>(walletTransactionsList);
 
             if (multiPanel.SelectedPage == jobsPage)
                 CreateGroupMenuList<IndustryJobGrouping, Enum>(jobsList);
@@ -935,11 +1104,21 @@ namespace EVEMon.CharacterMonitoring
         private void groupMenu_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             ToolStripItem item = e.ClickedItem;
+
+            if (multiPanel.SelectedPage == assetsPage)
+                GroupMenuSetting<AssetGrouping, Enum>(item, assetsList);
+
             if (multiPanel.SelectedPage == ordersPage)
                 GroupMenuSetting<MarketOrderGrouping, Enum>(item, ordersList);
 
             if (multiPanel.SelectedPage == contractsPage)
                 GroupMenuSetting<ContractGrouping, Enum>(item, contractsList);
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+                GroupMenuSetting<WalletJournalGrouping, Enum>(item, walletJournalList);
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+                GroupMenuSetting<WalletTransactionGrouping, Enum>(item, walletTransactionsList);
 
             if (multiPanel.SelectedPage == jobsPage)
                 GroupMenuSetting<IndustryJobGrouping, Enum>(item, jobsList);
@@ -958,11 +1137,33 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (filterTimer.Enabled)
+                filterTimer.Stop();
+
+            filterTimer.Start();
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the filterTimer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void filterTimer_Tick(object sender, EventArgs e)
+        {
+            if (multiPanel.SelectedPage == assetsPage)
+                assetsList.TextFilter = searchTextBox.Text;
+
             if (multiPanel.SelectedPage == ordersPage)
                 ordersList.TextFilter = searchTextBox.Text;
 
             if (multiPanel.SelectedPage == contractsPage)
                 contractsList.TextFilter = searchTextBox.Text;
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+                walletJournalList.TextFilter = searchTextBox.Text;
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+                walletTransactionsList.TextFilter = searchTextBox.Text;
 
             if (multiPanel.SelectedPage == jobsPage)
                 jobsList.TextFilter = searchTextBox.Text;
@@ -975,6 +1176,8 @@ namespace EVEMon.CharacterMonitoring
 
             if (multiPanel.SelectedPage == eveNotificationsPage)
                 eveNotificationsList.TextFilter = searchTextBox.Text;
+
+            filterTimer.Stop();
         }
 
         /// <summary>
@@ -985,6 +1188,22 @@ namespace EVEMon.CharacterMonitoring
         private void preferencesMenu_DropDownOpening(object sender, EventArgs e)
         {
             bool hideInactive = true;
+
+            if (multiPanel.SelectedPage == assetsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
+
+                preferencesMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in m_preferenceMenu.Where(
+                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
+                        !item.Equals(showOnlyCharMenuItem) && ! item.Equals(showOnlyCorpMenuItem) &&
+                        !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                {
+                    preferencesMenu.DropDownItems.Add(item);
+                }
+
+                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+            }
 
             if (multiPanel.SelectedPage == ordersPage)
             {
@@ -1018,6 +1237,38 @@ namespace EVEMon.CharacterMonitoring
                 numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
                 showOnlyCharMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Corporation;
+            }
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.WalletJournal.NumberAbsFormat;
+
+                preferencesMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in m_preferenceMenu.Where(
+                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
+                        !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
+                        !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                {
+                    preferencesMenu.DropDownItems.Add(item);
+                }
+
+                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+            }
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat;
+
+                preferencesMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in m_preferenceMenu.Where(
+                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
+                        !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
+                        !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                {
+                    preferencesMenu.DropDownItems.Add(item);
+                }
+
+                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
             }
 
             if (multiPanel.SelectedPage == jobsPage)
@@ -1064,6 +1315,21 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void columnSettingsMenuItem_Click(object sender, EventArgs e)
         {
+            if (multiPanel.SelectedPage == assetsPage)
+            {
+                using (AssetsColumnsSelectWindow f =
+                    new AssetsColumnsSelectWindow(assetsList.Columns.Cast<AssetColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        assetsList.Columns = f.Columns;
+                        Settings.UI.MainWindow.Assets.Columns.Clear();
+                        Settings.UI.MainWindow.Assets.Columns.AddRange(assetsList.Columns.Cast<AssetColumnSettings>());
+                    }
+                }
+            }
+
             if (multiPanel.SelectedPage == ordersPage)
             {
                 using (MarketOrdersColumnsSelectWindow f =
@@ -1090,6 +1356,38 @@ namespace EVEMon.CharacterMonitoring
                         contractsList.Columns = f.Columns;
                         Settings.UI.MainWindow.Contracts.Columns.Clear();
                         Settings.UI.MainWindow.Contracts.Columns.AddRange(contractsList.Columns.Cast<ContractColumnSettings>());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+            {
+                using (WalletJournalColumnsSelectWindow f =
+                    new WalletJournalColumnsSelectWindow(walletJournalList.Columns.Cast<WalletJournalColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        walletJournalList.Columns = f.Columns;
+                        Settings.UI.MainWindow.WalletJournal.Columns.Clear();
+                        Settings.UI.MainWindow.WalletJournal.Columns.AddRange(
+                            walletJournalList.Columns.Cast<WalletJournalColumnSettings>());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+            {
+                using (WalletTransactionsColumnsSelectWindow f = new WalletTransactionsColumnsSelectWindow(
+                    walletTransactionsList.Columns.Cast<WalletTransactionColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        walletTransactionsList.Columns = f.Columns;
+                        Settings.UI.MainWindow.WalletTransactions.Columns.Clear();
+                        Settings.UI.MainWindow.WalletTransactions.Columns.AddRange(
+                            walletTransactionsList.Columns.Cast<WalletTransactionColumnSettings>());
                     }
                 }
             }
@@ -1165,8 +1463,10 @@ namespace EVEMon.CharacterMonitoring
         private void autoSizeColumnMenuItem_Click(object sender, EventArgs e)
         {
             IListView list = multiPanel.SelectedPage.Controls.OfType<IListView>().FirstOrDefault();
+
             if (list == null)
                 return;
+
             list.Columns.Where(column => column.Visible).ToList().ForEach(column => column.Width = -2);
             list.UpdateColumns();
         }
@@ -1179,6 +1479,7 @@ namespace EVEMon.CharacterMonitoring
         private void hideInactiveMenuItem_Click(object sender, EventArgs e)
         {
             bool hideInactive = true;
+
             if (multiPanel.SelectedPage == ordersPage)
             {
                 hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
@@ -1209,6 +1510,14 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void numberAbsFormatMenuItem_Click(object sender, EventArgs e)
         {
+            if (multiPanel.SelectedPage == assetsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
+                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                Settings.UI.MainWindow.Assets.NumberAbsFormat = !numberFormat;
+                assetsList.UpdateColumns();
+            }
+
             if (multiPanel.SelectedPage == ordersPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
@@ -1223,6 +1532,22 @@ namespace EVEMon.CharacterMonitoring
                 numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
                 Settings.UI.MainWindow.Contracts.NumberAbsFormat = !numberFormat;
                 contractsList.UpdateColumns();
+            }
+
+            if (multiPanel.SelectedPage == walletJournalPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.WalletJournal.NumberAbsFormat;
+                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                Settings.UI.MainWindow.WalletJournal.NumberAbsFormat = !numberFormat;
+                walletJournalList.UpdateColumns();
+            }
+
+            if (multiPanel.SelectedPage == walletTransactionsPage)
+            {
+                bool numberFormat = Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat;
+                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat = !numberFormat;
+                walletTransactionsList.UpdateColumns();
             }
         }
 
@@ -1439,14 +1764,23 @@ namespace EVEMon.CharacterMonitoring
             list.Grouping = grouping;
             T obj = default(T);
 
+            if (obj is AssetGrouping)
+                m_character.UISettings.AssetsGroupBy = (AssetGrouping)grouping;
+  
             if (obj is MarketOrderGrouping)
                 m_character.UISettings.OrdersGroupBy = (MarketOrderGrouping)grouping;
 
-            if (obj is IndustryJobGrouping)
-                m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
-
             if (obj is ContractGrouping)
                 m_character.UISettings.ContractsGroupBy = (ContractGrouping)grouping;
+
+            if (obj is WalletJournalGrouping)
+                m_character.UISettings.WalletJournalGroupBy = (WalletJournalGrouping)grouping;
+
+            if (obj is WalletTransactionGrouping)
+                m_character.UISettings.WalletTransactionsGroupBy = (WalletTransactionGrouping)grouping;
+
+            if (obj is IndustryJobGrouping)
+                m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
 
             if (obj is EVEMailMessagesGrouping)
                 m_character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;

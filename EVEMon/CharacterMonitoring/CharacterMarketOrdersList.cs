@@ -19,9 +19,12 @@ namespace EVEMon.CharacterMonitoring
     /// </summary>
     public partial class CharacterMarketOrdersList : UserControl, IListView
     {
+        #region Fields
+
         private readonly List<MarketOrderColumnSettings> m_columns = new List<MarketOrderColumnSettings>();
         private readonly List<MarketOrder> m_list = new List<MarketOrder>();
 
+        private InfiniteDisplayToolTip m_tooltip;
         private MarketOrderGrouping m_grouping;
         private MarketOrderColumn m_sortCriteria;
         private IssuedFor m_showIssuedFor;
@@ -29,8 +32,6 @@ namespace EVEMon.CharacterMonitoring
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
 
-        private bool m_hideInactive;
-        private bool m_numberFormat;
         private bool m_isUpdatingColumns;
         private bool m_columnsChanged;
         private bool m_init;
@@ -67,6 +68,8 @@ namespace EVEMon.CharacterMonitoring
         private decimal m_issuedForCharacterEscrowAdditionalToCover,
                         m_issuedForCorporationEscrowAdditionalToCover;
 
+        #endregion
+
 
         # region Constructor
 
@@ -79,7 +82,6 @@ namespace EVEMon.CharacterMonitoring
             InitializeExpandablePanelControls();
 
             lvOrders.Visible = false;
-            lvOrders.ShowItemToolTips = true;
             lvOrders.AllowColumnReorder = true;
             lvOrders.Columns.Clear();
 
@@ -92,13 +94,10 @@ namespace EVEMon.CharacterMonitoring
             ListViewHelper.EnableDoubleBuffer(lvOrders);
 
             lvOrders.ColumnClick += listView_ColumnClick;
-            lvOrders.KeyDown += listView_KeyDown;
             lvOrders.ColumnWidthChanged += listView_ColumnWidthChanged;
             lvOrders.ColumnReordered += listView_ColumnReordered;
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
-            Disposed += OnDisposed;
+            lvOrders.MouseMove += listView_MouseMove;
+            lvOrders.MouseLeave += listView_MouseLeave;   
         }
 
         #endregion
@@ -110,7 +109,7 @@ namespace EVEMon.CharacterMonitoring
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvOrders"/> is visible.
@@ -239,14 +238,36 @@ namespace EVEMon.CharacterMonitoring
         # region Inherited Events
 
         /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            m_tooltip = new InfiniteDisplayToolTip(lvOrders);
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            Disposed += OnDisposed;
+        }
+
+        /// <summary>
         /// Unsubscribe events on disposing.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            m_tooltip.Dispose();
+
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -267,22 +288,22 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            Orders = (ccpCharacter == null ? null : ccpCharacter.MarketOrders);
+            Orders = (Character == null ? null : Character.MarketOrders);
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
             Grouping = (Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy);
+            TextFilter = String.Empty;
 
             UpdateColumns();
 
             m_init = true;
 
-            UpdateContent();
+            UpdateListVisibility();
         }
 
         # endregion
 
 
-        #region Updates Main Market Window On Global Events
+        #region Updates Main Market Window
 
         /// <summary>
         /// Updates the columns.
@@ -352,15 +373,14 @@ namespace EVEMon.CharacterMonitoring
                                     ? lvOrders.SelectedItems[0].Tag.GetHashCode()
                                     : 0);
 
-            m_hideInactive = Settings.UI.MainWindow.MarketOrders.HideInactiveOrders;
-            m_numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
-
             lvOrders.BeginUpdate();
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<MarketOrder> orders = m_list.Where(x => IsTextMatching(x, text));
-                if (Character != null && m_hideInactive)
+                IEnumerable<MarketOrder> orders = m_list
+                    .Where(x => x.Item != null && x.Station != null).Where(x => IsTextMatching(x, text));
+
+                if (Character != null && Settings.UI.MainWindow.MarketOrders.HideInactiveOrders)
                     orders = orders.Where(x => x.IsAvailable);
 
                 if (m_showIssuedFor != IssuedFor.All)
@@ -383,20 +403,28 @@ namespace EVEMon.CharacterMonitoring
                 // Update the expandable panel info
                 UpdateExpPanelContent();
 
-                // Display or hide the "no orders" label
-                if (m_init)
-                {
-                    noOrdersLabel.Visible = lvOrders.Items.Count == 0;
-                    lvOrders.Visible = !noOrdersLabel.Visible;
-                    marketExpPanelControl.Visible = true;
-                    marketExpPanelControl.Header.Visible = true;
-                }
+                UpdateListVisibility();
             }
             finally
             {
                 lvOrders.EndUpdate();
                 lvOrders.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Updates the list visibility.
+        /// </summary>
+        private void UpdateListVisibility()
+        {
+            // Display or hide the "no orders" label
+            if (!m_init)
+                return;
+
+            noOrdersLabel.Visible = lvOrders.Items.Count == 0;
+            lvOrders.Visible = !noOrdersLabel.Visible;
+            marketExpPanelControl.Visible = true;
+            marketExpPanelControl.Header.Visible = true;
         }
 
         /// <summary>
@@ -419,12 +447,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case MarketOrderGrouping.Issued:
                     IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups2 =
-                        orders.GroupBy(x => x.Issued.Date).OrderBy(x => x.Key);
+                        orders.GroupBy(x => x.Issued.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups2);
                     break;
                 case MarketOrderGrouping.IssuedDesc:
                     IOrderedEnumerable<IGrouping<DateTime, MarketOrder>> groups3 =
-                        orders.GroupBy(x => x.Issued.Date).OrderByDescending(x => x.Key);
+                        orders.GroupBy(x => x.Issued.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups3);
                     break;
                 case MarketOrderGrouping.ItemType:
@@ -485,49 +513,59 @@ namespace EVEMon.CharacterMonitoring
                 lvOrders.Groups.Add(listGroup);
 
                 // Add the items in every group
-                foreach (MarketOrder order in group)
-                {
-                    if (order.Item == null || order.Station == null)
-                        continue;
+                lvOrders.Items.AddRange(
+                    group.Select(order => new
+                                              {
+                                                  order,
+                                                  item = new ListViewItem(order.Item.Name, listGroup)
+                                                             {
+                                                                 UseItemStyleForSubItems = false,
+                                                                 Tag = order
+                                                             }
 
-                    ListViewItem item = new ListViewItem(order.Item.Name, listGroup)
-                                            { UseItemStyleForSubItems = false, Tag = order };
-
-                    // Display text as dimmed if the order is no longer available
-                    if (!order.IsAvailable)
-                        item.ForeColor = SystemColors.GrayText;
-
-                    // Display text highlighted if the order is modified
-                    if (order.State == OrderState.Modified)
-                        item.ForeColor = SystemColors.HotTrack;
-
-                    // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < lvOrders.Columns.Count + 1)
-                    {
-                        item.SubItems.Add(String.Empty);
-                    }
-
-                    // Creates the subitems
-                    for (int i = 0; i < lvOrders.Columns.Count; i++)
-                    {
-                        MarketOrderColumn column = (MarketOrderColumn)lvOrders.Columns[i].Tag;
-                        SetColumn(order, item.SubItems[i], column);
-                    }
-
-                    // Tooltip
-                    StringBuilder builder = new StringBuilder();
-                    builder.AppendFormat(CultureConstants.DefaultCulture,"Issued For: {0}", order.IssuedFor).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", order.Issued.ToLocalTime()).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration,
-                                         (order.Duration > 1 ? "s" : String.Empty)).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
-                                         order.Station.SolarSystem.FullLocation).AppendLine();
-                    builder.AppendFormat(CultureConstants.DefaultCulture, "Station: {0}", order.Station.Name).AppendLine();
-                    item.ToolTipText = builder.ToString();
-
-                    lvOrders.Items.Add(item);
-                }
+                                              }).Select(x => CreateSubItems(x.order, x.item)).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Creates the list view sub items.
+        /// </summary>
+        /// <param name="order">The order.</param>
+        /// <param name="item">The item.</param>
+        private ListViewItem CreateSubItems(MarketOrder order, ListViewItem item)
+        {                    
+            // Display text as dimmed if the order is no longer available
+            if (!order.IsAvailable)
+                item.ForeColor = SystemColors.GrayText;
+
+            // Display text highlighted if the order is modified
+            if (order.State == OrderState.Modified)
+                item.ForeColor = SystemColors.HotTrack;
+
+            // Add enough subitems to match the number of columns
+            while (item.SubItems.Count < lvOrders.Columns.Count + 1)
+            {
+                item.SubItems.Add(String.Empty);
+            }
+
+            // Creates the subitems
+            for (int i = 0; i < lvOrders.Columns.Count; i++)
+            {
+                SetColumn(order, item.SubItems[i], (MarketOrderColumn)lvOrders.Columns[i].Tag);
+            }
+
+            // Tooltip
+            StringBuilder builder = new StringBuilder();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", order.IssuedFor).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", order.Issued.ToLocalTime()).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration,
+                                 (order.Duration > 1 ? "s" : String.Empty)).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
+                                 order.Station.SolarSystem.FullLocation).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Station: {0}", order.Station.Name).AppendLine();
+            item.ToolTipText = builder.ToString();
+
+            return item;
         }
 
         /// <summary>
@@ -599,8 +637,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="order"></param>
         /// <param name="item"></param>
         /// <param name="column"></param>
-        private void SetColumn(MarketOrder order, ListViewItem.ListViewSubItem item, MarketOrderColumn column)
+        private static void SetColumn(MarketOrder order, ListViewItem.ListViewSubItem item, MarketOrderColumn column)
         {
+            bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
+
             BuyOrder buyOrder = order as BuyOrder;
             ConquerableStation outpost = order.Station as ConquerableStation;
 
@@ -616,7 +656,7 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = format.TextColor;
                     break;
                 case MarketOrderColumn.InitialVolume:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
@@ -638,7 +678,7 @@ namespace EVEMon.CharacterMonitoring
                                      : order.Station.FullLocation);
                     break;
                 case MarketOrderColumn.MinimumVolume:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.MinVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
@@ -646,12 +686,13 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = order.Station.SolarSystem.Constellation.Region.Name;
                     break;
                 case MarketOrderColumn.RemainingVolume:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
                                      : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture));
                     break;
                 case MarketOrderColumn.SolarSystem:
                     item.Text = order.Station.SolarSystem.Name;
+                    item.ForeColor = order.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case MarketOrderColumn.Station:
                     item.Text = (outpost != null
@@ -659,13 +700,13 @@ namespace EVEMon.CharacterMonitoring
                                      : order.Station.Name);
                     break;
                 case MarketOrderColumn.TotalPrice:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
                                      : order.TotalPrice.ToString("N2", CultureConstants.DefaultCulture));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.UnitaryPrice:
-                    item.Text = (m_numberFormat
+                    item.Text = (numberFormat
                                      ? FormatHelper.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
                                      : order.UnitaryPrice.ToString("N2", CultureConstants.DefaultCulture));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
@@ -673,10 +714,10 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.Volume:
                     item.Text = String.Format(
                         CultureConstants.DefaultCulture, "{0} / {1}",
-                        (m_numberFormat
+                        (numberFormat
                              ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
                              : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture)),
-                        (m_numberFormat
+                        (numberFormat
                              ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
                              : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture)));
                     break;
@@ -690,7 +731,7 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.Escrow:
                     if (buyOrder != null)
                     {
-                        item.Text = (m_numberFormat
+                        item.Text = (numberFormat
                                          ? FormatHelper.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
                                          : buyOrder.Escrow.ToString("N2", CultureConstants.DefaultCulture));
                         item.ForeColor = Color.DarkBlue;
@@ -765,6 +806,16 @@ namespace EVEMon.CharacterMonitoring
         #region Local Event Handlers
 
         /// <summary>
+        /// Exports item info to CSV format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(lvOrders);
+        }
+
+        /// <summary>
         /// On column reorder we update the settings.
         /// </summary>
         /// <param name="sender"></param>
@@ -782,6 +833,9 @@ namespace EVEMon.CharacterMonitoring
         private void listView_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
+                return;
+
+            if (m_columns[e.ColumnIndex].Width == lvOrders.Columns[e.ColumnIndex].Width)
                 return;
 
             m_columns[e.ColumnIndex].Width = lvOrders.Columns[e.ColumnIndex].Width;
@@ -804,24 +858,42 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
-            UpdateContent();
+            m_isUpdatingColumns = true;
+
+            // Updates the item sorter
+            UpdateSort();
+
+            m_isUpdatingColumns = false;
         }
 
         /// <summary>
-        /// Handles key press
+        /// When the mouse moves over the list, we show the item's tooltip if over an item.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listView_KeyDown(object sender, KeyEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void listView_MouseMove(object sender, MouseEventArgs e)
         {
-            switch (e.KeyCode)
+            ListViewItem item = lvOrders.GetItemAt(e.Location.X, e.Location.Y);
+            if (item == null)
             {
-                case Keys.A:
-                    if (e.Control)
-                        lvOrders.SelectAll();
-                    break;
+                //m_lastItem = null;
+                m_tooltip.Hide();
+                return;
             }
+
+            m_tooltip.Show(item.ToolTipText, e.Location);
         }
+
+        /// <summary>
+        /// When the mouse leaves the list, we hide the item's tooltip.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void listView_MouseLeave(object sender, EventArgs e)
+        {
+            m_tooltip.Hide();
+        }
+
         # endregion
 
 
@@ -853,11 +925,28 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            Orders = ccpCharacter.MarketOrders;
+            Orders = Character.MarketOrders;
+            UpdateColumns();
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            if (Character == null)
+                return;
+
+            foreach (MarketOrder order in m_list)
+            {
+                order.UpdateStation();
+            }
+
             UpdateColumns();
         }
 
@@ -1206,7 +1295,7 @@ namespace EVEMon.CharacterMonitoring
                                                             m_lblActiveCharBuyOrdersCount,
                                                             m_lblActiveCorpBuyOrdersCount
                                                         });
-          
+
             // Apply properties
             foreach (Label label in marketExpPanelControl.Controls.OfType<Label>())
             {

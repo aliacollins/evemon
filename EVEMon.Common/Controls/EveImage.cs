@@ -194,7 +194,7 @@ namespace EVEMon.Common.Controls
                     return ImageType.Drone;
                 case ItemFamily.StarbaseStructure:
                     return ImageType.Structure;
-                case ItemFamily.Bpo:
+                case ItemFamily.Blueprint:
                     return ImageType.Blueprint;
                 default:
                     return ImageType.Item;
@@ -272,13 +272,13 @@ namespace EVEMon.Common.Controls
             Uri imageURL = new Uri(String.Format(CultureConstants.InvariantCulture,
                                                  NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize));
 
-            ImageService.GetImageAsync(imageURL, true, img =>
-                                                           {
-                                                               GotImage(m_item.ID, img, drawOverlayIcon);
+            ImageService.GetImageAsync(imageURL, img =>
+                                                     {
+                                                         GotImage(m_item.ID, img, drawOverlayIcon);
 
-                                                               if (img == null)
-                                                                   GetImageFromAlternativeSource(typeData);
-                                                           });
+                                                         if (img == null)
+                                                             GetImageFromAlternativeSource(typeData);
+                                                     });
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace EVEMon.Common.Controls
             Uri imageURL = new Uri(String.Format(CultureConstants.InvariantCulture,
                                                  NetworkConstants.CCPIcons, typeData.URLPath, eveSize, imageWebName));
 
-            ImageService.GetImageAsync(imageURL, true, img => GotImage(m_item.ID, img, true));
+            ImageService.GetImageAsync(imageURL, img => GotImage(m_item.ID, img, true));
         }
 
         /// <summary>

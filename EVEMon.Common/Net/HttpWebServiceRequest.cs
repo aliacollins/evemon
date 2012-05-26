@@ -19,6 +19,8 @@ namespace EVEMon.Common.Net
 
         private WebRequestAsyncState m_asyncState;
         private HttpPostData m_postData;
+        private DataCompression m_dataCompression;
+        private HttpMethod m_method;
 
         private string m_accept;
         private Uri m_url;
@@ -74,20 +76,24 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Delegate for asynchronous invocation of GetResponse.
         /// </summary>
-        private delegate void GetResponseDelegate(Uri url, Stream responseStream, string accept, HttpPostData postData);
+        private delegate void GetResponseDelegate(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
+                                                  Stream responseStream, string accept);
 
         /// <summary>
         /// Retrieve the response from the reguested URL to the specified response stream
         /// If postData is supplied, the request is submitted as a POST request, otherwise it is submitted as a GET request
         /// The download process is broken into chunks for future implementation of asynchronous requests
         /// </summary>
-        internal void GetResponse(Uri url, Stream responseStream, string accept, HttpPostData postData = null)
+        internal void GetResponse(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
+                                  Stream responseStream, string accept)
         {
             // Store params
             m_url = url;
             BaseUrl = url;
             m_accept = accept;
             m_postData = postData;
+            m_method = postData == null ? HttpMethod.Get : method;
+            m_dataCompression = postData == null ? DataCompression.None : dataCompression;
             ResponseStream = responseStream;
 
             Stream webResponseStream = null;
@@ -150,18 +156,18 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
-        public void GetResponseAsync(Uri url, Stream responseStream, string accept, HttpPostData postData,
-                                     WebRequestAsyncState state)
+        public void GetResponseAsync(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
+                                     Stream responseStream, string accept, WebRequestAsyncState state)
         {
             m_asyncState = state;
             m_asyncState.Request = this;
             if (Dispatcher.IsMultiThreaded)
             {
                 GetResponseDelegate caller = GetResponse;
-                caller.BeginInvoke(url, responseStream, accept, postData, GetResponseAsyncCompleted, caller);
+                caller.BeginInvoke(url, method, postData, dataCompression, responseStream, accept, GetResponseAsyncCompleted, caller);
             }
             else
-                GetResponseAsyncCompletedCore(() => GetResponse(url, responseStream, accept, postData));
+                GetResponseAsyncCompletedCore(() => GetResponse(url, method, postData, dataCompression, responseStream, accept));
         }
 
         /// <summary>
@@ -198,15 +204,8 @@ namespace EVEMon.Common.Net
         /// </summary>
         private HttpWebResponse GetHttpResponse()
         {
-            HttpWebRequest request = GetHttpWebRequest(m_url, m_referer);
-
-            // Prepare the POST request we're going to send
-            if (request.Method == "POST")
-            {
-                Stream requestStream = request.GetRequestStream();
-                requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);
-                requestStream.Close();
-            }
+            // Build the request
+            HttpWebRequest request = GetHttpWebRequest();
 
             // Query the web site
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -240,9 +239,12 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Constructs an HttpWebRequest for the specified url and referer.
         /// </summary>
-        private HttpWebRequest GetHttpWebRequest(Uri url, string referer)
+        private HttpWebRequest GetHttpWebRequest()
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            if (m_method == HttpMethod.Get && m_postData != null)
+                m_url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}?{1}", m_url.AbsoluteUri, m_postData));
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(m_url);
             request.AllowAutoRedirect = false;
             request.Headers[HttpRequestHeader.AcceptLanguage] = "en-us,en;q=0.5";
             request.Headers[HttpRequestHeader.AcceptCharset] = "ISO-8859-1,utf-8;q=0.7,*;q=0.7";
@@ -251,15 +253,28 @@ namespace EVEMon.Common.Net
             request.UserAgent = m_webServiceState.UserAgent;
             request.Accept = m_accept;
             request.Timeout = m_timeout;
+            request.Method = HttpMethodToString(m_method);
 
-            if (referer != null)
-                request.Referer = referer;
+            if (m_referer != null)
+                request.Referer = m_referer;
 
             if (m_postData != null)
             {
-                request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = m_postData.Length;
+
+                if (m_method != HttpMethod.Get)
+                {
+                    request.ContentLength = m_postData.Length;
+
+                    // If we are going to send a compressed request set the appropriate header
+                    if (Enum.IsDefined(typeof(DataCompression), m_dataCompression) && m_dataCompression != DataCompression.None)
+                        request.Headers[HttpRequestHeader.ContentEncoding] =
+                            m_dataCompression.ToString().ToLower(CultureConstants.InvariantCulture);
+
+                    Stream requestStream = request.GetRequestStream();
+                    requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);
+                    requestStream.Close();
+                }
             }
 
             if (m_webServiceState.Proxy.Enabled)
@@ -284,6 +299,25 @@ namespace EVEMon.Common.Net
                 request.Proxy = proxy;
             }
             return request;
+        }
+
+        /// <summary>
+        /// Convert the HTTP method to string.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
+        private static string HttpMethodToString(HttpMethod method)
+        {
+            switch (method)
+            {
+                case HttpMethod.Postentity:
+                case HttpMethod.Post:
+                    return "POST";
+                case HttpMethod.Put:
+                    return "PUT";
+                default:
+                    return "GET";
+            }
         }
     }
 }

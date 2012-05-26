@@ -97,5 +97,6 @@
     <row refTypeID="89" refTypeName="Contact notification" />
     <row refTypeID="93" refTypeName="Customs office has been attacked" />
     <row refTypeID="94" refTypeName="Customs office has entered reinforced" />
+    <row refTypeID="95" refTypeName="Customs office has been transferred" />
   </rowset>
 </NotificationRefTypeIDs>

@@ -38,7 +38,7 @@ namespace EVEMon.Common
             MessageID = src.MessageID;
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();
-            m_sender = GetSender(src);
+            m_sender = GetSender();
             m_toCharacters = GetIDsToNames(src.ToCharacterIDs);
             m_mailingLists = GetMailingListIDsToNames(src.ToListID);
             m_toCorpOrAlliance = GetCorpOrAlliance(src.ToCorpOrAllianceID);
@@ -75,7 +75,7 @@ namespace EVEMon.Common
             get
             {
                 return m_sender == "Unknown"
-                           ? m_sender = GetSender(m_source)
+                           ? m_sender = GetSender()
                            : m_sender;
             }
         }
@@ -172,13 +172,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the sender.
         /// </summary>
-        /// <param name="src">The source.</param>
         /// <returns></returns>
-        private string GetSender(SerializableMailMessagesListItem src)
+        private string GetSender()
         {
-            return src.ToListID.Any(x => x == src.SenderID.ToString(CultureConstants.InvariantCulture))
-                       ? GetMailingListIDToName(src.SenderID.ToString(CultureConstants.InvariantCulture))
-                       : GetIDToName(src.SenderID.ToString(CultureConstants.InvariantCulture));
+            return m_source.ToListID.Any(x => x == m_source.SenderID.ToString(CultureConstants.InvariantCulture))
+                       ? GetMailingListIDToName(m_source.SenderID.ToString(CultureConstants.InvariantCulture))
+                       : GetIDToName(m_source.SenderID.ToString(CultureConstants.InvariantCulture));
         }
 
         /// <summary>

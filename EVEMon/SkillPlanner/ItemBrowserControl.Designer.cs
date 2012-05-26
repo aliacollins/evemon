@@ -130,13 +130,13 @@ namespace EVEMon.SkillPlanner
             this.ItemAttributeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportToCSVToolStripMenuItem});
             this.ItemAttributeContextMenu.Name = "ItemAttributeContextMenu";
-            this.ItemAttributeContextMenu.Size = new System.Drawing.Size(158, 48);
+            this.ItemAttributeContextMenu.Size = new System.Drawing.Size(155, 48);
             // 
             // exportToCSVToolStripMenuItem
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
-            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.exportToCSVToolStripMenuItem.Text = "Export to CSV ...";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export to CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // itemSelectControl

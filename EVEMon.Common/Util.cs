@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -6,14 +7,16 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace EVEMon.Common
 {
@@ -54,7 +57,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
-        public static XslCompiledTransform LoadXSLT(string content)
+        public static XslCompiledTransform LoadXslt(string content)
         {
             using (StringReader stringReader = new StringReader(content))
             {
@@ -73,7 +76,7 @@ namespace EVEMon.Common
         /// <param name="filename">The XML document to deserialize from.</param>
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <returns>The result of the deserialization.</returns>
-        public static T DeserializeXMLFromFile<T>(string filename, XslCompiledTransform transform = null)
+        public static T DeserializeXmlFromFile<T>(string filename, XslCompiledTransform transform = null)
             where T : class
         {
             try
@@ -128,7 +131,7 @@ namespace EVEMon.Common
         /// <param name="text">The text.</param>
         /// <param name="transform">The transform.</param>
         /// <returns>The result of the deserialization.</returns>
-        public static T DeserializeXMLFromString<T>(string text, XslCompiledTransform transform = null)
+        public static T DeserializeXmlFromString<T>(string text, XslCompiledTransform transform = null)
             where T : class
         {
             try
@@ -242,7 +245,7 @@ namespace EVEMon.Common
         /// <param name="filename">The filename.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <returns>The deserialized result</returns>
-        internal static APIResult<T> DeserializeAPIResult<T>(string filename, XslCompiledTransform transform)
+        internal static APIResult<T> DeserializeAPIResult<T>(string filename, XslCompiledTransform transform = null)
         {
             try
             {
@@ -262,14 +265,14 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The HTTP POST data to send, may be null.</param>
+        /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <param name="callback">The callback to call once the query has been completed.</param>
-        internal static void DownloadAPIResultAsync<T>(Uri url, HttpPostData postData, XslCompiledTransform transform,
-                                                       QueryCallback<T> callback)
+        internal static void DownloadAPIResultAsync<T>(Uri url, QueryCallback<T> callback, string postData = null,
+                                                       XslCompiledTransform transform = null)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url,
                 (asyncResult, userState) =>
                     {
                         try
@@ -286,10 +289,10 @@ namespace EVEMon.Common
                         {
                             ExceptionHandler.LogException(e, false);
                             EveMonClient.Trace("Method: DownloadAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
-                                url.AbsoluteUri, postData, typeof(T).Name);
+                                               url.AbsoluteUri, postData, typeof(T).Name);
                         }
                     },
-                null);
+                null, HttpMethod.Post, postData);
         }
 
         /// <summary>
@@ -297,9 +300,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The HTTP POST data to send, may be null.</param>
+        /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static APIResult<T> DownloadAPIResult<T>(Uri url, HttpPostData postData, XslCompiledTransform transform)
+        internal static APIResult<T> DownloadAPIResult<T>(Uri url, string postData = null, XslCompiledTransform transform = null)
         {
             APIResult<T> result = new APIResult<T>(APIError.Http,
                                                    String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
@@ -307,7 +310,7 @@ namespace EVEMon.Common
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url,
                 (asyncResult, userState) =>
                     {
                         try
@@ -330,7 +333,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null);
+                null, HttpMethod.Post, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -347,7 +350,7 @@ namespace EVEMon.Common
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <param name="doc">The XML document to deserialize from.</param>
         /// <returns>The result of the deserialization.</returns>
-        private static APIResult<T> DeserializeAPIResultCore<T>(IXPathNavigable doc, XslCompiledTransform transform)
+        private static APIResult<T> DeserializeAPIResultCore<T>(IXPathNavigable doc, XslCompiledTransform transform = null)
         {
             APIResult<T> result;
 
@@ -411,8 +414,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The HTTP POST data to send, may be null.</param>
-        internal static BCAPIResult<T> DownloadBCAPIResult<T>(Uri url, HttpPostData postData)
+        /// <param name="postData">The post data.</param>
+        /// <returns></returns>
+        internal static BCAPIResult<T> DownloadBCAPIResult<T>(Uri url, string postData = null)
         {
             string errorMessage = String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url);
             BCAPIError error = new BCAPIError { ErrorCode = "0", ErrorMessage = errorMessage };
@@ -421,7 +425,7 @@ namespace EVEMon.Common
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url,
                 (asyncResult, userState) =>
                     {
                         try
@@ -454,7 +458,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null);
+                null, HttpMethod.Post, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -469,13 +473,13 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The HTTP POST data to send, may be null.</param>
+        /// <param name="postData">The post data.</param>
         /// <param name="callback">The callback to call once the query has been completed.</param>
         internal static void DownloadBCAPIResultAsync<T>(Uri url, Serialization.BattleClinic.QueryCallback<T> callback,
-                                                         HttpPostData postData = null)
+                                                         string postData = null)
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url,
                 (asyncResult, userState) =>
                     {
                         try
@@ -497,10 +501,10 @@ namespace EVEMon.Common
                         {
                             ExceptionHandler.LogException(e, false);
                             EveMonClient.Trace("Method: DownloadBCAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
-                                url.AbsoluteUri, postData, typeof(T).Name);
+                                               url.AbsoluteUri, postData, typeof(T).Name);
                         }
-},
-                null);
+                    },
+                null, HttpMethod.Post, postData);
         }
 
         /// <summary>
@@ -557,11 +561,11 @@ namespace EVEMon.Common
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
         /// <param name="callback">A callback invoked on the UI thread.</param>
         /// <returns></returns>
-        public static void DownloadXMLAsync<T>(Uri url, DownloadCallback<T> callback, HttpPostData postData = null)
+        public static void DownloadXmlAsync<T>(Uri url, DownloadCallback<T> callback, string postData = null)
             where T : class
         {
             EveMonClient.HttpWebService.DownloadXmlAsync(
-                url, postData,
+                url,
                 // Callback
                 (asyncResult, userState) =>
                     {
@@ -603,7 +607,7 @@ namespace EVEMon.Common
                         // We got the result, let's invoke the callback on this actor
                         Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
                     },
-                null);
+                null, HttpMethod.Post, postData);
         }
 
         /// <summary>
@@ -611,7 +615,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static string GetXMLStringRepresentation(IXPathNavigable doc)
+        public static string GetXmlStringRepresentation(IXPathNavigable doc)
         {
             if (doc == null)
                 throw new ArgumentNullException("doc");
@@ -691,7 +695,8 @@ namespace EVEMon.Common
             // Uses a regex to retrieve the revision number
             string content = File.Exists(filename) ? File.ReadAllText(filename) : filename;
 
-            Match match = Regex.Match(content, "revision=\"([0-9]+)\"", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(content, "revision=\"([0-9]+)\"",
+                                      RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
             // No match ? Then there was no "revision" attribute, this is an old format
             if (!match.Success || match.Groups.Count < 2)
@@ -849,6 +854,68 @@ namespace EVEMon.Common
                                                FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
             return new FileStream(filePath, mode, access, share);
+        }
+
+        /// <summary>
+        /// Compresses the provided input data using zlib gzip.
+        /// </summary>
+        /// <param name="inputData">The input data.</param>
+        /// <returns></returns>
+        public static IEnumerable<byte> GZipCompress(byte[] inputData)
+        {
+            if (inputData == null)
+                throw new ArgumentNullException("inputData");
+
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                GZipOutputStream gZipOutputStream = new GZipOutputStream(outStream);
+                gZipOutputStream.Write(inputData, 0, inputData.Length);
+                gZipOutputStream.Finish();
+
+                return outStream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Compresses the provided input data using zlib deflater.
+        /// </summary>
+        /// <param name="inputData">The input data.</param>
+        /// <returns></returns>
+        public static IEnumerable<byte> DeflateCompress(byte[] inputData)
+        {
+            if (inputData == null)
+                throw new ArgumentNullException("inputData");
+
+            using (MemoryStream outStream = GetMemoryStream())
+            {
+                DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(outStream);
+                deflaterOutputStream.Write(inputData, 0, inputData.Length);
+                deflaterOutputStream.Finish();
+
+                return outStream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Deserializes a JSON string to an object.
+        /// </summary>
+        /// <param name="value">The json string.</param>
+        /// <returns></returns>
+        public static Dictionary<string, object> DeserializeJsonToObject(string value)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            return serializer.Deserialize<Dictionary<string, object>>(value);
+        }
+
+        /// <summary>
+        /// Serializes the object to JSON.
+        /// </summary>
+        /// <param name="jsonObj">The json object.</param>
+        /// <returns></returns>
+        public static string SerializeObjectToJson(Dictionary<string, object> jsonObj)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            return serializer.Serialize(jsonObj);
         }
 
         /// <summary>

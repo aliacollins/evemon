@@ -165,7 +165,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
             this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.exportToCSVToolStripMenuItem.Text = "Export To CSV ...";
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // shipSelectControl

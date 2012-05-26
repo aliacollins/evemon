@@ -169,6 +169,8 @@ namespace EVEMon.About
         {
             Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
             VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, currentVersion);
+            
+            CopyrightLabel.Text = String.Format(CultureConstants.DefaultCulture, CopyrightLabel.Text, DateTime.UtcNow.Year);
 
             AddDevelopersToListView();
 

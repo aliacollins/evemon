@@ -23,6 +23,7 @@
     </xsl:for-each>
   </xsl:template>
 
+  <!--Transforms the SerializableDictionary to its Modified version-->
   <xsl:template match="categories/dictionary">
     <xsl:for-each select ="item">
       <xsl:variable name="notificationCategory" select="key/NotificationCategory"/>
@@ -34,6 +35,7 @@
     </xsl:for-each>
   </xsl:template>
 
+  <!--Transforms the SerializableDictionary to its Modified version-->
   <xsl:template match="locations/dictionary">
     <xsl:for-each select ="item">
       <xsl:variable name="window" select="key/string"/>
@@ -47,6 +49,7 @@
     </xsl:for-each>
   </xsl:template>
 
+  <!--Transforms the SerializableDictionary to its Modified version-->
   <xsl:template match="splitters/dictionary">
     <xsl:for-each select ="item">
       <xsl:variable name="splitter" select="key/string"/>
@@ -56,5 +59,19 @@
       </int>
     </xsl:for-each>
   </xsl:template>
-  
+
+  <!-- Renaming element value 'None' to 'NoSlot' in item browser slot filtering -->
+  <xsl:template match="slotFilter">
+    <xsl:choose>
+      <xsl:when test="'None'">
+        <xsl:element name="slotFilter">
+          <xsl:value-of select="'NoSlot'"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>

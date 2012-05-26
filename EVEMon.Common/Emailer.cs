@@ -57,11 +57,6 @@ namespace EVEMon.Common
             string skillName = skill.SkillName;
             string skillLevelString = Skill.GetRomanFromInt(skill.Level);
 
-            DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
-            bool freeTime = skillQueueEndTime < DateTime.UtcNow.AddHours(24);
-            TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
-            string timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
-
             // Message's first line
             StringBuilder body = new StringBuilder();
             body.AppendFormat(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}.{3}{3}", charName, skillName,
@@ -82,8 +77,11 @@ namespace EVEMon.Common
                 body.AppendFormat(CultureConstants.DefaultCulture, "Character is not training.{0}{0}", Environment.NewLine);
 
             // Free room in skill queue
-            if (freeTime)
+            DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
+            if (skillQueueEndTime < DateTime.UtcNow.AddHours(24))
             {
+                TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
+                string timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
                 body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText,
                                   Environment.NewLine);
             }

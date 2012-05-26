@@ -507,6 +507,17 @@ namespace EVEMon.CharactersComparison
                 UIHelper.ExportCharacterSkillsAsPlan(character, skills);
         }
 
+        /// <summary>
+        /// Handles the ColumnWidthChanging event of the lvCharacterInfo control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.ColumnWidthChangingEventArgs"/> instance containing the event data.</param>
+        private void lvCharacterInfo_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
+        {
+            e.Cancel = true;
+            e.NewWidth = lvCharacterInfo.Columns[e.ColumnIndex].Width;
+        }
+
         #endregion
     }
 }

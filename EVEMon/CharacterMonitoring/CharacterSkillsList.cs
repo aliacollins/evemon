@@ -15,6 +15,8 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterSkillsList : UserControl
     {
+        #region Fields
+
         private const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
         private const byte SkillsSummaryTextWidth = 75;
         private const byte SkillGroupTotalSPTextWidth = 100;
@@ -45,6 +47,11 @@ namespace EVEMon.CharacterMonitoring
 
         private int m_maxGroupNameWidth;
 
+        #endregion
+
+
+        #region Constructor
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -59,12 +66,12 @@ namespace EVEMon.CharacterMonitoring
             noSkillsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             m_requireRefresh = true;
-
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            Disposed += OnDisposed;
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
@@ -72,8 +79,27 @@ namespace EVEMon.CharacterMonitoring
         [Browsable(false)]
         public Character Character { get; set; }
 
+        #endregion
+
 
         #region Inherited events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -137,7 +163,7 @@ namespace EVEMon.CharacterMonitoring
 
                 m_maxGroupNameWidth = (groups.Select(
                     group => TextRenderer.MeasureText(group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
-                                                 groupNameSize => groupNameSize.Width)).Concat(new[] { 0 }).Max();
+                        groupNameSize => groupNameSize.Width)).Concat(new[] { 0 }).Max();
 
                 // Scroll through groups
                 lbSkills.Items.Clear();
@@ -740,7 +766,7 @@ namespace EVEMon.CharacterMonitoring
                 tmSkillExplorerTemp = new ToolStripMenuItem("Show In Skill &Explorer...", Resources.LeadsTo);
                 tmSkillExplorerTemp.Click += tmSkillExplorer_Click;
                 tmSkillExplorerTemp.Tag = skill;
-                
+
                 ToolStripMenuItem tmSkillExplorer = tmSkillExplorerTemp;
                 tmSkillExplorerTemp = null;
 
@@ -780,8 +806,9 @@ namespace EVEMon.CharacterMonitoring
                                               (menuPlanItem, plan) =>
                                                   {
                                                       menuPlanItem.Click += menuPlanItem_Click;
-                                                      menuPlanItem.Tag = new Pair<Plan, SkillLevel>(plan,
-                                                                                                    new SkillLevel(skill, level));
+                                                      menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
+                                                                                                            new SkillLevel(skill,
+                                                                                                                           level));
                                                   });
 
                         ToolStripMenuItem menuLevel = tempMenuLevel;
@@ -822,7 +849,7 @@ namespace EVEMon.CharacterMonitoring
 
             ttToolTip.Active = false;
             SkillGroup skillGroup = item as SkillGroup;
-            ttToolTip.SetToolTip(lbSkills, skillGroup != null ? GetTooltip(skillGroup) : GetTooltip(item as Skill));
+            ttToolTip.SetToolTip(lbSkills, skillGroup != null ? GetTooltip(skillGroup) : GetTooltip((Skill)item));
             ttToolTip.Active = true;
         }
 
@@ -848,7 +875,7 @@ namespace EVEMon.CharacterMonitoring
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                               "Next level I: {0:N0} skill points remaining\n", pointsLeft);
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                              "Training time remaining: {0}", remainingTimeText);
+                                              "Training time remaining: {0}\n", remainingTimeText);
                 AddSkillBoilerPlate(untrainedToolTip, skill);
                 return untrainedToolTip.ToString();
             }
@@ -864,7 +891,7 @@ namespace EVEMon.CharacterMonitoring
                                                      "Training to level {0}: {1:N0} skill points remaining\n",
                                                      Skill.GetRomanFromInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                     "Training time remaining: {0}", remainingTimeText);
+                                                     "Training time remaining: {0}\n", remainingTimeText);
                 AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
                 return partiallyTrainedToolTip.ToString();
             }
@@ -882,7 +909,7 @@ namespace EVEMon.CharacterMonitoring
                                                       "Next level {0}: {1:N0} skill points required\n",
                                                       Skill.GetRomanFromInt(nextLevel), pointsLeft);
                     levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                      "Training Time: {0}", remainingTimeText);
+                                                      "Training Time: {0}\n", remainingTimeText);
                     AddSkillBoilerPlate(levelCompleteToolTip, skill);
                     return levelCompleteToolTip.ToString();
                 }
@@ -891,7 +918,7 @@ namespace EVEMon.CharacterMonitoring
                 StringBuilder lv5ToolTip = new StringBuilder();
                 lv5ToolTip.AppendFormat(CultureConstants.DefaultCulture, "Level V Complete: {0:N0}/{1:N0}\n", sp,
                                         nextLevelSP);
-                lv5ToolTip.Append("No further training required\n");
+                lv5ToolTip.AppendLine("No further training required");
                 AddSkillBoilerPlate(lv5ToolTip, skill);
                 return lv5ToolTip.ToString();
             }
@@ -902,7 +929,7 @@ namespace EVEMon.CharacterMonitoring
             calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
                                                  "Next level {0}: {1:N0} skill points remaining\n", nextLevel, pointsLeft);
             calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture,
-                                                 "Training time remaining: {0}", remainingTimeText);
+                                                 "Training time remaining: {0}\n", remainingTimeText);
             AddSkillBoilerPlate(calculationErrorToolTip, skill);
             return calculationErrorToolTip.ToString();
         }
@@ -914,9 +941,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="skill">The skill.</param>
         private static void AddSkillBoilerPlate(StringBuilder toolTip, Skill skill)
         {
-            toolTip.Append("\n\n");
-            toolTip.AppendLine(skill.DescriptionNL);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "\nPrimary: {0}, ", skill.PrimaryAttribute);
+            toolTip.AppendLine();
+            toolTip.AppendLine(skill.Description.WordWrap(100));
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Primary: {0}, ", skill.PrimaryAttribute);
             toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", skill.SecondaryAttribute);
             toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0:N0} SP/hour)", skill.SkillPointsPerHour);
         }
@@ -984,9 +1011,9 @@ namespace EVEMon.CharacterMonitoring
         private static void menuPlanItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem planItem = (ToolStripMenuItem)sender;
-            Pair<Plan, SkillLevel> tag = (Pair<Plan, SkillLevel>)planItem.Tag;
+            KeyValuePair<Plan, SkillLevel> tag = (KeyValuePair<Plan, SkillLevel>)planItem.Tag;
 
-            IPlanOperation operation = tag.A.TryPlanTo(tag.B.Skill, tag.B.Level);
+            IPlanOperation operation = tag.Key.TryPlanTo(tag.Value.Skill, tag.Value.Level);
             PlanHelper.SelectPerform(operation);
         }
 

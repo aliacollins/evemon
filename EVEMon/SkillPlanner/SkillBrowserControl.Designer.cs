@@ -251,7 +251,7 @@ namespace EVEMon.SkillPlanner
             this.ownsBookMenu.Name = "ownsBookMenu";
             this.ownsBookMenu.Size = new System.Drawing.Size(71, 22);
             this.ownsBookMenu.Text = "&Owns book";
-            this.ownsBookMenu.CheckedChanged += new System.EventHandler(this.ownsBookMenu_CheckedChanged);
+            this.ownsBookMenu.Click += new System.EventHandler(this.ownsBookMenu_Click);
             // 
             // planToMenu
             // 

@@ -11,8 +11,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Properties
     {
-        private static DateTime s_startTime;
-
         /// <summary>
         /// Gets or sets the base price property ID.
         /// </summary>
@@ -30,7 +28,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         internal static void GenerateDatafile()
         {
-            s_startTime = DateTime.Now;
+            DateTime startTime = DateTime.Now;
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -47,11 +45,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                  "Targeting", "Propulsion", "Miscellaneous", "NULL"
                                              };
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
-
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
             datafile.Categories.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))));
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }
@@ -162,7 +161,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             int newPropID = 0;
             List<SerializableProperty> gProperties = new List<SerializableProperty>();
             List<SerializableProperty> pProperties = new List<SerializableProperty>();
-            foreach (DgmAttributeCategory srcCategory in Database.DgmAttributeCategoriesTable)
+            foreach (DgmAttributeCategories srcCategory in Database.DgmAttributeCategoriesTable)
             {
                 List<SerializableProperty> properties = new List<SerializableProperty>();
                 SerializablePropertyCategory category = new SerializablePropertyCategory

@@ -48,14 +48,14 @@ namespace EVEMon.Common
                 using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                 {
                     // Apply the XSL transform
-                    XslCompiledTransform transform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT);
+                    XslCompiledTransform transform = Util.LoadXslt(Properties.Resources.RowsetsXSLT);
                     writer.Formatting = Formatting.Indented;
                     transform.Transform(reader, writer);
                     writer.Flush();
 
                     // Deserialize from the given stream
-                    stream.Seek(0, SeekOrigin.Begin);
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableNotificationRefTypeIDs));
+                    stream.Seek(0, SeekOrigin.Begin);
                     s_notificationTypes = (SerializableNotificationRefTypeIDs)xs.Deserialize(stream);
                 }
             }

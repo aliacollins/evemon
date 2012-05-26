@@ -36,21 +36,6 @@ namespace EVEMon.Common
             Group = src.GroupType;
         }
 
-        /// <summary>
-        /// Constructor from the settings.
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="src"></param>
-        internal Standing(Character character, SerializableStanding src)
-        {
-            m_character = character;
-
-            EntityID = src.EntityID;
-            EntityName = src.EntityName;
-            StandingValue = src.StandingValue;
-            Group = src.Group;
-        }
-
         #endregion
 
 
@@ -142,19 +127,19 @@ namespace EVEMon.Common
         private void GetImage()
         {
             m_image = GetDefaultImage();
-            ImageService.GetImageAsync(GetImageUrl(), true, img =>
-                                                                {
-                                                                    if (img == null)
-                                                                        return;
+            ImageService.GetImageAsync(GetImageUrl(), img =>
+                                                          {
+                                                              if (img == null)
+                                                                  return;
 
-                                                                    m_image = img;
+                                                              m_image = img;
 
-                                                                    // Notify the subscriber that we got the image
-                                                                    // Note that if the image is in cache the event doesn't get fired
-                                                                    // as the event object is null
-                                                                    if (StandingImageUpdated != null)
-                                                                        StandingImageUpdated(this, EventArgs.Empty);
-                                                                });
+                                                              // Notify the subscriber that we got the image
+                                                              // Note that if the image is in cache the event doesn't get fired
+                                                              // as the event object is null
+                                                              if (StandingImageUpdated != null)
+                                                                  StandingImageUpdated(this, EventArgs.Empty);
+                                                          });
         }
 
         /// <summary>

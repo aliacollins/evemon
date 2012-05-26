@@ -24,6 +24,8 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public static class EveMonClient
     {
+        #region Fields
+
         private static StreamWriter s_traceStream;
         private static TextWriterTraceListener s_traceListener;
         private static readonly DateTime s_startTime = DateTime.UtcNow;
@@ -34,6 +36,9 @@ namespace EVEMon.Common
         private static string s_traceFile;
 
         public const int DefaultDpi = 96;
+
+        #endregion
+
 
         #region Initialization and threading
 
@@ -499,6 +504,11 @@ namespace EVEMon.Common
         public static event EventHandler ConquerableStationListUpdated;
 
         /// <summary>
+        /// Occurs when the EVE factional warfare statistics has been updated.
+        /// </summary>
+        public static event EventHandler EveFactionalWarfareStatsUpdated;
+
+        /// <summary>
         /// Occurs when the API key info have been updated.
         /// </summary>
         public static event EventHandler APIKeyInfoUpdated;
@@ -507,6 +517,11 @@ namespace EVEMon.Common
         /// Occurs when the EveIDToName list has been updated.
         /// </summary>
         public static event EventHandler EveIDToNameUpdated;
+
+        /// <summary>
+        /// Occurs when the refTypes list has been updated.
+        /// </summary>
+        public static event EventHandler RefTypesUpdated;
 
         /// <summary>
         /// Occurs when the list of characters in an API key has been updated.
@@ -522,6 +537,11 @@ namespace EVEMon.Common
         /// Occurs when one of the character's collection of plans changed.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterPlanCollectionChanged;
+
+        /// <summary>
+        /// Occurs when a character's potrait has been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitUpdated;
 
         /// <summary>
         /// Occurs when a character sheet has been updated.
@@ -544,9 +564,14 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterStandingsUpdated;
 
         /// <summary>
-        /// Occurs when a character's potrait has been updated.
+        /// Occurs when a character factional warfare stats have been updated.
         /// </summary>
-        public static event EventHandler<CharacterChangedEventArgs> CharacterPortraitUpdated;
+        public static event EventHandler<CharacterChangedEventArgs> CharacterFactionalWarfareStatsUpdated;
+
+        /// <summary>
+        /// Occurs when a character assets have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterAssetsUpdated;
 
         /// <summary>
         /// Occurs when both personal and corporation market orders of a character have been updated.
@@ -597,6 +622,16 @@ namespace EVEMon.Common
         /// Occurs when items list of a corporation's contract have been downloaded.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CorporationContractItemsDownloaded;
+
+        /// <summary>
+        /// Occurs when a character wallet journal have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterWalletJournalUpdated;
+
+        /// <summary>
+        /// Occurs when a character walet transactions have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterWalletTransactionsUpdated;
 
         /// <summary>
         /// Occurs when industry jobs of a character have been updated.
@@ -782,6 +817,16 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when the EVE factional warfare statistics have been updated.
+        /// </summary>
+        internal static void OnEveFactionalWarfareStatsUpdated()
+        {
+            Trace("EveMonClient.OnEveFactionalWarfareStatsUpdated");
+            if (EveFactionalWarfareStatsUpdated != null)
+                EveFactionalWarfareStatsUpdated(null, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Called when the EveIDToName list has been updated.
         /// </summary>
         internal static void OnEveIDToNameUpdated()
@@ -789,6 +834,16 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnEveIDToNameUpdated");
             if (EveIDToNameUpdated != null)
                 EveIDToNameUpdated(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when the RefTypes list has been updated.
+        /// </summary>
+        internal static void OnRefTypesUpdated()
+        {
+            Trace("EveMonClient.OnRefTypesUpdated");
+            if (RefTypesUpdated != null)
+                RefTypesUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -870,9 +925,30 @@ namespace EVEMon.Common
         internal static void OnCharacterStandingsUpdated(Character character)
         {
             Trace("EveMonClient.OnCharacterStandingsUpdated - {0}", character.Name);
-            Settings.Save();
             if (CharacterStandingsUpdated != null)
                 CharacterStandingsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character factinal warfare stats updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterFactionalWarfareStatsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterFactionalWarfareStatsUpdated - {0}", character.Name);
+            if (CharacterFactionalWarfareStatsUpdated != null)
+                CharacterFactionalWarfareStatsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character assets updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterAssetsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterAssetsUpdated - {0}", character.Name);
+            if (CharacterAssetsUpdated != null)
+                CharacterAssetsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -992,6 +1068,28 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Called when the character wallet journal updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterWalletJournalUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterWalletJournalUpdated - {0}", character.Name);
+            if (CharacterWalletJournalUpdated != null)
+                CharacterWalletJournalUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character wallet transcations updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterWalletTransactionsUpdated(Character character)
+        {
+            Trace("EveMonClient.CharacterWalletTransactionsUpdated - {0}", character.Name);
+            if (CharacterWalletTransactionsUpdated != null)
+                CharacterWalletTransactionsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
         /// Called when both character and corporation issued industry jobs for a character updated.
         /// </summary>
         /// <param name="character">The character.</param>
@@ -1056,7 +1154,6 @@ namespace EVEMon.Common
         internal static void OnCharacterResearchPointsUpdated(Character character)
         {
             Trace("EveMonClient.OnCharacterResearchPointsUpdated - {0}", character.Name);
-            Settings.Save();
             if (CharacterResearchPointsUpdated != null)
                 CharacterResearchPointsUpdated(null, new CharacterChangedEventArgs(character));
         }
@@ -1080,7 +1177,6 @@ namespace EVEMon.Common
         internal static void OnCharacterEVEMailingListsUpdated(Character character)
         {
             Trace("EveMonClient.OnCharacterEVEMailingListsUpdated - {0}", character.Name);
-            Settings.Save();
             if (CharacterEVEMailingListsUpdated != null)
                 CharacterEVEMailingListsUpdated(null, new CharacterChangedEventArgs(character));
         }

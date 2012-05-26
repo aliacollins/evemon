@@ -53,6 +53,9 @@ namespace EVEMon.SkillPlanner
         private bool m_columnsOrderChanged;
         private readonly List<PlanColumnSettings> m_columns = new List<PlanColumnSettings>();
 
+        // Tooltip
+        private InfiniteDisplayToolTip m_tooltip;
+
         #endregion
 
 
@@ -65,6 +68,8 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
             pscPlan.RememberDistanceKey = "PlanEditor";
+
+            m_tooltip = new InfiniteDisplayToolTip(lvSkills);
 
             ListViewHelper.EnableDoubleBuffer(lvSkills);
 
@@ -96,6 +101,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void OnDisposed(object sender, EventArgs e)
         {
+            m_tooltip.Dispose();
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.CharacterImplantSetCollectionChanged -= EveMonClient_CharacterImplantSetCollectionChanged;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
@@ -361,9 +367,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="restoreSelectionAndFocus">When false, selection and focus will be reseted.</param>
         private void UpdateSkillList(bool restoreSelectionAndFocus = true)
         {
-            // Disable controls, they will be restored one the selection is updated
-            tsbMoveUp.Enabled = false;
-            tsbMoveDown.Enabled = false;
+            // Disable autorefresh timer, it will be enabled if a training entry is found
             tmrAutoRefresh.Stop();
 
             // Stores selection and focus, to restore them after the update
@@ -413,30 +417,28 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // We avoid clear + AddRange because it causes the sliders position to reset
-                while (lvSkills.Items.Count > 1)
+                while (lvSkills.Items.Count > 0)
                 {
                     lvSkills.Items.RemoveAt(lvSkills.Items.Count - 1);
                 }
 
-                bool isEmpty = (lvSkills.Items.Count == 0);
                 lvSkills.Items.AddRange(items.ToArray());
-                if (!isEmpty)
-                    lvSkills.Items.RemoveAt(0);
-
-                // Complete the items initialization
-                UpdateListViewItems();
 
                 // Restore selection and focus
                 if (restoreSelectionAndFocus)
                 {
                     RestoreSelection(selection);
-                    ListViewItem focusedItem =
-                        lvSkills.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag.GetHashCode() == focusedHashCode);
+                    ListViewItem focusedItem = lvSkills.Items.Cast<ListViewItem>()
+                        .FirstOrDefault(x => x.Tag.GetHashCode() == focusedHashCode);
+
                     if (focusedItem != null)
                         focusedItem.Focused = true;
 
                     lvSkills.Select();
                 }
+
+                // Complete the items initialization
+                UpdateListViewItems();
             }
             finally
             {
@@ -666,15 +668,15 @@ namespace EVEMon.SkillPlanner
                 case PlanColumn.PlanGroup:
                     return entry.PlanGroupsDescription;
                 case PlanColumn.TrainingTime:
-                    return entry.TrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
+                    return entry.TrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 case PlanColumn.TrainingTimeNatural:
-                    return entry.NaturalTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
+                    return entry.NaturalTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 case PlanColumn.EarliestStart:
                     return String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0:G}", entry.StartTime);
                 case PlanColumn.EarliestEnd:
                     return String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0:G}", entry.EndTime);
                 case PlanColumn.PercentComplete:
-                    return entry.FractionCompleted.ToString("P0", CultureConstants.DefaultCulture);
+                    return String.Format(CultureConstants.DefaultCulture, "{0}%", Math.Floor(entry.FractionCompleted * 100));
                 case PlanColumn.SkillRank:
                     return entry.Skill.Rank.ToString(CultureConstants.DefaultCulture);
                 case PlanColumn.PrimaryAttribute:
@@ -2137,30 +2139,30 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lvSkills_ItemHover(object sender, ListViewItemMouseHoverEventArgs e)
         {
-            ListViewItem lvi = e.Item;
-            if (lvi == null)
+            if (e.Item == null)
                 return;
 
             // Is it an entry ?
-            if (lvi.Tag is PlanEntry)
+            if (e.Item.Tag is PlanEntry)
             {
-                Skill skill = GetPlanEntry(lvi).CharacterSkill;
-                StringBuilder builder = new StringBuilder(skill.Description);
+                Skill skill = GetPlanEntry(e.Item).CharacterSkill;
+                StringBuilder builder = new StringBuilder(skill.Description.WordWrap(100, false));
 
                 if (!skill.IsKnown)
                 {
-                    builder.Append("\n\nYou do not know this skill - you ");
+                    builder.AppendLine();
+                    builder.Append("You do not know this skill - you ");
                     if (!skill.IsOwned)
                         builder.Append("do not ");
-                    builder.Append("own the skillbook");
+                    builder.Append("own the skillbook.");
                 }
-                lvi.ToolTipText = builder.ToString();
+                e.Item.ToolTipText = builder.ToString();
             }
                 // Then it is a remapping point
-            else if (lvi.Tag is RemappingPoint)
+            else if (e.Item.Tag is RemappingPoint)
             {
-                RemappingPoint point = lvi.Tag as RemappingPoint;
-                lvi.ToolTipText = (m_areRemappingPointsActive ? point.ToLongString() : "Remapping (ignored)");
+                RemappingPoint point = e.Item.Tag as RemappingPoint;
+                e.Item.ToolTipText = (m_areRemappingPointsActive ? point.ToLongString() : "Remapping (ignored)");
             }
         }
 
@@ -2172,6 +2174,33 @@ namespace EVEMon.SkillPlanner
         private void lvSkills_ColumnReordered(object sender, ColumnReorderedEventArgs e)
         {
             m_columnsOrderChanged = true;
+        }
+
+        /// <summary>
+        /// When the mouse moves over the list, we show the item's tooltip if over an item.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lvSkills_MouseMove(object sender, MouseEventArgs e)
+        {
+            ListViewItem item = lvSkills.GetItemAt(e.Location.X, e.Location.Y);
+            if (item == null)
+            {
+                m_tooltip.Hide();
+                return;
+            }
+
+            m_tooltip.Show(item.ToolTipText, e.Location);
+        }
+
+        /// <summary>
+        /// When the mouse leaves the list, we hide the item's tooltip.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void lvSkills_MouseLeave(object sender, EventArgs e)
+        {
+            m_tooltip.Hide();
         }
 
         #endregion

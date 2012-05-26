@@ -155,7 +155,7 @@
     <comment>New web address for portraits as part of Incursion 1.1.0</comment>
   </data>
   <data name="GoogleCalendarURL" xml:space="preserve">
-    <value>http://www.google.com/calendar/feeds/default/private/full</value>
+    <value>https://www.google.com/calendar/feeds/default/private/full</value>
   </data>
   <data name="APICredentials" xml:space="preserve">
     <value>https://support.eveonline.com/api</value>
@@ -491,5 +491,8 @@
   </data>
   <data name="PostDataCorporationIDOnly" xml:space="preserve">
     <value>corporationID={0}</value>
+  </data>
+  <data name="UploaderEndPoints" xml:space="preserve">
+    <value>https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/endpoints.json</value>
   </data>
 </root>

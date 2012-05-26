@@ -109,30 +109,11 @@ namespace EVEMon.SkillPlanner
                 UpdateContent();
             }
         }
+
         #endregion
 
 
         #region Content update
-
-        /// <summary>
-        /// Occurs whenever a plan is changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
-        {
-            UpdatePlannedLevel();
-        }
-
-        /// <summary>
-        /// Occurs whenever the settings changed.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
-        {
-            UpdateControlVisibility();
-        }
 
         /// <summary>
         /// Updates the control visibility.
@@ -261,7 +242,7 @@ namespace EVEMon.SkillPlanner
 
             // Left training time for level only
             TimeSpan timeOfLevelOnly = m_selectedSkill.GetLeftTrainingTimeForLevelOnly(level);
-            sb.Append(timeOfLevelOnly.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
+            sb.Append(timeOfLevelOnly.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
 
             // Total training time or completion percentage
             TimeSpan timeForPrereqs = m_selectedSkill.Character.GetTrainingTimeToMultipleSkills(m_selectedSkill.Prerequisites);
@@ -315,6 +296,32 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
+        #region Global events
+
+        /// <summary>
+        /// Occurs whenever a plan is changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        {
+            UpdatePlannedLevel();
+        }
+
+        /// <summary>
+        /// Occurs whenever the settings changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateControlVisibility();
+        }
+
+
+        #endregion
+
+
         #region Controls events handlers
 
         /// <summary>
@@ -342,7 +349,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ownsBookMenu_CheckedChanged(object sender, EventArgs e)
+        private void ownsBookMenu_Click(object sender, EventArgs e)
         {
             m_selectedSkill.IsOwned = ownsBookMenu.Checked;
             skillSelectControl.UpdateContent();

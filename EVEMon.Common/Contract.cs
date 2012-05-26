@@ -18,6 +18,8 @@ namespace EVEMon.Common
         private string m_assignee;
         private string m_acceptor;
         private bool m_queryPending;
+        private int m_startStationID;
+        private int m_endStationID;
 
         /// <summary>
         /// The maximum number of days after contract expires. Beyond this limit, we do not import contracts anymore.
@@ -178,7 +180,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the volume.
         /// </summary>
-        public double Volume { get; private set; }
+        public decimal Volume { get; private set; }
 
         /// <summary>
         /// Gets the issuer.
@@ -239,7 +241,7 @@ namespace EVEMon.Common
                     return String.Format(CultureConstants.DefaultCulture, "{0} >> {1} ({2} m³)",
                                          StartStation.SolarSystem.Name, EndStation.SolarSystem.Name, Math.Round(Volume));
 
-                if (!m_contractItems.Any())
+                if (!m_contractItems.Any() || !ContractItems.Any())
                     return "Unknown";
 
                 if (IsTrading)
@@ -437,14 +439,12 @@ namespace EVEMon.Common
             IssuerID = src.IssuerID;
             AssigneeID = src.AssigneeID;
             AcceptorID = src.AcceptorID;
-            StartStation = Station.GetByID(src.StartStationID);
-            EndStation = Station.GetByID(src.EndStationID);
             Description = String.IsNullOrWhiteSpace(src.Title) ? "(None)" : src.Title;
             IssuedFor = src.ForCorp ? IssuedFor.Corporation : IssuedFor.Character;
             Issued = src.DateIssued;
             Expiration = src.DateExpired;
             Accepted = src.DateAccepted;
-            Duration = (int)src.DateExpired.Subtract(src.DateIssued).TotalDays;
+            Duration = Convert.ToInt32(src.DateExpired.Subtract(src.DateIssued).TotalDays);
             DaysToComplete = src.NumDays;
             Completed = src.DateCompleted;
             Price = src.Price;
@@ -452,6 +452,9 @@ namespace EVEMon.Common
             Collateral = src.Collateral;
             Buyout = src.Buyout;
             Volume = src.Volume;
+            m_startStationID = src.StartStationID;
+            m_endStationID = src.EndStationID;
+            UpdateStation();
 
             Availability = Enum.IsDefined(typeof(ContractAvailability), src.Availability)
                                ? (ContractAvailability)Enum.Parse(typeof(ContractAvailability), src.Availability)
@@ -579,6 +582,20 @@ namespace EVEMon.Common
                 EveMonClient.OnCharacterContractItemsDownloaded(Character);
             else
                 EveMonClient.OnCorporationContractItemsDownloaded(Character);
+        }
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Updates the station.
+        /// </summary>
+        public void UpdateStation()
+        {
+            StartStation = Station.GetByID(m_startStationID);
+            EndStation = Station.GetByID(m_endStationID);
         }
 
         #endregion

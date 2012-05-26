@@ -32,7 +32,7 @@ namespace EVEMon.Common.Data
         #region Indexers
 
         /// <summary>
-        /// Gets a property from its name. If not found, return null.
+        /// Gets a property from its id. If not found, return null.
         /// </summary>
         /// <param name="id">The property id we're searching for.</param>
         /// <returns>The wanted property when found; null otherwise.</returns>

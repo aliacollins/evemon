@@ -209,6 +209,7 @@
             this.CharacterNameLabel.Size = new System.Drawing.Size(84, 13);
             this.CharacterNameLabel.TabIndex = 4;
             this.CharacterNameLabel.Text = "Character Name";
+            this.CharacterNameLabel.UseMnemonic = false;
             // 
             // BioInfoLabel
             // 
@@ -260,6 +261,7 @@
             this.CorporationNameLabel.Size = new System.Drawing.Size(82, 13);
             this.CorporationNameLabel.TabIndex = 6;
             this.CorporationNameLabel.Text = "Corporation Info";
+            this.CorporationNameLabel.UseMnemonic = false;
             this.CorporationNameLabel.MouseHover += new System.EventHandler(this.CorporationNameLabel_MouseHover);
             // 
             // AllianceInfoIndicationPictureBox
@@ -304,6 +306,7 @@
             this.ActiveShipLabel.Size = new System.Drawing.Size(82, 13);
             this.ActiveShipLabel.TabIndex = 10;
             this.ActiveShipLabel.Text = "Active Ship Info";
+            this.ActiveShipLabel.UseMnemonic = false;
             this.ActiveShipLabel.MouseHover += new System.EventHandler(this.ActiveShipLabel_MouseHover);
             // 
             // LocationInfoIndicationPictureBox
@@ -469,7 +472,7 @@
             this.SkillSummaryLabel.Size = new System.Drawing.Size(115, 65);
             this.SkillSummaryLabel.TabIndex = 1;
             this.SkillSummaryLabel.Text = "Known Skills: 0\r\nSkills at Level V: 0\r\nTotal SP: 0\r\nClone Limit: 0\r\nClone Grade U" +
-                "nknown";
+    "nknown";
             this.SkillSummaryLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.SkillSummaryLabel.MouseHover += new System.EventHandler(this.SkillSummaryLabel_MouseHover);
             // 

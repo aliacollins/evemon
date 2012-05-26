@@ -11,14 +11,12 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Certificates
     {
-        private static DateTime s_startTime;
-
         /// <summary>
         /// Generate the certificates datafile.
         /// </summary>        
         internal static void GenerateDatafile()
         {
-            s_startTime = DateTime.Now;
+            DateTime startTime = DateTime.Now;
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -43,11 +41,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 listOfCertCategories.Add(crtCategory);
             }
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}", DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
-
             // Serialize
             CertificatesDatafile datafile = new CertificatesDatafile();
             datafile.Categories.AddRange(listOfCertCategories);
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
         }
@@ -132,7 +131,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 if (relationship.ParentTypeID != null) // prereq is a skill
                 {
-                    InvType skill = Database.InvTypeTable.First(x => x.ID == relationship.ParentTypeID);
+                    InvTypes skill = Database.InvTypesTable.First(x => x.ID == relationship.ParentTypeID);
                     crtPrerequisites.Kind = SerializableCertificatePrerequisiteKind.Skill;
                     crtPrerequisites.Name = skill.Name;
                     crtPrerequisites.Level = relationship.ParentLevel.ToString();
@@ -160,7 +159,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     new
                         {
                             recommendation,
-                            shipName = Database.InvTypeTable.First(x => x.ID == recommendation.ShipTypeID)
+                            shipName = Database.InvTypesTable.First(x => x.ID == recommendation.ShipTypeID)
                         }).Select(certRecom => new SerializableCertificateRecommendation
                                                    {
                                                        ID = certRecom.recommendation.ID,

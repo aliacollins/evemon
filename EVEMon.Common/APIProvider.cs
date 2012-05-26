@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -134,15 +133,6 @@ namespace EVEMon.Common
         #region Queries
 
         /// <summary>
-        /// Query the conquerable station list.
-        /// </summary>
-        public APIResult<SerializableAPIConquerableStationList> QueryConquerableStationList()
-        {
-            return QueryMethod<SerializableAPIConquerableStationList>(APIGenericMethods.ConquerableStationList, null,
-                                                                      RowsetsTransform);
-        }
-
-        /// <summary>
         /// Query a method without arguments.
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
@@ -150,7 +140,7 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         public void QueryMethodAsync<T>(Enum method, QueryCallback<T> callback)
         {
-            QueryMethodAsync(method, null, RowsetsTransform, callback);
+            QueryMethodAsync(method, callback, null, RowsetsTransform);
         }
 
         /// <summary>
@@ -163,9 +153,9 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   NetworkConstants.PostDataBase, id, verificationCode));
-            QueryMethodAsync(method, postData, RowsetsTransform, callback);
+            string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
+                                            id, verificationCode);
+            QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
         /// <summary>
@@ -177,13 +167,11 @@ namespace EVEMon.Common
         /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="characterID">The character ID.</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID,
-                                        QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   NetworkConstants.PostDataWithCharID, id, verificationCode,
-                                                                   characterID));
-            QueryMethodAsync(method, postData, RowsetsTransform, callback);
+            string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                            id, verificationCode, characterID);
+            QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
         /// <summary>
@@ -199,10 +187,9 @@ namespace EVEMon.Common
         public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, long messageID,
                                         QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture, GetPostDataURL(method),
-                                                                   id, verificationCode,
-                                                                   characterID, messageID));
-            QueryMethodAsync(method, postData, RowsetsTransform, callback);
+            string postData = String.Format(CultureConstants.InvariantCulture, GetPostDataURL(method),
+                                            id, verificationCode, characterID, messageID);
+            QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
         /// <summary>
@@ -212,11 +199,11 @@ namespace EVEMon.Common
         /// <param name="method">The method.</param>
         /// <param name="ids">The ids.</param>
         /// <param name="callback">The callback.</param>
-        public void  QueryMethodAsync<T>(Enum method, string ids, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, string ids, QueryCallback<T> callback)
         {
-            HttpPostData postData = new HttpPostData(String.Format(CultureConstants.InvariantCulture,
-                                                                   NetworkConstants.PostDataIDsOnly, ids));
-            QueryMethodAsync(method, postData, RowsetsTransform, callback);
+            string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly,
+                                            ids);
+            QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
         #endregion
@@ -232,31 +219,14 @@ namespace EVEMon.Common
         /// <param name="postData">The http POST data</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <returns>The deserialized object</returns>
-        private APIResult<T> QueryMethod<T>(Enum method, HttpPostData postData, XslCompiledTransform transform)
+        private APIResult<T> QueryMethod<T>(Enum method, string postData, XslCompiledTransform transform)
         {
             // Download
             Uri url = GetMethodUrl(method);
             APIResult<T> result = Util.DownloadAPIResult<T>(url, postData, transform);
 
             // On failure with a custom method, fallback to CCP
-            if (ShouldRetryWithCCP(result))
-                return s_ccpProvider.QueryMethod<T>(method, postData, transform);
-
-            // If the result is a character sheet, we store the result
-            if (method is APICharacterMethods && (APICharacterMethods)method == APICharacterMethods.CharacterSheet &&
-                !result.HasError)
-            {
-                SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
-                LocalXmlCache.Save(sheet.Name, result.XmlDocument);
-            }
-
-            // If the result is a conquerable station list, we store the result
-            if (method is APIGenericMethods && (APIGenericMethods)method == APIGenericMethods.ConquerableStationList &&
-                !result.HasError)
-                LocalXmlCache.Save(method.ToString(), result.XmlDocument);
-
-            // Returns
-            return result;
+            return ShouldRetryWithCCP(result) ? s_ccpProvider.QueryMethod<T>(method, postData, transform) : result;
         }
 
         /// <summary>
@@ -264,11 +234,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult&lt;T&gt;"/>).</typeparam>
         /// <param name="method">The method to query</param>
-        /// <param name="postData">The http POST data</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
+        /// <param name="postData">The http POST data</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        private void QueryMethodAsync<T>(Enum method, HttpPostData postData, XslCompiledTransform transform,
-                                         QueryCallback<T> callback)
+        private void QueryMethodAsync<T>(Enum method, QueryCallback<T> callback, string postData, XslCompiledTransform transform)
         {
             // Check callback not null
             if (callback == null)
@@ -277,7 +246,7 @@ namespace EVEMon.Common
             // Lazy download
             Uri url = GetMethodUrl(method);
             Util.DownloadAPIResultAsync<T>(
-                url, postData, transform,
+                url,
                 result =>
                     {
                         // On failure with a custom provider, fallback to CCP
@@ -286,26 +255,14 @@ namespace EVEMon.Common
                             APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
                                                           ? s_ccpProvider
                                                           : s_ccpTestProvider;
-                            ccpProvider.QueryMethodAsync(method, postData, transform, callback);
+                            ccpProvider.QueryMethodAsync(method, callback, postData, transform);
                             return;
                         }
 
-                        // If the result is a character sheet, we store the result
-                        if (method is APICharacterMethods && (APICharacterMethods)method == APICharacterMethods.CharacterSheet &&
-                            !result.HasError)
-                        {
-                            SerializableAPICharacterSheet sheet = (SerializableAPICharacterSheet)(Object)result.Result;
-                            LocalXmlCache.Save(sheet.Name, result.XmlDocument);
-                        }
-
-                        // If the result is a conquerable station list, we store the result
-                        if (method is APIGenericMethods && (APIGenericMethods)method == APIGenericMethods.ConquerableStationList &&
-                            !result.HasError)
-                            LocalXmlCache.Save(method.ToString(), result.XmlDocument);
-
                         // Invokes the callback
                         callback(result);
-                    });
+                    },
+                postData, transform);
         }
 
         /// <summary>
@@ -320,14 +277,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="XmlSerializer"/>
-        /// </summary>
-        internal static XslCompiledTransform RowsetsTransform
-        {
-            get { return s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXSLT(Properties.Resources.RowsetsXSLT)); }
-        }
-
-        /// <summary>
         /// Gets the post data URL.
         /// </summary>
         /// <param name="method">The method.</param>
@@ -337,6 +286,14 @@ namespace EVEMon.Common
             return (method.GetType() == typeof(APICharacterMethods))
                        ? NetworkConstants.PostDataWithCharIDAndIDS
                        : NetworkConstants.PostDataWithCharIDAndContractID;
+        }
+
+        /// <summary>
+        /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="XmlSerializer"/>
+        /// </summary>
+        internal static XslCompiledTransform RowsetsTransform
+        {
+            get { return s_rowsetsTransform ?? (s_rowsetsTransform = Util.LoadXslt(Properties.Resources.RowsetsXSLT)); }
         }
 
         #endregion

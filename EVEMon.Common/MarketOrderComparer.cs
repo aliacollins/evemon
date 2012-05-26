@@ -98,7 +98,7 @@ namespace EVEMon.Common
                     return x.UnitaryPrice.CompareTo(y.UnitaryPrice);
                 case MarketOrderColumn.Volume:
                     // Compare the percent left
-                    return (x.InitialVolume * y.RemainingVolume - x.RemainingVolume * y.InitialVolume);
+                    return ((double)x.RemainingVolume / x.InitialVolume).CompareTo((double)y.RemainingVolume / y.InitialVolume);
                 case MarketOrderColumn.LastStateChange:
                     return x.LastStateChange.CompareTo(y.LastStateChange);
                 case MarketOrderColumn.OrderRange:

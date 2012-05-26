@@ -5,7 +5,7 @@ namespace EVEMon.Common
     public static class FormatHelper
     {
         /// <summary>
-        /// Formats the given price to a readable string.
+        /// Formats the given value into an abbreviated format string.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="format"></param>

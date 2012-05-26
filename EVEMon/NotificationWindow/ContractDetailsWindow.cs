@@ -9,6 +9,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
+using Region = EVEMon.Common.Data.Region;
 
 namespace EVEMon.NotificationWindow
 {
@@ -130,8 +131,8 @@ namespace EVEMon.NotificationWindow
         {
             get
             {
-                Common.Data.Region startStationRegion = m_contract.StartStation.SolarSystem.Constellation.Region;
-                Common.Data.Region characterLastKnownRegion = m_characterLastSolarSystem != null
+                Region startStationRegion = m_contract.StartStation.SolarSystem.Constellation.Region;
+                Region characterLastKnownRegion = m_characterLastSolarSystem != null
                                                                   ? m_characterLastSolarSystem.Constellation.Region
                                                                   : null;
                 string secondHalfText = m_contract.Availability == ContractAvailability.Private

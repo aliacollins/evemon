@@ -11,14 +11,12 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Skills
     {
-        private static DateTime s_startTime;
-
         /// <summary>
         /// Generate the skills datafile.
         /// </summary>
         internal static void GenerateDatafile()
         {
-            s_startTime = DateTime.Now;
+            DateTime startTime = DateTime.Now;
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -27,7 +25,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Export skill groups
             List<SerializableSkillGroup> listOfSkillGroups = new List<SerializableSkillGroup>();
 
-            foreach (InvGroup group in Database.InvGroupTable.Where(
+            foreach (InvGroups group in Database.InvGroupsTable.Where(
                 x => x.CategoryID == DBConstants.SkillCategoryID && x.ID != DBConstants.FakeSkillsGroupID).OrderBy(x => x.Name))
             {
                 SerializableSkillGroup skillGroup = new SerializableSkillGroup
@@ -43,12 +41,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 listOfSkillGroups.Add(skillGroup);
             }
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(s_startTime)).TrimEnd('0'));
-
             // Serialize
             SkillsDatafile datafile = new SkillsDatafile();
             datafile.SkillGroups.AddRange(listOfSkillGroups);
+
+            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
+                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
 
             Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }
@@ -62,7 +60,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             List<SerializableSkill> listOfSkillsInGroup = new List<SerializableSkill>();
 
-            foreach (InvType skill in Database.InvTypeTable.Where(x => x.GroupID == group.ID))
+            foreach (InvTypes skill in Database.InvTypesTable.Where(x => x.GroupID == group.ID))
             {
                 Util.UpdatePercentDone(Database.SkillsTotalCount);
 
@@ -104,7 +102,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                         !skillAttributes.ContainsKey(DBConstants.RequiredSkillLevelPropertyIDs[i]))
                         continue;
 
-                    InvType prereqSkill = Database.InvTypeTable.First(
+                    InvTypes prereqSkill = Database.InvTypesTable.First(
                         x => x.ID == skillAttributes[DBConstants.RequiredSkillPropertyIDs[i]]);
 
                     if (prereqSkill == null)

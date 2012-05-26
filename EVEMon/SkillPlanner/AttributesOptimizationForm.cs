@@ -297,13 +297,10 @@ namespace EVEMon.SkillPlanner
 
                 if (savedTime < TimeSpan.Zero)
                 {
-                    ListViewItem savedTimeItem = lvPoints.Items.Add(new ListViewItem(
-                                                                        String.Format(CultureConstants.DefaultCulture,
-                                                                                      "{0} slower than current.",
-                                                                                      (-savedTime).ToDescriptiveText(
-                                                                                          DescriptiveTextOptions.
-                                                                                              IncludeCommas)),
-                                                                        globalGroup));
+                    ListViewItem savedTimeItem = lvPoints.Items.Add(
+                        new ListViewItem(String.Format(CultureConstants.DefaultCulture, "{0} slower than current.",
+                                                       (-savedTime).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)),
+                                         globalGroup));
                     savedTimeItem.ForeColor = Color.DarkRed;
                 }
                 else

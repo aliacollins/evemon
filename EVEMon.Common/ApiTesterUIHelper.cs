@@ -40,7 +40,7 @@ namespace EVEMon.Common
         /// <value>
         ///   <c>true</c> if we use internal info; otherwise, <c>false</c>.
         /// </value>
-        public static bool UseInternalInfo { private get; set; }
+        public static bool UseInternalInfo { get; set; }
 
         /// <summary>
         /// Sets a value indicating whether we use external info.
@@ -48,7 +48,7 @@ namespace EVEMon.Common
         /// <value>
         ///   <c>true</c> if we use external info; otherwise, <c>false</c>.
         /// </value>
-        public static bool UseExternalInfo { private get; set; }
+        public static bool UseExternalInfo { get; set; }
 
         /// <summary>
         /// Sets the selected item.
@@ -56,7 +56,7 @@ namespace EVEMon.Common
         /// <value>
         /// The selected item.
         /// </value>
-        public static object SelectedItem { private get; set; }
+        public static object SelectedItem { get; set; }
 
         /// <summary>
         /// Sets the selected character.
@@ -64,7 +64,7 @@ namespace EVEMon.Common
         /// <value>
         /// The selected character.
         /// </value>
-        public static object SelectedCharacter { private get; set; }
+        public static object SelectedCharacter { get; set; }
 
         /// <summary>
         /// Sets the key ID.
@@ -72,7 +72,7 @@ namespace EVEMon.Common
         /// <value>
         /// The key ID.
         /// </value>
-        public static string KeyID { private get; set; }
+        public static string KeyID { get; set; }
 
         /// <summary>
         /// Sets the Verification code.
@@ -80,7 +80,7 @@ namespace EVEMon.Common
         /// <value>
         /// The Verification code.
         /// </value>
-        public static string VCode { private get; set; }
+        public static string VCode { get; set; }
 
         /// <summary>
         /// Sets the char ID.
@@ -88,7 +88,7 @@ namespace EVEMon.Common
         /// <value>
         /// The char ID.
         /// </value>
-        public static string CharID { private get; set; }
+        public static string CharID { get; set; }
 
         /// <summary>
         /// Sets the ID or name text.
@@ -96,7 +96,7 @@ namespace EVEMon.Common
         /// <value>
         /// The ID or name text.
         /// </value>
-        public static string IDOrNameText { private get; set; }
+        public static string IDOrNameText { get; set; }
 
         /// <summary>
         /// Gets the error text.
@@ -432,6 +432,9 @@ namespace EVEMon.Common
         /// </summary>
         public static void SaveDocument(WebBrowser webBrowser)
         {
+            if (webBrowser == null)
+                throw new ArgumentNullException("webBrowser");
+
             if (webBrowser.Document == null || webBrowser.Document.Body == null)
                 return;
 
@@ -452,7 +455,7 @@ namespace EVEMon.Common
                     XmlDocument xdoc = new XmlDocument();
                     string innerText = webBrowser.Document.Body.InnerText.Trim().Replace("\n-", "\n");
                     xdoc.LoadXml(innerText);
-                    string content = Util.GetXMLStringRepresentation(xdoc);
+                    string content = Util.GetXmlStringRepresentation(xdoc);
 
                     // Moves to the final file
                     FileHelper.OverwriteOrWarnTheUser(

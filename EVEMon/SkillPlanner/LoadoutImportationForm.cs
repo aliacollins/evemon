@@ -21,12 +21,15 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public partial class LoadoutImportationForm : EVEMonForm
     {
+        #region Fields
+
         private readonly List<Item> m_objects = new List<Item>();
         private readonly List<StaticSkillLevel> m_skillsToAdd = new List<StaticSkillLevel>();
 
         private readonly string[] m_orderedNodeNames = new[]
                                                            {
-                                                               "High", "Med", "Low", "Rigs", "Subsystems", "Ammunition", "Drones"
+                                                               "High", "Med", "Low", "Rigs",
+                                                               "Subsystems", "Ammunition", "Drones"
                                                            };
 
         private static string[] s_lines;
@@ -36,6 +39,8 @@ namespace EVEMon.SkillPlanner
         private BaseCharacter m_character;
         private LoadoutFormat m_loadoutFormat;
         private string m_loadoutName;
+
+        #endregion
 
 
         #region Constructors
@@ -309,7 +314,7 @@ namespace EVEMon.SkillPlanner
                     return false;
             }
 
-            s_fittings = Util.DeserializeXMLFromString<SerializableFittings>(text);
+            s_fittings = Util.DeserializeXmlFromString<SerializableFittings>(text);
             return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.Name == s_fittings.Fitting.ShipType.Name);
         }
 
@@ -322,7 +327,7 @@ namespace EVEMon.SkillPlanner
         /// </returns>
         private static bool IsDNAFormat(string text)
         {
-            s_lines = text.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            s_lines = text.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             // Nothing to evaluate
             if (s_lines.Length == 0)

@@ -15,7 +15,7 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterStandingsList : UserControl
     {
-        private CCPCharacter m_ccpCharacter;
+        #region Fields
 
         // Standings drawing - Region & text padding
         private const int PadTop = 2;
@@ -33,6 +33,11 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_standingsBoldFont;
         private readonly List<string> m_collapsedGroups = new List<string>();
 
+        #endregion
+
+
+        #region Constructor
+
         public CharacterStandingsList()
         {
             InitializeComponent();
@@ -42,20 +47,39 @@ namespace EVEMon.CharacterMonitoring
             m_standingsFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_standingsBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noStandingsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            EveMonClient.CharacterStandingsUpdated += EveMonClient_CharacterStandingsUpdated;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            Disposed += OnDisposed;
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
+
+        #endregion
 
 
         #region Inherited events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            EveMonClient.CharacterStandingsUpdated += EveMonClient_CharacterStandingsUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -87,11 +111,8 @@ namespace EVEMon.CharacterMonitoring
         #region Content Management
 
         /// <summary>
-        /// Updates all the content
+        /// Updates the content.
         /// </summary>
-        /// <remarks>
-        /// Another high-complexity method for us to look at.
-        /// </remarks>
         private void UpdateContent()
         {
             // Returns if not visible
@@ -106,19 +127,13 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
-            m_ccpCharacter = Character as CCPCharacter;
-
-            // If the character is not a CCPCharacter it does not have standings
-            if (m_ccpCharacter == null)
-                return;
-
             int scrollBarPosition = lbStandings.TopIndex;
 
-            // Update the skills list
+            // Update the standings list
             lbStandings.BeginUpdate();
             try
             {
-                IEnumerable<Standing> standings = m_ccpCharacter.Standings;
+                IEnumerable<Standing> standings = Character.Standings;
                 IEnumerable<IGrouping<string, Standing>> groups = standings.GroupBy(
                     x => x.Group).Reverse();
 
@@ -139,7 +154,7 @@ namespace EVEMon.CharacterMonitoring
                     }
                 }
 
-                // Display or hide the "no skills" label.
+                // Display or hide the "no standings" label.
                 noStandingsLabel.Visible = !standings.Any();
                 lbStandings.Visible = standings.Any();
 
@@ -172,7 +187,7 @@ namespace EVEMon.CharacterMonitoring
             Standing standing = item as Standing;
             if (standing != null)
                 DrawItem(standing, e);
-            else 
+            else
                 DrawItem((String)item, e);
         }
 
@@ -215,15 +230,16 @@ namespace EVEMon.CharacterMonitoring
             // Measure texts
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            Skill diplomacySkill = m_ccpCharacter.Skills[DBConstants.DiplomacySkillID];
-            Skill connectionsSkill = m_ccpCharacter.Skills[DBConstants.ConnectionsSkillID];
+            Skill diplomacySkill = Character.Skills[DBConstants.DiplomacySkillID];
+            Skill connectionsSkill = Character.Skills[DBConstants.ConnectionsSkillID];
             SkillLevel diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.LastConfirmedLvl);
             SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
 
             string standingText = String.Format(CultureConstants.DefaultCulture, "{0}  {1:N2}", standing.EntityName,
                                                 standing.EffectiveStanding);
             string standingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})", standing.Status);
-            string standingsDetailsText = String.Format(CultureConstants.DefaultCulture, "{0} raises your effective standing from {1:N2}",
+            string standingsDetailsText = String.Format(CultureConstants.DefaultCulture,
+                                                        "{0} raises your effective standing from {1:N2}",
                                                         (standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel),
                                                         standing.StandingValue);
 

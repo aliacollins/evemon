@@ -17,6 +17,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal IndustryJobCollection(CCPCharacter character)
         {
             m_character = character;

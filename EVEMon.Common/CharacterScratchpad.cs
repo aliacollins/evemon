@@ -159,6 +159,13 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        public override void Dispose()
+        {
+        }
+
+        /// <summary>
         /// Gets the requested attribute.
         /// </summary>
         /// <param name="attribute"></param>

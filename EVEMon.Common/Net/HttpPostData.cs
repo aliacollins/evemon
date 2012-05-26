@@ -1,5 +1,6 @@
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace EVEMon.Common.Net
@@ -10,21 +11,40 @@ namespace EVEMon.Common.Net
     public sealed class HttpPostData
     {
         private readonly string m_data;
-        private readonly List<byte> m_content;
+        private readonly IEnumerable<byte> m_content;
 
-        public HttpPostData(string data)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpPostData"/> class.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="dataCompression">The compression.</param>
+        public HttpPostData(string data, DataCompression dataCompression = DataCompression.None)
         {
-            ASCIIEncoding encoding = new ASCIIEncoding();
-            m_content = new List<byte>(encoding.GetBytes(data));
             m_data = data;
+
+            byte[] encoded = Encoding.UTF8.GetBytes(data);
+            switch (dataCompression)
+            {
+                case DataCompression.Gzip:
+                    m_content = Util.GZipCompress(encoded);
+                    break;
+                case DataCompression.Deflate:
+                    m_content = Util.DeflateCompress(encoded);
+                    break;
+                case DataCompression.None:
+                    m_content = encoded;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         /// <summary>
         /// Gets the content's bytes.
         /// </summary>
-        public ReadOnlyCollection<byte> Content
+        public IEnumerable<byte> Content
         {
-            get { return m_content.AsReadOnly(); }
+            get { return m_content; }
         }
 
         /// <summary>
@@ -32,7 +52,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         public int Length
         {
-            get { return Content.Count; }
+            get { return Content.Count(); }
         }
 
         /// <summary>

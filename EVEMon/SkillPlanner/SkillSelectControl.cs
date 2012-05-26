@@ -10,7 +10,7 @@ using System.Resources;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using CommonResources = EVEMon.Common.Resources;
+using EVEMon.Common.Resources.Skill_Select;
 
 namespace EVEMon.SkillPlanner
 {
@@ -198,10 +198,9 @@ namespace EVEMon.SkillPlanner
         {
             string groupname = String.Empty;
 
-            if (index > 0 && index < CommonResources.Skill_Select.IconSettings.Default.Properties.Count)
+            if (index > 0 && index < IconSettings.Default.Properties.Count)
             {
-                SettingsProperty settingsProperty =
-                    CommonResources.Skill_Select.IconSettings.Default.Properties["Group" + index];
+                SettingsProperty settingsProperty = IconSettings.Default.Properties["Group" + index];
                 if (settingsProperty != null)
                     groupname = settingsProperty.DefaultValue.ToString();
             }

@@ -597,7 +597,6 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.HideSelection = false;
             this.lvSkills.Location = new System.Drawing.Point(0, 33);
             this.lvSkills.Name = "lvSkills";
-            this.lvSkills.ShowItemToolTips = true;
             this.lvSkills.Size = new System.Drawing.Size(519, 487);
             this.lvSkills.SmallImageList = this.ilIcons;
             this.lvSkills.TabIndex = 0;
@@ -613,6 +612,8 @@ namespace EVEMon.SkillPlanner
             this.lvSkills.DragLeave += new System.EventHandler(this.lvSkills_DragLeave);
             this.lvSkills.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvSkills_KeyDown);
             this.lvSkills.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseDoubleClick);
+            this.lvSkills.MouseLeave += new System.EventHandler(this.lvSkills_MouseLeave);
+            this.lvSkills.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lvSkills_MouseMove);
             // 
             // tlpHeader
             // 

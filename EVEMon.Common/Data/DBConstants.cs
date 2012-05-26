@@ -182,6 +182,16 @@ namespace EVEMon.Common.Data
         #endregion
 
 
+        #region Faction IDs
+
+        public const int CaldariFactionID = 500001;
+        public const int MinmatarFactionID = 500002;
+        public const int AmarrFactionID = 500003;
+        public const int GallenteFactionID = 500004;
+
+        #endregion
+
+
         #region Attribute Category IDs
 
         public const int FittingAtributeCategoryID = 1;
@@ -612,6 +622,7 @@ namespace EVEMon.Common.Data
         public const int AdvancedMassProductionSkillID = 24625;
         public const int RavenStateIssueID = 26840;
         public const int TempestTribalIssueID = 26842;
+        public const int CivilianDataInterfaceID = 27026;
         public const int ZainouBeancounterF50ID = 27167;
         public const int ZainouBeancounterG50ID = 27168;
         public const int ZainouBeancounterF40ID = 27170;
@@ -636,7 +647,6 @@ namespace EVEMon.Common.Data
         public const int ProteusElectronicsFrictionExtensionProcessorBlueprintID = 30057;
         public const int LokiElectronicsImmobilityDriversBlueprintID = 30067;
         public const int LegionPropulsionChassisOptimizationBlueprintID = 30077;
-        public const int SmallEWDroneRangeAugmentorIIBlueprintID = 32078;
         public const int TenguPropulsionIntercalatedNanofibersBlueprintID = 30087;
         public const int ProteusPropulsionWakeLimiterBlueprintID = 30097;
         public const int LokiPropulsionChassisOptimizationBlueprintID = 30107;

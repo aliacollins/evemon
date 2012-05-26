@@ -66,37 +66,38 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Google.GData.AccessControl, Version=1.8.0.0, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328, processorArchitecture=MSIL">
+    <Reference Include="Google.GData.AccessControl, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Google.GData.AccessControl.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>Dependencies\Google.GData.AccessControl.dll</HintPath>
     </Reference>
-    <Reference Include="Google.GData.Calendar, Version=1.8.0.0, Culture=neutral, PublicKeyToken=aa6748391206b888, processorArchitecture=MSIL">
+    <Reference Include="Google.GData.Calendar, Version=2.0.0.0, Culture=neutral, PublicKeyToken=aa6748391206b888, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Google.GData.Calendar.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>Dependencies\Google.GData.Calendar.dll</HintPath>
     </Reference>
-    <Reference Include="Google.GData.Client, Version=1.8.0.0, Culture=neutral, PublicKeyToken=04a59ca9b0273830, processorArchitecture=MSIL">
+    <Reference Include="Google.GData.Client, Version=2.0.0.0, Culture=neutral, PublicKeyToken=04a59ca9b0273830, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Google.GData.Client.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>Dependencies\Google.GData.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Google.GData.Extensions, Version=1.8.0.0, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876, processorArchitecture=MSIL">
+    <Reference Include="Google.GData.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExternalCalendar\Google.GData.Extensions.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>Dependencies\Google.GData.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Outlook, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>ExternalCalendar\Microsoft.Office.Interop.Outlook.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>Dependencies\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -104,6 +105,9 @@
     <Compile Include="APIKeyQueryMonitor.cs" />
     <Compile Include="APIMethods.cs" />
     <Compile Include="ApiTesterUIHelper.cs" />
+    <Compile Include="Asset.cs" />
+    <Compile Include="AssetCollection.cs" />
+    <Compile Include="AssetComparer.cs" />
     <Compile Include="BlankCharacterUIHelper.cs" />
     <Compile Include="CharacterDataQuerying.cs" />
     <Compile Include="CharacterIdentityIgnoreList.cs" />
@@ -125,6 +129,9 @@
     </Compile>
     <Compile Include="Controls\ColumnSelectWindow.Designer.cs">
       <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\InfiniteDisplayToolTip.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\DraggableListView.cs">
       <SubType>Component</SubType>
@@ -230,13 +237,21 @@
     <Compile Include="EmailProvider\YahooProvider.cs" />
     <Compile Include="EmploymentRecordCollection.cs" />
     <Compile Include="EmploymentRecord.cs" />
+    <Compile Include="EveFactionWarfareStats.cs" />
+    <Compile Include="EveFactionWarfareStatsCollection.cs" />
+    <Compile Include="EveFactionWar.cs" />
+    <Compile Include="EveFactionWarsCollection.cs" />
+    <Compile Include="EveFlag.cs" />
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
+    <Compile Include="EveRefType.cs" />
     <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
     <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\OutlookAppointmentFilter.cs" />
+    <Compile Include="EveFactionalWarfareStats.cs" />
+    <Compile Include="FactionalWarfareStats.cs" />
     <Compile Include="FormatHelper.cs" />
     <Compile Include="GlobalAPIKeyCollection.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -271,8 +286,21 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAPIEveFactionalWarfareStats.cs" />
+    <Compile Include="Serialization\API\SerializableAPIAssetList.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
+    <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
+    <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
+    <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
+    <Compile Include="Serialization\API\SerializableEveFactionalWarfareStatsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableEveFactionWarsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableEveFacWarfareTotals.cs" />
+    <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />
+    <Compile Include="Serialization\API\SerializableWalletJournalListItem.cs" />
+    <Compile Include="Serialization\API\SerializableAPIWalletTransactions.cs" />
+    <Compile Include="Serialization\API\SerializableWalletTransactionsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableAssetListItem.cs" />
     <Compile Include="Serialization\API\SerializableContractBidsListItem.cs" />
     <Compile Include="Serialization\API\SerializableContractItemsListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIContracts.cs" />
@@ -340,28 +368,48 @@
     <Compile Include="Serialization\FittingTools\SerializableFittingHardware.cs" />
     <Compile Include="Serialization\FittingTools\SerializableFittings.cs" />
     <Compile Include="Serialization\FittingTools\SerializableFittingShipType.cs" />
+    <Compile Include="Serialization\SerializableEveFlagsListItem.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
+    <Compile Include="Serialization\SerializableEveFlags.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
     <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIKey.cs" />
     <Compile Include="Serialization\Settings\SerializableContract.cs" />
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
+    <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
+    <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
+    <Compile Include="SettingsObjects\AssetColumn.cs" />
+    <Compile Include="SettingsObjects\AssetColumnSettings.cs" />
+    <Compile Include="SettingsObjects\AssetSettings.cs" />
     <Compile Include="SettingsObjects\ContractColumn.cs" />
     <Compile Include="SettingsObjects\ContractColumnSettings.cs" />
     <Compile Include="SettingsObjects\ContractSettings.cs" />
+    <Compile Include="SettingsObjects\MarketUnifiedUploaderSettings.cs" />
     <Compile Include="SettingsObjects\ModifiedSerializableDictionary.cs" />
     <Compile Include="SettingsObjects\EveNotificationColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationColumnSettings.cs" />
     <Compile Include="SettingsObjects\EveNotificationSettings.cs" />
     <Compile Include="SettingsObjects\IColumnSettings.cs" />
     <Compile Include="SettingsObjects\UpdatePeriodExtensions.cs" />
+    <Compile Include="SettingsObjects\WalletJournalColumn.cs" />
+    <Compile Include="SettingsObjects\WalletJournalColumnSettings.cs" />
+    <Compile Include="SettingsObjects\WalletJournalSettings.cs" />
+    <Compile Include="SettingsObjects\WalletTransactionColumn.cs" />
+    <Compile Include="SettingsObjects\WalletTransactionColumnSettings.cs" />
+    <Compile Include="SettingsObjects\WalletTransactionSettings.cs" />
     <Compile Include="Standing.cs" />
     <Compile Include="StandingCollection.cs" />
     <Compile Include="Data\StaticSkillExtensions.cs" />
     <Compile Include="APIKey.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="UIHelper.cs" />
+    <Compile Include="WalletJournal.cs" />
+    <Compile Include="WalletJournalCollection.cs" />
+    <Compile Include="WalletJournalComparer.cs" />
+    <Compile Include="WalletTransaction.cs" />
+    <Compile Include="WalletTransactionComparer.cs" />
+    <Compile Include="WalletTransactionsCollection.cs" />
     <Compile Include="WindowsFactory.cs" />
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="Properties\AssemblyInfo.template.cs" />
@@ -388,7 +436,6 @@
     <Compile Include="EveMailMessageCollection.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="ListViewExporter.cs" />
-    <Compile Include="Pair.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="PlanEntrySorter.cs" />
     <Compile Include="ResearchPoint.cs" />
@@ -443,7 +490,6 @@
     <Compile Include="SettingsObjects\ResearchColumn.cs" />
     <Compile Include="SettingsObjects\ResearchColumnSettings.cs" />
     <Compile Include="SettingsObjects\ResearchSettings.cs" />
-    <Compile Include="SkillQueueToolTip.cs" />
     <Compile Include="Threading\Dispatcher.cs" />
     <Compile Include="Threading\ActorTimer.cs" />
     <Compile Include="Threading\IActor.cs" />
@@ -909,116 +955,13 @@
       <LastGenOutput>IconSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\MD5Sums.txt" />
-    <None Include="Resources\Overlay icons\Deadspace.png" />
-    <None Include="Resources\Overlay icons\Faction.png" />
-    <None Include="Resources\Overlay icons\Officer.png" />
-    <None Include="Resources\Overlay icons\Storyline.png" />
-    <None Include="Resources\Overlay icons\T1.png" />
-    <None Include="Resources\Overlay icons\T2.png" />
-    <None Include="Resources\Overlay icons\T3.png" />
-    <None Include="Resources\Overlay icons\T4.png" />
-    <None Include="Resources\Images\AccountManagement.png" />
-    <None Include="Resources\Images\AddAccount.png" />
-    <None Include="Resources\Images\APIKeyFull.png" />
-    <None Include="Resources\Images\APIKeyFull16.png" />
-    <None Include="Resources\Images\APIKeyLimited.png" />
-    <None Include="Resources\Images\APIKeyLimited16.png" />
-    <None Include="Resources\Images\APIKeyWrong.png" />
-    <None Include="Resources\Images\AttributeOptimize.png" />
-    <None Include="Resources\Images\Blue_Glass_Arrow.png" />
-    <None Include="Resources\Images\Blueprint.png" />
-    <None Include="Resources\Images\Calendar.png" />
-    <None Include="Resources\Images\Certificate-24.png" />
-    <None Include="Resources\Images\Certificate-32.png" />
-    <None Include="Resources\Images\Certificate-64.png" />
-    <None Include="Resources\Images\Collapse_large.png" />
-    <None Include="Resources\Images\comment.png" />
-    <None Include="Resources\Images\Copy.png" />
-    <None Include="Resources\Images\cross-black.png" />
-    <None Include="Resources\Images\cross-gray.png" />
-    <None Include="Resources\Images\DeleteAccount.png" />
-    <None Include="Resources\Images\DeleteCharacter.png" />
-    <None Include="Resources\Images\DeletePlan.png" />
-    <None Include="Resources\Images\EditAccount.png" />
-    <None Include="Resources\Images\EditChar.png" />
-    <None Include="Resources\Images\EditPlan.png" />
-    <None Include="Resources\Images\Error16.png" />
-    <None Include="Resources\Images\clock_16.png" />
-    <None Include="Resources\Files\gpl.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Images\BattleClinic.png" />
-    <None Include="Resources\Images\bee.jpg" />
-    <None Include="Resources\Images\DefaultAllianceImage32.png" />
-    <None Include="Resources\Images\DefaultCharacterImage32.png" />
-    <None Include="Resources\Images\DefaultCorporationImage32.png" />
-    <None Include="Resources\Images\default_char_pic.png" />
-    <None Include="Resources\Images\default_char_pic_old.png" />
-    <None Include="Resources\Images\EVEMail.png" />
-    <None Include="Resources\Images\EVEMon16.png" />
-    <None Include="Resources\Images\Exit.png" />
-    <None Include="Resources\Images\Expand_large.png" />
-    <None Include="Resources\Images\ExportArrow.png" />
-    <None Include="Resources\Images\ExportCharacter.png" />
-    <None Include="Resources\Images\ExportPlan.png" />
-    <None Include="Resources\Images\Folder.png" />
-    <None Include="Resources\Images\Forum.png" />
-    <None Include="Resources\Images\Grouping.png" />
-    <None Include="Resources\Images\help.png" />
-    <None Include="Resources\Images\HideCharacter.png" />
-    <None Include="Resources\Images\ImplantCalculator.png" />
-    <None Include="Resources\Images\ImportCharacter.png" />
-    <None Include="Resources\Images\Industry.png" />
-    <None Include="Resources\Images\Information16.png" />
-    <None Include="Resources\Images\JumpClone.png" />
-    <None Include="Resources\Images\LeadsTo.png" />
-    <None Include="Resources\Images\LoadPlan.png" />
-    <None Include="Resources\Images\LoadSettings.png" />
-    <None Include="Resources\Images\Magnifier.png" />
-    <None Include="Resources\Images\messagebox.png" />
-    <None Include="Resources\Images\Mineral.png" />
-    <None Include="Resources\Images\Money.png" />
-    <None Include="Resources\Images\NewPlan.png" />
-    <None Include="Resources\Images\Notification.png" />
-    <None Include="Resources\Images\Online.png" />
-    <None Include="Resources\Images\OwnedBook.png" />
-    <None Include="Resources\Images\PieChart.png" />
-    <None Include="Resources\Images\Plan.png" />
-    <None Include="Resources\Images\PlanCharacter.png" />
-    <None Include="Resources\Images\Printer.png" />
-    <None Include="Resources\Images\Problem.png" />
-    <None Include="Resources\Images\Research.png" />
-    <None Include="Resources\Images\Reset.png" />
-    <None Include="Resources\Images\SaveSettings.png" />
-    <None Include="Resources\Images\SchedulerAdd.png" />
-    <None Include="Resources\Images\SchedulerClear.png" />
-    <None Include="Resources\Images\SchedulerDelete.png" />
-    <None Include="Resources\Images\Settings.png" />
-    <None Include="Resources\Images\Ship.png" />
-    <None Include="Resources\Images\Skill16.png" />
-    <None Include="Resources\Images\Skill32.png" />
-    <None Include="Resources\Images\Skills.png" />
-    <None Include="Resources\Images\SkillsQueue.png" />
-    <None Include="Resources\Images\text_letter_omega.png" />
-    <None Include="Resources\Images\text_list_numbers.png" />
-    <None Include="Resources\Images\Toggle.png" />
-    <None Include="Resources\Images\Transparent.png" />
-    <None Include="Resources\Images\TrayIcon.png" />
-    <None Include="Resources\Images\Warning-yellow.png" />
-    <None Include="Resources\Images\Error32.png" />
-    <None Include="Resources\Images\Warning16.png" />
-    <None Include="Resources\Images\Window.png" />
-    <None Include="Resources\Images\EVEMonLogoBlue.png" />
-    <None Include="Resources\Images\AccountWide32.png" />
-    <None Include="Resources\Images\logo-100.png" />
-    <None Include="Resources\Images\MoveDown.png" />
-    <None Include="Resources\Images\MoveUp.png" />
-    <None Include="Resources\Images\Rename.png" />
-    <None Include="Resources\Images\Throbber.png" />
-    <None Include="Resources\Audio\SkillTrained.wav">
+    <None Include="Resources\License\gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Serialization\Exportation\output-html.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Serialization\Flags.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

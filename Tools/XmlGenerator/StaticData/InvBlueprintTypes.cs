@@ -8,10 +8,10 @@ namespace EVEMon.XmlGenerator.StaticData
         public int ID { get; set; }
 
         [XmlElement("parentBlueprintTypeID")]
-        public short? ParentID { get; set; }
+        public int? ParentID { get; set; }
 
         [XmlElement("productTypeID")]
-        public short ProductTypeID { get; set; }
+        public int ProductTypeID { get; set; }
 
         [XmlElement("productionTime")]
         public int ProductionTime { get; set; }

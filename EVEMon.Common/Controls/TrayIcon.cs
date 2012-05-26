@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using EVEMon.Common.SettingsObjects;
 using Timer = System.Threading.Timer;
 
 namespace EVEMon.Common.Controls
@@ -512,9 +513,10 @@ namespace EVEMon.Common.Controls
             public MouseStateOver(TrayIcon trayIcon, Point mousePosition)
                 : base(trayIcon, mousePosition)
             {
-                // Store the existing icon text, then reset it
+                // Store the existing icon text, then reset it if popups aren't disabled
                 trayIcon.m_iconText = trayIcon.notifyIcon.Text;
-                trayIcon.notifyIcon.Text = String.Empty;
+                if (Settings.UI.SystemTrayPopup.Style != TrayPopupStyles.Disabled)
+                    trayIcon.notifyIcon.Text = String.Empty;
 
                 // Start the timer and enable mouse tracking
                 // Lock the syncLock since we don't know the timeout value and need to ensure

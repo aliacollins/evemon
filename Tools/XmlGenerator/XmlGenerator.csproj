@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EVEMon.XmlGenerator</RootNamespace>
-    <AssemblyName>EVEMon.XmlGenerator</AssemblyName>
+    <AssemblyName>EVEMonXmlGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -72,6 +72,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EveStaticData.edmx</DependentUpon>
     </Compile>
+    <Compile Include="StaticData\InvFlags.cs" />
+    <Compile Include="Xmlfiles\Flags.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IHasId.cs" />
     <Compile Include="RelationSet.cs" />
@@ -95,23 +97,26 @@
     <Compile Include="StaticData\CrtRecommendations.cs" />
     <Compile Include="StaticData\CrtRelationships.cs" />
     <Compile Include="StaticData\DgmAttributeTypes.cs" />
-    <Compile Include="StaticData\DgmAttributeCategory.cs" />
-    <Compile Include="StaticData\DgmTypeAttribute.cs" />
-    <Compile Include="StaticData\DgmTypeEffect.cs" />
+    <Compile Include="StaticData\DgmAttributeCategories.cs" />
+    <Compile Include="StaticData\DgmTypeAttributes.cs" />
+    <Compile Include="StaticData\DgmTypeEffects.cs" />
     <Compile Include="StaticData\EveIcons.cs" />
-    <Compile Include="StaticData\EveUnit.cs" />
-    <Compile Include="StaticData\InvGroup.cs" />
-    <Compile Include="StaticData\InvMarketGroup.cs" />
-    <Compile Include="StaticData\InvMetaType.cs" />
-    <Compile Include="StaticData\InvType.cs" />
-    <Compile Include="StaticData\MapConstellation.cs" />
-    <Compile Include="StaticData\MapRegion.cs" />
-    <Compile Include="StaticData\MapSolarSystem.cs" />
-    <Compile Include="StaticData\MapSolarSystemJump.cs" />
-    <Compile Include="StaticData\StaStation.cs" />
+    <Compile Include="StaticData\EveUnits.cs" />
+    <Compile Include="StaticData\InvGroups.cs" />
+    <Compile Include="StaticData\InvMarketGroups.cs" />
+    <Compile Include="StaticData\InvMetaTypes.cs" />
+    <Compile Include="StaticData\InvTypes.cs" />
+    <Compile Include="StaticData\MapConstellations.cs" />
+    <Compile Include="StaticData\MapRegions.cs" />
+    <Compile Include="StaticData\MapSolarSystems.cs" />
+    <Compile Include="StaticData\MapSolarSystemsJump.cs" />
+    <Compile Include="StaticData\StaStations.cs" />
     <Compile Include="IndexedCollection.cs" />
     <Compile Include="SimpleCollection.cs" />
     <Compile Include="Relations.cs" />
+    <Compile Include="Xmlfiles\Serialization\SerialiazableRowset.cs" />
+    <Compile Include="Xmlfiles\Serialization\SerializableInvFlagsRow.cs" />
+    <Compile Include="Xmlfiles\Serialization\SerializableRoot.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\EVEMon.Common\EVEMon.Common.csproj">
@@ -125,14 +130,15 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EveStaticData.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="app.config" />
     <None Include="Properties\DataSources\EveStaticDataEntities.datasource" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rd /s /q "$(TargetDir)\Resources"
-del "$(TargetDir)Google*.dll"
-del "$(TargetDir)*office*.dll"</PostBuildEvent>
+    <PostBuildEvent>rd /s /q $(TargetDir)\Resources
+del $(TargetDir)Google*.dll
+del $(TargetDir)*office*.dll
+del $(TargetDir)*SharpZipLib*.dll</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

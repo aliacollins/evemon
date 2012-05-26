@@ -277,7 +277,11 @@ namespace EVEMon.Common
             get
             {
                 //Not partially trained? Then it's 0.0
-                return m_level == (CharacterSkill.Level + 1) ? CharacterSkill.FractionCompleted : 0.0f;
+                return m_level == CharacterSkill.Level + 1
+                           ? CharacterSkill.FractionCompleted
+                           : m_level == CharacterSkill.Level
+                                 ? 1f
+                                 : 0f;
             }
         }
 

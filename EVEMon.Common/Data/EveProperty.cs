@@ -127,6 +127,26 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
+        /// Gets the numeric interpretation of the object's property value, or NaN if the property value is not a numeric. 
+        /// When the given object has no value for this property, we use the default one.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public float GetNumericValue(Item obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+
+            // Retrieve the string for the number
+            EvePropertyValue? value = obj.Properties[ID];
+            string number = (value == null ? DefaultValue : value.Value.Value);
+
+            // Try to parse it as a float
+            float result;
+            return float.TryParse(number, NumberStyles.Number, CultureConstants.InvariantCulture, out result) ? result : default(float);
+        }
+
+        /// <summary>
         /// Format a property value as shown in EVE.
         /// </summary>
         /// <param name="value"></param>
@@ -224,26 +244,6 @@ namespace EVEMon.Common.Data
                 }
             }
             return value;
-        }
-
-        /// <summary>
-        /// Gets the numeric interpretation of the object's property value, or NaN if the property value is not a numeric. 
-        /// When the given object has no value for this property, we use the default one.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public float GetNumericValue(Item obj)
-        {
-            if (obj == null)
-                throw new ArgumentNullException("obj");
-
-            // Retrieve the string for the number
-            EvePropertyValue? value = obj.Properties[ID];
-            string number = (value == null ? DefaultValue : value.Value.Value);
-
-            // Try to parse it as a float
-            float result;
-            return float.TryParse(number, NumberStyles.Number, CultureConstants.InvariantCulture, out result) ? result : default(float);
         }
 
         #endregion

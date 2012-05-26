@@ -36,12 +36,15 @@ namespace EVEMon.CharacterMonitoring
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterMarketOrdersList));
             this.lvOrders = new System.Windows.Forms.ListView();
             this.itemColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.quantityColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.unitaryPriceColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.locationColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.unitaryPriceColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.quantityColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noOrdersLabel = new System.Windows.Forms.Label();
             this.marketExpPanelControl = new EVEMon.Common.Controls.ExpandablePanelControl();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // lvOrders
@@ -52,6 +55,7 @@ namespace EVEMon.CharacterMonitoring
             this.locationColumn,
             this.unitaryPriceColumn,
             this.quantityColumn});
+            this.lvOrders.ContextMenuStrip = this.contextMenu;
             this.lvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvOrders.FullRowSelect = true;
             listViewGroup1.Header = "Sell Orders";
@@ -63,6 +67,7 @@ namespace EVEMon.CharacterMonitoring
             listViewGroup2});
             this.lvOrders.HideSelection = false;
             this.lvOrders.Location = new System.Drawing.Point(0, 0);
+            this.lvOrders.MultiSelect = false;
             this.lvOrders.Name = "lvOrders";
             this.lvOrders.Size = new System.Drawing.Size(454, 334);
             this.lvOrders.SmallImageList = this.ilIcons;
@@ -75,20 +80,34 @@ namespace EVEMon.CharacterMonitoring
             this.itemColumn.Text = "Item";
             this.itemColumn.Width = 192;
             // 
-            // quantityColumn
+            // locationColumn
             // 
-            this.quantityColumn.Text = "Quantity";
-            this.quantityColumn.Width = 88;
+            this.locationColumn.Text = "System";
+            this.locationColumn.Width = 80;
             // 
             // unitaryPriceColumn
             // 
             this.unitaryPriceColumn.Text = "Unit Price";
             this.unitaryPriceColumn.Width = 92;
             // 
-            // locationColumn
+            // quantityColumn
             // 
-            this.locationColumn.Text = "System";
-            this.locationColumn.Width = 80;
+            this.quantityColumn.Text = "Quantity";
+            this.quantityColumn.Width = 88;
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(161, 26);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV ...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // ilIcons
             // 
@@ -126,15 +145,16 @@ namespace EVEMon.CharacterMonitoring
             this.marketExpPanelControl.Size = new System.Drawing.Size(454, 100);
             this.marketExpPanelControl.TabIndex = 2;
             // 
-            // MainWindowMarketOrdersList
+            // CharacterMarketOrdersList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lvOrders);
             this.Controls.Add(this.marketExpPanelControl);
             this.Controls.Add(this.noOrdersLabel);
-            this.Name = "MainWindowMarketOrdersList";
+            this.Name = "CharacterMarketOrdersList";
             this.Size = new System.Drawing.Size(454, 434);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -149,5 +169,7 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ColumnHeader unitaryPriceColumn;
         private System.Windows.Forms.ImageList ilIcons;
         private ExpandablePanelControl marketExpPanelControl;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

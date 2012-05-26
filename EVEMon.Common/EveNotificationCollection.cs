@@ -16,6 +16,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
+        /// <param name="ccpCharacter">The CCP character.</param>
         internal EveNotificationCollection(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;

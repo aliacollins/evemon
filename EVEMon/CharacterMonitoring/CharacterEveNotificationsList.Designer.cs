@@ -36,13 +36,16 @@
             this.chType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSentDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
-            this.eveNotificationReadingPane = new ReadingPane();
+            this.eveNotificationReadingPane = new EVEMon.CharacterMonitoring.ReadingPane();
             this.noEVENotificationsLabel = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotifications)).BeginInit();
             this.splitContainerNotifications.Panel1.SuspendLayout();
             this.splitContainerNotifications.Panel2.SuspendLayout();
             this.splitContainerNotifications.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainerNotifications
@@ -72,6 +75,7 @@
             this.chSenderName,
             this.chType,
             this.chSentDate});
+            this.lvNotifications.ContextMenuStrip = this.contextMenu;
             this.lvNotifications.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvNotifications.FullRowSelect = true;
             this.lvNotifications.HideSelection = false;
@@ -134,18 +138,33 @@
             // 
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // MainWindowEveNotificationsList
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToCSVToolStripMenuItem});
+            this.contextMenu.Name = "ShipPropertiesContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(158, 26);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
+            // CharacterEveNotificationsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainerNotifications);
             this.Controls.Add(this.noEVENotificationsLabel);
-            this.Name = "MainWindowEveNotificationsList";
+            this.Name = "CharacterEveNotificationsList";
             this.Size = new System.Drawing.Size(454, 434);
             this.splitContainerNotifications.Panel1.ResumeLayout(false);
             this.splitContainerNotifications.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerNotifications)).EndInit();
             this.splitContainerNotifications.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -161,5 +180,7 @@
         private System.Windows.Forms.Label noEVENotificationsLabel;
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

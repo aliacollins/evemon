@@ -132,7 +132,9 @@ namespace EVEMon.SkillPlanner
                     lvi.SubItems.Add(plan.GetTotalTime(null, true).ToDescriptiveText(
                         DescriptiveTextOptions.FullText | DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText));
                     lvi.SubItems.Add(plan.UniqueSkillsCount.ToString(CultureConstants.DefaultCulture));
-                    lvi.SubItems.Add(String.IsNullOrWhiteSpace(plan.DescriptionNL) ? "(None)" : plan.DescriptionNL);
+                    lvi.SubItems.Add(String.IsNullOrWhiteSpace(plan.Description)
+                                         ? "(None)"
+                                         : plan.Description.Replace(Environment.NewLine, " "));
                     lbPlanList.Items.Add(lvi);
 
                     // Restore selection and focus

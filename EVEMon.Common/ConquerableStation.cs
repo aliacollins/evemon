@@ -18,6 +18,7 @@ namespace EVEMon.Common
         private const string Filename = "ConquerableStationList";
 
         private static bool s_loaded;
+        private static bool s_queryPending;
 
 
         #region Constructor
@@ -36,9 +37,9 @@ namespace EVEMon.Common
         #region Properties
 
         /// <summary>
-        /// Gets an enumeration of all the stations in the universe.
+        /// Gets an enumeration of all the conquerable stations in the universe.
         /// </summary>
-        internal static IEnumerable<ConquerableStation> AllStations
+        internal static IEnumerable<ConquerableStation> AllConquerableStations
         {
             get
             {
@@ -83,15 +84,14 @@ namespace EVEMon.Common
             // Check to see if file is up to date
             bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(Filename, updateTime, updatePeriod);
 
-            // Up to date ? Quit
-            if (fileUpToDate)
+            // Up to date or query is pending? Quit
+            if (s_queryPending || fileUpToDate)
                 return;
 
-            // Query the API
-            APIResult<SerializableAPIConquerableStationList> result =
-                EveMonClient.APIProviders.CurrentProvider.QueryConquerableStationList();
+            EveMonClient.APIProviders.CurrentProvider
+                .QueryMethodAsync<SerializableAPIConquerableStationList>(APIGenericMethods.ConquerableStationList, OnUpdated);
 
-            OnUpdated(result);
+            s_queryPending = true;
         }
 
         /// <summary>
@@ -101,19 +101,32 @@ namespace EVEMon.Common
         {
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
+            {
+                // Reset query pending flag
+                s_queryPending = false;
                 return;
+            }
 
             // Was there an error ?
             if (result.HasError)
             {
+                // Reset query pending flag
+                s_queryPending = false;
+
                 EveMonClient.Notifications.NotifyConquerableStationListError(result);
                 return;
             }
 
             EveMonClient.Notifications.InvalidateAPIError();
 
+            // Save the file to our cache
+            LocalXmlCache.Save(Filename, result.XmlDocument);
+
             // Deserialize the list
             Import(result.Result.Outposts);
+
+            // Reset query pending flag
+            s_queryPending = false;
 
             // Notify the subscribers
             EveMonClient.OnConquerableStationListUpdated();
@@ -165,8 +178,8 @@ namespace EVEMon.Common
         private static void Import(IEnumerable<SerializableOutpost> outposts)
         {
             EveMonClient.Trace("ConquerableStationList.Import - begin");
-            s_conqStationsByID.Clear();
 
+            s_conqStationsByID.Clear();
             foreach (SerializableOutpost outpost in outposts)
             {
                 s_conqStationsByID[outpost.StationID] = new ConquerableStation(outpost);

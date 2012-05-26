@@ -57,6 +57,7 @@ namespace EVEMon.About
             this.stackOverflowLinkLabel = new System.Windows.Forms.LinkLabel();
             this.forgotLabel = new System.Windows.Forms.Label();
             this.OkButton = new System.Windows.Forms.Button();
+            this.DevelopmentTeamLabel = new System.Windows.Forms.Label();
             this.LegalLayoutPanel.SuspendLayout();
             this.HeaderLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).BeginInit();
@@ -73,7 +74,7 @@ namespace EVEMon.About
             this.LegalLayoutPanel.Controls.Add(this.GplLabel);
             this.LegalLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.LegalLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.LegalLayoutPanel.Location = new System.Drawing.Point(0, 102);
+            this.LegalLayoutPanel.Location = new System.Drawing.Point(0, 115);
             this.LegalLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.LegalLayoutPanel.Name = "LegalLayoutPanel";
             this.LegalLayoutPanel.Size = new System.Drawing.Size(304, 230);
@@ -98,7 +99,7 @@ namespace EVEMon.About
             this.HeaderLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.HeaderLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderLayoutPanel.Name = "HeaderLayoutPanel";
-            this.HeaderLayoutPanel.Size = new System.Drawing.Size(264, 102);
+            this.HeaderLayoutPanel.Size = new System.Drawing.Size(263, 115);
             this.HeaderLayoutPanel.TabIndex = 0;
             this.HeaderLayoutPanel.WrapContents = false;
             // 
@@ -119,13 +120,14 @@ namespace EVEMon.About
             this.VerCopyLayoutPanel.Controls.Add(this.EVEMonLabel);
             this.VerCopyLayoutPanel.Controls.Add(this.VersionLabel);
             this.VerCopyLayoutPanel.Controls.Add(this.CopyrightLabel);
+            this.VerCopyLayoutPanel.Controls.Add(this.DevelopmentTeamLabel);
             this.VerCopyLayoutPanel.Controls.Add(this.HomePageLinkLabel);
             this.VerCopyLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.VerCopyLayoutPanel.Location = new System.Drawing.Point(100, 0);
             this.VerCopyLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.VerCopyLayoutPanel.Name = "VerCopyLayoutPanel";
             this.VerCopyLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 25, 0, 25);
-            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(164, 102);
+            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(163, 115);
             this.VerCopyLayoutPanel.TabIndex = 8;
             this.VerCopyLayoutPanel.WrapContents = false;
             // 
@@ -152,14 +154,14 @@ namespace EVEMon.About
             this.CopyrightLabel.AutoSize = true;
             this.CopyrightLabel.Location = new System.Drawing.Point(3, 51);
             this.CopyrightLabel.Name = "CopyrightLabel";
-            this.CopyrightLabel.Size = new System.Drawing.Size(158, 13);
+            this.CopyrightLabel.Size = new System.Drawing.Size(107, 13);
             this.CopyrightLabel.TabIndex = 5;
-            this.CopyrightLabel.Text = "Copyright © 2006  Timothy Fries";
+            this.CopyrightLabel.Text = "Copyright © 2006-{0}";
             // 
             // HomePageLinkLabel
             // 
             this.HomePageLinkLabel.AutoSize = true;
-            this.HomePageLinkLabel.Location = new System.Drawing.Point(3, 64);
+            this.HomePageLinkLabel.Location = new System.Drawing.Point(3, 77);
             this.HomePageLinkLabel.Name = "HomePageLinkLabel";
             this.HomePageLinkLabel.Size = new System.Drawing.Size(157, 13);
             this.HomePageLinkLabel.TabIndex = 0;
@@ -210,7 +212,7 @@ namespace EVEMon.About
             this.AuthorsLayoutPanel.Controls.Add(this.DonationsLabel);
             this.AuthorsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.AuthorsLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.AuthorsLayoutPanel.Location = new System.Drawing.Point(0, 332);
+            this.AuthorsLayoutPanel.Location = new System.Drawing.Point(0, 345);
             this.AuthorsLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.AuthorsLayoutPanel.Name = "AuthorsLayoutPanel";
             this.AuthorsLayoutPanel.Size = new System.Drawing.Size(285, 39);
@@ -329,9 +331,9 @@ namespace EVEMon.About
             this.eveCentralLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.eveCentralLinkLabel.Name = "eveCentralLinkLabel";
             this.eveCentralLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.eveCentralLinkLabel.Size = new System.Drawing.Size(207, 19);
+            this.eveCentralLinkLabel.Size = new System.Drawing.Size(210, 19);
             this.eveCentralLinkLabel.TabIndex = 12;
-            this.eveCentralLinkLabel.Text = "Eve-central for their market data and API.";
+            this.eveCentralLinkLabel.Text = "EVE-Central for their market data and API.";
             this.eveCentralLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
             // eveDevLinkLabel
@@ -411,6 +413,15 @@ namespace EVEMon.About
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.btnOk_Click);
             // 
+            // DevelopmentTeamLabel
+            // 
+            this.DevelopmentTeamLabel.AutoSize = true;
+            this.DevelopmentTeamLabel.Location = new System.Drawing.Point(3, 64);
+            this.DevelopmentTeamLabel.Name = "DevelopmentTeamLabel";
+            this.DevelopmentTeamLabel.Size = new System.Drawing.Size(145, 13);
+            this.DevelopmentTeamLabel.TabIndex = 6;
+            this.DevelopmentTeamLabel.Text = "EVEMon Development Team";
+            // 
             // AboutWindow
             // 
             this.AcceptButton = this.OkButton;
@@ -479,6 +490,7 @@ namespace EVEMon.About
         private System.Windows.Forms.Label forgotLabel;
         private System.Windows.Forms.LinkLabel lironLeviLinkLabel;
         private System.Windows.Forms.LinkLabel stackOverflowLinkLabel;
+        private System.Windows.Forms.Label DevelopmentTeamLabel;
 
     }
 }

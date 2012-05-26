@@ -7,33 +7,38 @@ namespace EVEMon.Common.Net
 
     partial class HttpWebService
     {
-        private const string FILE_ACCEPT = "*/*;q=0.5";
+        private const string FileAccept = "*/*;q=0.5";
 
         /// <summary>
         /// Downloads an file from the specified url to the specified path.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="filePath"></param>
+        /// <param name="url">The URL.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="postdata">The post data.</param>
+        /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public FileInfo DownloadFile(Uri url, string filePath)
+        public FileInfo DownloadFile(Uri url, string filePath, HttpMethod method = HttpMethod.Get,
+                                     string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
                 throw new ArgumentException(urlValidationError);
 
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             try
             {
                 FileStream responseStream;
                 try
                 {
-                    responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write);
                 }
                 catch (Exception ex)
                 {
                     throw HttpWebServiceException.FileError(url, ex);
                 }
-                request.GetResponse(url, responseStream, FILE_ACCEPT);
+                request.GetResponse(url, method, postData, dataCompression, responseStream, FileAccept);
                 return new FileInfo(filePath);
             }
             finally
@@ -46,13 +51,17 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Asynchronously downloads file from the specified url to the specified path.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="filePath"></param>
+        /// <param name="url">The URL.</param>
+        /// <param name="filePath">The file path.</param>
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
-        /// <param name="progressCallback"></param>
+        /// <param name="progressCallback">The progress callback.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="postdata">The postdata.</param>
+        /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
         public object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
-                                        DownloadProgressChangedCallback progressCallback)
+                                        DownloadProgressChangedCallback progressCallback, HttpMethod method = HttpMethod.Get,
+                                        string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -60,9 +69,10 @@ namespace EVEMon.Common.Net
 
             FileRequestAsyncState state = new FileRequestAsyncState(filePath, callback, progressCallback,
                                                                     DownloadFileAsyncCompleted);
+            HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
-            FileStream responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-            request.GetResponseAsync(url, responseStream, IMAGE_ACCEPT, null, state);
+            FileStream responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write);
+            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, FileAccept, state);
             return request;
         }
 

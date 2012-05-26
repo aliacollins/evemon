@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using CommonProperties = EVEMon.Common.Properties;
+using EVEMon.Common.Properties;
 
 namespace EVEMon.ApiCredentialsManagement
 {
@@ -38,6 +38,8 @@ namespace EVEMon.ApiCredentialsManagement
             m_strikeoutFont = FontFactory.GetFont(m_smallFont, FontStyle.Strikeout);
             m_middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f);
             m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
+
+            ItemHeight = m_boldFont.Height + m_middleFont.Height + m_smallBoldFont.Height * 2;
         }
 
         /// <summary>
@@ -148,7 +150,7 @@ namespace EVEMon.ApiCredentialsManagement
 
             Margin = new Padding((ItemHeight - icon.Height) / 2);
             int left = e.Bounds.Left + Margin.Left;
-            int top = e.Bounds.Top;
+            int top = e.Bounds.Top + Margin.Top / 4;
 
             // Draws the checbox
             CheckBoxRenderer.DrawCheckBox(g, new Point(left, (ItemHeight - CheckBoxSize.Height) / 2),
@@ -191,7 +193,7 @@ namespace EVEMon.ApiCredentialsManagement
             g.DrawString(apiKeyExpiration, Font, fontBrush, new Point(indentedLeft, top));
 
             // Draw the texts on the middle third
-            top += g.MeasureString(apiKey.VerificationCode, Font).ToSize().Height;
+            top += g.MeasureString(apiKeyExpiration, Font).ToSize().Height;
             string accountCreated = String.Format(CultureConstants.DefaultCulture, "Account Created: {0}",
                                                   (apiKey.AccountCreated != DateTime.MinValue
                                                        ? apiKey.AccountCreated.ToLocalTime().ToString()
@@ -260,16 +262,16 @@ namespace EVEMon.ApiCredentialsManagement
             switch (apiKey.Type)
             {
                 default:
-                    icon = CommonProperties.Resources.KeyWrong32;
+                    icon = Resources.KeyWrong32;
                     break;
                 case APIKeyType.Character:
-                    icon = CommonProperties.Resources.DefaultCharacterImage32;
+                    icon = Resources.DefaultCharacterImage32;
                     break;
                 case APIKeyType.Corporation:
-                    icon = CommonProperties.Resources.DefaultCorporationImage32;
+                    icon = Resources.DefaultCorporationImage32;
                     break;
                 case APIKeyType.Account:
-                    icon = CommonProperties.Resources.AccountWide32;
+                    icon = Resources.AccountWide32;
                     break;
             }
             return icon;

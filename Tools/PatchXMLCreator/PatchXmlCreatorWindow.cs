@@ -491,7 +491,7 @@ namespace EVEMon.PatchXmlCreator
         {
             FileInfo file = new FileInfo(Path.Combine(PatchDir, PatchFilename));
 
-            SerializablePatch xmlDoc = File.Exists(file.FullName) ? Util.DeserializeXMLFromFile<SerializablePatch>(file.FullName) : null;
+            SerializablePatch xmlDoc = File.Exists(file.FullName) ? Util.DeserializeXmlFromFile<SerializablePatch>(file.FullName) : null;
 
             return xmlDoc;
         }
@@ -508,7 +508,7 @@ namespace EVEMon.PatchXmlCreator
             ExportDatafiles(serial.Datafiles);
 
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializablePatch), serial);
-            return (doc != null ? Util.GetXMLStringRepresentation(doc) : String.Empty);
+            return (doc != null ? Util.GetXmlStringRepresentation(doc) : String.Empty);
         }
 
         /// <summary>

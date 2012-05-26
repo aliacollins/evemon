@@ -14,7 +14,7 @@ namespace EVEMon.Common.Serialization.API
         public long Quantity { get; set; }
 
         [XmlAttribute("rawQuantity")]
-        public int RawQuantity { get; set; }
+        public short RawQuantity { get; set; }
 
         [XmlAttribute("singleton")]
         public bool Singleton { get; set; }

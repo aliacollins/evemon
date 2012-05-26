@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -10,61 +9,42 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
+using EVEMon.MarketUnifiedUploader;
 
 namespace EVEMon.SettingsUI
 {
     /// <summary>
-    /// Popup form displayed when the user hovers over the tray icon
+    /// Popup form displayed when the user hovers over the tray icon.
     /// </summary>
     /// <remarks>
     /// Display contents are governed by Settings.TrayPopupConfig<br/>
     /// Popup location is determined using mouse location, screen and screen bounds (see SetPosition()).<br/>
     /// </remarks>
-    public partial class TrayPopupWindow : Form
+    public class TrayPopupWindow : TrayBaseWindow
     {
-        private readonly int[] m_portraitSize = { 16, 24, 32, 40, 48, 56, 64 };
-
         private readonly Label m_eveTimeLabel = new Label();
         private readonly Label m_serverStatusLabel = new Label();
-        private bool m_updatePending;
-
-
-        #region Constructor
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public TrayPopupWindow()
-        {
-            InitializeComponent();
-        }
-
-        #endregion
+        private readonly Label m_uploaderStatusLabel = new Label();
 
 
         #region Inherited Events
 
         /// <summary>
-        /// Adds the character panes to the form, gets the TQ status message and sets the popup position
+        /// Adds the character panes to the form, gets the TQ status message and sets the popup position.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-
-            // Look'n feel
-            Font = FontFactory.GetFont(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.SizeInPoints);
-            mainPanel.BackColor = SystemColors.ControlLightLight;
+            if (DesignMode)
+                return;
 
             // Client events
-            EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.ServerStatusUpdated += EveMonClient_ServerStatusUpdated;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            Uploader.StatusChanged += Uploader_StatusChanged;
 
-            // Character Details
-            UpdateContent();
+            base.OnLoad(e);
         }
 
         /// <summary>
@@ -74,196 +54,37 @@ namespace EVEMon.SettingsUI
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
             EveMonClient.ServerStatusUpdated -= EveMonClient_ServerStatusUpdated;
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
-        }
-
-        /// <summary>
-        /// When the window becomes visible again, checks whether an update is pending.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (Visible && m_updatePending)
-                UpdateContent();
-
-            base.OnVisibleChanged(e);
-        }
-
-        /// <summary>
-        /// Draws the rounded rectangle border and background.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            if (e == null)
-                throw new ArgumentNullException("e");
-
-            base.OnPaint(e);
-
-            // Create graphics object to work with
-            Graphics g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.HighQuality;
-
-            // Define the size of the rectangle used for each of the 4 corner arcs.
-            const int Radius = 4;
-            Size cornerSize = new Size(Radius * 2, Radius * 2);
-
-            // Draw the background and border line
-            DrawBackground(g, cornerSize);
-            DrawBorder(g, cornerSize);
-        }
-
-        /// <summary>
-        /// Sets this window as topmost without activating it.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-
-            // Show the given form on topmost without activating it
-            this.ShowInactiveTopmost(NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
-        }
-
-        /// <summary>
-        /// Draws the rounded background.
-        /// </summary>
-        /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
-        /// <param name="g">The g.</param>
-        /// <param name="cornerSize">Size of the corner.</param>
-        private void DrawBackground(Graphics g, Size cornerSize)
-        {
-            // Construct a GraphicsPath for the form
-            using (GraphicsPath path = new GraphicsPath())
-            {
-                path.StartFigure();
-
-                // Top left
-                path.AddArc(new Rectangle(0, 0, cornerSize.Width, cornerSize.Height), 180, 90);
-
-                // Top Right
-                path.AddArc(new Rectangle(ClientRectangle.Width - cornerSize.Width, 0, cornerSize.Width, cornerSize.Height),
-                            270, 90);
-
-                // Bottom right
-                path.AddArc(new Rectangle(ClientRectangle.Width - cornerSize.Width,
-                                          ClientRectangle.Height - cornerSize.Height, cornerSize.Width, cornerSize.Height),
-                            0, 90);
-
-                // Bottom Left
-                path.AddArc(new Rectangle(0, ClientRectangle.Height - cornerSize.Height,
-                                          cornerSize.Width, cornerSize.Height), 90, 90);
-                path.CloseFigure();
-
-                Region = new Region(path);
-
-                // Fill the background
-                using (Brush fillBrush = new SolidBrush(SystemColors.ControlLightLight))
-                {
-                    g.FillPath(fillBrush, path);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Draws the rounded rectangle border.
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="g"></param>
-        /// <param name="cornerSize"></param>
-        private void DrawBorder(Graphics g, Size cornerSize)
-        {
-            // Construct a GraphicsPath for the border line
-            using (GraphicsPath path = new GraphicsPath())
-            {
-                path.StartFigure();
-
-                // Top left
-                path.AddArc(new Rectangle(0, 0, cornerSize.Width, cornerSize.Height), 180, 90);
-
-                // Top Right
-                path.AddArc(new Rectangle(ClientRectangle.Width - cornerSize.Width - 1, 0, cornerSize.Width, cornerSize.Height),
-                            270, 90);
-
-                // Bottom right
-                path.AddArc(new Rectangle(ClientRectangle.Width - cornerSize.Width - 1,
-                                          ClientRectangle.Height - cornerSize.Height, cornerSize.Width,
-                                          cornerSize.Height),
-                            0, 90);
-
-                // Bottom Left
-                path.AddArc(new Rectangle(0, ClientRectangle.Height - cornerSize.Height,
-                                          cornerSize.Width, cornerSize.Height), 90, 90);
-                path.CloseFigure();
-
-                // Draw the border
-                g.DrawPath(SystemPens.WindowFrame, path);
-            }
-        }
-
-        #endregion
-
-
-        #region Global Events
-
-        /// <summary>
-        /// Occurs when the monitored characters collection changed.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_MonitoredCharacterCollectionChanged(object sender, EventArgs e)
-        {
-            UpdateContent();
-        }
-
-        /// <summary>
-        /// Updates the TQ status message.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
-        {
-            UpdateServerStatusLabel();
-        }
-
-        /// <summary>
-        /// Once per second, we update the eve time.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_TimerTick(object sender, EventArgs e)
-        {
-            UpdateEveTimeLabel();
-        }
-
-        /// <summary>
-        /// Occur when characters completed skills. We refresh the controls.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
-        {
-            UpdateContent();
-        }
-
-        /// <summary>
-        /// When the settings changed, some may affect this popup, so we recreate content.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
-        {
-            UpdateContent();
         }
 
         #endregion
 
 
         #region Content management : add the controls to the panel, update them, etc
+
+        /// <summary>
+        /// Recreates the controls for character and warning.
+        /// </summary>
+        protected override void UpdateContent()
+        {
+            if (!Visible)
+            {
+                UpdatePending = true;
+                return;
+            }
+            UpdatePending = false;
+
+            // Controls layout
+            PerformCustomLayout();
+
+            // Supplemental controls layout
+            PerformSupplementalControlsLayout();
+
+            // Updates the tooltip width
+            CompleteLayout();
+        }
 
         /// <summary>
         /// Gets the characters list, sorted, grouped and filter according to the user settings.
@@ -320,20 +141,13 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
-        /// Recreates the controls for character and warning.
+        /// Performs the custom layout.
         /// </summary>
-        private void UpdateContent()
+        private void PerformCustomLayout()
         {
-            if (!Visible)
-            {
-                m_updatePending = true;
-                return;
-            }
-            m_updatePending = false;
-
             // Remove controls and dispose them
-            IEnumerable<Control> oldControls = mainPanel.Controls.Cast<Control>().ToList();
-            mainPanel.Controls.Clear();
+            IEnumerable<Control> oldControls = MainFlowLayoutPanel.Controls.Cast<Control>().ToList();
+            MainFlowLayoutPanel.Controls.Clear();
             foreach (Control ctl in oldControls)
             {
                 ctl.Dispose();
@@ -350,10 +164,10 @@ namespace EVEMon.SettingsUI
                 {
                     OverviewItem charPanel = GetOverviewItem(character);
                     List<APIKey> apiKeys = character.Identity.APIKeys.ToList();
-                    
+
                     if (!apiKeys.Exists(apiKey => prevAPIKeys.Contains(apiKey)))
                     {
-                        mainPanel.Controls.Add(charPanel);
+                        MainFlowLayoutPanel.Controls.Add(charPanel);
                         prevAPIKeys = apiKeys;
                     }
                     else
@@ -368,10 +182,12 @@ namespace EVEMon.SettingsUI
                             tempAccountGroupPanel.FlowDirection = FlowDirection.TopDown;
                             tempAccountGroupPanel.Padding = new Padding(10, 0, 0, 0);
 
+                            tempAccountGroupPanel.CreateControl();
+
                             FlowLayoutPanel accountGroupPanel = tempAccountGroupPanel;
                             tempAccountGroupPanel = null;
 
-                            mainPanel.Controls.Add(accountGroupPanel);
+                            MainFlowLayoutPanel.Controls.Add(accountGroupPanel);
                         }
                         finally
                         {
@@ -384,34 +200,7 @@ namespace EVEMon.SettingsUI
                 }
             }
             else
-                mainPanel.Controls.AddRange(characters.Select(GetOverviewItem).ToArray<Control>());
-
-            // Skip if the user do not want to be warned about accounts not in training
-            string warningMessage;
-            if (Settings.UI.SystemTrayPopup.ShowWarning && APIKey.HasCharactersNotTraining(out warningMessage))
-            {
-                FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
-                mainPanel.Controls.Add(warningPanel);
-            }
-
-            // Server Status
-            if (Settings.UI.SystemTrayPopup.ShowServerStatus)
-            {
-                m_serverStatusLabel.AutoSize = true;
-                mainPanel.Controls.Add(m_serverStatusLabel);
-                UpdateServerStatusLabel();
-            }
-
-            // EVE Time
-            if (Settings.UI.SystemTrayPopup.ShowEveTime)
-            {
-                m_eveTimeLabel.AutoSize = true;
-                mainPanel.Controls.Add(m_eveTimeLabel);
-                UpdateEveTimeLabel();
-            }
-
-            // Updates the tooltip width
-            CompleteLayout();
+                MainFlowLayoutPanel.Controls.AddRange(characters.Select(GetOverviewItem).ToArray<Control>());
         }
 
         /// <summary>
@@ -429,6 +218,8 @@ namespace EVEMon.SettingsUI
                 tempOverviewItem = new OverviewItem(character, true);
                 tempOverviewItem.Tag = character;
 
+                tempOverviewItem.CreateControl();
+
                 overviewItem = tempOverviewItem;
                 tempOverviewItem = null;
             }
@@ -442,11 +233,46 @@ namespace EVEMon.SettingsUI
         }
 
         /// <summary>
+        /// Performs the supplemental controls layout.
+        /// </summary>
+        private void PerformSupplementalControlsLayout()
+        {
+            // Skip if the user do not want to be warned about accounts not in training
+            string warningMessage;
+            if (Settings.UI.SystemTrayPopup.ShowWarning && APIKey.HasCharactersNotTraining(out warningMessage))
+            {
+                FlowLayoutPanel warningPanel = CreateAccountsNotTrainingPanel(warningMessage);
+                MainFlowLayoutPanel.Controls.Add(warningPanel);
+            }
+
+            // Server Status
+            if (Settings.UI.SystemTrayPopup.ShowServerStatus)
+            {
+                m_serverStatusLabel.AutoSize = true;
+                MainFlowLayoutPanel.Controls.Add(m_serverStatusLabel);
+                UpdateServerStatusLabel();
+            }
+
+            // EVE Time
+            if (Settings.UI.SystemTrayPopup.ShowEveTime)
+            {
+                m_eveTimeLabel.AutoSize = true;
+                MainFlowLayoutPanel.Controls.Add(m_eveTimeLabel);
+                UpdateEveTimeLabel();
+            }
+
+            // Market Uploader
+            m_uploaderStatusLabel.AutoSize = true;
+            MainFlowLayoutPanel.Controls.Add(m_uploaderStatusLabel);
+            UpdateUploaderStatusLabel();
+        }
+
+        /// <summary>
         /// Creates a panel contains the warning message for accounts not in training.
         /// </summary>
         /// <param name="warningMessage"></param>
         /// <returns></returns>
-        private FlowLayoutPanel CreateAccountsNotTrainingPanel(string warningMessage)
+        private static FlowLayoutPanel CreateAccountsNotTrainingPanel(string warningMessage)
         {
             // Create a flowlayout to hold the content
             FlowLayoutPanel warningPanel;
@@ -461,14 +287,16 @@ namespace EVEMon.SettingsUI
                 // Add a picture on the left with a warning icon
                 if (!Settings.UI.SafeForWork)
                 {
+                    int portraitSize = Int32.Parse(Settings.UI.SystemTrayPopup.PortraitSize.ToString().Substring(1),
+                                                   CultureConstants.InvariantCulture);
+
                     PictureBox tempPictureBoxWarning = null;
                     try
                     {
                         tempPictureBoxWarning = new PictureBox();
                         tempPictureBoxWarning.Image = SystemIcons.Warning.ToBitmap();
                         tempPictureBoxWarning.SizeMode = PictureBoxSizeMode.StretchImage;
-                        tempPictureBoxWarning.Size = new Size(m_portraitSize[(int)Settings.UI.SystemTrayPopup.PortraitSize],
-                                                              m_portraitSize[(int)Settings.UI.SystemTrayPopup.PortraitSize]);
+                        tempPictureBoxWarning.Size = new Size(portraitSize, portraitSize);
                         tempPictureBoxWarning.Margin = new Padding(2);
 
                         PictureBox pbWarning = tempPictureBoxWarning;
@@ -502,6 +330,8 @@ namespace EVEMon.SettingsUI
                         tempLabelMessage.Dispose();
                 }
 
+                tempWarningPanel.CreateControl();
+
                 warningPanel = tempWarningPanel;
                 tempWarningPanel = null;
             }
@@ -510,6 +340,7 @@ namespace EVEMon.SettingsUI
                 if (tempWarningPanel != null)
                     tempWarningPanel.Dispose();
             }
+
             return warningPanel;
         }
 
@@ -521,18 +352,12 @@ namespace EVEMon.SettingsUI
             // Fix the panel widths to the largest
             // We let the framework determine the appropriate widths, then fix them so that
             // updates to training time remaining don't cause the form to resize
-            int pnlWidth = (mainPanel.Controls.Cast<Control>().Select(control => control.Width)).Concat(new[] { 0 }).Max();
+            int pnlWidth = (MainFlowLayoutPanel.Controls.Cast<Control>().Select(control => control.Width)).Concat(new[] { 0 }).Max();
 
-            foreach (Control control in mainPanel.Controls)
+            foreach (FlowLayoutPanel flowPanel in MainFlowLayoutPanel.Controls.OfType<FlowLayoutPanel>())
             {
-                FlowLayoutPanel flowPanel = control as FlowLayoutPanel;
-                if (flowPanel == null)
-                    continue;
-
-                int pnlHeight = flowPanel.Height;
                 flowPanel.AutoSize = false;
                 flowPanel.Width = pnlWidth;
-                flowPanel.Height = pnlHeight;
             }
 
             // Position Popup
@@ -544,6 +369,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateEveTimeLabel()
         {
+            if (!Visible || m_eveTimeLabel == null)
+                return;
+
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
                 m_eveTimeLabel.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", DateTime.UtcNow);
         }
@@ -553,11 +381,67 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateServerStatusLabel()
         {
-            if (m_serverStatusLabel == null)
+            if (!Visible || m_serverStatusLabel == null)
                 return;
 
             if (Settings.UI.SystemTrayPopup.ShowServerStatus)
                 m_serverStatusLabel.Text = EveMonClient.EVEServer.StatusText;
+        }
+
+        /// <summary>
+        /// Updates the uploader status label.
+        /// </summary>
+        private void UpdateUploaderStatusLabel()
+        {
+            if (!Visible || m_uploaderStatusLabel == null)
+                return;
+
+            m_uploaderStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "Uploader Status: {0}", Uploader.Status);
+        }
+
+        #endregion
+
+
+        #region Global Events
+
+        /// <summary>
+        /// Updates the TQ status message.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_ServerStatusUpdated(object sender, EveServerEventArgs e)
+        {
+            UpdateServerStatusLabel();
+        }
+
+        /// <summary>
+        /// Once per second, we update the eve time.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            UpdateEveTimeLabel();
+        }
+
+        /// <summary>
+        /// Occur when characters completed skills. We refresh the controls.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
+        {
+            UpdateContent();
+        }
+
+        /// <summary>
+        /// Updates the uploader status message.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void Uploader_StatusChanged(object sender, EventArgs e)
+        {
+            UpdateUploaderStatusLabel();
         }
 
         #endregion

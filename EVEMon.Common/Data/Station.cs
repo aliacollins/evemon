@@ -152,19 +152,7 @@ namespace EVEMon.Common.Data
         internal static Station GetByID(int id)
         {
             // Check if it's a conquerable outpost station, if not look in our data
-            Station station = ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
-
-            // We failed ? It's not in any data we can access
-            // We set it to a fixed one and notify about it in the trace file
-            if (station == null)
-            {
-                EveMonClient.Trace("Could not find station id {0}", id);
-                station = StaticGeography.GetStationByID(60013747);
-                if (station != null)
-                    EveMonClient.Trace("Setting to {0}", station.Name);
-            }
-
-            return station;
+            return ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
         }
 
         /// <summary>

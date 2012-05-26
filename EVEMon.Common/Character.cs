@@ -591,11 +591,6 @@ namespace EVEMon.Common
 
 
         /// <summary>
-        /// Called when the object gets disposed.
-        /// </summary>
-        internal abstract void Dispose();
-
-        /// <summary>
         /// Gets the UI settings for this character.
         /// </summary>
         public CharacterUISettings UISettings { get; internal set; }

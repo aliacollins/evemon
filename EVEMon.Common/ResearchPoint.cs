@@ -10,6 +10,7 @@ namespace EVEMon.Common
         #region Fields
 
         private readonly float m_remainderPoints;
+        private int m_stationID;
 
         #endregion
 
@@ -82,7 +83,7 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Private Finders
+        #region Helper Methods
 
         /// <summary>
         /// Assigns the supplemental info of an agent by its ID.
@@ -97,8 +98,24 @@ namespace EVEMon.Common
             AgentName = agent.Name;
             AgentLevel = agent.Level;
 
-            if (agent.Station != null)
-                Station = Station.GetByID(agent.Station.ID);
+            if (agent.Station == null)
+                return;
+
+            m_stationID = agent.Station.ID;
+            UpdateStation();
+        }
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Updates the station.
+        /// </summary>
+        public void UpdateStation()
+        {
+            Station = Station.GetByID(m_stationID);
         }
 
         #endregion

@@ -17,6 +17,7 @@ using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.MarketUnifiedUploader;
 using Microsoft.Win32;
 
 namespace EVEMon.SettingsUI
@@ -29,6 +30,9 @@ namespace EVEMon.SettingsUI
         private readonly SerializableSettings m_oldSettings;
         private bool m_isLoading;
 
+
+        #region Constructor
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -37,7 +41,7 @@ namespace EVEMon.SettingsUI
             InitializeComponent();
 
             treeView.Font = FontFactory.GetFont("Tahoma", 9.75F);
-            alwaysAskRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold); 
+            alwaysAskRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             removeAllRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             removeConfirmedRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             battleClinicAPIControl.Font = FontFactory.GetFont("Tahoma", 8.25F);
@@ -47,51 +51,10 @@ namespace EVEMon.SettingsUI
             m_oldSettings = Settings.Export();
         }
 
+        #endregion
 
-        #region Core methods
 
-        /// <summary>
-        /// Occurs when the user click "Cancel".
-        /// We restore the old settings.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            // Update settings
-            Settings.Import(m_oldSettings, true);
-            Settings.Save();
-
-            // Close
-            Close();
-        }
-
-        /// <summary>
-        /// Occurs when the user click "OK".
-        /// We set up the new settings.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnOk_Click(object sender, EventArgs e)
-        {
-            // Return settings
-            ApplyToSettings();
-
-            // Close
-            Close();
-        }
-
-        /// <summary>
-        /// Occurs when the user click "Apply".
-        /// We set up the new settings.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void applyButton_Click(object sender, EventArgs e)
-        {
-            // Return settings
-            ApplyToSettings();
-        }
+        #region Inherited Events
 
         /// <summary>
         /// Occurs on form load, we update the controls values with the settings we retrieved.
@@ -100,6 +63,10 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void SettingsForm_Load(object sender, EventArgs e)
         {
+            Uploader.StatusChanged += Uploader_StatusChanged;
+            Disposed += OnDisposed;
+            
+            // Initialize members
             m_isLoading = true;
 
             // Platform is Unix ?
@@ -117,11 +84,11 @@ namespace EVEMon.SettingsUI
             overviewPortraitSizeComboBox.Items.AddRange(
                 Enum.GetValues(typeof(PortraitSizes)).Cast<PortraitSizes>().Select(
                     x =>
-                    {
-                        // Transforms x64 to 64 by 64
-                        string size = x.ToString().Substring(1);
-                        return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
-                    }).ToArray<object>());
+                        {
+                            // Transforms x64 to 64 by 64
+                            string size = x.ToString().Substring(1);
+                            return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
+                        }).ToArray<object>());
 
             // Expands the left panel and selects the first page and node
             treeView.ExpandAll();
@@ -145,6 +112,9 @@ namespace EVEMon.SettingsUI
 
             // G15
             SetG15Settings();
+
+            // Market Unified Uploader
+            marketUnifiedUploaderCheckBox.Checked = m_settings.MarketUnifiedUploader.Enabled;
 
             // Skills display on the main window
             cbShowAllPublicSkills.Checked = m_settings.UI.MainWindow.ShowAllPublicSkills;
@@ -217,10 +187,81 @@ namespace EVEMon.SettingsUI
             // API providers
             InitializeAPIProvidersDropDown();
 
-            // Enables / disables controls
             m_isLoading = false;
+
+            // Enables / disables controls
             UpdateDisables();
         }
+
+        /// <summary>
+        /// On dispose unsubscribe the events.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            Uploader.StatusChanged -= Uploader_StatusChanged;
+            Disposed -= OnDisposed;
+        }
+
+        /// <summary>
+        /// Enable/Disable uploader according to its state.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <remarks>A special condition so not to disable the uploader if network is unavailable.</remarks>
+        private void Uploader_StatusChanged(object sender, EventArgs e)
+        {
+            marketUnifiedUploaderCheckBox.Checked = Uploader.IsRunning;
+        }
+
+        /// <summary>
+        /// Occurs when the user click "Cancel".
+        /// We restore the old settings.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            // Update settings
+            Settings.Import(m_oldSettings, true);
+            Settings.Save();
+
+            // Close
+            Close();
+        }
+
+        /// <summary>
+        /// Occurs when the user click "OK".
+        /// We set up the new settings.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            // Return settings
+            ApplyToSettings();
+
+            // Close
+            Close();
+        }
+
+        /// <summary>
+        /// Occurs when the user click "Apply".
+        /// We set up the new settings.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void applyButton_Click(object sender, EventArgs e)
+        {
+            // Return settings
+            ApplyToSettings();
+        }
+
+        #endregion
+
+
+        #region Core methods
 
         /// <summary>
         /// Sets the tray icon settings.
@@ -324,7 +365,7 @@ namespace EVEMon.SettingsUI
             rbMSOutlook.Checked = m_settings.Calendar.Enabled && m_settings.Calendar.Provider == CalendarProvider.Outlook &&
                                   ExternalCalendar.OutlookInstalled;
             rbGoogle.Checked = !rbMSOutlook.Checked;
-            
+
             rbDefaultCalendar.Checked = m_settings.Calendar.UseOutlookDefaultCalendar;
             rbCustomCalendar.Checked = !rbDefaultCalendar.Checked;
             tbCalendarPath.Text = m_settings.Calendar.OutlookCustomCalendarPath;
@@ -425,6 +466,12 @@ namespace EVEMon.SettingsUI
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.MinimizeToTray;
             else
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.Exit;
+
+            // Market Unified Uploader
+            m_settings.MarketUnifiedUploader.Enabled = marketUnifiedUploaderCheckBox.Checked;
+            marketUnifiedUploaderControl.UpdateEndPointSettings();
+            if (!marketUnifiedUploaderCheckBox.Checked)
+                marketUnifiedUploaderControl.ShowInfoLabel();
 
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
@@ -708,6 +755,7 @@ namespace EVEMon.SettingsUI
             emailNotificationsControl.Enabled = mailNotificationCheckBox.Checked;
             customProxyPanel.Enabled = customProxyCheckBox.Checked;
             overviewPanel.Enabled = cbShowOverViewTab.Checked;
+            marketUnifiedUploaderControl.Enabled = marketUnifiedUploaderCheckBox.Checked;
 
             cbWindowsTitleList.Enabled = cbTitleToTime.Checked;
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
@@ -1023,9 +1071,9 @@ namespace EVEMon.SettingsUI
             tvlist.Nodes.Clear();
             tvlist.ImageList = GetCustomIconSet();
 
-            if(tvlist.ImageList == null)
+            if (tvlist.ImageList == null)
                 return;
-            
+
             TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"),
                                         tvlist.ImageList.Images.IndexOfKey("book"));
             gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"),

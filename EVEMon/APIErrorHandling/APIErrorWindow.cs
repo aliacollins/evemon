@@ -195,7 +195,7 @@ namespace EVEMon.ApiErrorHandling
             if (result == null || result.XmlDocument == null)
                 return "There was no associated XML document.";
 
-            return Util.GetXMLStringRepresentation(result.XmlDocument);
+            return Util.GetXmlStringRepresentation(result.XmlDocument);
         }
 
         /// <summary>

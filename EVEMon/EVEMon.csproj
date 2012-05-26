@@ -10,7 +10,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EVEMon</RootNamespace>
     <AssemblyName>EVEMon</AssemblyName>
-    <ApplicationIcon>EVEMon.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -65,8 +64,12 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
+  <PropertyGroup>
+    <Win32Resource>EVEMon.res</Win32Resource>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -147,6 +150,39 @@
     </Compile>
     <Compile Include="BlankCharacter\BlankCharacterWindow.Designer.cs">
       <DependentUpon>BlankCharacterWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\AssetsColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterAssetsList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterAssetsList.Designer.cs">
+      <DependentUpon>CharacterAssetsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.Designer.cs">
+      <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterWalletJournalList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterWalletJournalList.Designer.cs">
+      <DependentUpon>CharacterWalletJournalList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterWalletTransactionsList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterWalletTransactionsList.Designer.cs">
+      <DependentUpon>CharacterWalletTransactionsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\WalletJournalColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\WalletTransactionsColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="CharactersComparison\CharactersComparisonWindow.cs">
       <SubType>Form</SubType>
@@ -277,11 +313,23 @@
     <Compile Include="SettingsUI\EmailNotificationsControl.Designer.cs">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsUI\MarketUnifiedUploaderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\MarketUnifiedUploaderControl.Designer.cs">
+      <DependentUpon>MarketUnifiedUploaderControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsUI\SettingsFileStorageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SettingsUI\SettingsFileStorageControl.Designer.cs">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsUI\TrayBaseWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\TrayBaseWindow.Designer.cs">
+      <DependentUpon>TrayBaseWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SettingsUI\UpdateSettingsControl.cs">
       <SubType>UserControl</SubType>
@@ -390,6 +438,19 @@
     <EmbeddedResource Include="BlankCharacter\BlankCharacterWindow.resx">
       <DependentUpon>BlankCharacterWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterAssetsList.resx">
+      <DependentUpon>CharacterAssetsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.resx">
+      <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterWalletJournalList.resx">
+      <DependentUpon>CharacterWalletJournalList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterWalletTransactionsList.resx">
+      <DependentUpon>CharacterWalletTransactionsList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CharactersComparison\CharactersComparisonWindow.resx">
       <DependentUpon>CharactersComparisonWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -445,8 +506,14 @@
     <EmbeddedResource Include="SettingsUI\EmailNotificationsControl.resx">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\MarketUnifiedUploaderControl.resx">
+      <DependentUpon>MarketUnifiedUploaderControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\SettingsFileStorageControl.resx">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\TrayBaseWindow.resx">
+      <DependentUpon>TrayBaseWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\UpdateSettingsControl.resx">
       <DependentUpon>UpdateSettingsControl.cs</DependentUpon>
@@ -732,14 +799,8 @@
     <Compile Include="SettingsUI\TrayPopupWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsUI\TrayPopupWindow.Designer.cs">
-      <DependentUpon>TrayPopupWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="SettingsUI\TrayTooltipWindow.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SettingsUI\TrayTooltipWindow.Designer.cs">
-      <DependentUpon>TrayTooltipWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ExceptionHandling\UnhandledExceptionWindow.cs">
       <SubType>Form</SubType>
@@ -915,14 +976,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>TimeCheckNotification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsUI\TrayPopupWindow.resx">
-      <DependentUpon>TrayPopupWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingsUI\TrayTooltipWindow.resx">
-      <DependentUpon>TrayTooltipWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="ExceptionHandling\UnhandledExceptionWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>UnhandledExceptionWindow.cs</DependentUpon>
@@ -933,7 +986,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="SkillPlanner\BrowserClasses.cd" />
     <EmbeddedResource Include="ApiErrorHandling\ApiErrorWindow.resx">
       <DependentUpon>ApiErrorWindow.cs</DependentUpon>
@@ -1030,6 +1082,10 @@
       <Name>EVEMon.LogitechG15</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\EVEMon.MarketUnifiedUploader\EVEMon.MarketUnifiedUploader.csproj">
+      <Project>{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}</Project>
+      <Name>EVEMon.MarketUnifiedUploader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EVEMon.Watchdog\EVEMon.Watchdog.csproj">
       <Project>{8C4A87A0-780E-4765-ADD0-146091FE26F4}</Project>
       <Name>EVEMon.Watchdog</Name>
@@ -1050,10 +1106,6 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="EVEMon.ico" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
@@ -1064,7 +1116,10 @@
   <Target Name="AfterBuild">
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>cd $(SolutionDir)Tools\ResFileCreator\$(OutDir)
+EVEMonResFileCreator.exe</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>del $(ProjectDir)EVEMon.res</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -16,7 +16,8 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
-        public ContractBidCollection(CCPCharacter character)
+        /// <param name="character">The character.</param>
+        internal ContractBidCollection(CCPCharacter character)
         {
             m_character = character;
         }

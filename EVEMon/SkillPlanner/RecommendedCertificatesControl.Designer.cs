@@ -34,16 +34,16 @@ namespace EVEMon.SkillPlanner
             this.lblTimeRequired = new System.Windows.Forms.Label();
             this.btnAddCerts = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.tvCertList = new EVEMon.SkillPlanner.OverridenTreeView();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmAddToPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.showInBrowserMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.showInExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.tsSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.tvCertList = new EVEMon.SkillPlanner.OverridenTreeView();
-            this.tsmAddToPlan = new System.Windows.Forms.ToolStripMenuItem();
-            this.showInExplorerMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.contextMenu.SuspendLayout();
@@ -89,6 +89,22 @@ namespace EVEMon.SkillPlanner
             this.panel2.Size = new System.Drawing.Size(244, 127);
             this.panel2.TabIndex = 6;
             // 
+            // tvCertList
+            // 
+            this.tvCertList.ContextMenuStrip = this.contextMenu;
+            this.tvCertList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvCertList.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+            this.tvCertList.FullRowSelect = true;
+            this.tvCertList.ImageIndex = 0;
+            this.tvCertList.ImageList = this.imageList;
+            this.tvCertList.Location = new System.Drawing.Point(0, 0);
+            this.tvCertList.Name = "tvCertList";
+            this.tvCertList.SelectedImageIndex = 0;
+            this.tvCertList.Size = new System.Drawing.Size(244, 127);
+            this.tvCertList.TabIndex = 0;
+            this.tvCertList.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvCertList_NodeMouseClick);
+            this.tvCertList.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvCertList_NodeMouseDoubleClick);
+            // 
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -100,8 +116,16 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(195, 126);
+            this.contextMenu.Size = new System.Drawing.Size(195, 148);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            // 
+            // tsmAddToPlan
+            // 
+            this.tsmAddToPlan.Image = ((System.Drawing.Image)(resources.GetObject("tsmAddToPlan.Image")));
+            this.tsmAddToPlan.Name = "tsmAddToPlan";
+            this.tsmAddToPlan.Size = new System.Drawing.Size(194, 22);
+            this.tsmAddToPlan.Text = "&Plan...";
+            this.tsmAddToPlan.Click += new System.EventHandler(this.tsmAddToPlan_Click);
             // 
             // showInMenuSeparator
             // 
@@ -114,6 +138,14 @@ namespace EVEMon.SkillPlanner
             this.showInBrowserMenu.Size = new System.Drawing.Size(194, 22);
             this.showInBrowserMenu.Text = "Show in Skill &Browser";
             this.showInBrowserMenu.Click += new System.EventHandler(this.showInSkillBrowserMenu_Click);
+            // 
+            // showInExplorerMenu
+            // 
+            this.showInExplorerMenu.Image = ((System.Drawing.Image)(resources.GetObject("showInExplorerMenu.Image")));
+            this.showInExplorerMenu.Name = "showInExplorerMenu";
+            this.showInExplorerMenu.Size = new System.Drawing.Size(194, 22);
+            this.showInExplorerMenu.Text = "Show in Skill &Explorer...";
+            this.showInExplorerMenu.Click += new System.EventHandler(this.showInSkillExplorerMenu_Click);
             // 
             // tsSeparator
             // 
@@ -145,38 +177,6 @@ namespace EVEMon.SkillPlanner
             this.imageList.Images.SetKeyName(4, "Certificate.png");
             this.imageList.Images.SetKeyName(5, "Skillbook.png");
             this.imageList.Images.SetKeyName(6, "Plan.png");
-            // 
-            // tvCertList
-            // 
-            this.tvCertList.ContextMenuStrip = this.contextMenu;
-            this.tvCertList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvCertList.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-            this.tvCertList.FullRowSelect = true;
-            this.tvCertList.ImageIndex = 0;
-            this.tvCertList.ImageList = this.imageList;
-            this.tvCertList.Location = new System.Drawing.Point(0, 0);
-            this.tvCertList.Name = "tvCertList";
-            this.tvCertList.SelectedImageIndex = 0;
-            this.tvCertList.Size = new System.Drawing.Size(244, 127);
-            this.tvCertList.TabIndex = 0;
-            this.tvCertList.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvCertList_NodeMouseDoubleClick);
-            this.tvCertList.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvCertList_NodeMouseClick);
-            // 
-            // tsmAddToPlan
-            // 
-            this.tsmAddToPlan.Image = global::EVEMon.Common.Properties.Resources.EditPlan;
-            this.tsmAddToPlan.Name = "tsmAddToPlan";
-            this.tsmAddToPlan.Size = new System.Drawing.Size(194, 22);
-            this.tsmAddToPlan.Text = "&Plan...";
-            this.tsmAddToPlan.Click += new System.EventHandler(this.tsmAddToPlan_Click);
-            // 
-            // showInExplorerMenu
-            // 
-            this.showInExplorerMenu.Image = global::EVEMon.Common.Properties.Resources.LeadsTo;
-            this.showInExplorerMenu.Name = "showInExplorerMenu";
-            this.showInExplorerMenu.Size = new System.Drawing.Size(194, 22);
-            this.showInExplorerMenu.Text = "Show in Skill &Explorer...";
-            this.showInExplorerMenu.Click += new System.EventHandler(this.showInSkillExplorerMenu_Click);
             // 
             // RecommendedCertificatesControl
             // 

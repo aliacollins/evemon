@@ -101,7 +101,7 @@ namespace EVEMon.Common.Serialization.API
         public decimal Buyout { get; set; }
 
         [XmlAttribute("volume")]
-        public double Volume { get; set; }
+        public decimal Volume { get; set; }
 
         [XmlIgnore]
         public DateTime DateIssued { get; set; }

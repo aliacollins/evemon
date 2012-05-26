@@ -73,7 +73,8 @@ namespace EVEMon.ApiCredentialsManagement
             EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
 
             // Update the monitored status of selected characters
-            foreach (KeyValuePair<Character, bool> monitoredCharacter in m_monitoredCharacters)
+            foreach (KeyValuePair<Character, bool> monitoredCharacter in m_monitoredCharacters
+                .Where(character => EveMonClient.Characters.Contains(character.Key)))
             {
                 monitoredCharacter.Key.Monitored = monitoredCharacter.Value;
             }
@@ -337,7 +338,7 @@ namespace EVEMon.ApiCredentialsManagement
             {
                 // Retrieve current selection and grouping option
                 List<Character> oldSelection = new List<Character>(charactersListView.SelectedItems.Cast<ListViewItem>()
-                    .Select(x => x.Tag).OfType<Character>());
+                                                                       .Select(x => x.Tag).OfType<Character>());
 
                 charactersListView.Groups.Clear();
                 charactersListView.Items.Clear();
@@ -642,6 +643,17 @@ namespace EVEMon.ApiCredentialsManagement
         private void closeButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        /// <summary>
+        /// Handles the ColumnWidthChanging event of the charactersListView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.ColumnWidthChangingEventArgs"/> instance containing the event data.</param>
+        private void charactersListView_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
+        {
+            e.Cancel = true;
+            e.NewWidth = charactersListView.Columns[e.ColumnIndex].Width;
         }
 
         #endregion

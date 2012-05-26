@@ -102,7 +102,7 @@ namespace EVEMon.XmlGenerator
                         stream.Seek(0, SeekOrigin.Begin);
                         XmlDocument doc2 = new XmlDocument();
                         doc2.Load(stream);
-                        Trace.Write(Common.Util.GetXMLStringRepresentation(doc2));
+                        Trace.Write(Common.Util.GetXmlStringRepresentation(doc2));
                     }
 
                     // Deserialize from the given stream
@@ -152,6 +152,26 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// Serializes a XML file to EVEMon.Common\Serialization.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="serial">The serial.</param>
+        /// <param name="xmlRootName">Name of the xml root.</param>
+        /// <param name="filename">The filename.</param>
+        internal static void SerializeXMLTo<T>(T serial, string xmlRootName, string filename)
+        {
+            string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Serialization", filename);
+            using (FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(xmlRootName));
+                serializer.Serialize(stream, serial);
+                stream.Flush();
+            }
+
+            Console.WriteLine();
+        }
+
+        /// <summary>
         /// Creates one file alongside the resources file containing
         /// the MD5 sums for each resource.
         /// </summary>
@@ -159,6 +179,8 @@ namespace EVEMon.XmlGenerator
         internal static void CreateMD5SumsFile(string filename)
         {
             ResetCounters();
+
+            Console.WriteLine();
 
             const string ResourcesPath = @"..\..\..\..\..\EVEMon.Common\Resources";
             string md5SumsFileFullPath = Path.Combine(ResourcesPath, filename);
@@ -177,7 +199,7 @@ namespace EVEMon.XmlGenerator
                 }
             }
 
-            Console.WriteLine("MD5Sums File Created Successfully");
+            Console.WriteLine("MD5Sums file created successfully");
             Console.WriteLine();
         }
 

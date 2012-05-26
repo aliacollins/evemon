@@ -11,6 +11,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Internal constructor.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal ResearchPointCollection(CCPCharacter character)
         {
             m_character = character;
@@ -29,9 +30,6 @@ namespace EVEMon.Common
             {
                 Items.Add(new ResearchPoint(srcResearchPoint));
             }
-
-            // Fires the event regarding research points update
-            EveMonClient.OnCharacterResearchPointsUpdated(m_character);
         }
     }
 }

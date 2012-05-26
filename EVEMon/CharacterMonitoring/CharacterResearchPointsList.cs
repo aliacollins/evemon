@@ -43,29 +43,25 @@ namespace EVEMon.CharacterMonitoring
             lvResearchPoints.AllowColumnReorder = true;
             lvResearchPoints.Columns.Clear();
 
-            noResearchLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            noResearchPointsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             ListViewHelper.EnableDoubleBuffer(lvResearchPoints);
 
             lvResearchPoints.ColumnClick += lvResearchPoints_ColumnClick;
             lvResearchPoints.ColumnWidthChanged += lvResearchPoints_ColumnWidthChanged;
             lvResearchPoints.ColumnReordered += lvResearchPoints_ColumnReordered;
-
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
-            Disposed += OnDisposed;
         }
 
         #endregion
 
 
-        #region Properties
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -149,6 +145,23 @@ namespace EVEMon.CharacterMonitoring
         # region Inherited Events
 
         /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
+            Disposed += OnDisposed;
+        }
+
+        /// <summary>
         /// Unsubscribe events on disposing.
         /// </summary>
         /// <param name="sender"></param>
@@ -156,6 +169,7 @@ namespace EVEMon.CharacterMonitoring
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
             Disposed -= OnDisposed;
         }
@@ -177,15 +191,15 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            ResearchPoints = (ccpCharacter == null ? null : ccpCharacter.ResearchPoints);
+            ResearchPoints = (Character == null ? null : Character.ResearchPoints);
             Columns = Settings.UI.MainWindow.Research.Columns;
+            TextFilter = String.Empty;
 
             UpdateColumns();
 
             m_init = true;
 
-            UpdateContent();
+            UpdateListVisibility();
         }
 
         # endregion
@@ -259,38 +273,25 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<ResearchPoint> researhPoints = m_list.Where(x => IsTextMatching(x, text));
+                IEnumerable<ResearchPoint> researhPoints = m_list
+                    .Where(x => !String.IsNullOrEmpty(x.AgentName) && !String.IsNullOrEmpty(x.Field) && x.Station != null)
+                    .Where(x => IsTextMatching(x, text));
 
                 UpdateSort();
 
                 lvResearchPoints.Items.Clear();
 
-                // Add the items in every group
-                foreach (ResearchPoint researchPoint in researhPoints)
-                {
-                    if (String.IsNullOrEmpty(researchPoint.AgentName) || String.IsNullOrEmpty(researchPoint.Field) ||
-                        researchPoint.Station == null)
-                        continue;
-
-                    ListViewItem item = new ListViewItem(researchPoint.AgentName)
-                                            { UseItemStyleForSubItems = false, Tag = researchPoint };
-
-                    // Add enough subitems to match the number of columns
-                    while (item.SubItems.Count < lvResearchPoints.Columns.Count + 1)
-                    {
-                        item.SubItems.Add(String.Empty);
-                    }
-
-                    // Creates the subitems
-                    for (int i = 0; i < lvResearchPoints.Columns.Count; i++)
-                    {
-                        ColumnHeader header = lvResearchPoints.Columns[i];
-                        ResearchColumn column = (ResearchColumn)header.Tag;
-                        SetColumn(researchPoint, item.SubItems[i], column);
-                    }
-
-                    lvResearchPoints.Items.Add(item);
-                }
+                // Add the items
+                lvResearchPoints.Items.AddRange(
+                    researhPoints.Select(researchPoint => new
+                                                              {
+                                                                  researchPoint,
+                                                                  item = new ListViewItem(researchPoint.AgentName)
+                                                                             {
+                                                                                 UseItemStyleForSubItems = false,
+                                                                                 Tag = researchPoint
+                                                                             }
+                                                              }).Select(x => CreateSubItems(x.researchPoint, x.item)).ToArray());
 
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
@@ -302,18 +303,48 @@ namespace EVEMon.CharacterMonitoring
                     }
                 }
 
-                // Display or hide the "no research points" label
-                if (m_init)
-                {
-                    noResearchLabel.Visible = lvResearchPoints.Items.Count == 0;
-                    lvResearchPoints.Visible = !noResearchLabel.Visible;
-                }
+                UpdateListVisibility();
             }
             finally
             {
                 lvResearchPoints.EndUpdate();
                 lvResearchPoints.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Creates the list view sub items.
+        /// </summary>
+        /// <param name="researchPoint">The research point.</param>
+        /// <param name="item">The item.</param>
+        private ListViewItem CreateSubItems(ResearchPoint researchPoint, ListViewItem item)
+        {
+            // Add enough subitems to match the number of columns
+            while (item.SubItems.Count < lvResearchPoints.Columns.Count + 1)
+            {
+                item.SubItems.Add(String.Empty);
+            }
+
+            // Creates the subitems
+            for (int i = 0; i < lvResearchPoints.Columns.Count; i++)
+            {
+                SetColumn(researchPoint, item.SubItems[i], (ResearchColumn)lvResearchPoints.Columns[i].Tag);
+            }
+
+            return item;
+        }
+
+        /// <summary>
+        /// Updates the list visibility.
+        /// </summary>
+        private void UpdateListVisibility()
+        {
+            // Display or hide the "no research points" label
+            if (!m_init)
+                return;
+
+            noResearchPointsLabel.Visible = lvResearchPoints.Items.Count == 0;
+            lvResearchPoints.Visible = !noResearchPointsLabel.Visible;
         }
 
         /// <summary>
@@ -387,6 +418,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="column"></param>
         private static void SetColumn(ResearchPoint researchPoint, ListViewItem.ListViewSubItem item, ResearchColumn column)
         {
+            ConquerableStation outpost = researchPoint.Station as ConquerableStation;
+
             switch (column)
             {
                 case ResearchColumn.Agent:
@@ -408,16 +441,21 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = researchPoint.StartDate.ToLocalTime().ToString();
                     break;
                 case ResearchColumn.Location:
-                    item.Text = researchPoint.Station.FullLocation;
+                    item.Text = (outpost != null
+                                     ? outpost.FullLocation
+                                     : researchPoint.Station.FullLocation);
                     break;
                 case ResearchColumn.Region:
                     item.Text = researchPoint.Station.SolarSystem.Constellation.Region.Name;
                     break;
                 case ResearchColumn.SolarSystem:
                     item.Text = researchPoint.Station.SolarSystem.Name;
+                    item.ForeColor = researchPoint.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case ResearchColumn.Station:
-                    item.Text = researchPoint.Station.Name;
+                    item.Text = (outpost != null
+                                     ? outpost.FullName
+                                     : researchPoint.Station.Name);
                     break;
                 case ResearchColumn.Quality:
                     break;
@@ -456,6 +494,16 @@ namespace EVEMon.CharacterMonitoring
         #region Local Event Handlers
 
         /// <summary>
+        /// Exports item info to CSV format.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exportToCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewExporter.CreateCSV(lvResearchPoints);
+        }
+
+        /// <summary>
         /// On column reorder we update the settings.
         /// </summary>
         /// <param name="sender"></param>
@@ -473,6 +521,9 @@ namespace EVEMon.CharacterMonitoring
         private void lvResearchPoints_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (m_isUpdatingColumns || m_columns.Count <= e.ColumnIndex)
+                return;
+
+            if (m_columns[e.ColumnIndex].Width == lvResearchPoints.Columns[e.ColumnIndex].Width)
                 return;
 
             m_columns[e.ColumnIndex].Width = lvResearchPoints.Columns[e.ColumnIndex].Width;
@@ -495,7 +546,12 @@ namespace EVEMon.CharacterMonitoring
                 m_sortAscending = true;
             }
 
-            UpdateContent();
+            m_isUpdatingColumns = true;
+
+            // Updates the item sorter
+            UpdateSort();
+
+            m_isUpdatingColumns = false;
         }
 
         # endregion
@@ -528,11 +584,28 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
         {
-            CCPCharacter ccpCharacter = Character as CCPCharacter;
-            if (ccpCharacter == null || e.Character != ccpCharacter)
+            if (Character == null || e.Character != Character)
                 return;
 
-            ResearchPoints = ccpCharacter.ResearchPoints;
+            ResearchPoints = Character.ResearchPoints;
+            UpdateColumns();
+        }
+
+        /// <summary>
+        /// When Conquerable Station List updates, update the list.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        {
+            if (Character == null)
+                return;
+
+            foreach (ResearchPoint researchPoint in m_list)
+            {
+                researchPoint.UpdateStation();
+            }
+
             UpdateColumns();
         }
 

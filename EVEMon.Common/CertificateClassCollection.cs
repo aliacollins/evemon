@@ -11,6 +11,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Constructor.
         /// </summary>
+        /// <param name="character">The character.</param>
         internal CertificateClassCollection(Character character)
         {
             foreach (CertificateClass certClass in character.CertificateCategories.SelectMany(category => category))

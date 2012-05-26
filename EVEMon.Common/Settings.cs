@@ -47,6 +47,7 @@ namespace EVEMon.Common
             Calendar = new CalendarSettings();
             Exportation = new ExportationSettings();
             Notifications = new NotificationSettings();
+            MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
@@ -93,6 +94,11 @@ namespace EVEMon.Common
         /// Gets the settings for the notifications (alerts).
         /// </summary>
         public static NotificationSettings Notifications { get; private set; }
+
+        /// <summary>
+        /// Gets the settings for the market unified uploader.
+        /// </summary>
+        public static MarketUnifiedUploaderSettings MarketUnifiedUploader { get; private set; }
 
         /// <summary>
         /// Gets the settings for the network.
@@ -168,6 +174,7 @@ namespace EVEMon.Common
                 Calendar = serial.Calendar;
                 Exportation = serial.Exportation;
                 Notifications = serial.Notifications;
+                MarketUnifiedUploader = serial.MarketUnifiedUploader;
 
                 // Import the characters, API keys and plans
                 if (!preferencesOnly)
@@ -217,7 +224,7 @@ namespace EVEMon.Common
                 Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
 
                 // Bind the APIKeyInfo and CharacterList update period
-                if ((APIGenericMethods)method == APIGenericMethods.APIKeyInfo &&
+                if (method.Equals(APIGenericMethods.APIKeyInfo) &&
                     Updates.Periods[APIGenericMethods.CharacterList.ToString()] != Updates.Periods[method.ToString()])
                     Updates.Periods[method.ToString()] = Updates.Periods[APIGenericMethods.CharacterList.ToString()];
             }
@@ -250,11 +257,20 @@ namespace EVEMon.Common
             // Initializes the plan columns or adds missing ones
             UI.PlanWindow.Columns.AddRange(UI.PlanWindow.DefaultColumns);
 
+            // Initializes the asset columns or adds missing ones
+            UI.MainWindow.Assets.Columns.AddRange(UI.MainWindow.Assets.DefaultColumns);
+
             // Initializes the market order columns or adds missing ones
             UI.MainWindow.MarketOrders.Columns.AddRange(UI.MainWindow.MarketOrders.DefaultColumns);
 
             // Initializes the contracts columns or adds missing ones
             UI.MainWindow.Contracts.Columns.AddRange(UI.MainWindow.Contracts.DefaultColumns);
+
+            // Initializes the wallet journal columns or adds missing ones
+            UI.MainWindow.WalletJournal.Columns.AddRange(UI.MainWindow.WalletJournal.DefaultColumns);
+
+            // Initializes the wallet transactions columns or adds missing ones
+            UI.MainWindow.WalletTransactions.Columns.AddRange(UI.MainWindow.WalletTransactions.DefaultColumns);
 
             // Initializes the industry jobs columns or adds missing ones
             UI.MainWindow.IndustryJobs.Columns.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);
@@ -282,6 +298,7 @@ namespace EVEMon.Common
                                                   APIProviders = EveMonClient.APIProviders.Export(),
                                                   Scheduler = Scheduler.Export(),
                                                   Calendar = Calendar,
+                                                  MarketUnifiedUploader = MarketUnifiedUploader,
                                                   Notifications = Notifications,
                                                   Exportation = Exportation,
                                                   Updates = Updates,
@@ -350,7 +367,7 @@ namespace EVEMon.Common
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = revision == 0
                                                 ? (SerializableSettings)ShowNoSupportMessage()
-                                                : Util.DeserializeXMLFromString<SerializableSettings>(fileContent,
+                                                : Util.DeserializeXmlFromString<SerializableSettings>(fileContent,
                                                                                                       SettingsTransform);
 
             if (settings != null)
@@ -422,7 +439,7 @@ namespace EVEMon.Common
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = revision == 0
                                                 ? (SerializableSettings)ShowNoSupportMessage()
-                                                : Util.DeserializeXMLFromFile<SerializableSettings>(settingsFile,
+                                                : Util.DeserializeXmlFromFile<SerializableSettings>(settingsFile,
                                                                                                     SettingsTransform);
 
             // If the settings loaded OK, make a backup as 'last good settings' and return
@@ -492,7 +509,7 @@ namespace EVEMon.Common
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = revision == 0
                                                 ? (SerializableSettings)ShowNoSupportMessage()
-                                                : Util.DeserializeXMLFromFile<SerializableSettings>(backupFile,
+                                                : Util.DeserializeXmlFromFile<SerializableSettings>(backupFile,
                                                                                                     SettingsTransform);
 
             // If the settings loaded OK, copy to the main settings file, then copy back to stamp date
@@ -581,7 +598,7 @@ namespace EVEMon.Common
         /// </summary>
         private static XslCompiledTransform SettingsTransform
         {
-            get { return s_settingsTransform ?? (s_settingsTransform = Util.LoadXSLT(Properties.Resources.SettingsXSLT)); }
+            get { return s_settingsTransform ?? (s_settingsTransform = Util.LoadXslt(Properties.Resources.SettingsXSLT)); }
         }
 
         #endregion

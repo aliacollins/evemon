@@ -2,11 +2,17 @@
 using System.Globalization;
 using System.Threading;
 using EVEMon.XmlGenerator.Datafiles;
+using EVEMon.XmlGenerator.Xmlfiles;
 
 namespace EVEMon.XmlGenerator
 {
     internal static class Program
     {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        /// <returns></returns>
+        [STAThread]
         private static void Main()
         {
             DateTime startTime = DateTime.Now;
@@ -28,9 +34,14 @@ namespace EVEMon.XmlGenerator
             Geography.GenerateDatafile();
             Reprocessing.GenerateDatafile(); // Requires GenerateItems()
 
+            // Generate MD5 Sums file
             Util.CreateMD5SumsFile("MD5Sums.txt");
 
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating Datafiles completed in {0}",
+            // Generate support xml files
+            Flags.GenerateXMLfile();
+
+            Console.WriteLine();
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating files completed in {0}",
                                             DateTime.Now.Subtract(startTime)).TrimEnd('0'));
             Console.ReadLine();
         }

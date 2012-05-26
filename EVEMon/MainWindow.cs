@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -21,11 +22,13 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.IgbService;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
+using EVEMon.Common.Properties;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using EVEMon.ImplantControls;
+using EVEMon.MarketUnifiedUploader;
 using EVEMon.NotificationWindow;
 using EVEMon.PieChart;
 using EVEMon.Sales;
@@ -41,6 +44,7 @@ namespace EVEMon
     {
         private Form m_trayPopup;
         private IgbServer m_igbServer;
+        private UploaderStatus m_uploaderStatus;
 
         private bool m_isUpdating;
         private bool m_isUpdatingData;
@@ -62,6 +66,9 @@ namespace EVEMon
             RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
             Visible = false;
+
+            tabCreationLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            noCharactersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
@@ -116,7 +123,7 @@ namespace EVEMon
             // Check with BattleClinic the local clock is synchronized
             if (Settings.Updates.CheckTimeOnStartup)
                 CheckTimeSynchronization();
-            
+
             trayIcon.Text = Application.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
@@ -132,6 +139,7 @@ namespace EVEMon
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
+            Uploader.StatusChanged += Uploader_StatusChanged;
 
             // Update the content
             UpdateTabs();
@@ -157,7 +165,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Occurs when the window is shown, display a tooltip message.
+        /// Occurs when the window is shown.
         /// </summary>
         /// <param name="e">A <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnShown(EventArgs e)
@@ -308,6 +316,8 @@ namespace EVEMon
                 page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
 
             tcCharacterTabs.Hide();
+            tabCreationLabel.Visible = true;
+
             try
             {
                 // Rebuild the pages
@@ -360,7 +370,17 @@ namespace EVEMon
             }
             finally
             {
-                tcCharacterTabs.Show();
+                tabCreationLabel.Visible = false;
+
+                if (tcCharacterTabs.Controls.Count > 0)
+                {
+                    tcCharacterTabs.Show();
+                    noCharactersLabel.Visible = false;
+                }
+                else
+                {
+                    noCharactersLabel.Visible = true;
+                }
             }
         }
 
@@ -436,20 +456,19 @@ namespace EVEMon
         /// Creates the character monitor.
         /// </summary>
         /// <param name="character">The character.</param>
-        /// <param name="tempPage">The temp page.</param>
-        private static void CreateCharacterMonitor(Character character, Control tempPage)
+        /// <param name="tabPage">The tab page.</param>
+        private static void CreateCharacterMonitor(Character character, Control tabPage)
         {
             CharacterMonitor tempMonitor = null;
             try
             {
                 tempMonitor = new CharacterMonitor(character);
-                tempMonitor.Parent = tempPage;
+                tempMonitor.Parent = tabPage;
                 tempMonitor.Dock = DockStyle.Fill;
 
                 CharacterMonitor monitor = tempMonitor;
                 tempMonitor = null;
-
-                tempPage.Controls.Add(monitor);
+                tabPage.Controls.Add(monitor);
             }
             finally
             {
@@ -782,7 +801,7 @@ namespace EVEMon
                 return;
 
             // Play the sound
-            using (SoundPlayer sp = new SoundPlayer(Common.Properties.Resources.SkillTrained))
+            using (SoundPlayer sp = new SoundPlayer(Resources.SkillTrained))
             {
                 sp.Play();
             }
@@ -859,8 +878,10 @@ namespace EVEMon
             if (WindowState == FormWindowState.Minimized)
                 return;
 
-            DateTime now = DateTime.Now.ToUniversalTime();
+            DateTime now = DateTime.UtcNow;
             lblStatus.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", now);
+            lblStatus.ToolTipText = String.Format(CultureConstants.DefaultCulture, "YC{0} ({1})",
+                                                  now.Year - 1898, now.Date.ToShortDateString());
         }
 
         /// <summary>
@@ -1228,21 +1249,13 @@ namespace EVEMon
         /// <param name="e"></param>
         private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Save current directory
-            string currentDirectory = Directory.GetCurrentDirectory();
-
             // Prompts the user for a location
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             DialogResult result = saveFileDialog.ShowDialog();
 
-            // Restore current directory
-            Directory.SetCurrentDirectory(currentDirectory);
-
             // Copy settings if OK
-            if (result != DialogResult.OK)
-                return;
-
-            Settings.CopySettings(saveFileDialog.FileName);
+            if (result == DialogResult.OK)
+                Settings.CopySettings(saveFileDialog.FileName);
         }
 
         /// <summary>
@@ -1252,15 +1265,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Save current directory
-            string currentDirectory = Directory.GetCurrentDirectory();
-
             // Prompts the user for a location
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             DialogResult result = openFileDialog.ShowDialog();
-
-            // Restore current directory
-            Directory.SetCurrentDirectory(currentDirectory);
 
             // Load settings if OK
             if (result != DialogResult.OK)
@@ -1819,13 +1826,23 @@ namespace EVEMon
             if (m_trayPopup == null)
                 return;
 
-            m_trayPopup.Close();
-            m_trayPopup.Dispose();
+            try
+            {
+                m_trayPopup.Close();
+            }
+            catch (InvalidOperationException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+            }
+            finally
+            {
+                m_trayPopup.Dispose();
+            }
         }
 
         /// <summary>
         /// Occurs when the user click the tray icon.
-        /// If it's not a right click button, we restore the window.
+        /// If it's not a right click button, we restore or minimize the window.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1955,6 +1972,40 @@ namespace EVEMon
             Activate();
         }
 
+        /// <summary>
+        /// Updates the tray icon.
+        /// </summary>
+        private void UpdateTrayIcon()
+        {
+            trayIcon.Icon = m_uploaderStatus == UploaderStatus.Uploading
+                                ? Resources.EMUU
+                                : Resources.EVEMon;
+        }
+
+        #endregion
+
+
+        #region Market Unified Uploader
+
+        private void Uploader_StatusChanged(object sender, EventArgs e)
+        {
+            UpdateUploaderStatus();
+            UpdateTrayIcon();
+        }
+
+        /// <summary>
+        /// Updates the uploader status.
+        /// </summary>
+        private void UpdateUploaderStatus()
+        {
+            if (Uploader.Status == m_uploaderStatus)
+                return;
+
+            m_uploaderStatus = Uploader.Status;
+            UploaderToolStripStatusLabel.Image = UploaderStatusImageList.Images[(int)Uploader.Status];
+            UploaderToolStripStatusLabel.ToolTipText = Uploader.Status.ToString();
+        }
+
         #endregion
 
 
@@ -1982,6 +2033,12 @@ namespace EVEMon
 
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
+
+            // Enable/Disable Uploader
+            if (Settings.MarketUnifiedUploader.Enabled)
+                 Uploader.Start();
+            else
+                 Uploader.Stop();
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {
@@ -2058,7 +2115,7 @@ namespace EVEMon
         /// </summary>
         private void DisplayTestMenu()
         {
-            testToolStripMenuItem.Visible = true;
+            testsToolStripMenuItem.Visible = true;
             testTrayToolStripMenuItem.Visible = true;
             testsToolStripSeperator.Visible = true;
             testCharacterNotificationToolStripMenuItem.Visible = true;

@@ -10,7 +10,7 @@ namespace EVEMon.CharacterMonitoring
 {
     public partial class CharacterEmploymentHistoryList : UserControl
     {
-        private CCPCharacter m_ccpCharacter;
+        #region Fields
 
         private const int PadTop = 2;
         private const int PadLeft = 6;
@@ -26,6 +26,11 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_recordFont;
         private readonly Font m_recordBoldFont;
 
+        #endregion
+
+
+        #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CharacterEmploymentHistoryList"/> class.
         /// </summary>
@@ -38,18 +43,18 @@ namespace EVEMon.CharacterMonitoring
             m_recordFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_recordBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noEmploymentHistoryLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
-            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            Disposed += OnDisposed;
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
         [Browsable(false)]
-        public Character Character { get; set; }
+        public CCPCharacter Character { get; set; }
 
 
         /// <summary>
@@ -60,8 +65,27 @@ namespace EVEMon.CharacterMonitoring
             get { return Math.Max(m_recordFont.Height * 2 + PadTop * 2, EmploymentRecordDetailHeight); }
         }
 
+        #endregion
+
 
         #region Inherited events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            Disposed += OnDisposed;
+        }
 
         /// <summary>
         /// Unsubscribe events on disposing.
@@ -110,12 +134,6 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
-            m_ccpCharacter = Character as CCPCharacter;
-
-            // If the character is not a CCPCharacter it does not have employment history
-            if (m_ccpCharacter == null)
-                return;
-
             int scrollBarPosition = lbEmploymentHistory.TopIndex;
 
             // Update the skills list
@@ -124,15 +142,15 @@ namespace EVEMon.CharacterMonitoring
             {
                 // Add items in the list
                 lbEmploymentHistory.Items.Clear();
-                foreach (EmploymentRecord employmentRecord in m_ccpCharacter.EmploymentHistory)
+                foreach (EmploymentRecord employmentRecord in Character.EmploymentHistory)
                 {
                     employmentRecord.EmploymentRecordImageUpdated += record_EmploymentRecordImageUpdated;
                     lbEmploymentHistory.Items.Add(employmentRecord);
                 }
 
                 // Display or hide the "no skills" label.
-                noEmploymentHistoryLabel.Visible = !m_ccpCharacter.EmploymentHistory.Any();
-                lbEmploymentHistory.Visible = m_ccpCharacter.EmploymentHistory.Any();
+                noEmploymentHistoryLabel.Visible = !Character.EmploymentHistory.Any();
+                lbEmploymentHistory.Visible = Character.EmploymentHistory.Any();
 
                 // Invalidate display
                 lbEmploymentHistory.Invalidate();

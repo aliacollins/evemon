@@ -11,6 +11,9 @@ namespace EVEMon.Common.SettingsObjects
         {
             ShowOverview = true;
             ShowMenuBar = true;
+            Assets = new AssetSettings();
+            WalletJournal = new WalletJournalSettings();
+            WalletTransactions = new WalletTransactionSettings();
             MarketOrders = new MarketOrderSettings();
             Contracts = new ContractSettings();
             IndustryJobs = new IndustryJobSettings();
@@ -64,6 +67,12 @@ namespace EVEMon.Common.SettingsObjects
         [XmlElement("showSkillNameInWindowTitle")]
         public bool ShowSkillNameInWindowTitle { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [show all public skills].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [show all public skills]; otherwise, <c>false</c>.
+        /// </value>
         [XmlElement("showAllPublicSkills")]
         public bool ShowAllPublicSkills { get; set; }
 
@@ -170,6 +179,13 @@ namespace EVEMon.Common.SettingsObjects
         public bool UseIncreasedContrastOnOverview { get; set; }
 
         /// <summary>
+        /// Gets or sets the assets.
+        /// </summary>
+        /// <value>The assets.</value>
+        [XmlElement("assets")]
+        public AssetSettings Assets { get; set; }
+
+        /// <summary>
         /// Gets or sets the market orders.
         /// </summary>
         /// <value>The market orders.</value>
@@ -182,6 +198,20 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The contracts.</value>
         [XmlElement("contracts")]
         public ContractSettings Contracts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the wallet journal.
+        /// </summary>
+        /// <value>The wallet journal.</value>
+        [XmlElement("walletJournal")]
+        public WalletJournalSettings WalletJournal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the wallet transactions.
+        /// </summary>
+        /// <value>The wallet transactions.</value>
+        [XmlElement("walletTransactions")]
+        public WalletTransactionSettings WalletTransactions { get; set; }
 
         /// <summary>
         /// Gets or sets the industry jobs.

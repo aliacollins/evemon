@@ -294,7 +294,7 @@ namespace EVEMon.Common
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputPlan), output);
-            return Util.GetXMLStringRepresentation(doc);
+            return Util.GetXmlStringRepresentation(doc);
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace EVEMon.Common
 
             // Serializes to XML document and gets a string representation
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputPlans), output);
-            return Util.GetXMLStringRepresentation(doc);
+            return Util.GetXmlStringRepresentation(doc);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace EVEMon.Common
                 // Old format
                 result = revision == 0
                              ? (SerializablePlan)Settings.ShowNoSupportMessage()
-                             : Util.DeserializeXMLFromFile<OutputPlan>(filename);
+                             : Util.DeserializeXmlFromFile<OutputPlan>(filename);
             }
             catch (UnauthorizedAccessException exc)
             {
@@ -425,7 +425,7 @@ namespace EVEMon.Common
                 int revision = Util.GetRevisionNumber(filename);
 
                 if (revision != 0)
-                    result = Util.DeserializeXMLFromFile<OutputPlans>(filename);
+                    result = Util.DeserializeXmlFromFile<OutputPlans>(filename);
             }
             catch (UnauthorizedAccessException exc)
             {

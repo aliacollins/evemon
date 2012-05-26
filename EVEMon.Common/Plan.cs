@@ -205,14 +205,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets or sets the plan's description.
-        /// </summary>
-        public string DescriptionNL
-        {
-            get { return StaticSkill.WordWrap(m_description, 100).Trim(); }
-        }
-
-        /// <summary>
         /// List of invalid entries in the plan.
         /// </summary>
         public IEnumerable<InvalidPlanEntry> InvalidEntries

@@ -48,8 +48,10 @@ namespace EVEMon.CharacterMonitoring
             this.chToCharacterIDs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToCorpOrAlliance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToListID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.eveMailReadingPane = new EVEMon.CharacterMonitoring.ReadingPane();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.eveMailReadingPane = new ReadingPane();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMailMessages)).BeginInit();
             this.splitContainerMailMessages.Panel1.SuspendLayout();
@@ -80,9 +82,11 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mailReadLocal,
-            this.mailOpenExternal});
+            this.mailOpenExternal,
+            this.toolStripSeparator,
+            this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "mailListContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(180, 48);
+            this.contextMenu.Size = new System.Drawing.Size(180, 98);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mailReadLocal
@@ -211,10 +215,6 @@ namespace EVEMon.CharacterMonitoring
             // 
             this.chToListID.Text = "To Mailing List";
             // 
-            // timer
-            // 
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // eveMailReadingPane
             // 
             this.eveMailReadingPane.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -223,13 +223,29 @@ namespace EVEMon.CharacterMonitoring
             this.eveMailReadingPane.Size = new System.Drawing.Size(454, 140);
             this.eveMailReadingPane.TabIndex = 0;
             // 
-            // MainWindowEveMailMessagesList
+            // timer
+            // 
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(176, 6);
+            // 
+            // exportToCSVToolStripMenuItem
+            // 
+            this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
+            this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
+            // 
+            // CharacterEveMailMessagesList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainerMailMessages);
             this.Controls.Add(this.noEVEMailMessagesLabel);
-            this.Name = "MainWindowEveMailMessagesList";
+            this.Name = "CharacterEveMailMessagesList";
             this.Size = new System.Drawing.Size(454, 434);
             this.contextMenu.ResumeLayout(false);
             this.splitContainerMailMessages.Panel1.ResumeLayout(false);
@@ -262,5 +278,7 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ToolStripMenuItem mailGateReply;
         private System.Windows.Forms.ToolStripMenuItem mailGateReplyAll;
         private System.Windows.Forms.ToolStripMenuItem mailGateForward;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
+        private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
     }
 }

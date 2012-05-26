@@ -182,6 +182,57 @@ namespace EVEMon.Common.SettingsObjects
     #endregion
 
 
+    #region AssetSettings
+
+    /// <summary>
+    /// Enumeration for the assets to be group by.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum AssetGrouping
+    {
+        [Header("No group")]
+        None = 0,
+
+        [Header("Group by group")]
+        Group = 1,
+
+        [Header("Group by group (Desc)")]
+        GroupDesc = 2,
+
+        [Header("Group by category")]
+        Category = 3,
+
+        [Header("Group by category (Desc)")]
+        CategoryDesc = 4,
+
+        [Header("Group by container")]
+        Container = 5,
+
+        [Header("Group by container (Desc)")]
+        ContainerDesc = 6,
+
+        [Header("Group by location")]
+        Location = 7,
+
+        [Header("Group by location (Desc)")]
+        LocationDesc = 8,
+
+        [Header("Group by region")]
+        Region = 9,
+
+        [Header("Group by region (Desc)")]
+        RegionDesc = 10,
+
+        [Header("Group by jumps")]
+        Jumps = 11,
+
+        [Header("Group by jumps (Desc)")]
+        JumpsDesc = 12
+    }
+
+    #endregion
+
+
     #region MarketOrderSettings
 
     /// <summary>
@@ -255,6 +306,84 @@ namespace EVEMon.Common.SettingsObjects
 
         [Header("Group by starting station (Desc)")]
         StartLocationDesc = 7
+    }
+
+    #endregion
+
+
+    #region WalletJournalSettings
+
+    /// <summary>
+    /// Enumeration for the wallet journal to be group by.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum WalletJournalGrouping
+    {
+        [Header("No group")]
+        None = 0,
+
+        [Header("Group by date")]
+        Date = 1,
+
+        [Header("Group by date (Desc)")]
+        DateDesc = 2,
+
+        [Header("Group by type")]
+        Type = 3,
+
+        [Header("Group by type (Desc)")]
+        TypeDesc = 4,
+
+        [Header("Group by issuer")]
+        Issuer = 5,
+
+        [Header("Group by issuer (Desc)")]
+        IssuerDesc = 6,
+
+        [Header("Group by recipient")]
+        Recipient = 7,
+
+        [Header("Group by recipient (Desc)")]
+        RecipientDesc = 8
+    }
+
+    #endregion
+
+
+    #region WalletTransactionSettings
+
+    /// <summary>
+    /// Enumeration for the wallet transactions to be group by.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum WalletTransactionGrouping
+    {
+        [Header("No group")]
+        None = 0,
+
+        [Header("Group by date")]
+        Date = 1,
+
+        [Header("Group by date (Desc)")]
+        DateDesc = 2,
+
+        [Header("Group by item type")]
+        ItemType = 3,
+
+        [Header("Group by item type (Desc)")]
+        ItemTypeDesc = 4,
+
+        [Header("Group by client")]
+        Client = 5,
+
+        [Header("Group by client (Desc)")]
+        ClientDesc = 6,
+
+        [Header("Group by station")]
+        Location = 7,
+
+        [Header("Group by station (Desc)")]
+        LocationDesc = 8
     }
 
     #endregion
