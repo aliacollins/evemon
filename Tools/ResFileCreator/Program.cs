@@ -95,6 +95,8 @@ namespace EVEMon.ResFileCreator
                 Console.WriteLine(ex.Message);
                 return false;
             }
+
+            Console.WriteLine("Resource Compiler file created successfully.");
             return true;
         }
 
@@ -214,8 +216,7 @@ namespace EVEMon.ResFileCreator
                 exitCode = makeResProcess.ExitCode;
             }
 
-            if (exitCode == 1)
-                Console.WriteLine("RC exited with errors.");
+            Console.WriteLine(exitCode == 1 ? "RC exited with errors." : "Resource file compiled successfully.");
         }
 
         /// <summary>
