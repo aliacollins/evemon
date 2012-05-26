@@ -155,7 +155,7 @@ namespace EVEMon.SkillPlanner
                 TimeSpan time = cert.GetTrainingTime;
                 label.Text = String.Format(CultureConstants.DefaultCulture, "{0} : {1}",
                                            cert.Grade,
-                                           time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
+                                           time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
                 label.Visible = true;
                 lbIndex++;
 
