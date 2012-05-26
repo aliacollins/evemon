@@ -668,15 +668,15 @@ namespace EVEMon.SkillPlanner
                 case PlanColumn.PlanGroup:
                     return entry.PlanGroupsDescription;
                 case PlanColumn.TrainingTime:
-                    return entry.TrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
+                    return entry.TrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 case PlanColumn.TrainingTimeNatural:
-                    return entry.NaturalTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
+                    return entry.NaturalTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 case PlanColumn.EarliestStart:
                     return String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0:G}", entry.StartTime);
                 case PlanColumn.EarliestEnd:
                     return String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0:G}", entry.EndTime);
                 case PlanColumn.PercentComplete:
-                    return entry.FractionCompleted.ToString("P0", CultureConstants.DefaultCulture);
+                    return String.Format(CultureConstants.DefaultCulture, "{0}%", Math.Floor(entry.FractionCompleted * 100));
                 case PlanColumn.SkillRank:
                     return entry.Skill.Rank.ToString(CultureConstants.DefaultCulture);
                 case PlanColumn.PrimaryAttribute:
