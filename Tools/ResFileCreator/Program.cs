@@ -31,7 +31,10 @@ namespace EVEMon.ResFileCreator
 
             s_rcexe = FindRcExe();
             if (String.IsNullOrEmpty(s_rcexe))
+            {
                 Console.WriteLine("RC : Not Found - Resource file will not be created.");
+                return;
+            }
 
             ParserAssemblyInfo();
 
@@ -225,9 +228,8 @@ namespace EVEMon.ResFileCreator
 
             locations[0] = String.Format(CultureInfo.InvariantCulture, "{0}\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\RC.exe", s_programFilesDir);
             locations[1] = String.Format(CultureInfo.InvariantCulture, "{0}\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\RC.exe", s_programFilesX86Dir);
-            locations[2] = @"D:\Program Files\Microsoft SDKs\Windows\v7.0A\Bin\RC.exe"; // Possible location in TeamCity server
-            locations[3] = @"D:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\RC.exe"; // Possible location in TeamCity server
-
+            locations[2] = @"F:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\RC.exe"; // Possible location in TeamCity server
+            locations[3] = @"F:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Bin\RC.exe"; // Possible location in TeamCity server
             foreach (string path in locations.Where(File.Exists))
             {
                 return path;
