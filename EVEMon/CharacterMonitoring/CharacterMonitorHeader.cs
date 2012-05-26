@@ -393,15 +393,13 @@ namespace EVEMon.CharacterMonitoring
                 return "Never";
 
             TimeSpan remainingTime = monitor.NextUpdate.Subtract(DateTime.UtcNow);
-            if (remainingTime.Minutes > 0)
-            {
-                return remainingTime.ToDescriptiveText(
-                    DescriptiveTextOptions.FullText |
-                    DescriptiveTextOptions.SpaceText |
-                    DescriptiveTextOptions.SpaceBetween, false);
-            }
+            if (remainingTime.Minutes < 1)
+                return "Less than a minute";
 
-            return "Less than a minute";
+            return remainingTime.ToDescriptiveText(
+                DescriptiveTextOptions.FullText |
+                DescriptiveTextOptions.SpaceText |
+                DescriptiveTextOptions.SpaceBetween, false);
         }
 
         /// <summary>
