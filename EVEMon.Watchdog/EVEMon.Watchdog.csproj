@@ -70,7 +70,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="WatchdogWindow.cs">

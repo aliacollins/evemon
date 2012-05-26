@@ -99,7 +99,6 @@
     <Compile Include="SharpZLib\Zip\ZipOutputStream.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="EVEMonInstallerScript.nsi">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
