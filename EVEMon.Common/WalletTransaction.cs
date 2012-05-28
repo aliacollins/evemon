@@ -6,7 +6,7 @@ namespace EVEMon.Common
 {
     public sealed class WalletTransaction
     {
-        private int m_stationID;
+        private readonly int m_stationID;
 
 
         #region Constructor
@@ -15,7 +15,7 @@ namespace EVEMon.Common
         /// Initializes a new instance of the <see cref="WalletTransaction"/> class.
         /// </summary>
         /// <param name="src">The SRC.</param>
-        public WalletTransaction(SerializableWalletTransactionsListItem src)
+        internal WalletTransaction(SerializableWalletTransactionsListItem src)
         {
             if (src == null)
                 throw new ArgumentNullException("src");

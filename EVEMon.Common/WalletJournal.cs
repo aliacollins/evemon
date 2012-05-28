@@ -17,7 +17,7 @@ namespace EVEMon.Common
         /// Initializes a new instance of the <see cref="WalletJournal"/> class.
         /// </summary>
         /// <param name="src">The SRC.</param>
-        public WalletJournal(SerializableWalletJournalListItem src)
+        internal WalletJournal(SerializableWalletJournalListItem src)
         {
             if (src == null)
                 throw new ArgumentNullException("src");

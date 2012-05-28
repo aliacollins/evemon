@@ -15,7 +15,7 @@ namespace EVEMon.Common
         /// Initializes a new instance of the <see cref="Asset"/> class.
         /// </summary>
         /// <param name="src">The source.</param>
-        public Asset(SerializableAssetListItem src)
+        internal Asset(SerializableAssetListItem src)
         {
             if (src == null)
                 throw new ArgumentNullException("src");

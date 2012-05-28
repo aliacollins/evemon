@@ -6,11 +6,13 @@ namespace EVEMon.Common
 {
     public class EveFactionWar
     {
+        #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EveFactionWar"/> class.
         /// </summary>
         /// <param name="src">The source.</param>
-        public EveFactionWar(SerializableEveFactionWarsListItem src)
+        internal EveFactionWar(SerializableEveFactionWarsListItem src)
         {
             FactionID = src.FactionID;
             FactionName = src.FactionName;
@@ -19,6 +21,8 @@ namespace EVEMon.Common
 
             SetPrimeEnemy();
         }
+
+        #endregion
 
 
         #region Public Properties

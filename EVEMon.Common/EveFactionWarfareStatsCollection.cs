@@ -10,7 +10,7 @@ namespace EVEMon.Common
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The source.</param>
-        public void Import(IEnumerable<SerializableEveFactionalWarfareStatsListItem> src)
+        internal void Import(IEnumerable<SerializableEveFactionalWarfareStatsListItem> src)
         {
             Items.Clear();
 

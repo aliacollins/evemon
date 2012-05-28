@@ -4,11 +4,13 @@ namespace EVEMon.Common
 {
     public class EveFactionWarfareStats
     {
+        #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EveFactionWarfareStats"/> class.
         /// </summary>
         /// <param name="src">The source.</param>
-        public EveFactionWarfareStats(SerializableEveFactionalWarfareStatsListItem src)
+        internal EveFactionWarfareStats(SerializableEveFactionalWarfareStatsListItem src)
         {
             FactionID = src.FactionID;
             FactionName = src.FactionName;
@@ -21,6 +23,8 @@ namespace EVEMon.Common
             VictoryPointsLastWeek = src.VictoryPointsLastWeek;
             VictoryPointsTotal = src.VictoryPointsTotal;
         }
+
+        #endregion
 
 
         #region Public Properties
