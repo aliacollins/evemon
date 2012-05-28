@@ -132,6 +132,8 @@ namespace EVEMon.Common
 
         #region Queries
 
+
+
         /// <summary>
         /// Query a method without arguments.
         /// </summary>
@@ -169,8 +171,14 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, QueryCallback<T> callback)
         {
-            string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                            id, verificationCode, characterID);
+            string postData = method.Equals(APICharacterMethods.WalletJournal) ||
+                              method.Equals(APICharacterMethods.WalletTransactions)
+                                  ? String.Format(CultureConstants.InvariantCulture,
+                                                  NetworkConstants.PostDataWithCharIDAndRowCount,
+                                                  id, verificationCode, characterID, 2560)
+                                  : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                                  id, verificationCode, characterID);
+
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 

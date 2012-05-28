@@ -495,4 +495,7 @@
   <data name="UploaderEndPoints" xml:space="preserve">
     <value>https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/endpoints.json</value>
   </data>
+  <data name="PostDataWithCharIDAndRowCount" xml:space="preserve">
+    <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;rowCount={3}</value>
+  </data>
 </root>
