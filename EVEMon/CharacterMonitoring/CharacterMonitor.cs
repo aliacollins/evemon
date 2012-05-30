@@ -468,6 +468,9 @@ namespace EVEMon.CharacterMonitoring
                 item.Visible = true;
             }
 
+            // Show the wallet journal charts button only when on wallet journal page
+            walletJournalCharts.Visible = multiPanel.SelectedPage == walletJournalPage;
+
             // Enables / Disables the assets page related controls
             if (multiPanel.SelectedPage == assetsPage)
                 toolStripContextual.Enabled = ccpCharacter.Assets.Any();
@@ -1703,6 +1706,20 @@ namespace EVEMon.CharacterMonitoring
                 eveNotificationsList.PanePosition = ReadingPanePositioning.Off;
                 Settings.UI.MainWindow.EVENotifications.ReadingPanePosition = eveNotificationsList.PanePosition;
             }
+        }
+
+        /// <summary>
+        /// Handles the Click event of the walletJournalCharts control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void walletJournalCharts_Click(object sender, EventArgs e)
+        {
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            if (ccpCharacter == null)
+                return;
+
+            WindowsFactory.ShowByTag<WalletJournalChartWindow, CCPCharacter>(ccpCharacter);
         }
 
         # endregion

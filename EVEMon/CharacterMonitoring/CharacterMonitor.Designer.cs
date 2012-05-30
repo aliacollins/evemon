@@ -105,6 +105,7 @@ namespace EVEMon.CharacterMonitoring
             this.paneOffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.groupMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.walletJournalCharts = new System.Windows.Forms.ToolStripButton();
             this.toolStripFeatures = new System.Windows.Forms.ToolStrip();
             this.skillsIcon = new System.Windows.Forms.ToolStripButton();
             this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
@@ -451,7 +452,7 @@ namespace EVEMon.CharacterMonitoring
             this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
-            this.multiPanel.SelectedPage = this.factionalWarfareStatsPage;
+            this.multiPanel.SelectedPage = this.skillsPage;
             this.multiPanel.Size = new System.Drawing.Size(568, 156);
             this.multiPanel.TabIndex = 14;
             // 
@@ -481,7 +482,7 @@ namespace EVEMon.CharacterMonitoring
             this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsPage.Location = new System.Drawing.Point(0, 0);
             this.skillsPage.Name = "skillsPage";
-            this.skillsPage.Size = new System.Drawing.Size(568, 308);
+            this.skillsPage.Size = new System.Drawing.Size(568, 156);
             this.skillsPage.TabIndex = 0;
             this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
@@ -493,7 +494,7 @@ namespace EVEMon.CharacterMonitoring
             this.skillsList.Location = new System.Drawing.Point(0, 0);
             this.skillsList.Margin = new System.Windows.Forms.Padding(0);
             this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(568, 308);
+            this.skillsList.Size = new System.Drawing.Size(568, 156);
             this.skillsList.TabIndex = 12;
             // 
             // ordersPage
@@ -804,7 +805,8 @@ namespace EVEMon.CharacterMonitoring
             this.toolStripContextual.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.preferencesMenu,
             this.searchTextBox,
-            this.groupMenu});
+            this.groupMenu,
+            this.walletJournalCharts});
             this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripContextual.Location = new System.Drawing.Point(0, 31);
             this.toolStripContextual.Name = "toolStripContextual";
@@ -957,6 +959,17 @@ namespace EVEMon.CharacterMonitoring
             this.groupMenu.Text = "Group By...";
             this.groupMenu.DropDownOpening += new System.EventHandler(this.groupMenu_DropDownOpening);
             this.groupMenu.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.groupMenu_DropDownItemClicked);
+            // 
+            // walletJournalCharts
+            // 
+            this.walletJournalCharts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.walletJournalCharts.Image = ((System.Drawing.Image)(resources.GetObject("walletJournalCharts.Image")));
+            this.walletJournalCharts.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.walletJournalCharts.Name = "walletJournalCharts";
+            this.walletJournalCharts.Size = new System.Drawing.Size(23, 22);
+            this.walletJournalCharts.Text = "Wallet Journal Charts";
+            this.walletJournalCharts.ToolTipText = "Display Wallet Journal Charts";
+            this.walletJournalCharts.Click += new System.EventHandler(this.walletJournalCharts_Click);
             // 
             // toolStripFeatures
             // 
@@ -1366,5 +1379,6 @@ namespace EVEMon.CharacterMonitoring
         private System.Windows.Forms.ToolStripMenuItem EnableAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DisableAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator SelectionToolStripSeparator;
+        private System.Windows.Forms.ToolStripButton walletJournalCharts;
     }
 }
