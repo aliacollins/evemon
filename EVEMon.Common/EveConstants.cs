@@ -8,10 +8,13 @@
         public const int MaxImplantPoints = 5;
         public const int DowntimeHour = 11;
         public const int DowntimeDuration = 30;
+        public const float TransactionTaxBase = 1.5f;
+        public const float BrokerFeeBase = 1f;
 
         /// <summary>
         /// Represents a "region" range.
         /// </summary>
         public const int RegionRange = 32767;
     }
+
 }

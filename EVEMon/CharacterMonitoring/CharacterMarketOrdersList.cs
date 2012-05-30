@@ -1190,10 +1190,14 @@ namespace EVEMon.CharacterMonitoring
                                  + Character.Skills[DBConstants.TycconSkillID].LastConfirmedLvl * 32;
 
             // Calculate character's base broker fee
-            m_baseBrokerFee = 1 - (Character.Skills[DBConstants.BrokerRelationsSkillID].LastConfirmedLvl * 0.05f);
+            m_baseBrokerFee = EveConstants.BrokerFeeBase -
+                              (EveConstants.BrokerFeeBase *
+                               (Character.Skills[DBConstants.BrokerRelationsSkillID].LastConfirmedLvl * 0.05f));
 
             // Calculate character's transaction tax
-            m_transactionTax = 1 - (Character.Skills[DBConstants.AccountingSkillID].LastConfirmedLvl * 0.1f);
+            m_transactionTax = EveConstants.TransactionTaxBase -
+                               (EveConstants.TransactionTaxBase *
+                                (Character.Skills[DBConstants.AccountingSkillID].LastConfirmedLvl * 0.1f));
 
             // Calculate character's ask range
             m_askRange = Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl;
