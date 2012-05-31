@@ -968,7 +968,7 @@ namespace EVEMon.CharacterMonitoring
             this.walletJournalCharts.Name = "walletJournalCharts";
             this.walletJournalCharts.Size = new System.Drawing.Size(23, 22);
             this.walletJournalCharts.Text = "Wallet Journal Charts";
-            this.walletJournalCharts.ToolTipText = "Display Wallet Journal Charts";
+            this.walletJournalCharts.ToolTipText = "Charts";
             this.walletJournalCharts.Click += new System.EventHandler(this.walletJournalCharts_Click);
             // 
             // toolStripFeatures

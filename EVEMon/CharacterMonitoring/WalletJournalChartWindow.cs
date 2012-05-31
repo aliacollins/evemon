@@ -105,6 +105,7 @@ namespace EVEMon.CharacterMonitoring
             BalanceChart.ChartAreas[0].AxisX.MinorTickMark.Size = 0.5f;
             BalanceChart.ChartAreas[0].AxisX.MinorTickMark.Enabled = true;
             BalanceChart.ChartAreas[0].AxisX.LabelAutoFitMaxFontSize = 8;
+            BalanceChart.ChartAreas[0].AxisX.Interval = 1;
 
             // Configure Y axis
             BalanceChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Silver;
@@ -140,6 +141,7 @@ namespace EVEMon.CharacterMonitoring
                 chartArea.AxisX.MinorTickMark.Size = 0.5f;
                 chartArea.AxisX.MinorTickMark.Enabled = true;
                 chartArea.AxisX.LabelAutoFitMaxFontSize = 8;
+                chartArea.AxisX.Interval = 1;
 
                 // Configure Y axis
                 chartArea.AxisY.MajorGrid.LineColor = Color.Silver;
