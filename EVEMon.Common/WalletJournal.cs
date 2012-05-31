@@ -22,17 +22,18 @@ namespace EVEMon.Common
             if (src == null)
                 throw new ArgumentNullException("src");
 
+            m_refTypeID = src.RefTypeID;
+            m_taxReceiverID = src.TaxReceiverID;
+
             ID = src.ID;
             Date = src.Date;
             Amount = src.Amount;
             Balance = src.Balance;
-            Reason = ParseReason(src.Reason);
             Issuer = src.OwnerName1;
             Recipient = src.OwnerName2;
             TaxAmount = src.TaxAmount;
-            m_refTypeID = src.RefTypeID;
-            m_taxReceiverID = src.TaxReceiverID;
 
+            Reason = ParseReason(src.Reason);
             m_refType = EveRefType.GetRefTypeIDToName(src.RefTypeID);
             m_taxReceiver = GetTaxReceiver();
         }
