@@ -102,17 +102,14 @@ namespace EVEMon.CharacterMonitoring
 
             // Configure X axis
             BalanceChart.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.Silver;
-            BalanceChart.ChartAreas[0].AxisX.MinorTickMark.Size = 0.5f;
-            BalanceChart.ChartAreas[0].AxisX.MinorTickMark.Enabled = true;
             BalanceChart.ChartAreas[0].AxisX.LabelAutoFitMaxFontSize = 8;
             BalanceChart.ChartAreas[0].AxisX.Interval = 1;
 
             // Configure Y axis
             BalanceChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Silver;
-            BalanceChart.ChartAreas[0].AxisY.MinorTickMark.Size = 0.5f;
-            BalanceChart.ChartAreas[0].AxisY.MinorTickMark.Enabled = true;
             BalanceChart.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
             BalanceChart.ChartAreas[0].AxisY.LabelAutoFitMaxFontSize = 8;
+            //BalanceChart.ChartAreas[0].AxisY.Interval = 1;
 
             // Configure series
             BalanceChart.Series[0].ChartType = SeriesChartType.Area;
@@ -137,22 +134,22 @@ namespace EVEMon.CharacterMonitoring
                 chartArea.BorderDashStyle = ChartDashStyle.Solid;
 
                 // Configure X axis
+                chartArea.AxisX.IsMarksNextToAxis = false;
                 chartArea.AxisX.MajorGrid.LineColor = Color.Silver;
-                chartArea.AxisX.MinorTickMark.Size = 0.5f;
-                chartArea.AxisX.MinorTickMark.Enabled = true;
                 chartArea.AxisX.LabelAutoFitMaxFontSize = 8;
                 chartArea.AxisX.Interval = 1;
 
                 // Configure Y axis
                 chartArea.AxisY.MajorGrid.LineColor = Color.Silver;
-                chartArea.AxisY.MinorTickMark.Size = 0.5f;
-                chartArea.AxisY.MinorTickMark.Enabled = true;
                 chartArea.AxisY.LabelStyle.Format = "N0";
                 chartArea.AxisY.LabelAutoFitMaxFontSize = 8;
+                chartArea.AxisY.Crossing = 0D;
             }
 
-            // Disable the X axis labels for the second chart
-            AmountChart.ChartAreas[1].AxisX.Enabled = AxisEnabled.False;
+            // Disable the X axis labels and tick marks for the second chart
+            AmountChart.ChartAreas[1].AxisX.MajorGrid.Enabled = false;
+            AmountChart.ChartAreas[1].AxisX.MajorTickMark.Enabled = false;
+            AmountChart.ChartAreas[1].AxisX.LabelStyle.Enabled = false;
 
             foreach (Series series in AmountChart.Series)
             {
