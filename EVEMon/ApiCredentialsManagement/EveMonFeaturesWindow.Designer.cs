@@ -37,13 +37,18 @@
             this.AdvancedFeaturesLabel = new System.Windows.Forms.Label();
             this.advanceFeaturesFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.AccountStatusLabel = new System.Windows.Forms.Label();
+            this.AssetsLabel = new System.Windows.Forms.Label();
             this.EVEMailMessagesLabel = new System.Windows.Forms.Label();
             this.EVENotificationsLabel = new System.Windows.Forms.Label();
             this.IndustryJobsLabel = new System.Windows.Forms.Label();
             this.MarketOrdersLabel = new System.Windows.Forms.Label();
             this.ResearchPointsLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.StandingsLabel = new System.Windows.Forms.Label();
+            this.FactionalWarfareLabel = new System.Windows.Forms.Label();
             this.CreateAdvancedAPIKeyLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.ContractsLabel = new System.Windows.Forms.Label();
+            this.WalletJournalLabel = new System.Windows.Forms.Label();
+            this.WalletTransactionsLabel = new System.Windows.Forms.Label();
             this.MainFlowLayoutPanel.SuspendLayout();
             this.basicFeaturesflowLayoutPanel.SuspendLayout();
             this.advanceFeaturesFlowLayoutPanel.SuspendLayout();
@@ -55,15 +60,15 @@
             this.BasicFeaturesLabel.ForeColor = System.Drawing.SystemColors.Highlight;
             this.BasicFeaturesLabel.Location = new System.Drawing.Point(3, 0);
             this.BasicFeaturesLabel.Name = "BasicFeaturesLabel";
-            this.BasicFeaturesLabel.Size = new System.Drawing.Size(91, 16);
+            this.BasicFeaturesLabel.Size = new System.Drawing.Size(77, 13);
             this.BasicFeaturesLabel.TabIndex = 0;
             this.BasicFeaturesLabel.Text = "Basic Features";
             // 
             // MainFlowLayoutPanel
             // 
-            this.MainFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.MainFlowLayoutPanel.Controls.Add(this.BasicFeaturesLabel);
             this.MainFlowLayoutPanel.Controls.Add(this.basicFeaturesflowLayoutPanel);
             this.MainFlowLayoutPanel.Controls.Add(this.CreateBasicAPIKeyLinkLabel);
@@ -73,7 +78,7 @@
             this.MainFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.MainFlowLayoutPanel.Location = new System.Drawing.Point(12, 12);
             this.MainFlowLayoutPanel.Name = "MainFlowLayoutPanel";
-            this.MainFlowLayoutPanel.Size = new System.Drawing.Size(360, 343);
+            this.MainFlowLayoutPanel.Size = new System.Drawing.Size(379, 425);
             this.MainFlowLayoutPanel.TabIndex = 1;
             // 
             // basicFeaturesflowLayoutPanel
@@ -81,9 +86,9 @@
             this.basicFeaturesflowLayoutPanel.Controls.Add(this.CharacterMonitoringLabel);
             this.basicFeaturesflowLayoutPanel.Controls.Add(this.SkillQueueMonitoringLabel);
             this.basicFeaturesflowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.basicFeaturesflowLayoutPanel.Location = new System.Drawing.Point(3, 19);
+            this.basicFeaturesflowLayoutPanel.Location = new System.Drawing.Point(3, 16);
             this.basicFeaturesflowLayoutPanel.Name = "basicFeaturesflowLayoutPanel";
-            this.basicFeaturesflowLayoutPanel.Size = new System.Drawing.Size(354, 60);
+            this.basicFeaturesflowLayoutPanel.Size = new System.Drawing.Size(373, 60);
             this.basicFeaturesflowLayoutPanel.TabIndex = 1;
             // 
             // CharacterMonitoringLabel
@@ -92,32 +97,32 @@
             this.CharacterMonitoringLabel.Location = new System.Drawing.Point(3, 0);
             this.CharacterMonitoringLabel.Name = "CharacterMonitoringLabel";
             this.CharacterMonitoringLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.CharacterMonitoringLabel.Size = new System.Drawing.Size(178, 57);
+            this.CharacterMonitoringLabel.Size = new System.Drawing.Size(168, 57);
             this.CharacterMonitoringLabel.TabIndex = 4;
-            this.CharacterMonitoringLabel.Text = "For Character monitoring\r\nand skill levels planning: \r\n- Character Sheet\r\n- Chara" +
-                "cter Info (Private or Public)";
+            this.CharacterMonitoringLabel.Text = "For Character monitoring\r\nand skill levels planning: \r\n- CharacterSheet\r\n- Charac" +
+    "terInfo (Private or Public)";
             // 
             // SkillQueueMonitoringLabel
             // 
             this.SkillQueueMonitoringLabel.AutoSize = true;
-            this.SkillQueueMonitoringLabel.Location = new System.Drawing.Point(187, 0);
+            this.SkillQueueMonitoringLabel.Location = new System.Drawing.Point(177, 0);
             this.SkillQueueMonitoringLabel.Name = "SkillQueueMonitoringLabel";
             this.SkillQueueMonitoringLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.SkillQueueMonitoringLabel.Size = new System.Drawing.Size(140, 44);
+            this.SkillQueueMonitoringLabel.Size = new System.Drawing.Size(138, 44);
             this.SkillQueueMonitoringLabel.TabIndex = 1;
-            this.SkillQueueMonitoringLabel.Text = "For Skill Queue monitoring:\r\n- Skill Queue\r\n- Skill In Training";
+            this.SkillQueueMonitoringLabel.Text = "For Skill Queue monitoring:\r\n- SkillQueue\r\n- SkillInTraining";
             // 
             // CreateBasicAPIKeyLinkLabel
             // 
             this.CreateBasicAPIKeyLinkLabel.AutoSize = true;
-            this.CreateBasicAPIKeyLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(43, 55);
-            this.CreateBasicAPIKeyLinkLabel.Location = new System.Drawing.Point(3, 82);
+            this.CreateBasicAPIKeyLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(43, 56);
+            this.CreateBasicAPIKeyLinkLabel.Location = new System.Drawing.Point(3, 79);
             this.CreateBasicAPIKeyLinkLabel.Name = "CreateBasicAPIKeyLinkLabel";
-            this.CreateBasicAPIKeyLinkLabel.Size = new System.Drawing.Size(288, 31);
+            this.CreateBasicAPIKeyLinkLabel.Size = new System.Drawing.Size(283, 30);
             this.CreateBasicAPIKeyLinkLabel.TabIndex = 11;
             this.CreateBasicAPIKeyLinkLabel.TabStop = true;
-            this.CreateBasicAPIKeyLinkLabel.Text = "To create a basic features API key visit : https://support.eveonline.com /api/key" +
-                "/createpredefined";
+            this.CreateBasicAPIKeyLinkLabel.Text = "To create a basic features API key visit :\r\nhttps://support.eveonline.com /api/ke" +
+    "y/createpredefined";
             this.CreateBasicAPIKeyLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CreateBasicAPIKeyLinkLabel.UseCompatibleTextRendering = true;
             this.CreateBasicAPIKeyLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CreateBasicAPIKeyLinkLabel_LinkClicked);
@@ -126,26 +131,31 @@
             // 
             this.AdvancedFeaturesLabel.AutoSize = true;
             this.AdvancedFeaturesLabel.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.AdvancedFeaturesLabel.Location = new System.Drawing.Point(3, 113);
+            this.AdvancedFeaturesLabel.Location = new System.Drawing.Point(3, 109);
             this.AdvancedFeaturesLabel.Name = "AdvancedFeaturesLabel";
             this.AdvancedFeaturesLabel.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.AdvancedFeaturesLabel.Size = new System.Drawing.Size(117, 26);
+            this.AdvancedFeaturesLabel.Size = new System.Drawing.Size(100, 23);
             this.AdvancedFeaturesLabel.TabIndex = 2;
             this.AdvancedFeaturesLabel.Text = "Advanced Features";
             // 
             // advanceFeaturesFlowLayoutPanel
             // 
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.AccountStatusLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.StandingsLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.FactionalWarfareLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.AssetsLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.MarketOrdersLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.ContractsLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.WalletJournalLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.WalletTransactionsLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.IndustryJobsLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.ResearchPointsLabel);
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.EVEMailMessagesLabel);
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.EVENotificationsLabel);
-            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.IndustryJobsLabel);
-            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.MarketOrdersLabel);
-            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.ResearchPointsLabel);
-            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.label1);
             this.advanceFeaturesFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.advanceFeaturesFlowLayoutPanel.Location = new System.Drawing.Point(3, 142);
+            this.advanceFeaturesFlowLayoutPanel.Location = new System.Drawing.Point(3, 135);
             this.advanceFeaturesFlowLayoutPanel.Name = "advanceFeaturesFlowLayoutPanel";
-            this.advanceFeaturesFlowLayoutPanel.Size = new System.Drawing.Size(354, 166);
+            this.advanceFeaturesFlowLayoutPanel.Size = new System.Drawing.Size(373, 256);
             this.advanceFeaturesFlowLayoutPanel.TabIndex = 10;
             // 
             // AccountStatusLabel
@@ -154,14 +164,24 @@
             this.AccountStatusLabel.Location = new System.Drawing.Point(3, 0);
             this.AccountStatusLabel.Name = "AccountStatusLabel";
             this.AccountStatusLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.AccountStatusLabel.Size = new System.Drawing.Size(161, 31);
+            this.AccountStatusLabel.Size = new System.Drawing.Size(157, 31);
             this.AccountStatusLabel.TabIndex = 9;
             this.AccountStatusLabel.Text = "For Account Status monitoring:\r\n- AccountStatus";
+            // 
+            // AssetsLabel
+            // 
+            this.AssetsLabel.AutoSize = true;
+            this.AssetsLabel.Location = new System.Drawing.Point(3, 93);
+            this.AssetsLabel.Name = "AssetsLabel";
+            this.AssetsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.AssetsLabel.Size = new System.Drawing.Size(115, 31);
+            this.AssetsLabel.TabIndex = 12;
+            this.AssetsLabel.Text = "For Assets monitoring:\r\n- AssetList";
             // 
             // EVEMailMessagesLabel
             // 
             this.EVEMailMessagesLabel.AutoSize = true;
-            this.EVEMailMessagesLabel.Location = new System.Drawing.Point(3, 31);
+            this.EVEMailMessagesLabel.Location = new System.Drawing.Point(187, 62);
             this.EVEMailMessagesLabel.Name = "EVEMailMessagesLabel";
             this.EVEMailMessagesLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.EVEMailMessagesLabel.Size = new System.Drawing.Size(177, 57);
@@ -171,67 +191,107 @@
             // EVENotificationsLabel
             // 
             this.EVENotificationsLabel.AutoSize = true;
-            this.EVENotificationsLabel.Location = new System.Drawing.Point(3, 88);
+            this.EVENotificationsLabel.Location = new System.Drawing.Point(187, 119);
             this.EVENotificationsLabel.Name = "EVENotificationsLabel";
             this.EVENotificationsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.EVENotificationsLabel.Size = new System.Drawing.Size(168, 44);
+            this.EVENotificationsLabel.Size = new System.Drawing.Size(166, 44);
             this.EVENotificationsLabel.TabIndex = 8;
             this.EVENotificationsLabel.Text = "For EVE Notifications monitoring:\r\n- Notifications\r\n- NotificationTexts";
             // 
             // IndustryJobsLabel
             // 
             this.IndustryJobsLabel.AutoSize = true;
-            this.IndustryJobsLabel.Location = new System.Drawing.Point(3, 132);
+            this.IndustryJobsLabel.Location = new System.Drawing.Point(187, 0);
             this.IndustryJobsLabel.Name = "IndustryJobsLabel";
             this.IndustryJobsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.IndustryJobsLabel.Size = new System.Drawing.Size(152, 31);
+            this.IndustryJobsLabel.Size = new System.Drawing.Size(143, 31);
             this.IndustryJobsLabel.TabIndex = 5;
             this.IndustryJobsLabel.Text = "For Industry jobs monitoring:\r\n- IndustryJobs";
             // 
             // MarketOrdersLabel
             // 
             this.MarketOrdersLabel.AutoSize = true;
-            this.MarketOrdersLabel.Location = new System.Drawing.Point(186, 0);
+            this.MarketOrdersLabel.Location = new System.Drawing.Point(3, 124);
             this.MarketOrdersLabel.Name = "MarketOrdersLabel";
             this.MarketOrdersLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.MarketOrdersLabel.Size = new System.Drawing.Size(155, 31);
+            this.MarketOrdersLabel.Size = new System.Drawing.Size(149, 31);
             this.MarketOrdersLabel.TabIndex = 3;
             this.MarketOrdersLabel.Text = "For Market orders monitoring:\r\n- MarketOrders";
             // 
             // ResearchPointsLabel
             // 
             this.ResearchPointsLabel.AutoSize = true;
-            this.ResearchPointsLabel.Location = new System.Drawing.Point(186, 31);
+            this.ResearchPointsLabel.Location = new System.Drawing.Point(187, 31);
             this.ResearchPointsLabel.Name = "ResearchPointsLabel";
             this.ResearchPointsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.ResearchPointsLabel.Size = new System.Drawing.Size(165, 31);
+            this.ResearchPointsLabel.Size = new System.Drawing.Size(161, 31);
             this.ResearchPointsLabel.TabIndex = 6;
             this.ResearchPointsLabel.Text = "For Research points monitoring:\r\n- Research";
             // 
-            // label1
+            // StandingsLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(186, 62);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.label1.Size = new System.Drawing.Size(135, 31);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "For Standings monitoring:\r\n- Standings";
+            this.StandingsLabel.AutoSize = true;
+            this.StandingsLabel.Location = new System.Drawing.Point(3, 31);
+            this.StandingsLabel.Name = "StandingsLabel";
+            this.StandingsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.StandingsLabel.Size = new System.Drawing.Size(131, 31);
+            this.StandingsLabel.TabIndex = 11;
+            this.StandingsLabel.Text = "For Standings monitoring:\r\n- Standings";
+            // 
+            // FactionalWarfareLabel
+            // 
+            this.FactionalWarfareLabel.AutoSize = true;
+            this.FactionalWarfareLabel.Location = new System.Drawing.Point(3, 62);
+            this.FactionalWarfareLabel.Name = "FactionalWarfareLabel";
+            this.FactionalWarfareLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.FactionalWarfareLabel.Size = new System.Drawing.Size(168, 31);
+            this.FactionalWarfareLabel.TabIndex = 13;
+            this.FactionalWarfareLabel.Text = "For Factional Warfare monitoring:\r\n- FacWarStats";
             // 
             // CreateAdvancedAPIKeyLinkLabel
             // 
             this.CreateAdvancedAPIKeyLinkLabel.AutoSize = true;
-            this.CreateAdvancedAPIKeyLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(56, 55);
-            this.CreateAdvancedAPIKeyLinkLabel.Location = new System.Drawing.Point(3, 311);
+            this.CreateAdvancedAPIKeyLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(56, 56);
+            this.CreateAdvancedAPIKeyLinkLabel.Location = new System.Drawing.Point(3, 394);
             this.CreateAdvancedAPIKeyLinkLabel.Name = "CreateAdvancedAPIKeyLinkLabel";
-            this.CreateAdvancedAPIKeyLinkLabel.Size = new System.Drawing.Size(288, 31);
+            this.CreateAdvancedAPIKeyLinkLabel.Size = new System.Drawing.Size(286, 30);
             this.CreateAdvancedAPIKeyLinkLabel.TabIndex = 12;
             this.CreateAdvancedAPIKeyLinkLabel.TabStop = true;
-            this.CreateAdvancedAPIKeyLinkLabel.Text = "To create a basic and advanced features API key visit : https://support.eveonline" +
-                ".com /api/key/createpredefined";
+            this.CreateAdvancedAPIKeyLinkLabel.Text = "To create a basic and advanced features API key visit :\r\nhttps://support.eveonlin" +
+    "e.com /api/key/createpredefined";
             this.CreateAdvancedAPIKeyLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CreateAdvancedAPIKeyLinkLabel.UseCompatibleTextRendering = true;
             this.CreateAdvancedAPIKeyLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CreateAllFeaturesAPIKeyLinkLabel_LinkClicked);
+            // 
+            // ContractsLabel
+            // 
+            this.ContractsLabel.AutoSize = true;
+            this.ContractsLabel.Location = new System.Drawing.Point(3, 155);
+            this.ContractsLabel.Name = "ContractsLabel";
+            this.ContractsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.ContractsLabel.Size = new System.Drawing.Size(129, 31);
+            this.ContractsLabel.TabIndex = 14;
+            this.ContractsLabel.Text = "For Contracts monitoring:\r\n- Contracts";
+            // 
+            // WalletJournalLabel
+            // 
+            this.WalletJournalLabel.AutoSize = true;
+            this.WalletJournalLabel.Location = new System.Drawing.Point(3, 186);
+            this.WalletJournalLabel.Name = "WalletJournalLabel";
+            this.WalletJournalLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.WalletJournalLabel.Size = new System.Drawing.Size(151, 31);
+            this.WalletJournalLabel.TabIndex = 15;
+            this.WalletJournalLabel.Text = "For Wallet Journal monitoring:\r\n- WalletJournal";
+            // 
+            // WalletTransactionsLabel
+            // 
+            this.WalletTransactionsLabel.AutoSize = true;
+            this.WalletTransactionsLabel.Location = new System.Drawing.Point(3, 217);
+            this.WalletTransactionsLabel.Name = "WalletTransactionsLabel";
+            this.WalletTransactionsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.WalletTransactionsLabel.Size = new System.Drawing.Size(178, 31);
+            this.WalletTransactionsLabel.TabIndex = 16;
+            this.WalletTransactionsLabel.Text = "For Wallet Transactions monitoring:\r\n- WalletTransactions";
             // 
             // EVEMonFeaturesWindow
             // 
@@ -240,7 +300,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(384, 367);
+            this.ClientSize = new System.Drawing.Size(403, 449);
             this.Controls.Add(this.MainFlowLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -272,9 +332,14 @@
         private System.Windows.Forms.Label EVENotificationsLabel;
         private System.Windows.Forms.FlowLayoutPanel advanceFeaturesFlowLayoutPanel;
         private System.Windows.Forms.Label AccountStatusLabel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label StandingsLabel;
         private System.Windows.Forms.FlowLayoutPanel basicFeaturesflowLayoutPanel;
         private System.Windows.Forms.LinkLabel CreateBasicAPIKeyLinkLabel;
         private System.Windows.Forms.LinkLabel CreateAdvancedAPIKeyLinkLabel;
+        private System.Windows.Forms.Label AssetsLabel;
+        private System.Windows.Forms.Label FactionalWarfareLabel;
+        private System.Windows.Forms.Label ContractsLabel;
+        private System.Windows.Forms.Label WalletJournalLabel;
+        private System.Windows.Forms.Label WalletTransactionsLabel;
     }
 }
