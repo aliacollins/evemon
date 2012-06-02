@@ -171,6 +171,9 @@ namespace EVEMon.Common
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, QueryCallback<T> callback)
         {
+            if (method == null)
+                throw new ArgumentNullException("method");
+
             string postData = method.Equals(APICharacterMethods.WalletJournal) ||
                               method.Equals(APICharacterMethods.WalletTransactions)
                                   ? String.Format(CultureConstants.InvariantCulture,

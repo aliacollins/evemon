@@ -151,7 +151,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string ToNumericString(this long number, int decimals)
         {
-            string decimalsString = String.Format("N{0}", decimals);
+            string decimalsString = String.Format(CultureConstants.DefaultCulture, "N{0}", decimals);
             return number.ToString(decimalsString, CultureConstants.DefaultCulture);
         }
 
