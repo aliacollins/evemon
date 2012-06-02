@@ -42,6 +42,8 @@ namespace EVEMon
 {
     public sealed partial class MainWindow : EVEMonForm
     {
+        #region Fields
+
         private Form m_trayPopup;
         private IgbServer m_igbServer;
         private UploaderStatus m_uploaderStatus;
@@ -56,6 +58,11 @@ namespace EVEMon
         private readonly List<NotificationEventArgs> m_popupNotifications = new List<NotificationEventArgs>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
         private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
+
+        #endregion
+
+
+        #region Constructor
 
         /// <summary>
         /// Constructor.
@@ -99,6 +106,8 @@ namespace EVEMon
         {
             AutoShrink.Dirty(TimeSpan.FromSeconds(5).Seconds);
         }
+
+        #endregion
 
 
         #region Loading, closing, resizing, etc
@@ -2036,9 +2045,9 @@ namespace EVEMon
 
             // Enable/Disable Uploader
             if (Settings.MarketUnifiedUploader.Enabled)
-                 Uploader.Start();
+                Uploader.Start();
             else
-                 Uploader.Stop();
+                Uploader.Stop();
 
             if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
             {
