@@ -494,7 +494,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
-        public override void Dispose()
+        internal override void Dispose()
         {
             // Unsubscribe events
             EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;

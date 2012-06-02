@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class CharacterDataQuerying : IDisposable
+    public sealed class CharacterDataQuerying
     {
         #region Fields
 
@@ -132,7 +132,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
-        public void Dispose()
+        internal void Dispose()
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
 

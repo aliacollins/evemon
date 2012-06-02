@@ -16,7 +16,7 @@ namespace EVEMon.Common
     /// Represents a player API key.
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class APIKey : IDisposable
+    public sealed class APIKey
     {
         #region Fields
 
@@ -263,7 +263,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
-        public void Dispose()
+        internal void Dispose()
         {
             // Unsubscribe events
             EveMonClient.TimerTick -= EveMonClient_TimerTick;

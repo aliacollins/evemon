@@ -3,7 +3,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public interface IQueryMonitor : IDisposable
+    public interface IQueryMonitor
     {
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="IQueryMonitor"/> is enabled.
@@ -55,5 +55,10 @@ namespace EVEMon.Common
         /// Gets true whether this monitor has access to data.
         /// </summary>
         bool HasAccess { get; }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        void Dispose();
     }
 }

@@ -4,17 +4,17 @@ using EVEMon.Common.Data;
 
 namespace EVEMon.Common
 {
-    public abstract class BaseCharacter : IDisposable
+    public abstract class BaseCharacter
     {
         #region Abstract methods and properties
 
         protected abstract int TotalSkillPoints { get; }
         protected abstract ICharacterAttribute GetAttribute(EveAttribute attribute);
-
+        
+        internal abstract void Dispose();
+        
         public abstract int GetSkillLevel(StaticSkill skill);
         public abstract int GetSkillPoints(StaticSkill skill);
-
-        public abstract void Dispose();
 
         #endregion
 

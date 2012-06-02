@@ -50,9 +50,9 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Called when the object gets disposed.
+        /// Releases unmanaged and - optionally - managed resources
         /// </summary>
-        public override void Dispose()
+        internal override void Dispose()
         {
         }
 

@@ -159,13 +159,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
-        /// </summary>
-        public override void Dispose()
-        {
-        }
-
-        /// <summary>
         /// Gets the requested attribute.
         /// </summary>
         /// <param name="attribute"></param>
@@ -173,6 +166,13 @@ namespace EVEMon.Common
         protected override ICharacterAttribute GetAttribute(EveAttribute attribute)
         {
             return m_attributes[(int)attribute];
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        internal override void Dispose()
+        {
         }
 
         #endregion
