@@ -408,20 +408,15 @@ namespace EVEMon.Common.Serialization.BattleClinic
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Title = "EVEMon Settings Backup File Save";
-                saveFileDialog.DefaultExt = "xml";
+                saveFileDialog.DefaultExt = "bak";
                 saveFileDialog.Filter = "EVEMon Settings Backup Files (*.bak)|*.bak";
                 saveFileDialog.FilterIndex = 1;
-
-                // Save current directory
-                string currentDirectory = Directory.GetCurrentDirectory();
+                saveFileDialog.RestoreDirectory = true;
 
                 // Prompts the user for a location
                 saveFileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.bak", settingsFile.FileName);
                 saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 DialogResult result = saveFileDialog.ShowDialog();
-
-                // Restore current directory
-                Directory.SetCurrentDirectory(currentDirectory);
 
                 // Save settings file if OK
                 if (result != DialogResult.OK)

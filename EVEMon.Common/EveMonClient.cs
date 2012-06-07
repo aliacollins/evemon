@@ -211,7 +211,13 @@ namespace EVEMon.Common
         /// </summary>
         public static string SettingsFileNameFullPath
         {
-            get { return Path.Combine(EVEMonDataDir, SettingsFileName); }
+            get
+            {
+                if (EVEMonDataDir != Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon"))
+                    throw new InvalidOperationException(string.Format("EVEMonDataDir changed./n {0}", EVEMonDataDir));
+
+                return Path.Combine(EVEMonDataDir, SettingsFileName);
+            }
         }
 
         /// <summary>
@@ -277,17 +283,23 @@ namespace EVEMon.Common
         /// </summary>
         private static void InitializeEVEMonPaths()
         {
-            // If settings.xml exists in the app's directory, we use this one
-            EVEMonDataDir = Directory.GetCurrentDirectory();
-            string settingsFile = Path.Combine(EVEMonDataDir, SettingsFileName);
-
-            // Else, we use %APPDATA%\EVEMon
-            if (!File.Exists(settingsFile))
-                EVEMonDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
-
-            // Create the directory if it does not exist already
+            // Assign EVEMon data directory
             if (!Directory.Exists(EVEMonDataDir))
-                Directory.CreateDirectory(EVEMonDataDir);
+            {
+                string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
+
+                // If settings.xml exists in the app's directory, we use this one
+                EVEMonDataDir = Path.GetDirectoryName(Application.ExecutablePath) ?? appDataPath;
+                string settingsFile = Path.Combine(EVEMonDataDir, SettingsFileName);
+
+                // Else, we use %APPDATA%\EVEMon
+                if (!File.Exists(settingsFile))
+                    EVEMonDataDir = appDataPath;
+
+                // Create the directory if it does not exist already
+                if (!Directory.Exists(EVEMonDataDir))
+                    Directory.CreateDirectory(EVEMonDataDir);
+            }
 
             // Create the cache subfolder
             EVEMonCacheDir = Path.Combine(EVEMonDataDir, "cache");

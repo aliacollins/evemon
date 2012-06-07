@@ -264,7 +264,7 @@ namespace EVEMon
             // 
             this.saveFileDialog.DefaultExt = "bak";
             this.saveFileDialog.FileName = "settings.xml.bak";
-            this.saveFileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
+            this.saveFileDialog.Filter = "EVEMon Settings Backup Files (*.bak)|*.bak";
             this.saveFileDialog.RestoreDirectory = true;
             this.saveFileDialog.Title = "Backup your settings file";
             // 
@@ -272,7 +272,7 @@ namespace EVEMon
             // 
             this.openFileDialog.DefaultExt = "bak";
             this.openFileDialog.FileName = "settings.xml.bak";
-            this.openFileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
+            this.openFileDialog.Filter = "EVEMon Settings Backup Files (*.bak)|*.bak";
             this.openFileDialog.RestoreDirectory = true;
             this.openFileDialog.ShowHelp = true;
             this.openFileDialog.Title = "Restore your settings file";

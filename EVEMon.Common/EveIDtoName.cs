@@ -267,6 +267,7 @@ namespace EVEMon.Common
             SerializableEveIDToName serial = Export();
 
             // Save in file
+            EveMonClient.EnsureCacheDirInit();
             FileHelper.OverwriteOrWarnTheUser(s_file,
                                               fs =>
                                                   {

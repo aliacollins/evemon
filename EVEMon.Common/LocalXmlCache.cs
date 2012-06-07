@@ -90,9 +90,8 @@ namespace EVEMon.Common
             lock (s_syncLock)
             {
                 EveMonClient.EnsureCacheDirInit();
-                return
-                    new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                                         String.Format(CultureConstants.DefaultCulture, "{0}.xml", characterName)));
+                return new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                                            String.Format(CultureConstants.DefaultCulture, "{0}.xml", characterName)));
             }
         }
 
