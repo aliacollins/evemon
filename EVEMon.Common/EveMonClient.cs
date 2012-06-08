@@ -211,13 +211,7 @@ namespace EVEMon.Common
         /// </summary>
         public static string SettingsFileNameFullPath
         {
-            get
-            {
-                if (EVEMonDataDir != Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon"))
-                    throw new InvalidOperationException(string.Format("EVEMonDataDir changed./n {0}", EVEMonDataDir));
-
-                return Path.Combine(EVEMonDataDir, SettingsFileName);
-            }
+            get { return Path.Combine(EVEMonDataDir, SettingsFileName); }
         }
 
         /// <summary>
