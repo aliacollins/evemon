@@ -277,17 +277,16 @@ namespace EVEMon.Common
         /// </summary>
         private static void InitializeEVEMonPaths()
         {
-            // Assign EVEMon data directory
+            // Assign or create the EVEMon data directory
             if (!Directory.Exists(EVEMonDataDir))
             {
                 string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EVEMon");
 
                 // If settings.xml exists in the app's directory, we use this one
                 EVEMonDataDir = Path.GetDirectoryName(Application.ExecutablePath) ?? appDataPath;
-                string settingsFile = Path.Combine(EVEMonDataDir, SettingsFileName);
 
                 // Else, we use %APPDATA%\EVEMon
-                if (!File.Exists(settingsFile))
+                if (!File.Exists(SettingsFileNameFullPath))
                     EVEMonDataDir = appDataPath;
 
                 // Create the directory if it does not exist already
