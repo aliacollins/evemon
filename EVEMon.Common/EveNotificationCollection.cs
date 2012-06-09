@@ -73,8 +73,7 @@ namespace EVEMon.Common
             foreach (SerializableNotificationsListItem srcEVENotification in src)
             {
                 // If it's a new notification increase the counter
-                EveNotification notification = Items.FirstOrDefault(x => x.NotificationID == srcEVENotification.NotificationID);
-                if (notification == null)
+                if (!srcEVENotification.Read && Items.All(x => x.NotificationID != srcEVENotification.NotificationID))
                     NewNotifications++;
 
                 newNotifications.Add(new EveNotification(m_ccpCharacter, srcEVENotification));
