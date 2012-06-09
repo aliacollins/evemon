@@ -324,6 +324,7 @@ namespace EVEMon
             Dictionary<Character, TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
                 page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
 
+            // Hide the TabControl
             tcCharacterTabs.Hide();
             tabCreationLabel.Visible = true;
 
@@ -1285,11 +1286,14 @@ namespace EVEMon
             // Close any open associated windows
             CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
 
-            // Open the specified settings
-            Settings.Restore(openFileDialog.FileName);
-
             // Clear any notifications
             ClearNotifications();
+
+            // Hide the TabControl
+            tcCharacterTabs.Hide();
+
+            // Open the specified settings
+            Settings.Restore(openFileDialog.FileName);
 
             // Remove the tip window if it exist and is confirmed in settings
             if (Settings.UI.ConfirmedTips.Contains("startup") && Controls.OfType<TipWindow>().Any())
@@ -1331,11 +1335,14 @@ namespace EVEMon
             // Close any open associated windows
             CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
 
-            // Reset the settings
-            Settings.Reset();
-
             // Clear any notifications
             ClearNotifications();
+
+            // Hide the TabControl
+            tcCharacterTabs.Hide();
+
+            // Reset the settings
+            Settings.Reset();
 
             // Trigger the tip window
             OnShown(e);
