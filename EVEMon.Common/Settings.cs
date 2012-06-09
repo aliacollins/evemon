@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
@@ -326,9 +325,9 @@ namespace EVEMon.Common
         /// </summary>
         internal static int Revision
         {
-            get { return Assembly.GetExecutingAssembly().GetName().Version.Revision; }
+            get { return Version.Parse(Application.ProductVersion).Revision; }
         }
-        
+
         /// <summary>
         /// Initialization for the EVEMon client settings.
         /// </summary>
