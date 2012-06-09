@@ -9,16 +9,20 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableAPIServerStatus
     {
         [XmlElement("serverOpen")]
-        public string CCPOpen { get; set; }
+        public string CCPOpen
+        {
+            get { return Open.ToString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    Open = Convert.ToBoolean(value);
+            }
+        }
 
         [XmlElement("onlinePlayers")]
         public int Players { get; set; }
 
         [XmlIgnore]
-        public bool Open
-        {
-            get { return Boolean.Parse(CCPOpen.ToLower(CultureConstants.DefaultCulture)); }
-            set { CCPOpen = (value ? "True" : "False"); }
-        }
+        public bool Open { get; set; }
     }
 }

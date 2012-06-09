@@ -26,7 +26,7 @@ namespace EVEMon.Common.Serialization.API
         #region ISynchronizableWithLocalClock Members
 
         /// <summary>
-        /// Synchronizes the stored times with local clock
+        /// Synchronizes the stored times with local clock.
         /// </summary>
         /// <param name="drift"></param>
         void ISynchronizableWithLocalClock.SynchronizeWithLocalClock(TimeSpan drift)

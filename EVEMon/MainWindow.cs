@@ -887,10 +887,10 @@ namespace EVEMon
             if (WindowState == FormWindowState.Minimized)
                 return;
 
-            DateTime now = DateTime.UtcNow;
-            lblStatus.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", now);
+            DateTime serverTime = EveMonClient.EVEServer.ServerDateTime;
+            lblStatus.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", serverTime);
             lblStatus.ToolTipText = String.Format(CultureConstants.DefaultCulture, "YC{0} ({1})",
-                                                  now.Year - 1898, now.Date.ToShortDateString());
+                                                  serverTime.Year - 1898, serverTime.Date.ToShortDateString());
         }
 
         /// <summary>

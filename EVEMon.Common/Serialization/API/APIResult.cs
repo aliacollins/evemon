@@ -228,8 +228,8 @@ namespace EVEMon.Common.Serialization.API
         #region Time fixing
 
         /// <summary>
-        /// Fixup the currentTime and cachedUntil time to match the user's clock.
-        /// This should ONLY be called when the xml is first received from CCP
+        /// Fixup the result time to match the user's clock.
+        /// This should ONLY be called when the xml is first received from CCP.
         /// </summary>
         /// <param name="millisecondsDrift"></param>
         public void SynchronizeWithLocalClock(double millisecondsDrift)
@@ -248,14 +248,7 @@ namespace EVEMon.Common.Serialization.API
                 drift = new TimeSpan(0, 0, 0, 0);
             }
 
-            // Now fix the server time to align with local time
-            if (CurrentTime != DateTime.MinValue)
-                CurrentTime -= drift;
-
-            if (CachedUntil != DateTime.MinValue)
-                CachedUntil -= drift;
-
-            // Fix the TQ start/end times first
+            // Fix the start/end times for the results implementing synchronization
             ISynchronizableWithLocalClock synchronizable = ((Object)Result) as ISynchronizableWithLocalClock;
 
             if (synchronizable != null)

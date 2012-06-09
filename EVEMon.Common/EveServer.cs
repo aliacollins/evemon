@@ -11,6 +11,7 @@ namespace EVEMon.Common
         private int m_users;
         private ServerStatus m_status;
         private readonly QueryMonitor<SerializableAPIServerStatus> m_serverStatusMonitor;
+        private DateTime m_serverDateTime = DateTime.UtcNow;
 
         /// <summary>
         /// Constructor.
@@ -59,6 +60,14 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the server date time.
+        /// </summary>
+        public DateTime ServerDateTime
+        {
+            get { return m_serverDateTime; }
+        }
+
+        /// <summary>
         /// Forces an update of the server status.
         /// </summary>
         public void ForceUpdate()
@@ -73,6 +82,9 @@ namespace EVEMon.Common
         private void OnServerStatusMonitorUpdated(APIResult<SerializableAPIServerStatus> result)
         {
             ServerStatus lastStatus = m_status;
+
+            // Update the server date and time
+            m_serverDateTime = result.CurrentTime;
 
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
@@ -89,9 +101,11 @@ namespace EVEMon.Common
                 return;
             }
 
-            // Update status and users, notify no more errors
+            // Update status and users
             m_users = result.Result.Players;
             m_status = (result.Result.Open ? ServerStatus.Online : ServerStatus.Offline);
+
+            // Invalidate any error notifications
             EveMonClient.Notifications.InvalidateAPIError();
 
             // Notify subscribers about update
