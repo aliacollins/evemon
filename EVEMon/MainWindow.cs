@@ -130,8 +130,7 @@ namespace EVEMon
             EveMonClient.Run(this);
 
             // Check with BattleClinic the local clock is synchronized
-            if (Settings.Updates.CheckTimeOnStartup)
-                CheckTimeSynchronization();
+            CheckTimeSynchronization();
 
             trayIcon.Text = Application.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
@@ -274,7 +273,7 @@ namespace EVEMon
         /// <param name="localTime"></param>
         private static void TimeCheckCallback(bool isSynchronised, DateTime serverTime, DateTime localTime)
         {
-            if (isSynchronised)
+            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised)
                 return;
 
             using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))

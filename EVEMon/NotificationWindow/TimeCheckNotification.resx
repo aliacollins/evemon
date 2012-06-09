@@ -121,7 +121,7 @@
   <data name="uxWarningIconPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAFzUkdCAK7O
-        HOkAAAAEZ0FNQQAAsY8L/GEFAAAACXBIWXMAAADlAAAA5QGP5Zs8AAAAGXRFWHRTb2Z0d2FyZQB3d3cu
+        HOkAAAAEZ0FNQQAAsY8L/GEFAAAACXBIWXMAAADjAAAA4wEP5t+nAAAAGXRFWHRTb2Z0d2FyZQB3d3cu
         aW5rc2NhcGUub3Jnm+48GgAAB5hJREFUWEe9l3tQVPcVx388RUTeKFpjmhrfD9Kad2bMmESxYya2aUen
         daYzNPUPp52EZGLbpDEt1kgQIWDiAw01CRiRh7A8FY0UdkmBJAgxIAvugizPfe+9u8s+2P32/C64wTYP
         oGnuzJm77My938/3e865d2EA2GxKqGYPWqpZm6aI7ReqmN9s7sGvma34XKHGf9hz7SnYrsRCns2e+74B
@@ -159,7 +159,6 @@
 </value>
   </data>
   <data name="uxMessageLabel1.Text" xml:space="preserve">
-    <value>EVEMon checked your system's time using BattleClinic.com and found that we do not agree on what the current time is. This may be because your Time Zone is not set correctly, or your clock is set to the wrong time. 
-</value>
+    <value>EVEMon checked your system's time compared to BattleClinic.com and found that they do not agree on what your current time is. This may be because your Time Zone is not set correctly, or your clock is set to the wrong time. </value>
   </data>
 </root>

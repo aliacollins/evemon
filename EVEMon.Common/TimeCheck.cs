@@ -29,28 +29,17 @@ namespace EVEMon.Common
         /// <param name="userState"></param>
         private static void SyncDownloadCompleted(DownloadStringAsyncResult e, object userState)
         {
-            DateTime completionTime = DateTime.Now;
+            DateTime localTime = DateTime.Now;
             SyncState state = (SyncState)userState;
             bool isSynchronised = true;
-            DateTime timeNow = DateTime.MinValue;
-            if (e.Error == null)
+            DateTime serverTime = DateTime.MinValue;
+            if (!String.IsNullOrEmpty(e.Result))
             {
-                string timeString = e.Result;
-                if (timeString.Length != 0)
-                {
-                    try
-                    {
-                        timeNow = DateTime.ParseExact(timeString, "yyyy'-'MM'-'dd'T'HH':'mm':'sszzz", CultureConstants.InvariantCulture);
-                        double timediff = Math.Abs((timeNow.ToLocalTime() - completionTime).TotalSeconds);
-                        isSynchronised = timediff < 60;
-                    }
-                    catch (FormatException ex)
-                    {
-                        ExceptionHandler.LogException(ex, false);
-                    }
-                }
+                serverTime = e.Result.TimeStringToDateTime().ToLocalTime();
+                double timediff = Math.Abs(serverTime.Subtract(localTime).TotalSeconds);
+                isSynchronised = timediff < 60;
             }
-            state.Callback(isSynchronised, timeNow, completionTime);
+            state.Callback(isSynchronised, serverTime, localTime);
         }
 
         /// <summary>
