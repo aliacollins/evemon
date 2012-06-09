@@ -22,6 +22,8 @@ namespace EVEMon.Common
 
             m_serverStatusMonitor = new QueryMonitor<SerializableAPIServerStatus>(APIGenericMethods.ServerStatus,
                                                                                   OnServerStatusMonitorUpdated) { Enabled = true };
+
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
 
         /// <summary>
@@ -119,6 +121,16 @@ namespace EVEMon.Common
             }
 
             EveMonClient.Notifications.InvalidateServerStatusChange();
+        }
+
+        /// <summary>
+        /// Handles the TimerTick event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_TimerTick(object sender, EventArgs e)
+        {
+            m_serverDateTime = m_serverDateTime.AddSeconds(1);
         }
     }
 }

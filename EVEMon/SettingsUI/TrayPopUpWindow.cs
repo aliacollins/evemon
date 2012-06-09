@@ -373,7 +373,8 @@ namespace EVEMon.SettingsUI
                 return;
 
             if (Settings.UI.SystemTrayPopup.ShowEveTime)
-                m_eveTimeLabel.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", DateTime.UtcNow);
+                m_eveTimeLabel.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}",
+                                                    EveMonClient.EVEServer.ServerDateTime);
         }
 
         /// <summary>

@@ -476,7 +476,7 @@ namespace EVEMon.LogitechG15
             if (!ShowEVETime)
                 return;
 
-            string curEVETime = DateTime.UtcNow.ToString("HH:mm", CultureConstants.DefaultCulture);
+            string curEVETime = EveMonClient.EVEServer.ServerDateTime.ToString("HH:mm", CultureConstants.DefaultCulture);
             SizeF size = m_lcdCanvas.MeasureString(curEVETime, m_defaultFont);
             RectangleF timeLine = new RectangleF(new PointF(0f, 0f), size);
             timeLine.Offset(0f, 32f);
