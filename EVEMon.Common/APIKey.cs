@@ -316,6 +316,11 @@ namespace EVEMon.Common
             // Notify on error
             if (result.HasError)
             {
+                // Fire the event in order to trigger the monitoring of a character's features
+                // regardless of the result having error
+                EveMonClient.OnAPIKeyInfoUpdated(this);
+                
+                // Notify the user
                 EveMonClient.Notifications.NotifyCharacterListError(this, result);
                 return;
             }
