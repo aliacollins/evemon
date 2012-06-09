@@ -1,4 +1,5 @@
-using System.Reflection;
+using System.IO;
+using System.Windows.Forms;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Net
@@ -6,68 +7,60 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// Conainer class for HttpWebService settings and state
     /// </summary>
-    public class HttpWebServiceState
+    public static class HttpWebServiceState
     {
-        private const int MAX_BUFFER_SIZE = 8192;
-        private const int MIN_BUFFER_SIZE = 1024;
-        private const int MAX_REDIRECTS = 5;
-        private readonly object m_syncLock = new object();
-        private readonly string m_userAgent = "EVEMon/" + Assembly.GetExecutingAssembly().GetName().Version;
-        private ProxySettings m_proxy = new ProxySettings();
-
-        internal HttpWebServiceState()
-        {
-        }
+        private static readonly object s_syncLock = new object();
+        private static ProxySettings s_proxy = new ProxySettings();
 
         /// <summary>
-        /// The maximum size of a download section
+        /// The maximum size of a download section.
         /// </summary>
         public static int MaxBufferSize
         {
-            get { return MAX_BUFFER_SIZE; }
+            get { return 8192; }
         }
 
         /// <summary>
-        /// The minimum size if a download section
+        /// The minimum size if a download section.
         /// </summary>
         public static int MinBufferSize
         {
-            get { return MIN_BUFFER_SIZE; }
+            get { return 1024; }
         }
 
         /// <summary>
-        /// The user agent string for requests
+        /// The user agent string for requests.
         /// </summary>
-        public string UserAgent
+        public static string UserAgent
         {
-            get { return m_userAgent; }
+            get { return Application.ProductName + Path.AltDirectorySeparatorChar + Application.ProductVersion; }
         }
 
         /// <summary>
-        /// The maximum redirects allowed for a request
+        /// The maximum redirects allowed for a request.
         /// </summary>
         public static int MaxRedirects
         {
-            get { return MAX_REDIRECTS; }
+            get { return 5; }
         }
 
         /// <summary>
-        /// A ProxySetting instance for the custom proxy to be used
+        /// A ProxySetting instance for the custom proxy to be used.
         /// </summary>
-        public ProxySettings Proxy
+        public static ProxySettings Proxy
         {
             get
             {
-                lock (m_syncLock)
+                lock (s_syncLock)
                 {
-                    return m_proxy;
+                    return s_proxy;
                 }
             }
             set
             {
-                lock (m_syncLock)
+                lock (s_syncLock)
                 {
-                    m_proxy = value;
+                    s_proxy = value;
                 }
             }
         }

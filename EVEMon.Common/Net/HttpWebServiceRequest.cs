@@ -15,7 +15,6 @@ namespace EVEMon.Common.Net
     {
         private readonly int m_timeout;
         private readonly object m_syncLock = new object();
-        private readonly HttpWebServiceState m_webServiceState;
 
         private WebRequestAsyncState m_asyncState;
         private HttpPostData m_postData;
@@ -32,10 +31,8 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Initialises a new instance of HttpWebServiceRequest to be submitted as a POST request.
         /// </summary>
-        /// <param name="webServiceState">An <see cref="HttpWebServiceState"/> instance</param>
-        internal HttpWebServiceRequest(HttpWebServiceState webServiceState)
+        internal HttpWebServiceRequest()
         {
-            m_webServiceState = webServiceState;
             m_redirectsRemaining = HttpWebServiceState.MaxRedirects;
 
             // Pull the timeout from the settings
@@ -138,7 +135,7 @@ namespace EVEMon.Common.Net
             catch (WebException ex)
             {
                 // Aborted, time out or error while processing the request
-                throw HttpWebServiceException.WebException(BaseUrl, m_webServiceState, ex);
+                throw HttpWebServiceException.WebException(BaseUrl, ex);
             }
             catch (Exception ex)
             {
@@ -250,7 +247,7 @@ namespace EVEMon.Common.Net
             request.Headers[HttpRequestHeader.AcceptCharset] = "ISO-8859-1,utf-8;q=0.7,*;q=0.7";
             request.Headers[HttpRequestHeader.Pragma] = "no-cache";
             request.KeepAlive = true;
-            request.UserAgent = m_webServiceState.UserAgent;
+            request.UserAgent = HttpWebServiceState.UserAgent;
             request.Accept = m_accept;
             request.Timeout = m_timeout;
             request.Method = HttpMethodToString(m_method);
@@ -277,10 +274,10 @@ namespace EVEMon.Common.Net
                 }
             }
 
-            if (m_webServiceState.Proxy.Enabled)
+            if (HttpWebServiceState.Proxy.Enabled)
             {
-                WebProxy proxy = new WebProxy(m_webServiceState.Proxy.Host, m_webServiceState.Proxy.Port);
-                switch (m_webServiceState.Proxy.Authentication)
+                WebProxy proxy = new WebProxy(HttpWebServiceState.Proxy.Host, HttpWebServiceState.Proxy.Port);
+                switch (HttpWebServiceState.Proxy.Authentication)
                 {
                     case ProxyAuthentication.None:
                         proxy.UseDefaultCredentials = false;
@@ -291,9 +288,9 @@ namespace EVEMon.Common.Net
                         break;
                     case ProxyAuthentication.Specified:
                         proxy.UseDefaultCredentials = false;
-                        proxy.Credentials = new NetworkCredential(m_webServiceState.Proxy.Username,
-                                                                  Util.Decrypt(m_webServiceState.Proxy.Password,
-                                                                               m_webServiceState.Proxy.Username));
+                        proxy.Credentials = new NetworkCredential(HttpWebServiceState.Proxy.Username,
+                                                                  Util.Decrypt(HttpWebServiceState.Proxy.Password,
+                                                                               HttpWebServiceState.Proxy.Username));
                         break;
                 }
                 request.Proxy = proxy;

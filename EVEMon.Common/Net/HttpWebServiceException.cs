@@ -147,16 +147,12 @@ namespace EVEMon.Common.Net
         /// nature of the WebException.
         /// </summary>
         /// <param name="url">The url of the request that failed</param>
-        /// <param name="webServiceState">The EVEMonWebClientState instance of the request</param>
         /// <param name="ex">The WebException that was thrown</param>
         /// <returns></returns>
-        public static HttpWebServiceException WebException(Uri url, HttpWebServiceState webServiceState, WebException ex)
+        public static HttpWebServiceException WebException(Uri url, WebException ex)
         {
-            if (webServiceState == null)
-                throw new ArgumentNullException("webServiceState");
-
-            string proxyHost = webServiceState.Proxy.Enabled
-                                   ? webServiceState.Proxy.Host
+            string proxyHost = HttpWebServiceState.Proxy.Enabled
+                                   ? HttpWebServiceState.Proxy.Host
                                    : WebRequest.DefaultWebProxy.GetProxy(url).Host;
 
             HttpWebServiceExceptionStatus status;

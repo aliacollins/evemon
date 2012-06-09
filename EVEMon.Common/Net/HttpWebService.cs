@@ -11,20 +11,12 @@ namespace EVEMon.Common.Net
     /// </summary>
     public partial class HttpWebService
     {
-        private readonly HttpWebServiceState m_state = new HttpWebServiceState();
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpWebService"/> class.
+        /// </summary>
         internal HttpWebService()
         {
             ServicePointManager.Expect100Continue = false;
-        }
-
-        /// <summary>
-        /// State is a read-only instance of HttpWebServiceState.
-        /// Changes to web client settings should be made to properties of this instance.
-        /// </summary>
-        public HttpWebServiceState State
-        {
-            get { return m_state; }
         }
 
         /// <summary>
@@ -81,9 +73,9 @@ namespace EVEMon.Common.Net
         /// Factory method to construct an EVEMonWebRequest instance.
         /// </summary>
         /// <returns></returns>
-        private HttpWebServiceRequest GetRequest()
+        private static HttpWebServiceRequest GetRequest()
         {
-            return new HttpWebServiceRequest(m_state);
+            return new HttpWebServiceRequest();
         }
     }
 }
