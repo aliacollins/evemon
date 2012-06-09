@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -220,10 +219,9 @@ namespace EVEMon.ApiErrorHandling
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void CopyToClipboardLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
             StringBuilder builder = new StringBuilder();
 
-            builder.AppendFormat("EVEMon {0} API Error:{1}", version, Environment.NewLine);
+            builder.AppendFormat("EVEMon {0} API Error:{1}", Application.ProductVersion, Environment.NewLine);
             builder.AppendLine();
             builder.AppendLine(GetErrorLabelText(Notification));
             builder.AppendLine();

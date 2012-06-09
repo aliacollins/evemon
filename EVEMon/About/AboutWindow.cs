@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -167,15 +166,14 @@ namespace EVEMon.About
         /// <param name="e"></param>
         private void AboutWindow_Load(object sender, EventArgs e)
         {
-            Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, currentVersion);
-            
             CopyrightLabel.Text = String.Format(CultureConstants.DefaultCulture, CopyrightLabel.Text, DateTime.UtcNow.Year);
+            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, Application.ProductVersion);
+
+            // Adds " (Debug)" to the version number if the build is in DEBUG
+            if (EveMonClient.IsDebugBuild)
+                VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} (Debug)", VersionLabel.Text);
 
             AddDevelopersToListView();
-
-            if (EveMonClient.IsDebugBuild)
-                AddDebugTag();
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
             AddLinkToLabel(battleclinicLinkLabel, "BattleClinic", "http://www.battleclinic.com/");
@@ -205,14 +203,6 @@ namespace EVEMon.About
             int length = linkText.Length;
 
             label.Links.Add(start, length, url);
-        }
-
-        /// <summary>
-        /// Adds " (Debug)" to the verison number if the build is in DEBUG.
-        /// </summary>
-        private void AddDebugTag()
-        {
-            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} (Debug)", VersionLabel.Text);
         }
 
         /// <summary>

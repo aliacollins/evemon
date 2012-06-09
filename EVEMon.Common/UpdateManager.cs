@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.BattleClinic;
@@ -180,7 +179,7 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         private static void ScanUpdateFeed(SerializablePatch result)
         {
-            Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            Version currentVersion = new Version(Application.ProductVersion);
             Version newestVersion = new Version(result.Release.Version);
             Version mostRecentDeniedVersion = !String.IsNullOrEmpty(Settings.Updates.MostRecentDeniedUpgrade)
                                                   ? new Version(Settings.Updates.MostRecentDeniedUpgrade)

@@ -562,7 +562,7 @@ namespace EVEMon.Common
             if (EveMonClient.IsDebugBuild)
                 return;
 
-            if (Assembly.GetExecutingAssembly().GetName().Version.Revision == settings.Revision)
+            if (Revision == settings.Revision)
                 return;
 
             DialogResult backupSettings =
