@@ -453,11 +453,12 @@ namespace EVEMon.CharacterMonitoring
             StringBuilder output = new StringBuilder();
 
             output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", m_character.KnownSkillCount).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}", m_character.GetSkillCountAtLevel(5)).
-                AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:N0}", m_character.SkillPoints).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:N0}", m_character.CloneSkillPoints).
-                AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}",
+                                m_character.GetSkillCountAtLevel(5)).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:N0}",
+                                m_character.SkillPoints).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:N0}",
+                                m_character.CloneSkillPoints).AppendLine();
             output.Append(m_character.CloneName);
 
             return output.ToString();
