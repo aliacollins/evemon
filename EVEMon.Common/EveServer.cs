@@ -85,8 +85,8 @@ namespace EVEMon.Common
         {
             ServerStatus lastStatus = m_status;
 
-            // Update the server date and time
-            m_serverDateTime = result.CurrentTime;
+            // Update the server date and time (in case of API server total failure use UTC time)
+            m_serverDateTime = result.CurrentTime != DateTime.MinValue ? result.CurrentTime : DateTime.UtcNow;
 
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
