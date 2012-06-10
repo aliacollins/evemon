@@ -63,13 +63,13 @@
   <!-- Renaming element value 'None' to 'NoSlot' in item browser slot filtering -->
   <xsl:template match="slotFilter">
     <xsl:choose>
-      <xsl:when test="'None'">
-        <xsl:element name="slotFilter">
+      <xsl:when test="text()='None'">
+        <xsl:copy>
           <xsl:value-of select="'NoSlot'"/>
-        </xsl:element>
+        </xsl:copy>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:copy/>
+        <xsl:copy-of select="."/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

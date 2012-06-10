@@ -181,7 +181,7 @@ namespace EVEMon.SkillPlanner
             // Update the settings
             switch (cbSlotFilter.SelectedIndex)
             {
-                default:
+                case 0:
                     Settings.UI.ItemBrowser.SlotFilter = ItemSlot.All;
                     break;
                 case 1:
@@ -196,6 +196,8 @@ namespace EVEMon.SkillPlanner
                 case 4:
                     Settings.UI.ItemBrowser.SlotFilter = ItemSlot.NoSlot;
                     break;
+                default:
+                    throw new NotImplementedException();
             }
 
             // Update the predicate
