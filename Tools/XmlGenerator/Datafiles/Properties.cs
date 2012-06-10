@@ -65,7 +65,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             {
                 attribute.CategoryID = (attribute.Published
                                             ? DBConstants.MiscellaneousAttributeCategoryID
-                                            : DBConstants.NULLAtributeCategoryID);
+                                            : DBConstants.NullAtributeCategoryID);
             }
 
             // Change some display names and default values

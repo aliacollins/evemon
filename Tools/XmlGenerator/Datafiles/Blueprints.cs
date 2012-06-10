@@ -162,20 +162,12 @@ namespace EVEMon.XmlGenerator.Datafiles
             s_nullMarketBlueprints = Database.InvTypesTable.Where(
                 item => item.MarketGroupID == null && !item.Name.Contains("TEST")).Where(
                     item => Database.InvBlueprintTypesTable.Any(blueprintType => blueprintType.ID == item.ID)).Select(
-                        blueprint => new
-                                         {
-                                             blueprint,
-                                             productedItemID = Database.InvBlueprintTypesTable[blueprint.ID].ProductTypeID,
-                                         }).Where(
-                                             blueprint =>
-                                             Database.InvTypesTable.Any(item => item.ID == blueprint.productedItemID) &&
-                                             Database.InvTypesTable[blueprint.productedItemID].Published).Select(
-                                                 item =>
-                                                     {
-                                                         Util.UpdatePercentDone(Database.BlueprintsTotalCount);
-                                                         item.blueprint.Published = true;
-                                                         return item.blueprint;
-                                                     }).ToList();
+                        blueprint =>
+                            {
+                                Util.UpdatePercentDone(Database.BlueprintsTotalCount);
+                                blueprint.Published = true;
+                                return blueprint;
+                            }).ToList();
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (InvTypes item in s_nullMarketBlueprints)

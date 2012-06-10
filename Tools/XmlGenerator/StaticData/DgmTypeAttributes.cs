@@ -18,7 +18,7 @@ namespace EVEMon.XmlGenerator.StaticData
 
         /// <summary>
         /// Returns the value as an integer. 
-        /// Some int values are actually stored as floats in the DB, hence this trick.
+        /// Some int values are actually stored as doubles in the DB, hence this trick.
         /// </summary>
         /// <returns></returns>
         [XmlIgnore]

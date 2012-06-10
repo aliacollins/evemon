@@ -46,11 +46,14 @@ namespace EVEMon.Common
         [XmlEnum("Faction")]
         Faction = 32,
 
+        [XmlEnum("Sleepers")]
+        Sleepers = 64,
+
         [XmlEnum("ORE")]
-        Ore = 64,
+        Ore = 128,
 
         None = 0,
-        All = Amarr | Minmatar | Caldari | Gallente | Faction | Jove | Ore
+        All = Amarr | Minmatar | Caldari | Gallente | Jove | Faction | Sleepers | Ore
     }
 
     /// <summary>
@@ -62,10 +65,10 @@ namespace EVEMon.Common
         T1 = 2,
         T2 = 4,
         T3 = 8,
-        Faction = 0x10,
-        Officer = 0x20,
-        Deadspace = 0x40,
-        Storyline = 0x80,
+        Faction = 16,
+        Officer = 32,
+        Deadspace = 64,
+        Storyline = 128,
 
         None = 0,
         AllTechLevel = T1 | T2 | T3,

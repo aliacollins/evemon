@@ -81,7 +81,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Add the items in this group; excluding the implants we are adding below
                 List<SerializableItem> items = new List<SerializableItem>();
                 foreach (InvTypes srcItem in Database.InvTypesTable.Where(
-                    item => !item.Generated && item.Published && item.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Where(
+                    item => !item.Generated && item.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Where(
                         srcItem => marketGroup.ParentID != DBConstants.RootNonMarketGroupID ||
                                    Database.InvGroupsTable[srcItem.GroupID].CategoryID != DBConstants.ImplantCategoryID ||
                                    srcItem.GroupID == DBConstants.CyberLearningImplantsGroupID))
@@ -210,35 +210,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                  }
                                          };
 
-            // Manually set some items attributes
-            Database.InvTypesTable[DBConstants.CivilianGatlingPulseLaserID].Published = true;
-            Database.InvTypesTable[DBConstants.CivilianGatlingAutocannonID].Published = true;
-            Database.InvTypesTable[DBConstants.CivilianGatlingRailgunID].Published = true;
-            Database.InvTypesTable[DBConstants.CivilianLightElectronBlasterID].Published = true;
-            Database.InvTypesTable[DBConstants.CivilianDataInterfaceID].Published = true;
-            Database.InvTypesTable[DBConstants.TemperatePlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.IcePlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.GasPlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.OceanicPlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.LavaPlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.BarrenPlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.StormPlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.PlasmaPlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.ShatteredPlanetID].Published = true;
-            Database.InvTypesTable[DBConstants.ImpairorID].Published = true;
-            Database.InvTypesTable[DBConstants.IbisID].Published = true;
-            Database.InvTypesTable[DBConstants.VelatorID].Published = true;
-            Database.InvTypesTable[DBConstants.ReaperID].Published = true;
-            Database.InvTypesTable[DBConstants.CapsuleID].Published = true;
-
-            // Include only items that are published (Special condition check for blueprints)
-            s_nullMarketItems = Database.InvTypesTable.Where(x => x.Published && x.MarketGroupID == null).Where(
-                srcItem => Database.InvBlueprintTypesTable.Where(x => x.ID == srcItem.ID).Select(
-                    item => new
-                                {
-                                    item,
-                                    productItemID = Database.InvBlueprintTypesTable[srcItem.ID].ProductTypeID
-                                }).All(item => Database.InvTypesTable[item.productItemID].Published)).ToList();
+            // Add all items with null market group
+            s_nullMarketItems = Database.InvTypesTable.Where(x => x.MarketGroupID == null).ToList();
 
             // Set some attributes to items because their MarketGroupID is NULL
             foreach (InvTypes srcItem in s_nullMarketItems)
@@ -249,18 +222,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Set some ships market group and race
                 switch (srcItem.ID)
                 {
-                    case DBConstants.ImpairorID:
-                        srcItem.MarketGroupID = DBConstants.RookieShipAmarrGroupID;
-                        break;
-                    case DBConstants.IbisID:
-                        srcItem.MarketGroupID = DBConstants.RookieShipCaldariGroupID;
-                        break;
-                    case DBConstants.VelatorID:
-                        srcItem.MarketGroupID = DBConstants.RookieShipGallenteGroupID;
-                        break;
-                    case DBConstants.ReaperID:
-                        srcItem.MarketGroupID = DBConstants.RookieShipMinmatarGroupID;
-                        break;
                     case DBConstants.CapsuleID:
                         srcItem.MarketGroupID = DBConstants.UniqueDesignsRootNonMarketGroupID;
                         srcItem.RaceID = (int)Race.All;
@@ -459,7 +420,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
+                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                                  : String.Empty
                                   });
                     continue;
                 }
@@ -471,7 +434,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
+                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                                  : String.Empty
                                   });
                     continue;
                 }
@@ -483,7 +448,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
+                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                                  : String.Empty
                                   });
                     continue;
                 }
@@ -495,7 +462,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
+                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                                  : String.Empty
                                   });
                     continue;
                 }
@@ -507,7 +476,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
+                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                                  : String.Empty
                                   });
                     continue;
                 }
@@ -519,7 +490,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
+                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                                  : String.Empty
                                   });
                     continue;
                 }
@@ -531,7 +504,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
+                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                                  : String.Empty
                                   });
                     continue;
                 }

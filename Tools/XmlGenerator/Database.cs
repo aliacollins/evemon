@@ -14,12 +14,12 @@ namespace EVEMon.XmlGenerator
         private static DateTime s_startTime;
 
         internal const int PropertiesTotalCount = 1634;
-        internal const int ItemsTotalCount = 11476;
+        internal const int ItemsTotalCount = 18757;
         internal const int SkillsTotalCount = 428;
         internal const int CertificatesTotalCount = 4272;
-        internal const int BlueprintsTotalCount = 4168;
+        internal const int BlueprintsTotalCount = 4702;
         internal const int GeographyTotalCount = 97;
-        internal const int ReprocessingTotalCount = 11672;
+        internal const int ReprocessingTotalCount = 18757;
 
 
         #region Properties

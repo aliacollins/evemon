@@ -105,7 +105,7 @@ namespace EVEMon.XmlGenerator
             // Is it actually an integer stored as a float?
             if (property.ValueFloat.HasValue &&
                 Math.Abs(Math.Truncate(property.ValueFloat.Value) - property.ValueFloat.Value) < float.Epsilon)
-                return Convert.ToInt32(property.ValueFloat.Value).ToString(CultureInfo.InvariantCulture);
+                return Convert.ToInt64(property.ValueFloat.Value).ToString(CultureInfo.InvariantCulture);
 
             return property.ValueFloat.ToString();
         }

@@ -197,7 +197,7 @@ namespace EVEMon.Common.Data
         public const int FittingAtributeCategoryID = 1;
         public const int StructureAtributeCategoryID = 4;
         public const int MiscellaneousAttributeCategoryID = 7;
-        public const int NULLAtributeCategoryID = 9;
+        public const int NullAtributeCategoryID = 9;
 
         #endregion
 
@@ -538,21 +538,9 @@ namespace EVEMon.Common.Data
         #region Types IDs
 
         public const int CorporationID = 2;
-        public const int TemperatePlanetID = 11;
-        public const int IcePlanetID = 12;
-        public const int GasPlanetID = 13;
-        public const int ReaperID = 588;
-        public const int ImpairorID = 596;
-        public const int IbisID = 601;
-        public const int VelatorID = 606;
         public const int CapsuleID = 670;
         public const int CharacterAmarrID = 1373;
         public const int CharacterVherokiorID = 1386;
-        public const int OceanicPlanetID = 2014;
-        public const int LavaPlanetID = 2015;
-        public const int BarrenPlanetID = 2016;
-        public const int StormPlanetID = 2017;
-        public const int PlasmaPlanetID = 2063;
         public const int AdrestiaBlueprintID = 2837;
         public const int GunnerySkillID = 3300;
         public const int SmallHybridTurretSkillID = 3301;
@@ -583,10 +571,6 @@ namespace EVEMon.Common.Data
         public const int VisibilitySkillID = 3447;
         public const int NavigationSkillID = 3449;
         public const int EchelonBlueprintID = 3533;
-        public const int CivilianGatlingPulseLaserID = 3634;
-        public const int CivilianGatlingAutocannonID = 3636;
-        public const int CivilianGatlingRailgunID = 3638;
-        public const int CivilianLightElectronBlasterID = 3640;
         public const int ScrapMetalProcessingSkillID = 12196;
         public const int MegathronFederateIssueID = 13202;
         public const int AllianceID = 16159;
@@ -622,7 +606,6 @@ namespace EVEMon.Common.Data
         public const int AdvancedMassProductionSkillID = 24625;
         public const int RavenStateIssueID = 26840;
         public const int TempestTribalIssueID = 26842;
-        public const int CivilianDataInterfaceID = 27026;
         public const int ZainouBeancounterF50ID = 27167;
         public const int ZainouBeancounterG50ID = 27168;
         public const int ZainouBeancounterF40ID = 27170;
@@ -664,7 +647,6 @@ namespace EVEMon.Common.Data
         public const int LokiOffensiveTurretConcurrenceRegistryBlueprintID = 30407;
         public const int InterbusShuttleID = 30842;
         public const int InterbusShuttleBlueprintID = 30843;
-        public const int ShatteredPlanetID = 30889;
         public const int FrekiBlueprintID = 32208;
         public const int MimirBlueprintID = 32210;
 
