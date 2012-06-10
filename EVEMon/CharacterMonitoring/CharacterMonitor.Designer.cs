@@ -174,7 +174,7 @@ namespace EVEMon.CharacterMonitoring
             this.pnlTraining.Location = new System.Drawing.Point(0, 362);
             this.pnlTraining.Name = "pnlTraining";
             this.pnlTraining.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.pnlTraining.Size = new System.Drawing.Size(574, 42);
+            this.pnlTraining.Size = new System.Drawing.Size(614, 42);
             this.pnlTraining.TabIndex = 1;
             this.pnlTraining.Visible = false;
             // 
@@ -195,7 +195,7 @@ namespace EVEMon.CharacterMonitoring
             this.tlpStatus.Name = "tlpStatus";
             this.tlpStatus.RowCount = 1;
             this.tlpStatus.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpStatus.Size = new System.Drawing.Size(574, 39);
+            this.tlpStatus.Size = new System.Drawing.Size(614, 39);
             this.tlpStatus.TabIndex = 4;
             // 
             // flpStatusLabels
@@ -297,7 +297,7 @@ namespace EVEMon.CharacterMonitoring
             // btnAddToCalendar
             // 
             this.btnAddToCalendar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddToCalendar.Location = new System.Drawing.Point(462, 13);
+            this.btnAddToCalendar.Location = new System.Drawing.Point(502, 13);
             this.btnAddToCalendar.Name = "btnAddToCalendar";
             this.btnAddToCalendar.Size = new System.Drawing.Size(109, 23);
             this.btnAddToCalendar.TabIndex = 0;
@@ -313,7 +313,7 @@ namespace EVEMon.CharacterMonitoring
             this.upperPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.upperPanel.Location = new System.Drawing.Point(0, 0);
             this.upperPanel.Name = "upperPanel";
-            this.upperPanel.Size = new System.Drawing.Size(574, 165);
+            this.upperPanel.Size = new System.Drawing.Size(614, 165);
             this.upperPanel.TabIndex = 14;
             // 
             // Header
@@ -323,7 +323,7 @@ namespace EVEMon.CharacterMonitoring
             this.Header.Dock = System.Windows.Forms.DockStyle.Top;
             this.Header.Location = new System.Drawing.Point(0, 0);
             this.Header.Name = "Header";
-            this.Header.Size = new System.Drawing.Size(574, 165);
+            this.Header.Size = new System.Drawing.Size(614, 165);
             this.Header.TabIndex = 15;
             // 
             // skillQueuePanel
@@ -337,7 +337,7 @@ namespace EVEMon.CharacterMonitoring
             this.skillQueuePanel.Location = new System.Drawing.Point(0, 306);
             this.skillQueuePanel.Name = "skillQueuePanel";
             this.skillQueuePanel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 6);
-            this.skillQueuePanel.Size = new System.Drawing.Size(574, 56);
+            this.skillQueuePanel.Size = new System.Drawing.Size(614, 56);
             this.skillQueuePanel.TabIndex = 13;
             // 
             // lblPaused
@@ -345,7 +345,7 @@ namespace EVEMon.CharacterMonitoring
             this.lblPaused.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lblPaused.Location = new System.Drawing.Point(0, 23);
             this.lblPaused.Name = "lblPaused";
-            this.lblPaused.Size = new System.Drawing.Size(574, 17);
+            this.lblPaused.Size = new System.Drawing.Size(614, 17);
             this.lblPaused.TabIndex = 3;
             this.lblPaused.Text = "Paused";
             this.lblPaused.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -357,14 +357,14 @@ namespace EVEMon.CharacterMonitoring
             this.skillQueueTimePanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.skillQueueTimePanel.Location = new System.Drawing.Point(0, 6);
             this.skillQueueTimePanel.Name = "skillQueueTimePanel";
-            this.skillQueueTimePanel.Size = new System.Drawing.Size(574, 17);
+            this.skillQueueTimePanel.Size = new System.Drawing.Size(614, 17);
             this.skillQueueTimePanel.TabIndex = 17;
             // 
             // lblQueueCompletionTime
             // 
             this.lblQueueCompletionTime.AutoSize = true;
             this.lblQueueCompletionTime.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblQueueCompletionTime.Location = new System.Drawing.Point(530, 0);
+            this.lblQueueCompletionTime.Location = new System.Drawing.Point(570, 0);
             this.lblQueueCompletionTime.Margin = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.lblQueueCompletionTime.Name = "lblQueueCompletionTime";
             this.lblQueueCompletionTime.Size = new System.Drawing.Size(44, 13);
@@ -392,7 +392,7 @@ namespace EVEMon.CharacterMonitoring
             this.skillQueueControl.Location = new System.Drawing.Point(0, 40);
             this.skillQueueControl.Name = "skillQueueControl";
             this.skillQueueControl.SecondColor = System.Drawing.Color.LightSlateGray;
-            this.skillQueueControl.Size = new System.Drawing.Size(574, 10);
+            this.skillQueueControl.Size = new System.Drawing.Size(614, 10);
             this.skillQueueControl.SkillQueue = null;
             this.skillQueueControl.TabIndex = 13;
             // 
@@ -405,7 +405,7 @@ namespace EVEMon.CharacterMonitoring
             this.lowerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lowerPanel.Location = new System.Drawing.Point(0, 165);
             this.lowerPanel.Name = "lowerPanel";
-            this.lowerPanel.Size = new System.Drawing.Size(574, 404);
+            this.lowerPanel.Size = new System.Drawing.Size(614, 404);
             this.lowerPanel.TabIndex = 3;
             // 
             // borderPanel
@@ -418,7 +418,7 @@ namespace EVEMon.CharacterMonitoring
             this.borderPanel.Margin = new System.Windows.Forms.Padding(0);
             this.borderPanel.Name = "borderPanel";
             this.borderPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
-            this.borderPanel.Size = new System.Drawing.Size(574, 250);
+            this.borderPanel.Size = new System.Drawing.Size(614, 250);
             this.borderPanel.TabIndex = 3;
             // 
             // corePanel
@@ -430,7 +430,7 @@ namespace EVEMon.CharacterMonitoring
             this.corePanel.Margin = new System.Windows.Forms.Padding(0);
             this.corePanel.Name = "corePanel";
             this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
-            this.corePanel.Size = new System.Drawing.Size(571, 174);
+            this.corePanel.Size = new System.Drawing.Size(611, 174);
             this.corePanel.TabIndex = 14;
             // 
             // multiPanel
@@ -453,7 +453,7 @@ namespace EVEMon.CharacterMonitoring
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.SelectedPage = this.skillsPage;
-            this.multiPanel.Size = new System.Drawing.Size(568, 156);
+            this.multiPanel.Size = new System.Drawing.Size(608, 156);
             this.multiPanel.TabIndex = 14;
             // 
             // standingsPage
@@ -482,7 +482,7 @@ namespace EVEMon.CharacterMonitoring
             this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsPage.Location = new System.Drawing.Point(0, 0);
             this.skillsPage.Name = "skillsPage";
-            this.skillsPage.Size = new System.Drawing.Size(568, 156);
+            this.skillsPage.Size = new System.Drawing.Size(608, 156);
             this.skillsPage.TabIndex = 0;
             this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
@@ -494,7 +494,7 @@ namespace EVEMon.CharacterMonitoring
             this.skillsList.Location = new System.Drawing.Point(0, 0);
             this.skillsList.Margin = new System.Windows.Forms.Padding(0);
             this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(568, 156);
+            this.skillsList.Size = new System.Drawing.Size(608, 156);
             this.skillsList.TabIndex = 12;
             // 
             // ordersPage
@@ -773,7 +773,7 @@ namespace EVEMon.CharacterMonitoring
             this.warningLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.warningLabel.Location = new System.Drawing.Point(1, 1);
             this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(568, 17);
+            this.warningLabel.Size = new System.Drawing.Size(608, 17);
             this.warningLabel.TabIndex = 1;
             this.warningLabel.Text = "This character has no associated API key, data won\'t be updated.";
             this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -785,7 +785,7 @@ namespace EVEMon.CharacterMonitoring
             this.notificationList.Location = new System.Drawing.Point(2, 2);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(571, 72);
+            this.notificationList.Size = new System.Drawing.Size(611, 72);
             this.notificationList.TabIndex = 13;
             // 
             // toolstripPanel
@@ -796,7 +796,7 @@ namespace EVEMon.CharacterMonitoring
             this.toolstripPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolstripPanel.Location = new System.Drawing.Point(0, 0);
             this.toolstripPanel.Name = "toolstripPanel";
-            this.toolstripPanel.Size = new System.Drawing.Size(574, 56);
+            this.toolstripPanel.Size = new System.Drawing.Size(614, 56);
             this.toolstripPanel.TabIndex = 16;
             // 
             // toolStripContextual
@@ -810,7 +810,7 @@ namespace EVEMon.CharacterMonitoring
             this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripContextual.Location = new System.Drawing.Point(0, 31);
             this.toolStripContextual.Name = "toolStripContextual";
-            this.toolStripContextual.Size = new System.Drawing.Size(574, 25);
+            this.toolStripContextual.Size = new System.Drawing.Size(614, 25);
             this.toolStripContextual.TabIndex = 15;
             // 
             // preferencesMenu
@@ -997,7 +997,7 @@ namespace EVEMon.CharacterMonitoring
             this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripFeatures.Location = new System.Drawing.Point(0, 0);
             this.toolStripFeatures.Name = "toolStripFeatures";
-            this.toolStripFeatures.Size = new System.Drawing.Size(574, 31);
+            this.toolStripFeatures.Size = new System.Drawing.Size(614, 31);
             this.toolStripFeatures.TabIndex = 13;
             // 
             // skillsIcon
@@ -1240,7 +1240,7 @@ namespace EVEMon.CharacterMonitoring
             this.Controls.Add(this.lowerPanel);
             this.Controls.Add(this.upperPanel);
             this.Name = "CharacterMonitor";
-            this.Size = new System.Drawing.Size(574, 569);
+            this.Size = new System.Drawing.Size(614, 569);
             this.pnlTraining.ResumeLayout(false);
             this.pnlTraining.PerformLayout();
             this.tlpStatus.ResumeLayout(false);

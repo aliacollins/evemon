@@ -227,7 +227,7 @@ namespace EVEMon
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.ShowItemToolTips = true;
-            this.statusStrip.Size = new System.Drawing.Size(554, 22);
+            this.statusStrip.Size = new System.Drawing.Size(600, 22);
             this.statusStrip.TabIndex = 1;
             // 
             // lblTraining
@@ -255,7 +255,7 @@ namespace EVEMon
             this.UploaderToolStripStatusLabel.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.UploaderToolStripStatusLabel.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.UploaderToolStripStatusLabel.Name = "UploaderToolStripStatusLabel";
-            this.UploaderToolStripStatusLabel.Size = new System.Drawing.Size(122, 17);
+            this.UploaderToolStripStatusLabel.Size = new System.Drawing.Size(162, 17);
             this.UploaderToolStripStatusLabel.Text = "// Market Uploader Status:";
             this.UploaderToolStripStatusLabel.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.UploaderToolStripStatusLabel.ToolTipText = "Disabled";
@@ -290,7 +290,7 @@ namespace EVEMon
             this.testsToolStripMenuItem});
             this.mainMenuBar.Location = new System.Drawing.Point(0, 0);
             this.mainMenuBar.Name = "mainMenuBar";
-            this.mainMenuBar.Size = new System.Drawing.Size(554, 24);
+            this.mainMenuBar.Size = new System.Drawing.Size(600, 24);
             this.mainMenuBar.TabIndex = 3;
             this.mainMenuBar.Text = "menuStrip1";
             // 
@@ -730,7 +730,7 @@ namespace EVEMon
             this.tsbAbout});
             this.mainToolBar.Location = new System.Drawing.Point(0, 24);
             this.mainToolBar.Name = "mainToolBar";
-            this.mainToolBar.Size = new System.Drawing.Size(554, 25);
+            this.mainToolBar.Size = new System.Drawing.Size(600, 25);
             this.mainToolBar.TabIndex = 5;
             this.mainToolBar.Text = "toolStrip1";
             // 
@@ -1029,7 +1029,7 @@ namespace EVEMon
             this.tcCharacterTabs.Padding = new System.Drawing.Point(0, 0);
             this.tcCharacterTabs.SelectedIndex = 0;
             this.tcCharacterTabs.ShowToolTips = true;
-            this.tcCharacterTabs.Size = new System.Drawing.Size(554, 503);
+            this.tcCharacterTabs.Size = new System.Drawing.Size(600, 503);
             this.tcCharacterTabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tcCharacterTabs.TabIndex = 0;
             this.tcCharacterTabs.SelectedIndexChanged += new System.EventHandler(this.tcCharacterTabs_SelectedIndexChanged);
@@ -1040,7 +1040,7 @@ namespace EVEMon
             this.tpOverview.Controls.Add(this.overview);
             this.tpOverview.Location = new System.Drawing.Point(4, 22);
             this.tpOverview.Name = "tpOverview";
-            this.tpOverview.Size = new System.Drawing.Size(546, 477);
+            this.tpOverview.Size = new System.Drawing.Size(592, 477);
             this.tpOverview.TabIndex = 0;
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
@@ -1062,7 +1062,7 @@ namespace EVEMon
             this.tabCreationLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.tabCreationLabel.Location = new System.Drawing.Point(0, 49);
             this.tabCreationLabel.Name = "tabCreationLabel";
-            this.tabCreationLabel.Size = new System.Drawing.Size(554, 503);
+            this.tabCreationLabel.Size = new System.Drawing.Size(600, 503);
             this.tabCreationLabel.TabIndex = 7;
             this.tabCreationLabel.Text = "Tab pages creation in progress.\r\n\r\nPlease wait.";
             this.tabCreationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1083,7 +1083,7 @@ namespace EVEMon
             this.noCharactersLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.noCharactersLabel.Location = new System.Drawing.Point(0, 0);
             this.noCharactersLabel.Name = "noCharactersLabel";
-            this.noCharactersLabel.Size = new System.Drawing.Size(554, 646);
+            this.noCharactersLabel.Size = new System.Drawing.Size(600, 646);
             this.noCharactersLabel.TabIndex = 8;
             this.noCharactersLabel.Text = "No character loaded.\r\nTo add characters, click the File|Add API key... menu optio" +
     "n";
@@ -1097,7 +1097,7 @@ namespace EVEMon
             this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.overview.Location = new System.Drawing.Point(0, 0);
             this.overview.Name = "overview";
-            this.overview.Size = new System.Drawing.Size(546, 477);
+            this.overview.Size = new System.Drawing.Size(592, 477);
             this.overview.TabIndex = 0;
             this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
             // 
@@ -1108,14 +1108,14 @@ namespace EVEMon
             this.notificationList.Location = new System.Drawing.Point(0, 552);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(554, 72);
+            this.notificationList.Size = new System.Drawing.Size(600, 72);
             this.notificationList.TabIndex = 6;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(554, 646);
+            this.ClientSize = new System.Drawing.Size(600, 646);
             this.Controls.Add(this.tcCharacterTabs);
             this.Controls.Add(this.tabCreationLabel);
             this.Controls.Add(this.notificationList);
@@ -1124,7 +1124,7 @@ namespace EVEMon
             this.Controls.Add(this.mainMenuBar);
             this.Controls.Add(this.noCharactersLabel);
             this.MainMenuStrip = this.mainMenuBar;
-            this.MinimumSize = new System.Drawing.Size(570, 350);
+            this.MinimumSize = new System.Drawing.Size(616, 350);
             this.Name = "MainWindow";
             this.Deactivate += new System.EventHandler(this.MainWindow_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
