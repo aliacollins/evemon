@@ -255,13 +255,13 @@ namespace EVEMon.SkillPlanner
 
         protected System.Windows.Forms.TextBox tbSearchText;
         protected System.Windows.Forms.Label lbNoMatches;
-        protected System.Windows.Forms.ListBox lbSearchList;
         protected System.Windows.Forms.Panel upperPanel;
         protected System.Windows.Forms.Panel lowerPanel;
         protected System.Windows.Forms.Label lbSearchTextHint;
         protected System.Windows.Forms.PictureBox pbSearchImage;
         protected System.Windows.Forms.Label lblFilter;
         protected System.Windows.Forms.ComboBox cbUsabilityFilter;
+        protected internal System.Windows.Forms.ListBox lbSearchList;
         protected internal EVEMon.Common.Controls.TreeView tvItems;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;

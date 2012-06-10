@@ -82,9 +82,6 @@ namespace EVEMon.SkillPlanner
 
             m_blueprint = SelectedObject as Blueprint;
 
-            // Update Tabs
-            UpdateTabs();
-
             // Update Required Skills
             m_activity = GetActivity();
             requiredSkillsControl.Object = SelectedObject;
@@ -92,6 +89,9 @@ namespace EVEMon.SkillPlanner
 
             // Update Facility Modifier
             UpdateFacilityModifier();
+
+            // Update Tabs
+            UpdateTabs();
         }
 
         /// <summary>
@@ -149,16 +149,15 @@ namespace EVEMon.SkillPlanner
             if (tabControl.SelectedIndex != 0)
                 tabControl.Hide();
 
+            tabControl.SuspendLayout();
             try
             {
                 RefreshTabs(hasResearchingTimeProductivity, hasCopying, hasResearchingMaterialProductivity);
             }
             finally
             {
+                tabControl.ResumeLayout(true);
                 tabControl.Show();
-
-                // Return focus to selector
-                blueprintSelectControl.tvItems.Focus();
             }
         }
 
@@ -170,6 +169,13 @@ namespace EVEMon.SkillPlanner
         /// <param name="hasResearchingMaterialProductivity">if set to <c>true</c> [has researching material productivity].</param>
         private void RefreshTabs(bool hasResearchingTimeProductivity, bool hasCopying, bool hasResearchingMaterialProductivity)
         {
+            // Store the visible selector control for later use
+            Control visibleSelector;
+            if (blueprintSelectControl.tvItems.Visible)
+                visibleSelector = blueprintSelectControl.tvItems;
+            else
+                visibleSelector = blueprintSelectControl.lbSearchList;
+
             // Store the selected tab index for later use
             int storedTabIndex = tabControl.SelectedIndex;
 
@@ -197,6 +203,9 @@ namespace EVEMon.SkillPlanner
             // if the index doesn't exist it smartly selects
             // the first one by its own
             tabControl.SelectedIndex = storedTabIndex;
+
+            // Return focus to selector
+            visibleSelector.Focus();
         }
 
         /// <summary>
