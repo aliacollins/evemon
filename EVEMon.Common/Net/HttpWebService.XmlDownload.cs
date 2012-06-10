@@ -10,7 +10,7 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// HttpWebService Xml download implementation.
     /// </summary>
-    partial class HttpWebService
+    static partial class HttpWebService
     {
         private const string XMLAccept =
             "text/xml,application/xml,application/xhtml+xml;q=0.8,*/*;q=0.5";
@@ -23,7 +23,8 @@ namespace EVEMon.Common.Net
         /// <param name="postdata">The postdata.</param>
         /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public IXPathNavigable DownloadXml(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null, DataCompression dataCompression = DataCompression.None)
+        public static IXPathNavigable DownloadXml(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null,
+                                                  DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -59,8 +60,9 @@ namespace EVEMon.Common.Net
         /// <param name="method">The method.</param>
         /// <param name="postdata">The postdata.</param>
         /// <param name="dataCompression">The compression.</param>
-        public void DownloadXmlAsync(Uri url, DownloadXmlCompletedCallback callback, object userState,
-                                     HttpMethod method = HttpMethod.Get, string postdata = null, DataCompression dataCompression = DataCompression.None)
+        public static void DownloadXmlAsync(Uri url, DownloadXmlCompletedCallback callback, object userState,
+                                            HttpMethod method = HttpMethod.Get, string postdata = null,
+                                            DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))

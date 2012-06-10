@@ -302,12 +302,12 @@ namespace EVEMon.MarketUnifiedUploader
 
             // Inform about suspended endpoints
             foreach (EndPoint endPoint in s_endPoints.Where(endPoint => endPoint.Enabled &&
-                endPoint.NextUploadTimeUtc != DateTime.MinValue &&
-                endPoint.NextUploadTimeUtc >= DateTime.UtcNow ))
+                                                                        endPoint.NextUploadTimeUtc != DateTime.MinValue &&
+                                                                        endPoint.NextUploadTimeUtc >= DateTime.UtcNow))
             {
                 ProgressText = String.Format(CultureConstants.DefaultCulture, "{2}: Uploading to {0} is suspended until {1}{3}",
-                             endPoint.Name, endPoint.NextUploadTimeUtc.ToLocalTime(),
-                             DateTime.Now.ToUniversalDateTimeString(), Environment.NewLine);
+                                             endPoint.Name, endPoint.NextUploadTimeUtc.ToLocalTime(),
+                                             DateTime.Now.ToUniversalDateTimeString(), Environment.NewLine);
             }
 
             // Upload to the selected endpoints
@@ -338,8 +338,8 @@ namespace EVEMon.MarketUnifiedUploader
             string response;
             try
             {
-                response = EveMonClient.HttpWebService.DownloadString(endPoint.Url, endPoint.Method, postdata,
-                                                                      endPoint.DataCompression);
+                response = HttpWebService.DownloadString(endPoint.Url, endPoint.Method, postdata,
+                                                         endPoint.DataCompression);
             }
             catch (HttpWebServiceException ex)
             {
@@ -395,7 +395,7 @@ namespace EVEMon.MarketUnifiedUploader
                 }
 
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow.Add(endPoint.UploadInterval);
-                
+
                 ProgressText = String.Format(CultureConstants.DefaultCulture, "{3}: {0}{4}Next upload try to {1} at: {2}{4}",
                                              response,
                                              endPoint.Name,

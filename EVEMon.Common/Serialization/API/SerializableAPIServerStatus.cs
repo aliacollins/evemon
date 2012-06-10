@@ -15,7 +15,7 @@ namespace EVEMon.Common.Serialization.API
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    Open = Convert.ToBoolean(value);
+                    Open = Convert.ToBoolean(value, CultureConstants.InvariantCulture);
             }
         }
 

@@ -18,7 +18,7 @@ namespace EVEMon.Common
         {
             SyncState state = new SyncState(callback);
             Uri url = new Uri(NetworkConstants.BatlleclinicTimeSynch);
-            EveMonClient.HttpWebService.DownloadStringAsync(url, SyncDownloadCompleted, state);
+            HttpWebService.DownloadStringAsync(url, SyncDownloadCompleted, state);
         }
 
         /// <summary>

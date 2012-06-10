@@ -5,7 +5,7 @@ namespace EVEMon.Common.Net
 {
     public delegate void DownloadFileCompletedCallback(DownloadFileAsyncResult e);
 
-    partial class HttpWebService
+    static partial class HttpWebService
     {
         private const string FileAccept = "*/*;q=0.5";
 
@@ -18,7 +18,7 @@ namespace EVEMon.Common.Net
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public FileInfo DownloadFile(Uri url, string filePath, HttpMethod method = HttpMethod.Get,
+        public static FileInfo DownloadFile(Uri url, string filePath, HttpMethod method = HttpMethod.Get,
                                      string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
@@ -59,7 +59,7 @@ namespace EVEMon.Common.Net
         /// <param name="postdata">The postdata.</param>
         /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
+        public static object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
                                         DownloadProgressChangedCallback progressCallback, HttpMethod method = HttpMethod.Get,
                                         string postdata = null, DataCompression dataCompression = DataCompression.None)
         {

@@ -8,7 +8,7 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// HttpWebService String download implementation.
     /// </summary>
-    public partial class HttpWebService
+    static partial class HttpWebService
     {
         private const string StringAccept =
             "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,*/*;q=0.5";
@@ -21,7 +21,7 @@ namespace EVEMon.Common.Net
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public String DownloadString(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null,
+        public static String DownloadString(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null,
                                      DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
@@ -61,7 +61,7 @@ namespace EVEMon.Common.Net
         /// <param name="method">The method.</param>
         /// <param name="postdata">The postdata.</param>
         /// <param name="dataCompression">The compression.</param>
-        public void DownloadStringAsync(Uri url, DownloadStringCompletedCallback callback, object userState,
+        public static void DownloadStringAsync(Uri url, DownloadStringCompletedCallback callback, object userState,
                                         HttpMethod method = HttpMethod.Get, string postdata = null,
                                         DataCompression dataCompression = DataCompression.None)
         {

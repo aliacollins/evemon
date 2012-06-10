@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
@@ -271,7 +272,7 @@ namespace EVEMon.Common
         internal static void DownloadAPIResultAsync<T>(Uri url, QueryCallback<T> callback, string postData = null,
                                                        XslCompiledTransform transform = null)
         {
-            EveMonClient.HttpWebService.DownloadXmlAsync(
+            HttpWebService.DownloadXmlAsync(
                 url,
                 (asyncResult, userState) =>
                     {
@@ -309,7 +310,7 @@ namespace EVEMon.Common
 
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
-            EveMonClient.HttpWebService.DownloadXmlAsync(
+            HttpWebService.DownloadXmlAsync(
                 url,
                 (asyncResult, userState) =>
                     {
@@ -424,7 +425,7 @@ namespace EVEMon.Common
 
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
-            EveMonClient.HttpWebService.DownloadXmlAsync(
+            HttpWebService.DownloadXmlAsync(
                 url,
                 (asyncResult, userState) =>
                     {
@@ -478,7 +479,7 @@ namespace EVEMon.Common
         internal static void DownloadBCAPIResultAsync<T>(Uri url, Serialization.BattleClinic.QueryCallback<T> callback,
                                                          string postData = null)
         {
-            EveMonClient.HttpWebService.DownloadXmlAsync(
+            HttpWebService.DownloadXmlAsync(
                 url,
                 (asyncResult, userState) =>
                     {
@@ -564,7 +565,7 @@ namespace EVEMon.Common
         public static void DownloadXmlAsync<T>(Uri url, DownloadCallback<T> callback, string postData = null)
             where T : class
         {
-            EveMonClient.HttpWebService.DownloadXmlAsync(
+            HttpWebService.DownloadXmlAsync(
                 url,
                 // Callback
                 (asyncResult, userState) =>

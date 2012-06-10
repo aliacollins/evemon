@@ -9,7 +9,7 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// HttpWebService Image download implementation.
     /// </summary>
-    partial class HttpWebService
+    static partial class HttpWebService
     {
         private const string ImageAccept = "image/png,*/*;q=0.5";
 
@@ -21,7 +21,7 @@ namespace EVEMon.Common.Net
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public Image DownloadImage(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null,
+        public static Image DownloadImage(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null,
                                    DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
@@ -52,7 +52,7 @@ namespace EVEMon.Common.Net
         /// <param name="method">The method.</param>
         /// <param name="postdata">The postdata.</param>
         /// <param name="dataCompression">The compression.</param>
-        public void DownloadImageAsync(Uri url, DownloadImageCompletedCallback callback, object userState,
+        public static void DownloadImageAsync(Uri url, DownloadImageCompletedCallback callback, object userState,
                                        HttpMethod method = HttpMethod.Get, string postdata = null,
                                        DataCompression dataCompression = DataCompression.None)
         {

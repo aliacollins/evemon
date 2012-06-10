@@ -73,7 +73,7 @@ namespace EVEMon.Common
             // Cache not to be used ?
             if (!useCache)
             {
-                EveMonClient.HttpWebService.DownloadImageAsync(url, GotImage, callback);
+                HttpWebService.DownloadImageAsync(url, GotImage, callback);
                 return;
             }
 
@@ -117,14 +117,14 @@ namespace EVEMon.Common
             }
 
             // Downloads the image and adds it to cache
-            EveMonClient.HttpWebService.DownloadImageAsync(url, GotImage,
-                                                           (GetImageCallback)(img =>
-                                                                                  {
-                                                                                      if (img != null)
-                                                                                          AddImageToCache(url, img);
+            HttpWebService.DownloadImageAsync(url, GotImage,
+                                              (GetImageCallback)(img =>
+                                                                     {
+                                                                         if (img != null)
+                                                                             AddImageToCache(url, img);
 
-                                                                                      callback(img);
-                                                                                  }));
+                                                                         callback(img);
+                                                                     }));
         }
 
         /// <summary>

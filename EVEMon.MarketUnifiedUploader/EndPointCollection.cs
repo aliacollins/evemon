@@ -105,7 +105,7 @@ namespace EVEMon.MarketUnifiedUploader
             try
             {
                 Uri url = new Uri(NetworkConstants.UploaderEndPoints);
-                response = EveMonClient.HttpWebService.DownloadString(url);
+                response = HttpWebService.DownloadString(url);
             }
             catch (HttpWebServiceException ex)
             {

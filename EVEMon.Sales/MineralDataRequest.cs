@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using EVEMon.Common;
+using EVEMon.Common.Net;
 
 namespace EVEMon.Sales
 {
@@ -85,7 +85,7 @@ namespace EVEMon.Sales
         /// <returns></returns>
         private static IEnumerable<MineralPrice> GetPrices(IMineralParser parser)
         {
-            string content = EveMonClient.HttpWebService.DownloadString(parser.URL);
+            string content = HttpWebService.DownloadString(parser.URL);
 
             // Scan for prices
             MatchCollection mc = parser.Tokenizer.Matches(content);

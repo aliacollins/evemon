@@ -64,7 +64,6 @@ namespace EVEMon.Common
                 APIMethods.Initialize();
 
                 // Members instantiations
-                HttpWebService = new HttpWebService();
                 APIProviders = new GlobalAPIProviderCollection();
                 MonitoredCharacters = new GlobalMonitoredCharacterCollection();
                 CharacterIdentities = new GlobalCharacterIdentityCollection();
@@ -372,11 +371,6 @@ namespace EVEMon.Common
         /// Gets an enumeration over the datafiles checksums.
         /// </summary>
         public static GlobalDatafileCollection Datafiles { get; private set; }
-
-        /// <summary>
-        /// Gets the http web service we use to query web services.
-        /// </summary>
-        public static HttpWebService HttpWebService { get; private set; }
 
         /// <summary>
         /// Gets the API providers collection.

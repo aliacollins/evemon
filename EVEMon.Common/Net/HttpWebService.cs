@@ -9,12 +9,12 @@ namespace EVEMon.Common.Net
     /// HttpWebService provides all HTTP-based download services.
     /// It is intended to be used as a singleton instance via the Singleton class.
     /// </summary>
-    public partial class HttpWebService
+    public static partial class HttpWebService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpWebService"/> class.
         /// </summary>
-        internal HttpWebService()
+        static HttpWebService()
         {
             ServicePointManager.Expect100Continue = false;
         }
