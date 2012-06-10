@@ -1,43 +1,52 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>06 April 2012</date>
-    <version>1.6.1.3611</version>
-    <md5>fcdd61fd97ec0bf22236dbcc54399e16</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,162875.0.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.6.1.3611.exe</autopatchurl>
+    <date>10 June 2012</date>
+    <version>1.7.0.3809</version>
+    <md5>dc5390d1836dd63b7237479b5a62a263</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,166187.0.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.7.0.3809.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
 
 * Jimi
-* Jazzy_Josh
+
+== New Features ==
+
+* EVEMon now has a character Asset monitor.
+* EVEMon now has a character Wallet Journal monitor.
+* EVEMon now has a character Wallet Transactions monitor.
+* EVEMon now has a Market Unified Uploader.
+* EVEMon now has a character Factional Warfare monitor.
 
 == Bug Fixes ==
 
-* Fixed a bug in EVE Notifications Monitor where every sender was shown as a corporation.
-* Fixed various issues when choosing Outlook as external calendar.
-* Fixed some minor visual bugs when displaying courier contracts details.
-* Fixed a visual bug where corporation name in Employment History monitor wasn't updating correctly.
-* Fixed a bug where Overview was not placed in the correct position when restoring settings.
-* Fixed a visual bug where when restoring settings the tip window visibility wasn't following settings.
-* Fixed a bug where EVEMon was notifying when an update was initiated and the character was removed since.
-* Fixed a bug where the character list in API Tester was not updated when collection of characters changes.
-* Fixed a bug where the character list in Characters Comparison was not updated when collection of characters or monitored characters changes.
-* Fixed a bug where any open windows were not closed when reseting or restoring settings or hide or deleting characters.
-* Fixed a bug where tray icon was visible after restoring main window while settings for 'Show System Tray Icon' is set to 'When Minimized'.
-* Fixed a crash bug when an Implant set gets deleted while is selected in Plan Editor.
-* Fixed several memory leaks when restoring or resetting settings.
-* Fixed a bug in Contracts where the names of assignee and acceptor where not updated.
-* Fixed the link to EVE-Dev site.
-* Fixed a bug where controls that accept vCode was restrained to fewer digits than allowed.
-* Fixed several issues that can lead to crash when machine is missing fonts.
+* Fixed a crash bug when Overview tab is the last in Tab collection.
+* Fixed a bug where the installation for an industry job is wrongly assigned.
+* Fixed a bug where plan entries where not getting correctly removed internally upon restoring a plan.
+* Fixed a visual bug with search text not reseting upon changing monitor.
+* Fixed a visual bug when ampersand is used in user entered text in Character Info.
+* Fixed a bug when sorting by 'Quantity' in Market orders monitor.
+* Fixed a bug where google calendar wasn't updating the correct event.
+* Fixed a visual bug in API keys management window when using large fonts.
+* Fixed a bug in Skill browser where selecting an owned skill had unwanted behavior.
+* Fixed an bug where a character is added in monitoring collection after it has been deleted.
+* Fixed a visual bug where the notification about insufficient balance was not updated when character balance was updated.
+* Fixed a bug where contact notifications type where not shown correctly.
+* Fixed a bug where blueprint selector was losing focus when using search list.
 
 == Enhancements ==
 
-* Blueprint browser filter now takes into consideration the activity when showing the 'blueprints I cannot use'.
-* Added ability to load settings directly from the storage server on EVEMon startup.
-* Added the remaining API calls to API Tester feature.
+* Industry jobs that have been completed but not delivered, even passed the max period EVEMon tracks them, will now be shown.
+* Tooltip in any monitor has infinite display time and is displayed hovering over at any position.
+* Tooltip in Plan Queue has infinite display time and is displayed hovering over at any position.
+* An informative tooltip is shown when similar items are selected in Asset monitor.
+* Added selections to enable or disable all in features menu.
+* Added an informative text when no character is monitored and overview tab is disabled.
+* Adding ability to export to csv, monitored info (where it makes sense).
+* Solar systems and locations are now colored according to their security level.
+* EVEMon will now notify only for unread EVE notifications.
 
 == Misc ==
 
@@ -46,52 +55,59 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>29 March 2012</date>
-      <md5>b2438ac642ce716f2bc8d99cd09eeb4c</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/355549</url>
-      <message><![CDATA[Crucible 1.6 (355549) blueprints data file by the EVEMon Development Team]]></message>
+      <date>10 June 2012</date>
+      <md5>567c52efe3a3b8762b70934a383b69f9</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
+      <message><![CDATA[Inferno 1.0 (376700) blueprints data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>29 March 2012</date>
-      <md5>a47cc5f2a8d8687b4ef17cb310474c44</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/355549</url>
-      <message><![CDATA[Crucible 1.6 (355549) certificates data file by the EVEMon Development Team]]></message>
+      <date>10 June 2012</date>
+      <md5>c9eaa52747814eb186432d1a1fbe2de0</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
+      <message><![CDATA[Inferno 1.0 (376700) certificates data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>29 March 2012</date>
-      <md5>58c7c7f018af4e560d437f70383680d9</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/355549</url>
-      <message><![CDATA[Crucible 1.6 (355549) geography data file by the EVEMon Development Team]]></message>
+      <date>10 June 2012</date>
+      <md5>3b130c6507b33c9a9cf165e9a77c6ced</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
+      <message><![CDATA[Inferno 1.0 (376700) geography data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>29 March 2012</date>
-      <md5>d0385d9fde85fbd0e7d0c65c3069a173</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/355549</url>
-      <message><![CDATA[Crucible 1.6 (355549) items data file by the EVEMon Development Team]]></message>
+      <date>10 June 2012</date>
+      <md5>5b060cc87bc890593d8553a35631f4a0</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
+      <message><![CDATA[Inferno 1.0 (376700) items data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>29 March 2012</date>
-      <md5>0ca8efc6b98414dd8a40f70c3ce626a6</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/355549</url>
-      <message><![CDATA[Crucible 1.6 (355549) properties data file by the EVEMon Development Team]]></message>
+      <date>10 June 2012</date>
+      <md5>b510b9759fb91b8bed8de50f33e0f51e</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
+      <message><![CDATA[Inferno 1.0 (376700) properties data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>29 March 2012</date>
-      <md5>0d97c378866cce63766ada1df69f815b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/355549</url>
-      <message><![CDATA[Crucible 1.6 (355549) reprocessing data file by the EVEMon Development Team]]></message>
+      <date>10 June 2012</date>
+      <md5>05e4bae06ebacb3ba7acc406c078f065</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
+      <message><![CDATA[Inferno 1.0 (376700) reprocessing data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>29 March 2012</date>
-      <md5>aa74354942dfad9527ca1da564b525ce</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Crucible/355549</url>
-      <message><![CDATA[Crucible 1.6 (355549) skills data file by the EVEMon Development Team]]></message>
+      <date>10 June 2012</date>
+      <md5>efcdd7e7616983f4fe0363465bca7ca7</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
+      <message><![CDATA[Inferno 1.0 (376700) skills data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
   </datafiles>
 </evemon>
