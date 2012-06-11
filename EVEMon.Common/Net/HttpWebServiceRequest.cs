@@ -255,25 +255,6 @@ namespace EVEMon.Common.Net
             if (m_referer != null)
                 request.Referer = m_referer;
 
-            if (m_postData != null)
-            {
-                request.ContentType = "application/x-www-form-urlencoded";
-
-                if (m_method != HttpMethod.Get)
-                {
-                    request.ContentLength = m_postData.Length;
-
-                    // If we are going to send a compressed request set the appropriate header
-                    if (Enum.IsDefined(typeof(DataCompression), m_dataCompression) && m_dataCompression != DataCompression.None)
-                        request.Headers[HttpRequestHeader.ContentEncoding] =
-                            m_dataCompression.ToString().ToLower(CultureConstants.InvariantCulture);
-
-                    Stream requestStream = request.GetRequestStream();
-                    requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);
-                    requestStream.Close();
-                }
-            }
-
             if (HttpWebServiceState.Proxy.Enabled)
             {
                 WebProxy proxy = new WebProxy(HttpWebServiceState.Proxy.Host, HttpWebServiceState.Proxy.Port);
@@ -294,6 +275,25 @@ namespace EVEMon.Common.Net
                         break;
                 }
                 request.Proxy = proxy;
+            }
+
+            if (m_postData != null)
+            {
+                request.ContentType = "application/x-www-form-urlencoded";
+
+                if (m_method != HttpMethod.Get)
+                {
+                    request.ContentLength = m_postData.Length;
+
+                    // If we are going to send a compressed request set the appropriate header
+                    if (Enum.IsDefined(typeof(DataCompression), m_dataCompression) && m_dataCompression != DataCompression.None)
+                        request.Headers[HttpRequestHeader.ContentEncoding] =
+                            m_dataCompression.ToString().ToLower(CultureConstants.InvariantCulture);
+
+                    Stream requestStream = request.GetRequestStream();
+                    requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);
+                    requestStream.Close();
+                }
             }
             return request;
         }
