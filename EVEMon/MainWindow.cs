@@ -1294,6 +1294,9 @@ namespace EVEMon
             // Open the specified settings
             Settings.Restore(openFileDialog.FileName);
 
+            // Show the TabControl
+            tcCharacterTabs.Show();
+
             // Remove the tip window if it exist and is confirmed in settings
             if (Settings.UI.ConfirmedTips.Contains("startup") && Controls.OfType<TipWindow>().Any())
                 Controls.Remove(Controls.OfType<TipWindow>().First());
@@ -1342,6 +1345,9 @@ namespace EVEMon
 
             // Reset the settings
             Settings.Reset();
+
+            // Show the TabControl
+            tcCharacterTabs.Show();
 
             // Trigger the tip window
             OnShown(e);
