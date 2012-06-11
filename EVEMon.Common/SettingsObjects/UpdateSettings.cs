@@ -23,7 +23,7 @@ namespace EVEMon.Common.SettingsObjects
             HttpTimeout = 20;
             Periods = new ModifiedSerializableDictionary<String, UpdatePeriod>();
             IgnoreNetworkStatus = false;
-            UpdateFrequency = 240;
+            UpdateFrequency = 720;
             UseCustomUpdatesUrl = false;
             UpdatesAddress = NetworkConstants.EVEMonUpdates;
         }
@@ -50,12 +50,12 @@ namespace EVEMon.Common.SettingsObjects
         /// Gets or sets the length of time between updates in minutes.
         /// </summary>
         /// <remarks>
-        /// Hidden Setting. The value of this setting must be equal to or higher than 240 minutes, the default is 240 minutes (4 hours).
+        /// Hidden Setting. The value of this setting must be equal to or higher than 720 minutes, the default is 720 minutes (12 hours).
         /// </remarks>
         [XmlElement("updateFrequency")]
         public int UpdateFrequency
         {
-            get { return m_updateFrequency < 240 ? 240 : m_updateFrequency; }
+            get { return m_updateFrequency < 720 ? 720 : m_updateFrequency; }
             set { m_updateFrequency = value; }
         }
 
