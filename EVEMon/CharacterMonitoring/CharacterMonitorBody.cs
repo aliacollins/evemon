@@ -108,6 +108,7 @@ namespace EVEMon.CharacterMonitoring
 
             UpdateFrequentControls();
             UpdateInfrequentControls();
+            UpdateFeaturesMenu();
         }
 
         /// <summary>
