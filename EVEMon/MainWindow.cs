@@ -2195,8 +2195,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void testCharacterNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CharacterMonitor monitor = GetCurrentMonitor();
-            monitor.TestCharacterNotification();
+            CharacterMonitor.TestCharacterNotification(GetCurrentCharacter());
         }
 
         /// <summary>

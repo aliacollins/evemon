@@ -16,10 +16,14 @@ namespace EVEMon.CharacterMonitoring
     /// <summary>
     /// Implements the header component of the main character monitor user interface.
     /// </summary>
-    public partial class CharacterMonitorHeader : UserControl
+    public sealed partial class CharacterMonitorHeader : UserControl
     {
+        #region Fields
+
         private Character m_character;
         private int m_spAtLastRedraw;
+
+        #endregion
 
 
         #region Constructor
@@ -34,23 +38,62 @@ namespace EVEMon.CharacterMonitoring
 
         #endregion
 
-
-        #region Public Properties
+        
+        #region Inherited Events
 
         /// <summary>
-        /// Gets or sets the character.
+        /// Occurs when control loads.
         /// </summary>
-        /// <value>The character.</value>
-        public Character Character
+        protected override void OnLoad(EventArgs e)
         {
-            get { return m_character; }
-            set
-            {
-                if (m_character == value)
-                    return;
+            base.OnLoad(e);
 
-                m_character = value;
-            }
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            // Fonts
+            Font = FontFactory.GetFont("Tahoma");
+            CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
+            // Subscribe to events
+            EveMonClient.TimerTick += EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
+            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            Disposed += OnDisposed;
+
+            base.OnLoad(e);
+        }
+
+        /// <summary>
+        /// Occurs when visibility changes.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            if (!Visible)
+                return;
+
+            UpdateFrequentControls();
+            UpdateInfrequentControls();
+
+            base.OnVisibleChanged(e);
+        }
+
+        /// <summary>
+        /// Called when the control is disposed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
+            EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
+            Disposed -= OnDisposed;
         }
 
         #endregion
@@ -154,6 +197,18 @@ namespace EVEMon.CharacterMonitoring
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Sets the character.
+        /// </summary>
+        /// <value>The character.</value>
+        public void SetCharacter(Character character)
+        {
+            if (m_character == character)
+                return;
+
+            m_character = character;
+        }
 
         /// <summary>
         /// Formats the balance.
@@ -327,10 +382,10 @@ namespace EVEMon.CharacterMonitoring
             // Skip character's corporation monitors if they are bound with the character's personal monitor
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
                 monitor => monitor.HasAccess).Where(
-                monitor =>
-                (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
-                (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
-                 monitor.Method.GetType() != typeof(APICharacterMethods))))
+                    monitor =>
+                    (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
+                    (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
+                     monitor.Method.GetType() != typeof(APICharacterMethods))))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -480,60 +535,7 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Event Handlers
-
-        /// <summary>
-        /// Occurs when control loads.
-        /// </summary>
-        protected override void OnLoad(EventArgs e)
-        {
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
-
-            // Fonts
-            Font = FontFactory.GetFont("Tahoma");
-            CharacterNameLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            // Subscribe to events
-            EveMonClient.TimerTick += EveMonClient_TimerTick;
-            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
-            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
-            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
-            Disposed += OnDisposed;
-
-            base.OnLoad(e);
-        }
-
-        /// <summary>
-        /// Occurs when visibility changes.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (!Visible)
-                return;
-
-            UpdateFrequentControls();
-            UpdateInfrequentControls();
-
-            base.OnVisibleChanged(e);
-        }
-
-        /// <summary>
-        /// Called when the control is disposed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
-            EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
-            EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
-            Disposed -= OnDisposed;
-        }
+        #region Global Events
 
         /// <summary>
         /// Handles the TimerTick event of the EveMonClient control.
@@ -604,6 +606,11 @@ namespace EVEMon.CharacterMonitoring
 
             FormatBalance();
         }
+
+        #endregion
+
+
+        #region Local Events
 
         /// <summary>
         /// Occurs when the user click the throbber.

@@ -167,6 +167,18 @@
     <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.Designer.cs">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMonitorBody.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMonitorBody.Designer.cs">
+      <DependentUpon>CharacterMonitorBody.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMonitorFooter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMonitorFooter.Designer.cs">
+      <DependentUpon>CharacterMonitorFooter.cs</DependentUpon>
+    </Compile>
     <Compile Include="CharacterMonitoring\CharacterWalletJournalList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -450,6 +462,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.resx">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorBody.resx">
+      <DependentUpon>CharacterMonitorBody.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorFooter.resx">
+      <DependentUpon>CharacterMonitorFooter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterWalletJournalList.resx">
       <DependentUpon>CharacterWalletJournalList.cs</DependentUpon>
