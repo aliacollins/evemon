@@ -74,4 +74,18 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Replacing element value 'Named' and 'Other' in item browser metaGroup filtering -->
+  <xsl:template match="metaGroupFilter">
+    <xsl:choose>
+      <xsl:when test="contains(text(), 'Named') or contains(text(), 'Other')">
+        <xsl:copy>
+          <xsl:value-of select="'All'"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
