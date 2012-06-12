@@ -123,9 +123,6 @@ namespace EVEMon
             if (DesignMode)
                 return;
 
-            // Ensures the installation files downloaded through the autoupdate are correctly deleted
-            UpdateManager.DeleteInstallationFiles();
-
             // Start the one-second timer 
             EveMonClient.Run(this);
 

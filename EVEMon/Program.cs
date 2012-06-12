@@ -55,6 +55,9 @@ namespace EVEMon
             // Check arguments
             bool startMinimized = Environment.GetCommandLineArgs().Contains("-startMinimized");
 
+            // Ensures the installation file downloaded through the autoupdate is correctly deleted
+            UpdateManager.DeleteInstallationFiles();
+
             // Upgrades the BattleClinic API settings
             BCAPI.UpgradeSettings();
 
