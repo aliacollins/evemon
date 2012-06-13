@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.PatchXml;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common

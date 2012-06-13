@@ -2,7 +2,7 @@ using System;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.BattleClinic
+namespace EVEMon.Common.Serialization.PatchXml
 {
     public sealed class SerializableDatafile
     {

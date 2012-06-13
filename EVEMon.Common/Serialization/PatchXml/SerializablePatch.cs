@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.BattleClinic
+namespace EVEMon.Common.Serialization.PatchXml
 {
     [XmlRoot("evemon")]
     public sealed class SerializablePatch

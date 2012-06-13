@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
-using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.PatchXml;
 
 namespace EVEMon.PatchXmlCreator
 {

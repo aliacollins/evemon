@@ -365,6 +365,9 @@
     <Compile Include="Serialization\FittingTools\SerializableFittingHardware.cs" />
     <Compile Include="Serialization\FittingTools\SerializableFittings.cs" />
     <Compile Include="Serialization\FittingTools\SerializableFittingShipType.cs" />
+    <Compile Include="Serialization\PatchXml\SerializableDatafile.cs" />
+    <Compile Include="Serialization\PatchXml\SerializablePatch.cs" />
+    <Compile Include="Serialization\PatchXml\SerializableRelease.cs" />
     <Compile Include="Serialization\SerializableEveFlagsListItem.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableEveFlags.cs" />
@@ -464,9 +467,6 @@
     <Compile Include="Serialization\API\SerializableQueuedSkill.cs" />
     <Compile Include="Serialization\API\SerializableResearchListItem.cs" />
     <Compile Include="Serialization\API\ISerializableCharacterIdentity.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableDatafile.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializablePatch.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableRelease.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIMethod.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIUpdate.cs" />

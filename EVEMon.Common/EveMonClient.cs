@@ -12,7 +12,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
-using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.PatchXml;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
