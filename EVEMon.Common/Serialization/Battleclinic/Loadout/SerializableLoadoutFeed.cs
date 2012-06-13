@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.BattleClinic
+namespace EVEMon.Common.Serialization.BattleClinic.Loadout
 {
     [XmlRoot("loadouts")]
     public sealed class SerializableLoadoutFeed

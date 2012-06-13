@@ -11,7 +11,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.BattleClinic.Loadout;
 using SortOrder = System.Windows.Forms.SortOrder;
 
 namespace EVEMon.SkillPlanner

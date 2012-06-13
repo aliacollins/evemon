@@ -326,9 +326,9 @@
     <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableLoadout.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableLoadoutRace.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableLoadoutSlot.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadout.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutRace.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutSlot.cs" />
     <Compile Include="Serialization\Datafiles\SerializableAgent.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprint.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprintMarketGroup.cs" />
@@ -761,7 +761,7 @@
     <Compile Include="Scheduling\ScheduleEntryTitleComparer.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableLoadoutFeed.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutFeed.cs" />
     <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacterSheet.cs" />
     <Compile Include="Serialization\API\SerializableCharacterAttributes.cs" />

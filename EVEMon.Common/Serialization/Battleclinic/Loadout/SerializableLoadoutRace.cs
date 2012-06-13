@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.BattleClinic
+namespace EVEMon.Common.Serialization.BattleClinic.Loadout
 {
     /// <remarks>
     /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
