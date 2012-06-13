@@ -215,18 +215,22 @@ namespace EVEMon.Common
             if (SelectedItem == null)
                 return String.Empty;
 
+            // Post data for character name, type name
             if (SelectedItem.Equals(APIGenericMethods.CharacterName) ||
                 SelectedItem.Equals(APIGenericMethods.TypeName))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly, IDOrNameText);
             }
 
+            // Post data for character id
             if (SelectedItem.Equals(APIGenericMethods.CharacterID))
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataNamesOnly, IDOrNameText);
 
+            // Post data for supplemental API methods
             if (APIMethods.AllSupplementalMethods.Contains(SelectedItem))
                 return SupplementalAPIMethodsPostData();
 
+            // Post data for non account generic API methods
             if (!APIMethods.NonAccountGenericMethods.Contains(SelectedItem))
             {
                 if (UseInternalInfo)
@@ -234,15 +238,18 @@ namespace EVEMon.Common
                     if (SelectedCharacter == null)
                         return String.Empty;
 
+                    // Find associated API key 
                     Character character = (Character)SelectedCharacter;
                     APIKey apiKey = character.Identity.APIKeys.FirstOrDefault(key => key.IsCharacterOrAccountType);
 
+                    // No API key found else generic post data
                     return apiKey == null
                                ? NoAPIKeyWithAccess
                                : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
                                                apiKey.ID, apiKey.VerificationCode);
                 }
 
+                // Generic post data
                 if (UseExternalInfo)
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
                                          KeyID, VCode);
@@ -268,15 +275,19 @@ namespace EVEMon.Common
                 Character character = (Character)SelectedCharacter;
                 APIKey apiKey = null;
 
+                // Find associated API key for corporation contracts
                 if (SelectedItem.ToString().StartsWith("CorporationContract", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts);
 
+                // Find associated API key for character contracts
                 if (SelectedItem.ToString().StartsWith("Contract", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
 
+                // No API key found
                 if (apiKey == null)
                     return NoAPIKeyWithAccess;
 
+                // Post data for contract items
                 if (SelectedItem.Equals(APIGenericMethods.ContractItems) ||
                     SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
                 {
@@ -284,10 +295,12 @@ namespace EVEMon.Common
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
                 }
 
+                // Generic post data
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                      apiKey.ID, apiKey.VerificationCode, character.CharacterID);
             }
 
+            // Post data for contract items
             if (SelectedItem.Equals(APIGenericMethods.ContractItems) ||
                 SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
             {
@@ -295,6 +308,7 @@ namespace EVEMon.Common
                                      KeyID, VCode, CharID, IDOrNameText);
             }
 
+            // Generic post data
             return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                  KeyID, VCode, CharID);
         }
@@ -313,12 +327,15 @@ namespace EVEMon.Common
                 if (SelectedCharacter == null)
                     return String.Empty;
 
+                // Find associated API key
                 Character character = (Character)SelectedCharacter;
                 APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APICharacterMethods)SelectedItem);
 
+                // No API key found
                 if (apiKey == null)
                     return NoAPIKeyWithAccess;
 
+                // Post data for character calendarEventAttendees, locations, mailBodies, notificationTexts
                 if (SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees) ||
                     SelectedItem.Equals(APICharacterMethods.Locations) ||
                     SelectedItem.Equals(APICharacterMethods.MailBodies) ||
@@ -328,10 +345,12 @@ namespace EVEMon.Common
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
                 }
 
+                // Generic post data
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                      apiKey.ID, apiKey.VerificationCode, character.CharacterID);
             }
 
+            // Post data for character info
             if (SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
                 (KeyID.Length == 0 || VCode.Length == 0))
             {
@@ -339,7 +358,9 @@ namespace EVEMon.Common
                                      CharID);
             }
 
-            if (SelectedItem.Equals(APICharacterMethods.Locations) ||
+            // Post data for character calendarEventAttendees, locations, mailBodies, notificationTexts
+            if (SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees) || 
+                SelectedItem.Equals(APICharacterMethods.Locations) ||
                 SelectedItem.Equals(APICharacterMethods.MailBodies) ||
                 SelectedItem.Equals(APICharacterMethods.NotificationTexts))
             {
@@ -347,6 +368,7 @@ namespace EVEMon.Common
                                      KeyID, VCode, CharID, IDOrNameText);
             }
 
+            // Generic post data
             return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                  KeyID, VCode, CharID);
         }
@@ -365,34 +387,47 @@ namespace EVEMon.Common
                 if (SelectedCharacter == null)
                     return String.Empty;
 
+                // Find associated API key
                 Character character = (Character)SelectedCharacter;
                 APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APICorporationMethods)SelectedItem);
 
+                // No API key found
                 if (apiKey == null)
+                {
+                    // Post data for simple corporation sheet
+                    if (SelectedItem.Equals(APICorporationMethods.CorporationSheet))
+                        return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCorporationIDOnly,
+                                             character.CorporationID);
                     return NoAPIKeyWithAccess;
+                }
 
+                // Post data for corporation location
                 if (SelectedItem.Equals(APICorporationMethods.CorporationLocations))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
                 }
 
+                // Post data for extended corporation member tracking
                 if (SelectedItem.Equals(APICorporationMethods.CorporationMemberTrackingExtended))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithExtendedParameter,
                                          apiKey.ID, apiKey.VerificationCode);
                 }
 
+                // Post data for corporation starbase details
                 if (SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithItemID,
                                          apiKey.ID, apiKey.VerificationCode, IDOrNameText);
                 }
 
+                // Generic post data
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
                                      apiKey.ID, apiKey.VerificationCode);
             }
 
+            // Post data for simple corporation sheet
             if (SelectedItem.Equals(APICorporationMethods.CorporationSheet) &&
                 (KeyID.Length == 0 || VCode.Length == 0))
             {
@@ -400,24 +435,28 @@ namespace EVEMon.Common
                                      CharID);
             }
 
+            // Post data for corporation location
             if (SelectedItem.Equals(APICorporationMethods.CorporationLocations))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
                                      KeyID, VCode, CharID, IDOrNameText);
             }
 
+            // Post data for extended corporation member tracking
             if (SelectedItem.Equals(APICorporationMethods.CorporationMemberTrackingExtended))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithExtendedParameter,
                                      KeyID, VCode);
             }
 
+            // Post data for corporation starbase details
             if (SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithItemID,
                                      KeyID, VCode, IDOrNameText);
             }
 
+            // Generic post data
             return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
                                  KeyID, VCode);
         }
