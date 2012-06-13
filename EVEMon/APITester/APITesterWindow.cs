@@ -13,6 +13,7 @@ namespace EVEMon.ApiTester
         private Uri m_url;
         private Uri m_defaultUri;
 
+
         #region Constructor
 
         /// <summary>
@@ -84,14 +85,16 @@ namespace EVEMon.ApiTester
         /// </summary>
         private void UpdateExternalInfoControlsEnabling()
         {
-            KeyIDTextBox.Enabled = VCodeTextBox.Enabled = ExternalInfoRadioButton.Checked && APIMethodComboBox.SelectedItem != null &&
-                                                !APIMethods.NonAccountGenericMethods.Contains(APIMethodComboBox.SelectedItem);
+            KeyIDTextBox.Enabled =
+                VCodeTextBox.Enabled = ExternalInfoRadioButton.Checked && APIMethodComboBox.SelectedItem != null &&
+                                       !APIMethods.NonAccountGenericMethods.Contains(APIMethodComboBox.SelectedItem);
 
-            CharIDLabel.Visible = CharIDTextBox.Visible = ExternalInfoRadioButton.Checked && APIMethodComboBox.SelectedItem != null &&
-                                                   (APIMethodComboBox.SelectedItem is APICharacterMethods ||
-                                                    APIMethods.CharacterSupplementalMethods.Contains(APIMethodComboBox.SelectedItem) ||
-                                                    APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet) ||
-                                                    APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationLocations));
+            CharIDLabel.Visible =
+                CharIDTextBox.Visible = ExternalInfoRadioButton.Checked && APIMethodComboBox.SelectedItem != null &&
+                                        (APIMethodComboBox.SelectedItem is APICharacterMethods ||
+                                         APIMethods.CharacterSupplementalMethods.Contains(APIMethodComboBox.SelectedItem) ||
+                                         APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet) ||
+                                         APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationLocations));
 
             CharIDLabel.Text = APIMethodComboBox.SelectedItem != null &&
                                APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet)
@@ -189,7 +192,34 @@ namespace EVEMon.ApiTester
         #endregion
 
 
-        #region Global and Local Events Handlers
+        #region Global Events Handlers
+
+        /// <summary>
+        /// Handles the APIKeyInfoUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
+        {
+            UpdateCharacterList();
+            UpdateControlsVisibility();
+        }
+
+        /// <summary>
+        /// Handles the CharacterCollectionChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
+        {
+            UpdateCharacterList();
+            UpdateControlsVisibility();
+        }
+
+        #endregion
+
+
+        #region Local Events Handlers
 
         /// <summary>
         /// Handles the Load event of the ApiTesterWindow control.
@@ -230,28 +260,6 @@ namespace EVEMon.ApiTester
         {
             e.Cancel = false;
             base.OnClosing(e);
-        }
-
-        /// <summary>
-        /// Handles the APIKeyInfoUpdated event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
-        {
-            UpdateCharacterList();
-            UpdateControlsVisibility();
-        }
-
-        /// <summary>
-        /// Handles the CharacterCollectionChanged event of the EveMonClient control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
-        {
-            UpdateCharacterList();
-            UpdateControlsVisibility();
         }
 
         /// <summary>
@@ -330,7 +338,7 @@ namespace EVEMon.ApiTester
         {
             // Enable "Save" button on condition
             SaveButton.Enabled = (m_url == e.Url && e.Url != m_defaultUri &&
-                                 WebBrowser.Document != null && WebBrowser.Document.Body != null);
+                                  WebBrowser.Document != null && WebBrowser.Document.Body != null);
         }
 
         /// <summary>
@@ -366,8 +374,8 @@ namespace EVEMon.ApiTester
                 return;
 
             // Special condition in case user requests character info or corporation sheet without API credentials
-            if ((APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo)||
-                APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet)) &&
+            if ((APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo) ||
+                 APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet)) &&
                 textbox.Equals(KeyIDTextBox) && textbox.Text.Length == 0 && VCodeTextBox.Text.Length == 0)
                 return;
 
@@ -378,29 +386,27 @@ namespace EVEMon.ApiTester
                 return;
             }
 
-            if (textbox.TextLength == 1 && textbox.Text == "0")
+            string[] ids = textbox.Text.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            if (ids.Any(id => id == "0"))
             {
                 ErrorProvider.SetError(textbox, "ID must not be zero.");
                 e.Cancel = true;
                 return;
             }
 
-            if (textbox.Text.StartsWith("0", StringComparison.Ordinal))
+            if (ids.Any(id => id.StartsWith("0", StringComparison.Ordinal)))
             {
                 ErrorProvider.SetError(textbox, "ID must not start with zero.");
                 e.Cancel = true;
                 return;
             }
 
-            for (int i = 0; i < textbox.TextLength; i++)
-            {
-                if (Char.IsDigit(textbox.Text[i]))
-                    continue;
+            if (ids.All(id => id.ToCharArray().All(Char.IsDigit)))
+                return;
 
-                ErrorProvider.SetError(textbox, "ID must be numerical.");
-                e.Cancel = true;
-                break;
-            }
+            ErrorProvider.SetError(textbox, "ID must be numerical.");
+            e.Cancel = true;
         }
 
         /// <summary>
@@ -415,8 +421,8 @@ namespace EVEMon.ApiTester
                 return;
 
             // Special condition in case user requests character info without API credentials
-            if ((APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo)||
-                APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet)) &&
+            if ((APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo) ||
+                 APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet)) &&
                 KeyIDTextBox.Text.Length == 0 && VCodeTextBox.Text.Length == 0)
                 return;
 
