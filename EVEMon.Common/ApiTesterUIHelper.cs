@@ -479,12 +479,8 @@ namespace EVEMon.Common
 
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
-                string path = webBrowser.Url.AbsolutePath;
-
                 sfd.Filter = "XML (*.xml)|*.xml";
-                sfd.FileName = path.Substring(path.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1,
-                                              path.LastIndexOf(".", StringComparison.OrdinalIgnoreCase) -
-                                              path.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) - 1);
+                sfd.FileName = Path.GetFileNameWithoutExtension(webBrowser.Url.AbsoluteUri);
 
                 if (sfd.ShowDialog() != DialogResult.OK)
                     return;
