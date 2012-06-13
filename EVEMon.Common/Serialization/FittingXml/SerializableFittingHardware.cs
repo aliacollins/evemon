@@ -2,7 +2,7 @@ using System;
 using System.Xml.Serialization;
 using EVEMon.Common.Data;
 
-namespace EVEMon.Common.Serialization.FittingTools
+namespace EVEMon.Common.Serialization.FittingXml
 {
     public sealed class SerializableFittingHardware
     {

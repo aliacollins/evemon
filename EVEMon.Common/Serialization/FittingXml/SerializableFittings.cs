@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.FittingTools
+namespace EVEMon.Common.Serialization.FittingXml
 {
     [XmlRoot("fittings")]
     public sealed class SerializableFittings

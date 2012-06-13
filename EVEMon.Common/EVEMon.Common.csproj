@@ -360,11 +360,11 @@
     <Compile Include="Serialization\Exportation\OutputCertificate.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFitting.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFittingDescription.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFittingHardware.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFittings.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFittingShipType.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFitting.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFittingDescription.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFittingHardware.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFittings.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFittingShipType.cs" />
     <Compile Include="Serialization\PatchXml\SerializableDatafile.cs" />
     <Compile Include="Serialization\PatchXml\SerializablePatch.cs" />
     <Compile Include="Serialization\PatchXml\SerializableRelease.cs" />

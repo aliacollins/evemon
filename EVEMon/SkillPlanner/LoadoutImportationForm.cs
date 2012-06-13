@@ -10,7 +10,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.FittingTools;
+using EVEMon.Common.Serialization.FittingXml;
 
 namespace EVEMon.SkillPlanner
 {

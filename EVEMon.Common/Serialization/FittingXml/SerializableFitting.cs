@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.FittingTools
+namespace EVEMon.Common.Serialization.FittingXml
 {
     public sealed class SerializableFitting
     {
