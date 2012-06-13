@@ -308,11 +308,8 @@
     <Compile Include="Serialization\API\SerializableAPIKeyItem.cs" />
     <Compile Include="Serialization\API\SerializableContractListItem.cs" />
     <Compile Include="Serialization\API\SerializableEmploymentHistory.cs" />
-    <Compile Include="Serialization\API\SerializableAgentStanding.cs" />
     <Compile Include="Serialization\API\SerializableAPIStandings.cs" />
     <Compile Include="Serialization\API\SerializableEmploymentHistoryListItem.cs" />
-    <Compile Include="Serialization\API\SerializableFactionStanding.cs" />
-    <Compile Include="Serialization\API\SerializableNPCCorporationStanding.cs" />
     <Compile Include="Serialization\API\SerializableStandings.cs" />
     <Compile Include="Serialization\API\SerializableStandingsListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacterInfo.cs" />

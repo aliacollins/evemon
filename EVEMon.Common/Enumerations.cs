@@ -1584,5 +1584,18 @@ namespace EVEMon.Common
         ValklearGeneral = 9,
     }
 
+    /// <summary>
+    /// Enumeration of standing group.
+    /// </summary>
+    public enum StandingGroup
+    {
+        [Description("Agents")]
+        Agents,
+        [Description("NPC Corporations")]
+        NPCCorporations,
+        [Description("Factions")]
+        Factions
+    }
+
     #endregion
 }

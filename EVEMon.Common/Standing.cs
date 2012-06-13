@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common
 {
@@ -33,7 +32,7 @@ namespace EVEMon.Common
             EntityID = src.ID;
             EntityName = src.Name;
             StandingValue = src.StandingValue;
-            Group = src.GroupType;
+            Group = src.Group;
         }
 
         #endregion
@@ -63,7 +62,7 @@ namespace EVEMon.Common
         /// Gets or sets the group.
         /// </summary>
         /// <value>The group.</value>
-        public string Group { get; private set; }
+        public StandingGroup Group { get; private set; }
 
         /// <summary>
         /// Gets or sets the entity image.
@@ -150,11 +149,11 @@ namespace EVEMon.Common
         {
             switch (Group)
             {
-                case "Agents":
+                case StandingGroup.Agents:
                     return Properties.Resources.DefaultCharacterImage32;
-                case "NPC Corporations":
+                case StandingGroup.NPCCorporations:
                     return Properties.Resources.DefaultCorporationImage32;
-                case "Factions":
+                case StandingGroup.Factions:
                     return Properties.Resources.DefaultAllianceImage32;
             }
             return new Bitmap(32, 32);
@@ -166,35 +165,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         private Uri GetImageUrl()
         {
-            if (Group == "Agents")
+            if (Group == StandingGroup.Agents)
                 return new Uri(String.Format(CultureConstants.InvariantCulture,
                                              NetworkConstants.CCPPortraits, EntityID, (int)EveImageSize.x32));
 
             return new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                                 (Group == "Factions" ? "alliance" : "corporation"),
+                                 (Group == StandingGroup.Factions ? "alliance" : "corporation"),
                                  EntityID, (int)EveImageSize.x32));
-        }
-
-        #endregion
-
-
-        #region Export Method
-
-        /// <summary>
-        /// Exports the given object to a serialization object.
-        /// </summary>
-        internal SerializableStanding Export()
-        {
-            SerializableStanding serial = new SerializableStanding
-                                              {
-                                                  EntityID = EntityID,
-                                                  EntityName = EntityName,
-                                                  StandingValue = StandingValue,
-                                                  Group = Group
-                                              };
-
-
-            return serial;
         }
 
         #endregion

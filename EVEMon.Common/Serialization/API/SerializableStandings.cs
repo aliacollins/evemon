@@ -6,36 +6,57 @@ namespace EVEMon.Common.Serialization.API
 {
     public sealed class SerializableStandings
     {
-        private readonly Collection<SerializableAgentStanding> m_agentStandings;
-        private readonly Collection<SerializableNPCCorporationStanding> m_npcCorporationStandings;
-        private readonly Collection<SerializableFactionStanding> m_factionStandings;
+        private readonly Collection<SerializableStandingsListItem> m_agentStandings;
+        private readonly Collection<SerializableStandingsListItem> m_npcCorporationStandings;
+        private readonly Collection<SerializableStandingsListItem> m_factionStandings;
 
         public SerializableStandings()
         {
-            m_agentStandings = new Collection<SerializableAgentStanding>();
-            m_npcCorporationStandings = new Collection<SerializableNPCCorporationStanding>();
-            m_factionStandings = new Collection<SerializableFactionStanding>();
+            m_agentStandings = new Collection<SerializableStandingsListItem>();
+            m_npcCorporationStandings = new Collection<SerializableStandingsListItem>();
+            m_factionStandings = new Collection<SerializableStandingsListItem>();
         }
 
         [XmlArray("agents")]
         [XmlArrayItem("agent")]
-        public Collection<SerializableAgentStanding> AgentStandings
+        public Collection<SerializableStandingsListItem> AgentStandings
         {
-            get { return m_agentStandings; }
+            get
+            {
+                foreach (SerializableStandingsListItem agentStanding in m_agentStandings)
+                {
+                    agentStanding.Group = StandingGroup.Agents;
+                }
+                return m_agentStandings;
+            }
         }
 
         [XmlArray("NPCCorporations")]
         [XmlArrayItem("NPCCorporation")]
-        public Collection<SerializableNPCCorporationStanding> NPCCorporationStandings
+        public Collection<SerializableStandingsListItem> NPCCorporationStandings
         {
-            get { return m_npcCorporationStandings; }
+            get
+            {
+                foreach (SerializableStandingsListItem npcCorporationStanding in m_npcCorporationStandings)
+                {
+                    npcCorporationStanding.Group = StandingGroup.NPCCorporations;
+                }
+                return m_npcCorporationStandings;
+            }
         }
 
         [XmlArray("factions")]
         [XmlArrayItem("faction")]
-        public Collection<SerializableFactionStanding> FactionStandings
+        public Collection<SerializableStandingsListItem> FactionStandings
         {
-            get { return m_factionStandings; }
+            get
+            {
+                foreach (SerializableStandingsListItem factionStanding in m_factionStandings)
+                {
+                    factionStanding.Group = StandingGroup.Factions;
+                }
+                return m_factionStandings;
+            }
         }
 
         [XmlIgnore]
