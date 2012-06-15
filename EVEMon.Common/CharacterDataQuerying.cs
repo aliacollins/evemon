@@ -25,6 +25,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIContactList> m_charContactsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMedals> m_charMedalsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents> m_charUpcomingCalendarEventsMonitor;
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
         private readonly CCPCharacter m_ccpCharacter;
@@ -114,13 +115,20 @@ namespace EVEMon.Common
 
             m_charContactsMonitor =
                 new CharacterQueryMonitor<SerializableAPIContactList>(ccpCharacter, APICharacterMethods.ContactList,
-                                                                   OnContactsUpdated) { QueryOnStartup = true };
+                                                                      OnContactsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charContactsMonitor);
 
             m_charMedalsMonitor =
                 new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, APICharacterMethods.Medals,
-                                                                   OnMedalsUpdated) { QueryOnStartup = true };
+                                                                 OnMedalsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charMedalsMonitor);
+
+            m_charUpcomingCalendarEventsMonitor =
+                new CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents>(ccpCharacter,
+                                                                                 APICharacterMethods.UpcomingCalendarEvents,
+                                                                                 OnUpcomingCalendarEventsUpdated)
+                    { QueryOnStartup = true };
+            m_characterQueryMonitors.Add(m_charUpcomingCalendarEventsMonitor);
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
                 monitor => new { monitor, method = (APICharacterMethods)monitor.Method }).Where(
@@ -756,7 +764,7 @@ namespace EVEMon.Common
             // Fires the event regarding contacts update
             EveMonClient.OnCharacterContactsUpdated(m_ccpCharacter);
         }
-        
+
         /// <summary>
         /// Processes the queried character's medals.
         /// </summary>
@@ -780,6 +788,31 @@ namespace EVEMon.Common
 
             // Fires the event regarding medals update
             EveMonClient.OnCharacterMedalsUpdated(m_ccpCharacter);
+        }
+
+        /// <summary>
+        /// Processes the queried character's upcoming calendar events.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnUpcomingCalendarEventsUpdated(APIResult<SerializableAPIUpcomingCalendarEvents> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
+                return;
+
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.UpcomingCalendarEvents))
+                EveMonClient.Notifications.NotifyCharacterUpcomindCalendarEventsError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_ccpCharacter.UpcomingCalendarEvents.Import(result.Result.UpcomingEvents);
+
+            // Fires the event regarding upcoming calendar events update
+            EveMonClient.OnCharacterUpcomingCalendarEventsUpdated(m_ccpCharacter);
         }
 
         #endregion

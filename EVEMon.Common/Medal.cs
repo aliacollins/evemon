@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -9,6 +6,9 @@ namespace EVEMon.Common
     public sealed class Medal
     {
         private readonly long m_medalID;
+
+
+        #region Constructor
 
         /// <summary>
         /// Constructor from the API.
@@ -27,26 +27,51 @@ namespace EVEMon.Common
             Group = src.Group;
         }
 
+        #endregion
+
 
         #region Public Properties
 
+        /// <summary>
+        /// Gets the reason.
+        /// </summary>
         public string Reason { get; private set; }
 
+        /// <summary>
+        /// Gets the status.
+        /// </summary>
         public string Status { get; private set; }
 
+        /// <summary>
+        /// Gets the issuer ID.
+        /// </summary>
         public long IssuerID { get; private set; }
 
+        /// <summary>
+        /// Gets the corporation ID.
+        /// </summary>
         public long CorporationID { get; private set; }
 
+        /// <summary>
+        /// Gets the description.
+        /// </summary>
         public string Description { get; private set; }
 
-        public string Title { get; set; }
+        /// <summary>
+        /// Gets the title.
+        /// </summary>
+        public string Title { get; private set; }
 
+        /// <summary>
+        /// Gets the issued.
+        /// </summary>
         public DateTime Issued { get; private set; }
 
-        public MedalGroup Group { get; set; }
+        /// <summary>
+        /// Gets the group.
+        /// </summary>
+        public MedalGroup Group { get; private set; }
 
         #endregion
-
     }
 }

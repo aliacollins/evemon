@@ -695,11 +695,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occured while querying the EVE notification text.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occured while querying the EVE notification text.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -712,11 +712,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occured while querying the personal contacts list.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occured while querying the personal contacts list.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -729,8 +729,44 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occured while querying the personal medals.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies an upcoming calendar events query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterUpcomindCalendarEventsError(CCPCharacter character,
+                                                                 APIResult<SerializableAPIUpcomingCalendarEvents> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
                 {
-                    Description = "An error occured while querying the personal medals.",
+                    Description = "An error occured while querying the personal upcoming calendar events.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a calendar event attendees query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterCalendarEventAttendeesError(CCPCharacter character,
+                                                                 APIResult<SerializableAPICalendarEventAttendees> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occured while querying the personal calendar event attendees.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };

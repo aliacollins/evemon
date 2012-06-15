@@ -4,6 +4,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of medals. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIMedals
     {
         private readonly Collection<SerializableMedalsListItem> m_corporationMedals;

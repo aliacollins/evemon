@@ -247,6 +247,7 @@
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
+    <Compile Include="EventAttendee.cs" />
     <Compile Include="EveRefType.cs" />
     <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
@@ -292,6 +293,7 @@
     </Compile>
     <Compile Include="Serialization\API\SerializableAllianceListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIAllianceList.cs" />
+    <Compile Include="Serialization\API\SerializableAPICalendarEventAttendees.cs" />
     <Compile Include="Serialization\API\SerializableAPIContactList.cs" />
     <Compile Include="Serialization\API\SerializableAPICorporationSheet.cs" />
     <Compile Include="Serialization\API\SerializableAPIEveFactionalWarfareStats.cs" />
@@ -301,7 +303,9 @@
     <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
     <Compile Include="Serialization\API\SerializableAPIMedals.cs" />
     <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
+    <Compile Include="Serialization\API\SerializableAPIUpcomingCalendarEvents.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
+    <Compile Include="Serialization\API\SerializableCalendarEventAttendeeListItem.cs" />
     <Compile Include="Serialization\API\SerializableContactListItem.cs" />
     <Compile Include="Serialization\API\SerializableDivision.cs" />
     <Compile Include="Serialization\API\SerializableEveFactionalWarfareStatsListItem.cs" />
@@ -310,6 +314,7 @@
     <Compile Include="Serialization\API\SerializableMedalsListItem.cs" />
     <Compile Include="Serialization\API\SerializableMemberCorporation.cs" />
     <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />
+    <Compile Include="Serialization\API\SerializableUpcomingCalendarEventsListItem.cs" />
     <Compile Include="Serialization\API\SerializableWalletDivision.cs" />
     <Compile Include="Serialization\API\SerializableWalletJournalListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletTransactions.cs" />
@@ -418,6 +423,8 @@
     <Compile Include="APIKey.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="UIHelper.cs" />
+    <Compile Include="UpcomingCalendarEvent.cs" />
+    <Compile Include="UpcomingCalendarEventCollection.cs" />
     <Compile Include="WalletJournal.cs" />
     <Compile Include="WalletJournalCollection.cs" />
     <Compile Include="WalletJournalComparer.cs" />

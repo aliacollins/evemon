@@ -698,6 +698,16 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterMedalsUpdated;
 
         /// <summary>
+        /// Occurs when the text of a character upcoming calendar events have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterUpcomingCalendarEventsUpdated;
+        
+        /// <summary>
+        /// Occurs when the text of a character calendar event attendees have been downloaded.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterCalendarEventAttendeesDownloaded;
+
+        /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
         public static event EventHandler<PlanChangedEventArgs> PlanNameChanged;
@@ -1244,6 +1254,28 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterMedalsUpdated - {0}", character.Name);
             if (CharacterMedalsUpdated != null)
                 CharacterMedalsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character upcoming calendar events updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterUpcomingCalendarEventsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterUpcomingCalendarEventsUpdated - {0}", character.Name);
+            if (CharacterUpcomingCalendarEventsUpdated != null)
+                CharacterUpcomingCalendarEventsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character calendar event attendees downloaded.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterCalendarEventAttendeesDownloaded(Character character)
+        {
+            Trace("EveMonClient.OnCharacterCalendarEventAttendeesDownloaded - {0}", character.Name);
+            if (CharacterCalendarEventAttendeesDownloaded != null)
+                CharacterCalendarEventAttendeesDownloaded(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
