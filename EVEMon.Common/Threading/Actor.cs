@@ -134,7 +134,6 @@ namespace EVEMon.Common.Threading
         /// Invoke the provided delegate on the bound thread and wait for completion.
         /// </summary>
         /// <param name="action">The action to invoke</param>
-        /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
         public void Invoke(Action action)
         {
             Invoke(action, true);
@@ -145,7 +144,6 @@ namespace EVEMon.Common.Threading
         /// Note that, when the calling thread and the bound thread are the same, we execute the action immediately without waiting.
         /// </summary>
         /// <param name="action">The action to invoke</param>
-        /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
         public void BeginInvoke(Action action)
         {
             Invoke(action);
@@ -156,7 +154,6 @@ namespace EVEMon.Common.Threading
         /// </summary>
         /// <param name="action"></param>
         /// <param name="waitForCompletion">When true, will wait for the completion</param>
-        /// <returns>True when succesful, false otherwise (the thread has been shutdown).</returns>
         private void Invoke(Action action, bool waitForCompletion)
         {
             // Already on the bound thread, execute immediately

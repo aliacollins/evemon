@@ -34,7 +34,7 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Wait for the action completion by the owner of the messages pump
+        /// Wait for the action completion by the owner of the messages pump.
         /// </summary>
         public void Wait()
         {
@@ -43,7 +43,7 @@ namespace EVEMon.Common.Threading
         }
 
         /// <summary>
-        /// Cancels the operation, just signals the waiting thread when any
+        /// Cancels the operation, just signals the waiting thread when any.
         /// </summary>
         public void Cancel()
         {
