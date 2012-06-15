@@ -4,15 +4,31 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-    public sealed class SerializableAPICharacterMedals
+    public sealed class SerializableAPIMedals
     {
+        private readonly Collection<SerializableMedalsListItem> m_corporationMedals;
         private readonly Collection<SerializableMedalsListItem> m_currentCorpMedals;
         private readonly Collection<SerializableMedalsListItem> m_otherCorpsMedals;
 
-        public SerializableAPICharacterMedals()
+        public SerializableAPIMedals()
         {
+            m_corporationMedals = new Collection<SerializableMedalsListItem>();
             m_currentCorpMedals = new Collection<SerializableMedalsListItem>();
             m_otherCorpsMedals = new Collection<SerializableMedalsListItem>();
+        }
+
+        [XmlArray("medals")]
+        [XmlArrayItem("medal")]
+        public Collection<SerializableMedalsListItem> CorporationMedals
+        {
+            get
+            {
+                foreach (SerializableMedalsListItem medal in m_corporationMedals)
+                {
+                    medal.Group = MedalGroup.CurrentCorporation;
+                }
+                return m_corporationMedals;
+            }
         }
 
         [XmlArray("currentCorporation")]
@@ -44,7 +60,7 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlIgnore]
-        public IEnumerable<SerializableMedalsListItem> AllMedals
+        public IEnumerable<SerializableMedalsListItem> CharacterAllMedals
         {
             get
             {

@@ -725,7 +725,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterMedalsError(CCPCharacter character, APIResult<SerializableAPICharacterMedals> result)
+        internal void NotifyCharacterMedalsError(CCPCharacter character, APIResult<SerializableAPIMedals> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)

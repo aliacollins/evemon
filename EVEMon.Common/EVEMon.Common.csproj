@@ -299,7 +299,7 @@
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
     <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
-    <Compile Include="Serialization\API\SerializableAPICharacterMedals.cs" />
+    <Compile Include="Serialization\API\SerializableAPIMedals.cs" />
     <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
     <Compile Include="Serialization\API\SerializableContactListItem.cs" />

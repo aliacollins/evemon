@@ -24,7 +24,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIContactList> m_charContactsMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPICharacterMedals> m_charMedalsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIMedals> m_charMedalsMonitor;
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
         private readonly CCPCharacter m_ccpCharacter;
@@ -118,7 +118,7 @@ namespace EVEMon.Common
             m_characterQueryMonitors.Add(m_charContactsMonitor);
 
             m_charMedalsMonitor =
-                new CharacterQueryMonitor<SerializableAPICharacterMedals>(ccpCharacter, APICharacterMethods.Medals,
+                new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, APICharacterMethods.Medals,
                                                                    OnMedalsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charMedalsMonitor);
 
@@ -761,7 +761,7 @@ namespace EVEMon.Common
         /// Processes the queried character's medals.
         /// </summary>
         /// <param name="result"></param>
-        private void OnMedalsUpdated(APIResult<SerializableAPICharacterMedals> result)
+        private void OnMedalsUpdated(APIResult<SerializableAPIMedals> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -776,7 +776,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_ccpCharacter.Medals.Import(result.Result.AllMedals);
+            m_ccpCharacter.Medals.Import(result.Result.CharacterAllMedals);
 
             // Fires the event regarding medals update
             EveMonClient.OnCharacterMedalsUpdated(m_ccpCharacter);
