@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace EVEMon.Common
 {
@@ -469,28 +470,23 @@ namespace EVEMon.Common
         /// <summary>
         /// Saves the document to the disk.
         /// </summary>
-        public static void SaveDocument(WebBrowser webBrowser)
+        public static void SaveDocument(string filename, IXPathNavigable xmlDocument)
         {
-            if (webBrowser == null)
-                throw new ArgumentNullException("webBrowser");
-
-            if (webBrowser.Document == null || webBrowser.Document.Body == null)
-                return;
+            if (xmlDocument == null)
+                throw new ArgumentNullException("xmlDocument");
 
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
+                sfd.DefaultExt = "xml";
                 sfd.Filter = "XML (*.xml)|*.xml";
-                sfd.FileName = Path.GetFileNameWithoutExtension(webBrowser.Url.AbsoluteUri);
+                sfd.FileName = filename;
 
                 if (sfd.ShowDialog() != DialogResult.OK)
                     return;
 
                 try
                 {
-                    XmlDocument xdoc = new XmlDocument();
-                    string innerText = webBrowser.Document.Body.InnerText.Trim().Replace("\n-", "\n");
-                    xdoc.LoadXml(innerText);
-                    string content = Util.GetXmlStringRepresentation(xdoc);
+                    string content = Util.GetXmlStringRepresentation(xmlDocument);
 
                     // Moves to the final file
                     FileHelper.OverwriteOrWarnTheUser(

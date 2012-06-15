@@ -1,10 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml.XPath;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Net;
 
 namespace EVEMon.ApiTester
 {
@@ -12,6 +15,7 @@ namespace EVEMon.ApiTester
     {
         private Uri m_url;
         private Uri m_defaultUri;
+        private IXPathNavigable m_result;
 
 
         #region Constructor
@@ -26,11 +30,6 @@ namespace EVEMon.ApiTester
             Size = new Size(800, 600);
             StartPosition = FormStartPosition.CenterScreen;
         }
-
-        #endregion
-
-
-        #region Properties
 
         #endregion
 
@@ -186,6 +185,16 @@ namespace EVEMon.ApiTester
                                 : String.Empty;
 
             m_url = url;
+
+            // Get the raw xml document to use when saving
+            if (m_url != m_defaultUri)
+            {
+                Uri nUrl = EveMonClient.APIProviders.CurrentProvider.GetMethodUrl((Enum)ApiTesterUIHelper.SelectedItem);
+                string postData = m_url.Query.Replace("?", String.Empty);
+                m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, postData);
+            }
+
+            // Show the xml document using the webbrowser control
             WebBrowser.Navigate(url);
         }
 
@@ -359,7 +368,8 @@ namespace EVEMon.ApiTester
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            ApiTesterUIHelper.SaveDocument(WebBrowser);
+            string filename = Path.GetFileNameWithoutExtension(WebBrowser.Url.AbsoluteUri);
+            ApiTesterUIHelper.SaveDocument(filename, m_result);
         }
 
         /// <summary>
