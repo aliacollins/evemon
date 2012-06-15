@@ -30,7 +30,6 @@ namespace EVEMon.Common.Serialization.API
                 {
                     contact.Group = ContactGroup.Contact;
                 }
-
                 return m_contacts;
             }
         }

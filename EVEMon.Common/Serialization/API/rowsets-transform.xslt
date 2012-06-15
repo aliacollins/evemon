@@ -32,7 +32,7 @@
       <!-- (employmentHistory, row) are transformed into (employmentHistory, record) -->
       <xsl:when test="@name='employmentHistory'">
         <xsl:call-template name="rowsets">
-          <xsl:with-param name="setName" select="'employmentHistory'" />
+          <xsl:with-param name="setName" select="@name" />
           <xsl:with-param name="rowName" select="'record'" />
         </xsl:call-template>
       </xsl:when>
@@ -76,6 +76,20 @@
         <xsl:call-template name="rowsets">
           <xsl:with-param name="setName" select="'allianceContacts'" />
           <xsl:with-param name="rowName" select="'allianceContact'" />
+        </xsl:call-template>
+      </xsl:when>
+      <!-- (currentCorporation, row) are transformed into (currentCorporation, medal) -->
+      <xsl:when test="@name='currentCorporation'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="@name" />
+          <xsl:with-param name="rowName" select="'medal'" />
+        </xsl:call-template>
+      </xsl:when>
+      <!-- (otherCorporations, row) are transformed into (otherCorporations, medal) -->
+      <xsl:when test="@name='otherCorporations'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="@name" />
+          <xsl:with-param name="rowName" select="'medal'" />
         </xsl:call-template>
       </xsl:when>
       <!-- By default behaviour, the rowset is a plural so we just remove the last character to get the row name-->

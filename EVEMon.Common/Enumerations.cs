@@ -1084,6 +1084,15 @@ namespace EVEMon.Common
         Alliance,
     }
 
+    /// <summary>
+    /// Enumeration of medal group.
+    /// </summary>
+    public enum MedalGroup
+    {
+        CurrentCorporation,
+        OtherCorporation,
+    }
+
     #endregion
 
 

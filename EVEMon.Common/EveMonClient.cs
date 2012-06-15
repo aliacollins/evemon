@@ -693,6 +693,11 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterContactsUpdated;
 
         /// <summary>
+        /// Occurs when the text of a character medals have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterMedalsUpdated;
+
+        /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
         public static event EventHandler<PlanChangedEventArgs> PlanNameChanged;
@@ -1228,6 +1233,17 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterContactsUpdated - {0}", character.Name);
             if (CharacterContactsUpdated != null)
                 CharacterContactsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character medals updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterMedalsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterMedalsUpdated - {0}", character.Name);
+            if (CharacterMedalsUpdated != null)
+                CharacterMedalsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

@@ -704,7 +704,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Notifies a notification texts query error.
+        /// Notifies a contact list query error.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
@@ -714,6 +714,23 @@ namespace EVEMon.Common
                 new APIErrorNotificationEventArgs(character, result)
                 {
                     Description = "An error occured while querying the personal contacts list.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a medals query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterMedalsError(CCPCharacter character, APIResult<SerializableAPICharacterMedals> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occured while querying the personal medals.",
                     Behaviour = NotificationBehaviour.Overwrite,
                     Priority = NotificationPriority.Error
                 };

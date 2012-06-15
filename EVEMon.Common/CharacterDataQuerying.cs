@@ -24,6 +24,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIContactList> m_charContactsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPICharacterMedals> m_charMedalsMonitor;
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
         private readonly CCPCharacter m_ccpCharacter;
@@ -115,6 +116,11 @@ namespace EVEMon.Common
                 new CharacterQueryMonitor<SerializableAPIContactList>(ccpCharacter, APICharacterMethods.ContactList,
                                                                    OnContactsUpdated) { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charContactsMonitor);
+
+            m_charMedalsMonitor =
+                new CharacterQueryMonitor<SerializableAPICharacterMedals>(ccpCharacter, APICharacterMethods.Medals,
+                                                                   OnMedalsUpdated) { QueryOnStartup = true };
+            m_characterQueryMonitors.Add(m_charMedalsMonitor);
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
                 monitor => new { monitor, method = (APICharacterMethods)monitor.Method }).Where(
@@ -747,8 +753,33 @@ namespace EVEMon.Common
             // Import the data
             m_ccpCharacter.Contacts.Import(result.Result.AllContacts);
 
-            // Fires the event regarding standings update
+            // Fires the event regarding contacts update
             EveMonClient.OnCharacterContactsUpdated(m_ccpCharacter);
+        }
+        
+        /// <summary>
+        /// Processes the queried character's medals.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnMedalsUpdated(APIResult<SerializableAPICharacterMedals> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
+                return;
+
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Medals))
+                EveMonClient.Notifications.NotifyCharacterMedalsError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_ccpCharacter.Medals.Import(result.Result.AllMedals);
+
+            // Fires the event regarding medals update
+            EveMonClient.OnCharacterMedalsUpdated(m_ccpCharacter);
         }
 
         #endregion
