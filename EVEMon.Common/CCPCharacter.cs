@@ -58,6 +58,7 @@ namespace EVEMon.Common
             EVEMailMessages = new EveMailMessageCollection(this);
             EVEMailingLists = new EveMailingListCollection(this);
             EVENotifications = new EveNotificationCollection(this);
+            Contacts = new ContactCollection(this);
 
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
@@ -248,6 +249,11 @@ namespace EVEMon.Common
         /// Gets the collection of EVE notifications.
         /// </summary>
         public EveNotificationCollection EVENotifications { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of contacts.
+        /// </summary>
+        public ContactCollection Contacts { get; private set; }
 
         /// <summary>
         /// Gets the query monitors enumeration.

@@ -48,14 +48,6 @@ namespace EVEMon.Common
 
         #endregion
 
-        /// <summary>
-        /// Called when the object gets disposed.
-        /// </summary>
-        public void Dispose()
-        {
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-        }
-
 
         #region Properties
 
@@ -189,6 +181,14 @@ namespace EVEMon.Common
 
         #endregion
 
+
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        public void Dispose()
+        {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+        }
 
         /// <summary>
         /// Manually updates this monitor with the provided data, like if it has just been updated from CCP.

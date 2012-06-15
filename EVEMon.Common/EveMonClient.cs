@@ -688,6 +688,11 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationTextDownloaded;
 
         /// <summary>
+        /// Occurs when the text of a character contacts have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterContactsUpdated;
+
+        /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
         public static event EventHandler<PlanChangedEventArgs> PlanNameChanged;
@@ -1212,6 +1217,17 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterEVENotificationTextDownloaded - {0}", character.Name);
             if (CharacterEVENotificationTextDownloaded != null)
                 CharacterEVENotificationTextDownloaded(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character contacts updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterContactsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterContactsUpdated - {0}", character.Name);
+            if (CharacterContactsUpdated != null)
+                CharacterContactsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

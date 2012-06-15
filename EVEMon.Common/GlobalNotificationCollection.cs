@@ -138,11 +138,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = "An error occurred while querying the EVE factional warfare statistics.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occurred while querying the EVE factional warfare statistics.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -154,11 +154,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = "An error occurred while querying the ID to Name conversion.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occurred while querying the ID to Name conversion.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -170,11 +170,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                {
-                    Description = "An error occurred while querying the RefTypes list.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occurred while querying the RefTypes list.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -368,12 +368,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCharacterStandingsError(CCPCharacter character, APIResult<SerializableAPIStandings> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-            {
-                Description = "An error occurred while querying the personal standings.",
-                Behaviour = NotificationBehaviour.Overwrite,
-                Priority = NotificationPriority.Error
-            };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the personal standings.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -382,14 +383,16 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterFactionalWarfareStatsError(CCPCharacter character, APIResult<SerializableAPIFactionalWarfareStats> result)
+        internal void NotifyCharacterFactionalWarfareStatsError(CCPCharacter character,
+                                                                APIResult<SerializableAPIFactionalWarfareStats> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-            {
-                Description = "An error occurred while querying the personal factional warfare stats.",
-                Behaviour = NotificationBehaviour.Overwrite,
-                Priority = NotificationPriority.Error
-            };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the personal factional warfare stats.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -400,12 +403,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCharacterAssetsError(CCPCharacter character, APIResult<SerializableAPIAssetList> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-            {
-                Description = "An error occurred while querying the personal assets list.",
-                Behaviour = NotificationBehaviour.Overwrite,
-                Priority = NotificationPriority.Error
-            };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the personal assets list.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -469,11 +473,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occurred while querying the corporation contracts.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occurred while querying the corporation contracts.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -520,11 +524,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occurred while querying the corporation contract bids.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occurred while querying the corporation contract bids.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -535,12 +539,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyCharacterWalletJournalError(CCPCharacter character, APIResult<SerializableAPIWalletJournal> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-            {
-                Description = "An error occurred while querying the personal wallet journal.",
-                Behaviour = NotificationBehaviour.Overwrite,
-                Priority = NotificationPriority.Error
-            };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the personal wallet journal.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -549,14 +554,16 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterWalletTransactionsError(CCPCharacter character, APIResult<SerializableAPIWalletTransactions> result)
+        internal void NotifyCharacterWalletTransactionsError(CCPCharacter character,
+                                                             APIResult<SerializableAPIWalletTransactions> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-            {
-                Description = "An error occurred while querying the personal wallet transactions.",
-                Behaviour = NotificationBehaviour.Overwrite,
-                Priority = NotificationPriority.Error
-            };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occurred while querying the personal wallet transactions.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -652,13 +659,13 @@ namespace EVEMon.Common
         /// <param name="result">The result.</param>
         internal void NotifyMailingListsError(CCPCharacter character, APIResult<SerializableAPIMailingLists> result)
         {
-            APIErrorNotificationEventArgs notification = new APIErrorNotificationEventArgs(character, result)
-                                                             {
-                                                                 Description =
-                                                                     "An error occured while querying the mailing lists.",
-                                                                 Behaviour = NotificationBehaviour.Overwrite,
-                                                                 Priority = NotificationPriority.Error
-                                                             };
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occured while querying the mailing lists.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -688,11 +695,28 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the EVE notification text.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the EVE notification text.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a notification texts query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterContactsError(CCPCharacter character, APIResult<SerializableAPIContactList> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occured while querying the personal contacts list.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -1082,10 +1106,10 @@ namespace EVEMon.Common
         {
             ContractsNotificationEventArgs notification =
                 new ContractsNotificationEventArgs(corporation, endedContracts)
-                {
-                    Behaviour = NotificationBehaviour.Merge,
-                    Priority = NotificationPriority.Information
-                };
+                    {
+                        Behaviour = NotificationBehaviour.Merge,
+                        Priority = NotificationPriority.Information
+                    };
             Notify(notification);
         }
 

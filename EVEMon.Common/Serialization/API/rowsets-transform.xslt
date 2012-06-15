@@ -11,13 +11,6 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Transform APIKeyInfo 'characterName' to 'name'-->
-  <xsl:template name="trans-characterName">
-    <xsl:attribute name="name">
-      <xsl:value-of select="." />
-    </xsl:attribute>
-  </xsl:template>
-
   <!-- Rowsets are transformed into something else-->
   <xsl:template match="rowset">
     <!-- Select the set and row names. -->
@@ -64,6 +57,27 @@
           <xsl:with-param name="rowName" select="'bid'" />
         </xsl:call-template>
       </xsl:when>
+      <!-- (contactList, row) are transformed into (contacts, contact) -->
+      <xsl:when test="@name='contactList'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="'contacts'" />
+          <xsl:with-param name="rowName" select="'contact'" />
+        </xsl:call-template>
+      </xsl:when>
+      <!-- (corporateContactList, row) are transformed into (corporateContacts, corporateContact) -->
+      <xsl:when test="@name='corporateContactList'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="'corporateContacts'" />
+          <xsl:with-param name="rowName" select="'corporateContact'" />
+        </xsl:call-template>
+      </xsl:when>
+      <!-- (allianceContactList, row) are transformed into (allianceContacts, allianceContact) -->
+      <xsl:when test="@name='allianceContactList'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="'allianceContacts'" />
+          <xsl:with-param name="rowName" select="'allianceContact'" />
+        </xsl:call-template>
+      </xsl:when>
       <!-- By default behaviour, the rowset is a plural so we just remove the last character to get the row name-->
       <xsl:otherwise>
         <xsl:call-template name="rowsets">
@@ -84,15 +98,15 @@
           <xsl:for-each select="@* | node()">
             <xsl:choose>
               <!-- Special condition for APIKeyInfo -->
+              <!-- Transform APIKeyInfo 'characterName' to 'name'-->
               <xsl:when test="name(.)='characterName'">
-                <xsl:call-template name="trans-characterName" />
+                <xsl:attribute name="name">
+                  <xsl:value-of select="." />
+                </xsl:attribute>
               </xsl:when>
-              <!-- Special condition for rowset inside rowset (see AssetList) -->
-              <xsl:when test="@name='contents'">
-                <xsl:call-template name="rowsets">
-                  <xsl:with-param name="setName" select="@name" />
-                  <xsl:with-param name="rowName" select="substring(@name, 1, string-length(@name) - 1)" />
-                </xsl:call-template>
+              <!-- Special condition for rowset inside rowset (see AssetList, AllianceList) -->
+              <xsl:when test="name()='rowset'">
+                <xsl:apply-templates select="." />
               </xsl:when>
               <xsl:otherwise>
                 <xsl:copy/>
@@ -103,4 +117,5 @@
       </xsl:for-each>
     </xsl:element>
   </xsl:template>
+
 </xsl:stylesheet>

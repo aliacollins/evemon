@@ -1062,6 +1062,28 @@ namespace EVEMon.Common
         Put
     }
 
+    /// <summary>
+    /// Enumeration of contact group.
+    /// </summary>
+    public enum ContactGroup
+    {
+        Contact,
+        Corporate,
+        Alliance,
+    }
+
+    /// <summary>
+    /// Enumeration of contact group.
+    /// </summary>
+    public enum ContactType
+    {
+        None,
+        Agent,
+        Pilot,
+        Corporation,
+        Alliance,
+    }
+
     #endregion
 
 
@@ -1591,8 +1613,10 @@ namespace EVEMon.Common
     {
         [Description("Agents")]
         Agents,
+
         [Description("NPC Corporations")]
         NPCCorporations,
+
         [Description("Factions")]
         Factions
     }

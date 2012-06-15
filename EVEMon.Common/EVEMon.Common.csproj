@@ -113,6 +113,8 @@
     <Compile Include="CharacterIdentityIgnoreList.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
+    <Compile Include="Contact.cs" />
+    <Compile Include="ContactCollection.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractBid.cs" />
     <Compile Include="ContractBidCollection.cs" />
@@ -286,6 +288,10 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAllianceListItem.cs" />
+    <Compile Include="Serialization\API\SerializableAPIAllianceList.cs" />
+    <Compile Include="Serialization\API\SerializableAPIContactList.cs" />
+    <Compile Include="Serialization\API\SerializableAPICorporationSheet.cs" />
     <Compile Include="Serialization\API\SerializableAPIEveFactionalWarfareStats.cs" />
     <Compile Include="Serialization\API\SerializableAPIAssetList.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
@@ -293,10 +299,14 @@
     <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
     <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
+    <Compile Include="Serialization\API\SerializableContactListItem.cs" />
+    <Compile Include="Serialization\API\SerializableDivision.cs" />
     <Compile Include="Serialization\API\SerializableEveFactionalWarfareStatsListItem.cs" />
     <Compile Include="Serialization\API\SerializableEveFactionWarsListItem.cs" />
     <Compile Include="Serialization\API\SerializableEveFacWarfareTotals.cs" />
+    <Compile Include="Serialization\API\SerializableMemberCorporation.cs" />
     <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />
+    <Compile Include="Serialization\API\SerializableWalletDivision.cs" />
     <Compile Include="Serialization\API\SerializableWalletJournalListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletTransactions.cs" />
     <Compile Include="Serialization\API\SerializableWalletTransactionsListItem.cs" />
