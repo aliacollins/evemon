@@ -247,7 +247,7 @@
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
-    <Compile Include="EventAttendee.cs" />
+    <Compile Include="CalendarEventAttendee.cs" />
     <Compile Include="EveRefType.cs" />
     <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
@@ -267,6 +267,8 @@
     <Compile Include="IPlanOrderPluggable.cs" />
     <Compile Include="IQueryMonitorEx.cs" />
     <Compile Include="ISkillLevel.cs" />
+    <Compile Include="KillLog.cs" />
+    <Compile Include="KillLogCollection.cs" />
     <Compile Include="Medal.cs" />
     <Compile Include="MedalCollection.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
@@ -301,6 +303,7 @@
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
     <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
+    <Compile Include="Serialization\API\SerializableAPIKillLog.cs" />
     <Compile Include="Serialization\API\SerializableAPIMedals.cs" />
     <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
     <Compile Include="Serialization\API\SerializableAPIUpcomingCalendarEvents.cs" />
@@ -311,6 +314,10 @@
     <Compile Include="Serialization\API\SerializableEveFactionalWarfareStatsListItem.cs" />
     <Compile Include="Serialization\API\SerializableEveFactionWarsListItem.cs" />
     <Compile Include="Serialization\API\SerializableEveFacWarfareTotals.cs" />
+    <Compile Include="Serialization\API\SerializableKillLogAttackersListItem.cs" />
+    <Compile Include="Serialization\API\SerializableKillLogItemListItem.cs" />
+    <Compile Include="Serialization\API\SerializableKillLogListItem.cs" />
+    <Compile Include="Serialization\API\SerializableKillLogVictim.cs" />
     <Compile Include="Serialization\API\SerializableMedalsListItem.cs" />
     <Compile Include="Serialization\API\SerializableMemberCorporation.cs" />
     <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />

@@ -61,6 +61,7 @@ namespace EVEMon.Common
             Contacts = new ContactCollection(this);
             Medals = new MedalCollection(this);
             UpcomingCalendarEvents = new UpcomingCalendarEventCollection(this);
+            KillLog = new KillLogCollection(this);
 
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
@@ -266,6 +267,11 @@ namespace EVEMon.Common
         /// Gets the collection of upcoming calendar events.
         /// </summary>
         public UpcomingCalendarEventCollection UpcomingCalendarEvents { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of kill logs.
+        /// </summary>
+        public KillLogCollection KillLog { get; private set; }
 
         /// <summary>
         /// Gets the query monitors enumeration.
@@ -564,6 +570,10 @@ namespace EVEMon.Common
 
             // We don't want to be notified about corp roles error
             if (result.CCPError != null && result.CCPError.IsCorpRolesError)
+                return false;
+
+            // We don't want to be notified about kill log exhausted error
+            if (result.CCPError != null && result.CCPError.IsKillLogExhaustedError)
                 return false;
 
             // We don't want to be notified about not enlisted in factional warfare error

@@ -747,11 +747,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occured while querying the personal upcoming calendar events.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occured while querying the personal upcoming calendar events.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 
@@ -765,11 +765,28 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                {
-                    Description = "An error occured while querying the personal calendar event attendees.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Error
-                };
+                    {
+                        Description = "An error occured while querying the personal calendar event attendees.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
+            Notify(notification);
+        }
+
+        /// <summary>
+        /// Notifies a kill log query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterKillLogError(CCPCharacter character, APIResult<SerializableAPIKillLog> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                    {
+                        Description = "An error occured while querying the personal kill log.",
+                        Behaviour = NotificationBehaviour.Overwrite,
+                        Priority = NotificationPriority.Error
+                    };
             Notify(notification);
         }
 

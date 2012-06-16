@@ -26,6 +26,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIContactList> m_charContactsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMedals> m_charMedalsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents> m_charUpcomingCalendarEventsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIKillLog> m_charKillLogMonitor;
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
         private readonly CCPCharacter m_ccpCharacter;
@@ -129,6 +130,11 @@ namespace EVEMon.Common
                                                                                  OnUpcomingCalendarEventsUpdated)
                     { QueryOnStartup = true };
             m_characterQueryMonitors.Add(m_charUpcomingCalendarEventsMonitor);
+
+            m_charKillLogMonitor =
+                new CharacterQueryMonitor<SerializableAPIKillLog>(ccpCharacter, APICharacterMethods.KillLog,
+                                                                  OnKillLogUpdated) { QueryOnStartup = true };
+            m_characterQueryMonitors.Add(m_charKillLogMonitor);
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
                 monitor => new { monitor, method = (APICharacterMethods)monitor.Method }).Where(
@@ -813,6 +819,31 @@ namespace EVEMon.Common
 
             // Fires the event regarding upcoming calendar events update
             EveMonClient.OnCharacterUpcomingCalendarEventsUpdated(m_ccpCharacter);
+        }
+
+        /// <summary>
+        /// Processes the queried character's kill log.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnKillLogUpdated(APIResult<SerializableAPIKillLog> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
+                return;
+
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.KillLog))
+                EveMonClient.Notifications.NotifyCharacterKillLogError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_ccpCharacter.KillLog.Import(result.Result.Kills);
+
+            // Fires the event regarding kill log update
+            EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
         }
 
         #endregion

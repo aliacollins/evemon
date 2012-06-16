@@ -5,7 +5,7 @@ namespace EVEMon.Common.Serialization.API
     /// <summary>
     /// Represents a reference to a character in the charactersList API
     /// </summary>
-    public sealed class SerializableCharacterListItem : ISerializableCharacterIdentity
+    public class SerializableCharacterListItem : ISerializableCharacterIdentity
     {
         [XmlAttribute("characterID")]
         public long ID { get; set; }

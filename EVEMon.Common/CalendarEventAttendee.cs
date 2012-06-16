@@ -2,15 +2,15 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class EventAttendee
+    public sealed class CalendarEventAttendee
     {
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EventAttendee"/> class.
+        /// Initializes a new instance of the <see cref="CalendarEventAttendee"/> class.
         /// </summary>
         /// <param name="src">The SRC.</param>
-        internal EventAttendee(SerializableCalendarEventAttendeeListItem src)
+        internal CalendarEventAttendee(SerializableCalendarEventAttendeeListItem src)
         {
             CharacterID = src.CharacterID;
             CharacterName = src.CharacterName;

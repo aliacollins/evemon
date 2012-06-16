@@ -701,11 +701,16 @@ namespace EVEMon.Common
         /// Occurs when the text of a character upcoming calendar events have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterUpcomingCalendarEventsUpdated;
-        
+
         /// <summary>
         /// Occurs when the text of a character calendar event attendees have been downloaded.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterCalendarEventAttendeesDownloaded;
+
+        /// <summary>
+        /// Occurs when the text of a character kill logs have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterKillLogUpdated;
 
         /// <summary>
         /// Occurs when a plan's name changed.
@@ -1276,6 +1281,17 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterCalendarEventAttendeesDownloaded - {0}", character.Name);
             if (CharacterCalendarEventAttendeesDownloaded != null)
                 CharacterCalendarEventAttendeesDownloaded(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character kill log updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterKillLogUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterKillLogUpdated - {0}", character.Name);
+            if (CharacterKillLogUpdated != null)
+                CharacterKillLogUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

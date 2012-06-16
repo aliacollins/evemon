@@ -7,10 +7,14 @@ namespace EVEMon.Common
 {
     public sealed class UpcomingCalendarEvent
     {
+        #region Fields
+
         private readonly CCPCharacter m_ccpCharacter;
-        private readonly List<EventAttendee> m_eventAttendees;
+        private readonly List<CalendarEventAttendee> m_eventAttendees;
         private readonly long m_eventID;
         private bool m_queryPending;
+
+        #endregion
 
 
         #region Constructor
@@ -33,7 +37,7 @@ namespace EVEMon.Common
             Importance = src.Importance;
             Response = src.Response;
             EventDate = src.EventDate;
-            m_eventAttendees = new List<EventAttendee>();
+            m_eventAttendees = new List<CalendarEventAttendee>();
         }
 
         #endregion
@@ -87,7 +91,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the event attendees.
         /// </summary>
-        public IEnumerable<EventAttendee> EventAttendees
+        public IEnumerable<CalendarEventAttendee> EventAttendees
         {
             get { return m_eventAttendees; }
         }
@@ -144,7 +148,7 @@ namespace EVEMon.Common
 
             // Import the data
             m_eventAttendees.Clear();
-            m_eventAttendees.AddRange(result.Result.EventAttendees.Select(attendee => new EventAttendee(attendee)));
+            m_eventAttendees.AddRange(result.Result.EventAttendees.Select(attendee => new CalendarEventAttendee(attendee)));
 
             EveMonClient.OnCharacterCalendarEventAttendeesDownloaded(m_ccpCharacter);
         }
