@@ -102,6 +102,13 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Transform 'characterName' to 'name'-->
+  <xsl:template match="@characterName">
+    <xsl:attribute name="name">
+      <xsl:value-of select="." />
+    </xsl:attribute>
+  </xsl:template>
+
   <!-- Template applied to rowsets-->
   <xsl:template name="rowsets">
     <xsl:param name="setName">rowset</xsl:param>
@@ -110,22 +117,7 @@
       <xsl:for-each select="row">
         <xsl:element name="{$rowName}">
           <xsl:for-each select="@* | node()">
-            <xsl:choose>
-              <!-- Special condition for APIKeyInfo -->
-              <!-- Transform APIKeyInfo 'characterName' to 'name'-->
-              <xsl:when test="name(.)='characterName'">
-                <xsl:attribute name="name">
-                  <xsl:value-of select="." />
-                </xsl:attribute>
-              </xsl:when>
-              <!-- Special condition for rowset inside rowset (see AssetList, AllianceList) -->
-              <xsl:when test="name()='rowset'">
-                <xsl:apply-templates select="." />
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:copy/>
-              </xsl:otherwise>
-            </xsl:choose>
+            <xsl:apply-templates select="." />
           </xsl:for-each>
         </xsl:element>
       </xsl:for-each>
