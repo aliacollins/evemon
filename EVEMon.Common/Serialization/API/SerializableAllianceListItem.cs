@@ -39,7 +39,7 @@ namespace EVEMon.Common.Serialization.API
             }
         }
 
-        [XmlAttribute("memberCorporations")]
+        [XmlArray("memberCorporations")]
         [XmlArrayItem("memberCorporation")]
         public Collection<SerializableMemberCorporation> MemberCorporations
         {
