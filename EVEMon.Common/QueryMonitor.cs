@@ -114,7 +114,10 @@ namespace EVEMon.Common
                 }
 
                 // No error ? Then we compute the next update according to the settings
-                UpdatePeriod period = Settings.Updates.Periods[Method.ToString()];
+                UpdatePeriod period = UpdatePeriod.Never;
+                if (Settings.Updates.Periods.ContainsKey(Method.ToString()))
+                    period = Settings.Updates.Periods[Method.ToString()];
+
                 if (period == UpdatePeriod.Never)
                     return DateTime.MaxValue;
 
