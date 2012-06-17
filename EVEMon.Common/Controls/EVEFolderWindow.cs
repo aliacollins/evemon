@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
 {
     public partial class EveFolderWindow : EVEMonForm
     {
-        private readonly string[] m_defaultFolderLocation = EveMonClient.DefaultEvePortraitCacheFolders.ToArray();
-        private string[] m_specifiedPortraitFolder = new[] { String.Empty };
+        private IEnumerable<string> m_specifiedPortraitFolder = new List<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EveFolderWindow"/> class.
@@ -25,29 +23,20 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EVEFolderWindow_Load(object sender, EventArgs e)
         {
-            if (m_defaultFolderLocation == null)
+            if (EveMonClient.DefaultEvePortraitCacheFolders == null)
             {
                 SpecifyFolderRadioButton.Checked = true;
                 DefaultFolderRadioButton.Enabled = false;
             }
-
-            if (m_specifiedPortraitFolder == m_defaultFolderLocation)
-            {
-                DefaultFolderRadioButton.Checked = true;
-                BrowseButton.Enabled = false;
-            }
             else
-            {
                 SpecifyFolderRadioButton.Checked = true;
-                BrowseButton.Enabled = true;
-            }
         }
 
         /// <summary>
-        /// Gets the EVE portrait cache folder.
+        /// Gets the specified EVE portrait cache folder.
         /// </summary>
-        /// <value>The EVE portrait cache folder.</value>
-        public IEnumerable<string> EVEPortraitCacheFolder
+        /// <value>The specified EVE portrait cache folder.</value>
+        public IEnumerable<string> SpecifiedEVEPortraitCacheFolder
         {
             get { return m_specifiedPortraitFolder; }
         }
@@ -64,8 +53,8 @@ namespace EVEMon.Common.Controls
                 return;
 
             FilenameTextBox.Text = OpenDirFolderBrowserDialog.SelectedPath;
-            m_specifiedPortraitFolder[0] = FilenameTextBox.Text;
             OKButton.Enabled = true;
+            AcceptButton = OKButton;
         }
 
         /// <summary>
@@ -75,6 +64,10 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OKButton_Click(object sender, EventArgs e)
         {
+            m_specifiedPortraitFolder = DefaultFolderRadioButton.Checked
+                                            ? EveMonClient.DefaultEvePortraitCacheFolders
+                                            : new List<string> { FilenameTextBox.Text };
+
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -89,8 +82,8 @@ namespace EVEMon.Common.Controls
             if (!DefaultFolderRadioButton.Checked)
                 return;
 
-            m_specifiedPortraitFolder = m_defaultFolderLocation;
             OKButton.Enabled = true;
+            AcceptButton = OKButton;
         }
 
         /// <summary>
@@ -100,7 +93,10 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void SpecifyFolderRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            BrowseButton.Enabled = SpecifyFolderRadioButton.Checked;
+            BrowseButton.Enabled = FilenameTextBox.Enabled = SpecifyFolderRadioButton.Checked;
+            if (SpecifyFolderRadioButton.Checked && FilenameTextBox.Text.Length == 0)
+                AcceptButton = BrowseButton;
+
             OKButton.Enabled = (SpecifyFolderRadioButton.Checked && FilenameTextBox.Text.Length != 0);
         }
     }

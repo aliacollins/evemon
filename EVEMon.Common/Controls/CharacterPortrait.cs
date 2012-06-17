@@ -16,6 +16,9 @@ namespace EVEMon.Common.Controls
         private bool m_updatingPortrait;
         private bool m_pendingUpdate;
 
+
+        #region Constructor
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -24,6 +27,11 @@ namespace EVEMon.Common.Controls
             InitializeComponent();
             pictureBox.Image = pictureBox.InitialImage;
         }
+
+        #endregion
+
+
+        #region Inherited Events
 
         /// <summary>
         /// When the control is made visible, we check for a pending update.
@@ -37,6 +45,8 @@ namespace EVEMon.Common.Controls
 
             base.OnVisibleChanged(e);
         }
+
+        #endregion
 
 
         #region Properties
@@ -256,13 +266,13 @@ namespace EVEMon.Common.Controls
             m_updatingPortrait = true;
             try
             {
-                if (EveMonClient.EvePortraitCacheFolders == null)
-                    return;
-
                 // If we don't have the game's portraits cache already, prompt the user
                 // Return if the user canceled
-                if (EveMonClient.EvePortraitCacheFolders.Count == 0 && !ChangeEVEPortraitCache())
-                    return;
+                if (EveMonClient.EvePortraitCacheFolders == null || !EveMonClient.EvePortraitCacheFolders.Any())
+                {
+                    if (!ChangeEVEPortraitCache() || EveMonClient.EvePortraitCacheFolders == null)
+                        return;
+                }
 
                 // Now, search in the game folder all matching files 
                 // (different resolutions are available for every character)
@@ -270,9 +280,10 @@ namespace EVEMon.Common.Controls
                 List<FileInfo> filesInEveCache = new List<FileInfo>();
                 List<FileInfo> imageFilesInEveCache = new List<FileInfo>();
                 foreach (DirectoryInfo di in EveMonClient.EvePortraitCacheFolders.Select(
-                    evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)))
+                    evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)).Where(directory => directory.Exists))
                 {
-                    filesInEveCache.AddRange(di.GetFiles(String.Format(CultureConstants.InvariantCulture, "{0}*", m_character.CharacterID)));
+                    filesInEveCache.AddRange(di.GetFiles(String.Format(CultureConstants.InvariantCulture,
+                                                                       "{0}*", m_character.CharacterID)));
 
                     // Look up for an image file and add it to the list
                     // Note by Jimi : CCP changed image format in Incursion 1.1.0
@@ -282,8 +293,8 @@ namespace EVEMon.Common.Controls
                     imageFilesInEveCache.AddRange(filesInEveCache.Where(IsImageFile));
                 }
 
-                // Displays an error message if none found.
-                if (imageFilesInEveCache.Count == 0)
+                // Displays an error message if none found
+                if (!imageFilesInEveCache.Any())
                 {
                     StringBuilder message = new StringBuilder();
 
@@ -301,7 +312,7 @@ namespace EVEMon.Common.Controls
                     return;
                 }
 
-                // Search for the biggest portrait
+                // Search for the largest portrait
                 int bestSize = 0;
                 string bestFile = String.Empty;
                 int charIDLength = m_character.CharacterID.ToString(CultureConstants.DefaultCulture).Length;
@@ -356,9 +367,10 @@ namespace EVEMon.Common.Controls
             {
                 if (f.ShowDialog() == DialogResult.OK)
                 {
-                    EveMonClient.SetEvePortraitCacheFolder(f.EVEPortraitCacheFolder);
+                    EveMonClient.EvePortraitCacheFolders = f.SpecifiedEVEPortraitCacheFolder;
                     return true;
                 }
+
             }
 
             return false;
