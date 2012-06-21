@@ -338,6 +338,12 @@
     <Compile Include="SettingsUI\MarketUnifiedUploaderControl.Designer.cs">
       <DependentUpon>MarketUnifiedUploaderControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsUI\PortableEveClientsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\PortableEveClientsControl.Designer.cs">
+      <DependentUpon>PortableEveClientsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsUI\SettingsFileStorageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -536,6 +542,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\MarketUnifiedUploaderControl.resx">
       <DependentUpon>MarketUnifiedUploaderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\PortableEveClientsControl.resx">
+      <DependentUpon>PortableEveClientsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\SettingsFileStorageControl.resx">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>

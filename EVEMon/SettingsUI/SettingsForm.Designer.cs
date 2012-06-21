@@ -55,26 +55,28 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 7, 7);
             System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 4, 4);
             System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 3, 3);
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("General", 10, 10, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Portable EVE Clients", 17, 17);
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("General", 10, 10, new System.Windows.Forms.TreeNode[] {
             treeNode10,
             treeNode11,
             treeNode12,
-            treeNode13});
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Main Window", 6, 6);
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Icons", 13, 13);
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Messages", 14, 14);
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Skill Planner", 8, 8, new System.Windows.Forms.TreeNode[] {
-            treeNode16,
-            treeNode17});
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("System Tray Icon", 2, 2);
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("External Calendar", 5, 5);
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
-            treeNode20});
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Skill Completion Mails", 12, 12);
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Notifications", 9, 9, new System.Windows.Forms.TreeNode[] {
-            treeNode22});
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("BattleClinic Service", 15, 15);
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Market Unified Uploader", 16, 16);
+            treeNode13,
+            treeNode14});
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Main Window", 6, 6);
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Icons", 13, 13);
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Messages", 14, 14);
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Skill Planner", 8, 8, new System.Windows.Forms.TreeNode[] {
+            treeNode17,
+            treeNode18});
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("System Tray Icon", 2, 2);
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("External Calendar", 5, 5);
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Scheduler", 1, 1, new System.Windows.Forms.TreeNode[] {
+            treeNode21});
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Skill Completion Mails", 12, 12);
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Notifications", 9, 9, new System.Windows.Forms.TreeNode[] {
+            treeNode23});
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("BattleClinic Service", 15, 15);
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Market Unified Uploader", 16, 16);
             this.systemTrayIconGroupBox = new System.Windows.Forms.GroupBox();
             this.rbSystemTrayOptionsNever = new System.Windows.Forms.RadioButton();
             this.rbSystemTrayOptionsAlways = new System.Windows.Forms.RadioButton();
@@ -275,6 +277,10 @@ namespace EVEMon.SettingsUI
             this.marketUnifiedUploaderControl = new EVEMon.SettingsUI.MarketUnifiedUploaderControl();
             this.marketUnifiedUploaderCheckBox = new System.Windows.Forms.CheckBox();
             this.marketUnifiedUploaderPageLabel = new System.Windows.Forms.Label();
+            this.portableEveClientsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.PECIGroupBox = new System.Windows.Forms.GroupBox();
+            this.portableEveClientsControl = new EVEMon.SettingsUI.PortableEveClientsControl();
             this.systemTrayIconGroupBox.SuspendLayout();
             this.bottomPanel.SuspendLayout();
             this.groupBox15.SuspendLayout();
@@ -324,6 +330,8 @@ namespace EVEMon.SettingsUI
             this.settingsFileStorageGroupBox.SuspendLayout();
             this.bcCredentialsGroupBox.SuspendLayout();
             this.marketUnifiedUploaderPage.SuspendLayout();
+            this.portableEveClientsPage.SuspendLayout();
+            this.PECIGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // systemTrayIconGroupBox
@@ -1169,12 +1177,12 @@ namespace EVEMon.SettingsUI
             this.treeView.Location = new System.Drawing.Point(6, 6);
             this.treeView.Name = "treeView";
             treeNode10.ImageIndex = 11;
-            treeNode10.Name = "Node9";
+            treeNode10.Name = "UpdatesNode";
             treeNode10.SelectedImageIndex = 11;
             treeNode10.Tag = "updatesPage";
             treeNode10.Text = "Updates";
             treeNode11.ImageIndex = 7;
-            treeNode11.Name = "Node5";
+            treeNode11.Name = "networkNode";
             treeNode11.SelectedImageIndex = 7;
             treeNode11.Tag = "networkPage";
             treeNode11.Text = "Network";
@@ -1184,79 +1192,84 @@ namespace EVEMon.SettingsUI
             treeNode12.Tag = "g15Page";
             treeNode12.Text = "Logitech Keyboards";
             treeNode13.ImageIndex = 3;
-            treeNode13.Name = "Node2";
+            treeNode13.Name = "IGBServerNode";
             treeNode13.SelectedImageIndex = 3;
             treeNode13.Tag = "igbServerPage";
             treeNode13.Text = "IGB Server";
-            treeNode14.ImageIndex = 10;
-            treeNode14.Name = "generalNode";
-            treeNode14.SelectedImageIndex = 10;
-            treeNode14.Tag = "generalPage";
-            treeNode14.Text = "General";
-            treeNode15.ImageIndex = 6;
-            treeNode15.Name = "Node3";
-            treeNode15.SelectedImageIndex = 6;
-            treeNode15.Tag = "mainWindowPage";
-            treeNode15.Text = "Main Window";
-            treeNode16.ImageIndex = 13;
-            treeNode16.Name = "IconsNode";
-            treeNode16.SelectedImageIndex = 13;
-            treeNode16.Tag = "iconsPage";
-            treeNode16.Text = "Icons";
-            treeNode17.ImageIndex = 14;
-            treeNode17.Name = "MassagesNode";
-            treeNode17.SelectedImageIndex = 14;
-            treeNode17.Tag = "messagesPage";
-            treeNode17.Text = "Messages";
-            treeNode18.ImageIndex = 8;
-            treeNode18.Name = "Node4";
-            treeNode18.SelectedImageIndex = 8;
-            treeNode18.Tag = "skillPlannerPage";
-            treeNode18.Text = "Skill Planner";
-            treeNode19.ImageIndex = 2;
-            treeNode19.Name = "trayIconNode";
-            treeNode19.SelectedImageIndex = 2;
-            treeNode19.Tag = "trayIconPage";
-            treeNode19.Text = "System Tray Icon";
-            treeNode20.ImageIndex = 5;
-            treeNode20.Name = "Node11";
-            treeNode20.SelectedImageIndex = 5;
-            treeNode20.Tag = "externalCalendarPage";
-            treeNode20.Text = "External Calendar";
-            treeNode21.ImageIndex = 1;
-            treeNode21.Name = "Node10";
-            treeNode21.SelectedImageIndex = 1;
-            treeNode21.Tag = "schedulerUIPage";
-            treeNode21.Text = "Scheduler";
-            treeNode22.ImageIndex = 12;
-            treeNode22.Name = "Node7";
-            treeNode22.SelectedImageIndex = 12;
-            treeNode22.Tag = "emailNotificationsPage";
-            treeNode22.Text = "Skill Completion Mails";
-            treeNode23.ImageIndex = 9;
-            treeNode23.Name = "Node2";
-            treeNode23.SelectedImageIndex = 9;
-            treeNode23.Tag = "notificationsPage";
-            treeNode23.Text = "Notifications";
-            treeNode24.ImageIndex = 15;
-            treeNode24.Name = "BattleClinicWebServiceNode";
-            treeNode24.SelectedImageIndex = 15;
-            treeNode24.Tag = "battleClinicServicePage";
-            treeNode24.Text = "BattleClinic Service";
-            treeNode25.ImageIndex = 16;
-            treeNode25.Name = "MarketUnifiedUploaderNode";
-            treeNode25.SelectedImageIndex = 16;
-            treeNode25.Tag = "marketUnifiedUploaderPage";
-            treeNode25.Text = "Market Unified Uploader";
+            treeNode14.ImageIndex = 17;
+            treeNode14.Name = "PortableEveClientsNode";
+            treeNode14.SelectedImageIndex = 17;
+            treeNode14.Tag = "portableEveClientsPage";
+            treeNode14.Text = "Portable EVE Clients";
+            treeNode15.ImageIndex = 10;
+            treeNode15.Name = "generalNode";
+            treeNode15.SelectedImageIndex = 10;
+            treeNode15.Tag = "generalPage";
+            treeNode15.Text = "General";
+            treeNode16.ImageIndex = 6;
+            treeNode16.Name = "Node3";
+            treeNode16.SelectedImageIndex = 6;
+            treeNode16.Tag = "mainWindowPage";
+            treeNode16.Text = "Main Window";
+            treeNode17.ImageIndex = 13;
+            treeNode17.Name = "IconsNode";
+            treeNode17.SelectedImageIndex = 13;
+            treeNode17.Tag = "iconsPage";
+            treeNode17.Text = "Icons";
+            treeNode18.ImageIndex = 14;
+            treeNode18.Name = "MassagesNode";
+            treeNode18.SelectedImageIndex = 14;
+            treeNode18.Tag = "messagesPage";
+            treeNode18.Text = "Messages";
+            treeNode19.ImageIndex = 8;
+            treeNode19.Name = "Node4";
+            treeNode19.SelectedImageIndex = 8;
+            treeNode19.Tag = "skillPlannerPage";
+            treeNode19.Text = "Skill Planner";
+            treeNode20.ImageIndex = 2;
+            treeNode20.Name = "trayIconNode";
+            treeNode20.SelectedImageIndex = 2;
+            treeNode20.Tag = "trayIconPage";
+            treeNode20.Text = "System Tray Icon";
+            treeNode21.ImageIndex = 5;
+            treeNode21.Name = "Node11";
+            treeNode21.SelectedImageIndex = 5;
+            treeNode21.Tag = "externalCalendarPage";
+            treeNode21.Text = "External Calendar";
+            treeNode22.ImageIndex = 1;
+            treeNode22.Name = "Node10";
+            treeNode22.SelectedImageIndex = 1;
+            treeNode22.Tag = "schedulerUIPage";
+            treeNode22.Text = "Scheduler";
+            treeNode23.ImageIndex = 12;
+            treeNode23.Name = "Node7";
+            treeNode23.SelectedImageIndex = 12;
+            treeNode23.Tag = "emailNotificationsPage";
+            treeNode23.Text = "Skill Completion Mails";
+            treeNode24.ImageIndex = 9;
+            treeNode24.Name = "Node2";
+            treeNode24.SelectedImageIndex = 9;
+            treeNode24.Tag = "notificationsPage";
+            treeNode24.Text = "Notifications";
+            treeNode25.ImageIndex = 15;
+            treeNode25.Name = "BattleClinicWebServiceNode";
+            treeNode25.SelectedImageIndex = 15;
+            treeNode25.Tag = "battleClinicServicePage";
+            treeNode25.Text = "BattleClinic Service";
+            treeNode26.ImageIndex = 16;
+            treeNode26.Name = "MarketUnifiedUploaderNode";
+            treeNode26.SelectedImageIndex = 16;
+            treeNode26.Tag = "marketUnifiedUploaderPage";
+            treeNode26.Text = "Market Unified Uploader";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode14,
             treeNode15,
-            treeNode18,
+            treeNode16,
             treeNode19,
-            treeNode21,
-            treeNode23,
+            treeNode20,
+            treeNode22,
             treeNode24,
-            treeNode25});
+            treeNode25,
+            treeNode26});
             this.treeView.SelectedImageIndex = 0;
             this.treeView.ShowLines = false;
             this.treeView.ShowPlusMinus = false;
@@ -1272,11 +1285,11 @@ namespace EVEMon.SettingsUI
             this.imageList.Images.SetKeyName(0, "Transparent.png");
             this.imageList.Images.SetKeyName(1, "Calendar.png");
             this.imageList.Images.SetKeyName(2, "EVEMon16.png");
-            this.imageList.Images.SetKeyName(3, "IGB Server.png");
+            this.imageList.Images.SetKeyName(3, "IGB.png");
             this.imageList.Images.SetKeyName(4, "Logitech Keyboard.png");
             this.imageList.Images.SetKeyName(5, "gcalendar.png");
             this.imageList.Images.SetKeyName(6, "MainWindow.png");
-            this.imageList.Images.SetKeyName(7, "Online.png");
+            this.imageList.Images.SetKeyName(7, "Network.png");
             this.imageList.Images.SetKeyName(8, "Plan.png");
             this.imageList.Images.SetKeyName(9, "Problem.png");
             this.imageList.Images.SetKeyName(10, "Settings.png");
@@ -1286,6 +1299,7 @@ namespace EVEMon.SettingsUI
             this.imageList.Images.SetKeyName(14, "messagebox.png");
             this.imageList.Images.SetKeyName(15, "BattleClinic.png");
             this.imageList.Images.SetKeyName(16, "EMUU16.png");
+            this.imageList.Images.SetKeyName(17, "EveClient.png");
             // 
             // leftPanel
             // 
@@ -1317,6 +1331,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Controls.Add(this.messagesPage);
             this.multiPanel.Controls.Add(this.battleClinicServicePage);
             this.multiPanel.Controls.Add(this.marketUnifiedUploaderPage);
+            this.multiPanel.Controls.Add(this.portableEveClientsPage);
             this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
@@ -2748,6 +2763,47 @@ namespace EVEMon.SettingsUI
             this.marketUnifiedUploaderPageLabel.Text = "EVEMon can send market data, from your EVE installation cache, to certified endpo" +
     "ints.";
             // 
+            // portableEveClientsPage
+            // 
+            this.portableEveClientsPage.Controls.Add(this.label3);
+            this.portableEveClientsPage.Controls.Add(this.PECIGroupBox);
+            this.portableEveClientsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.portableEveClientsPage.Location = new System.Drawing.Point(5, 5);
+            this.portableEveClientsPage.Name = "portableEveClientsPage";
+            this.portableEveClientsPage.Size = new System.Drawing.Size(435, 426);
+            this.portableEveClientsPage.TabIndex = 20;
+            this.portableEveClientsPage.Text = "portableEveClientsPage";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label3.Location = new System.Drawing.Point(4, 15);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(424, 95);
+            this.label3.TabIndex = 21;
+            this.label3.Text = resources.GetString("label3.Text");
+            // 
+            // PECIGroupBox
+            // 
+            this.PECIGroupBox.Controls.Add(this.portableEveClientsControl);
+            this.PECIGroupBox.Location = new System.Drawing.Point(7, 129);
+            this.PECIGroupBox.Name = "PECIGroupBox";
+            this.PECIGroupBox.Size = new System.Drawing.Size(421, 283);
+            this.PECIGroupBox.TabIndex = 0;
+            this.PECIGroupBox.TabStop = false;
+            this.PECIGroupBox.Text = "Portable EVE Client Installations";
+            // 
+            // portableEveClientsControl
+            // 
+            this.portableEveClientsControl.AutoScroll = true;
+            this.portableEveClientsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.portableEveClientsControl.Location = new System.Drawing.Point(3, 16);
+            this.portableEveClientsControl.Name = "portableEveClientsControl";
+            this.portableEveClientsControl.Size = new System.Drawing.Size(415, 264);
+            this.portableEveClientsControl.TabIndex = 0;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.okButton;
@@ -2851,6 +2907,8 @@ namespace EVEMon.SettingsUI
             this.bcCredentialsGroupBox.ResumeLayout(false);
             this.marketUnifiedUploaderPage.ResumeLayout(false);
             this.marketUnifiedUploaderPage.PerformLayout();
+            this.portableEveClientsPage.ResumeLayout(false);
+            this.PECIGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -3058,5 +3116,9 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox marketUnifiedUploaderCheckBox;
         private System.Windows.Forms.Label marketUnifiedUploaderPageLabel;
         private MarketUnifiedUploaderControl marketUnifiedUploaderControl;
+        private MultiPanelPage portableEveClientsPage;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox PECIGroupBox;
+        private PortableEveClientsControl portableEveClientsControl;
     }
 }

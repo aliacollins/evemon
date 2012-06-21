@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SettingsUI
 {
@@ -14,10 +15,10 @@ namespace EVEMon.SettingsUI
     /// </summary>
     public partial class APISettingsForm : EVEMonForm
     {
-        private readonly SerializableAPIProviders m_providers;
+        private readonly APIProvidersSettings m_providers;
         private readonly SerializableAPIProvider m_provider;
 
-        public APISettingsForm(SerializableAPIProviders providers, SerializableAPIProvider newProvider)
+        public APISettingsForm(APIProvidersSettings providers, SerializableAPIProvider newProvider)
         {
             InitializeComponent();
             m_providers = providers;

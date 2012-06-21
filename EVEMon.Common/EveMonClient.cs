@@ -32,6 +32,7 @@ namespace EVEMon.Common
 
         private static readonly Object s_pathsInitializationLock = new Object();
         private static readonly Object s_initializationLock = new Object();
+        private static IEnumerable<string> s_defaultEvePortraitCacheFolders;
         private static bool s_initialized;
         private static string s_traceFile;
 
@@ -148,9 +149,26 @@ namespace EVEMon.Common
         #region File paths
 
         /// <summary>
-        /// Gets or sets the EVE Online installation's default portrait cache folder.
+        /// Gets the EVE Online installations default portrait cache folder.
         /// </summary>
-        public static IEnumerable<string> DefaultEvePortraitCacheFolders { get; private set; }
+        public static IEnumerable<string> DefaultEvePortraitCacheFolders
+        {
+            get
+            {
+                if (s_defaultEvePortraitCacheFolders == null || !s_defaultEvePortraitCacheFolders.Any())
+                {
+                    s_defaultEvePortraitCacheFolders = Settings.PortableEveInstallations.EVEClients.Select(
+                        eveClientInstallation => String.Format(
+                            CultureConstants.InvariantCulture, "{1}{0}cache{0}Pictures{0}Characters",
+                            Path.DirectorySeparatorChar, eveClientInstallation.Path)).Where(Directory.Exists);
+
+                    if (s_defaultEvePortraitCacheFolders.Any())
+                        EvePortraitCacheFolders = s_defaultEvePortraitCacheFolders;
+                }
+
+                return s_defaultEvePortraitCacheFolders;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the portrait cache folder defined by the user.
@@ -204,6 +222,11 @@ namespace EVEMon.Common
         /// Gets the name of the current settings file.
         /// </summary>
         public static string SettingsFileName { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether cache folder in EVE default location exist.
+        /// </summary>
+        public static bool EveAppDataFoldersExistInDefaultLocation { get; private set; }
 
         /// <summary>
         /// Gets the fully qualified path to the current settings file.
@@ -330,18 +353,19 @@ namespace EVEMon.Common
             // Create a pattern that matches anything "*_tranquility"
             // Enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationDataDir);
-            DirectoryInfo[] foldersInEveCache = di.GetDirectories("*_tranquility");
+            DirectoryInfo[] tranquilityFolders = di.GetDirectories("*_tranquility");
 
-            if (!foldersInEveCache.Any())
+            EveAppDataFoldersExistInDefaultLocation = tranquilityFolders.Any();
+
+            if (!tranquilityFolders.Any())
                 return;
 
-            DefaultEvePortraitCacheFolders = foldersInEveCache.Select(
-                eveDataPath => eveDataPath.Name).Select(
-                    portraitCache => String.Format(
+            s_defaultEvePortraitCacheFolders = tranquilityFolders.Select(
+                    traquilityFolder => String.Format(
                         CultureConstants.InvariantCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
-                        Path.DirectorySeparatorChar, portraitCache, EVEApplicationDataDir)).Where(Directory.Exists);
+                        Path.DirectorySeparatorChar, traquilityFolder.Name, EVEApplicationDataDir)).Where(Directory.Exists);
 
-            EvePortraitCacheFolders = DefaultEvePortraitCacheFolders;
+            EvePortraitCacheFolders = s_defaultEvePortraitCacheFolders;
         }
 
         /// <summary>

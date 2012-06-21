@@ -268,7 +268,9 @@ namespace EVEMon.Common.Controls
             {
                 // If we don't have the game's portraits cache already, prompt the user
                 // Return if the user canceled
-                if (EveMonClient.EvePortraitCacheFolders == null || !EveMonClient.EvePortraitCacheFolders.Any())
+                if (!EveMonClient.DefaultEvePortraitCacheFolders.Any() ||
+                    EveMonClient.EvePortraitCacheFolders == null ||
+                    !EveMonClient.EvePortraitCacheFolders.Any())
                 {
                     if (!ChangeEVEPortraitCache() || EveMonClient.EvePortraitCacheFolders == null)
                         return;
@@ -303,8 +305,10 @@ namespace EVEMon.Common.Controls
                     message.AppendFormat("Ensure that you have checked the following:{0}", Environment.NewLine);
                     message.AppendFormat(" - You have logged into EVE with that characters' account.{0}", Environment.NewLine);
                     message.AppendFormat(" - You have selected a folder that contains EVE Portraits.{0}", Environment.NewLine);
-                    message.AppendFormat("Your default EVE Portrait directory is:{1}{0}{1}",
-                                         EveMonClient.EVEApplicationDataDir, Environment.NewLine);
+
+                    if (EveMonClient.DefaultEvePortraitCacheFolders.Any())
+                        message.AppendFormat("Your default EVE Portrait directory is:{1}{0}",
+                                             EveMonClient.DefaultEvePortraitCacheFolders.First(), Environment.NewLine);
 
                     MessageBox.Show(message.ToString(), "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 

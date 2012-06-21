@@ -1,13 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using EVEMon.Common.Serialization.Settings;
 
-namespace EVEMon.Common.Serialization.Settings
+namespace EVEMon.Common.SettingsObjects
 {
-    public sealed class SerializableScheduler
+    public sealed class SchedulerSettings
     {
         private readonly Collection<SerializableScheduleEntry> m_entries;
 
-        public SerializableScheduler()
+        public SchedulerSettings()
         {
             m_entries = new Collection<SerializableScheduleEntry>();
         }

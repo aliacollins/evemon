@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
@@ -23,7 +24,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EVEFolderWindow_Load(object sender, EventArgs e)
         {
-            if (EveMonClient.DefaultEvePortraitCacheFolders == null)
+            if (!EveMonClient.DefaultEvePortraitCacheFolders.Any())
             {
                 SpecifyFolderRadioButton.Checked = true;
                 DefaultFolderRadioButton.Enabled = false;

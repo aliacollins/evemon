@@ -761,6 +761,9 @@ namespace EVEMon.SettingsUI
             cbSkillInTitle.Enabled = cbTitleToTime.Checked;
             btnEditAPIServer.Enabled = btnDeleteAPIServer.Enabled = cbAPIServer.SelectedIndex > 1;
 
+            // Portable Eve Clients settings
+            portableEveClientsControl.Enabled = !EveMonClient.EveAppDataFoldersExistInDefaultLocation;
+
             // Minimize to tray/task bar
             rbMinToTray.Enabled = !rbSystemTrayOptionsNever.Checked;
             if (rbSystemTrayOptionsNever.Checked && rbMinToTray.Checked)

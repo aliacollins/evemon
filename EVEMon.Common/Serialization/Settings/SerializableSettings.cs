@@ -21,11 +21,12 @@ namespace EVEMon.Common.Serialization.Settings
             m_apiKeys = new Collection<SerializableAPIKey>();
             m_characters = new Collection<SerializableSettingsCharacter>();
             m_monitoredCharacters = new Collection<MonitoredCharacterSettings>();
+            PortableEveInstallations = new PortableEveInstallationsSettings();
             MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
-            APIProviders = new SerializableAPIProviders();
+            APIProviders = new APIProvidersSettings();
             Notifications = new NotificationSettings();
             Exportation = new ExportationSettings();
-            Scheduler = new SerializableScheduler();
+            Scheduler = new SchedulerSettings();
             Calendar = new CalendarSettings();
             Updates = new UpdateSettings();
             Proxy = new ProxySettings();
@@ -74,7 +75,7 @@ namespace EVEMon.Common.Serialization.Settings
 
 
         [XmlElement("apiProviders")]
-        public SerializableAPIProviders APIProviders { get; set; }
+        public APIProvidersSettings APIProviders { get; set; }
 
         [XmlElement("updates")]
         public UpdateSettings Updates { get; set; }
@@ -86,7 +87,7 @@ namespace EVEMon.Common.Serialization.Settings
         public IGBSettings IGB { get; set; }
 
         [XmlElement("scheduler")]
-        public SerializableScheduler Scheduler { get; set; }
+        public SchedulerSettings Scheduler { get; set; }
 
         [XmlElement("calendar")]
         public CalendarSettings Calendar { get; set; }
@@ -96,6 +97,9 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlElement("marketUnifiedUploader")]
         public MarketUnifiedUploaderSettings MarketUnifiedUploader { get; set; }
+
+        [XmlElement("portableEveInstallations")]
+        public PortableEveInstallationsSettings PortableEveInstallations { get; set; }
 
         [XmlElement("G15")]
         public G15Settings G15 { get; set; }

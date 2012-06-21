@@ -1,16 +1,17 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using EVEMon.Common.Serialization.Settings;
 
-namespace EVEMon.Common.Serialization.Settings
+namespace EVEMon.Common.SettingsObjects
 {
     /// <summary>
     /// Represents a serializable version of the set of API providers. Used for settings persistence.
     /// </summary>
-    public sealed class SerializableAPIProviders
+    public sealed class APIProvidersSettings
     {
         private readonly Collection<SerializableAPIProvider> m_customProviders;
 
-        public SerializableAPIProviders()
+        public APIProvidersSettings()
         {
             m_customProviders = new Collection<SerializableAPIProvider>();
         }

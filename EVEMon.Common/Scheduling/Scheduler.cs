@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Scheduling
 {
@@ -88,7 +89,7 @@ namespace EVEMon.Common.Scheduling
         /// Imports data from the given serialization object.
         /// </summary>
         /// <param name="serial"></param>
-        internal static void Import(SerializableScheduler serial)
+        internal static void Import(SchedulerSettings serial)
         {
             s_schedule.Clear();
             foreach (SerializableScheduleEntry serialEntry in serial.Entries)
@@ -108,9 +109,9 @@ namespace EVEMon.Common.Scheduling
         /// Exports data to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal static SerializableScheduler Export()
+        internal static SchedulerSettings Export()
         {
-            SerializableScheduler serial = new SerializableScheduler();
+            SchedulerSettings serial = new SchedulerSettings();
             foreach (ScheduleEntry entry in s_schedule.Where(entry => !entry.Expired))
             {
                 serial.Entries.Add(entry.Export());
