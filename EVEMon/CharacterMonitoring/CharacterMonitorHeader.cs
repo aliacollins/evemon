@@ -687,11 +687,12 @@ namespace EVEMon.CharacterMonitoring
 
             // Add monitor items
             // Skip character's corporation monitors if they are bound with the character's personal monitor
-            foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors.Where(monitor => monitor.HasAccess).Where(
-                monitor =>
-                (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
-                (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
-                 monitor.Method.GetType() != typeof(APICharacterMethods))).Select(CreateNewMonitorToolStripMenuItem))
+            foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors.Where(
+                monitor => monitor.Method.HasHeader() && monitor.HasAccess).Where(
+                    monitor =>
+                    (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
+                    (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
+                     monitor.Method.GetType() != typeof(APICharacterMethods))).Select(CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menuItem);
             }
