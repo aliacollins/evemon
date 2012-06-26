@@ -191,7 +191,14 @@ namespace EVEMon.ApiTester
             {
                 Uri nUrl = EveMonClient.APIProviders.CurrentProvider.GetMethodUrl((Enum)ApiTesterUIHelper.SelectedItem);
                 string postData = m_url.Query.Replace("?", String.Empty);
-                m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, postData);
+                try
+                {
+                    m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, postData);
+                }
+                catch (HttpWebServiceException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
             }
 
             // Show the xml document using the webbrowser control
@@ -368,6 +375,9 @@ namespace EVEMon.ApiTester
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            if (m_result == null)
+                return;
+
             string filename = Path.GetFileNameWithoutExtension(WebBrowser.Url.AbsoluteUri);
             ApiTesterUIHelper.SaveDocument(filename, m_result);
         }
