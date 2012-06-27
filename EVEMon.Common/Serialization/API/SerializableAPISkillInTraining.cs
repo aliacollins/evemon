@@ -18,7 +18,7 @@ namespace EVEMon.Common.Serialization.API
         public string TrainingStartTime { get; set; }
 
         [XmlElement("trainingTypeID")]
-        public short TrainingTypeID { get; set; }
+        public int TrainingTypeID { get; set; }
 
         [XmlElement("trainingStartSP")]
         public int TrainingStartSP { get; set; }
