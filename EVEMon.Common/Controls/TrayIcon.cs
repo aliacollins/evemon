@@ -22,6 +22,7 @@ namespace EVEMon.Common.Controls
         private MouseState m_mouseState;
 
         private string m_iconText;
+        private int m_mouseHoverTime;
 
 
         #region Constructors
@@ -61,7 +62,11 @@ namespace EVEMon.Common.Controls
              "The length of time, in milliseconds, for which the mouse must remain stationary over the control before the MouseHover event is raised"
              ),
          DefaultValue(250)]
-        public int MouseHoverTime { get; set; }
+        public int MouseHoverTime
+        {
+            get { return m_mouseHoverTime; }
+            set { m_mouseHoverTime = value < 250 ? 250 : value; }
+        }
 
         #endregion
 
@@ -524,7 +529,7 @@ namespace EVEMon.Common.Controls
                 lock (SyncLock)
                 {
                     // Start the hover timer
-                    m_timer = new Timer(HoverTimeout, null, TrayIcon.MouseHoverTime, Timeout.Infinite);
+                    m_timer = new Timer(HoverTimeout, null, TrayIcon.m_mouseHoverTime, Timeout.Infinite);
 
                     // Start tracking the mouse
                     EnableMouseTracking();
@@ -539,7 +544,7 @@ namespace EVEMon.Common.Controls
                 try
                 {
                     // Mouse has moved, so reset the hover timer
-                    m_timer.Change(TrayIcon.MouseHoverTime, Timeout.Infinite);
+                    m_timer.Change(TrayIcon.m_mouseHoverTime, Timeout.Infinite);
                 }
                 catch (ObjectDisposedException)
                 {
