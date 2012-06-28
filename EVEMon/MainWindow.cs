@@ -58,6 +58,7 @@ namespace EVEMon
         private readonly List<NotificationEventArgs> m_popupNotifications = new List<NotificationEventArgs>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
         private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
+        private bool m_mouseClicked;
 
         #endregion
 
@@ -1871,6 +1872,9 @@ namespace EVEMon
             if (mouseClick != null && mouseClick.Button == MouseButtons.Right)
                 return;
 
+            // Set the mouse clicked flag
+            m_mouseClicked = true;
+
             // Update the tray icon's visibility
             HidePopup();
 
@@ -1886,8 +1890,15 @@ namespace EVEMon
         /// <param name="e"></param>
         private void trayIcon_MouseHover(object sender, EventArgs e)
         {
-            // Only display the pop up window if the context menu isn't showing
-            if (trayIconToolStrip.Visible)
+            // When clicking on the tray icon we need to prevent the popup showing due to pending hovering event
+            if (m_mouseClicked)
+            {
+                m_mouseClicked = false;
+                return;
+            }
+
+            // Only display the pop up window if the context menu isn't showing and main window is not restoring
+            if (trayIconContextMenuStrip.Visible)
                 return;
 
             // Stop if the popup is disabled

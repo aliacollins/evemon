@@ -31,7 +31,7 @@ namespace EVEMon
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.trayIconToolStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.trayIconContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.planToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plansStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.testTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -139,7 +139,7 @@ namespace EVEMon
             this.UploaderStatusImageList = new System.Windows.Forms.ImageList(this.components);
             this.noCharactersLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.Controls.NotificationList();
-            this.trayIconToolStrip.SuspendLayout();
+            this.trayIconContextMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
             this.toolbarContext.SuspendLayout();
@@ -150,17 +150,17 @@ namespace EVEMon
             // 
             // trayIconToolStrip
             // 
-            this.trayIconToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.trayIconContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.planToolStripMenuItem,
             this.plansStripSeparator,
             this.testTrayToolStripMenuItem,
             this.testsToolStripSeperator,
             this.restoreToolStripMenuItem,
             this.closeToolStripMenuItem});
-            this.trayIconToolStrip.Name = "trayIconToolStrip";
-            this.trayIconToolStrip.Size = new System.Drawing.Size(114, 104);
-            this.trayIconToolStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.trayIconToolStrip_Closed);
-            this.trayIconToolStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconToolStrip_Opening);
+            this.trayIconContextMenuStrip.Name = "trayIconContextMenuStrip";
+            this.trayIconContextMenuStrip.Size = new System.Drawing.Size(114, 104);
+            this.trayIconContextMenuStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.trayIconToolStrip_Closed);
+            this.trayIconContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconToolStrip_Opening);
             // 
             // planToolStripMenuItem
             // 
@@ -1059,7 +1059,7 @@ namespace EVEMon
             // 
             // trayIcon
             // 
-            this.trayIcon.ContextMenuStrip = this.trayIconToolStrip;
+            this.trayIcon.ContextMenuStrip = this.trayIconContextMenuStrip;
             this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
             this.trayIcon.MouseHoverTime = 500;
             this.trayIcon.Text = "";
@@ -1130,7 +1130,7 @@ namespace EVEMon
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Resize += new System.EventHandler(this.MainWindow_Resize);
-            this.trayIconToolStrip.ResumeLayout(false);
+            this.trayIconContextMenuStrip.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.mainMenuBar.ResumeLayout(false);
@@ -1149,7 +1149,7 @@ namespace EVEMon
 
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
-        private System.Windows.Forms.ContextMenuStrip trayIconToolStrip;
+        private System.Windows.Forms.ContextMenuStrip trayIconContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem planToolStripMenuItem;
