@@ -3,7 +3,7 @@
 namespace EVEMon.Common.Serialization.API
 {
     /// <summary>
-    /// Represents a serializable version of a characters' sheet. Used for querying CCP.
+    /// Represents a serializable version of a character's sheet. Used for querying CCP.
     /// </summary>
     public sealed class SerializableAPICharacterSheet : SerializableCharacterSheetBase
     {

@@ -4,6 +4,7 @@ using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
 {
@@ -105,7 +106,7 @@ namespace EVEMon.Common
         /// Update the providers with the provided serialization object.
         /// </summary>
         /// <param name="serial"></param>
-        internal void Import(SerializableAPIProviders serial)
+        internal void Import(APIProvidersSettings serial)
         {
             m_customProviders.Clear();
             CurrentProvider = DefaultProvider;
@@ -145,9 +146,9 @@ namespace EVEMon.Common
         /// Exports the providers to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal SerializableAPIProviders Export()
+        internal APIProvidersSettings Export()
         {
-            SerializableAPIProviders serial = new SerializableAPIProviders { CurrentProviderName = CurrentProvider.Name };
+            APIProvidersSettings serial = new APIProvidersSettings { CurrentProviderName = CurrentProvider.Name };
 
             // Providers
             foreach (APIProvider provider in CustomProviders)

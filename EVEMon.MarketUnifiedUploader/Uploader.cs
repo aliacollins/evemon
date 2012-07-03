@@ -71,7 +71,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// <summary>
         /// Gets the endpoints.
         /// </summary>
-        public static IEnumerable<EndPoint> EndPoints
+        public static EndPointCollection EndPoints
         {
             get { return s_endPoints; }
         }
@@ -205,25 +205,31 @@ namespace EVEMon.MarketUnifiedUploader
                         continue;
                     }
 
-                    // Get files from EVE cache and upload the data to the selected endpoints
-                    foreach (FileInfo cachedfile in Parser.GetMachoNetCachedFiles())
+                    // Get the cache files according to eve clients installations
+                    FileInfo[] cachedFiles = EveMonClient.EveAppDataFoldersExistInDefaultLocation
+                                                 ? Parser.GetMachoNetCachedFiles()
+                                                 : Settings.PortableEveInstallations.EVEClients.SelectMany(
+                                                     eveClient => Parser.GetMachoNetCachedFiles(eveClient.Path)).ToArray();
+
+                    // Parse the cahced files and upload the data to the selected endpoints
+                    foreach (FileInfo cachedFile in cachedFiles)
                     {
                         // Parse the cached file
-                        KeyValuePair<object, object> result = ParseCacheFile(cachedfile);
+                        KeyValuePair<object, object> result = ParseCacheFile(cachedFile);
 
-                        // Skip if for some reason the result is null
+                        // Skip if there is no result
                         if (result.Key == null || result.Value == null)
                             continue;
 
                         // Create the JSON object
                         Dictionary<string, object> jsonObj = UnifiedFormat.GetJSONObject(result);
 
-                        // Skip if for some reason the JSON object is null or empty
+                        // Skip if for some reason there is no JSON object or it's empty
                         if (jsonObj == null || !jsonObj.Any())
                             continue;
 
                         // Uploads to the selected endpoints
-                        UploadToEndPoints(cachedfile, jsonObj);
+                        UploadToEndPoints(cachedFile, jsonObj);
                     }
 
                     Status = UploaderStatus.Idle;

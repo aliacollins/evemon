@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.Serialization.API
 {
     /// <summary>
-    /// Represents a serializable version of a characters' market orders. Used for querying CCP.
+    /// Represents a serializable version of market orders. Used for querying CCP.
     /// </summary>
     public sealed class SerializableAPIMarketOrders
     {

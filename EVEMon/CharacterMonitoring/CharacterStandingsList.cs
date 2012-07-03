@@ -134,17 +134,17 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 IEnumerable<Standing> standings = Character.Standings;
-                IEnumerable<IGrouping<string, Standing>> groups = standings.GroupBy(
+                IEnumerable<IGrouping<StandingGroup, Standing>> groups = standings.GroupBy(
                     x => x.Group).Reverse();
 
                 // Scroll through groups
                 lbStandings.Items.Clear();
-                foreach (IGrouping<string, Standing> group in groups)
+                foreach (IGrouping<StandingGroup, Standing> group in groups)
                 {
-                    lbStandings.Items.Add(group.Key);
+                    lbStandings.Items.Add(group.Key.GetDescription());
 
                     // Add items in the group when it's not collapsed
-                    if (m_collapsedGroups.Contains(group.Key))
+                    if (m_collapsedGroups.Contains(group.Key.GetDescription()))
                         continue;
 
                     foreach (Standing standing in group.OrderByDescending(x => x.EffectiveStanding))

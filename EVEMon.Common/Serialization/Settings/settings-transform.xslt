@@ -29,9 +29,20 @@
       <xsl:variable name="notificationCategory" select="key/NotificationCategory"/>
       <xsl:variable name="toolTipBehaviour" select="value/NotificationCategorySettings/@toolTipBehaviour"/>
       <xsl:variable name="showOnMainWindow" select="value/NotificationCategorySettings/@showOnMainWindow"/>
-      <category toolTipBehaviour ="{$toolTipBehaviour}" showOnMainWindow ="{$showOnMainWindow}">
-        <xsl:value-of select="$notificationCategory"/>
-      </category>
+      <!--As of version 1.3.3 the spelling of enumeration 'RepeatUntiClicked' was corrected and double supported since 1.6.1,
+      though we need to catch that too for all those that haven't updated since-->
+      <xsl:choose>
+        <xsl:when test="$toolTipBehaviour='RepeatUntiClicked'">
+          <category toolTipBehaviour ="RepeatUntilClicked" showOnMainWindow ="{$showOnMainWindow}">
+            <xsl:value-of select="$notificationCategory"/>
+          </category>
+        </xsl:when>
+        <xsl:otherwise>
+          <category toolTipBehaviour ="{$toolTipBehaviour}" showOnMainWindow ="{$showOnMainWindow}">
+            <xsl:value-of select="$notificationCategory"/>
+          </category>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
   </xsl:template>
 
@@ -66,6 +77,20 @@
       <xsl:when test="text()='None'">
         <xsl:copy>
           <xsl:value-of select="'NoSlot'"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Replacing element value 'Named' and 'Other' in item browser metaGroup filtering -->
+  <xsl:template match="metaGroupFilter">
+    <xsl:choose>
+      <xsl:when test="contains(text(), 'Named') or contains(text(), 'Other')">
+        <xsl:copy>
+          <xsl:value-of select="'All'"/>
         </xsl:copy>
       </xsl:when>
       <xsl:otherwise>

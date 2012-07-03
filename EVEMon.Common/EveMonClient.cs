@@ -12,7 +12,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
-using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.PatchXml;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
@@ -32,6 +32,7 @@ namespace EVEMon.Common
 
         private static readonly Object s_pathsInitializationLock = new Object();
         private static readonly Object s_initializationLock = new Object();
+        private static IEnumerable<string> s_defaultEvePortraitCacheFolders;
         private static bool s_initialized;
         private static string s_traceFile;
 
@@ -148,14 +149,31 @@ namespace EVEMon.Common
         #region File paths
 
         /// <summary>
-        /// Gets or sets the EVE Online installation's default portrait cache folder.
+        /// Gets the EVE Online installations default portrait cache folder.
         /// </summary>
-        public static ReadOnlyCollection<string> DefaultEvePortraitCacheFolders { get; private set; }
+        public static IEnumerable<string> DefaultEvePortraitCacheFolders
+        {
+            get
+            {
+                if (s_defaultEvePortraitCacheFolders == null || !s_defaultEvePortraitCacheFolders.Any())
+                {
+                    s_defaultEvePortraitCacheFolders = Settings.PortableEveInstallations.EVEClients.Select(
+                        eveClientInstallation => String.Format(
+                            CultureConstants.InvariantCulture, "{1}{0}cache{0}Pictures{0}Characters",
+                            Path.DirectorySeparatorChar, eveClientInstallation.Path)).Where(Directory.Exists);
+
+                    if (s_defaultEvePortraitCacheFolders.Any())
+                        EvePortraitCacheFolders = s_defaultEvePortraitCacheFolders;
+                }
+
+                return s_defaultEvePortraitCacheFolders;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the portrait cache folder defined by the user.
         /// </summary>
-        public static ReadOnlyCollection<string> EvePortraitCacheFolders { get; private set; }
+        public static IEnumerable<string> EvePortraitCacheFolders { get; internal set; }
 
         /// <summary>
         /// Gets or sets the EVE Online application data folder.
@@ -168,7 +186,7 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if EVE database is out of service; otherwise, <c>false</c>.
         /// </value>
-        public static bool EVEDatabaseDisabled { get; set; }
+        public static bool EVEDatabaseDisabled { get; internal set; }
 
         /// <summary>
         /// Returns the current data storage directory.
@@ -204,6 +222,11 @@ namespace EVEMon.Common
         /// Gets the name of the current settings file.
         /// </summary>
         public static string SettingsFileName { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether cache folder in EVE default location exist.
+        /// </summary>
+        public static bool EveAppDataFoldersExistInDefaultLocation { get; private set; }
 
         /// <summary>
         /// Gets the fully qualified path to the current settings file.
@@ -319,7 +342,6 @@ namespace EVEMon.Common
         /// </summary>
         private static void InitializeDefaultEvePortraitCachePath()
         {
-            DefaultEvePortraitCacheFolders = new ReadOnlyCollection<string>(new string[] { });
             string localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             EVEApplicationDataDir = String.Format(CultureConstants.InvariantCulture, "{1}{0}CCP{0}EVE",
                                                   Path.DirectorySeparatorChar, localApplicationData);
@@ -331,27 +353,19 @@ namespace EVEMon.Common
             // Create a pattern that matches anything "*_tranquility"
             // Enumerate files in the EVE cache directory
             DirectoryInfo di = new DirectoryInfo(EVEApplicationDataDir);
-            DirectoryInfo[] foldersInEveCache = di.GetDirectories("*_tranquility");
+            DirectoryInfo[] tranquilityFolders = di.GetDirectories("*_tranquility");
 
-            if (!foldersInEveCache.Any())
+            EveAppDataFoldersExistInDefaultLocation = tranquilityFolders.Any();
+
+            if (!tranquilityFolders.Any())
                 return;
 
-            EvePortraitCacheFolders = foldersInEveCache.Select(
-                eveDataPath => eveDataPath.Name).Select(
-                    portraitCache => String.Format(
+            s_defaultEvePortraitCacheFolders = tranquilityFolders.Select(
+                    traquilityFolder => String.Format(
                         CultureConstants.InvariantCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
-                        Path.DirectorySeparatorChar, portraitCache, EVEApplicationDataDir)).ToList().AsReadOnly();
+                        Path.DirectorySeparatorChar, traquilityFolder.Name, EVEApplicationDataDir)).Where(Directory.Exists);
 
-            DefaultEvePortraitCacheFolders = EvePortraitCacheFolders;
-        }
-
-        /// <summary>
-        /// Set the EVE Online installation's portrait cache folder.
-        /// </summary>
-        /// <param name="path">location of the folder</param>
-        internal static void SetEvePortraitCacheFolder(IEnumerable<string> path)
-        {
-            EvePortraitCacheFolders = path.ToList().AsReadOnly();
+            EvePortraitCacheFolders = s_defaultEvePortraitCacheFolders;
         }
 
         /// <summary>
@@ -686,6 +700,31 @@ namespace EVEMon.Common
         /// Occurs when the text of a character EVE notification has been downloaded.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterEVENotificationTextDownloaded;
+
+        /// <summary>
+        /// Occurs when the text of a character contacts have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterContactsUpdated;
+
+        /// <summary>
+        /// Occurs when the text of a character medals have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterMedalsUpdated;
+
+        /// <summary>
+        /// Occurs when the text of a character upcoming calendar events have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterUpcomingCalendarEventsUpdated;
+
+        /// <summary>
+        /// Occurs when the text of a character calendar event attendees have been downloaded.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterCalendarEventAttendeesDownloaded;
+
+        /// <summary>
+        /// Occurs when the text of a character kill logs have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterKillLogUpdated;
 
         /// <summary>
         /// Occurs when a plan's name changed.
@@ -1212,6 +1251,61 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterEVENotificationTextDownloaded - {0}", character.Name);
             if (CharacterEVENotificationTextDownloaded != null)
                 CharacterEVENotificationTextDownloaded(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character contacts updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterContactsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterContactsUpdated - {0}", character.Name);
+            if (CharacterContactsUpdated != null)
+                CharacterContactsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character medals updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterMedalsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterMedalsUpdated - {0}", character.Name);
+            if (CharacterMedalsUpdated != null)
+                CharacterMedalsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character upcoming calendar events updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterUpcomingCalendarEventsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterUpcomingCalendarEventsUpdated - {0}", character.Name);
+            if (CharacterUpcomingCalendarEventsUpdated != null)
+                CharacterUpcomingCalendarEventsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character calendar event attendees downloaded.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterCalendarEventAttendeesDownloaded(Character character)
+        {
+            Trace("EveMonClient.OnCharacterCalendarEventAttendeesDownloaded - {0}", character.Name);
+            if (CharacterCalendarEventAttendeesDownloaded != null)
+                CharacterCalendarEventAttendeesDownloaded(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character kill log updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterKillLogUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterKillLogUpdated - {0}", character.Name);
+            if (CharacterKillLogUpdated != null)
+                CharacterKillLogUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

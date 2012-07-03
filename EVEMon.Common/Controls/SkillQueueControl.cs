@@ -181,24 +181,24 @@ namespace EVEMon.Common.Controls
         /// Paint the skill queue to the control surface.
         /// </summary>
         /// <remarks>
-        /// pe.Graphics is control suface. Width and Height are
-        /// derived from the control itself not pe.ClipRectangle 
-        /// which could point to part of the control
+        /// e.Graphics is control surface. Width and Height are
+        /// derived from the control itself not e.ClipRectangle 
+        /// which could point to part of the control.
         /// </remarks>
-        /// <param name="pe">Paint Event</param>
-        protected override void OnPaint(PaintEventArgs pe)
+        /// <param name="e">Paint Event</param>
+        protected override void OnPaint(PaintEventArgs e)
         {
-            if (pe == null)
-                throw new ArgumentNullException("pe");
+            if (e == null)
+                throw new ArgumentNullException("e");
 
-            base.OnPaint(pe);
+            base.OnPaint(e);
 
-            Graphics g = pe.Graphics;
+            Graphics g = e.Graphics;
             int width = Width;
             int height = Height;
 
             // If we are in DesignMode we just paint a dummy queue
-            if (DesignMode)
+            if (DesignMode || this.IsDesignModeHosted())
                 PaintDesignerQueue(g, width, height);
             else
                 PaintQueue(g, width, height);

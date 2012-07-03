@@ -40,13 +40,13 @@ namespace EVEMon.SettingsUI
             this.colPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnUseDefaults = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dgMethods)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
@@ -63,14 +63,14 @@ namespace EVEMon.SettingsUI
             // 
             // txtAPIHost
             // 
-            this.txtAPIHost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtAPIHost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtAPIHost.Location = new System.Drawing.Point(118, 35);
             this.txtAPIHost.Name = "txtAPIHost";
             this.txtAPIHost.Size = new System.Drawing.Size(242, 20);
             this.txtAPIHost.TabIndex = 1;
-            this.txtAPIHost.Validated += new System.EventHandler(this.txtAPIHost_Validated);
             this.txtAPIHost.Validating += new System.ComponentModel.CancelEventHandler(this.txtAPIHost_Validating);
+            this.txtAPIHost.Validated += new System.EventHandler(this.txtAPIHost_Validated);
             // 
             // lblConfigurationName
             // 
@@ -83,14 +83,14 @@ namespace EVEMon.SettingsUI
             // 
             // txtConfigurationName
             // 
-            this.txtConfigurationName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtConfigurationName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtConfigurationName.Location = new System.Drawing.Point(118, 9);
             this.txtConfigurationName.Name = "txtConfigurationName";
             this.txtConfigurationName.Size = new System.Drawing.Size(242, 20);
             this.txtConfigurationName.TabIndex = 0;
-            this.txtConfigurationName.Validated += new System.EventHandler(this.txtConfigurationName_Validated);
             this.txtConfigurationName.Validating += new System.ComponentModel.CancelEventHandler(this.txtConfigurationName_Validating);
+            this.txtConfigurationName.Validated += new System.EventHandler(this.txtConfigurationName_Validated);
             // 
             // btnOK
             // 
@@ -120,9 +120,9 @@ namespace EVEMon.SettingsUI
             this.dgMethods.AllowUserToAddRows = false;
             this.dgMethods.AllowUserToDeleteRows = false;
             this.dgMethods.AllowUserToResizeRows = false;
-            this.dgMethods.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgMethods.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgMethods.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgMethods.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.dgMethods.BackgroundColor = System.Drawing.SystemColors.Window;
@@ -178,17 +178,17 @@ namespace EVEMon.SettingsUI
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Method URL Paths";
             // 
-            // flowLayoutPanel1
+            // flowLayoutPanel
             // 
-            this.flowLayoutPanel1.Controls.Add(this.panel1);
-            this.flowLayoutPanel1.Controls.Add(this.groupBox1);
-            this.flowLayoutPanel1.Controls.Add(this.panel2);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(396, 310);
-            this.flowLayoutPanel1.TabIndex = 7;
+            this.flowLayoutPanel.Controls.Add(this.panel1);
+            this.flowLayoutPanel.Controls.Add(this.groupBox1);
+            this.flowLayoutPanel.Controls.Add(this.panel2);
+            this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel.Name = "flowLayoutPanel";
+            this.flowLayoutPanel.Size = new System.Drawing.Size(396, 310);
+            this.flowLayoutPanel.TabIndex = 7;
             // 
             // panel1
             // 
@@ -222,7 +222,7 @@ namespace EVEMon.SettingsUI
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(396, 310);
-            this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.flowLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -231,7 +231,7 @@ namespace EVEMon.SettingsUI
             this.Text = "EVE API Configuration Settings";
             ((System.ComponentModel.ISupportInitialize)(this.dgMethods)).EndInit();
             this.groupBox1.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -253,7 +253,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.DataGridViewTextBoxColumn colPath;
         private System.Windows.Forms.Button btnUseDefaults;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ErrorProvider errorProvider;

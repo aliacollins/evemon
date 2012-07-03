@@ -131,6 +131,7 @@ namespace EVEMon.Updater
             this.Name = "DataUpdateNotifyForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Data Update Available";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.DataUpdateNotifyForm_Load);
             this.tableLayoutPanel.ResumeLayout(false);
             this.tableLayoutPanel.PerformLayout();

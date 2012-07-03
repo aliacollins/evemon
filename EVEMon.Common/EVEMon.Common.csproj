@@ -113,6 +113,8 @@
     <Compile Include="CharacterIdentityIgnoreList.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
+    <Compile Include="Contact.cs" />
+    <Compile Include="ContactCollection.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractBid.cs" />
     <Compile Include="ContractBidCollection.cs" />
@@ -245,6 +247,7 @@
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
     <Compile Include="EveNotificationType.cs" />
+    <Compile Include="CalendarEventAttendee.cs" />
     <Compile Include="EveRefType.cs" />
     <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
@@ -264,6 +267,10 @@
     <Compile Include="IPlanOrderPluggable.cs" />
     <Compile Include="IQueryMonitorEx.cs" />
     <Compile Include="ISkillLevel.cs" />
+    <Compile Include="KillLog.cs" />
+    <Compile Include="KillLogCollection.cs" />
+    <Compile Include="Medal.cs" />
+    <Compile Include="MedalCollection.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
     <Compile Include="Notifications\APIErrorNotificationEventArgs.cs" />
     <Compile Include="Notifications\ClaimableCertificateNotificationEventArgs.cs" />
@@ -286,17 +293,36 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Serialization\API\SerializableAllianceListItem.cs" />
+    <Compile Include="Serialization\API\SerializableAPIAllianceList.cs" />
+    <Compile Include="Serialization\API\SerializableAPICalendarEventAttendees.cs" />
+    <Compile Include="Serialization\API\SerializableAPIContactList.cs" />
+    <Compile Include="Serialization\API\SerializableAPICorporationSheet.cs" />
     <Compile Include="Serialization\API\SerializableAPIEveFactionalWarfareStats.cs" />
     <Compile Include="Serialization\API\SerializableAPIAssetList.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
     <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
     <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
+    <Compile Include="Serialization\API\SerializableAPIKillLog.cs" />
+    <Compile Include="Serialization\API\SerializableAPIMedals.cs" />
     <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
+    <Compile Include="Serialization\API\SerializableAPIUpcomingCalendarEvents.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
+    <Compile Include="Serialization\API\SerializableCalendarEventAttendeeListItem.cs" />
+    <Compile Include="Serialization\API\SerializableContactListItem.cs" />
+    <Compile Include="Serialization\API\SerializableDivision.cs" />
     <Compile Include="Serialization\API\SerializableEveFactionalWarfareStatsListItem.cs" />
     <Compile Include="Serialization\API\SerializableEveFactionWarsListItem.cs" />
     <Compile Include="Serialization\API\SerializableEveFacWarfareTotals.cs" />
+    <Compile Include="Serialization\API\SerializableKillLogAttackersListItem.cs" />
+    <Compile Include="Serialization\API\SerializableKillLogItemListItem.cs" />
+    <Compile Include="Serialization\API\SerializableKillLogListItem.cs" />
+    <Compile Include="Serialization\API\SerializableKillLogVictim.cs" />
+    <Compile Include="Serialization\API\SerializableMedalsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableMemberCorporation.cs" />
     <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />
+    <Compile Include="Serialization\API\SerializableUpcomingCalendarEventsListItem.cs" />
+    <Compile Include="Serialization\API\SerializableWalletDivision.cs" />
     <Compile Include="Serialization\API\SerializableWalletJournalListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletTransactions.cs" />
     <Compile Include="Serialization\API\SerializableWalletTransactionsListItem.cs" />
@@ -308,11 +334,8 @@
     <Compile Include="Serialization\API\SerializableAPIKeyItem.cs" />
     <Compile Include="Serialization\API\SerializableContractListItem.cs" />
     <Compile Include="Serialization\API\SerializableEmploymentHistory.cs" />
-    <Compile Include="Serialization\API\SerializableAgentStanding.cs" />
     <Compile Include="Serialization\API\SerializableAPIStandings.cs" />
     <Compile Include="Serialization\API\SerializableEmploymentHistoryListItem.cs" />
-    <Compile Include="Serialization\API\SerializableFactionStanding.cs" />
-    <Compile Include="Serialization\API\SerializableNPCCorporationStanding.cs" />
     <Compile Include="Serialization\API\SerializableStandings.cs" />
     <Compile Include="Serialization\API\SerializableStandingsListItem.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacterInfo.cs" />
@@ -329,9 +352,9 @@
     <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableLoadout.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableLoadoutRace.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableLoadoutSlot.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadout.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutRace.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutSlot.cs" />
     <Compile Include="Serialization\Datafiles\SerializableAgent.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprint.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprintMarketGroup.cs" />
@@ -363,11 +386,14 @@
     <Compile Include="Serialization\Exportation\OutputCertificate.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFitting.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFittingDescription.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFittingHardware.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFittings.cs" />
-    <Compile Include="Serialization\FittingTools\SerializableFittingShipType.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFitting.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFittingDescription.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFittingHardware.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFittings.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableFittingShipType.cs" />
+    <Compile Include="Serialization\PatchXml\SerializableDatafile.cs" />
+    <Compile Include="Serialization\PatchXml\SerializablePatch.cs" />
+    <Compile Include="Serialization\PatchXml\SerializableRelease.cs" />
     <Compile Include="Serialization\SerializableEveFlagsListItem.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableEveFlags.cs" />
@@ -378,6 +404,8 @@
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
+    <Compile Include="SettingsObjects\PortableEveInstallationsSettings.cs" />
+    <Compile Include="Serialization\Settings\SerializablePortableEveInstallation.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
     <Compile Include="SettingsObjects\AssetColumn.cs" />
     <Compile Include="SettingsObjects\AssetColumnSettings.cs" />
@@ -404,6 +432,8 @@
     <Compile Include="APIKey.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="UIHelper.cs" />
+    <Compile Include="UpcomingCalendarEvent.cs" />
+    <Compile Include="UpcomingCalendarEventCollection.cs" />
     <Compile Include="WalletJournal.cs" />
     <Compile Include="WalletJournalCollection.cs" />
     <Compile Include="WalletJournalComparer.cs" />
@@ -467,9 +497,6 @@
     <Compile Include="Serialization\API\SerializableQueuedSkill.cs" />
     <Compile Include="Serialization\API\SerializableResearchListItem.cs" />
     <Compile Include="Serialization\API\ISerializableCharacterIdentity.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableDatafile.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializablePatch.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableRelease.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIMethod.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIUpdate.cs" />
@@ -764,7 +791,7 @@
     <Compile Include="Scheduling\ScheduleEntryTitleComparer.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableLoadoutFeed.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutFeed.cs" />
     <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacterSheet.cs" />
     <Compile Include="Serialization\API\SerializableCharacterAttributes.cs" />
@@ -783,7 +810,7 @@
     <Compile Include="SettingsObjects\G15Settings.cs" />
     <Compile Include="SettingsObjects\MainWindowSettings.cs" />
     <Compile Include="SettingsObjects\NotificationSettings.cs" />
-    <Compile Include="Serialization\Settings\SerializableScheduler.cs" />
+    <Compile Include="SettingsObjects\SchedulerSettings.cs" />
     <Compile Include="SettingsObjects\SerializableDictionary.cs" />
     <Compile Include="Serialization\Settings\SerializableSettingsImplantSet.cs" />
     <Compile Include="Serialization\Settings\SerializablePlan.cs" />
@@ -819,7 +846,7 @@
     <Compile Include="GlobalCharacterIdentityCollection.cs" />
     <Compile Include="GlobalMonitoredCharacterCollection.cs" />
     <Compile Include="Serialization\API\ISerializableWithLocalClock.cs" />
-    <Compile Include="Serialization\Settings\SerializableAPIProviders.cs" />
+    <Compile Include="SettingsObjects\APIProvidersSettings.cs" />
     <Compile Include="Serialization\API\SerializableCharacterSkill.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacters.cs" />
     <Compile Include="Serialization\API\SerializableAPIServerStatus.cs" />
@@ -919,7 +946,9 @@
     <None Include="Resources\Skill_Select\Group8\Bars.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Serialization\API\rowsets-transform.xslt" />
+    <EmbeddedResource Include="Serialization\API\rowsets-transform.xslt">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Serialization\Datafiles\datafile-transform.xslt" />
     <EmbeddedResource Include="Serialization\Datafiles\DatafileConstants.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

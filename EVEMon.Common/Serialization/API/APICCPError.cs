@@ -38,8 +38,16 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return (ErrorCode >= 206 && ErrorCode <= 209) || ErrorCode == 213; }
         }
-        
-        
+
+        /// <summary>
+        /// Gets true when character has exhausted kill log.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsKillLogExhaustedError
+        {
+            get { return ErrorCode == 119; }
+        }
+
         /// <summary>
         /// Gets true when character is not enlisted in factional warfare.
         /// </summary>

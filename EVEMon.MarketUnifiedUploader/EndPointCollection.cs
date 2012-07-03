@@ -47,17 +47,20 @@ namespace EVEMon.MarketUnifiedUploader
             }
 
             // If a valid localhost endpoint is specified insert it on top of the list
-            SerializableLocalhostEndPoint localhost =
-                Settings.MarketUnifiedUploader.EndPoints.OfType<SerializableLocalhostEndPoint>().FirstOrDefault(
-                    endPoint => endPoint.Url != null && (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1"));
-            if (localhost != null)
+            List<SerializableLocalhostEndPoint> localhosts =
+                Settings.MarketUnifiedUploader.EndPoints.OfType<SerializableLocalhostEndPoint>().Where(
+                    endPoint => endPoint.Url != null && (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1")).Reverse().ToList();
+
+            foreach (SerializableLocalhostEndPoint localhost in localhosts)
+            {
                 endpointsOnline.Insert(0, new EndPoint(localhost));
+            }
 
             // Import the merged endpoints
             Import(endpointsOnline);
 
             // Update the settings
-            UpdateEndPointSettings();
+            UpdateSettings();
 
             // Notify the subscribers
             Dispatcher.Invoke(Uploader.OnEndPointsUpdated);
@@ -131,17 +134,53 @@ namespace EVEMon.MarketUnifiedUploader
         }
 
         /// <summary>
+        /// Updates the localhosts.
+        /// </summary>
+        /// <param name="localhostEndPoints">The localhost endpoints.</param>
+        public void UpdateLocalhosts(IEnumerable<SerializableLocalhostEndPoint> localhostEndPoints)
+        {
+            RemoveLocalhosts();
+            foreach (EndPoint endPoint in localhostEndPoints.Reverse().Select(localhostEndPoint => new EndPoint(localhostEndPoint)))
+            {
+                Items.Insert(0, endPoint);
+            }
+
+            Uploader.OnEndPointsUpdated();
+        }
+
+        /// <summary>
+        /// Removes the localhosts.
+        /// </summary>
+        private void RemoveLocalhosts()
+        {
+            List<EndPoint> endpointsToRemove =
+                Items.Where(endPoint => endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1").ToList();
+            foreach (EndPoint endPoint in endpointsToRemove)
+            {
+                Items.Remove(endPoint);
+            }
+        }
+
+        /// <summary>
         /// Updates the endpoint settings.
         /// </summary>
-        public static void UpdateEndPointSettings()
+        public void UpdateSettings()
         {
             Settings.MarketUnifiedUploader.EndPoints.Clear();
 
-            foreach (EndPoint endPoint in Uploader.EndPoints)
+            foreach (EndPoint endPoint in Items)
             {
                 if (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1")
                 {
-                    Settings.MarketUnifiedUploader.EndPoints.Add(endPoint.ExportLocalhostEndpoint());
+                    Settings.MarketUnifiedUploader.EndPoints.Add(new SerializableLocalhostEndPoint
+                                                                     {
+                                                                         Enabled = endPoint.Enabled,
+                                                                         Name = endPoint.Name,
+                                                                         Url = endPoint.Url,
+                                                                         UploadKey = endPoint.UploadKey,
+                                                                         Method = endPoint.Method,
+                                                                         DataCompression = endPoint.DataCompression
+                                                                     });
                     continue;
                 }
 
@@ -152,7 +191,7 @@ namespace EVEMon.MarketUnifiedUploader
                                                                  });
             }
         }
-
+        
         /// <summary>
         /// Gets a string representation of this collection.
         /// </summary>

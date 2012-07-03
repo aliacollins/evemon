@@ -48,14 +48,6 @@ namespace EVEMon.Common
 
         #endregion
 
-        /// <summary>
-        /// Called when the object gets disposed.
-        /// </summary>
-        public void Dispose()
-        {
-            EveMonClient.TimerTick -= EveMonClient_TimerTick;
-        }
-
 
         #region Properties
 
@@ -122,7 +114,10 @@ namespace EVEMon.Common
                 }
 
                 // No error ? Then we compute the next update according to the settings
-                UpdatePeriod period = Settings.Updates.Periods[Method.ToString()];
+                UpdatePeriod period = UpdatePeriod.Never;
+                if (Settings.Updates.Periods.ContainsKey(Method.ToString()))
+                    period = Settings.Updates.Periods[Method.ToString()];
+
                 if (period == UpdatePeriod.Never)
                     return DateTime.MaxValue;
 
@@ -189,6 +184,14 @@ namespace EVEMon.Common
 
         #endregion
 
+
+        /// <summary>
+        /// Called when the object gets disposed.
+        /// </summary>
+        public void Dispose()
+        {
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
+        }
 
         /// <summary>
         /// Manually updates this monitor with the provided data, like if it has just been updated from CCP.

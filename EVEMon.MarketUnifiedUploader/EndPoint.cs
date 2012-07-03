@@ -37,7 +37,11 @@ namespace EVEMon.MarketUnifiedUploader
                 DataCompression = (DataCompression)Enum.Parse(typeof(DataCompression), endPoint["compression"].ToString().ToTitleCase());
         }
 
-        public EndPoint(SerializableLocalhostEndPoint endPoint)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EndPoint"/> class.
+        /// </summary>
+        /// <param name="endPoint">The end point.</param>
+        internal EndPoint(SerializableLocalhostEndPoint endPoint)
         {
             Enabled = endPoint.Enabled;
             Name = endPoint.Name ?? "Localhost";
@@ -113,28 +117,6 @@ namespace EVEMon.MarketUnifiedUploader
         /// The next upload time UTC.
         /// </value>
         internal DateTime NextUploadTimeUtc { get; set; }
-
-        #endregion
-
-
-        #region Exportation
-
-        /// <summary>
-        /// Exports the localhost endpoint as a serializable object.
-        /// </summary>
-        /// <returns></returns>
-        public SerializableEndPoint ExportLocalhostEndpoint()
-        {
-            return new SerializableLocalhostEndPoint
-                       {
-                           Enabled = Enabled,
-                           Name = Name,
-                           Url = Url,
-                           UploadKey = UploadKey,
-                           Method = Method,
-                           DataCompression = DataCompression
-                       };
-        }
 
         #endregion
 

@@ -23,7 +23,7 @@ InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMo
 
 VIAddVersionKey "ProductName" "EVEMon Installer"
 VIAddVersionKey "CompanyName" "battleclinic.com"
-VIAddVersionKey "LegalCopyright" "Copyright 2006, Timothy Fries and EVEMon Development Team"
+VIAddVersionKey "LegalCopyright" "Copyright 2006-2012, EVEMon Development Team"
 VIAddVersionKey "FileDescription" "Installs EVEMon on your computer"
 VIAddVersionKey "FileVersion" "${VERSION}"
 VIProductVersion ${VERSION}
@@ -144,8 +144,8 @@ Function EnsureNotRunning
 
 	lbl_waitForIt:
 	IntOp $1 $1 + 1
-	IntCmp $1 10 0 0 lbl_failedToClose
-	Sleep 500
+	IntCmp $1 60 0 0 lbl_failedToClose
+	Sleep 1000
 	goto lbl_tryAgain
 
 	lbl_failedToClose:

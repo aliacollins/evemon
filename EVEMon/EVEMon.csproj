@@ -167,6 +167,18 @@
     <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.Designer.cs">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMonitorBody.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMonitorBody.Designer.cs">
+      <DependentUpon>CharacterMonitorBody.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMonitorFooter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMonitorFooter.Designer.cs">
+      <DependentUpon>CharacterMonitorFooter.cs</DependentUpon>
+    </Compile>
     <Compile Include="CharacterMonitoring\CharacterWalletJournalList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -320,11 +332,23 @@
     <Compile Include="SettingsUI\EmailNotificationsControl.Designer.cs">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsUI\LocalhostSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\LocalhostSettingsForm.Designer.cs">
+      <DependentUpon>LocalhostSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsUI\MarketUnifiedUploaderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SettingsUI\MarketUnifiedUploaderControl.Designer.cs">
       <DependentUpon>MarketUnifiedUploaderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsUI\PortableEveClientsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsUI\PortableEveClientsControl.Designer.cs">
+      <DependentUpon>PortableEveClientsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SettingsUI\SettingsFileStorageControl.cs">
       <SubType>UserControl</SubType>
@@ -451,6 +475,12 @@
     <EmbeddedResource Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.resx">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorBody.resx">
+      <DependentUpon>CharacterMonitorBody.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorFooter.resx">
+      <DependentUpon>CharacterMonitorFooter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterWalletJournalList.resx">
       <DependentUpon>CharacterWalletJournalList.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -516,8 +546,14 @@
     <EmbeddedResource Include="SettingsUI\EmailNotificationsControl.resx">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\LocalhostSettingsForm.resx">
+      <DependentUpon>LocalhostSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\MarketUnifiedUploaderControl.resx">
       <DependentUpon>MarketUnifiedUploaderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsUI\PortableEveClientsControl.resx">
+      <DependentUpon>PortableEveClientsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\SettingsFileStorageControl.resx">
       <DependentUpon>SettingsFileStorageControl.cs</DependentUpon>

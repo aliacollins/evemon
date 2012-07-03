@@ -1,6 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
-using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.PatchXml;
 
 namespace EVEMon.Common.CustomEventArgs
 {

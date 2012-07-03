@@ -21,7 +21,7 @@ namespace EVEMon.Common.SettingsObjects
         /// Gets or sets a value indicating whether this <see cref="MarketUnifiedUploaderSettings"/> is enabled.
         /// </summary>
         /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
-        [XmlElement("enabled")]
+        [XmlAttribute("enabled")]
         public bool Enabled { get; set; }
 
         /// <summary>

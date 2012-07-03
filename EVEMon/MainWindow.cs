@@ -58,6 +58,7 @@ namespace EVEMon
         private readonly List<NotificationEventArgs> m_popupNotifications = new List<NotificationEventArgs>();
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
         private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
+        private bool m_mouseClicked;
 
         #endregion
 
@@ -122,9 +123,6 @@ namespace EVEMon
 
             if (DesignMode)
                 return;
-
-            // Ensures the installation files downloaded through the autoupdate are correctly deleted
-            UpdateManager.DeleteInstallationFiles();
 
             // Start the one-second timer 
             EveMonClient.Run(this);
@@ -1294,6 +1292,9 @@ namespace EVEMon
             // Open the specified settings
             Settings.Restore(openFileDialog.FileName);
 
+            // Show the TabControl
+            tcCharacterTabs.Show();
+
             // Remove the tip window if it exist and is confirmed in settings
             if (Settings.UI.ConfirmedTips.Contains("startup") && Controls.OfType<TipWindow>().Any())
                 Controls.Remove(Controls.OfType<TipWindow>().First());
@@ -1342,6 +1343,9 @@ namespace EVEMon
 
             // Reset the settings
             Settings.Reset();
+
+            // Show the TabControl
+            tcCharacterTabs.Show();
 
             // Trigger the tip window
             OnShown(e);
@@ -1868,6 +1872,9 @@ namespace EVEMon
             if (mouseClick != null && mouseClick.Button == MouseButtons.Right)
                 return;
 
+            // Set the mouse clicked flag
+            m_mouseClicked = true;
+
             // Update the tray icon's visibility
             HidePopup();
 
@@ -1883,8 +1890,15 @@ namespace EVEMon
         /// <param name="e"></param>
         private void trayIcon_MouseHover(object sender, EventArgs e)
         {
-            // Only display the pop up window if the context menu isn't showing
-            if (trayIconToolStrip.Visible)
+            // When clicking on the tray icon we need to prevent the popup showing due to pending hovering event
+            if (m_mouseClicked)
+            {
+                m_mouseClicked = false;
+                return;
+            }
+
+            // Only display the pop up window if the context menu isn't showing and main window is not restoring
+            if (trayIconContextMenuStrip.Visible)
                 return;
 
             // Stop if the popup is disabled
@@ -2189,8 +2203,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void testCharacterNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CharacterMonitor monitor = GetCurrentMonitor();
-            monitor.TestCharacterNotification();
+            CharacterMonitor.TestCharacterNotification(GetCurrentCharacter());
         }
 
         /// <summary>

@@ -39,21 +39,23 @@ namespace EVEMon.Common.Controls
             // 
             // BrowseButton
             // 
-            this.BrowseButton.Location = new System.Drawing.Point(268, 60);
+            this.BrowseButton.Enabled = false;
+            this.BrowseButton.Location = new System.Drawing.Point(268, 58);
             this.BrowseButton.Name = "BrowseButton";
             this.BrowseButton.Size = new System.Drawing.Size(75, 23);
-            this.BrowseButton.TabIndex = 5;
+            this.BrowseButton.TabIndex = 3;
             this.BrowseButton.Text = "Browse...";
             this.BrowseButton.UseVisualStyleBackColor = true;
             this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
             // 
             // FilenameTextBox
             // 
+            this.FilenameTextBox.Enabled = false;
             this.FilenameTextBox.Location = new System.Drawing.Point(43, 60);
             this.FilenameTextBox.Name = "FilenameTextBox";
             this.FilenameTextBox.ReadOnly = true;
             this.FilenameTextBox.Size = new System.Drawing.Size(219, 20);
-            this.FilenameTextBox.TabIndex = 4;
+            this.FilenameTextBox.TabIndex = 2;
             // 
             // OpenDirFolderBrowserDialog
             // 
@@ -66,7 +68,7 @@ namespace EVEMon.Common.Controls
             this.CancelButon.Location = new System.Drawing.Point(268, 103);
             this.CancelButon.Name = "CancelButon";
             this.CancelButon.Size = new System.Drawing.Size(75, 23);
-            this.CancelButon.TabIndex = 7;
+            this.CancelButon.TabIndex = 5;
             this.CancelButon.Text = "Cancel";
             this.CancelButon.UseVisualStyleBackColor = true;
             // 
@@ -77,7 +79,7 @@ namespace EVEMon.Common.Controls
             this.OKButton.Location = new System.Drawing.Point(187, 103);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 8;
+            this.OKButton.TabIndex = 4;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
@@ -89,7 +91,7 @@ namespace EVEMon.Common.Controls
             this.DefaultFolderRadioButton.Location = new System.Drawing.Point(13, 13);
             this.DefaultFolderRadioButton.Name = "DefaultFolderRadioButton";
             this.DefaultFolderRadioButton.Size = new System.Drawing.Size(126, 17);
-            this.DefaultFolderRadioButton.TabIndex = 9;
+            this.DefaultFolderRadioButton.TabIndex = 0;
             this.DefaultFolderRadioButton.TabStop = true;
             this.DefaultFolderRadioButton.Text = "&Use the default folder";
             this.DefaultFolderRadioButton.UseVisualStyleBackColor = true;
@@ -101,15 +103,17 @@ namespace EVEMon.Common.Controls
             this.SpecifyFolderRadioButton.Location = new System.Drawing.Point(13, 37);
             this.SpecifyFolderRadioButton.Name = "SpecifyFolderRadioButton";
             this.SpecifyFolderRadioButton.Size = new System.Drawing.Size(98, 17);
-            this.SpecifyFolderRadioButton.TabIndex = 10;
+            this.SpecifyFolderRadioButton.TabIndex = 1;
             this.SpecifyFolderRadioButton.Text = "&Specify a folder";
             this.SpecifyFolderRadioButton.UseVisualStyleBackColor = true;
             this.SpecifyFolderRadioButton.CheckedChanged += new System.EventHandler(this.SpecifyFolderRadioButton_CheckedChanged);
             // 
             // EveFolderWindow
             // 
+            this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.CancelButon;
             this.ClientSize = new System.Drawing.Size(355, 138);
             this.Controls.Add(this.SpecifyFolderRadioButton);
             this.Controls.Add(this.DefaultFolderRadioButton);

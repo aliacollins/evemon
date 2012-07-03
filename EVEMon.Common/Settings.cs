@@ -47,6 +47,7 @@ namespace EVEMon.Common
             Exportation = new ExportationSettings();
             Notifications = new NotificationSettings();
             MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
+            PortableEveInstallations = new PortableEveInstallationsSettings();
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
@@ -98,6 +99,11 @@ namespace EVEMon.Common
         /// Gets the settings for the market unified uploader.
         /// </summary>
         public static MarketUnifiedUploaderSettings MarketUnifiedUploader { get; private set; }
+
+        /// <summary>
+        /// Gets the settings for the portable EVE installations.
+        /// </summary>
+        public static PortableEveInstallationsSettings PortableEveInstallations { get; private set; }
 
         /// <summary>
         /// Gets the settings for the network.
@@ -174,6 +180,7 @@ namespace EVEMon.Common
                 Exportation = serial.Exportation;
                 Notifications = serial.Notifications;
                 MarketUnifiedUploader = serial.MarketUnifiedUploader;
+                PortableEveInstallations = serial.PortableEveInstallations;
 
                 // Import the characters, API keys and plans
                 if (!preferencesOnly)
@@ -297,6 +304,7 @@ namespace EVEMon.Common
                                                   APIProviders = EveMonClient.APIProviders.Export(),
                                                   Scheduler = Scheduler.Export(),
                                                   Calendar = Calendar,
+                                                  PortableEveInstallations = PortableEveInstallations,
                                                   MarketUnifiedUploader = MarketUnifiedUploader,
                                                   Notifications = Notifications,
                                                   Exportation = Exportation,

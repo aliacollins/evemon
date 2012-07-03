@@ -170,6 +170,20 @@ namespace EVEMon.Common.Data
                                                 ZainouBeancounterG40ID, ZainouBeancounterG50ID, ZainouBeancounterG60ID
                                             });
 
+        // Group of Faction IDs
+        public static readonly ReadOnlyCollection<int> FactionIDs =
+            new ReadOnlyCollection<int>(new[]
+                                            {
+                                                CaldariFactionID, MinmatarFactionID, AmarrFactionID,
+                                                GallenteFactionID, JoveFactionID, ConcordAssemblyFactionID,
+                                                AmmatarMandateFactionID, KhanidKingdomFactionID, TheSyndicateFactionID,
+                                                GuristasPiratesFactionID, AngelCartelFactionID, BloodRaiderCovenantFactionID,
+                                                TheInterBusFactionID, OREFactionID, ThukkerTribeFactionID,
+                                                ServantSistersofEVEFactionID, TheSocietyofConsciousThoughtFactionID,
+                                                MordusLegionCommandFactionID,
+                                                SanshasNationFactionID, SerpentisFactionID
+                                            });
+
         #endregion
 
 
@@ -188,6 +202,22 @@ namespace EVEMon.Common.Data
         public const int MinmatarFactionID = 500002;
         public const int AmarrFactionID = 500003;
         public const int GallenteFactionID = 500004;
+        public const int JoveFactionID = 500005;
+        public const int ConcordAssemblyFactionID = 500006;
+        public const int AmmatarMandateFactionID = 500007;
+        public const int KhanidKingdomFactionID = 500008;
+        public const int TheSyndicateFactionID = 500009;
+        public const int GuristasPiratesFactionID = 500010;
+        public const int AngelCartelFactionID = 500011;
+        public const int BloodRaiderCovenantFactionID = 500012;
+        public const int TheInterBusFactionID = 500013;
+        public const int OREFactionID = 500014;
+        public const int ThukkerTribeFactionID = 500015;
+        public const int ServantSistersofEVEFactionID = 500016;
+        public const int TheSocietyofConsciousThoughtFactionID = 500017;
+        public const int MordusLegionCommandFactionID = 500018;
+        public const int SanshasNationFactionID = 500019;
+        public const int SerpentisFactionID = 500020;
 
         #endregion
 

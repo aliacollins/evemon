@@ -1062,6 +1062,37 @@ namespace EVEMon.Common
         Put
     }
 
+    /// <summary>
+    /// Enumeration of contact group.
+    /// </summary>
+    public enum ContactGroup
+    {
+        Contact,
+        Corporate,
+        Alliance,
+    }
+
+    /// <summary>
+    /// Enumeration of contact group.
+    /// </summary>
+    public enum ContactType
+    {
+        None,
+        Agent,
+        Pilot,
+        Corporation,
+        Alliance,
+    }
+
+    /// <summary>
+    /// Enumeration of medal group.
+    /// </summary>
+    public enum MedalGroup
+    {
+        CurrentCorporation,
+        OtherCorporation,
+    }
+
     #endregion
 
 
@@ -1582,6 +1613,21 @@ namespace EVEMon.Common
 
         [Description("Valklear General")]
         ValklearGeneral = 9,
+    }
+
+    /// <summary>
+    /// Enumeration of standing group.
+    /// </summary>
+    public enum StandingGroup
+    {
+        [Description("Agents")]
+        Agents,
+
+        [Description("NPC Corporations")]
+        NPCCorporations,
+
+        [Description("Factions")]
+        Factions
     }
 
     #endregion

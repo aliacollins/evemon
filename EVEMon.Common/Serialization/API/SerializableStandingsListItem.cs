@@ -2,7 +2,7 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-    public abstract class SerializableStandingsListItem
+    public sealed class SerializableStandingsListItem
     {
         [XmlAttribute("fromID")]
         public int ID { get; set; }
@@ -14,6 +14,6 @@ namespace EVEMon.Common.Serialization.API
         public double StandingValue { get; set; }
 
         [XmlIgnore]
-        public string GroupType { get; protected set; }
+        public StandingGroup Group { get; set; }
     }
 }

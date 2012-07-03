@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterMonitorHeader
+    sealed partial class CharacterMonitorHeader
     {
         /// <summary> 
         /// Required designer variable.
