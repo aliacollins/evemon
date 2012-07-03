@@ -112,7 +112,6 @@ namespace EVEMon.SettingsUI
             }
 
             DialogResult = DialogResult.OK;
-            Close();
         }
 
         /// <summary>

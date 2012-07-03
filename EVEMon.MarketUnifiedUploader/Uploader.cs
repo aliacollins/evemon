@@ -71,7 +71,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// <summary>
         /// Gets the endpoints.
         /// </summary>
-        public static IEnumerable<EndPoint> EndPoints
+        public static EndPointCollection EndPoints
         {
             get { return s_endPoints; }
         }

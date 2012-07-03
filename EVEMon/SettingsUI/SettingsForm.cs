@@ -115,6 +115,7 @@ namespace EVEMon.SettingsUI
 
             // Market Unified Uploader
             marketUnifiedUploaderCheckBox.Checked = m_settings.MarketUnifiedUploader.Enabled;
+            marketUnifiedUploaderControl.Settings = m_settings.MarketUnifiedUploader;
 
             // Skills display on the main window
             cbShowAllPublicSkills.Checked = m_settings.UI.MainWindow.ShowAllPublicSkills;
@@ -899,7 +900,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e"></param>
         private void btnEditAPIServer_Click(object sender, EventArgs e)
         {
-            // Search the provider with the selected name
+            // Search for the provider with the selected name
             SerializableAPIProvider customProvider =
                 m_settings.APIProviders.CustomProviders.First(provider => provider.Name == (string)cbAPIServer.SelectedItem);
 
