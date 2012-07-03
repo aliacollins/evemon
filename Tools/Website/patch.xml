@@ -55,58 +55,58 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>10 June 2012</date>
-      <md5>567c52efe3a3b8762b70934a383b69f9</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
-      <message><![CDATA[Inferno 1.0 (376700) blueprints data file by the EVEMon Development Team
+      <date>27 June 2012</date>
+      <md5>21a0c5f17fb6e69d30785cb89d464063</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
+      <message><![CDATA[Inferno 1.1 (391430) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>10 June 2012</date>
+      <date>27 June 2012</date>
       <md5>c9eaa52747814eb186432d1a1fbe2de0</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
-      <message><![CDATA[Inferno 1.0 (376700) certificates data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
+      <message><![CDATA[Inferno 1.1 (391430) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>10 June 2012</date>
-      <md5>3b130c6507b33c9a9cf165e9a77c6ced</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
-      <message><![CDATA[Inferno 1.0 (376700) geography data file by the EVEMon Development Team
+      <date>27 June 2012</date>
+      <md5>495bf1deae1bf4bfdebdcddc329a7d63</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
+      <message><![CDATA[Inferno 1.1 (391430) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>10 June 2012</date>
-      <md5>5b060cc87bc890593d8553a35631f4a0</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
-      <message><![CDATA[Inferno 1.0 (376700) items data file by the EVEMon Development Team
+      <date>27 June 2012</date>
+      <md5>96971f5c01a56be66c998949ab178836</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
+      <message><![CDATA[Inferno 1.1 (391430) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>10 June 2012</date>
-      <md5>b510b9759fb91b8bed8de50f33e0f51e</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
-      <message><![CDATA[Inferno 1.0 (376700) properties data file by the EVEMon Development Team
+      <date>27 June 2012</date>
+      <md5>13e588b665d4094f9e75d8b6386f2903</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
+      <message><![CDATA[Inferno 1.1 (391430) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>10 June 2012</date>
-      <md5>05e4bae06ebacb3ba7acc406c078f065</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
-      <message><![CDATA[Inferno 1.0 (376700) reprocessing data file by the EVEMon Development Team
+      <date>27 June 2012</date>
+      <md5>33649f17b6219371f97afe99f887ee09</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
+      <message><![CDATA[Inferno 1.1 (391430) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>10 June 2012</date>
-      <md5>efcdd7e7616983f4fe0363465bca7ca7</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/376700</url>
-      <message><![CDATA[Inferno 1.0 (376700) skills data file by the EVEMon Development Team
+      <date>27 June 2012</date>
+      <md5>0c97e072e58c7effc75b61f01e9d415c</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
+      <message><![CDATA[Inferno 1.1 (391430) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
   </datafiles>
