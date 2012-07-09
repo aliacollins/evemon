@@ -303,7 +303,7 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns></returns>
-        private static string HttpMethodToString(HttpMethod method)
+        internal static string HttpMethodToString(HttpMethod method)
         {
             switch (method)
             {
