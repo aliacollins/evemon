@@ -1,52 +1,34 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>10 June 2012</date>
-    <version>1.7.0.3809</version>
-    <md5>dc5390d1836dd63b7237479b5a62a263</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,166187.0.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.7.0.3809.exe</autopatchurl>
+    <date>11 July 2012</date>
+    <version>1.7.1.3860</version>
+    <md5>b65137fc770073520f2fec02c06da0e5</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,167431.0.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.7.1.3860.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
 
 * Jimi
 
-== New Features ==
-
-* EVEMon now has a character Asset monitor.
-* EVEMon now has a character Wallet Journal monitor.
-* EVEMon now has a character Wallet Transactions monitor.
-* EVEMon now has a Market Unified Uploader.
-* EVEMon now has a character Factional Warfare monitor.
-
 == Bug Fixes ==
 
-* Fixed a crash bug when Overview tab is the last in Tab collection.
-* Fixed a bug where the installation for an industry job is wrongly assigned.
-* Fixed a bug where plan entries where not getting correctly removed internally upon restoring a plan.
-* Fixed a visual bug with search text not reseting upon changing monitor.
-* Fixed a visual bug when ampersand is used in user entered text in Character Info.
-* Fixed a bug when sorting by 'Quantity' in Market orders monitor.
-* Fixed a bug where google calendar wasn't updating the correct event.
-* Fixed a visual bug in API keys management window when using large fonts.
-* Fixed a bug in Skill browser where selecting an owned skill had unwanted behavior.
-* Fixed an bug where a character is added in monitoring collection after it has been deleted.
-* Fixed a visual bug where the notification about insufficient balance was not updated when character balance was updated.
-* Fixed a bug where contact notifications type where not shown correctly.
-* Fixed a bug where blueprint selector was losing focus when using search list.
+* Fixed a bug when using a proxy to connect.
+* Fixed a visual bug where character tabs don't show after a failed settings restoration.
+* Fixed an issue where deprecated enumerations in item browser caused settings file to be flagged as corrupt.
+* Fixed a bug where the features menu button was not displayed if a character monitor got hidden and then re-shown.
+* Fixed a bug in API Tester where comma seperated ids were not regognized.
+* Fixed a bug in API Tester where simple corporation sheet info were not displayed when using Internal info.
+* Fixed a bug in API Tester where calendar event attendees were not displayed when using External info.
+* Fixed an issue where deprecated ToolTipNotificationBehaviour enumeration caused settings file to be flagged as corrupt.
+* Fixed an issue in API Tester where saving an Xml document that contains html tags leads to failure.
+* Fixed a crash bug when selecting to update a portrait from EVE portrait cache folder and EVE client is started in portable mode (/LUA:OFF).
 
 == Enhancements ==
 
-* Industry jobs that have been completed but not delivered, even passed the max period EVEMon tracks them, will now be shown.
-* Tooltip in any monitor has infinite display time and is displayed hovering over at any position.
-* Tooltip in Plan Queue has infinite display time and is displayed hovering over at any position.
-* An informative tooltip is shown when similar items are selected in Asset monitor.
-* Added selections to enable or disable all in features menu.
-* Added an informative text when no character is monitored and overview tab is disabled.
-* Adding ability to export to csv, monitored info (where it makes sense).
-* Solar systems and locations are now colored according to their security level.
-* EVEMon will now notify only for unread EVE notifications.
+* Added ability to set up EVE clients path that are running in portable mode (/LUA:OFF).
+* Added ability to setup localhost endpoints in EMUU.
 
 == Misc ==
 
