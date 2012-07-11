@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using EVEMon.Common.Net;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 
@@ -197,7 +198,7 @@ namespace EVEMon.Common.IgbService
 
                 // We should support only the "GET" method
                 client.Write(String.Format(CultureConstants.InvariantCulture, "HTTP/1.1 {0}\n",
-                                           request.Equals("GET")
+                                           request.Equals(HttpWebServiceRequest.HttpMethodToString(HttpMethod.Get))
                                                ? "200 OK"
                                                : "501 Not Implemented"));
                 client.Write("Server: EVEMon/1.0\n");
@@ -296,14 +297,18 @@ namespace EVEMon.Common.IgbService
             // really do this
             string hostPort = host;
 
+            // Add the 'http' scheme to the address if it's missing
+            if (!host.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+                hostPort = String.Format(CultureConstants.InvariantCulture, "http://{0}", hostPort);
+
             // If the host string already contains a port then do nothing
             // (IGB shouldn't really do this but it is!)
-            if (!host.Contains(":"))
+            if (!hostPort.Contains(":"))
             {
                 // Now cater for when/if CCP fix the IGB to not send port as part of the host header
                 if (IgbServerPort != 80)
                     // non-standard port - let's add it
-                    hostPort = String.Format(CultureConstants.InvariantCulture, "http://{0}:{1}", host, IgbServerPort);
+                    hostPort = String.Format(CultureConstants.InvariantCulture, "{0}:{1}", hostPort, IgbServerPort);
             }
             return hostPort;
         }
@@ -315,9 +320,11 @@ namespace EVEMon.Common.IgbService
         /// <param name="requestPath">URL of the request</param>
         /// <param name="headers">dictionary of headers</param>
         /// <param name="sw">stream writer to output to</param>
-        private void ProcessRequest(string request, string requestPath, IDictionary<string, string> headers, StreamWriter sw)
+        private void ProcessRequest(string request, string requestPath, IDictionary<string, string> headers, TextWriter sw)
         {
-            if (!request.Equals("GET"))
+            WriteDocumentHeader(sw);
+
+            if (!request.Equals(HttpWebServiceRequest.HttpMethodToString(HttpMethod.Get)))
             {
                 sw.WriteLine(String.Format(CultureConstants.InvariantCulture,
                                            "<h1>Error loading requested URL</h1>The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",
@@ -349,7 +356,7 @@ namespace EVEMon.Common.IgbService
             }
 
             // Character not listed in EVEMon 
-            if (!EveMonClient.Characters.Any(x => x.Name == characterName))
+            if (EveMonClient.Characters.All(x => x.Name != characterName))
             {
                 sw.WriteLine("Hello {0}, this character is not recognized by EVEMon!", characterName);
                 return;
@@ -386,6 +393,8 @@ namespace EVEMon.Common.IgbService
                 GenerateSkillsByTimeOutput(context, sw, character);
             else
                 GeneratePlanListOutput(context, sw, character);
+
+            WriteDocumentFooter(sw);
         }
 
         /// <summary>
@@ -394,9 +403,8 @@ namespace EVEMon.Common.IgbService
         /// <param name="currentCharacterName">Name of the current character.</param>
         /// <param name="sw">stream writer to output to</param>
         /// <param name="characters">list of characters to output</param>
-        private static void GenerateCharacterList(string currentCharacterName, StreamWriter sw, IEnumerable<Character> characters)
+        private static void GenerateCharacterList(string currentCharacterName, TextWriter sw, IEnumerable<Character> characters)
         {
-            WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Welcome!</h1>");
 
             sw.WriteLine("<h2>Monitored characters:</h2>");
@@ -411,18 +419,6 @@ namespace EVEMon.Common.IgbService
 
                 sw.WriteLine("<br/>");
             }
-
-            WriteDocumentFooter(sw);
-        }
-
-        /// <summary>
-        /// Outputs the documents footer.
-        /// </summary>
-        /// <param name="sw"></param>
-        private static void WriteDocumentFooter(TextWriter sw)
-        {
-            sw.WriteLine("  </body>");
-            sw.WriteLine("</html>");
         }
 
         /// <summary>
@@ -444,6 +440,16 @@ namespace EVEMon.Common.IgbService
         }
 
         /// <summary>
+        /// Outputs the documents footer.
+        /// </summary>
+        /// <param name="sw"></param>
+        private static void WriteDocumentFooter(TextWriter sw)
+        {
+            sw.WriteLine("  </body>");
+            sw.WriteLine("</html>");
+        }
+
+        /// <summary>
         /// Outputs a list of plans for a given character to a stream writer.
         /// </summary>
         /// <param name="context">context of the request</param>
@@ -451,7 +457,6 @@ namespace EVEMon.Common.IgbService
         /// <param name="character">character to use</param>
         private static void GeneratePlanListOutput(string context, TextWriter sw, Character character)
         {
-            WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
             sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
 
@@ -468,7 +473,6 @@ namespace EVEMon.Common.IgbService
             sw.WriteLine("<a href=\"{0}/skills/bytime\">By training time</a><br/>", context);
 
             sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
-            WriteDocumentFooter(sw);
         }
 
         /// <summary>
@@ -479,7 +483,6 @@ namespace EVEMon.Common.IgbService
         /// <param name="character">character to use</param>
         private static void GenerateSkillsByTimeOutput(string context, TextWriter sw, Character character)
         {
-            WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
             sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
             sw.WriteLine("<a href=\"{0}\">Character overview</a>", context);
@@ -523,7 +526,6 @@ namespace EVEMon.Common.IgbService
 
             sw.WriteLine("<br/><a href=\"{0}\">Character overview</a>", context);
             sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
-            WriteDocumentFooter(sw);
         }
 
         /// <summary>
@@ -535,7 +537,6 @@ namespace EVEMon.Common.IgbService
         /// <param name="character">character to use</param>
         private static void GeneratePlanOrShoppingOutput(string context, string requestPath, TextWriter sw, Character character)
         {
-            WriteDocumentHeader(sw);
             sw.WriteLine("<h1>Hello, {0}</h1>", HttpUtility.HtmlEncode(character.Name));
             sw.WriteLine("<a href=\"/characters\">List all characters</a><hr/>");
             sw.WriteLine("<a href=\"{0}\">Character overview</a>", context);
@@ -617,7 +618,6 @@ namespace EVEMon.Common.IgbService
 
             sw.WriteLine("<br/><br/><a href=\"{0}\">Character overview</a>", context);
             sw.WriteLine("<hr/><a href=\"/characters\">List all characters</a>");
-            WriteDocumentFooter(sw);
         }
 
         /// <summary>

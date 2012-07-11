@@ -1061,7 +1061,7 @@ namespace EVEMon
             // 
             this.trayIcon.ContextMenuStrip = this.trayIconContextMenuStrip;
             this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
-            this.trayIcon.MouseHoverTime = 500;
+            this.trayIcon.MouseHoverTime = 300;
             this.trayIcon.Text = "";
             this.trayIcon.Click += new System.EventHandler(this.trayIcon_Click);
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
