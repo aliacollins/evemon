@@ -57,21 +57,23 @@ namespace EVEMon.CharacterMonitoring
             // Subscribe events
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
-            EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
-            EveMonClient.ContractsUpdated += EveMonClient_ContractsUpdated;
-            EveMonClient.CharacterWalletJournalUpdated += EveMonClient_CharacterWalletJournalUpdated;
-            EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_CharacterWalletTransactionsUpdated;
-            EveMonClient.IndustryJobsUpdated += EveMonClient_IndustryJobsUpdated;
-            EveMonClient.CharacterResearchPointsUpdated += EveMonClient_CharacterResearchPointsUpdated;
-            EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_CharacterEVEMailMessagesUpdated;
-            EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_CharacterEVENotificationsUpdated;
+            EveMonClient.CharacterAssetsUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.MarketOrdersUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.ContractsUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterWalletJournalUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.IndustryJobsUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterResearchPointsUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             EveMonClient.NotificationInvalidated += EveMonClient_NotificationInvalidated;
             Disposed += OnDisposed;
 
+
             // Updates the controls
             UpdateInfrequentControls();
+            UpdateNotifications();
 
             // Picks the last selected page
             multiPanel.SelectedPage = null;
@@ -121,15 +123,15 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
-            EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
-            EveMonClient.ContractsUpdated -= EveMonClient_ContractsUpdated;
-            EveMonClient.CharacterWalletJournalUpdated -= EveMonClient_CharacterWalletJournalUpdated;
-            EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_CharacterWalletTransactionsUpdated;
-            EveMonClient.IndustryJobsUpdated -= EveMonClient_IndustryJobsUpdated;
-            EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_CharacterResearchPointsUpdated;
-            EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_CharacterEVEMailMessagesUpdated;
-            EveMonClient.CharacterEVENotificationsUpdated -= EveMonClient_CharacterEVENotificationsUpdated;
+            EveMonClient.CharacterAssetsUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.MarketOrdersUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.ContractsUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterWalletJournalUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.IndustryJobsUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterEVENotificationsUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
             EveMonClient.NotificationInvalidated -= EveMonClient_NotificationInvalidated;
             Disposed -= OnDisposed;
@@ -386,6 +388,14 @@ namespace EVEMon.CharacterMonitoring
             }
         }
 
+        /// <summary>
+        /// Update the notifications list.
+        /// </summary>
+        private void UpdateNotifications()
+        {
+            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == m_character);
+        }
+
         #endregion
 
 
@@ -422,115 +432,11 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Updates the page controls on assets change.
+        /// Updates the page controls on an event.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterAssetsUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePageControls();
-        }
-
-        /// <summary>
-        /// Updates the page controls on market orders change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_MarketOrdersUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePageControls();
-        }
-
-        /// <summary>
-        /// Updates the page controls on contracts change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_ContractsUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePageControls();
-        }
-
-        /// <summary>
-        /// Updates the page controls on wallet journal change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterWalletJournalUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePageControls();
-        }
-
-        /// <summary>
-        /// Updates the page controls on wallet transactions change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterWalletTransactionsUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePageControls();
-        }
-
-        /// <summary>
-        /// Updates the page controls on industry jobs change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_IndustryJobsUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePageControls();
-        }
-
-        /// <summary>
-        /// Updates the page controls on research points change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterResearchPointsUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePageControls();
-        }
-
-        /// <summary>
-        /// Updates the page controls on EVE mail messages change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterEVEMailMessagesUpdated(object sender, CharacterChangedEventArgs e)
-        {
-            if (e.Character != m_character)
-                return;
-
-            UpdatePageControls();
-        }
-
-        /// <summary>
-        /// Updates the page controls on EVE notifications change.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CharacterChangedEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_CharacterEVENotificationsUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_UpdatePageControls(object sender, CharacterChangedEventArgs e)
         {
             if (e.Character != m_character)
                 return;
@@ -1617,14 +1523,6 @@ namespace EVEMon.CharacterMonitoring
             }
 
             return monitors;
-        }
-
-        /// <summary>
-        /// Update the notifications list.
-        /// </summary>
-        private void UpdateNotifications()
-        {
-            notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == m_character);
         }
 
         #endregion
