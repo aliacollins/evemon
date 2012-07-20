@@ -177,7 +177,7 @@ namespace EVEMon.CharacterMonitoring
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
-            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
             Disposed += OnDisposed;
         }
@@ -193,7 +193,7 @@ namespace EVEMon.CharacterMonitoring
 
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
-            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
             Disposed -= OnDisposed;
         }
@@ -864,7 +864,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         /// <remarks>Mainly to update the jumps from charater last known location to assets.</remarks>
-        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        private void EveMonClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (Character == null || e.Character != Character)
                 return;
