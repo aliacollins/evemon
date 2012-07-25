@@ -679,7 +679,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Enables / Disables the "query everything" menu item
-            QueryEverythingMenuItem.Enabled = ccpCharacter.QueryMonitors.Any(x => x.Enabled && x.HasAccess && x.CanForceUpdate);
+            QueryEverythingMenuItem.Enabled = ccpCharacter.QueryMonitors.All(x => x.HasAccess && x.CanForceUpdate);
 
             // Add a separator before monitor items if it doesn't exist already
             if (!ThrobberContextMenu.Items.Contains(ThrobberSeparator))
