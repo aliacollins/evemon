@@ -2,7 +2,7 @@
 
 namespace EVEMon.Common.Serialization.Datafiles
 {
-    public sealed class SerializableMaterialQuantity
+    public class SerializableMaterialQuantity
     {
         /// <summary>
         /// Gets or sets the ID.

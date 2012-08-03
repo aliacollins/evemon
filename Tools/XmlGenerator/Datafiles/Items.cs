@@ -294,6 +294,11 @@ namespace EVEMon.XmlGenerator.Datafiles
             else
                 item.Slot = ItemSlot.NoSlot;
 
+            // Add reaction info for reactions
+            AddReactionInfo(srcItem, item);
+
+            // Add fuel info for control towers
+
             // Add this item
             groupItems.Add(item);
 
@@ -312,16 +317,41 @@ namespace EVEMon.XmlGenerator.Datafiles
         }
 
         /// <summary>
+        /// Adds the reaction info.
+        /// </summary>
+        /// <param name="srcItem">The SRC item.</param>
+        /// <param name="item">The item.</param>
+        private static void AddReactionInfo(IHasID srcItem, SerializableItem item)
+        {
+            item.ReactionInfo.AddRange(Database.InvTypeReactionsTable.Where(x => x.ReactionTypeID == srcItem.ID).Select(
+                srcReaction => new
+                                   {
+                                       srcReaction,
+                                       multiplier = Database.DgmTypeAttributesTable.Where(
+                                           x => x.ItemID == srcReaction.TypeID &&
+                                                x.AttributeID == DBConstants.MoonMiningAmountPropertyID).Select(
+                                                    x => x.GetIntValue).FirstOrDefault()
+                                   }).Select(
+                                       reaction => new SerializableReactionInfo
+                                                       {
+                                                           ID = reaction.srcReaction.TypeID,
+                                                           IsInput = reaction.srcReaction.Input,
+                                                           Quantity = reaction.multiplier > 0
+                                                                          ? reaction.srcReaction.Quantity * reaction.multiplier
+                                                                          : reaction.srcReaction.Quantity
+                                                       }));
+        }
+
+        /// <summary>
         /// Adds the meta group.
         /// </summary>
         /// <param name="srcItem">The source item.</param>
-        /// <param name="item">The item.</param>
+        /// <param name="item">The serializable item.</param>
         private static void AddMetaGroup(IHasID srcItem, SerializableItem item)
         {
-            int itemID = srcItem.ID;
-
-            if (Database.InvBlueprintTypesTable.Any(x => x.ID == srcItem.ID))
-                itemID = Database.InvBlueprintTypesTable.First(x => x.ID == srcItem.ID).ProductTypeID;
+            int itemID = Database.InvBlueprintTypesTable.Any(x => x.ID == srcItem.ID)
+                             ? Database.InvBlueprintTypesTable.First(x => x.ID == srcItem.ID).ProductTypeID
+                             : srcItem.ID;
 
             foreach (InvMetaTypes relation in Database.InvMetaTypesTable.Where(x => x.ItemID == itemID))
             {
@@ -361,8 +391,8 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Adds the race.
         /// </summary>
-        /// <param name="srcItem">The SRC item.</param>
-        /// <param name="item">The item.</param>
+        /// <param name="srcItem">The source item.</param>
+        /// <param name="item">The serializable item.</param>
         private static void AddRace(InvTypes srcItem, SerializableItem item)
         {
             item.Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0));
@@ -383,8 +413,8 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Adds the item properties and prerequisites.
         /// </summary>
-        /// <param name="srcItem">The SRC item.</param>
-        /// <param name="item">The item.</param>
+        /// <param name="srcItem">The source item.</param>
+        /// <param name="item">The serializable item.</param>
         /// <returns></returns>
         private static IEnumerable<SerializablePropertyValue> AddItemPropsAndPrereq(InvTypes srcItem, SerializableItem item)
         {
@@ -395,6 +425,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             double warpSpeedMultiplier = 1;
             foreach (DgmTypeAttributes srcProp in Database.DgmTypeAttributesTable.Where(x => x.ItemID == srcItem.ID))
             {
+                if (srcProp.AttributeID == DBConstants.MoonMiningAmountPropertyID)
+                    continue;
+
                 int propIntValue = srcProp.GetIntValue;
 
                 // Is it a prereq skill ?

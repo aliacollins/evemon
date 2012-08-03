@@ -324,6 +324,8 @@ namespace EVEMon.Common.Data
         public const int ModuleReactivationDelayPropertyID = 669;
         public const int UnanchoringDelayPropertyID = 676;
         public const int OnliningDelayPropertyID = 677;
+        public const int ConsumptionQuantityPropertyID = 714;
+        public const int MoonMiningAmountPropertyID = 726;
         public const int IceHarvestCycleBonusPropertyID = 780;
         public const int SpecialisationAsteroidGroupPropertyID = 781;
         public const int ReprocessingSkillPropertyID = 790;

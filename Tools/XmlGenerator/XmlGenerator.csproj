@@ -73,6 +73,7 @@
       <DependentUpon>EveStaticData.edmx</DependentUpon>
     </Compile>
     <Compile Include="StaticData\InvFlags.cs" />
+    <Compile Include="StaticData\InvTypeReactions.cs" />
     <Compile Include="Xmlfiles\Flags.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IHasId.cs" />

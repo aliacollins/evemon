@@ -13,6 +13,7 @@ namespace EVEMon.XmlGenerator
     {
         private static DateTime s_startTime;
 
+        internal const int TotalTablesCount = 31;
         internal const int PropertiesTotalCount = 1635;
         internal const int ItemsTotalCount = 18767;
         internal const int SkillsTotalCount = 429;
@@ -169,6 +170,11 @@ namespace EVEMon.XmlGenerator
         internal static List<InvTypeMaterials> InvTypeMaterialsTable { get; private set; }
 
         /// <summary>
+        /// Gets the inv type reactions table.
+        /// </summary>
+        internal static List<InvTypeReactions> InvTypeReactionsTable { get; private set; }
+
+        /// <summary>
         /// Gets or sets the ram type requirements table.
         /// </summary>
         /// <value>The ram type requirements table.</value>
@@ -209,15 +215,6 @@ namespace EVEMon.XmlGenerator
         /// reinstantiating each time.
         /// </summary>
         private static EveStaticDataEntities Context { get; set; }
-
-        /// <summary>
-        /// Gets the total tables count.
-        /// </summary>
-        /// <value>The total tables count.</value>
-        internal static int TotalTablesCount
-        {
-            get { return 30; }
-        }
 
         #endregion
 
@@ -267,7 +264,7 @@ namespace EVEMon.XmlGenerator
                 Context = new EveStaticDataEntities(connection);
 
                 Console.SetCursorPosition(Console.CursorLeft - Text.Length, Console.CursorTop);
-                Console.WriteLine("Connection to SQL Database: Succefull");
+                Console.WriteLine("Connection to SQL Database: Successful");
                 Console.WriteLine();
             }
             catch (EntityException)
@@ -352,6 +349,8 @@ namespace EVEMon.XmlGenerator
             InvNamesTable = Names();
             Util.UpdateProgress();
             InvTypeMaterialsTable = TypeMaterials();
+            Util.UpdateProgress();
+            InvTypeReactionsTable = TypeReactions();
             Util.UpdateProgress();
             InvTypesTable = Types();
             Util.UpdateProgress();
@@ -992,6 +991,32 @@ namespace EVEMon.XmlGenerator
                                     MaterialTypeID = material.materialTypeID,
                                     Quantity = material.quantity
                                 }).ToList();
+        }
+
+        /// <summary>
+        /// Types the reactions.
+        /// </summary>
+        /// <returns></returns>
+        private static List<InvTypeReactions> TypeReactions()
+        {
+            List<InvTypeReactions> list = new List<InvTypeReactions>();
+
+            foreach (invTypeReactions reaction in Context.invTypeReactions)
+            {
+                InvTypeReactions item = new InvTypeReactions
+                                            {
+                                                ReactionTypeID = reaction.reactionTypeID,
+                                                Input = reaction.input,
+                                                TypeID = reaction.typeID,
+                                            };
+
+                if (reaction.quantity.HasValue)
+                    item.Quantity = reaction.quantity.Value;
+
+                list.Add(item);
+            }
+
+            return list;
         }
 
         /// <summary>

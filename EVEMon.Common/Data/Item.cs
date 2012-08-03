@@ -43,6 +43,7 @@ namespace EVEMon.Common.Data
             MarketGroup = group;
             Family = ItemFamily.Blueprint;
 
+            // Skills prerequisites
             m_prerequisites = new FastList<StaticSkillLevel>(src.PrereqSkill != null ? src.PrereqSkill.Count : 0);
             if (src.PrereqSkill == null)
                 return;
@@ -64,7 +65,7 @@ namespace EVEMon.Common.Data
             MarketGroup = group;
             Icon = src.Icon;
             Race = src.Race;
-            FittingSlot = src.Slot == ItemSlot.None ? ItemSlot.NoSlot : src.Slot; // TODO: Simplify after year 2013
+            FittingSlot = src.Slot == ItemSlot.None ? ItemSlot.NoSlot : src.Slot;
             Family = src.Family;
             Description = src.Description;
             CategoryName = src.Category;
@@ -75,6 +76,7 @@ namespace EVEMon.Common.Data
             MetaGroup = src.MetaGroup;
 
             Properties = new EvePropertyCollection(src.Properties);
+            ReactionMaterial = new ReactionMaterialCollection(src.ReactionInfo);
 
             // Skills prerequisites
             m_prerequisites = new FastList<StaticSkillLevel>(src.PrerequisiteSkills != null ? src.PrerequisiteSkills.Count : 0);
@@ -161,6 +163,11 @@ namespace EVEMon.Common.Data
         /// Gets the collection of properties of this object.
         /// </summary>
         public EvePropertyCollection Properties { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of reaction info of this object.
+        /// </summary>
+        public ReactionMaterialCollection ReactionMaterial { get; private set; }
 
         /// <summary>
         /// Gets the collection of skills this object must satisfy to be used.
