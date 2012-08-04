@@ -5,6 +5,7 @@ using System.Data.EntityClient;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using EVEMon.Common.Data;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator
@@ -13,52 +14,83 @@ namespace EVEMon.XmlGenerator
     {
         private static DateTime s_startTime;
 
-        internal const int TotalTablesCount = 31;
-        internal const int PropertiesTotalCount = 1635;
-        internal const int ItemsTotalCount = 18767;
-        internal const int SkillsTotalCount = 429;
+        internal const int TotalTablesCount = 34;
         internal const int CertificatesTotalCount = 4272;
-        internal const int BlueprintsTotalCount = 4708;
-        internal const int GeographyTotalCount = 97;
-        internal const int ReprocessingTotalCount = 18767;
+
+        internal static int PropertiesTotalCount;
+        internal static int ItemsTotalCount;
+        internal static int SkillsTotalCount;
+        internal static int BlueprintsTotalCount;
+        internal static int GeographyTotalCount;
+        internal static int ReprocessingTotalCount;
 
 
         #region Properties
 
         /// <summary>
-        /// Gets or sets the agents table.
+        /// Gets or sets the agt agents table.
         /// </summary>
-        /// <value>The agents table.</value>
+        /// <value>The agt agents table.</value>
         internal static Bag<AgtAgents> AgtAgentsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the agent types table.
+        /// Gets or sets the agt agent types table.
         /// </summary>
-        /// <value>The agent types table.</value>
+        /// <value>The agt agent types table.</value>
         internal static Bag<AgtAgentTypes> AgtAgentTypesTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the research agents table.
+        /// Gets or sets the agt research agents table.
         /// </summary>
-        /// <value>The research agents table.</value>
+        /// <value>The agt research agents table.</value>
         internal static Bag<AgtResearchAgents> AgtResearchAgentsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the NPC divisions table.
+        /// Gets or sets the chr factions table.
         /// </summary>
-        /// <value>The NPC divisions table.</value>
+        /// <value>The chr factions table.</value>
+        internal static Bag<ChrFactions> ChrFactionsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crp NPC divisions table.
+        /// </summary>
+        /// <value>The crp NPC divisions table.</value>
         internal static Bag<CrpNPCDivisions> CrpNPCDivisionsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the eve units table.
+        /// Gets or sets the crt categories table.
         /// </summary>
-        /// <value>The eve units table.</value>
-        internal static Bag<EveUnits> EveUnitsTable { get; private set; }
+        /// <value>The crt categories table.</value>
+        internal static Bag<CrtCategories> CrtCategoriesTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the eve names table.
+        /// Gets or sets the crt classes table.
         /// </summary>
-        /// <value>The eve names table.</value>
+        /// <value>The crt classes table.</value>
+        internal static Bag<CrtClasses> CrtClassesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt certificates table.
+        /// </summary>
+        /// <value>The crt certificates table.</value>
+        internal static Bag<CrtCertificates> CrtCertificatesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt recommendations table.
+        /// </summary>
+        /// <value>The crt recommendations table.</value>
+        internal static Bag<CrtRecommendations> CrtRecommendationsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt relationships table.
+        /// </summary>
+        /// <value>The crt relationships table.</value>
+        internal static Bag<CrtRelationships> CrtRelationshipsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the inv names table.
+        /// </summary>
+        /// <value>The inv names table.</value>
         internal static Bag<InvNames> InvNamesTable { get; private set; }
 
         /// <summary>
@@ -68,27 +100,33 @@ namespace EVEMon.XmlGenerator
         internal static Bag<EveIcons> EveIconsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the DMG attribute types table.
+        /// Gets or sets the eve units table.
         /// </summary>
-        /// <value>The DMG attribute types table.</value>
+        /// <value>The eve units table.</value>
+        internal static Bag<EveUnits> EveUnitsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the dgm attribute types table.
+        /// </summary>
+        /// <value>The dgm attribute types table.</value>
         internal static Bag<DgmAttributeTypes> DgmAttributeTypesTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the DMG attribute categories table.
+        /// Gets or sets the dgm attribute categories table.
         /// </summary>
-        /// <value>The DMG attribute categories table.</value>
+        /// <value>The dgm attribute categories table.</value>
         internal static Bag<DgmAttributeCategories> DgmAttributeCategoriesTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the DMG type effects table.
+        /// Gets or sets the dgm type effects table.
         /// </summary>
-        /// <value>The DMG type effects table.</value>
+        /// <value>The dgm type effects table.</value>
         internal static RelationSet<DgmTypeEffects> DgmTypeEffectsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the DMG type attributes table.
+        /// Gets or sets the dgm type attributes table.
         /// </summary>
-        /// <value>The DMG type attributes table.</value>
+        /// <value>The type attributes table.</value>
         internal static RelationSet<DgmTypeAttributes> DgmTypeAttributesTable { get; private set; }
 
         /// <summary>
@@ -132,6 +170,18 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <value>The inv categories table.</value>
         internal static Bag<InvCategories> InvCategoriesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the inv control tower resource purposes table.
+        /// </summary>
+        /// <value>The inv control tower resource purposes table.</value>
+        internal static Bag<InvControlTowerResourcePurposes> InvControlTowerResourcePurposesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the inv control tower resources table.
+        /// </summary>
+        /// <value>The inv control tower resource table.</value>
+        internal static List<InvControlTowerResources> InvControlTowerResourcesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv flag table.
@@ -179,36 +229,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <value>The ram type requirements table.</value>
         internal static List<RamTypeRequirements> RamTypeRequirementsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the CRT categories table.
-        /// </summary>
-        /// <value>The CRT categories table.</value>
-        internal static Bag<CrtCategories> CrtCategoriesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the CRT classes table.
-        /// </summary>
-        /// <value>The CRT classes table.</value>
-        internal static Bag<CrtClasses> CrtClassesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the CRT certificates table.
-        /// </summary>
-        /// <value>The CRT certificates table.</value>
-        internal static Bag<CrtCertificates> CrtCertificatesTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the CRT recommendations table.
-        /// </summary>
-        /// <value>The CRT recommendations table.</value>
-        internal static Bag<CrtRecommendations> CrtRecommendationsTable { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the CRT relationships table.
-        /// </summary>
-        /// <value>The CRT relationships table.</value>
-        internal static Bag<CrtRelationships> CrtRelationshipsTable { get; private set; }
 
         /// <summary>
         /// Makes the context available to all database methods without
@@ -310,6 +330,8 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             AgtResearchAgentsTable = ResearchAgents();
             Util.UpdateProgress();
+            ChrFactionsTable = Factions();
+            Util.UpdateProgress();
             CrpNPCDivisionsTable = NPCDivisions();
             Util.UpdateProgress();
             CrtCategoriesTable = CertificateCategories();
@@ -322,13 +344,13 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             CrtRelationshipsTable = CertificateRelationships();
             Util.UpdateProgress();
-            DgmAttributeTypesTable = Attributes();
+            DgmAttributeTypesTable = AttributeTypes();
             Util.UpdateProgress();
             DgmAttributeCategoriesTable = AttributeCategories();
             Util.UpdateProgress();
-            EveUnitsTable = Units();
-            Util.UpdateProgress();
             EveIconsTable = Icons();
+            Util.UpdateProgress();
+            EveUnitsTable = Units();
             Util.UpdateProgress();
             DgmTypeAttributesTable = TypeAttributes();
             Util.UpdateProgress();
@@ -337,6 +359,10 @@ namespace EVEMon.XmlGenerator
             InvBlueprintTypesTable = BlueprintTypes();
             Util.UpdateProgress();
             InvCategoriesTable = Categories();
+            Util.UpdateProgress();
+            InvControlTowerResourcePurposesTable = ControlTowerResourcePurposes();
+            Util.UpdateProgress();
+            InvControlTowerResourcesTable = ControlTowerResources();
             Util.UpdateProgress();
             InvFlagsTable = Flags();
             Util.UpdateProgress();
@@ -358,7 +384,7 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             MapConstellationsTable = Constellations();
             Util.UpdateProgress();
-            MapSolarSystemsTable = Solarsystems();
+            MapSolarSystemsTable = SolarSystems();
             Util.UpdateProgress();
             MapSolarSystemJumpsTable = Jumps();
             Util.UpdateProgress();
@@ -371,9 +397,9 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// EVE Agents.
+        /// Agent Agents.
         /// </summary>
-        /// <returns><c>Bag</c> of EVE Agents.</returns>
+        /// <returns><c>Bag</c> of Agent Agents.</returns>
         private static Bag<AgtAgents> Agents()
         {
             IndexedCollection<AgtAgents> collection = new IndexedCollection<AgtAgents>();
@@ -406,13 +432,13 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<AgtAgents>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// EVE Agent Types.
+        /// Agent Agent Types.
         /// </summary>
-        /// <returns><c>Bag</c> of EVE Agent Types.</returns>
+        /// <returns><c>Bag</c> of Agent Agent Types.</returns>
         private static Bag<AgtAgentTypes> AgentTypes()
         {
             IndexedCollection<AgtAgentTypes> collection = new IndexedCollection<AgtAgentTypes>();
@@ -427,13 +453,13 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<AgtAgentTypes>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// EVE Research Agents.
+        /// Agent Research Agents.
         /// </summary>
-        /// <returns><c>Bag</c> of EVE Research Agents.</returns>
+        /// <returns><c>Bag</c> of Agent Research Agents.</returns>
         private static Bag<AgtResearchAgents> ResearchAgents()
         {
             IndexedCollection<AgtResearchAgents> collection = new IndexedCollection<AgtResearchAgents>();
@@ -448,13 +474,60 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<AgtResearchAgents>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// EVE NPC Divisions.
+        /// Character Factions.
         /// </summary>
-        /// <returns><c>Bag</c> of EVE NPC Divisions.</returns>
+        /// <returns><c>Bag</c> of Character Factions.</returns>
+        private static Bag<ChrFactions> Factions()
+        {
+            IndexedCollection<ChrFactions> collection = new IndexedCollection<ChrFactions>();
+
+            foreach (chrFactions faction in Context.chrFactions)
+            {
+                ChrFactions item = new ChrFactions
+                                       {
+                                           ID = faction.factionID,
+                                           FactionName = faction.factionName,
+                                           Description = faction.description,
+                                           MilitiaCorporationID = faction.militiaCorporationID,
+                                       };
+
+                item.Description = item.Description.Clean();
+
+                if (faction.raceIDs.HasValue)
+                    item.RaceID = faction.raceIDs.Value;
+
+                if (faction.solarSystemID.HasValue)
+                    item.SolarSystemID = faction.solarSystemID.Value;
+
+                if (faction.corporationID.HasValue)
+                    item.CorporationID = faction.corporationID.Value;
+
+                if (faction.sizeFactor.HasValue)
+                    item.SizeFactor = faction.sizeFactor.Value;
+
+                if (faction.stationCount.HasValue)
+                    item.StationCount = faction.stationCount.Value;
+
+                if (faction.stationSystemCount.HasValue)
+                    item.StationSystemCount = faction.stationSystemCount.Value;
+
+                if (faction.iconID.HasValue)
+                    item.IconID = faction.iconID.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Corporation NPC Divisions.
+        /// </summary>
+        /// <returns><c>Bag</c> of Corporation NPC Divisions.</returns>
         private static Bag<CrpNPCDivisions> NPCDivisions()
         {
             IndexedCollection<CrpNPCDivisions> collection = new IndexedCollection<CrpNPCDivisions>();
@@ -469,13 +542,13 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<CrpNPCDivisions>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// EVE Names.
+        /// Inventory Names.
         /// </summary>
-        /// <returns><c>Bag</c> of EVE Names.</returns>
+        /// <returns><c>Bag</c> of Inventory Names.</returns>
         private static Bag<InvNames> Names()
         {
             IndexedCollection<InvNames> collection = new IndexedCollection<InvNames>();
@@ -490,7 +563,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvNames>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
@@ -516,13 +589,13 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<EveUnits>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
         /// EVE Icons.
         /// </summary>
-        /// <returns><c>Bag</c> of icons.</returns>
+        /// <returns><c>Bag</c> of EVE icons.</returns>
         private static Bag<EveIcons> Icons()
         {
             IndexedCollection<EveIcons> collection = new IndexedCollection<EveIcons>();
@@ -537,14 +610,14 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<EveIcons>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// EVE Attributes.
+        /// Dogma Attribute Types.
         /// </summary>
-        /// <returns><c>Bag</c> of Attributes.</returns>
-        private static Bag<DgmAttributeTypes> Attributes()
+        /// <returns><c>Bag</c> of Dogma Attribute Types.</returns>
+        private static Bag<DgmAttributeTypes> AttributeTypes()
         {
             IndexedCollection<DgmAttributeTypes> collection = new IndexedCollection<DgmAttributeTypes>();
 
@@ -560,6 +633,7 @@ namespace EVEMon.XmlGenerator
                                                  Name = attribute.attributeName,
                                                  UnitID = attribute.unitID,
                                              };
+
                 item.Description = item.Description.Clean();
                 item.DisplayName = item.DisplayName.Clean();
                 item.Name = item.Name.Clean();
@@ -576,13 +650,16 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<DgmAttributeTypes>(collection);
+            // Set properties total count
+            PropertiesTotalCount = collection.Items.Count;
+
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Attribute categories.
+        /// Dogma Attribute categories.
         /// </summary>
-        /// <returns><c>Bag</c> of Attribute Categories.</returns>
+        /// <returns><c>Bag</c> of Dogma Attribute Categories.</returns>
         private static Bag<DgmAttributeCategories> AttributeCategories()
         {
             IndexedCollection<DgmAttributeCategories> collection = new IndexedCollection<DgmAttributeCategories>();
@@ -601,13 +678,14 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<DgmAttributeCategories>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Regions in the EVE Universe.
+        /// Map Regions.
         /// </summary>
-        /// <returns><c>Bag</c> of all regions in EVE.</returns>
+        /// <returns><c>Bag</c> of Map Regions.</returns>
+        /// <remarks>Regions in the EVE Universe.</remarks>
         private static Bag<MapRegions> Regions()
         {
             IndexedCollection<MapRegions> collection = new IndexedCollection<MapRegions>();
@@ -623,13 +701,16 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<MapRegions>(collection);
+            GeographyTotalCount = collection.Items.Count;
+
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Constallations in the EVE Universe.
+        /// Map Constellations.
         /// </summary>
-        /// <returns><c>Bag</c> of Constallations in EVE.</returns>
+        /// <returns><c>Bag</c> of Map Constellations.</returns>
+        /// <remarks>Constallations in the EVE Universe.</remarks>
         private static Bag<MapConstellations> Constellations()
         {
             IndexedCollection<MapConstellations> collection = new IndexedCollection<MapConstellations>();
@@ -648,14 +729,14 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<MapConstellations>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Solar Systems in EVE.
+        /// Map Solar Systems.
         /// </summary>
-        /// <returns><c>Bag</c> of Solar Systems in the EVE.</returns>
-        private static Bag<MapSolarSystems> Solarsystems()
+        /// <returns><c>Bag</c> of Map Solar Systems.</returns>
+        private static Bag<MapSolarSystems> SolarSystems()
         {
             IndexedCollection<MapSolarSystems> collection = new IndexedCollection<MapSolarSystems>();
 
@@ -685,13 +766,14 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<MapSolarSystems>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Stations in the EVE Universe
+        /// Station Stations.
         /// </summary>
-        /// <returns><c>Bag</c> of Stations in the EVE Universe.</returns>
+        /// <returns><c>Bag</c> of Station Stations.</returns>
+        /// <remarks>Stations in the EVE Universe.</remarks>
         private static Bag<StaStations> Stations()
         {
             IndexedCollection<StaStations> collection = new IndexedCollection<StaStations>();
@@ -722,13 +804,14 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<StaStations>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Jumps between two solar systems in the EVE Universe.
+        /// Map Solar Systems Jump.
         /// </summary>
-        /// <returns><c>List</c> of jumps between SolarSystems in EVE.</returns>
+        /// <returns><c>List</c> of Map Solar Systems Jump.</returns>
+        /// <remarks>Jumps between two solar systems in the EVE Universe.</remarks>
         private static List<MapSolarSystemsJump> Jumps()
         {
             return Context.mapSolarSystemJumps.Select(
@@ -788,11 +871,13 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvBlueprintTypes>(collection);
+            BlueprintsTotalCount = collection.Items.Count;
+
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Inventory Item Market Groups.
+        /// Inventory Market Groups.
         /// </summary>
         /// <returns><c>Bag</c> of Market Groups available on the market.</returns>
         private static Bag<InvMarketGroups> MarketGroups()
@@ -814,11 +899,11 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvMarketGroups>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Inventory Item Categories.
+        /// Inventory Categories.
         /// </summary>
         /// <returns><c>Bag</c> of Inventory Categories.</returns>
         private static Bag<InvCategories> Categories()
@@ -831,11 +916,9 @@ namespace EVEMon.XmlGenerator
                                          {
                                              ID = category.categoryID,
                                              Name = category.categoryName,
-                                             Description = category.description
+                                             Description = category.description,
+                                             IconID = category.iconID
                                          };
-
-                if (category.iconID.HasValue)
-                    item.IconID = category.iconID.Value;
 
                 if (category.published.HasValue)
                     item.Published = category.published.Value;
@@ -843,7 +926,59 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvCategories>(collection);
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Inventory Control Tower Resource Purposes.
+        /// </summary>
+        /// <returns><c>Bag</c> of Inventory Control Tower Resource Purposes.</returns>
+        private static Bag<InvControlTowerResourcePurposes> ControlTowerResourcePurposes()
+        {
+            IndexedCollection<InvControlTowerResourcePurposes> collection =
+                new IndexedCollection<InvControlTowerResourcePurposes>();
+
+            foreach (InvControlTowerResourcePurposes item in Context.invControlTowerResourcePurposes.Select(
+                resource => new InvControlTowerResourcePurposes
+                                {
+                                    ID = resource.purpose,
+                                    PurposeName = resource.purposeText,
+                                }))
+            {
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Inventory Control Tower Resources.
+        /// </summary>
+        /// <returns><c>List</c> of Inventory Control Tower Resources .</returns>
+        private static List<InvControlTowerResources> ControlTowerResources()
+        {
+            List<InvControlTowerResources> list = new List<InvControlTowerResources>();
+
+            foreach (invControlTowerResources resource in Context.invControlTowerResources)
+            {
+                InvControlTowerResources item = new InvControlTowerResources
+                                                    {
+                                                        ID = resource.controlTowerTypeID,
+                                                        ResourceID = resource.resourceTypeID,
+                                                        MinSecurityLevel = resource.minSecurityLevel,
+                                                        FactionID = resource.factionID,
+                                                    };
+
+                if (resource.purpose.HasValue)
+                    item.PurposeID = resource.purpose.Value;
+
+                if (resource.quantity.HasValue)
+                    item.Quantity = resource.quantity.Value;
+
+                list.Add(item);
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -867,11 +1002,11 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvFlags>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Inventory Item Groups.
+        /// Inventory Groups.
         /// </summary>
         /// <returns><c>Bag</c> of Inventory Groups.</returns>
         private static Bag<InvGroups> Groups()
@@ -895,7 +1030,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvGroups>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
@@ -943,13 +1078,22 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<InvTypes>(collection);
+            // Set items total count
+            ItemsTotalCount = ReprocessingTotalCount = collection.Items.Count;
+
+            // Set skills total count
+            SkillsTotalCount = collection.Items.Count(
+                item => item.GroupID != DBConstants.FakeSkillsGroupID &&
+                        InvGroupsTable[item.GroupID].CategoryID == DBConstants.SkillCategoryID);
+
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Requirements used for an Activity.
+        /// Inventory Requirements.
         /// </summary>
         /// <returns>List of Requirements needed for a particular activity.</returns>
+        /// <remarks>Used for an Activity</remarks>
         private static List<RamTypeRequirements> TypeRequirements()
         {
             List<RamTypeRequirements> list = new List<RamTypeRequirements>();
@@ -979,7 +1123,7 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Materials.
+        /// Inventory Materials.
         /// </summary>
         /// <returns>List of Materials.</returns>
         private static List<InvTypeMaterials> TypeMaterials()
@@ -994,9 +1138,9 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Types the reactions.
+        /// Inventory Type Reactions.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of reaction info.</returns>
         private static List<InvTypeReactions> TypeReactions()
         {
             List<InvTypeReactions> list = new List<InvTypeReactions>();
@@ -1040,7 +1184,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<CrtCategories>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
@@ -1064,11 +1208,11 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<CrtClasses>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Certificates.
+        /// Certificate Certificates.
         /// </summary>
         /// <returns><c>Bag</c> of Certificates.</returns>
         private static Bag<CrtCertificates> Certificates()
@@ -1096,7 +1240,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<CrtCertificates>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
@@ -1124,7 +1268,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<CrtRecommendations>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
@@ -1153,11 +1297,11 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            return new Bag<CrtRelationships>(collection);
+            return collection.ToBag();
         }
 
         /// <summary>
-        /// Type Attributes.
+        /// Dogma Type Attributes.
         /// </summary>
         /// <returns><c>RelationSet</c> of attributes for types.</returns>
         private static RelationSet<DgmTypeAttributes> TypeAttributes()
@@ -1170,12 +1314,11 @@ namespace EVEMon.XmlGenerator
                                          ValueFloat = typeAttribute.valueFloat,
                                          ValueInt = typeAttribute.valueInt
                                      });
-
             return new RelationSet<DgmTypeAttributes>(list);
         }
 
         /// <summary>
-        /// Meta Types.
+        /// Inventory Meta Types.
         /// </summary>
         /// <returns><c>RelationSet</c> parent-child relationships between types.</returns>
         private static RelationSet<InvMetaTypes> MetaTypes()
@@ -1196,7 +1339,7 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Effects of various types.
+        /// Dogma Type Effects.
         /// </summary>
         /// <returns><c>RelationSet</c> of Types and Effects.</returns>
         private static RelationSet<DgmTypeEffects> TypeEffects()

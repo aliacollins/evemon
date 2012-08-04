@@ -224,6 +224,8 @@
     <Compile Include="CustomEventArgs\AttributeValueChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\AttributeValueChangingEventArgs.cs" />
     <Compile Include="Data\Agent.cs" />
+    <Compile Include="Data\ControlTowerFuel.cs" />
+    <Compile Include="Data\ControlTowerFuelCollection.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />
     <Compile Include="Data\MaterialCollection.cs" />
@@ -367,6 +369,7 @@
     <Compile Include="Serialization\Datafiles\SerializableCertificatePrerequisiteKind.cs" />
     <Compile Include="Serialization\Datafiles\SerializableCertificateRecommendation.cs" />
     <Compile Include="Serialization\Datafiles\SerializableConstellation.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableControlTowerFuel.cs" />
     <Compile Include="Serialization\Datafiles\SerializableItem.cs" />
     <Compile Include="Serialization\Datafiles\SerializableItemMaterials.cs" />
     <Compile Include="Serialization\Datafiles\SerializableJump.cs" />

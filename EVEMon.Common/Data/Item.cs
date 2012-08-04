@@ -77,6 +77,7 @@ namespace EVEMon.Common.Data
 
             Properties = new EvePropertyCollection(src.Properties);
             ReactionMaterial = new ReactionMaterialCollection(src.ReactionInfo);
+            ControlTowerFuel = new ControlTowerFuelCollection(src.ControlTowerFuelInfo);
 
             // Skills prerequisites
             m_prerequisites = new FastList<StaticSkillLevel>(src.PrerequisiteSkills != null ? src.PrerequisiteSkills.Count : 0);
@@ -168,6 +169,11 @@ namespace EVEMon.Common.Data
         /// Gets the collection of reaction info of this object.
         /// </summary>
         public ReactionMaterialCollection ReactionMaterial { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of control tower fuel info of this object.
+        /// </summary>
+        public ControlTowerFuelCollection ControlTowerFuel { get; private set; }
 
         /// <summary>
         /// Gets the collection of skills this object must satisfy to be used.

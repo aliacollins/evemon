@@ -132,8 +132,7 @@ namespace EVEMon.Common.Data
                                             {
                                                 InterceptorsMarketGroupID, CovertOpsMarketGroupID, AssaultShipsMarketGroupID,
                                                 LogisticsMarketGroupID, HeavyAssaultShipsMarketGroupID,
-                                                TransportShipsMarketGroupID, CommandShipsMarketGroupID, InterdictorsMarketGroupID
-                                                ,
+                                                TransportShipsMarketGroupID, CommandShipsMarketGroupID, InterdictorsMarketGroupID,
                                                 ReconShipsMarketGroupID, ExhumersMarketGroupID,
                                                 ElectronicAttackFrigatesMarketGroupID, HeavyInterdictorsMarketGroupID,
                                                 BlackOpsMarketGroupID, MaraudersMarketGroupID, JumpFreightersMarketGroupID
@@ -180,8 +179,7 @@ namespace EVEMon.Common.Data
                                                 GuristasPiratesFactionID, AngelCartelFactionID, BloodRaiderCovenantFactionID,
                                                 TheInterBusFactionID, OREFactionID, ThukkerTribeFactionID,
                                                 ServantSistersofEVEFactionID, TheSocietyofConsciousThoughtFactionID,
-                                                MordusLegionCommandFactionID,
-                                                SanshasNationFactionID, SerpentisFactionID
+                                                MordusLegionCommandFactionID, SanshasNationFactionID, SerpentisFactionID
                                             });
 
         #endregion
@@ -407,8 +405,9 @@ namespace EVEMon.Common.Data
         #region Category IDs
 
         public const int BlueprintCategoryID = 9;
-        public const int ImplantCategoryID = 20;
         public const int SkillCategoryID = 16;
+        public const int ImplantCategoryID = 20;
+        public const int ReactionCategoryID = 24;
 
         #endregion
 
@@ -425,6 +424,7 @@ namespace EVEMon.Common.Data
         public const int SocialSkillsGroupID = 278;
         public const int AssaultShipGroupID = 324;
         public const int HeavyAssaultShipGroupID = 358;
+        public const int ControlTowerGroupID = 365;
         public const int TransportShipGroupID = 380;
         public const int EliteBattleshipGroupID = 381;
         public const int BattlecruiserGroupID = 419;
@@ -518,13 +518,7 @@ namespace EVEMon.Common.Data
         public const int RootNonMarketGroupID = 11000;
 
         public const int UniqueDesignsRootNonMarketGroupID = 10000;
-        public const int UniqueDesignBattleshipsNonMarketGroupID = 10200;
         public const int UniqueDesignShuttlesNonMarketGroupID = 10900;
-        public const int RookieShipRootGroupID = 11100;
-        public const int RookieShipAmarrGroupID = 11140;
-        public const int RookieShipCaldariGroupID = 11110;
-        public const int RookieShipGallenteGroupID = 11180;
-        public const int RookieShipMinmatarGroupID = 11120;
 
         public const int BlueprintRootNonMarketGroupID = 21000;
         public const int BlueprintTechINonMarketGroupID = 21001;

@@ -159,15 +159,13 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                  }
                                          };
 
-            s_nullMarketBlueprints = Database.InvTypesTable.Where(
-                item => item.MarketGroupID == null && !item.Name.Contains("TEST")).Where(
-                    item => Database.InvBlueprintTypesTable.Any(blueprintType => blueprintType.ID == item.ID)).Select(
-                        blueprint =>
-                            {
-                                Util.UpdatePercentDone(Database.BlueprintsTotalCount);
-                                blueprint.Published = true;
-                                return blueprint;
-                            }).ToList();
+            s_nullMarketBlueprints = Database.InvTypesTable.Where(item => item.MarketGroupID == null &&
+                        Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID).Select(
+                            blueprint =>
+                                {
+                                    blueprint.Published = true;
+                                    return blueprint;
+                                }).ToList();
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (InvTypes item in s_nullMarketBlueprints)
@@ -252,27 +250,27 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="item">The item.</param>
         private static void SetMarketGroupFromMetaGroup(InvTypes item)
         {
-            foreach (InvMetaTypes relation in Database.InvMetaTypesTable.Where(
-                x => x.ItemID == Database.InvBlueprintTypesTable[item.ID].ProductTypeID))
+            int relation = Database.InvMetaTypesTable.Where(
+                x => x.ItemID == Database.InvBlueprintTypesTable[item.ID].ProductTypeID).Select(
+                    x => x.MetaGroupID).FirstOrDefault();
+
+            switch (relation)
             {
-                switch (relation.MetaGroupID)
-                {
-                    case DBConstants.TechIIMetaGroupID:
-                        item.MarketGroupID = DBConstants.BlueprintTechIINonMarketGroupID;
-                        break;
-                    case DBConstants.StorylineMetaGroupID:
-                        item.MarketGroupID = DBConstants.BlueprintStorylineNonMarketGroupID;
-                        break;
-                    case DBConstants.FactionMetaGroupID:
-                        item.MarketGroupID = DBConstants.BlueprintFactionNonMarketGroupID;
-                        break;
-                    case DBConstants.OfficerMetaGroupID:
-                        item.MarketGroupID = DBConstants.BlueprintOfficerNonMarketGroupID;
-                        break;
-                    case DBConstants.TechIIIMetaGroupID:
-                        item.MarketGroupID = DBConstants.BlueprintTechIIINonMarketGroupID;
-                        break;
-                }
+                case DBConstants.TechIIMetaGroupID:
+                    item.MarketGroupID = DBConstants.BlueprintTechIINonMarketGroupID;
+                    break;
+                case DBConstants.StorylineMetaGroupID:
+                    item.MarketGroupID = DBConstants.BlueprintStorylineNonMarketGroupID;
+                    break;
+                case DBConstants.FactionMetaGroupID:
+                    item.MarketGroupID = DBConstants.BlueprintFactionNonMarketGroupID;
+                    break;
+                case DBConstants.OfficerMetaGroupID:
+                    item.MarketGroupID = DBConstants.BlueprintOfficerNonMarketGroupID;
+                    break;
+                case DBConstants.TechIIIMetaGroupID:
+                    item.MarketGroupID = DBConstants.BlueprintTechIIINonMarketGroupID;
+                    break;
             }
         }
 

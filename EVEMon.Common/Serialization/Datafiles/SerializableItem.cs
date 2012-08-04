@@ -15,6 +15,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         private readonly Collection<SerializablePrerequisiteSkill> m_prerequisiteSkills;
         private readonly Collection<SerializablePropertyValue> m_properties;
         private readonly Collection<SerializableReactionInfo> m_reactions;
+        private readonly Collection<SerializableControlTowerFuel> m_controlTowerFuel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializableItem"/> class.
@@ -24,6 +25,7 @@ namespace EVEMon.Common.Serialization.Datafiles
             m_prerequisiteSkills = new Collection<SerializablePrerequisiteSkill>();
             m_properties = new Collection<SerializablePropertyValue>();
             m_reactions = new Collection<SerializableReactionInfo>();
+            m_controlTowerFuel = new Collection<SerializableControlTowerFuel>();
         }
 
         /// <summary>
@@ -157,6 +159,15 @@ namespace EVEMon.Common.Serialization.Datafiles
         public Collection<SerializableReactionInfo> ReactionInfo
         {
             get { return m_reactions; }
+        }
+
+        /// <summary>
+        /// Gets the control tower fuel info.
+        /// </summary>
+        [XmlElement("ctf")]
+        public Collection<SerializableControlTowerFuel> ControlTowerFuelInfo
+        {
+            get { return m_controlTowerFuel; }
         }
     }
 }

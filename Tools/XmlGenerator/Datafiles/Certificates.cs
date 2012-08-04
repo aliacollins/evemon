@@ -64,10 +64,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             foreach (CrtClasses certClass in Database.CrtClassesTable)
             {
                 // Exclude unused classes
-                int id = certClass.ID;
-                if (id == DBConstants.IndustrialHarvestingID ||
-                    id == DBConstants.AutomatedMiningID ||
-                    id == DBConstants.ProductionInternID)
+                if (certClass.ID == DBConstants.IndustrialHarvestingID ||
+                    certClass.ID == DBConstants.AutomatedMiningID ||
+                    certClass.ID == DBConstants.ProductionInternID)
                     continue;
 
                 SerializableCertificateClass crtClasses = new SerializableCertificateClass
@@ -82,7 +81,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 foreach (CrtCertificates certificate in Database.CrtCertificatesTable.Where(x => x.ClassID == certClass.ID))
                 {
-
                     // Storing the certificate categoryID for use in classes
                     categoryID = certificate.CategoryID;
 
