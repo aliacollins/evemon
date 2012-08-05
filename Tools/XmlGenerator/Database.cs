@@ -344,17 +344,17 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             CrtRelationshipsTable = CertificateRelationships();
             Util.UpdateProgress();
-            DgmAttributeTypesTable = AttributeTypes();
-            Util.UpdateProgress();
             DgmAttributeCategoriesTable = AttributeCategories();
             Util.UpdateProgress();
-            EveIconsTable = Icons();
-            Util.UpdateProgress();
-            EveUnitsTable = Units();
+            DgmAttributeTypesTable = AttributeTypes();
             Util.UpdateProgress();
             DgmTypeAttributesTable = TypeAttributes();
             Util.UpdateProgress();
             DgmTypeEffectsTable = TypeEffects();
+            Util.UpdateProgress();
+            EveIconsTable = Icons();
+            Util.UpdateProgress();
+            EveUnitsTable = Units();
             Util.UpdateProgress();
             InvBlueprintTypesTable = BlueprintTypes();
             Util.UpdateProgress();
@@ -380,13 +380,13 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             InvTypesTable = Types();
             Util.UpdateProgress();
-            MapRegionsTable = Regions();
-            Util.UpdateProgress();
             MapConstellationsTable = Constellations();
             Util.UpdateProgress();
-            MapSolarSystemsTable = SolarSystems();
+            MapRegionsTable = Regions();
             Util.UpdateProgress();
-            MapSolarSystemJumpsTable = Jumps();
+            MapSolarSystemJumpsTable = SolarSystemsJumps();
+            Util.UpdateProgress();
+            MapSolarSystemsTable = SolarSystems();
             Util.UpdateProgress();
             RamTypeRequirementsTable = TypeRequirements();
             Util.UpdateProgress();
@@ -546,18 +546,256 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Inventory Names.
+        /// Certificate Categories.
         /// </summary>
-        /// <returns><c>Bag</c> of Inventory Names.</returns>
-        private static Bag<InvNames> Names()
+        /// <returns><c>Bag</c> of Certificate Categories.</returns>
+        private static Bag<CrtCategories> CertificateCategories()
         {
-            IndexedCollection<InvNames> collection = new IndexedCollection<InvNames>();
+            IndexedCollection<CrtCategories> collection = new IndexedCollection<CrtCategories>();
 
-            foreach (InvNames item in Context.invNames.Select(
-                name => new InvNames
+            foreach (CrtCategories item in Context.crtCategories.Select(
+                category => new CrtCategories
+                {
+                    ID = category.categoryID,
+                    CategoryName = category.categoryName,
+                    Description = category.description
+                }))
+            {
+                item.Description = item.Description.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Certificates.
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificates.</returns>
+        private static Bag<CrtCertificates> Certificates()
+        {
+            IndexedCollection<CrtCertificates> collection = new IndexedCollection<CrtCertificates>();
+
+            foreach (crtCertificates certificate in Context.crtCertificates)
+            {
+                CrtCertificates item = new CrtCertificates
+                {
+                    ID = certificate.certificateID,
+                    Description = certificate.description
+                };
+                item.Description = item.Description.Clean();
+
+                if (certificate.categoryID.HasValue)
+                    item.CategoryID = certificate.categoryID.Value;
+
+                if (certificate.classID.HasValue)
+                    item.ClassID = certificate.classID.Value;
+
+                if (certificate.grade.HasValue)
+                    item.Grade = certificate.grade.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Classes.
+        /// </summary>
+        /// <returns><c>Bag</c> of Classes of Certificate.</returns>
+        private static Bag<CrtClasses> CertificateClasses()
+        {
+            IndexedCollection<CrtClasses> collection = new IndexedCollection<CrtClasses>();
+
+            foreach (CrtClasses item in Context.crtClasses.Select(
+                cClass => new CrtClasses
+                {
+                    ID = cClass.classID,
+                    ClassName = cClass.className,
+                    Description = cClass.description
+                }))
+            {
+                item.Description = item.Description.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Recommendations.
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificate Recommendations.</returns>
+        private static Bag<CrtRecommendations> CertificateRecommendations()
+        {
+            IndexedCollection<CrtRecommendations> collection = new IndexedCollection<CrtRecommendations>();
+
+            foreach (crtRecommendations recommendation in Context.crtRecommendations)
+            {
+                CrtRecommendations item = new CrtRecommendations
+                {
+                    ID = recommendation.recommendationID,
+                    Level = recommendation.recommendationLevel,
+                };
+
+                if (recommendation.certificateID.HasValue)
+                    item.CertificateID = recommendation.certificateID.Value;
+
+                if (recommendation.shipTypeID.HasValue)
+                    item.ShipTypeID = recommendation.shipTypeID.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Relationships.
+        /// </summary>
+        /// <returns><c>Bag</c> of parent-child relationships between certificates.</returns>
+        private static Bag<CrtRelationships> CertificateRelationships()
+        {
+            IndexedCollection<CrtRelationships> collection = new IndexedCollection<CrtRelationships>();
+
+            foreach (crtRelationships relationship in Context.crtRelationships)
+            {
+                CrtRelationships item = new CrtRelationships
+                {
+                    ID = relationship.relationshipID,
+                    ParentID = relationship.parentID,
+                    ParentLevel = relationship.parentLevel,
+                };
+
+                if (relationship.parentTypeID != 0)
+                    item.ParentTypeID = relationship.parentTypeID;
+
+                if (relationship.childID.HasValue)
+                    item.ChildID = relationship.childID.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Dogma Attribute categories.
+        /// </summary>
+        /// <returns><c>Bag</c> of Dogma Attribute Categories.</returns>
+        private static Bag<DgmAttributeCategories> AttributeCategories()
+        {
+            IndexedCollection<DgmAttributeCategories> collection = new IndexedCollection<DgmAttributeCategories>();
+
+            foreach (DgmAttributeCategories item in Context.dgmAttributeCategories.Select(
+                category => new DgmAttributeCategories
+                {
+                    ID = category.categoryID,
+                    Description = category.categoryDescription,
+                    Name = category.categoryName
+                }))
+            {
+                item.Description = item.Description.Clean();
+                item.Name = item.Name.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Dogma Attribute Types.
+        /// </summary>
+        /// <returns><c>Bag</c> of Dogma Attribute Types.</returns>
+        private static Bag<DgmAttributeTypes> AttributeTypes()
+        {
+            IndexedCollection<DgmAttributeTypes> collection = new IndexedCollection<DgmAttributeTypes>();
+
+            foreach (dgmAttributeTypes attribute in Context.dgmAttributeTypes)
+            {
+                DgmAttributeTypes item = new DgmAttributeTypes
+                {
+                    ID = attribute.attributeID,
+                    CategoryID = attribute.categoryID,
+                    Description = attribute.description,
+                    DisplayName = attribute.displayName,
+                    IconID = attribute.iconID,
+                    Name = attribute.attributeName,
+                    UnitID = attribute.unitID,
+                };
+
+                item.Description = item.Description.Clean();
+                item.DisplayName = item.DisplayName.Clean();
+                item.Name = item.Name.Clean();
+
+                if (attribute.defaultValue.HasValue)
+                    item.DefaultValue = attribute.defaultValue.Value.ToString(CultureInfo.InvariantCulture);
+
+                if (attribute.published.HasValue)
+                    item.Published = attribute.published.Value;
+
+                if (attribute.highIsGood.HasValue)
+                    item.HigherIsBetter = attribute.highIsGood.Value;
+
+                collection.Items.Add(item);
+            }
+
+            // Set properties total count
+            PropertiesTotalCount = collection.Items.Count;
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Dogma Type Attributes.
+        /// </summary>
+        /// <returns><c>RelationSet</c> of attributes for types.</returns>
+        private static RelationSet<DgmTypeAttributes> TypeAttributes()
+        {
+            IEnumerable<DgmTypeAttributes> list = Context.dgmTypeAttributes.Select(
+                typeAttribute => new DgmTypeAttributes
+                {
+                    AttributeID = typeAttribute.attributeID,
+                    ItemID = typeAttribute.typeID,
+                    ValueFloat = typeAttribute.valueFloat,
+                    ValueInt = typeAttribute.valueInt
+                });
+            return new RelationSet<DgmTypeAttributes>(list);
+        }
+
+        /// <summary>
+        /// Dogma Type Effects.
+        /// </summary>
+        /// <returns><c>RelationSet</c> of Types and Effects.</returns>
+        private static RelationSet<DgmTypeEffects> TypeEffects()
+        {
+            List<DgmTypeEffects> list = Context.dgmTypeEffects.Select(
+                typeEffect => new DgmTypeEffects
+                {
+                    EffectID = typeEffect.effectID,
+                    ItemID = typeEffect.typeID
+                }).ToList();
+
+            return new RelationSet<DgmTypeEffects>(list);
+        }
+
+        /// <summary>
+        /// EVE Icons.
+        /// </summary>
+        /// <returns><c>Bag</c> of EVE icons.</returns>
+        private static Bag<EveIcons> Icons()
+        {
+            IndexedCollection<EveIcons> collection = new IndexedCollection<EveIcons>();
+
+            foreach (EveIcons item in Context.eveIcons.Select(
+                icon => new EveIcons
                             {
-                                ID = name.itemID,
-                                Name = name.itemName
+                                ID = icon.iconID,
+                                Icon = icon.iconFile
                             }))
             {
                 collection.Items.Add(item);
@@ -590,236 +828,6 @@ namespace EVEMon.XmlGenerator
             }
 
             return collection.ToBag();
-        }
-
-        /// <summary>
-        /// EVE Icons.
-        /// </summary>
-        /// <returns><c>Bag</c> of EVE icons.</returns>
-        private static Bag<EveIcons> Icons()
-        {
-            IndexedCollection<EveIcons> collection = new IndexedCollection<EveIcons>();
-
-            foreach (EveIcons item in Context.eveIcons.Select(
-                icon => new EveIcons
-                            {
-                                ID = icon.iconID,
-                                Icon = icon.iconFile
-                            }))
-            {
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Dogma Attribute Types.
-        /// </summary>
-        /// <returns><c>Bag</c> of Dogma Attribute Types.</returns>
-        private static Bag<DgmAttributeTypes> AttributeTypes()
-        {
-            IndexedCollection<DgmAttributeTypes> collection = new IndexedCollection<DgmAttributeTypes>();
-
-            foreach (dgmAttributeTypes attribute in Context.dgmAttributeTypes)
-            {
-                DgmAttributeTypes item = new DgmAttributeTypes
-                                             {
-                                                 ID = attribute.attributeID,
-                                                 CategoryID = attribute.categoryID,
-                                                 Description = attribute.description,
-                                                 DisplayName = attribute.displayName,
-                                                 IconID = attribute.iconID,
-                                                 Name = attribute.attributeName,
-                                                 UnitID = attribute.unitID,
-                                             };
-
-                item.Description = item.Description.Clean();
-                item.DisplayName = item.DisplayName.Clean();
-                item.Name = item.Name.Clean();
-
-                if (attribute.defaultValue.HasValue)
-                    item.DefaultValue = attribute.defaultValue.Value.ToString(CultureInfo.InvariantCulture);
-
-                if (attribute.published.HasValue)
-                    item.Published = attribute.published.Value;
-
-                if (attribute.highIsGood.HasValue)
-                    item.HigherIsBetter = attribute.highIsGood.Value;
-
-                collection.Items.Add(item);
-            }
-
-            // Set properties total count
-            PropertiesTotalCount = collection.Items.Count;
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Dogma Attribute categories.
-        /// </summary>
-        /// <returns><c>Bag</c> of Dogma Attribute Categories.</returns>
-        private static Bag<DgmAttributeCategories> AttributeCategories()
-        {
-            IndexedCollection<DgmAttributeCategories> collection = new IndexedCollection<DgmAttributeCategories>();
-
-            foreach (DgmAttributeCategories item in Context.dgmAttributeCategories.Select(
-                category => new DgmAttributeCategories
-                                {
-                                    ID = category.categoryID,
-                                    Description = category.categoryDescription,
-                                    Name = category.categoryName
-                                }))
-            {
-                item.Description = item.Description.Clean();
-                item.Name = item.Name.Clean();
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Map Regions.
-        /// </summary>
-        /// <returns><c>Bag</c> of Map Regions.</returns>
-        /// <remarks>Regions in the EVE Universe.</remarks>
-        private static Bag<MapRegions> Regions()
-        {
-            IndexedCollection<MapRegions> collection = new IndexedCollection<MapRegions>();
-
-            foreach (MapRegions item in Context.mapRegions.Select(
-                region => new MapRegions
-                              {
-                                  ID = region.regionID,
-                                  Name = region.regionName,
-                                  FactionID = region.factionID
-                              }))
-            {
-                collection.Items.Add(item);
-            }
-
-            GeographyTotalCount = collection.Items.Count;
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Map Constellations.
-        /// </summary>
-        /// <returns><c>Bag</c> of Map Constellations.</returns>
-        /// <remarks>Constallations in the EVE Universe.</remarks>
-        private static Bag<MapConstellations> Constellations()
-        {
-            IndexedCollection<MapConstellations> collection = new IndexedCollection<MapConstellations>();
-
-            foreach (mapConstellations constellation in Context.mapConstellations)
-            {
-                MapConstellations item = new MapConstellations
-                                             {
-                                                 ID = constellation.constellationID,
-                                                 Name = constellation.constellationName,
-                                             };
-
-                if (constellation.regionID.HasValue)
-                    item.RegionID = constellation.regionID.Value;
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Map Solar Systems.
-        /// </summary>
-        /// <returns><c>Bag</c> of Map Solar Systems.</returns>
-        private static Bag<MapSolarSystems> SolarSystems()
-        {
-            IndexedCollection<MapSolarSystems> collection = new IndexedCollection<MapSolarSystems>();
-
-            foreach (mapSolarSystems solarsystem in Context.mapSolarSystems)
-            {
-                MapSolarSystems item = new MapSolarSystems
-                                           {
-                                               ID = solarsystem.solarSystemID,
-                                               Name = solarsystem.solarSystemName
-                                           };
-
-                if (solarsystem.constellationID.HasValue)
-                    item.ConstellationID = solarsystem.constellationID.Value;
-
-                if (solarsystem.security.HasValue)
-                    item.SecurityLevel = (float)solarsystem.security.Value;
-
-                if (solarsystem.x.HasValue)
-                    item.X = solarsystem.x.Value;
-
-                if (solarsystem.y.HasValue)
-                    item.Y = solarsystem.y.Value;
-
-                if (solarsystem.z.HasValue)
-                    item.Z = solarsystem.z.Value;
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Station Stations.
-        /// </summary>
-        /// <returns><c>Bag</c> of Station Stations.</returns>
-        /// <remarks>Stations in the EVE Universe.</remarks>
-        private static Bag<StaStations> Stations()
-        {
-            IndexedCollection<StaStations> collection = new IndexedCollection<StaStations>();
-
-            foreach (staStations station in Context.staStations)
-            {
-                StaStations item = new StaStations
-                                       {
-                                           ID = station.stationID,
-                                           Name = station.stationName,
-                                       };
-
-                if (station.reprocessingEfficiency.HasValue)
-                    item.ReprocessingEfficiency = (float)station.reprocessingEfficiency.Value;
-
-                if (station.reprocessingStationsTake.HasValue)
-                    item.ReprocessingStationsTake = (float)station.reprocessingStationsTake.Value;
-
-                if (station.security.HasValue)
-                    item.SecurityLevel = station.security.Value;
-
-                if (station.solarSystemID.HasValue)
-                    item.SolarSystemID = station.solarSystemID.Value;
-
-                if (station.corporationID.HasValue)
-                    item.CorporationID = station.corporationID.Value;
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Map Solar Systems Jump.
-        /// </summary>
-        /// <returns><c>List</c> of Map Solar Systems Jump.</returns>
-        /// <remarks>Jumps between two solar systems in the EVE Universe.</remarks>
-        private static List<MapSolarSystemsJump> Jumps()
-        {
-            return Context.mapSolarSystemJumps.Select(
-                jump => new MapSolarSystemsJump
-                            {
-                                A = jump.fromSolarSystemID,
-                                B = jump.toSolarSystemID
-                            }).ToList();
         }
 
         /// <summary>
@@ -872,32 +880,6 @@ namespace EVEMon.XmlGenerator
             }
 
             BlueprintsTotalCount = collection.Items.Count;
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Inventory Market Groups.
-        /// </summary>
-        /// <returns><c>Bag</c> of Market Groups available on the market.</returns>
-        private static Bag<InvMarketGroups> MarketGroups()
-        {
-            IndexedCollection<InvMarketGroups> collection = new IndexedCollection<InvMarketGroups>();
-
-            foreach (InvMarketGroups item in Context.invMarketGroups.Select(
-                marketGroup => new InvMarketGroups
-                                   {
-                                       ID = marketGroup.marketGroupID,
-                                       Description = marketGroup.description,
-                                       IconID = marketGroup.iconID,
-                                       Name = marketGroup.marketGroupName,
-                                       ParentID = marketGroup.parentGroupID
-                                   }))
-            {
-                item.Description = item.Description.Clean();
-
-                collection.Items.Add(item);
-            }
 
             return collection.ToBag();
         }
@@ -992,10 +974,10 @@ namespace EVEMon.XmlGenerator
             foreach (invFlags flag in Context.invFlags)
             {
                 InvFlags item = new InvFlags
-                                    {
-                                        ID = flag.flagID,
-                                        Name = flag.flagName,
-                                    };
+                {
+                    ID = flag.flagID,
+                    Name = flag.flagName,
+                };
 
                 item.Text = flag.flagText.Clean();
 
@@ -1016,10 +998,10 @@ namespace EVEMon.XmlGenerator
             foreach (invGroups group in Context.invGroups)
             {
                 InvGroups item = new InvGroups
-                                     {
-                                         ID = group.groupID,
-                                         Name = group.groupName
-                                     };
+                {
+                    ID = group.groupID,
+                    Name = group.groupName
+                };
 
                 if (group.published.HasValue)
                     item.Published = group.published.Value;
@@ -1034,6 +1016,115 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// Inventory Market Groups.
+        /// </summary>
+        /// <returns><c>Bag</c> of Market Groups available on the market.</returns>
+        private static Bag<InvMarketGroups> MarketGroups()
+        {
+            IndexedCollection<InvMarketGroups> collection = new IndexedCollection<InvMarketGroups>();
+
+            foreach (InvMarketGroups item in Context.invMarketGroups.Select(
+                marketGroup => new InvMarketGroups
+                {
+                    ID = marketGroup.marketGroupID,
+                    Description = marketGroup.description,
+                    IconID = marketGroup.iconID,
+                    Name = marketGroup.marketGroupName,
+                    ParentID = marketGroup.parentGroupID
+                }))
+            {
+                item.Description = item.Description.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Inventory Meta Types.
+        /// </summary>
+        /// <returns><c>RelationSet</c> parent-child relationships between types.</returns>
+        private static RelationSet<InvMetaTypes> MetaTypes()
+        {
+            List<InvMetaTypes> list = new List<InvMetaTypes>();
+
+            foreach (invMetaTypes metaType in Context.invMetaTypes)
+            {
+                InvMetaTypes item = new InvMetaTypes { ItemID = metaType.typeID };
+                if (metaType.metaGroupID.HasValue)
+                    item.MetaGroupID = Convert.ToInt32(metaType.metaGroupID, CultureInfo.InvariantCulture);
+
+                if (metaType.parentTypeID.HasValue)
+                    item.ParentItemID = Convert.ToInt32(metaType.parentTypeID, CultureInfo.InvariantCulture);
+                list.Add(item);
+            }
+            return new RelationSet<InvMetaTypes>(list);
+        }
+
+        /// <summary>
+        /// Inventory Names.
+        /// </summary>
+        /// <returns><c>Bag</c> of Inventory Names.</returns>
+        private static Bag<InvNames> Names()
+        {
+            IndexedCollection<InvNames> collection = new IndexedCollection<InvNames>();
+
+            foreach (InvNames item in Context.invNames.Select(
+                name => new InvNames
+                {
+                    ID = name.itemID,
+                    Name = name.itemName
+                }))
+            {
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Inventory Materials.
+        /// </summary>
+        /// <returns>List of Materials.</returns>
+        private static List<InvTypeMaterials> TypeMaterials()
+        {
+            return Context.invTypeMaterials.Select(
+                material => new InvTypeMaterials
+                {
+                    TypeID = material.typeID,
+                    MaterialTypeID = material.materialTypeID,
+                    Quantity = material.quantity
+                }).ToList();
+        }
+
+        /// <summary>
+        /// Inventory Type Reactions.
+        /// </summary>
+        /// <returns>List of reaction info.</returns>
+        private static List<InvTypeReactions> TypeReactions()
+        {
+            List<InvTypeReactions> list = new List<InvTypeReactions>();
+
+            foreach (invTypeReactions reaction in Context.invTypeReactions)
+            {
+                InvTypeReactions item = new InvTypeReactions
+                {
+                    ReactionTypeID = reaction.reactionTypeID,
+                    Input = reaction.input,
+                    TypeID = reaction.typeID,
+                };
+
+                if (reaction.quantity.HasValue)
+                    item.Quantity = reaction.quantity.Value;
+
+                list.Add(item);
+            }
+
+            return list;
+        }
+
+        /// <summary>
         /// Inventory Types.
         /// </summary>
         /// <returns><c>Bag</c> of items from the Inventory.</returns>
@@ -1044,14 +1135,14 @@ namespace EVEMon.XmlGenerator
             foreach (invTypes type in Context.invTypes)
             {
                 InvTypes item = new InvTypes
-                                    {
-                                        ID = type.typeID,
-                                        Description = type.description,
-                                        IconID = type.iconID,
-                                        MarketGroupID = type.marketGroupID,
-                                        Name = type.typeName,
-                                        RaceID = type.raceID
-                                    };
+                {
+                    ID = type.typeID,
+                    Description = type.description,
+                    IconID = type.iconID,
+                    MarketGroupID = type.marketGroupID,
+                    Name = type.typeName,
+                    RaceID = type.raceID
+                };
                 item.Description = item.Description.Clean();
 
                 if (type.basePrice.HasValue)
@@ -1090,7 +1181,110 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Inventory Requirements.
+        /// Map Constellations.
+        /// </summary>
+        /// <returns><c>Bag</c> of Map Constellations.</returns>
+        /// <remarks>Constallations in the EVE Universe.</remarks>
+        private static Bag<MapConstellations> Constellations()
+        {
+            IndexedCollection<MapConstellations> collection = new IndexedCollection<MapConstellations>();
+
+            foreach (mapConstellations constellation in Context.mapConstellations)
+            {
+                MapConstellations item = new MapConstellations
+                {
+                    ID = constellation.constellationID,
+                    Name = constellation.constellationName,
+                };
+
+                if (constellation.regionID.HasValue)
+                    item.RegionID = constellation.regionID.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Map Regions.
+        /// </summary>
+        /// <returns><c>Bag</c> of Map Regions.</returns>
+        /// <remarks>Regions in the EVE Universe.</remarks>
+        private static Bag<MapRegions> Regions()
+        {
+            IndexedCollection<MapRegions> collection = new IndexedCollection<MapRegions>();
+
+            foreach (MapRegions item in Context.mapRegions.Select(
+                region => new MapRegions
+                {
+                    ID = region.regionID,
+                    Name = region.regionName,
+                    FactionID = region.factionID
+                }))
+            {
+                collection.Items.Add(item);
+            }
+
+            GeographyTotalCount = collection.Items.Count;
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Map Solar Systems Jump.
+        /// </summary>
+        /// <returns><c>List</c> of Map Solar Systems Jump.</returns>
+        /// <remarks>Jumps between two solar systems in the EVE Universe.</remarks>
+        private static List<MapSolarSystemsJump> SolarSystemsJumps()
+        {
+            return Context.mapSolarSystemJumps.Select(
+                jump => new MapSolarSystemsJump
+                {
+                    A = jump.fromSolarSystemID,
+                    B = jump.toSolarSystemID
+                }).ToList();
+        }
+
+        /// <summary>
+        /// Map Solar Systems.
+        /// </summary>
+        /// <returns><c>Bag</c> of Map Solar Systems.</returns>
+        private static Bag<MapSolarSystems> SolarSystems()
+        {
+            IndexedCollection<MapSolarSystems> collection = new IndexedCollection<MapSolarSystems>();
+
+            foreach (mapSolarSystems solarsystem in Context.mapSolarSystems)
+            {
+                MapSolarSystems item = new MapSolarSystems
+                {
+                    ID = solarsystem.solarSystemID,
+                    Name = solarsystem.solarSystemName
+                };
+
+                if (solarsystem.constellationID.HasValue)
+                    item.ConstellationID = solarsystem.constellationID.Value;
+
+                if (solarsystem.security.HasValue)
+                    item.SecurityLevel = (float)solarsystem.security.Value;
+
+                if (solarsystem.x.HasValue)
+                    item.X = solarsystem.x.Value;
+
+                if (solarsystem.y.HasValue)
+                    item.Y = solarsystem.y.Value;
+
+                if (solarsystem.z.HasValue)
+                    item.Z = solarsystem.z.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Ram Type Requirements.
         /// </summary>
         /// <returns>List of Requirements needed for a particular activity.</returns>
         /// <remarks>Used for an Activity</remarks>
@@ -1101,11 +1295,11 @@ namespace EVEMon.XmlGenerator
             foreach (ramTypeRequirements requirement in Context.ramTypeRequirements)
             {
                 RamTypeRequirements item = new RamTypeRequirements
-                                               {
-                                                   TypeID = requirement.typeID,
-                                                   ActivityID = requirement.activityID,
-                                                   RequiredTypeID = requirement.requiredTypeID
-                                               };
+                {
+                    TypeID = requirement.typeID,
+                    ActivityID = requirement.activityID,
+                    RequiredTypeID = requirement.requiredTypeID
+                };
 
                 if (requirement.quantity.HasValue)
                     item.Quantity = requirement.quantity.Value;
@@ -1123,235 +1317,41 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Inventory Materials.
+        /// Station Stations.
         /// </summary>
-        /// <returns>List of Materials.</returns>
-        private static List<InvTypeMaterials> TypeMaterials()
+        /// <returns><c>Bag</c> of Station Stations.</returns>
+        /// <remarks>Stations in the EVE Universe.</remarks>
+        private static Bag<StaStations> Stations()
         {
-            return Context.invTypeMaterials.Select(
-                material => new InvTypeMaterials
-                                {
-                                    TypeID = material.typeID,
-                                    MaterialTypeID = material.materialTypeID,
-                                    Quantity = material.quantity
-                                }).ToList();
-        }
+            IndexedCollection<StaStations> collection = new IndexedCollection<StaStations>();
 
-        /// <summary>
-        /// Inventory Type Reactions.
-        /// </summary>
-        /// <returns>List of reaction info.</returns>
-        private static List<InvTypeReactions> TypeReactions()
-        {
-            List<InvTypeReactions> list = new List<InvTypeReactions>();
-
-            foreach (invTypeReactions reaction in Context.invTypeReactions)
+            foreach (staStations station in Context.staStations)
             {
-                InvTypeReactions item = new InvTypeReactions
-                                            {
-                                                ReactionTypeID = reaction.reactionTypeID,
-                                                Input = reaction.input,
-                                                TypeID = reaction.typeID,
-                                            };
+                StaStations item = new StaStations
+                {
+                    ID = station.stationID,
+                    Name = station.stationName,
+                };
 
-                if (reaction.quantity.HasValue)
-                    item.Quantity = reaction.quantity.Value;
+                if (station.reprocessingEfficiency.HasValue)
+                    item.ReprocessingEfficiency = (float)station.reprocessingEfficiency.Value;
 
-                list.Add(item);
-            }
+                if (station.reprocessingStationsTake.HasValue)
+                    item.ReprocessingStationsTake = (float)station.reprocessingStationsTake.Value;
 
-            return list;
-        }
+                if (station.security.HasValue)
+                    item.SecurityLevel = station.security.Value;
 
-        /// <summary>
-        /// Certificate Categories.
-        /// </summary>
-        /// <returns><c>Bag</c> of Certificate Categories.</returns>
-        private static Bag<CrtCategories> CertificateCategories()
-        {
-            IndexedCollection<CrtCategories> collection = new IndexedCollection<CrtCategories>();
+                if (station.solarSystemID.HasValue)
+                    item.SolarSystemID = station.solarSystemID.Value;
 
-            foreach (CrtCategories item in Context.crtCategories.Select(
-                category => new CrtCategories
-                                {
-                                    ID = category.categoryID,
-                                    CategoryName = category.categoryName,
-                                    Description = category.description
-                                }))
-            {
-                item.Description = item.Description.Clean();
+                if (station.corporationID.HasValue)
+                    item.CorporationID = station.corporationID.Value;
 
                 collection.Items.Add(item);
             }
 
             return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Certificate Classes.
-        /// </summary>
-        /// <returns><c>Bag</c> of Classes of Certificate.</returns>
-        private static Bag<CrtClasses> CertificateClasses()
-        {
-            IndexedCollection<CrtClasses> collection = new IndexedCollection<CrtClasses>();
-
-            foreach (CrtClasses item in Context.crtClasses.Select(
-                cClass => new CrtClasses
-                              {
-                                  ID = cClass.classID,
-                                  ClassName = cClass.className,
-                                  Description = cClass.description
-                              }))
-            {
-                item.Description = item.Description.Clean();
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Certificate Certificates.
-        /// </summary>
-        /// <returns><c>Bag</c> of Certificates.</returns>
-        private static Bag<CrtCertificates> Certificates()
-        {
-            IndexedCollection<CrtCertificates> collection = new IndexedCollection<CrtCertificates>();
-
-            foreach (crtCertificates certificate in Context.crtCertificates)
-            {
-                CrtCertificates item = new CrtCertificates
-                                           {
-                                               ID = certificate.certificateID,
-                                               Description = certificate.description
-                                           };
-                item.Description = item.Description.Clean();
-
-                if (certificate.categoryID.HasValue)
-                    item.CategoryID = certificate.categoryID.Value;
-
-                if (certificate.classID.HasValue)
-                    item.ClassID = certificate.classID.Value;
-
-                if (certificate.grade.HasValue)
-                    item.Grade = certificate.grade.Value;
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Certificate Recommendations.
-        /// </summary>
-        /// <returns><c>Bag</c> of Certificate Recommendations.</returns>
-        private static Bag<CrtRecommendations> CertificateRecommendations()
-        {
-            IndexedCollection<CrtRecommendations> collection = new IndexedCollection<CrtRecommendations>();
-
-            foreach (crtRecommendations recommendation in Context.crtRecommendations)
-            {
-                CrtRecommendations item = new CrtRecommendations
-                                              {
-                                                  ID = recommendation.recommendationID,
-                                                  Level = recommendation.recommendationLevel,
-                                              };
-
-                if (recommendation.certificateID.HasValue)
-                    item.CertificateID = recommendation.certificateID.Value;
-
-                if (recommendation.shipTypeID.HasValue)
-                    item.ShipTypeID = recommendation.shipTypeID.Value;
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Certificate Relationships.
-        /// </summary>
-        /// <returns><c>Bag</c> of parent-child relationships between certificates.</returns>
-        private static Bag<CrtRelationships> CertificateRelationships()
-        {
-            IndexedCollection<CrtRelationships> collection = new IndexedCollection<CrtRelationships>();
-
-            foreach (crtRelationships relationship in Context.crtRelationships)
-            {
-                CrtRelationships item = new CrtRelationships
-                                            {
-                                                ID = relationship.relationshipID,
-                                                ParentID = relationship.parentID,
-                                                ParentLevel = relationship.parentLevel,
-                                            };
-
-                if (relationship.parentTypeID != 0)
-                    item.ParentTypeID = relationship.parentTypeID;
-
-                if (relationship.childID.HasValue)
-                    item.ChildID = relationship.childID.Value;
-
-                collection.Items.Add(item);
-            }
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
-        /// Dogma Type Attributes.
-        /// </summary>
-        /// <returns><c>RelationSet</c> of attributes for types.</returns>
-        private static RelationSet<DgmTypeAttributes> TypeAttributes()
-        {
-            IEnumerable<DgmTypeAttributes> list = Context.dgmTypeAttributes.Select(
-                typeAttribute => new DgmTypeAttributes
-                                     {
-                                         AttributeID = typeAttribute.attributeID,
-                                         ItemID = typeAttribute.typeID,
-                                         ValueFloat = typeAttribute.valueFloat,
-                                         ValueInt = typeAttribute.valueInt
-                                     });
-            return new RelationSet<DgmTypeAttributes>(list);
-        }
-
-        /// <summary>
-        /// Inventory Meta Types.
-        /// </summary>
-        /// <returns><c>RelationSet</c> parent-child relationships between types.</returns>
-        private static RelationSet<InvMetaTypes> MetaTypes()
-        {
-            List<InvMetaTypes> list = new List<InvMetaTypes>();
-
-            foreach (invMetaTypes metaType in Context.invMetaTypes)
-            {
-                InvMetaTypes item = new InvMetaTypes { ItemID = metaType.typeID };
-                if (metaType.metaGroupID.HasValue)
-                    item.MetaGroupID = Convert.ToInt32(metaType.metaGroupID, CultureInfo.InvariantCulture);
-
-                if (metaType.parentTypeID.HasValue)
-                    item.ParentItemID = Convert.ToInt32(metaType.parentTypeID, CultureInfo.InvariantCulture);
-                list.Add(item);
-            }
-            return new RelationSet<InvMetaTypes>(list);
-        }
-
-        /// <summary>
-        /// Dogma Type Effects.
-        /// </summary>
-        /// <returns><c>RelationSet</c> of Types and Effects.</returns>
-        private static RelationSet<DgmTypeEffects> TypeEffects()
-        {
-            List<DgmTypeEffects> list = Context.dgmTypeEffects.Select(
-                typeEffect => new DgmTypeEffects
-                                  {
-                                      EffectID = typeEffect.effectID,
-                                      ItemID = typeEffect.typeID
-                                  }).ToList();
-
-            return new RelationSet<DgmTypeEffects>(list);
         }
 
         #endregion
