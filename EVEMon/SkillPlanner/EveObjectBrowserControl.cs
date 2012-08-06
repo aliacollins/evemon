@@ -339,7 +339,7 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Check if the objects belong to an item family that has fitting slot property 
-                if (category.Name == "General" && SelectControl.SelectedObjects.Any(
+                if (category.Name == DBConstants.GeneralCategoryName && SelectControl.SelectedObjects.Any(
                     x => (x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone) &&
                          x.FittingSlot != ItemSlot.NoSlot && x.FittingSlot != ItemSlot.None))
                 {
@@ -458,6 +458,7 @@ namespace EVEMon.SkillPlanner
             if (SelectControl.SelectedObjects.All(x => !x.ControlTowerFuel.Any()))
                 return;
 
+            EveProperty prop = StaticProperties.GetPropertyByName(DBConstants.ConsumptionRatePropertyName);
             IEnumerable<SerializableControlTowerFuel> fuelMaterials = SelectControl.SelectedObjects.Where(
                 x => x.ControlTowerFuel.Any()).SelectMany(x => x.ControlTowerFuel);
 
@@ -486,7 +487,7 @@ namespace EVEMon.SkillPlanner
                             x => new ControlTowerFuel(x)).FirstOrDefault());
                     }
 
-                    AddListViewItem(null, items, group, item, materials);
+                    AddListViewItem(prop, items, group, item, materials);
                 }
 
                 PropertiesList.Groups.Add(group);

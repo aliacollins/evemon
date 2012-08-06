@@ -535,7 +535,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     // Also add packaged volume as a prop as only ships have 'ship warp speed' attribute
                     props.Add(new SerializablePropertyValue
                                   {
-                                      ID = Properties.PropPackagedVolumeID,
+                                      ID = Properties.PackagedVolumePropertyID,
                                       Value = GetPackagedVolume(srcItem.GroupID).ToString(CultureConstants.InvariantCulture)
                                   });
                 }
@@ -636,7 +636,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Ensures there is a cargo capacity and add it to prop
-            if (Math.Abs(srcItem.Capacity - 0) > double.Epsilon)
+            if (Math.Abs(srcItem.Capacity) > double.Epsilon)
             {
                 props.Add(new SerializablePropertyValue
                               {
@@ -646,7 +646,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Ensures there is a volume and add it to prop
-            if (Math.Abs(srcItem.Volume - 0) > double.Epsilon)
+            if (Math.Abs(srcItem.Volume) > double.Epsilon)
             {
                 props.Add(new SerializablePropertyValue
                               {
@@ -656,7 +656,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Add base price as a prop
-            props.Add(new SerializablePropertyValue { ID = Properties.PropBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
+            props.Add(new SerializablePropertyValue { ID = Properties.BasePricePropertyID, Value = srcItem.BasePrice.FormatDecimal() });
         }
 
         /// <summary>

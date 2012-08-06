@@ -7,6 +7,15 @@ namespace EVEMon.Common.Data
     /// </summary>
     public static class DBConstants
     {
+        #region Custom Constants
+
+        public const string GeneralCategoryName = "General";
+        public const string PropulsionCategoryName = "Propulsion";
+        public const string ConsumptionRatePropertyName = "Consumption Rate";
+
+        #endregion
+
+
         #region Collections
 
         // Group of PropertyIDs
