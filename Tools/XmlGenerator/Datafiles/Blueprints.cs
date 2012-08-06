@@ -80,10 +80,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Add the items in this group
                 List<SerializableBlueprint> blueprints = new List<SerializableBlueprint>();
                 foreach (InvTypes item in Database.InvTypesTable.Where(
-                    item => item.Published && item.MarketGroupID.GetValueOrDefault() == marketGroup.ID).Select(
-                        item => new { item, group = Database.InvGroupsTable[item.GroupID] }).Where(
-                            itemGroup => itemGroup.group.CategoryID == DBConstants.BlueprintCategoryID
-                                         && itemGroup.group.Published).Select(itemGroup => itemGroup.item))
+                    item => item.MarketGroupID.GetValueOrDefault() == marketGroup.ID &&
+                        Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID))
                 {
                     CreateBlueprint(item, blueprints);
                 }
@@ -160,12 +158,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                          };
 
             s_nullMarketBlueprints = Database.InvTypesTable.Where(item => item.MarketGroupID == null &&
-                        Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID).Select(
-                            blueprint =>
-                                {
-                                    blueprint.Published = true;
-                                    return blueprint;
-                                }).ToList();
+                        Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID).ToList();
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (InvTypes item in s_nullMarketBlueprints)
@@ -320,10 +313,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Look for the tech 2 variations that this blueprint invents
             IEnumerable<int> listOfInventionTypeID = Database.InvMetaTypesTable.Where(
                 x => x.ParentItemID == blueprint.ProduceItemID &&
-                     x.MetaGroupID == DBConstants.TechIIMetaGroupID).Select(x => x.ItemID).SelectMany(
-                         relationItemID => Database.InvBlueprintTypesTable.Where(
-                             x => x.ProductTypeID == relationItemID).Select(x => x.ID),
-                         (relationItemID, variationItemID) => Database.InvTypesTable[variationItemID].ID);
+                     x.MetaGroupID == DBConstants.TechIIMetaGroupID).SelectMany(
+                         relationItem => Database.InvBlueprintTypesTable.Where(
+                             x => x.ProductTypeID == relationItem.ItemID).Select(x => x.ID));
 
             // Add invention blueprints to item
             blueprint.InventionTypeID.AddRange(listOfInventionTypeID);
@@ -453,9 +445,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             {
                 // Is it a skill ? Add it to the prerequisities skills list
                 if (Database.InvTypesTable.Any(x => x.ID == requirement.RequiredTypeID &&
-                                                    Database.InvGroupsTable.Any(
-                                                        y => y.ID == x.GroupID &&
-                                                             y.CategoryID == DBConstants.SkillCategoryID)))
+                                                    Database.InvGroupsTable[x.GroupID].CategoryID == DBConstants.SkillCategoryID))
                 {
                     prerequisiteSkills.Add(new SerializablePrereqSkill
                                                {

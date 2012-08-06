@@ -227,6 +227,13 @@ namespace EVEMon.CharactersComparison
             }
         }
 
+        /// <summary>
+        /// Adds the value for selected characters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item">The item.</param>
+        /// <param name="labels">The labels.</param>
+        /// <param name="values">The values.</param>
         private void AddValueForSelectedCharacters<T>(ListViewItem item, IList<string> labels, IList<T> values)
         {
             T min = values.Any() ? values.Min() : default(T);

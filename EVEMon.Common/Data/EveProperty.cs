@@ -164,7 +164,11 @@ namespace EVEMon.Common.Data
 
                     // Format a value of Structure Volume
                     if (ID == DBConstants.VolumePropertyID)
-                        return String.Format(CultureConstants.DefaultCulture, "{0:#,##0.0##} {1}", numericValue, Unit);
+                    {
+                        return String.Format(CultureConstants.DefaultCulture, numericValue <= 1000
+                                                                                  ? "{0:N2} {1}"
+                                                                                  : "{0:#,##0.0##} {1}", numericValue, Unit);
+                    }
 
                     // Format a value of Capacitor Capacity
                     if (ID == DBConstants.CapacitorCapacityPropertyID)

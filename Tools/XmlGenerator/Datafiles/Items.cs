@@ -661,8 +661,22 @@ namespace EVEMon.XmlGenerator.Datafiles
                               });
             }
 
+            // Add unit to refine prop where applicable
+            if (Database.InvGroupsTable[srcItem.GroupID].CategoryID == DBConstants.AsteroidCategoryID)
+            {
+                props.Add(new SerializablePropertyValue
+                              {
+                                  ID = Properties.UnitsToRefinePropertyID,
+                                  Value = srcItem.PortionSize.ToString()
+                              });
+            }
+
             // Add base price as a prop
-            props.Add(new SerializablePropertyValue { ID = Properties.BasePricePropertyID, Value = srcItem.BasePrice.FormatDecimal() });
+            props.Add(new SerializablePropertyValue
+                          {
+                              ID = Properties.BasePricePropertyID,
+                              Value = srcItem.BasePrice.FormatDecimal()
+                          });
         }
 
         /// <summary>

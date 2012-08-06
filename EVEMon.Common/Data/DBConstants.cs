@@ -417,6 +417,7 @@ namespace EVEMon.Common.Data
         public const int SkillCategoryID = 16;
         public const int ImplantCategoryID = 20;
         public const int ReactionCategoryID = 24;
+        public const int AsteroidCategoryID = 25;
 
         #endregion
 

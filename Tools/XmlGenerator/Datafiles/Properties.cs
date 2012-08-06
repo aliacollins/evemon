@@ -12,19 +12,22 @@ namespace EVEMon.XmlGenerator.Datafiles
     public static class Properties
     {
         private static List<EveUnits> s_injectedUnits;
-        private static List<DgmAttributeTypes> s_injectedProperties; 
+        private static List<DgmAttributeTypes> s_injectedProperties;
 
         /// <summary>
-        /// Gets or sets the base price property ID.
+        /// Gets the base price property ID.
         /// </summary>
-        /// <value>The base price property ID.</value>
         internal static int BasePricePropertyID { get; private set; }
 
         /// <summary>
-        /// Gets or sets the packaged volume property ID.
+        /// Gets the packaged volume property ID.
         /// </summary>
-        /// <value>The packaged volume property ID.</value>
         internal static int PackagedVolumePropertyID { get; private set; }
+
+        /// <summary>
+        /// Gets the units to refine property ID.
+        /// </summary>
+        internal static int UnitsToRefinePropertyID { get; private set; }
 
         /// <summary>
         /// Generate the properties datafile.
@@ -88,6 +91,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Create EVEMon custom properties
             int newPropID = Database.DgmAttributeTypesTable.Last().ID;
             PackagedVolumePropertyID = ++newPropID;
+            UnitsToRefinePropertyID = ++newPropID;
             BasePricePropertyID = ++newPropID;
 
             s_injectedProperties = new List<DgmAttributeTypes>
@@ -104,6 +108,19 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                    UnitID = 9,
                                                    HigherIsBetter = true,
                                                    CategoryID = 4
+                                               },
+                                           new DgmAttributeTypes
+                                               {
+                                                   ID = UnitsToRefinePropertyID,
+                                                   Name = "unitToRefine",
+                                                   Description = "The units required to perform the refining process.",
+                                                   IconID = 0,
+                                                   DefaultValue = "0",
+                                                   Published = true,
+                                                   DisplayName = "Units to Refine",
+                                                   UnitID = null,
+                                                   HigherIsBetter = false,
+                                                   CategoryID = 7
                                                },
                                            new DgmAttributeTypes
                                                {
@@ -266,7 +283,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                           : String.Empty;
 
                     // Unit
-                    prop.UnitID = srcProp.UnitID.HasValue ? srcProp.UnitID.Value : default(int);
+                    prop.UnitID = srcProp.UnitID.GetValueOrDefault();
                     prop.Unit = srcProp.UnitID.HasValue
                                     ? Database.EveUnitsTable.Concat(s_injectedUnits).First(
                                         x => x.ID == srcProp.UnitID.Value).DisplayName
