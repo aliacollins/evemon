@@ -113,7 +113,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Enumerate all implants without market groups
             foreach (InvTypes srcItem in Database.InvTypesTable.Where(
-                srcItem => (srcItem.MarketGroupID == null || s_nullMarketItems.Contains(srcItem)) &&
+                srcItem => (srcItem.MarketGroupID == null || srcItem.MarketGroupID == DBConstants.RootNonMarketGroupID) &&
                            srcItem.GroupID != DBConstants.CyberLearningImplantsGroupID &&
                            Database.InvGroupsTable[srcItem.GroupID].CategoryID == DBConstants.ImplantCategoryID).Select(
                                srcItem => new
@@ -183,6 +183,11 @@ namespace EVEMon.XmlGenerator.Datafiles
                         srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesNonMarketGroupID;
                         srcItem.RaceID = (int)Race.Faction;
                         break;
+                    case DBConstants.RavenStateIssueID:
+                    case DBConstants.MegathronFederateIssueID:
+                    case DBConstants.TempestTribalIssueID:
+                        srcItem.MarketGroupID = DBConstants.NavyFactionMarketGroupID;
+                        break;
                 }
             }
         }
@@ -251,13 +256,14 @@ namespace EVEMon.XmlGenerator.Datafiles
             groupItems.Add(item);
 
             // If the current item isn't in a market group then we are done
-            if (s_nullMarketItems.Contains(srcItem))
+            if (srcItem.MarketGroupID == DBConstants.RootNonMarketGroupID)
                 return;
 
             // Look for variations which are not in any market group
             foreach (InvTypes srcVariationItem in Database.InvMetaTypesTable.Where(x => x.ParentItemID == srcItem.ID).Select(
                 variation => Database.InvTypesTable[variation.ItemID]).Where(
-                    srcVariationItem => srcVariationItem.Published && s_nullMarketItems.Contains(srcVariationItem)))
+                    srcVariationItem => srcVariationItem.Published &&
+                                        srcVariationItem.MarketGroupID == DBConstants.RootNonMarketGroupID))
             {
                 srcVariationItem.RaceID = (int)Race.Faction;
                 CreateItem(srcVariationItem, groupItems);

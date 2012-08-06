@@ -517,6 +517,7 @@ namespace EVEMon.Common.Data
         public const int SubsystemsMarketGroupID = 1112;
         public const int StrategicCruisersMarketGroupID = 1138;
         public const int FighterBombersMarketGroupID = 1310;
+        public const int NavyFactionMarketGroupID = 1379;
         public const int OREIndustrialsMarketGroupID = 1390;
 
         #endregion
