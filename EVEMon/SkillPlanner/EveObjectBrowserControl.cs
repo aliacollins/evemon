@@ -483,8 +483,9 @@ namespace EVEMon.SkillPlanner
                             continue;
                         }
 
-                        materials.Add(obj.ControlTowerFuel.Where(x => x.ID == item.ID).Select(
-                            x => new ControlTowerFuel(x)).FirstOrDefault());
+                        materials.Add(obj.ControlTowerFuel.Where(
+                            x => x.ID == item.ID && fuelMaterials.Any(y => y == x)).Select(
+                                x => new ControlTowerFuel(x)).FirstOrDefault());
                     }
 
                     AddListViewItem(prop, items, group, item, materials);
@@ -544,8 +545,9 @@ namespace EVEMon.SkillPlanner
                         continue;
                     }
 
-                    materials.Add(obj.ReactionMaterial.Where(x => x.ID == item.ID).Select(
-                        x => new ReactionMaterial(x)).FirstOrDefault());
+                    materials.Add(obj.ReactionMaterial.Where(
+                        x => x.ID == item.ID && reactionMaterials.Any(y => y == x)).Select(
+                            x => new ReactionMaterial(x)).FirstOrDefault());
                 }
 
                 AddListViewItem(prop, items, resourcesGroup, item, materials);
@@ -613,7 +615,8 @@ namespace EVEMon.SkillPlanner
                         continue;
                     }
 
-                    materials.Add(obj.ReprocessingMaterials.FirstOrDefault(x => x.Item == item));
+                    materials.Add(obj.ReprocessingMaterials.FirstOrDefault(
+                        x => x.Item == item && reprocessingMaterials.Any(y => y == x)));
                 }
 
                 AddListViewItem(null, items, group, item, materials);
