@@ -89,42 +89,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     CreateItem(srcItem, items);
                 }
 
-                // If this is an implant group, we add the implants with no market groups in this one
-                if (marketGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID ||
-                    marketGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
-                {
-                    AddImplant(items, marketGroup);
-                }
-
                 // Store the items
                 group.Items.AddRange(items.OrderBy(x => x.Name));
-            }
-        }
-
-        /// <summary>
-        /// Adds an implant.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        /// <param name="srcGroups">The market group.</param>
-        private static void AddImplant(ICollection<SerializableItem> items, InvMarketGroups srcGroups)
-        {
-            string slotString = srcGroups.Name.Substring("Implant Slot ".Length);
-            int slot = Int32.Parse(slotString, CultureConstants.InvariantCulture);
-
-            // Enumerate all implants without market groups
-            foreach (InvTypes srcItem in Database.InvTypesTable.Where(
-                srcItem => (srcItem.MarketGroupID == null || srcItem.MarketGroupID == DBConstants.RootNonMarketGroupID) &&
-                           srcItem.GroupID != DBConstants.CyberLearningImplantsGroupID &&
-                           Database.InvGroupsTable[srcItem.GroupID].CategoryID == DBConstants.ImplantCategoryID).Select(
-                               srcItem => new
-                                              {
-                                                  srcItem,
-                                                  slotAttrib =
-                                              Database.DgmTypeAttributesTable.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID)
-                                              }).Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue == slot).Select(
-                                                  x => x.srcItem))
-            {
-                CreateItem(srcItem, items);
             }
         }
 

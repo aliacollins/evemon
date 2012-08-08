@@ -588,7 +588,6 @@
           <Property Name="groupID" Type="int" />
           <Property Name="typeName" Type="nvarchar" MaxLength="100" />
           <Property Name="description" Type="nvarchar" MaxLength="3000" />
-          <Property Name="radius" Type="float" />
           <Property Name="mass" Type="float" />
           <Property Name="volume" Type="float" />
           <Property Name="capacity" Type="float" />
@@ -1648,7 +1647,6 @@
           <Property Name="groupID" Type="Int32" />
           <Property Name="typeName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
           <Property Name="description" Type="String" MaxLength="3000" Unicode="true" FixedLength="false" />
-          <Property Name="radius" Type="Double" />
           <Property Name="mass" Type="Double" />
           <Property Name="volume" Type="Double" />
           <Property Name="capacity" Type="Double" />
@@ -2489,7 +2487,6 @@
             <ScalarProperty Name="groupID" ColumnName="groupID" />
             <ScalarProperty Name="typeName" ColumnName="typeName" />
             <ScalarProperty Name="description" ColumnName="description" />
-            <ScalarProperty Name="radius" ColumnName="radius" />
             <ScalarProperty Name="mass" ColumnName="mass" />
             <ScalarProperty Name="volume" ColumnName="volume" />
             <ScalarProperty Name="capacity" ColumnName="capacity" />
@@ -2902,7 +2899,7 @@
         <EntityTypeShape EntityType="EveStaticDataModel.invPositions" Width="1.5" PointX="8.75" PointY="17.75" Height="2.3648893229166674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invTypeMaterials" Width="1.5" PointX="10.75" PointY="17.75" Height="1.5956835937500102" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invTypeReactions" Width="1.5" PointX="12.75" PointY="17.75" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.invTypes" Width="1.5" PointX="14.75" PointY="17.75" Height="3.9033007812500102" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.invTypes" Width="1.5" PointX="14.75" PointY="17.75" Height="3.7109993489583353" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invUniqueNames" Width="1.5" PointX="16.75" PointY="17.75" Height="1.5956835937500102" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapCelestialStatistics" Width="1.5" PointX="18.75" PointY="0.75" Height="4.8648079427083246" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.mapConstellationJumps" Width="1.5" PointX="0.75" PointY="18.75" Height="1.7879850260416674" IsExpanded="true" />
