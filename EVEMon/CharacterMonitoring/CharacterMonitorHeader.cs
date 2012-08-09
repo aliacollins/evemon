@@ -381,7 +381,7 @@ namespace EVEMon.CharacterMonitoring
 
             // Skip character's corporation monitors if they are bound with the character's personal monitor
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
-                monitor => monitor.HasAccess).Where(
+                monitor => monitor.Method.HasHeader() && monitor.HasAccess).Where(
                     monitor =>
                     (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
                     (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
@@ -679,7 +679,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Enables / Disables the "query everything" menu item
-            QueryEverythingMenuItem.Enabled = ccpCharacter.QueryMonitors.Any(x => x.Enabled && x.HasAccess && x.CanForceUpdate);
+            QueryEverythingMenuItem.Enabled = ccpCharacter.QueryMonitors.All(x => x.HasAccess && x.CanForceUpdate);
 
             // Add a separator before monitor items if it doesn't exist already
             if (!ThrobberContextMenu.Items.Contains(ThrobberSeparator))

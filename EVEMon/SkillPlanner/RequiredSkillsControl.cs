@@ -173,13 +173,11 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private TreeNode GetSkillNode(ISkillLevel prereq, ref bool allSkillsKnown, ref bool skillsUnplanned)
         {
-            Character character = (Character)m_plan.Character;
-            
             if (prereq.Skill == null)
                 return new TreeNode();
 
+            Character character = (Character)m_plan.Character;
             Skill skill = character.Skills[prereq.Skill.ID];
-
             TreeNode node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
 
             // Skill requirement met
@@ -213,7 +211,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Generate child nodes if required
-            foreach (StaticSkillLevel childPrereq in skill.StaticData.Prerequisites)
+            foreach (StaticSkillLevel childPrereq in skill.StaticData.Prerequisites.Where(childPrereq => childPrereq != prereq))
             {
                 node.Nodes.Add(GetSkillNode(childPrereq, ref allSkillsKnown, ref skillsUnplanned));
             }

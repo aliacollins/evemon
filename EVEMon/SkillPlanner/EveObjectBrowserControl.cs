@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.SkillPlanner
 {
@@ -167,7 +168,7 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
-        
+
         #region Event Handlers
 
         /// <summary>
@@ -297,6 +298,10 @@ namespace EVEMon.SkillPlanner
 
                 foreach (EveProperty prop in category)
                 {
+                    // Skip the 'moon mining amount' property
+                    if (prop.ID == DBConstants.MoonMiningAmountPropertyID)
+                        continue;
+
                     // Checks whether we must display this property
                     bool visibleProperty = false;
 
@@ -334,15 +339,23 @@ namespace EVEMon.SkillPlanner
                 }
 
                 // Check if the objects belong to an item family that has fitting slot property 
-                if (category.Name == "General" &&
-                    SelectControl.SelectedObjects.Any(x => (x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone) &&
-                                                           x.FittingSlot != ItemSlot.NoSlot && x.FittingSlot != ItemSlot.None))
+                if (category.Name == DBConstants.GeneralCategoryName && SelectControl.SelectedObjects.Any(
+                    x => (x.Family == ItemFamily.Item || x.Family == ItemFamily.Drone) &&
+                         x.FittingSlot != ItemSlot.NoSlot && x.FittingSlot != ItemSlot.None))
+                {
                     AddFittingSlotProperty(items, group);
+                }
 
                 // Add properties
                 if (hasProps)
                     PropertiesList.Groups.Add(group);
             }
+
+            // Add the reaction info
+            AddReactionInfo(items);
+
+            // Add the control tower fuel info
+            AddControlTowerFuelInfo(items);
 
             // Add the reprocessing-refining info 
             AddReprocessingInfo(items);
@@ -362,7 +375,7 @@ namespace EVEMon.SkillPlanner
             float[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group) { ToolTipText = prop.Description, Text = prop.Name, Tag = prop};
+            ListViewItem item = new ListViewItem(group) { ToolTipText = prop.Description, Text = prop.Name, Tag = prop };
             items.Add(item);
 
             AddValueForSelectedObjects(prop, item, labels, values);
@@ -428,11 +441,119 @@ namespace EVEMon.SkillPlanner
             string[] labels = SelectControl.SelectedObjects.Select(x => x.FittingSlot.ToString()).ToArray();
 
             // Create the list view item
-            ListViewItem item = new ListViewItem(group) { ToolTipText = "The slot that this item fits in", Text = "Fitting Slot", Tag = Text};
+            ListViewItem item = new ListViewItem(group)
+                                    { ToolTipText = "The slot that this item fits in", Text = "Fitting Slot", Tag = Text };
             items.Add(item);
 
             // Add the value for every selected item
             AddValueForSelectedObjects(null, item, labels, new float[] { });
+        }
+
+        /// <summary>
+        /// Adds the control tower fuel info.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        private void AddControlTowerFuelInfo(ICollection<ListViewItem> items)
+        {
+            if (SelectControl.SelectedObjects.All(x => !x.ControlTowerFuel.Any()))
+                return;
+
+            EveProperty prop = StaticProperties.GetPropertyByName(DBConstants.ConsumptionRatePropertyName);
+            IEnumerable<SerializableControlTowerFuel> fuelMaterials = SelectControl.SelectedObjects.Where(
+                x => x.ControlTowerFuel.Any()).SelectMany(x => x.ControlTowerFuel);
+
+            foreach (string purpose in fuelMaterials.Select(x => x.Purpose).Distinct())
+            {
+                string groupName = String.Format(CultureConstants.DefaultCulture, "Fuel Requirements - {0}", purpose);
+                ListViewGroup group = new ListViewGroup(groupName);
+
+                foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
+                {
+                    if (fuelMaterials.Where(x => x.Purpose == purpose).All(x => x.ID != item.ID))
+                        continue;
+
+                    // Create the list of materials we need to scroll through
+                    List<Material> materials = new List<Material>();
+                    foreach (Item obj in SelectControl.SelectedObjects)
+                    {
+                        // Compensate for missing entries
+                        if (!obj.ControlTowerFuel.Any())
+                        {
+                            materials.Add(null);
+                            continue;
+                        }
+
+                        materials.Add(obj.ControlTowerFuel.Where(
+                            x => x.ID == item.ID && fuelMaterials.Any(y => y == x)).Select(
+                                x => new ControlTowerFuel(x)).FirstOrDefault());
+                    }
+
+                    AddListViewItem(prop, items, group, item, materials);
+                }
+
+                PropertiesList.Groups.Add(group);
+            }
+        }
+
+        /// <summary>
+        /// Adds the reaction info.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        private void AddReactionInfo(ICollection<ListViewItem> items)
+        {
+            if (SelectControl.SelectedObjects.All(x => !x.ReactionMaterial.Any()))
+                return;
+
+            EveProperty prop = StaticProperties.GetPropertyByID(DBConstants.ConsumptionQuantityPropertyID);
+            IEnumerable<SerializableReactionInfo> reactionMaterials = SelectControl.SelectedObjects.Where(
+                x => x.ReactionMaterial.Any()).SelectMany(x => x.ReactionMaterial);
+
+            // Add resources info
+            ListViewGroup resourcesGroup = new ListViewGroup("Resources");
+            IEnumerable<SerializableReactionInfo> resources = reactionMaterials.Where(x => x.IsInput);
+            AddItemsAndSubItems(prop, items, resourcesGroup, resources);
+
+            // Add products info
+            ListViewGroup productsGroup = new ListViewGroup("Products");
+            IEnumerable<SerializableReactionInfo> products = reactionMaterials.Where(x => !x.IsInput);
+            AddItemsAndSubItems(prop, items, productsGroup, products);
+        }
+
+        /// <summary>
+        /// Adds the items and sub items.
+        /// </summary>
+        /// <param name="prop">The prop.</param>
+        /// <param name="items">The items.</param>
+        /// <param name="resourcesGroup">The resources group.</param>
+        /// <param name="reactionMaterials">The reaction materials.</param>
+        private void AddItemsAndSubItems(EveProperty prop, ICollection<ListViewItem> items, ListViewGroup resourcesGroup,
+                                         IEnumerable<SerializableReactionInfo> reactionMaterials)
+        {
+            foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
+            {
+                if (reactionMaterials.All(x => x.ID != item.ID))
+                    continue;
+
+                // Create the list of materials we need to scroll through
+                List<Material> materials = new List<Material>();
+                foreach (Item obj in SelectControl.SelectedObjects)
+                {
+                    // Compensate for missing entries
+                    if (!obj.ReactionMaterial.Any())
+                    {
+                        materials.Add(null);
+                        continue;
+                    }
+
+                    materials.Add(obj.ReactionMaterial.Where(
+                        x => x.ID == item.ID && reactionMaterials.Any(y => y == x)).Select(
+                            x => new ReactionMaterial(x)).FirstOrDefault());
+                }
+
+                AddListViewItem(prop, items, resourcesGroup, item, materials);
+            }
+
+            PropertiesList.Groups.Add(resourcesGroup);
         }
 
         /// <summary>
@@ -467,8 +588,6 @@ namespace EVEMon.SkillPlanner
                 x => x.ReprocessingMaterials != null).SelectMany(x => x.ReprocessingMaterials);
 
             AddItemsAndSubItems(items, group, reprocessingMaterials);
-
-            PropertiesList.Groups.Add(group);
         }
 
         /// <summary>
@@ -495,31 +614,51 @@ namespace EVEMon.SkillPlanner
                         materials.Add(null);
                         continue;
                     }
-                    materials.Add(obj.ReprocessingMaterials.FirstOrDefault(y => y.Item == item));
+
+                    materials.Add(obj.ReprocessingMaterials.FirstOrDefault(
+                        x => x.Item == item && reprocessingMaterials.Any(y => y == x)));
                 }
 
-                // Create the list of labels and values
-                List<string> labels = new List<string>();
-                List<float> values = new List<float>();
-                foreach (Material material in materials)
-                {
-                    // Add default labels and values for non existing materials
-                    if (material == null)
-                    {
-                        labels.Add("0 ");
-                        values.Add(0f);
-                        continue;
-                    }
-                    labels.Add(material.Quantity.ToString("N0", CultureConstants.DefaultCulture));
-                    values.Add(material.Quantity);
-                }
-
-                // Create the list view item
-                ListViewItem lvItem = new ListViewItem(group) { ToolTipText = item.Description, Text = item.Name, Tag = item };
-                items.Add(lvItem);
-
-                AddValueForSelectedObjects(null, lvItem, labels.ToArray(), values.ToArray());
+                AddListViewItem(null, items, group, item, materials);
             }
+
+            PropertiesList.Groups.Add(group);
+        }
+
+        /// <summary>
+        /// Adds the list view item.
+        /// </summary>
+        /// <param name="prop">The prop.</param>
+        /// <param name="items">The items.</param>
+        /// <param name="group">The group.</param>
+        /// <param name="item">The item.</param>
+        /// <param name="materials">The materials.</param>
+        private void AddListViewItem(EveProperty prop, ICollection<ListViewItem> items, ListViewGroup group, Item item,
+                                     IEnumerable<Material> materials)
+        {
+            // Create the list of labels and values
+            List<string> labels = new List<string>();
+            List<float> values = new List<float>();
+            foreach (Material material in materials)
+            {
+                // Add default labels and values for non existing materials
+                if (material == null)
+                {
+                    labels.Add("0 ");
+                    values.Add(0f);
+                    continue;
+                }
+
+                labels.Add(String.Format(CultureConstants.DefaultCulture, "{0:N0} {1}", material.Quantity,
+                                         prop != null ? prop.Unit : String.Empty));
+                values.Add(material.Quantity);
+            }
+
+            // Create the list view item
+            ListViewItem lvItem = new ListViewItem(group) { ToolTipText = item.Description, Text = item.Name, Tag = item };
+            items.Add(lvItem);
+
+            AddValueForSelectedObjects(prop, lvItem, labels, values);
         }
 
         /// <summary>
@@ -557,7 +696,7 @@ namespace EVEMon.SkillPlanner
             items.Add(item);
 
             // Add the value for every selected item
-            AddValueForSelectedObjects(null, item, labels.ToArray(), new float[] { });
+            AddValueForSelectedObjects(null, item, labels, new float[] { });
         }
 
         /// <summary>

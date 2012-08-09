@@ -12,7 +12,7 @@ namespace EVEMon.XmlGenerator.Datafiles
     public static class Items
     {
         private static List<InvMarketGroups> s_injectedMarketGroups;
-        private static List<InvTypes> s_nullMarketItems; 
+        private static List<InvTypes> s_nullMarketItems;
 
         /// <summary>
         /// Generate the items datafile.
@@ -89,43 +89,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     CreateItem(srcItem, items);
                 }
 
-                // If this is an implant group, we add the implants with no market groups in this one
-                if (marketGroup.ParentID == DBConstants.SkillHardwiringImplantsMarketGroupID ||
-                    marketGroup.ParentID == DBConstants.AttributeEnhancersImplantsMarketGroupID)
-                {
-                    AddImplant(items, marketGroup);
-                }
-
                 // Store the items
                 group.Items.AddRange(items.OrderBy(x => x.Name));
-            }
-        }
-
-        /// <summary>
-        /// Adds an implant.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        /// <param name="srcGroups">The market group.</param>
-        private static void AddImplant(ICollection<SerializableItem> items, InvMarketGroups srcGroups)
-        {
-            string slotString = srcGroups.Name.Substring("Implant Slot ".Length);
-            int slot = Int32.Parse(slotString, CultureConstants.InvariantCulture);
-
-            // Enumerate all implants without market groups
-            foreach (InvTypes srcItem in Database.InvTypesTable.Where(
-                item => (item.MarketGroupID == null || s_nullMarketItems.Contains(item)) &&
-                        Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.ImplantCategoryID &&
-                        item.GroupID != DBConstants.CyberLearningImplantsGroupID).Select(
-                            srcItem =>
-                            new
-                                {
-                                    srcItem,
-                                    slotAttrib =
-                                Database.DgmTypeAttributesTable.Get(srcItem.ID, DBConstants.ImplantSlotPropertyID)
-                                }).Where(x => x.slotAttrib != null && x.slotAttrib.GetIntValue == slot).Select(
-                                    x => x.srcItem))
-            {
-                CreateItem(srcItem, items);
             }
         }
 
@@ -136,46 +101,6 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             s_injectedMarketGroups = new List<InvMarketGroups>
                                          {
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Rookie Ships",
-                                                     Description = "Capsuleer starter ship",
-                                                     ID = DBConstants.RookieShipRootGroupID,
-                                                     ParentID = DBConstants.UniqueDesignsRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownShipIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Amarr",
-                                                     Description = "Amarr rookie ship",
-                                                     ID = DBConstants.RookieShipAmarrGroupID,
-                                                     ParentID = DBConstants.RookieShipRootGroupID,
-                                                     IconID = DBConstants.UnknownShipIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Caldari",
-                                                     Description = "Caldari rookie ship",
-                                                     ID = DBConstants.RookieShipCaldariGroupID,
-                                                     ParentID = DBConstants.RookieShipRootGroupID,
-                                                     IconID = DBConstants.UnknownShipIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Gallente",
-                                                     Description = "Gallente rookie ship",
-                                                     ID = DBConstants.RookieShipGallenteGroupID,
-                                                     ParentID = DBConstants.RookieShipRootGroupID,
-                                                     IconID = DBConstants.UnknownShipIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Minmatar",
-                                                     Description = "Minmatar rookie ship",
-                                                     ID = DBConstants.RookieShipMinmatarGroupID,
-                                                     ParentID = DBConstants.RookieShipRootGroupID,
-                                                     IconID = DBConstants.UnknownShipIconID
-                                                 },
                                              new InvMarketGroups
                                                  {
                                                      Name = "Unique Designs",
@@ -189,14 +114,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                      Name = "Unique Shuttles",
                                                      Description = "Fast ships of a unique design",
                                                      ID = DBConstants.UniqueDesignShuttlesNonMarketGroupID,
-                                                     ParentID = DBConstants.UniqueDesignsRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownShipIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Unique Battleships",
-                                                     Description = "Battleships ships of a unique design",
-                                                     ID = DBConstants.UniqueDesignBattleshipsNonMarketGroupID,
                                                      ParentID = DBConstants.UniqueDesignsRootNonMarketGroupID,
                                                      IconID = DBConstants.UnknownShipIconID
                                                  },
@@ -226,22 +143,21 @@ namespace EVEMon.XmlGenerator.Datafiles
                         srcItem.MarketGroupID = DBConstants.UniqueDesignsRootNonMarketGroupID;
                         srcItem.RaceID = (int)Race.All;
                         break;
-                    case DBConstants.MegathronFederateIssueID:
-                    case DBConstants.RavenStateIssueID:
-                    case DBConstants.TempestTribalIssueID:
-                        srcItem.MarketGroupID = DBConstants.UniqueDesignBattleshipsNonMarketGroupID;
-                        srcItem.RaceID = (int)Race.Faction;
-                        break;
                     case DBConstants.GorusShuttleID:
                     case DBConstants.GuristasShuttleID:
                     case DBConstants.InterbusShuttleID:
                         srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesNonMarketGroupID;
                         srcItem.RaceID = (int)Race.Faction;
                         break;
+                    case DBConstants.RavenStateIssueID:
+                    case DBConstants.MegathronFederateIssueID:
+                    case DBConstants.TempestTribalIssueID:
+                        srcItem.MarketGroupID = DBConstants.NavyFactionMarketGroupID;
+                        break;
                 }
             }
         }
-        
+
         /// <summary>
         /// Add properties to an item.
         /// </summary>
@@ -294,17 +210,26 @@ namespace EVEMon.XmlGenerator.Datafiles
             else
                 item.Slot = ItemSlot.NoSlot;
 
+            // Add reaction info for reactions
+            if (Database.InvGroupsTable[srcItem.GroupID].CategoryID == DBConstants.ReactionCategoryID)
+                AddReactionInfo(srcItem, item);
+
+            // Add fuel info for control towers
+            if (srcItem.GroupID == DBConstants.ControlTowerGroupID)
+                AddControlTowerFuelInfo(srcItem, item);
+
             // Add this item
             groupItems.Add(item);
 
             // If the current item isn't in a market group then we are done
-            if (s_nullMarketItems.Contains(srcItem))
+            if (srcItem.MarketGroupID == DBConstants.RootNonMarketGroupID)
                 return;
 
             // Look for variations which are not in any market group
             foreach (InvTypes srcVariationItem in Database.InvMetaTypesTable.Where(x => x.ParentItemID == srcItem.ID).Select(
                 variation => Database.InvTypesTable[variation.ItemID]).Where(
-                    srcVariationItem => srcVariationItem.Published && s_nullMarketItems.Contains(srcVariationItem)))
+                    srcVariationItem => srcVariationItem.Published &&
+                                        srcVariationItem.MarketGroupID == DBConstants.RootNonMarketGroupID))
             {
                 srcVariationItem.RaceID = (int)Race.Faction;
                 CreateItem(srcVariationItem, groupItems);
@@ -312,16 +237,71 @@ namespace EVEMon.XmlGenerator.Datafiles
         }
 
         /// <summary>
-        /// Adds the meta group.
+        /// Adds the control tower fuel info.
         /// </summary>
         /// <param name="srcItem">The source item.</param>
         /// <param name="item">The item.</param>
+        private static void AddControlTowerFuelInfo(IHasID srcItem, SerializableItem item)
+        {
+            var controlTowerResourcesTable = Database.InvControlTowerResourcesTable.Join(
+                Database.InvControlTowerResourcePurposesTable,
+                ctr => ctr.PurposeID, ctrp => ctrp.ID,
+                (ctr, ctrp) => new { ctr, ctrp }).Where(x => x.ctr.ID == srcItem.ID);
+
+            item.ControlTowerFuelInfo.AddRange(controlTowerResourcesTable.Select(
+                resource => new SerializableControlTowerFuel
+                                {
+                                    ID = resource.ctr.ResourceID,
+                                    Purpose = resource.ctrp.PurposeName,
+                                    Quantity = resource.ctr.Quantity,
+                                    MinSecurityLevel = resource.ctr.MinSecurityLevel.HasValue
+                                                           ? resource.ctr.MinSecurityLevel.Value.ToString()
+                                                           : String.Empty,
+                                    FactionID = resource.ctr.FactionID.HasValue
+                                                    ? resource.ctr.FactionID.Value.ToString()
+                                                    : String.Empty,
+                                    FactionName = resource.ctr.FactionID.HasValue
+                                                      ? Database.ChrFactionsTable[resource.ctr.FactionID.Value].FactionName
+                                                      : String.Empty
+                                }));
+        }
+
+        /// <summary>
+        /// Adds the reaction info.
+        /// </summary>
+        /// <param name="srcItem">The source item.</param>
+        /// <param name="item">The item.</param>
+        private static void AddReactionInfo(IHasID srcItem, SerializableItem item)
+        {
+            item.ReactionInfo.AddRange(Database.InvTypeReactionsTable.Where(x => x.ReactionTypeID == srcItem.ID).Select(
+                srcReaction => new
+                                   {
+                                       srcReaction,
+                                       multiplier = Database.DgmTypeAttributesTable.Where(
+                                           x => x.ItemID == srcReaction.TypeID &&
+                                                x.AttributeID == DBConstants.MoonMiningAmountPropertyID).Select(
+                                                    x => x.GetIntValue).FirstOrDefault()
+                                   }).Select(
+                                       reaction => new SerializableReactionInfo
+                                                       {
+                                                           ID = reaction.srcReaction.TypeID,
+                                                           IsInput = reaction.srcReaction.Input,
+                                                           Quantity = reaction.multiplier > 0
+                                                                          ? reaction.srcReaction.Quantity * reaction.multiplier
+                                                                          : reaction.srcReaction.Quantity
+                                                       }));
+        }
+
+        /// <summary>
+        /// Adds the meta group.
+        /// </summary>
+        /// <param name="srcItem">The source item.</param>
+        /// <param name="item">The serializable item.</param>
         private static void AddMetaGroup(IHasID srcItem, SerializableItem item)
         {
-            int itemID = srcItem.ID;
-
-            if (Database.InvBlueprintTypesTable.Any(x => x.ID == srcItem.ID))
-                itemID = Database.InvBlueprintTypesTable.First(x => x.ID == srcItem.ID).ProductTypeID;
+            int itemID = Database.InvBlueprintTypesTable.Any(x => x.ID == srcItem.ID)
+                             ? Database.InvBlueprintTypesTable.First(x => x.ID == srcItem.ID).ProductTypeID
+                             : srcItem.ID;
 
             foreach (InvMetaTypes relation in Database.InvMetaTypesTable.Where(x => x.ItemID == itemID))
             {
@@ -361,8 +341,8 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Adds the race.
         /// </summary>
-        /// <param name="srcItem">The SRC item.</param>
-        /// <param name="item">The item.</param>
+        /// <param name="srcItem">The source item.</param>
+        /// <param name="item">The serializable item.</param>
         private static void AddRace(InvTypes srcItem, SerializableItem item)
         {
             item.Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0));
@@ -383,8 +363,8 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Adds the item properties and prerequisites.
         /// </summary>
-        /// <param name="srcItem">The SRC item.</param>
-        /// <param name="item">The item.</param>
+        /// <param name="srcItem">The source item.</param>
+        /// <param name="item">The serializable item.</param>
         /// <returns></returns>
         private static IEnumerable<SerializablePropertyValue> AddItemPropsAndPrereq(InvTypes srcItem, SerializableItem item)
         {
@@ -527,7 +507,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     // Also add packaged volume as a prop as only ships have 'ship warp speed' attribute
                     props.Add(new SerializablePropertyValue
                                   {
-                                      ID = Properties.PropPackagedVolumeID,
+                                      ID = Properties.PackagedVolumePropertyID,
                                       Value = GetPackagedVolume(srcItem.GroupID).ToString(CultureConstants.InvariantCulture)
                                   });
                 }
@@ -628,7 +608,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Ensures there is a cargo capacity and add it to prop
-            if (Math.Abs(srcItem.Capacity - 0) > double.Epsilon)
+            if (Math.Abs(srcItem.Capacity) > double.Epsilon)
             {
                 props.Add(new SerializablePropertyValue
                               {
@@ -638,7 +618,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             // Ensures there is a volume and add it to prop
-            if (Math.Abs(srcItem.Volume - 0) > double.Epsilon)
+            if (Math.Abs(srcItem.Volume) > double.Epsilon)
             {
                 props.Add(new SerializablePropertyValue
                               {
@@ -647,8 +627,22 @@ namespace EVEMon.XmlGenerator.Datafiles
                               });
             }
 
+            // Add unit to refine prop where applicable
+            if (Database.InvGroupsTable[srcItem.GroupID].CategoryID == DBConstants.AsteroidCategoryID)
+            {
+                props.Add(new SerializablePropertyValue
+                              {
+                                  ID = Properties.UnitsToRefinePropertyID,
+                                  Value = srcItem.PortionSize.ToString()
+                              });
+            }
+
             // Add base price as a prop
-            props.Add(new SerializablePropertyValue { ID = Properties.PropBasePriceID, Value = srcItem.BasePrice.FormatDecimal() });
+            props.Add(new SerializablePropertyValue
+                          {
+                              ID = Properties.BasePricePropertyID,
+                              Value = srcItem.BasePrice.FormatDecimal()
+                          });
         }
 
         /// <summary>

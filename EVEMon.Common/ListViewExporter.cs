@@ -10,13 +10,16 @@ namespace EVEMon.Common
     public static class ListViewExporter
     {
         /// <summary>
-        /// This method takes a list view and returns a multi-line string that represents the listview as a CSV (comma-delimited) file.  The major
-        /// difference is that the list view assumes to contain units, so if the values in each column contain two values seperated by a space
-        /// and the second value is the same in every column (1 and beyond), the unit is seperated out and placed in column "2".  This allows the
-        /// values to be imported into the spreadsheet software as a number, instead of a string enabling numerical analysis of the export.
+        /// This method takes a list view and returns a multi-line string that represents the listview as a CSV (comma-delimited) file.
         /// </summary>
-        /// <param name="listViewToExport">as noted.</param>
+        /// <param name="listViewToExport">Thr listview to export.</param>
         /// <param name="withUnit">if set to <c>true</c> listView is exported with unit column.</param>
+        /// <remarks>
+        /// For delimiter we use the semicolon in order to support decimal and thousand seperator in different cultures.
+        /// The major difference is that the list view assumes to contain units, so if the values in each column contain two values seperated by a space
+        /// and the second value is the same in every column (1 and beyond), the unit is seperated out and placed in column "2". This allows the
+        /// values to be imported into the spreadsheet software as a number, instead of a string enabling numerical analysis of the export.
+        /// </remarks>
         public static void CreateCSV(ListView listViewToExport, bool withUnit = false)
         {
             if (listViewToExport == null)
@@ -24,19 +27,19 @@ namespace EVEMon.Common
 
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
-                saveFileDialog.Filter = "Comma Delimited Files (*.csv)|*.csv";
+                saveFileDialog.Filter = "Comma Delimited Files (Semicolon) (*.csv)|*.csv";
                 if (saveFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
                 StringBuilder sb = new StringBuilder();
 
                 // Export the column headers
-                bool ignoreComma = true;
+                bool ignoreSemicolon = true;
                 for (int i = 0; i < listViewToExport.Columns.Count; i++)
                 {
                     ColumnHeader myColumn = listViewToExport.Columns[i];
-                    sb.Append(MakeCSVString(myColumn.Text, ignoreComma));
-                    ignoreComma = false;
+                    sb.Append(MakeCSVString(myColumn.Text, ignoreSemicolon));
+                    ignoreSemicolon = false;
 
                     if (i == 0 && withUnit)
                         sb.Append(MakeCSVString("Unit"));
@@ -58,7 +61,7 @@ namespace EVEMon.Common
                     }
 
                     // Export the lines
-                    ignoreComma = true;
+                    ignoreSemicolon = true;
                     int maxElements = listViewToExport.Columns.Count;
 
                     if (listViewToExport.Items[line].SubItems.Count < maxElements)
@@ -71,10 +74,10 @@ namespace EVEMon.Common
                         // If the value is a number format it as so; as string otherwise
                         double number;
                         sb.Append(Double.TryParse(elements[0], out number)
-                                      ? MakeCSVNumber(number.ToString(CultureConstants.InvariantCulture), ignoreComma)
-                                      : MakeCSVString(listViewToExport.Items[line].SubItems[subitem].Text, ignoreComma));
+                                      ? MakeCSVNumber(number.ToString(CultureConstants.DefaultCulture), ignoreSemicolon)
+                                      : MakeCSVString(listViewToExport.Items[line].SubItems[subitem].Text, ignoreSemicolon));
 
-                        ignoreComma = false;
+                        ignoreSemicolon = false;
 
                         if (subitem == 0 && withUnit)
                             sb.Append(MakeCSVString(unit));
@@ -90,22 +93,22 @@ namespace EVEMon.Common
         /// Makes the CSV string.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <param name="ignoreComma">if set to <c>true</c> ignore comma.</param>
+        /// <param name="ignoreSemicolon">if set to <c>true</c> ignore semicolon.</param>
         /// <returns></returns>
-        private static String MakeCSVString(string text, bool ignoreComma = false)
+        private static String MakeCSVString(string text, bool ignoreSemicolon = false)
         {
-            return MakeCSVNumber(String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text), ignoreComma);
+            return MakeCSVNumber(String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text), ignoreSemicolon);
         }
 
         /// <summary>
         /// Makes the CSV number.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <param name="ignoreComma">if set to <c>true</c> ignore comma.</param>
+        /// <param name="ignoreSemicolon">if set to <c>true</c> ignore semicolon.</param>
         /// <returns></returns>
-        private static String MakeCSVNumber(string text, bool ignoreComma = false)
+        private static String MakeCSVNumber(string text, bool ignoreSemicolon = false)
         {
-            return String.Format(CultureConstants.DefaultCulture, "{0}{1}", ignoreComma ? String.Empty : ",", text);
+            return String.Format(CultureConstants.DefaultCulture, "{0}{1}", ignoreSemicolon ? String.Empty : ";", text);
         }
     }
 }

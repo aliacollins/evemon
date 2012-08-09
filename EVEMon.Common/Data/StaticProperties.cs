@@ -92,7 +92,7 @@ namespace EVEMon.Common.Data
         #region Public Finders
 
         /// <summary>
-        /// Gets a property by its identifier.
+        /// Gets a property by its id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -100,6 +100,18 @@ namespace EVEMon.Common.Data
         {
             EveProperty property;
             s_propertiesByID.TryGetValue(id, out property);
+            return property;
+        }
+
+        /// <summary>
+        /// Gets a property by its name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static EveProperty GetPropertyByName(string name)
+        {
+            EveProperty property;
+            s_propertiesByName.TryGetValue(name, out property);
             return property;
         }
 

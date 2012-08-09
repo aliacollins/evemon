@@ -11,17 +11,23 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Properties
     {
-        /// <summary>
-        /// Gets or sets the base price property ID.
-        /// </summary>
-        /// <value>The base price property ID.</value>
-        internal static int PropBasePriceID { get; private set; }
+        private static List<EveUnits> s_injectedUnits;
+        private static List<DgmAttributeTypes> s_injectedProperties;
 
         /// <summary>
-        /// Gets or sets the packaged volume property ID.
+        /// Gets the base price property ID.
         /// </summary>
-        /// <value>The packaged volume property ID.</value>
-        internal static int PropPackagedVolumeID { get; private set; }
+        internal static int BasePricePropertyID { get; private set; }
+
+        /// <summary>
+        /// Gets the packaged volume property ID.
+        /// </summary>
+        internal static int PackagedVolumePropertyID { get; private set; }
+
+        /// <summary>
+        /// Gets the units to refine property ID.
+        /// </summary>
+        internal static int UnitsToRefinePropertyID { get; private set; }
 
         /// <summary>
         /// Generate the properties datafile.
@@ -42,12 +48,12 @@ namespace EVEMon.XmlGenerator.Datafiles
             string[] orderedGroupNames = new[]
                                              {
                                                  "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
-                                                 "Targeting", "Propulsion", "Miscellaneous", "NULL"
+                                                 "Targeting", "Propulsion", "Miscellaneous", "NULL", "AI"
                                              };
 
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
-            datafile.Categories.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(String.Intern(x.Name))));
+            datafile.Categories.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(x.Name)));
 
             Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
                                             DateTime.Now.Subtract(startTime)).TrimEnd('0'));
@@ -60,6 +66,90 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         private static void ConfigureNullCategoryProperties()
         {
+            // Create EVEMon custom units
+            int newUnitID = Database.EveUnitsTable.Last().ID;
+            s_injectedUnits = new List<EveUnits>();
+
+            EveUnits warpSpeedUnit = new EveUnits
+                                         {
+                                             ID = ++newUnitID,
+                                             Name = "Warp Speed",
+                                             DisplayName = "AU/s",
+                                             Description = "Astronomical Unit per second."
+                                         };
+            s_injectedUnits.Add(warpSpeedUnit);
+
+            EveUnits perHourUnit = new EveUnits
+                                       {
+                                           ID = ++newUnitID,
+                                           Name = DBConstants.ConsumptionRatePropertyName,
+                                           DisplayName = "per hour",
+                                           Description = "Used to describe the consumption rate."
+                                       };
+            s_injectedUnits.Add(perHourUnit);
+
+            // Create EVEMon custom properties
+            int newPropID = Database.DgmAttributeTypesTable.Last().ID;
+            PackagedVolumePropertyID = ++newPropID;
+            UnitsToRefinePropertyID = ++newPropID;
+            BasePricePropertyID = ++newPropID;
+
+            s_injectedProperties = new List<DgmAttributeTypes>
+                                       {
+                                           new DgmAttributeTypes
+                                               {
+                                                   ID = PackagedVolumePropertyID,
+                                                   Name = "packagedVolume",
+                                                   Description = "The packaged volume of a ship.",
+                                                   IconID = 67,
+                                                   DefaultValue = "0",
+                                                   Published = true,
+                                                   DisplayName = "Packaged Volume",
+                                                   UnitID = 9,
+                                                   HigherIsBetter = true,
+                                                   CategoryID = 4
+                                               },
+                                           new DgmAttributeTypes
+                                               {
+                                                   ID = UnitsToRefinePropertyID,
+                                                   Name = "unitToRefine",
+                                                   Description = "The units required to perform the refining process.",
+                                                   IconID = 0,
+                                                   DefaultValue = "0",
+                                                   Published = true,
+                                                   DisplayName = "Units to Refine",
+                                                   UnitID = null,
+                                                   HigherIsBetter = false,
+                                                   CategoryID = 7
+                                               },
+                                           new DgmAttributeTypes
+                                               {
+                                                   ID = BasePricePropertyID,
+                                                   Name = "basePrice",
+                                                   Description = "The price from NPC vendors (does not mean there is any).",
+                                                   IconID = 67,
+                                                   DefaultValue = "0",
+                                                   Published = true,
+                                                   DisplayName = "Base Price",
+                                                   UnitID = 133,
+                                                   HigherIsBetter = true,
+                                                   CategoryID = 7
+                                               },
+                                           new DgmAttributeTypes
+                                               {
+                                                   ID = ++newPropID,
+                                                   Name = "consumptionRate",
+                                                   Description = "The rate of the given resource type needed to be consumed for each activation cycle of this structure.",
+                                                   IconID = 0,
+                                                   DefaultValue = "0",
+                                                   Published = true,
+                                                   DisplayName = DBConstants.ConsumptionRatePropertyName,
+                                                   UnitID = perHourUnit.ID,
+                                                   HigherIsBetter = false,
+                                                   CategoryID = 7
+                                               }
+                                       };
+
             // Set attributes with CategoryID 'NULL" to NULL category
             foreach (DgmAttributeTypes attribute in Database.DgmAttributeTypesTable.Where(x => x.CategoryID == null))
             {
@@ -67,6 +157,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                                             ? DBConstants.MiscellaneousAttributeCategoryID
                                             : DBConstants.NullAtributeCategoryID);
             }
+            
+            // Assign injected properties units
+            Database.DgmAttributeTypesTable[DBConstants.ShipWarpSpeedPropertyID].UnitID = warpSpeedUnit.ID;
 
             // Change some display names and default values
             Database.DgmAttributeTypesTable[DBConstants.StructureHitpointsPropertyID].DisplayName = "Structure HP";
@@ -157,8 +250,6 @@ namespace EVEMon.XmlGenerator.Datafiles
             List<SerializablePropertyCategory> categories = new List<SerializablePropertyCategory>();
 
             // Export attribute categories
-            int newCategoryID = 0;
-            int newPropID = 0;
             List<SerializableProperty> gProperties = new List<SerializableProperty>();
             List<SerializableProperty> pProperties = new List<SerializableProperty>();
             foreach (DgmAttributeCategories srcCategory in Database.DgmAttributeCategoriesTable)
@@ -173,7 +264,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                 categories.Add(category);
 
                 // Export attributes
-                foreach (DgmAttributeTypes srcProp in Database.DgmAttributeTypesTable.Where(x => x.CategoryID == srcCategory.ID))
+                foreach (DgmAttributeTypes srcProp in Database.DgmAttributeTypesTable.Concat(s_injectedProperties).Where(
+                    x => x.CategoryID == srcCategory.ID))
                 {
                     Util.UpdatePercentDone(Database.PropertiesTotalCount);
 
@@ -191,86 +283,43 @@ namespace EVEMon.XmlGenerator.Datafiles
                                           : String.Empty;
 
                     // Unit
-                    if (srcProp.UnitID == null)
-                        prop.Unit = String.Empty;
-                    else
-                    {
-                        prop.Unit = Database.EveUnitsTable[srcProp.UnitID.Value].DisplayName;
-                        prop.UnitID = srcProp.UnitID.Value;
-                    }
-
-                    // Ship warp speed unit
-                    if (srcProp.ID == DBConstants.ShipWarpSpeedPropertyID)
-                        prop.Unit = "AU/S";
+                    prop.UnitID = srcProp.UnitID.GetValueOrDefault();
+                    prop.Unit = srcProp.UnitID.HasValue
+                                    ? Database.EveUnitsTable.Concat(s_injectedUnits).First(
+                                        x => x.ID == srcProp.UnitID.Value).DisplayName
+                                    : String.Empty;
 
                     // Icon
-                    prop.Icon = (srcProp.IconID.HasValue ? Database.EveIconsTable[srcProp.IconID.Value].Icon : String.Empty);
+                    prop.Icon = srcProp.IconID.HasValue ? Database.EveIconsTable[srcProp.IconID.Value].Icon : String.Empty;
 
                     // Reordering some properties
                     ReorderProperties(pProperties, gProperties, prop, srcProp, properties);
-
-                    // New property ID
-                    newPropID = Math.Max(newPropID, srcProp.ID);
-                }
-
-                // Add EVEMon custom properties (Packaged Volume)
-                if (srcCategory.ID == DBConstants.StructureAtributeCategoryID)
-                {
-                    SerializableProperty pvProp = new SerializableProperty
-                                                      {
-                                                          Name = "Packaged Volume",
-                                                          Unit = "m3",
-                                                          Icon = "02_09",
-                                                          DefaultValue = "0",
-                                                          Description = "The packaged volume of a ship.",
-                                                          UnitID = 9
-                                                      };
-                    properties.Insert(4, pvProp);
                 }
 
                 category.Properties.AddRange(properties);
-
-                // New category ID
-                newCategoryID = Math.Max(newCategoryID, srcCategory.ID);
             }
 
-            // Set packaged volume property ID
-            PropPackagedVolumeID = ++newPropID;
-            categories[DBConstants.StructureAtributeCategoryID - 1].Properties[4].ID = PropPackagedVolumeID;
-
-            // Add EVEMon custom properties (Base Price)
-            PropBasePriceID = ++newPropID;
-            SerializableProperty bpProp = new SerializableProperty
-                                              {
-                                                  ID = PropBasePriceID,
-                                                  Name = "Base Price",
-                                                  Unit = "ISK",
-                                                  DefaultValue = "0",
-                                                  Description = "The price from NPC vendors (does not mean there is any).",
-                                                  UnitID = 133
-                                              };
-            gProperties.Insert(0, bpProp);
+            // New category ID
+            int newCategoryID = Database.DgmAttributeCategoriesTable.Last().ID;
 
             // We insert custom categories
             SerializablePropertyCategory general = new SerializablePropertyCategory
                                                        {
                                                            ID = ++newCategoryID,
-                                                           Name = "General",
-                                                           Description = "General informations"
+                                                           Name = DBConstants.GeneralCategoryName,
+                                                           Description = "General information"
                                                        };
+            general.Properties.AddRange(gProperties);
             categories.Insert(0, general);
 
             SerializablePropertyCategory propulsion = new SerializablePropertyCategory
                                                           {
                                                               ID = ++newCategoryID,
-                                                              Name = "Propulsion",
+                                                              Name = DBConstants.PropulsionCategoryName,
                                                               Description = "Navigation attributes for ships"
                                                           };
-            categories.Insert(0, propulsion);
-
-            // Add properties to custom categories
-            general.Properties.AddRange(gProperties);
             propulsion.Properties.AddRange(pProperties);
+            categories.Insert(0, propulsion);
 
             return categories;
         }
@@ -278,15 +327,30 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Reorders the properties.
         /// </summary>
-        /// <param name="pProperties">The p properties.</param>
-        /// <param name="gProperties">The g properties.</param>
+        /// <param name="pProperties">The properties in propulsion category.</param>
+        /// <param name="gProperties">The properties in general category.</param>
         /// <param name="prop">The prop.</param>
-        /// <param name="srcProp">The SRC prop.</param>
+        /// <param name="srcProp">The source prop.</param>
         /// <param name="properties">The properties.</param>
         private static void ReorderProperties(IList<SerializableProperty> pProperties, IList<SerializableProperty> gProperties,
                                               SerializableProperty prop, IHasID srcProp, IList<SerializableProperty> properties)
         {
             int index = properties.IndexOf(prop);
+
+            if (srcProp.ID == PackagedVolumePropertyID)
+            {
+                properties.Insert(4, prop);
+                properties.RemoveAt(index + 1);
+                return;
+            }
+
+            if (srcProp.ID == BasePricePropertyID)
+            {
+                gProperties.Insert(0, prop);
+                properties.RemoveAt(index);
+                return;
+            }
+
             switch (srcProp.ID)
             {
                 case DBConstants.StructureHitpointsPropertyID:

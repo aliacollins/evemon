@@ -212,7 +212,7 @@ namespace EVEMon.MarketUnifiedUploader
                                                      eveClient => Parser.GetMachoNetCachedFiles(eveClient.Path)).ToArray();
 
                     // Parse the cahced files and upload the data to the selected endpoints
-                    foreach (FileInfo cachedFile in cachedFiles)
+                    foreach (FileInfo cachedFile in cachedFiles.Where(x => x.Exists))
                     {
                         // Parse the cached file
                         KeyValuePair<object, object> result = ParseCacheFile(cachedFile);

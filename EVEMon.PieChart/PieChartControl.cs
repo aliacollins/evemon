@@ -47,19 +47,19 @@ namespace EVEMon.PieChart
         private int[] m_sortOrder;
 
         /// <summary>
-        ///   Default AutoPopDelay of the ToolTip control.
+        /// Default AutoPopDelay of the ToolTip control.
         /// </summary>
         private int m_defaultToolTipAutoPopDelay;
 
         /// <summary>
-        ///   Flag indicating that object has been disposed.
+        /// Flag indicating that object has been disposed.
         /// </summary>
         private bool m_disposed;
 
         private bool m_mouseDown;
 
         /// <summary>
-        ///   Initializes the <c>PieChartControl</c>.
+        /// Initializes the <c>PieChartControl</c>.
         /// </summary>
         public PieChartControl()
         {
@@ -78,13 +78,17 @@ namespace EVEMon.PieChart
         /// <summary>
         /// Gets or sets the pie chart.
         /// </summary>
-        /// <value>The pie chart.</value>
+        /// <value>
+        /// The pie chart.
+        /// </value>
         public PieChart3D PieChart { get; private set; }
 
         /// <summary>
         /// Gets or sets colors to be used for rendering pie slices.
         /// </summary>
-        /// <value>The colors.</value>
+        /// <value>
+        /// The colors.
+        /// </value>
         [Browsable(false)]
         public IEnumerable<Color> Colors
         {
@@ -100,8 +104,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Sets the left margin for the chart.
+        /// Sets the left margin for the chart.
         /// </summary>
+        /// <param name="left">The left.</param>
         public void LeftMargin(float left)
         {
             Debug.Assert(left >= 0);
@@ -120,8 +125,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Sets the top margin for the chart.
+        /// Sets the top margin for the chart.
         /// </summary>
+        /// <param name="top">The top.</param>
         public void TopMargin(float top)
         {
             Debug.Assert(top >= 0);
@@ -130,8 +136,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Sets the bottom margin for the chart.
+        /// Sets the bottom margin for the chart.
         /// </summary>
+        /// <param name="bottom">The bottom.</param>
         public void BottomMargin(float bottom)
         {
             Debug.Assert(bottom >= 0);
@@ -140,9 +147,10 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Sets the indicator if chart should fit the bounding rectangle
-        ///   exactly.
+        /// Sets the indicator if chart should fit the bounding rectangle
+        /// exactly.
         /// </summary>
+        /// <param name="fit">if set to <c>true</c> [fit].</param>
         public void FitChart(bool fit)
         {
             m_fitChart = fit;
@@ -151,8 +159,9 @@ namespace EVEMon.PieChart
 
 
         /// <summary>
-        ///   Sets values to be represented by the chart.
+        /// Sets values to be represented by the chart.
         /// </summary>
+        /// <param name="chartValues">The chart values.</param>
         public void Values(decimal[] chartValues)
         {
             m_values = chartValues;
@@ -160,8 +169,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Sets values for slice displacements.
+        /// Sets values for slice displacements.
         /// </summary>
+        /// <param name="relativeDisplacements">The relative displacements.</param>
         public void SliceRelativeDisplacements(float[] relativeDisplacements)
         {
             m_relativeSliceDisplacements = relativeDisplacements;
@@ -169,24 +179,27 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Gets or sets tooltip texts.
+        /// Gets or sets tooltip texts.
         /// </summary>
+        /// <param name="sliceTooltips">The slice tooltips.</param>
         public void ToolTips(string[] sliceTooltips)
         {
             m_tootips = sliceTooltips;
         }
 
         /// <summary>
-        ///   Sets texts appearing by each pie slice.
+        /// Sets texts appearing by each pie slice.
         /// </summary>
+        /// <param name="sliceTexts">The slice texts.</param>
         public void Texts(string[] sliceTexts)
         {
             m_texts = sliceTexts;
         }
 
         /// <summary>
-        ///   Sets pie slice reative height.
+        /// Sets pie slice reative height.
         /// </summary>
+        /// <param name="relativeHeight">Height of the relative.</param>
         public void SliceRelativeHeight(float relativeHeight)
         {
             m_sliceRelativeHeight = relativeHeight;
@@ -203,8 +216,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///  Sets the edge color type.
+        /// Sets the edge color type.
         /// </summary>
+        /// <param name="edgeColorType">Type of the edge color.</param>
         public void ColorTypeOfEdge(EdgeColorType edgeColorType)
         {
             m_edgeColorType = edgeColorType;
@@ -212,8 +226,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Sets the edge lines width.
+        /// Sets the edge lines width.
         /// </summary>
+        /// <param name="lineWidth">Width of the line.</param>
         public void EdgeLineWidth(float lineWidth)
         {
             m_edgeLineWidth = lineWidth;
@@ -240,11 +255,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Handles <c>OnPaint</c> event.
+        /// Handles <c>OnPaint</c> event.
         /// </summary>
-        /// <param name="e">
-        ///   <c>PaintEventArgs</c> object.
-        /// </param>
+        /// <param name="e"><c>PaintEventArgs</c> object.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             if (e == null)
@@ -256,11 +269,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Sets values for the chart and draws them.
+        /// Sets values for the chart and draws them.
         /// </summary>
-        /// <param name="graphics">
-        ///   Graphics object used for drawing.
-        /// </param>
+        /// <param name="graphics">Graphics object used for drawing.</param>
         private void DoDraw(Graphics graphics)
         {
             if (m_drawValues == null || m_drawValues.Length <= 0)
@@ -270,7 +281,7 @@ namespace EVEMon.PieChart
             float width = ClientSize.Width - m_leftMargin - m_rightMargin;
             float height = ClientSize.Height - m_topMargin - m_bottomMargin;
 
-            // if the width or height if <=0 an exception would be thrown -> exit method..
+            // If the width or height if <=0 an exception would be thrown -> exit method..
             if (width <= 0 || height <= 0)
                 return;
 
@@ -287,6 +298,7 @@ namespace EVEMon.PieChart
                 PieChart = new PieChart3D(m_leftMargin, m_topMargin, width, height, m_drawValues, m_sliceRelativeHeight,
                                           m_drawTexts);
             }
+
             PieChart.FitToBoundingRectangle(m_fitChart);
             PieChart.InitialAngle(m_initialAngle);
             PieChart.SliceRelativeDisplacements(m_drawRelativeSliceDisplacements);
@@ -301,9 +313,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Handles <c>MouseEnter</c> event to activate the tooltip.
+        /// Handles <c>MouseEnter</c> event to activate the tooltip.
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnMouseEnter(EventArgs e)
         {
             base.OnMouseEnter(e);
@@ -312,9 +324,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Handles <c>MouseLeave</c> event to disable tooltip.
+        /// Handles <c>MouseLeave</c> event to disable tooltip.
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
@@ -327,7 +339,7 @@ namespace EVEMon.PieChart
         /// <summary>
         /// Handles <c>MouseDown</c> event
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -347,10 +359,10 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Handles <c>MouseMove</c> event to display tooltip for the pie
-        ///   slice under pointer and to display slice in highlighted color.
+        /// Handles <c>MouseMove</c> event to display tooltip for the pie
+        /// slice under pointer and to display slice in highlighted color.
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs"/> that contains the event data.</param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (e == null)
@@ -382,7 +394,9 @@ namespace EVEMon.PieChart
                 {
                     if (m_drawToolTipTexts == null || m_drawToolTipTexts.Length <= m_highlightedIndex ||
                         m_drawToolTipTexts[m_highlightedIndex].Length == 0)
+                    {
                         m_toolTip.SetToolTip(this, m_values[m_highlightedIndex].ToString(CultureInfo.CurrentCulture));
+                    }
                     else
                         m_toolTip.SetToolTip(this, m_drawToolTipTexts[m_highlightedIndex]);
                 }
@@ -395,8 +409,9 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Clean up any resources being used.
+        /// Clean up any resources being used.
         /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (m_disposed)
@@ -406,7 +421,9 @@ namespace EVEMon.PieChart
             {
                 if (disposing)
                 {
-                    PieChart.Dispose();
+                    if (PieChart != null)
+                        PieChart.Dispose();
+
                     m_toolTip.Dispose();
                 }
                 m_disposed = true;
@@ -418,8 +435,11 @@ namespace EVEMon.PieChart
         }
 
         /// <summary>
-        ///   Gets a flag indicating if at least one value is nonzero.
+        /// Gets a flag indicating if at least one value is nonzero.
         /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has any value; otherwise, <c>false</c>.
+        /// </value>
         private bool HasAnyValue
         {
             get { return m_values != null && m_values.Any(angle => angle != 0); }
@@ -443,7 +463,7 @@ namespace EVEMon.PieChart
         /// <summary>
         /// Event for when the graph angle changes
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnAngleChange(EventArgs e)
         {
             if (AngleChange != null)

@@ -148,9 +148,9 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
 
             // Get the latest cache folder (differs on every client patch version)
             // We take into consideration the edge case where the user has multiple clients but uses only one
-            string latestFolder = cacheFoldersPath.Select(x => new DirectoryInfo(x)).Where(x => x.Exists).SelectMany(
-                x => x.GetDirectories()).Select(
-                    x => int.Parse(x.Name, CultureInfo.InvariantCulture)).Concat(new[] { 0 }).Max().ToString(
+            string latestFolder = cacheFoldersPath.Select(path => new DirectoryInfo(path)).Where(dir => dir.Exists).SelectMany(
+                dir => dir.GetDirectories()).Select(
+                    dir => int.Parse(dir.Name, CultureInfo.InvariantCulture)).Concat(new[] { 0 }).Max().ToString(
                         CultureInfo.InvariantCulture);
 
             // Construct the final path to the cache folders
@@ -161,17 +161,18 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
                                    : cacheFoldersPath.Select(path => Path.Combine(path, latestFolder, DefaultFolderLookupName));
 
             // Get the cached files we need to scrap
-            IEnumerable<FileInfo> cachedFiles = cacheFoldersPath.Select(
-                x => new DirectoryInfo(x)).Where(x => x.Exists).SelectMany(x => x.GetFiles(CacheFileExtensionLookup));
+            IEnumerable<FileInfo> cachedFiles = cacheFoldersPath.Select(path => new DirectoryInfo(path)).Where(
+                dir => dir.Exists).SelectMany(dir => dir.GetFiles(CacheFileExtensionLookup));
 
             // Finds the cached files that are legit EVE files and satisfy the methods search criteria
-            return cachedFiles.Select(cachedFile => new CachedFileReader(cachedFile, false)).Where(
-                reader => reader.Buffer.First() == (byte)StreamType.StreamStart).Where(
-                    cachedFile =>
-                    s_methodIncludeFilter.Any()
-                        ? s_methodIncludeFilter.Any(method => Encoding.ASCII.GetString(cachedFile.Buffer).Contains(method))
-                        : !s_methodExcludeFilter.Any() ||
-                          s_methodExcludeFilter.All(method => !Encoding.ASCII.GetString(cachedFile.Buffer).Contains(method))
+            return cachedFiles.Where(cachedFile => cachedFile.Exists).Select(
+                cachedFile => new CachedFileReader(cachedFile, false)).Where(
+                    reader => reader.Buffer.First() == (byte)StreamType.StreamStart).Where(
+                        cachedFile =>
+                        s_methodIncludeFilter.Any()
+                            ? s_methodIncludeFilter.Any(method => Encoding.ASCII.GetString(cachedFile.Buffer).Contains(method))
+                            : !s_methodExcludeFilter.Any() ||
+                              s_methodExcludeFilter.All(method => !Encoding.ASCII.GetString(cachedFile.Buffer).Contains(method))
                 ).Select(cachedFile => new FileInfo(cachedFile.Fullname)).ToArray();
         }
     }

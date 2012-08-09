@@ -6,7 +6,7 @@ namespace EVEMon.Common.Data
     /// <summary>
     /// Represents a product of the reprocessing.
     /// </summary>
-    public sealed class Material
+    public class Material
     {
         # region Constructor
 

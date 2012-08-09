@@ -72,7 +72,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EveStaticData.edmx</DependentUpon>
     </Compile>
+    <Compile Include="StaticData\ChrFactions.cs" />
+    <Compile Include="StaticData\InvControlTowerResources.cs" />
+    <Compile Include="StaticData\InvControlTowerResourcePurposes.cs" />
     <Compile Include="StaticData\InvFlags.cs" />
+    <Compile Include="StaticData\InvTypeReactions.cs" />
     <Compile Include="Xmlfiles\Flags.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IHasId.cs" />
@@ -130,6 +134,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EveStaticData.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="app.config" />
     <None Include="Properties\DataSources\EveStaticDataEntities.datasource" />
   </ItemGroup>
   <ItemGroup />

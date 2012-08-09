@@ -10043,30 +10043,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Double> radius
-        {
-            get
-            {
-                return _radius;
-            }
-            set
-            {
-                OnradiusChanging(value);
-                ReportPropertyChanging("radius");
-                _radius = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("radius");
-                OnradiusChanged();
-            }
-        }
-        private Nullable<global::System.Double> _radius;
-        partial void OnradiusChanging(Nullable<global::System.Double> value);
-        partial void OnradiusChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Double> mass
         {
             get

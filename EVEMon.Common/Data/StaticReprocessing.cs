@@ -10,7 +10,7 @@ namespace EVEMon.Common.Data
     public static class StaticReprocessing
     {
         private static bool s_initialized;
-        private static readonly Dictionary<long, MaterialCollection> s_itemMaterialsByID = new Dictionary<long, MaterialCollection>();
+        private static readonly Dictionary<int, MaterialCollection> s_itemMaterialsByID = new Dictionary<int, MaterialCollection>();
 
         /// <summary>
         /// Ensures the reprocessing informations have been intialized.
@@ -49,7 +49,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static IEnumerable<Material> GetItemMaterialsByID(long id)
+        public static IEnumerable<Material> GetItemMaterialsByID(int id)
         {
             EnsureInitialized();
             MaterialCollection result;

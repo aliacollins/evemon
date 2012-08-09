@@ -79,6 +79,18 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
+        /// When the control becomes visible again, we check whether there was an update pending.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            if (Visible && m_pendingUpdate)
+                UpdateContent();
+
+            base.OnVisibleChanged(e);
+        }
+
+        /// <summary>
         /// Gets or sets the displayed notifications.
         /// </summary>
         [Browsable(false)]
@@ -648,18 +660,6 @@ namespace EVEMon.Controls
                                                      icon.Height);
             deleteIconRect.Inflate(2, 8);
             return deleteIconRect;
-        }
-
-        /// <summary>
-        /// When the control becomes visible again, we check whether there was an update pending.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (Visible && m_pendingUpdate)
-                UpdateContent();
-
-            base.OnVisibleChanged(e);
         }
     }
 }

@@ -224,10 +224,14 @@
     <Compile Include="CustomEventArgs\AttributeValueChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\AttributeValueChangingEventArgs.cs" />
     <Compile Include="Data\Agent.cs" />
+    <Compile Include="Data\ControlTowerFuel.cs" />
+    <Compile Include="Data\ControlTowerFuelCollection.cs" />
     <Compile Include="Data\ImplantCollection.cs" />
     <Compile Include="Data\EvePropertyCollection.cs" />
     <Compile Include="Data\MaterialCollection.cs" />
     <Compile Include="Data\NPCCorporation.cs" />
+    <Compile Include="Data\ReactionMaterialCollection.cs" />
+    <Compile Include="Data\ReactionMaterial.cs" />
     <Compile Include="Data\StaticReprocessing.cs" />
     <Compile Include="EmailProvider\DefaultProvider.cs" />
     <Compile Include="EmailProvider\EmailProviders.cs" />
@@ -365,6 +369,7 @@
     <Compile Include="Serialization\Datafiles\SerializableCertificatePrerequisiteKind.cs" />
     <Compile Include="Serialization\Datafiles\SerializableCertificateRecommendation.cs" />
     <Compile Include="Serialization\Datafiles\SerializableConstellation.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableControlTowerFuel.cs" />
     <Compile Include="Serialization\Datafiles\SerializableItem.cs" />
     <Compile Include="Serialization\Datafiles\SerializableItemMaterials.cs" />
     <Compile Include="Serialization\Datafiles\SerializableJump.cs" />
@@ -375,6 +380,7 @@
     <Compile Include="Serialization\Datafiles\SerializableProperty.cs" />
     <Compile Include="Serialization\Datafiles\SerializablePropertyCategory.cs" />
     <Compile Include="Serialization\Datafiles\SerializablePropertyValue.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableReactionInfo.cs" />
     <Compile Include="Serialization\Datafiles\SerializableRegion.cs" />
     <Compile Include="Serialization\Datafiles\SerializableRequiredMaterial.cs" />
     <Compile Include="Serialization\Datafiles\SerializableSkill.cs" />
