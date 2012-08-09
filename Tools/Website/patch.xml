@@ -4,7 +4,7 @@
     <date>09 August 2012</date>
     <version>1.7.2.3882</version>
     <md5>0e6b34cb3bf6bbbf40856d05c869c1e3</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,168499.html</url>
+    <url>http://forum.battleclinic.com/index.php/topic,168500.html</url>
     <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.7.2.3882.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
