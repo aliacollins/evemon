@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>11 July 2012</date>
-    <version>1.7.1.3860</version>
-    <md5>b65137fc770073520f2fec02c06da0e5</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,167431.0.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.7.1.3860.exe</autopatchurl>
+    <date>09 August 2012</date>
+    <version>1.7.2.3882</version>
+    <md5>0e6b34cb3bf6bbbf40856d05c869c1e3</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,168499.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.7.2.3882.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
@@ -14,81 +14,77 @@
 
 == Bug Fixes ==
 
-* Fixed a bug when using a proxy to connect.
-* Fixed a visual bug where character tabs don't show after a failed settings restoration.
-* Fixed an issue where deprecated enumerations in item browser caused settings file to be flagged as corrupt.
-* Fixed a bug where the features menu button was not displayed if a character monitor got hidden and then re-shown.
-* Fixed a bug in API Tester where comma seperated ids were not regognized.
-* Fixed a bug in API Tester where simple corporation sheet info were not displayed when using Internal info.
-* Fixed a bug in API Tester where calendar event attendees were not displayed when using External info.
-* Fixed an issue where deprecated ToolTipNotificationBehaviour enumeration caused settings file to be flagged as corrupt.
-* Fixed an issue in API Tester where saving an Xml document that contains html tags leads to failure.
-* Fixed a crash bug when selecting to update a portrait from EVE portrait cache folder and EVE client is started in portable mode (/LUA:OFF).
+* Fixed a bug where an Asset distance from character's last known location where not in sync when Character info updated.
+* Fixed a bug where notifications where not displayed in a Character monitor on EVEMon launch and notifications are available.
+* Fixed a visual bug where non-implemented API calls where shown in the character's API timer tooltip.
+* Fixed a crash bug when closing a character's Pie Chart when the character doesn't have skills info.
+* Fixed a crash bug for the rare case where a skill has itself as a prerequisite (only seen in Non-Public skills like 'Polaris').
 
 == Enhancements ==
 
-* Added ability to set up EVE clients path that are running in portable mode (/LUA:OFF).
-* Added ability to setup localhost endpoints in EMUU.
+* Added reaction material info for reactions in Item Browser.
+* Added control tower fuel info for control towers in Item Browser.
 
 == Misc ==
 
+* Switched the exporting to CSV delimiter to use semicolon instead of comma, in order to support number formatting for different cultures.
 * Several improvements have been done to the base code to make EVEMon a better, faster and more stable application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>27 June 2012</date>
-      <md5>21a0c5f17fb6e69d30785cb89d464063</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
-      <message><![CDATA[Inferno 1.1 (391430) blueprints data file by the EVEMon Development Team
+      <date>09 August 2012</date>
+      <md5>11bbb1f581cb58328ed960bb2b1008d0</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
+      <message><![CDATA[Inferno 1.2 (404131) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>27 June 2012</date>
-      <md5>c9eaa52747814eb186432d1a1fbe2de0</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
-      <message><![CDATA[Inferno 1.1 (391430) certificates data file by the EVEMon Development Team
+      <date>09 August 2012</date>
+      <md5>fef1c73230ef067b2ba7902fde45a0fc</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
+      <message><![CDATA[Inferno 1.2 (404131) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>27 June 2012</date>
-      <md5>495bf1deae1bf4bfdebdcddc329a7d63</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
-      <message><![CDATA[Inferno 1.1 (391430) geography data file by the EVEMon Development Team
+      <date>09 August 2012</date>
+      <md5>f72ab1f371090f43e77d8db15e4bd6b6</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
+      <message><![CDATA[Inferno 1.2 (404131) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>27 June 2012</date>
-      <md5>96971f5c01a56be66c998949ab178836</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
-      <message><![CDATA[Inferno 1.1 (391430) items data file by the EVEMon Development Team
+      <date>09 August 2012</date>
+      <md5>5abe64ccd5b57aca691dfa4decfa4126</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
+      <message><![CDATA[Inferno 1.2 (404131) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>27 June 2012</date>
-      <md5>13e588b665d4094f9e75d8b6386f2903</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
-      <message><![CDATA[Inferno 1.1 (391430) properties data file by the EVEMon Development Team
+      <date>09 August 2012</date>
+      <md5>28bebae965bc193c2003086a2d9044f7</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
+      <message><![CDATA[Inferno 1.2 (404131) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>27 June 2012</date>
-      <md5>33649f17b6219371f97afe99f887ee09</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
-      <message><![CDATA[Inferno 1.1 (391430) reprocessing data file by the EVEMon Development Team
+      <date>09 August 2012</date>
+      <md5>552ab7ca12dedccd0ee589c020eb5cb4</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
+      <message><![CDATA[Inferno 1.2 (404131) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>27 June 2012</date>
-      <md5>0c97e072e58c7effc75b61f01e9d415c</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/391430</url>
-      <message><![CDATA[Inferno 1.1 (391430) skills data file by the EVEMon Development Team
+      <date>09 August 2012</date>
+      <md5>3efd345a3ea44dd0db5fe6fc87a2c6e4</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
+      <message><![CDATA[Inferno 1.2 (404131) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
   </datafiles>
