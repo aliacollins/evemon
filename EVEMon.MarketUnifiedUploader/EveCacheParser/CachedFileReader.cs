@@ -83,9 +83,17 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
             {
                 throw new ParserException(ex.Message, ex.InnerException);
             }
-            catch (IOException ex)
+            catch (UnauthorizedAccessException ex)
             {
                 throw new ParserException(ex.Message, ex.InnerException);
+            }
+            catch (IOException ex)
+            {
+                // File does not exist anymore (why? beats the hell out of me),
+                // normally we should throw an exception here
+                // but we will bypass it for functionality sakes
+
+                //throw new ParserException(ex.Message, ex.InnerException);
             }
         }
 

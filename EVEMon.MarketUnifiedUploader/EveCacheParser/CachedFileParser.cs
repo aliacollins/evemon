@@ -160,7 +160,9 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
         {
             IList<SType> tupleTwoMembers = m_stream.Members.First().Members;
             object key = tupleTwoMembers.First().ToObject();
-            object value = tupleTwoMembers.Last().ToObject();
+            object value = tupleTwoMembers.Count > 2
+                               ? tupleTwoMembers.Skip(1).Select(member => member.ToObject()).ToList()
+                               : tupleTwoMembers.Last().ToObject();
 
             return new KeyValuePair<object, object>(key, value);
         }
