@@ -250,7 +250,7 @@ namespace EVEMon.MarketUnifiedUploader
                                                  : ex.InnerException.Message,
                                              DateTime.Now.ToUniversalDateTimeString(),
                                              Environment.NewLine);
-                Settings.MarketUnifiedUploader.Enabled = false;
+
                 Stop();
             }
         }
@@ -417,7 +417,7 @@ namespace EVEMon.MarketUnifiedUploader
                 endPoint.UploadInterval = TimeSpan.Zero;
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow;
 
-                ProgressText = String.Format(CultureConstants.DefaultCulture, "{1}: Uploaded to {0} succesfully.{2}",
+                ProgressText = String.Format(CultureConstants.DefaultCulture, "{1}: Uploaded to {0} successfully.{2}",
                                              endPoint.Name, DateTime.Now.ToUniversalDateTimeString(),
                                              Environment.NewLine);
 
