@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -126,6 +127,11 @@ namespace EVEMon.Common.IgbService
                     if (!ar.CompletedSynchronously)
                         BeginRead(true);
                 }
+            }
+            catch (IOException ex)
+            {
+                Close();
+                ExceptionHandler.LogException(ex, true);
             }
             catch (Exception ex)
             {
