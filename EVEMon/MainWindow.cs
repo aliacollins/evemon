@@ -44,21 +44,22 @@ namespace EVEMon
     {
         #region Fields
 
+        private readonly List<NotificationEventArgs> m_popupNotifications = new List<NotificationEventArgs>();
+        private readonly bool m_startMinimized;
+
         private Form m_trayPopup;
         private IgbServer m_igbServer;
         private UploaderStatus m_uploaderStatus;
+        private DateTime m_nextPopupUpdate = DateTime.UtcNow;
 
+        private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
+        private bool m_isMouseClicked;
         private bool m_isUpdating;
         private bool m_isUpdatingData;
         private bool m_isShowingUpdateWindow;
         private bool m_isShowingDataUpdateWindow;
         private bool m_isUpdatingTabOrder;
         private bool m_isUpdateEventsSubscribed;
-
-        private readonly List<NotificationEventArgs> m_popupNotifications = new List<NotificationEventArgs>();
-        private DateTime m_nextPopupUpdate = DateTime.UtcNow;
-        private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
-        private bool m_mouseClicked;
 
         #endregion
 
@@ -73,7 +74,6 @@ namespace EVEMon
             InitializeComponent();
             RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
-            Visible = false;
 
             tabCreationLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             noCharactersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
@@ -88,16 +88,7 @@ namespace EVEMon
         public MainWindow(bool startMinimized)
             : this()
         {
-            // Start minimized ?
-            if (startMinimized)
-            {
-                WindowState = FormWindowState.Minimized;
-                ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
-                                || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
-                Visible = ShowInTaskbar;
-            }
-
-            TriggerAutoShrink();
+            m_startMinimized = startMinimized;
         }
 
         /// <summary>
@@ -123,6 +114,15 @@ namespace EVEMon
 
             if (DesignMode)
                 return;
+
+            // Start minimized ?
+            if (m_startMinimized)
+            {
+                WindowState = FormWindowState.Minimized;
+                ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
+                                || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
+                Visible = ShowInTaskbar;
+            }
 
             // Start the one-second timer 
             EveMonClient.Run(this);
@@ -152,6 +152,9 @@ namespace EVEMon
 
             // Updates the controls visibility according to settings
             UpdateControlsVisibility();
+
+            // Force cleanup
+            TriggerAutoShrink();
         }
 
         /// <summary>
@@ -1873,7 +1876,7 @@ namespace EVEMon
                 return;
 
             // Set the mouse clicked flag
-            m_mouseClicked = true;
+            m_isMouseClicked = true;
 
             // Update the tray icon's visibility
             HidePopup();
@@ -1891,9 +1894,9 @@ namespace EVEMon
         private void trayIcon_MouseHover(object sender, EventArgs e)
         {
             // When clicking on the tray icon we need to prevent the popup showing due to pending hovering event
-            if (m_mouseClicked)
+            if (m_isMouseClicked)
             {
-                m_mouseClicked = false;
+                m_isMouseClicked = false;
                 return;
             }
 
