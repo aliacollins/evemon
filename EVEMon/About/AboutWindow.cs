@@ -233,16 +233,6 @@ namespace EVEMon.About
         }
 
         /// <summary>
-        /// Handles the Click event of the btnOk control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnOk_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        /// <summary>
         /// Handles the LinkClicked event of the llHomePage LinkLabel.
         /// Navigates to the EVEMon website in a browser.
         /// </summary>
