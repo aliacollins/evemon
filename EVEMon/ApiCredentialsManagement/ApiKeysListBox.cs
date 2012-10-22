@@ -32,14 +32,12 @@ namespace EVEMon.ApiCredentialsManagement
         {
             DrawMode = DrawMode.OwnerDrawFixed;
             DrawItem += OnDrawItem;
-
+            
             m_smallFont = FontFactory.GetFont(Font.FontFamily, 6.5f);
             m_smallBoldFont = FontFactory.GetFont(m_smallFont, FontStyle.Bold);
             m_strikeoutFont = FontFactory.GetFont(m_smallFont, FontStyle.Strikeout);
             m_middleFont = FontFactory.GetFont(Font.FontFamily, 8.0f);
             m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
-
-            ItemHeight = m_boldFont.Height + m_middleFont.Height + m_smallBoldFont.Height * 2;
         }
 
         /// <summary>
@@ -132,6 +130,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="System.Windows.Forms.DrawItemEventArgs"/> instance containing the event data.</param>
         private void OnDrawItem(object sender, DrawItemEventArgs e)
         {
+            ItemHeight = m_boldFont.Height + m_middleFont.Height + m_smallBoldFont.Height * 2;
+
             // Background
             Graphics g = e.Graphics;
             bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
