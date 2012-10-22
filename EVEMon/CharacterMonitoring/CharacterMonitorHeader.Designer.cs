@@ -522,9 +522,9 @@
             this.AccountActivityLabel.Location = new System.Drawing.Point(83, 5);
             this.AccountActivityLabel.Margin = new System.Windows.Forms.Padding(0);
             this.AccountActivityLabel.Name = "AccountActivityLabel";
-            this.AccountActivityLabel.Size = new System.Drawing.Size(37, 13);
+            this.AccountActivityLabel.Size = new System.Drawing.Size(25, 13);
             this.AccountActivityLabel.TabIndex = 1;
-            this.AccountActivityLabel.Text = "Active";
+            this.AccountActivityLabel.Text = "???";
             // 
             // PaidUntilLabel
             // 

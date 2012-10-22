@@ -121,7 +121,6 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void Uploader_EndPointsUpdated(object sender, EventArgs e)
         {
-            //InitializeLocalhostEndPointsDropDown();
             UpdateEndPointsList();
         }
 
