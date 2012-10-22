@@ -64,6 +64,10 @@
             this.AttributeWillpowerLabel = new System.Windows.Forms.Label();
             this.lblINTAttribute = new System.Windows.Forms.Label();
             this.SkillSummaryLabel = new System.Windows.Forms.Label();
+            this.AccountStatusTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.AccountStatusLabel = new System.Windows.Forms.Label();
+            this.AccountActivityLabel = new System.Windows.Forms.Label();
+            this.PaidUntilLabel = new System.Windows.Forms.Label();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.MainTableLayoutPanel.SuspendLayout();
             this.ThrobberFlowLayoutPanel.SuspendLayout();
@@ -76,6 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.LocationInfoIndicationPictureBox)).BeginInit();
             this.SkillSummaryPanel.SuspendLayout();
             this.tlpAttributes.SuspendLayout();
+            this.AccountStatusTableLayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTableLayoutPanel
@@ -90,21 +95,24 @@
             this.MainTableLayoutPanel.Controls.Add(this.ThrobberFlowLayoutPanel, 2, 0);
             this.MainTableLayoutPanel.Controls.Add(this.BioFlowLayoutPanel, 1, 0);
             this.MainTableLayoutPanel.Controls.Add(this.SkillSummaryPanel, 1, 1);
-            this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.MainTableLayoutPanel.Controls.Add(this.AccountStatusTableLayoutPanel, 0, 2);
+            this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.MainTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.MainTableLayoutPanel.Name = "MainTableLayoutPanel";
             this.MainTableLayoutPanel.RowCount = 2;
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(429, 165);
+            this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(502, 169);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // CharacterPortrait
             // 
             this.CharacterPortrait.Character = null;
-            this.CharacterPortrait.Location = new System.Drawing.Point(0, 7);
-            this.CharacterPortrait.Margin = new System.Windows.Forms.Padding(0, 7, 3, 3);
+            this.CharacterPortrait.Location = new System.Drawing.Point(3, 3);
+            this.CharacterPortrait.Margin = new System.Windows.Forms.Padding(3, 3, 5, 0);
             this.CharacterPortrait.MinimumSize = new System.Drawing.Size(128, 128);
             this.CharacterPortrait.Name = "CharacterPortrait";
             this.MainTableLayoutPanel.SetRowSpan(this.CharacterPortrait, 2);
@@ -118,7 +126,7 @@
             this.ThrobberFlowLayoutPanel.Controls.Add(this.UpdateLabel);
             this.ThrobberFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ThrobberFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.ThrobberFlowLayoutPanel.Location = new System.Drawing.Point(366, 0);
+            this.ThrobberFlowLayoutPanel.Location = new System.Drawing.Point(439, 0);
             this.ThrobberFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ThrobberFlowLayoutPanel.Name = "ThrobberFlowLayoutPanel";
             this.ThrobberFlowLayoutPanel.Size = new System.Drawing.Size(63, 91);
@@ -194,10 +202,10 @@
             this.BioFlowLayoutPanel.Controls.Add(this.ActiveShipFlowLayoutPanel);
             this.BioFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BioFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.BioFlowLayoutPanel.Location = new System.Drawing.Point(131, 0);
+            this.BioFlowLayoutPanel.Location = new System.Drawing.Point(136, 0);
             this.BioFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BioFlowLayoutPanel.Name = "BioFlowLayoutPanel";
-            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(235, 91);
+            this.BioFlowLayoutPanel.Size = new System.Drawing.Size(303, 91);
             this.BioFlowLayoutPanel.TabIndex = 9;
             // 
             // CharacterNameLabel
@@ -326,11 +334,12 @@
             this.SkillSummaryPanel.Controls.Add(this.tlpAttributes);
             this.SkillSummaryPanel.Controls.Add(this.SkillSummaryLabel);
             this.SkillSummaryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SkillSummaryPanel.Location = new System.Drawing.Point(131, 91);
+            this.SkillSummaryPanel.Location = new System.Drawing.Point(136, 91);
             this.SkillSummaryPanel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryPanel.Name = "SkillSummaryPanel";
             this.SkillSummaryPanel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.SkillSummaryPanel.Size = new System.Drawing.Size(298, 74);
+            this.MainTableLayoutPanel.SetRowSpan(this.SkillSummaryPanel, 3);
+            this.SkillSummaryPanel.Size = new System.Drawing.Size(366, 78);
             this.SkillSummaryPanel.TabIndex = 4;
             // 
             // tlpAttributes
@@ -358,7 +367,7 @@
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpAttributes.Size = new System.Drawing.Size(89, 69);
+            this.tlpAttributes.Size = new System.Drawing.Size(89, 73);
             this.tlpAttributes.TabIndex = 5;
             // 
             // lblMEMAttribute
@@ -466,7 +475,7 @@
             this.SkillSummaryLabel.AutoSize = true;
             this.SkillSummaryLabel.BackColor = System.Drawing.Color.Transparent;
             this.SkillSummaryLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.SkillSummaryLabel.Location = new System.Drawing.Point(183, 5);
+            this.SkillSummaryLabel.Location = new System.Drawing.Point(251, 5);
             this.SkillSummaryLabel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryLabel.Name = "SkillSummaryLabel";
             this.SkillSummaryLabel.Size = new System.Drawing.Size(115, 65);
@@ -475,6 +484,58 @@
     "nknown";
             this.SkillSummaryLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.SkillSummaryLabel.MouseHover += new System.EventHandler(this.SkillSummaryLabel_MouseHover);
+            // 
+            // AccountStatusTableLayoutPanel
+            // 
+            this.AccountStatusTableLayoutPanel.AutoSize = true;
+            this.AccountStatusTableLayoutPanel.ColumnCount = 2;
+            this.AccountStatusTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.AccountStatusTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.AccountStatusTableLayoutPanel.Controls.Add(this.AccountStatusLabel, 0, 0);
+            this.AccountStatusTableLayoutPanel.Controls.Add(this.AccountActivityLabel, 1, 0);
+            this.AccountStatusTableLayoutPanel.Controls.Add(this.PaidUntilLabel, 0, 1);
+            this.AccountStatusTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.AccountStatusTableLayoutPanel.Location = new System.Drawing.Point(0, 131);
+            this.AccountStatusTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.AccountStatusTableLayoutPanel.Name = "AccountStatusTableLayoutPanel";
+            this.AccountStatusTableLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.AccountStatusTableLayoutPanel.RowCount = 2;
+            this.MainTableLayoutPanel.SetRowSpan(this.AccountStatusTableLayoutPanel, 2);
+            this.AccountStatusTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.AccountStatusTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.AccountStatusTableLayoutPanel.Size = new System.Drawing.Size(136, 31);
+            this.AccountStatusTableLayoutPanel.TabIndex = 11;
+            // 
+            // AccountStatusLabel
+            // 
+            this.AccountStatusLabel.AutoSize = true;
+            this.AccountStatusLabel.Location = new System.Drawing.Point(0, 5);
+            this.AccountStatusLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.AccountStatusLabel.Name = "AccountStatusLabel";
+            this.AccountStatusLabel.Size = new System.Drawing.Size(83, 13);
+            this.AccountStatusLabel.TabIndex = 0;
+            this.AccountStatusLabel.Text = "Account Status:";
+            // 
+            // AccountActivityLabel
+            // 
+            this.AccountActivityLabel.AutoSize = true;
+            this.AccountActivityLabel.Location = new System.Drawing.Point(83, 5);
+            this.AccountActivityLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.AccountActivityLabel.Name = "AccountActivityLabel";
+            this.AccountActivityLabel.Size = new System.Drawing.Size(37, 13);
+            this.AccountActivityLabel.TabIndex = 1;
+            this.AccountActivityLabel.Text = "Active";
+            // 
+            // PaidUntilLabel
+            // 
+            this.PaidUntilLabel.AutoSize = true;
+            this.AccountStatusTableLayoutPanel.SetColumnSpan(this.PaidUntilLabel, 2);
+            this.PaidUntilLabel.Location = new System.Drawing.Point(0, 18);
+            this.PaidUntilLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.PaidUntilLabel.Name = "PaidUntilLabel";
+            this.PaidUntilLabel.Size = new System.Drawing.Size(126, 13);
+            this.PaidUntilLabel.TabIndex = 2;
+            this.PaidUntilLabel.Text = "dd/MM/YYYY HH:mm:ss";
             // 
             // ToolTip
             // 
@@ -490,7 +551,7 @@
             this.AutoSize = true;
             this.Controls.Add(this.MainTableLayoutPanel);
             this.Name = "CharacterMonitorHeader";
-            this.Size = new System.Drawing.Size(429, 165);
+            this.Size = new System.Drawing.Size(502, 169);
             this.Resize += new System.EventHandler(this.CharacterMonitorHeader_Resize);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();
@@ -510,6 +571,8 @@
             this.SkillSummaryPanel.PerformLayout();
             this.tlpAttributes.ResumeLayout(false);
             this.tlpAttributes.PerformLayout();
+            this.AccountStatusTableLayoutPanel.ResumeLayout(false);
+            this.AccountStatusTableLayoutPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -518,19 +581,12 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel MainTableLayoutPanel;
-        private System.Windows.Forms.Panel SkillSummaryPanel;
         private EVEMon.Common.Controls.CharacterPortrait CharacterPortrait;
-        private System.Windows.Forms.Label SkillSummaryLabel;
         private System.Windows.Forms.ContextMenuStrip ThrobberContextMenu;
         private System.Windows.Forms.ToolStripMenuItem ChangeAPIKeyInfoMenuItem;
         private System.Windows.Forms.ToolStripMenuItem QueryEverythingMenuItem;
         private System.Windows.Forms.ToolStripSeparator ThrobberSeparator;
         private System.Windows.Forms.ToolTip ToolTip;
-        private System.Windows.Forms.Label AttributeIntelligenceLabel;
-        private System.Windows.Forms.Label AttributePerceptionLabel;
-        private System.Windows.Forms.Label AttributeCharismaLabel;
-        private System.Windows.Forms.Label AttributeWillpowerLabel;
-        private System.Windows.Forms.Label AttributeMemoryLabel;
         private System.Windows.Forms.FlowLayoutPanel BioFlowLayoutPanel;
         private System.Windows.Forms.Label CharacterNameLabel;
         private System.Windows.Forms.Label BioInfoLabel;
@@ -546,11 +602,22 @@
         private System.Windows.Forms.FlowLayoutPanel ThrobberFlowLayoutPanel;
         private EVEMon.Common.Controls.Throbber UpdateThrobber;
         private System.Windows.Forms.Label UpdateLabel;
+        private System.Windows.Forms.TableLayoutPanel AccountStatusTableLayoutPanel;
+        private System.Windows.Forms.Label AccountStatusLabel;
+        private System.Windows.Forms.Label AccountActivityLabel;
+        private System.Windows.Forms.Label PaidUntilLabel;
+        private System.Windows.Forms.Panel SkillSummaryPanel;
         private System.Windows.Forms.TableLayoutPanel tlpAttributes;
         private System.Windows.Forms.Label lblMEMAttribute;
         private System.Windows.Forms.Label lblWILAttribute;
         private System.Windows.Forms.Label lblCHAAttribute;
         private System.Windows.Forms.Label lblPERAttribute;
+        private System.Windows.Forms.Label AttributeCharismaLabel;
+        private System.Windows.Forms.Label AttributePerceptionLabel;
+        private System.Windows.Forms.Label AttributeIntelligenceLabel;
+        private System.Windows.Forms.Label AttributeMemoryLabel;
+        private System.Windows.Forms.Label AttributeWillpowerLabel;
         private System.Windows.Forms.Label lblINTAttribute;
+        private System.Windows.Forms.Label SkillSummaryLabel;
     }
 }
