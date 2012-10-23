@@ -17,7 +17,6 @@ using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.MarketUnifiedUploader;
 using Microsoft.Win32;
 
 namespace EVEMon.SettingsUI
@@ -62,10 +61,7 @@ namespace EVEMon.SettingsUI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SettingsForm_Load(object sender, EventArgs e)
-        {
-            Uploader.StatusChanged += Uploader_StatusChanged;
-            Disposed += OnDisposed;
-            
+        {          
             // Initialize members
             m_isLoading = true;
 
@@ -192,28 +188,6 @@ namespace EVEMon.SettingsUI
 
             // Enables / disables controls
             UpdateDisables();
-        }
-
-        /// <summary>
-        /// On dispose unsubscribe the events.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            Uploader.StatusChanged -= Uploader_StatusChanged;
-            Disposed -= OnDisposed;
-        }
-
-        /// <summary>
-        /// Enable/Disable uploader according to its state.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        /// <remarks>A special condition so not to disable the uploader if network is unavailable.</remarks>
-        private void Uploader_StatusChanged(object sender, EventArgs e)
-        {
-            marketUnifiedUploaderCheckBox.Checked = Uploader.IsRunning;
         }
 
         /// <summary>
