@@ -62,7 +62,6 @@
     <Compile Include="EveCentralParser.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IMineralParser.cs" />
-    <Compile Include="MatariParser.cs" />
     <Compile Include="MineralDataRequest.cs" />
     <Compile Include="MineralPrice.cs" />
     <Compile Include="MineralTile.cs">
