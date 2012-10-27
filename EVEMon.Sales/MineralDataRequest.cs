@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using EVEMon.Common;
+using EVEMon.Common.Data;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Sales
@@ -99,13 +100,21 @@ namespace EVEMon.Sales
             // Scan for prices
             MatchCollection mc = parser.Tokenizer.Matches(content);
 
-            return mc.Cast<Match>().Select(match => new MineralPrice
-                                                        {
-                                                            Name = match.Groups["name"].Value,
-                                                            Price = Decimal.Parse(match.Groups["price"].Value,
-                                                                                  NumberStyles.Currency,
-                                                                                  CultureInfo.InvariantCulture)
-                                                        });
+            return mc.Cast<Match>().Select(match =>
+                                               {
+                                                   int typeID;
+                                                   string name = Int32.TryParse(match.Groups["name"].Value, out typeID)
+                                                                     ? StaticItems.GetItemByID(typeID).Name
+                                                                     : match.Groups["name"].Value;
+
+                                                   return new MineralPrice
+                                                              {
+                                                                  Name = name,
+                                                                  Price = Decimal.Parse(match.Groups["price"].Value,
+                                                                                        NumberStyles.Currency,
+                                                                                        CultureInfo.InvariantCulture)
+                                                              };
+                                               });
         }
     }
 }
