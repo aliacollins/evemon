@@ -564,7 +564,11 @@ namespace EVEMon.SettingsUI
         {
             cbAPIServer.Items.Clear();
             cbAPIServer.Items.Add(GlobalAPIProviderCollection.DefaultProvider.Name);
-            cbAPIServer.Items.Add(GlobalAPIProviderCollection.TestProvider.Name);
+
+            // Test Provider is only available in debug mode
+            if (EveMonClient.IsDebugBuild)
+                cbAPIServer.Items.Add(GlobalAPIProviderCollection.TestProvider.Name);
+
             foreach (SerializableAPIProvider provider in m_settings.APIProviders.CustomProviders)
             {
                 cbAPIServer.Items.Add(provider.Name);
@@ -573,7 +577,7 @@ namespace EVEMon.SettingsUI
             }
 
             if (m_settings.APIProviders.CurrentProviderName == GlobalAPIProviderCollection.TestProvider.Name)
-                cbAPIServer.SelectedIndex = 1;
+                cbAPIServer.SelectedIndex = EveMonClient.IsDebugBuild ? 1 : 0;
 
             // Selects the default API server if none selected
             if (cbAPIServer.SelectedIndex == -1)

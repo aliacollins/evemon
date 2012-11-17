@@ -49,7 +49,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<APIProvider> CustomProviders
         {
-            get { return m_customProviders.AsReadOnly(); }
+            get { return m_customProviders; }
         }
 
         /// <summary>
@@ -138,8 +138,9 @@ namespace EVEMon.Common
             if (newCurrentProvider != null)
                 CurrentProvider = newCurrentProvider;
 
+            // Test Provider is only available in debug mode
             if (serial.CurrentProviderName == TestProvider.Name)
-                CurrentProvider = TestProvider;
+                CurrentProvider = EveMonClient.IsDebugBuild ? TestProvider : DefaultProvider;
         }
 
         /// <summary>

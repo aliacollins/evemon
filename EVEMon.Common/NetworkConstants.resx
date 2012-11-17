@@ -195,8 +195,8 @@
     <value>/char/IndustryJobs.xml.aspx</value>
   </data>
   <data name="APITestBase" xml:space="preserve">
-    <value>https://apitest.eveonline.com</value>
-    <comment>Test API Service announced as part of Tyrannis 1.2</comment>
+    <value>https://api.testeveonline.com</value>
+    <comment>Test API Service announced as part of Tyrannis 1.2; Url changed as of Retribution 1.0</comment>
   </data>
   <data name="APIResearchPoints" xml:space="preserve">
     <value>/char/Research.xml.aspx</value>
