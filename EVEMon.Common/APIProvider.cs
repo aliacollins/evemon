@@ -66,12 +66,7 @@ namespace EVEMon.Common
         /// </value>
         public bool SupportsCompressedResponse
         {
-            get
-            {
-                if (this == TestProvider)
-                    return true;
-                return m_supportsCompressedResponse;
-            }
+            get { return IsDefault || this == TestProvider || m_supportsCompressedResponse; }
             set { m_supportsCompressedResponse = value; }
         }
 
