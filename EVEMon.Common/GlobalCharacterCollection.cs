@@ -129,7 +129,7 @@ namespace EVEMon.Common
             Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri,
                                                                        result =>
                                                                        callback(null, new UriCharacterEventArgs(uri, result)),
-                                                                       null, APIProvider.RowsetsTransform);
+                                                                       false, null, APIProvider.RowsetsTransform);
         }
 
         /// <summary>

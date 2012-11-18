@@ -192,7 +192,6 @@ namespace EVEMon.MarketUnifiedUploader
                             Status = UploaderStatus.Disabled;
                             nextRun = GetNextRun(TimeSpan.FromSeconds(1));
                             Console.WriteLine("Network Unavailable. Next run at: {0}", nextRun);
-                            continue;
                         }
                         continue;
                     }
@@ -344,7 +343,7 @@ namespace EVEMon.MarketUnifiedUploader
             string response;
             try
             {
-                response = HttpWebService.DownloadString(endPoint.Url, endPoint.Method, postdata,
+                response = HttpWebService.DownloadString(endPoint.Url, endPoint.Method, false, postdata,
                                                          endPoint.DataCompression);
             }
             catch (HttpWebServiceException ex)

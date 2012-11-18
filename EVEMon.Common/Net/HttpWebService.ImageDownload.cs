@@ -18,11 +18,12 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="method">The method.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public static Image DownloadImage(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null,
-                                   DataCompression dataCompression = DataCompression.None)
+        public static Image DownloadImage(Uri url, HttpMethod method = HttpMethod.Get, bool acceptEncoded = false, 
+                                          string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -33,7 +34,7 @@ namespace EVEMon.Common.Net
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, method, postData, dataCompression, responseStream, ImageAccept);
+                request.GetResponse(url, method, postData, dataCompression, responseStream, acceptEncoded, ImageAccept);
                 return GetImage(request);
             }
             finally
@@ -50,11 +51,13 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <param name="method">The method.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The postdata.</param>
         /// <param name="dataCompression">The compression.</param>
         public static void DownloadImageAsync(Uri url, DownloadImageCompletedCallback callback, object userState,
-                                       HttpMethod method = HttpMethod.Get, string postdata = null,
-                                       DataCompression dataCompression = DataCompression.None)
+                                              HttpMethod method = HttpMethod.Get, bool acceptEncoded = false,
+                                              string postdata = null,
+                                              DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -64,7 +67,7 @@ namespace EVEMon.Common.Net
             HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, ImageAccept, state);
+            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, acceptEncoded, ImageAccept, state);
         }
 
         /// <summary>
@@ -102,7 +105,7 @@ namespace EVEMon.Common.Net
             request.ResponseStream.Seek(0, SeekOrigin.Begin);
             try
             {
-                return Image.FromStream(request.ResponseStream, true);
+                return Image.FromStream(Util.ZlibUncompress(request.ResponseStream), true);
             }
             catch (ArgumentException ex)
             {

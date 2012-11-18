@@ -189,11 +189,12 @@ namespace EVEMon.ApiTester
             // Get the raw xml document to use when saving
             if (m_url != m_defaultUri)
             {
-                Uri nUrl = EveMonClient.APIProviders.CurrentProvider.GetMethodUrl((Enum)ApiTesterUIHelper.SelectedItem);
+                APIProvider provider = EveMonClient.APIProviders.CurrentProvider;
+                Uri nUrl = provider.GetMethodUrl((Enum)ApiTesterUIHelper.SelectedItem);
                 string postData = m_url.Query.Replace("?", String.Empty);
                 try
                 {
-                    m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, postData);
+                    m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, provider.SupportsCompressedResponse, postData);
                 }
                 catch (HttpWebServiceException ex)
                 {

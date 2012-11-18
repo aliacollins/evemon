@@ -25,9 +25,10 @@ namespace EVEMon.Common
         private static XslCompiledTransform s_rowsetsTransform;
 
         private readonly List<APIMethod> m_methods;
+        private bool m_supportsCompressedResponse;
 
         /// <summary>
-        /// Default constructor 
+        /// Default constructor.
         /// </summary>
         internal APIProvider()
         {
@@ -37,7 +38,7 @@ namespace EVEMon.Common
         }
 
 
-        #region Configuration
+        #region Properties
 
         /// <summary>
         /// Returns the name of this APIConfiguration.
@@ -54,13 +55,25 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<APIMethod> Methods
         {
-            get { return m_methods.AsReadOnly(); }
+            get { return m_methods; }
         }
 
-        #endregion
-
-
-        #region Helpers
+        /// <summary>
+        /// Gets or sets a value indicating whether the provider supports compressed responses.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the provider supports compressed responses; otherwise, <c>false</c>.
+        /// </value>
+        public bool SupportsCompressedResponse
+        {
+            get
+            {
+                if (this == TestProvider)
+                    return true;
+                return m_supportsCompressedResponse;
+            }
+            set { m_supportsCompressedResponse = value; }
+        }
 
         /// <summary>
         /// Returns true if this APIConfiguration represents the default API service.
@@ -69,6 +82,31 @@ namespace EVEMon.Common
         {
             get { return (this == DefaultProvider); }
         }
+
+        /// <summary>
+        /// Gets the default API provider
+        /// </summary>
+        public static APIProvider DefaultProvider
+        {
+            get { return s_ccpProvider ?? (s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" }); }
+        }
+
+        /// <summary>
+        /// Gets the test API provider
+        /// </summary>
+        public static APIProvider TestProvider
+        {
+            get
+            {
+                return s_ccpTestProvider ??
+                       (s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" });
+            }
+        }
+
+        #endregion
+
+
+        #region Helpers
 
         /// <summary>
         /// Returns the request method.
@@ -105,26 +143,6 @@ namespace EVEMon.Common
             UriBuilder uriBuilder = new UriBuilder(baseUri);
             uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + path;
             return uriBuilder.Uri;
-        }
-
-        /// <summary>
-        /// Gets the default API provider
-        /// </summary>
-        public static APIProvider DefaultProvider
-        {
-            get { return s_ccpProvider ?? (s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" }); }
-        }
-
-        /// <summary>
-        /// Gets the test API provider
-        /// </summary>
-        public static APIProvider TestProvider
-        {
-            get
-            {
-                return s_ccpTestProvider ??
-                       (s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" });
-            }
         }
 
         #endregion
@@ -234,7 +252,7 @@ namespace EVEMon.Common
         {
             // Download
             Uri url = GetMethodUrl(method);
-            APIResult<T> result = Util.DownloadAPIResult<T>(url, postData, transform);
+            APIResult<T> result = Util.DownloadAPIResult<T>(url, SupportsCompressedResponse, postData, transform);
 
             // On failure with a custom method, fallback to CCP
             return ShouldRetryWithCCP(result) ? s_ccpProvider.QueryMethod<T>(method, postData, transform) : result;
@@ -273,7 +291,7 @@ namespace EVEMon.Common
                         // Invokes the callback
                         callback(result);
                     },
-                postData, transform);
+                    SupportsCompressedResponse, postData, transform);
         }
 
         /// <summary>

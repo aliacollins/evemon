@@ -266,11 +266,12 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
+        /// <param name="callback">The callback to call once the query has been completed.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        /// <param name="callback">The callback to call once the query has been completed.</param>
-        internal static void DownloadAPIResultAsync<T>(Uri url, QueryCallback<T> callback, string postData = null,
-                                                       XslCompiledTransform transform = null)
+        internal static void DownloadAPIResultAsync<T>(Uri url, QueryCallback<T> callback, bool acceptEncoded = false,
+                                                       string postData = null, XslCompiledTransform transform = null)
         {
             HttpWebService.DownloadXmlAsync(
                 url,
@@ -293,7 +294,7 @@ namespace EVEMon.Common
                                                url.AbsoluteUri, postData, typeof(T).Name);
                         }
                     },
-                null, HttpMethod.Post, postData);
+                null, HttpMethod.Post, acceptEncoded, postData);
         }
 
         /// <summary>
@@ -301,9 +302,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static APIResult<T> DownloadAPIResult<T>(Uri url, string postData = null, XslCompiledTransform transform = null)
+        internal static APIResult<T> DownloadAPIResult<T>(Uri url, bool acceptEncoded = false,
+                                                          string postData = null, XslCompiledTransform transform = null)
         {
             APIResult<T> result = new APIResult<T>(APIError.Http,
                                                    String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
@@ -334,7 +337,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null, HttpMethod.Post, postData);
+                null, HttpMethod.Post, acceptEncoded, postData);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -415,9 +418,12 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The post data.</param>
+        /// <param name="dataCompression">The data compression.</param>
         /// <returns></returns>
-        internal static BCAPIResult<T> DownloadBCAPIResult<T>(Uri url, string postData = null)
+        internal static BCAPIResult<T> DownloadBCAPIResult<T>(Uri url, bool acceptEncoded = false, string postData = null,
+                                                              DataCompression dataCompression = DataCompression.None)
         {
             string errorMessage = String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url);
             BCAPIError error = new BCAPIError { ErrorCode = "0", ErrorMessage = errorMessage };
@@ -459,7 +465,7 @@ namespace EVEMon.Common
                             wait.Set();
                         }
                     },
-                null, HttpMethod.Post, postData);
+                null, HttpMethod.Post, acceptEncoded, postData, dataCompression);
 
             // Wait for the completion of the background thread
             wait.WaitOne();
@@ -474,10 +480,13 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="postData">The post data.</param>
         /// <param name="callback">The callback to call once the query has been completed.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
+        /// <param name="postData">The post data.</param>
+        /// <param name="dataCompression">The data compression.</param>
         internal static void DownloadBCAPIResultAsync<T>(Uri url, Serialization.BattleClinic.QueryCallback<T> callback,
-                                                         string postData = null)
+                                                         bool acceptEncoded = false, string postData = null,
+                                                         DataCompression dataCompression = DataCompression.None)
         {
             HttpWebService.DownloadXmlAsync(
                 url,
@@ -505,7 +514,7 @@ namespace EVEMon.Common
                                                url.AbsoluteUri, postData, typeof(T).Name);
                         }
                     },
-                null, HttpMethod.Post, postData);
+                null, HttpMethod.Post, acceptEncoded, postData, dataCompression);
         }
 
         /// <summary>
@@ -532,22 +541,22 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogException(exc, true);
                 BCAPIError error = new BCAPIError
-                                       {
-                                           ErrorMessage = exc.InnerException == null
-                                                              ? exc.Message
-                                                              : exc.InnerException.Message
-                                       };
+                    {
+                        ErrorMessage = exc.InnerException == null
+                                           ? exc.Message
+                                           : exc.InnerException.Message
+                    };
                 result = new BCAPIResult<T> { Error = error };
             }
             catch (XmlException exc)
             {
                 ExceptionHandler.LogException(exc, true);
                 BCAPIError error = new BCAPIError
-                                       {
-                                           ErrorMessage = exc.InnerException == null
-                                                              ? exc.Message
-                                                              : exc.InnerException.Message
-                                       };
+                    {
+                        ErrorMessage = exc.InnerException == null
+                                           ? exc.Message
+                                           : exc.InnerException.Message
+                    };
                 result = new BCAPIResult<T> { Error = error };
             }
 
@@ -559,10 +568,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="url">The url to download from</param>
-        /// <param name="postData">The http POST data to pass with the url. May be null.</param>
         /// <param name="callback">A callback invoked on the UI thread.</param>
-        /// <returns></returns>
-        public static void DownloadXmlAsync<T>(Uri url, DownloadCallback<T> callback, string postData = null)
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
+        /// <param name="postData">The http POST data to pass with the url. May be null.</param>
+        public static void DownloadXmlAsync<T>(Uri url, DownloadCallback<T> callback, bool acceptEncoded = false,
+                                               string postData = null)
             where T : class
         {
             HttpWebService.DownloadXmlAsync(
@@ -608,7 +618,7 @@ namespace EVEMon.Common
                         // We got the result, let's invoke the callback on this actor
                         Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
                     },
-                null, HttpMethod.Post, postData);
+                null, HttpMethod.Post, acceptEncoded, postData);
         }
 
         /// <summary>
@@ -867,13 +877,34 @@ namespace EVEMon.Common
             if (inputData == null)
                 throw new ArgumentNullException("inputData");
 
-            using (MemoryStream outStream = new MemoryStream())
+            using (MemoryStream outputStream = GetMemoryStream())
             {
-                GZipOutputStream gZipOutputStream = new GZipOutputStream(outStream);
+                GZipOutputStream gZipOutputStream = new GZipOutputStream(outputStream);
                 gZipOutputStream.Write(inputData, 0, inputData.Length);
                 gZipOutputStream.Finish();
 
-                return outStream.ToArray();
+                return outputStream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Uncompresses the provided input data using zlib gzip.
+        /// </summary>
+        /// <param name="inputData">The input data.</param>
+        /// <returns></returns>
+        public static IEnumerable<byte> GZipUncompress(byte[] inputData)
+        {
+            if (inputData == null)
+                throw new ArgumentNullException("inputData");
+
+            using (MemoryStream inputStream = GetMemoryStream(inputData))
+            using (MemoryStream outputStream = GetMemoryStream())
+            {
+                GZipInputStream gZipOutputStream = new GZipInputStream(inputStream);
+                gZipOutputStream.CopyTo(outputStream);
+                gZipOutputStream.Flush();
+
+                return outputStream.ToArray();
             }
         }
 
@@ -887,14 +918,74 @@ namespace EVEMon.Common
             if (inputData == null)
                 throw new ArgumentNullException("inputData");
 
-            using (MemoryStream outStream = GetMemoryStream())
+            using (MemoryStream outputStream = GetMemoryStream())
             {
-                DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(outStream);
+                DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(outputStream);
                 deflaterOutputStream.Write(inputData, 0, inputData.Length);
                 deflaterOutputStream.Finish();
 
-                return outStream.ToArray();
+                return outputStream.ToArray();
             }
+        }
+
+        /// <summary>
+        /// Uncompresses the provided input data using zlib inflater.
+        /// </summary>
+        /// <param name="inputData">The input data.</param>
+        /// <returns></returns>
+        public static IEnumerable<byte> InflateUncompress(byte[] inputData)
+        {
+            if (inputData == null)
+                throw new ArgumentNullException("inputData");
+
+            using (MemoryStream inputStream = GetMemoryStream(inputData))
+            using (MemoryStream outputStream = GetMemoryStream())
+            {
+                InflaterInputStream deflaterOutputStream = new InflaterInputStream(inputStream);
+                deflaterOutputStream.CopyTo(outputStream);
+                deflaterOutputStream.Flush();
+
+                return outputStream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Uncompress using zlib.
+        /// </summary>
+        /// <param name="inputData">The input data.</param>
+        /// <returns></returns>
+        public static IEnumerable<byte> ZlibUncompress(byte[] inputData)
+        {
+            if (inputData == null)
+                throw new ArgumentNullException("inputData");
+
+            if (inputData[0] == 31 && inputData[1] == 139)
+                return GZipUncompress(inputData);
+
+            if (inputData[0] == 120 && inputData[1] == 156)
+                return InflateUncompress(inputData);
+
+            return inputData;
+        }
+
+        /// <summary>
+        /// Uncompress using zlib.
+        /// </summary>
+        /// <param name="inputStream">The input stream.</param>
+        /// <returns></returns>
+        public static Stream ZlibUncompress(Stream inputStream)
+        {
+            if (inputStream == null)
+                throw new ArgumentNullException("inputStream");
+
+            MemoryStream stream = inputStream as MemoryStream;
+
+            if (stream == null)
+                return inputStream;
+
+            byte[] data = ZlibUncompress(stream.ToArray()) as byte[];
+
+            return data == null ? inputStream : new MemoryStream(data);
         }
 
         /// <summary>

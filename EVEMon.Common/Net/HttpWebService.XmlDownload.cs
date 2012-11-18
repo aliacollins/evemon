@@ -20,11 +20,12 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="method">The method.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The postdata.</param>
         /// <param name="dataCompression">The compression.</param>
         /// <returns></returns>
-        public static IXPathNavigable DownloadXml(Uri url, HttpMethod method = HttpMethod.Get, string postdata = null,
-                                                  DataCompression dataCompression = DataCompression.None)
+        public static IXPathNavigable DownloadXml(Uri url, HttpMethod method = HttpMethod.Get, bool acceptEncoded = false,
+                                                  string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -35,14 +36,8 @@ namespace EVEMon.Common.Net
             try
             {
                 MemoryStream responseStream = Util.GetMemoryStream();
-                request.GetResponse(url, method, postData, dataCompression, responseStream, XMLAccept);
-                XmlDocument result = new XmlDocument();
-                if (request.ResponseStream != null)
-                {
-                    request.ResponseStream.Seek(0, SeekOrigin.Begin);
-                    result.Load(request.ResponseStream);
-                }
-                return result;
+                request.GetResponse(url, method, postData, dataCompression, responseStream, acceptEncoded, XMLAccept);
+                return GetXmlDocument(request);
             }
             finally
             {
@@ -58,10 +53,11 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadXmlCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <param name="method">The method.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The postdata.</param>
         /// <param name="dataCompression">The compression.</param>
         public static void DownloadXmlAsync(Uri url, DownloadXmlCompletedCallback callback, object userState,
-                                            HttpMethod method = HttpMethod.Get, string postdata = null,
+                                            HttpMethod method = HttpMethod.Get, bool acceptEncoded = false, string postdata = null,
                                             DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
@@ -72,7 +68,7 @@ namespace EVEMon.Common.Net
             HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, XMLAccept, state);
+            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, acceptEncoded, XMLAccept, state);
         }
 
         /// <summary>
@@ -82,23 +78,41 @@ namespace EVEMon.Common.Net
         {
             XmlRequestAsyncState requestState = (XmlRequestAsyncState)state;
             XmlDocument xdocResult = new XmlDocument();
-            if (!requestState.Request.Cancelled && requestState.Error == null && requestState.Request.ResponseStream != null)
+            try
             {
-                try
-                {
-                    requestState.Request.ResponseStream.Seek(0, SeekOrigin.Begin);
-                    xdocResult.Load(requestState.Request.ResponseStream);
-                }
-                catch (XmlException ex)
-                {
-                    requestState.Error = HttpWebServiceException.XmlException(requestState.Request.BaseUrl, ex);
-                }
+                if (!requestState.Request.Cancelled && requestState.Error == null && requestState.Request.ResponseStream != null)
+                    xdocResult = (XmlDocument)GetXmlDocument(requestState.Request);
+            }
+            catch (HttpWebServiceException ex)
+            {
+                requestState.Error = ex;
             }
 
             if (requestState.Request.ResponseStream != null)
                 requestState.Request.ResponseStream.Close();
 
             requestState.DownloadXmlCompleted(new DownloadXmlAsyncResult(xdocResult, requestState.Error), requestState.UserState);
+        }
+
+        /// <summary>
+        /// Helper method to return an Xml document from the completed request.
+        /// </summary>
+        private static IXPathNavigable GetXmlDocument(HttpWebServiceRequest request)
+        {
+            if (request.ResponseStream == null)
+                return null;
+
+            request.ResponseStream.Seek(0, SeekOrigin.Begin);
+            try
+            {
+                XmlDocument result = new XmlDocument();
+                result.Load(Util.ZlibUncompress(request.ResponseStream));
+                return result;
+            }
+            catch (XmlException ex)
+            {
+                throw HttpWebServiceException.XmlException(request.BaseUrl, ex);
+            }
         }
 
         /// <summary>
