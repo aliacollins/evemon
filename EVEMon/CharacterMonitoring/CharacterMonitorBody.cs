@@ -291,7 +291,17 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Show the wallet journal charts button only when on wallet journal page
-            walletJournalCharts.Visible = multiPanel.SelectedPage == walletJournalPage;
+            walletJournalCharts.Visible = (multiPanel.SelectedPage == walletJournalPage);
+
+            allContacts.Visible = contactsExcellent.Visible = contactsGood.Visible =
+                                                              contactsNeutral.Visible =
+                                                              contactsBad.Visible = contactsTerrible.Visible =
+                                                                                    inWatchList.Visible =
+                                                                                    (multiPanel.SelectedPage == contactsPage);
+
+            // Enables / Disables the contacts page related controls
+            if (multiPanel.SelectedPage == contactsPage)
+                groupMenu.Visible = searchTextBox.Visible = preferencesMenu.Visible = false;
 
             // Enables / Disables the assets page related controls
             if (multiPanel.SelectedPage == assetsPage)
@@ -589,7 +599,7 @@ namespace EVEMon.CharacterMonitoring
             // Add items to dropdown menu
             featuresMenu.DropDownItems.AddRange(toolStripMenuItems.ToArray<ToolStripItem>());
 
-            // Enable or Disable controls
+            // Enable/Disable the "Enable All / Disable All" controls
             EnableAllToolStripMenuItem.Enabled = toolStripMenuItems.Where(item => item.Enabled).Any(item => !item.Checked);
             DisableAllToolStripMenuItem.Enabled = toolStripMenuItems.Where(item => item.Enabled).Any(item => item.Checked);
         }
@@ -1449,6 +1459,7 @@ namespace EVEMon.CharacterMonitoring
             skillQueueList.Character = ccpCharacter;
             employmentList.Character = ccpCharacter;
             standingsList.Character = ccpCharacter;
+            contactsList.Character = ccpCharacter;
             factionalWarfareStatsList.Character = ccpCharacter;
             assetsList.Character = ccpCharacter;
             ordersList.Character = ccpCharacter;
@@ -1464,7 +1475,7 @@ namespace EVEMon.CharacterMonitoring
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
                                             {
-                                                standingsIcon, factionalWarfareStatsIcon, assetsIcon,
+                                                standingsIcon, contactsIcon, factionalWarfareStatsIcon, assetsIcon,
                                                 ordersIcon, contractsIcon, walletJournalIcon, walletTransactionsIcon,
                                                 jobsIcon, researchIcon, mailMessagesIcon, eveNotificationsIcon
                                             });
@@ -1552,6 +1563,40 @@ namespace EVEMon.CharacterMonitoring
         }
 
         # endregion
+
+
+        /// <summary>
+        /// Handles the Click event of the contactsToolbarIcon control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void contactsToolbarIcon_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripButton item in toolStripContextual.Items.OfType<ToolStripButton>())
+            {
+                item.Checked = (item == sender);
+            }
+
+            contactsList.ShowAllContacts = sender.Equals(allContacts);
+            contactsList.ShowContactsInWatchList = sender.Equals(inWatchList);
+
+            if (sender.Equals(contactsExcellent))
+                contactsList.ShowContactsWithStandings = StandingStatus.Excellent;
+
+            if (sender.Equals(contactsGood))
+                contactsList.ShowContactsWithStandings = StandingStatus.Good;
+
+            if (sender.Equals(contactsNeutral))
+                contactsList.ShowContactsWithStandings = StandingStatus.Neutral;
+
+            if (sender.Equals(contactsBad))
+                contactsList.ShowContactsWithStandings = StandingStatus.Bad;
+
+            if (sender.Equals(contactsTerrible))
+                contactsList.ShowContactsWithStandings = StandingStatus.Terrible;
+
+            contactsList.UpdateContent();
+        }
 
     }
 }

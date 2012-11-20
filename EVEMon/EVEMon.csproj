@@ -161,6 +161,12 @@
     <Compile Include="CharacterMonitoring\CharacterAssetsList.Designer.cs">
       <DependentUpon>CharacterAssetsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\CharacterContactList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterContactList.Designer.cs">
+      <DependentUpon>CharacterContactList.cs</DependentUpon>
+    </Compile>
     <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -471,6 +477,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterAssetsList.resx">
       <DependentUpon>CharacterAssetsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterContactList.resx">
+      <DependentUpon>CharacterContactList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.resx">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>

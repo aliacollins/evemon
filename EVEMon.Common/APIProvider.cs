@@ -163,13 +163,13 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
         /// <param name="method">The method.</param>
-        /// <param name="id">The API key's ID</param>
+        /// <param name="keyId">The API key's ID</param>
         /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, QueryCallback<T> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                                            id, verificationCode);
+                                            keyId, verificationCode);
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
@@ -178,24 +178,40 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
         /// <param name="method">The method.</param>
-        /// <param name="id">The API key's ID</param>
+        /// <param name="keyId">The API key's ID</param>
         /// <param name="verificationCode">The API key's verification code</param>
-        /// <param name="characterID">The character ID.</param>
+        /// <param name="id">The character or corporation ID.</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, QueryCallback<T> callback)
         {
             if (method == null)
                 throw new ArgumentNullException("method");
 
-            string postData = method.Equals(APICharacterMethods.WalletJournal) ||
-                              method.Equals(APICharacterMethods.WalletTransactions)
-                                  ? String.Format(CultureConstants.InvariantCulture,
-                                                  NetworkConstants.PostDataWithCharIDAndRowCount,
-                                                  id, verificationCode, characterID, 2560)
-                                  : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                                  id, verificationCode, characterID);
+            string postData = GetPostDataString(method, keyId, verificationCode, id);
 
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
+        }
+
+        private static string GetPostDataString(Enum method, long id, string verificationCode, long characterID)
+        {
+            if (method.Equals(APICharacterMethods.CharacterInfo) && id == 0 && string.IsNullOrEmpty(verificationCode))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly, characterID);
+            }
+
+            if (method.Equals(APICorporationMethods.CorporationSheet) && id == 0 && string.IsNullOrEmpty(verificationCode))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCorporationIDOnly, characterID);
+            }
+
+            if (method.Equals(APICharacterMethods.WalletJournal) || method.Equals(APICharacterMethods.WalletTransactions))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndRowCount,
+                                     id, verificationCode, characterID, 2560);
+            }
+
+            return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                 id, verificationCode, characterID);
         }
 
         /// <summary>
@@ -203,16 +219,16 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="method">The method.</param>
-        /// <param name="id">The API key's ID</param>
+        /// <param name="keyId">The API key's ID</param>
         /// <param name="verificationCode">The API key's verification code</param>
-        /// <param name="characterID">The character ID.</param>
+        /// <param name="id">The character ID.</param>
         /// <param name="messageID">The message ID.</param>
         /// <param name="callback">The callback.</param>
-        public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, long messageID,
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, long messageID,
                                         QueryCallback<T> callback)
         {
-            string postData = String.Format(CultureConstants.InvariantCulture, GetPostDataURL(method),
-                                            id, verificationCode, characterID, messageID);
+            string postData = String.Format(CultureConstants.InvariantCulture, GetPostDataFormat(method),
+                                            keyId, verificationCode, id, messageID);
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
@@ -301,11 +317,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the post data URL.
+        /// Gets the post data format.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns></returns>
-        private static string GetPostDataURL(Enum method)
+        private static string GetPostDataFormat(Enum method)
         {
             return (method.GetType() == typeof(APICharacterMethods))
                        ? NetworkConstants.PostDataWithCharIDAndIDS

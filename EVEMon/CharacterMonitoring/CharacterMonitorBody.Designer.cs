@@ -49,11 +49,19 @@
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.groupMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.walletJournalCharts = new System.Windows.Forms.ToolStripButton();
+            this.allContacts = new System.Windows.Forms.ToolStripButton();
+            this.contactsExcellent = new System.Windows.Forms.ToolStripButton();
+            this.contactsGood = new System.Windows.Forms.ToolStripButton();
+            this.contactsNeutral = new System.Windows.Forms.ToolStripButton();
+            this.contactsBad = new System.Windows.Forms.ToolStripButton();
+            this.contactsTerrible = new System.Windows.Forms.ToolStripButton();
+            this.inWatchList = new System.Windows.Forms.ToolStripButton();
             this.toolStripFeatures = new System.Windows.Forms.ToolStrip();
             this.skillsIcon = new System.Windows.Forms.ToolStripButton();
             this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
             this.employmentIcon = new System.Windows.Forms.ToolStripButton();
             this.standingsIcon = new System.Windows.Forms.ToolStripButton();
+            this.contactsIcon = new System.Windows.Forms.ToolStripButton();
             this.factionalWarfareStatsIcon = new System.Windows.Forms.ToolStripButton();
             this.assetsIcon = new System.Windows.Forms.ToolStripButton();
             this.ordersIcon = new System.Windows.Forms.ToolStripButton();
@@ -75,36 +83,38 @@
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
             this.standingsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.standingsList = new EVEMon.CharacterMonitoring.CharacterStandingsList();
             this.skillsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.skillsList = new EVEMon.CharacterMonitoring.CharacterSkillsList();
             this.ordersPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.ordersList = new EVEMon.CharacterMonitoring.CharacterMarketOrdersList();
             this.skillQueuePage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.skillQueueList = new EVEMon.CharacterMonitoring.CharacterSkillsQueueList();
             this.jobsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.jobsList = new EVEMon.CharacterMonitoring.CharacterIndustryJobsList();
             this.researchPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.researchList = new EVEMon.CharacterMonitoring.CharacterResearchPointsList();
             this.mailMessagesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.mailMessagesList = new EVEMon.CharacterMonitoring.CharacterEveMailMessagesList();
             this.eveNotificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.eveNotificationsList = new EVEMon.CharacterMonitoring.CharacterEveNotificationsList();
             this.employmentPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.employmentList = new EVEMon.CharacterMonitoring.CharacterEmploymentHistoryList();
             this.contractsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.contractsList = new EVEMon.CharacterMonitoring.CharacterContractsList();
             this.assetsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.assetsList = new EVEMon.CharacterMonitoring.CharacterAssetsList();
             this.walletJournalPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.walletJournalList = new EVEMon.CharacterMonitoring.CharacterWalletJournalList();
             this.walletTransactionsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.walletTransactionsList = new EVEMon.CharacterMonitoring.CharacterWalletTransactionsList();
             this.factionalWarfareStatsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.factionalWarfareStatsList = new EVEMon.CharacterMonitoring.CharacterFactionalWarfareStatsList();
+            this.contactsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.warningLabel = new System.Windows.Forms.Label();
-            this.notificationList = new EVEMon.Controls.NotificationList();
             this.filterTimer = new System.Windows.Forms.Timer(this.components);
+            this.standingsList = new EVEMon.CharacterMonitoring.CharacterStandingsList();
+            this.skillsList = new EVEMon.CharacterMonitoring.CharacterSkillsList();
+            this.ordersList = new EVEMon.CharacterMonitoring.CharacterMarketOrdersList();
+            this.skillQueueList = new EVEMon.CharacterMonitoring.CharacterSkillsQueueList();
+            this.jobsList = new EVEMon.CharacterMonitoring.CharacterIndustryJobsList();
+            this.researchList = new EVEMon.CharacterMonitoring.CharacterResearchPointsList();
+            this.mailMessagesList = new EVEMon.CharacterMonitoring.CharacterEveMailMessagesList();
+            this.eveNotificationsList = new EVEMon.CharacterMonitoring.CharacterEveNotificationsList();
+            this.employmentList = new EVEMon.CharacterMonitoring.CharacterEmploymentHistoryList();
+            this.contractsList = new EVEMon.CharacterMonitoring.CharacterContractsList();
+            this.assetsList = new EVEMon.CharacterMonitoring.CharacterAssetsList();
+            this.walletJournalList = new EVEMon.CharacterMonitoring.CharacterWalletJournalList();
+            this.walletTransactionsList = new EVEMon.CharacterMonitoring.CharacterWalletTransactionsList();
+            this.factionalWarfareStatsList = new EVEMon.CharacterMonitoring.CharacterFactionalWarfareStatsList();
+            this.contactsList = new EVEMon.CharacterMonitoring.CharacterContactList();
+            this.notificationList = new EVEMon.Controls.NotificationList();
             this.toolstripPanel.SuspendLayout();
             this.toolStripContextual.SuspendLayout();
             this.toolStripFeatures.SuspendLayout();
@@ -125,6 +135,7 @@
             this.walletJournalPage.SuspendLayout();
             this.walletTransactionsPage.SuspendLayout();
             this.factionalWarfareStatsPage.SuspendLayout();
+            this.contactsPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolstripPanel
@@ -146,7 +157,14 @@
             this.preferencesMenu,
             this.searchTextBox,
             this.groupMenu,
-            this.walletJournalCharts});
+            this.walletJournalCharts,
+            this.allContacts,
+            this.contactsExcellent,
+            this.contactsGood,
+            this.contactsNeutral,
+            this.contactsBad,
+            this.contactsTerrible,
+            this.inWatchList});
             this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripContextual.Location = new System.Drawing.Point(0, 31);
             this.toolStripContextual.Name = "toolStripContextual";
@@ -252,7 +270,7 @@
             // 
             this.paneRightMenuItem.CheckOnClick = true;
             this.paneRightMenuItem.Name = "paneRightMenuItem";
-            this.paneRightMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.paneRightMenuItem.Size = new System.Drawing.Size(114, 22);
             this.paneRightMenuItem.Tag = "Right";
             this.paneRightMenuItem.Text = "Right";
             this.paneRightMenuItem.Click += new System.EventHandler(this.paneRightMenuItem_Click);
@@ -261,7 +279,7 @@
             // 
             this.paneBottomMenuItem.CheckOnClick = true;
             this.paneBottomMenuItem.Name = "paneBottomMenuItem";
-            this.paneBottomMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.paneBottomMenuItem.Size = new System.Drawing.Size(114, 22);
             this.paneBottomMenuItem.Tag = "Bottom";
             this.paneBottomMenuItem.Text = "Bottom";
             this.paneBottomMenuItem.Click += new System.EventHandler(this.paneBottomMenuItem_Click);
@@ -270,7 +288,7 @@
             // 
             this.paneOffMenuItem.CheckOnClick = true;
             this.paneOffMenuItem.Name = "paneOffMenuItem";
-            this.paneOffMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.paneOffMenuItem.Size = new System.Drawing.Size(114, 22);
             this.paneOffMenuItem.Tag = "Off";
             this.paneOffMenuItem.Text = "Off";
             this.paneOffMenuItem.Click += new System.EventHandler(this.paneOffMenuItem_Click);
@@ -311,6 +329,79 @@
             this.walletJournalCharts.ToolTipText = "Charts";
             this.walletJournalCharts.Click += new System.EventHandler(this.walletJournalCharts_Click);
             // 
+            // allContacts
+            // 
+            this.allContacts.Checked = true;
+            this.allContacts.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.allContacts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.allContacts.Image = ((System.Drawing.Image)(resources.GetObject("allContacts.Image")));
+            this.allContacts.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.allContacts.Name = "allContacts";
+            this.allContacts.Size = new System.Drawing.Size(23, 22);
+            this.allContacts.Text = "All contacts";
+            this.allContacts.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsExcellent
+            // 
+            this.contactsExcellent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsExcellent.Image = ((System.Drawing.Image)(resources.GetObject("contactsExcellent.Image")));
+            this.contactsExcellent.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsExcellent.Name = "contactsExcellent";
+            this.contactsExcellent.Size = new System.Drawing.Size(23, 22);
+            this.contactsExcellent.Text = "Excellent standing";
+            this.contactsExcellent.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsGood
+            // 
+            this.contactsGood.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsGood.Image = ((System.Drawing.Image)(resources.GetObject("contactsGood.Image")));
+            this.contactsGood.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsGood.Name = "contactsGood";
+            this.contactsGood.Size = new System.Drawing.Size(23, 22);
+            this.contactsGood.Tag = "Good";
+            this.contactsGood.Text = "Good standing";
+            this.contactsGood.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsNeutral
+            // 
+            this.contactsNeutral.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsNeutral.Image = ((System.Drawing.Image)(resources.GetObject("contactsNeutral.Image")));
+            this.contactsNeutral.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsNeutral.Name = "contactsNeutral";
+            this.contactsNeutral.Size = new System.Drawing.Size(23, 22);
+            this.contactsNeutral.Text = "Neutral standing";
+            this.contactsNeutral.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsBad
+            // 
+            this.contactsBad.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsBad.Image = ((System.Drawing.Image)(resources.GetObject("contactsBad.Image")));
+            this.contactsBad.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsBad.Name = "contactsBad";
+            this.contactsBad.Size = new System.Drawing.Size(23, 22);
+            this.contactsBad.Text = "Bad standing";
+            this.contactsBad.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsTerrible
+            // 
+            this.contactsTerrible.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsTerrible.Image = ((System.Drawing.Image)(resources.GetObject("contactsTerrible.Image")));
+            this.contactsTerrible.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsTerrible.Name = "contactsTerrible";
+            this.contactsTerrible.Size = new System.Drawing.Size(23, 22);
+            this.contactsTerrible.Text = "Terrible standing";
+            this.contactsTerrible.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // inWatchList
+            // 
+            this.inWatchList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.inWatchList.Image = ((System.Drawing.Image)(resources.GetObject("inWatchList.Image")));
+            this.inWatchList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.inWatchList.Name = "inWatchList";
+            this.inWatchList.Size = new System.Drawing.Size(23, 22);
+            this.inWatchList.Text = "Watch List";
+            this.inWatchList.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
             // toolStripFeatures
             // 
             this.toolStripFeatures.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -320,6 +411,7 @@
             this.skillQueueIcon,
             this.employmentIcon,
             this.standingsIcon,
+            this.contactsIcon,
             this.factionalWarfareStatsIcon,
             this.assetsIcon,
             this.ordersIcon,
@@ -389,6 +481,18 @@
             this.standingsIcon.Text = "Standings";
             this.standingsIcon.ToolTipText = "Display standings";
             this.standingsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // contactsIcon
+            // 
+            this.contactsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsIcon.Image = ((System.Drawing.Image)(resources.GetObject("contactsIcon.Image")));
+            this.contactsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsIcon.Name = "contactsIcon";
+            this.contactsIcon.Size = new System.Drawing.Size(28, 28);
+            this.contactsIcon.Tag = "contactsPage";
+            this.contactsIcon.Text = "Contacts";
+            this.contactsIcon.ToolTipText = "Display contacts";
+            this.contactsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
             // factionalWarfareStatsIcon
             // 
@@ -551,21 +655,21 @@
             // EnableAllToolStripMenuItem
             // 
             this.EnableAllToolStripMenuItem.Name = "EnableAllToolStripMenuItem";
-            this.EnableAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.EnableAllToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.EnableAllToolStripMenuItem.Text = "Enable All";
             this.EnableAllToolStripMenuItem.Click += new System.EventHandler(this.EnableAllToolStripMenuItem_Click);
             // 
             // DisableAllToolStripMenuItem
             // 
             this.DisableAllToolStripMenuItem.Name = "DisableAllToolStripMenuItem";
-            this.DisableAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.DisableAllToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.DisableAllToolStripMenuItem.Text = "Disable All";
             this.DisableAllToolStripMenuItem.Click += new System.EventHandler(this.DisableAllToolStripMenuItem_Click);
             // 
             // SelectionToolStripSeparator
             // 
             this.SelectionToolStripSeparator.Name = "SelectionToolStripSeparator";
-            this.SelectionToolStripSeparator.Size = new System.Drawing.Size(149, 6);
+            this.SelectionToolStripSeparator.Size = new System.Drawing.Size(126, 6);
             // 
             // tsPagesSeparator
             // 
@@ -617,6 +721,7 @@
             this.multiPanel.Controls.Add(this.walletJournalPage);
             this.multiPanel.Controls.Add(this.walletTransactionsPage);
             this.multiPanel.Controls.Add(this.factionalWarfareStatsPage);
+            this.multiPanel.Controls.Add(this.contactsPage);
             this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
@@ -635,15 +740,6 @@
             this.standingsPage.Tag = "Standings";
             this.standingsPage.Text = "standingsPage";
             // 
-            // standingsList
-            // 
-            this.standingsList.Character = null;
-            this.standingsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.standingsList.Location = new System.Drawing.Point(0, 0);
-            this.standingsList.Name = "standingsList";
-            this.standingsList.Size = new System.Drawing.Size(568, 308);
-            this.standingsList.TabIndex = 0;
-            // 
             // skillsPage
             // 
             this.skillsPage.Controls.Add(this.skillsList);
@@ -654,16 +750,6 @@
             this.skillsPage.TabIndex = 0;
             this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
-            // 
-            // skillsList
-            // 
-            this.skillsList.Character = null;
-            this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillsList.Location = new System.Drawing.Point(0, 0);
-            this.skillsList.Margin = new System.Windows.Forms.Padding(0);
-            this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(564, 181);
-            this.skillsList.TabIndex = 12;
             // 
             // ordersPage
             // 
@@ -676,19 +762,6 @@
             this.ordersPage.Tag = "MarketOrders";
             this.ordersPage.Text = "ordersPage";
             // 
-            // ordersList
-            // 
-            this.ordersList.Character = null;
-            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
-            this.ordersList.Location = new System.Drawing.Point(0, 0);
-            this.ordersList.Name = "ordersList";
-            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.ordersList.Size = new System.Drawing.Size(564, 181);
-            this.ordersList.TabIndex = 13;
-            this.ordersList.TextFilter = "";
-            this.ordersList.Visibility = false;
-            // 
             // skillQueuePage
             // 
             this.skillQueuePage.Controls.Add(this.skillQueueList);
@@ -699,15 +772,6 @@
             this.skillQueuePage.TabIndex = 1;
             this.skillQueuePage.Tag = "SkillQueue";
             this.skillQueuePage.Text = "skillQueuePage";
-            // 
-            // skillQueueList
-            // 
-            this.skillQueueList.Character = null;
-            this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skillQueueList.Location = new System.Drawing.Point(0, 0);
-            this.skillQueueList.Name = "skillQueueList";
-            this.skillQueueList.Size = new System.Drawing.Size(568, 86);
-            this.skillQueueList.TabIndex = 0;
             // 
             // jobsPage
             // 
@@ -720,19 +784,6 @@
             this.jobsPage.Tag = "IndustryJobs";
             this.jobsPage.Text = "jobsPage";
             // 
-            // jobsList
-            // 
-            this.jobsList.Character = null;
-            this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
-            this.jobsList.Location = new System.Drawing.Point(0, 0);
-            this.jobsList.Name = "jobsList";
-            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.jobsList.Size = new System.Drawing.Size(568, 308);
-            this.jobsList.TabIndex = 0;
-            this.jobsList.TextFilter = "";
-            this.jobsList.Visibility = false;
-            // 
             // researchPage
             // 
             this.researchPage.Controls.Add(this.researchList);
@@ -743,17 +794,6 @@
             this.researchPage.TabIndex = 4;
             this.researchPage.Tag = "ResearchPoints";
             this.researchPage.Text = "researchPage";
-            // 
-            // researchList
-            // 
-            this.researchList.Character = null;
-            this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.researchList.Grouping = null;
-            this.researchList.Location = new System.Drawing.Point(0, 0);
-            this.researchList.Name = "researchList";
-            this.researchList.Size = new System.Drawing.Size(568, 86);
-            this.researchList.TabIndex = 0;
-            this.researchList.TextFilter = "";
             // 
             // mailMessagesPage
             // 
@@ -766,18 +806,6 @@
             this.mailMessagesPage.Tag = "MailMessages";
             this.mailMessagesPage.Text = "mailMessagesPage";
             // 
-            // mailMessagesList
-            // 
-            this.mailMessagesList.Character = null;
-            this.mailMessagesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mailMessagesList.Grouping = EVEMon.Common.SettingsObjects.EVEMailMessagesGrouping.State;
-            this.mailMessagesList.Location = new System.Drawing.Point(0, 0);
-            this.mailMessagesList.Name = "mailMessagesList";
-            this.mailMessagesList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
-            this.mailMessagesList.Size = new System.Drawing.Size(568, 87);
-            this.mailMessagesList.TabIndex = 0;
-            this.mailMessagesList.TextFilter = "";
-            // 
             // eveNotificationsPage
             // 
             this.eveNotificationsPage.Controls.Add(this.eveNotificationsList);
@@ -788,18 +816,6 @@
             this.eveNotificationsPage.TabIndex = 6;
             this.eveNotificationsPage.Tag = "Notifications";
             this.eveNotificationsPage.Text = "eveNotificationsPage";
-            // 
-            // eveNotificationsList
-            // 
-            this.eveNotificationsList.Character = null;
-            this.eveNotificationsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eveNotificationsList.Grouping = EVEMon.Common.SettingsObjects.EVENotificationsGrouping.Type;
-            this.eveNotificationsList.Location = new System.Drawing.Point(0, 0);
-            this.eveNotificationsList.Name = "eveNotificationsList";
-            this.eveNotificationsList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
-            this.eveNotificationsList.Size = new System.Drawing.Size(568, 86);
-            this.eveNotificationsList.TabIndex = 0;
-            this.eveNotificationsList.TextFilter = "";
             // 
             // employmentPage
             // 
@@ -812,38 +828,16 @@
             this.employmentPage.Tag = "EmploymentHistory";
             this.employmentPage.Text = "employmentPage";
             // 
-            // employmentList
-            // 
-            this.employmentList.Character = null;
-            this.employmentList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.employmentList.Location = new System.Drawing.Point(0, 0);
-            this.employmentList.Name = "employmentList";
-            this.employmentList.Size = new System.Drawing.Size(568, 156);
-            this.employmentList.TabIndex = 0;
-            // 
             // contractsPage
             // 
             this.contractsPage.Controls.Add(this.contractsList);
             this.contractsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contractsPage.Location = new System.Drawing.Point(0, 0);
             this.contractsPage.Name = "contractsPage";
-            this.contractsPage.Size = new System.Drawing.Size(568, 308);
+            this.contractsPage.Size = new System.Drawing.Size(564, 181);
             this.contractsPage.TabIndex = 9;
             this.contractsPage.Tag = "Contracts";
             this.contractsPage.Text = "contractsPage";
-            // 
-            // contractsList
-            // 
-            this.contractsList.Character = null;
-            this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
-            this.contractsList.Location = new System.Drawing.Point(0, 0);
-            this.contractsList.Name = "contractsList";
-            this.contractsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.contractsList.Size = new System.Drawing.Size(568, 308);
-            this.contractsList.TabIndex = 0;
-            this.contractsList.TextFilter = "";
-            this.contractsList.Visibility = false;
             // 
             // assetsPage
             // 
@@ -856,17 +850,6 @@
             this.assetsPage.Tag = "AssetList";
             this.assetsPage.Text = "assetsPage";
             // 
-            // assetsList
-            // 
-            this.assetsList.Character = null;
-            this.assetsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.None;
-            this.assetsList.Location = new System.Drawing.Point(0, 0);
-            this.assetsList.Name = "assetsList";
-            this.assetsList.Size = new System.Drawing.Size(568, 308);
-            this.assetsList.TabIndex = 0;
-            this.assetsList.TextFilter = "";
-            // 
             // walletJournalPage
             // 
             this.walletJournalPage.Controls.Add(this.walletJournalList);
@@ -877,17 +860,6 @@
             this.walletJournalPage.TabIndex = 11;
             this.walletJournalPage.Tag = "WalletJournal";
             this.walletJournalPage.Text = "walletJournalPage";
-            // 
-            // walletJournalList
-            // 
-            this.walletJournalList.Character = null;
-            this.walletJournalList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.walletJournalList.Grouping = EVEMon.Common.SettingsObjects.WalletJournalGrouping.None;
-            this.walletJournalList.Location = new System.Drawing.Point(0, 0);
-            this.walletJournalList.Name = "walletJournalList";
-            this.walletJournalList.Size = new System.Drawing.Size(568, 86);
-            this.walletJournalList.TabIndex = 0;
-            this.walletJournalList.TextFilter = "";
             // 
             // walletTransactionsPage
             // 
@@ -900,17 +872,6 @@
             this.walletTransactionsPage.Tag = "WalletTransactions";
             this.walletTransactionsPage.Text = "walletTransactionsPage";
             // 
-            // walletTransactionsList
-            // 
-            this.walletTransactionsList.Character = null;
-            this.walletTransactionsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.walletTransactionsList.Grouping = EVEMon.Common.SettingsObjects.WalletTransactionGrouping.None;
-            this.walletTransactionsList.Location = new System.Drawing.Point(0, 0);
-            this.walletTransactionsList.Name = "walletTransactionsList";
-            this.walletTransactionsList.Size = new System.Drawing.Size(568, 86);
-            this.walletTransactionsList.TabIndex = 0;
-            this.walletTransactionsList.TextFilter = "";
-            // 
             // factionalWarfareStatsPage
             // 
             this.factionalWarfareStatsPage.Controls.Add(this.factionalWarfareStatsList);
@@ -922,14 +883,16 @@
             this.factionalWarfareStatsPage.Tag = "FactionalWarfareStats";
             this.factionalWarfareStatsPage.Text = "factionalWarfareStatsPage";
             // 
-            // factionalWarfareStatsList
+            // contactsPage
             // 
-            this.factionalWarfareStatsList.Character = null;
-            this.factionalWarfareStatsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.factionalWarfareStatsList.Location = new System.Drawing.Point(0, 0);
-            this.factionalWarfareStatsList.Name = "factionalWarfareStatsList";
-            this.factionalWarfareStatsList.Size = new System.Drawing.Size(568, 156);
-            this.factionalWarfareStatsList.TabIndex = 0;
+            this.contactsPage.Controls.Add(this.contactsList);
+            this.contactsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contactsPage.Location = new System.Drawing.Point(0, 0);
+            this.contactsPage.Name = "contactsPage";
+            this.contactsPage.Size = new System.Drawing.Size(564, 181);
+            this.contactsPage.TabIndex = 14;
+            this.contactsPage.Tag = "ContactList";
+            this.contactsPage.Text = "contactsPage";
             // 
             // warningLabel
             // 
@@ -946,6 +909,176 @@
             this.warningLabel.Text = "This character has no associated API key, data won\'t be updated.";
             this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // filterTimer
+            // 
+            this.filterTimer.Interval = 300;
+            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
+            // 
+            // standingsList
+            // 
+            this.standingsList.Character = null;
+            this.standingsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.standingsList.Location = new System.Drawing.Point(0, 0);
+            this.standingsList.Name = "standingsList";
+            this.standingsList.Size = new System.Drawing.Size(568, 308);
+            this.standingsList.TabIndex = 0;
+            // 
+            // skillsList
+            // 
+            this.skillsList.Character = null;
+            this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillsList.Location = new System.Drawing.Point(0, 0);
+            this.skillsList.Margin = new System.Windows.Forms.Padding(0);
+            this.skillsList.Name = "skillsList";
+            this.skillsList.Size = new System.Drawing.Size(564, 181);
+            this.skillsList.TabIndex = 12;
+            // 
+            // ordersList
+            // 
+            this.ordersList.Character = null;
+            this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
+            this.ordersList.Location = new System.Drawing.Point(0, 0);
+            this.ordersList.Name = "ordersList";
+            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.ordersList.Size = new System.Drawing.Size(564, 181);
+            this.ordersList.TabIndex = 13;
+            this.ordersList.TextFilter = "";
+            this.ordersList.Visibility = false;
+            // 
+            // skillQueueList
+            // 
+            this.skillQueueList.Character = null;
+            this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skillQueueList.Location = new System.Drawing.Point(0, 0);
+            this.skillQueueList.Name = "skillQueueList";
+            this.skillQueueList.Size = new System.Drawing.Size(568, 86);
+            this.skillQueueList.TabIndex = 0;
+            // 
+            // jobsList
+            // 
+            this.jobsList.Character = null;
+            this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
+            this.jobsList.Location = new System.Drawing.Point(0, 0);
+            this.jobsList.Name = "jobsList";
+            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.jobsList.Size = new System.Drawing.Size(568, 308);
+            this.jobsList.TabIndex = 0;
+            this.jobsList.TextFilter = "";
+            this.jobsList.Visibility = false;
+            // 
+            // researchList
+            // 
+            this.researchList.Character = null;
+            this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.researchList.Grouping = null;
+            this.researchList.Location = new System.Drawing.Point(0, 0);
+            this.researchList.Name = "researchList";
+            this.researchList.Size = new System.Drawing.Size(568, 86);
+            this.researchList.TabIndex = 0;
+            this.researchList.TextFilter = "";
+            // 
+            // mailMessagesList
+            // 
+            this.mailMessagesList.Character = null;
+            this.mailMessagesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mailMessagesList.Grouping = EVEMon.Common.SettingsObjects.EVEMailMessagesGrouping.State;
+            this.mailMessagesList.Location = new System.Drawing.Point(0, 0);
+            this.mailMessagesList.Name = "mailMessagesList";
+            this.mailMessagesList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
+            this.mailMessagesList.Size = new System.Drawing.Size(568, 87);
+            this.mailMessagesList.TabIndex = 0;
+            this.mailMessagesList.TextFilter = "";
+            // 
+            // eveNotificationsList
+            // 
+            this.eveNotificationsList.Character = null;
+            this.eveNotificationsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eveNotificationsList.Grouping = EVEMon.Common.SettingsObjects.EVENotificationsGrouping.Type;
+            this.eveNotificationsList.Location = new System.Drawing.Point(0, 0);
+            this.eveNotificationsList.Name = "eveNotificationsList";
+            this.eveNotificationsList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
+            this.eveNotificationsList.Size = new System.Drawing.Size(568, 86);
+            this.eveNotificationsList.TabIndex = 0;
+            this.eveNotificationsList.TextFilter = "";
+            // 
+            // employmentList
+            // 
+            this.employmentList.Character = null;
+            this.employmentList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.employmentList.Location = new System.Drawing.Point(0, 0);
+            this.employmentList.Name = "employmentList";
+            this.employmentList.Size = new System.Drawing.Size(568, 156);
+            this.employmentList.TabIndex = 0;
+            // 
+            // contractsList
+            // 
+            this.contractsList.Character = null;
+            this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
+            this.contractsList.Location = new System.Drawing.Point(0, 0);
+            this.contractsList.Name = "contractsList";
+            this.contractsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
+            this.contractsList.Size = new System.Drawing.Size(564, 181);
+            this.contractsList.TabIndex = 0;
+            this.contractsList.TextFilter = "";
+            this.contractsList.Visibility = false;
+            // 
+            // assetsList
+            // 
+            this.assetsList.Character = null;
+            this.assetsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.None;
+            this.assetsList.Location = new System.Drawing.Point(0, 0);
+            this.assetsList.Name = "assetsList";
+            this.assetsList.Size = new System.Drawing.Size(568, 308);
+            this.assetsList.TabIndex = 0;
+            this.assetsList.TextFilter = "";
+            // 
+            // walletJournalList
+            // 
+            this.walletJournalList.Character = null;
+            this.walletJournalList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.walletJournalList.Grouping = EVEMon.Common.SettingsObjects.WalletJournalGrouping.None;
+            this.walletJournalList.Location = new System.Drawing.Point(0, 0);
+            this.walletJournalList.Name = "walletJournalList";
+            this.walletJournalList.Size = new System.Drawing.Size(568, 86);
+            this.walletJournalList.TabIndex = 0;
+            this.walletJournalList.TextFilter = "";
+            // 
+            // walletTransactionsList
+            // 
+            this.walletTransactionsList.Character = null;
+            this.walletTransactionsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.walletTransactionsList.Grouping = EVEMon.Common.SettingsObjects.WalletTransactionGrouping.None;
+            this.walletTransactionsList.Location = new System.Drawing.Point(0, 0);
+            this.walletTransactionsList.Name = "walletTransactionsList";
+            this.walletTransactionsList.Size = new System.Drawing.Size(568, 86);
+            this.walletTransactionsList.TabIndex = 0;
+            this.walletTransactionsList.TextFilter = "";
+            // 
+            // factionalWarfareStatsList
+            // 
+            this.factionalWarfareStatsList.Character = null;
+            this.factionalWarfareStatsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.factionalWarfareStatsList.Location = new System.Drawing.Point(0, 0);
+            this.factionalWarfareStatsList.Name = "factionalWarfareStatsList";
+            this.factionalWarfareStatsList.Size = new System.Drawing.Size(568, 156);
+            this.factionalWarfareStatsList.TabIndex = 0;
+            // 
+            // contactsList
+            // 
+            this.contactsList.Character = null;
+            this.contactsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contactsList.Location = new System.Drawing.Point(0, 0);
+            this.contactsList.Name = "contactsList";
+            this.contactsList.ShowAllContacts = false;
+            this.contactsList.ShowContactsInWatchList = false;
+            this.contactsList.ShowContactsWithStandings = EVEMon.Common.StandingStatus.Excellent;
+            this.contactsList.Size = new System.Drawing.Size(564, 181);
+            this.contactsList.TabIndex = 0;
+            // 
             // notificationList
             // 
             this.notificationList.Dock = System.Windows.Forms.DockStyle.Top;
@@ -955,11 +1088,6 @@
             this.notificationList.Name = "notificationList";
             this.notificationList.Size = new System.Drawing.Size(567, 72);
             this.notificationList.TabIndex = 13;
-            // 
-            // filterTimer
-            // 
-            this.filterTimer.Interval = 300;
-            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
             // 
             // CharacterMonitorBody
             // 
@@ -992,6 +1120,7 @@
             this.walletJournalPage.ResumeLayout(false);
             this.walletTransactionsPage.ResumeLayout(false);
             this.factionalWarfareStatsPage.ResumeLayout(false);
+            this.contactsPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1074,5 +1203,15 @@
         private System.Windows.Forms.Label warningLabel;
         private Controls.NotificationList notificationList;
         private System.Windows.Forms.Timer filterTimer;
+        private System.Windows.Forms.ToolStripButton contactsIcon;
+        private Common.Controls.MultiPanel.MultiPanelPage contactsPage;
+        private CharacterContactList contactsList;
+        private System.Windows.Forms.ToolStripButton allContacts;
+        private System.Windows.Forms.ToolStripButton contactsExcellent;
+        private System.Windows.Forms.ToolStripButton contactsGood;
+        private System.Windows.Forms.ToolStripButton contactsNeutral;
+        private System.Windows.Forms.ToolStripButton contactsBad;
+        private System.Windows.Forms.ToolStripButton contactsTerrible;
+        private System.Windows.Forms.ToolStripButton inWatchList;
     }
 }

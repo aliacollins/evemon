@@ -173,17 +173,18 @@ namespace EVEMon.Common
         /// The advanced character features of APIMethods.
         /// </summary>
         AdvancedCharacterFeatures =
-            APICharacterMethods.AccountStatus | APICharacterMethods.AssetList | APICharacterMethods.MarketOrders |
-            APICharacterMethods.Contracts | APICharacterMethods.WalletJournal | APICharacterMethods.WalletTransactions |
-            APICharacterMethods.IndustryJobs | APICharacterMethods.ResearchPoints | APICharacterMethods.Standings |
-            APICharacterMethods.MailMessages | APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
-            APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts | APICharacterMethods.FactionalWarfareStats,
+            APICharacterMethods.AccountStatus | APICharacterMethods.AssetList |
+            APICharacterMethods.ContactList | APICharacterMethods.Contracts | APICharacterMethods.FactionalWarfareStats |
+            APICharacterMethods.FactionalWarfareStats | APICharacterMethods.IndustryJobs | APICharacterMethods.ResearchPoints |
+            APICharacterMethods.Standings | APICharacterMethods.MailMessages | APICharacterMethods.MailBodies |
+            APICharacterMethods.MailingLists | APICharacterMethods.MarketOrders | APICharacterMethods.Notifications |
+            APICharacterMethods.NotificationTexts | APICharacterMethods.WalletJournal | APICharacterMethods.WalletTransactions,
 
         /// <summary>
         /// The advanced corporation features of APIMethods.
         /// </summary>
-        AdvancedCorporationFeatures = APICorporationMethods.CorporationMarketOrders | APICorporationMethods.CorporationContracts
-                                      | APICorporationMethods.CorporationIndustryJobs,
+        AdvancedCorporationFeatures = APICorporationMethods.CorporationContracts | APICorporationMethods.CorporationMarketOrders |
+                                      APICorporationMethods.CorporationIndustryJobs,
 
         /// <summary>
         /// All character features of APIMethods
@@ -352,6 +353,9 @@ namespace EVEMon.Common
         /// <summary>
         /// The contact list of a character.
         /// </summary>
+        [Header("Contacts")]
+        [Description("The contacts of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
         ContactList = 1 << 4,
 
         /// <summary>
@@ -1063,23 +1067,11 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Enumeration of contact group.
-    /// </summary>
-    public enum ContactGroup
-    {
-        Contact,
-        Corporate,
-        Alliance,
-    }
-
-    /// <summary>
-    /// Enumeration of contact group.
+    /// Enumeration of contact type.
     /// </summary>
     public enum ContactType
     {
-        None,
-        Agent,
-        Pilot,
+        Character,
         Corporation,
         Alliance,
     }
@@ -1628,6 +1620,63 @@ namespace EVEMon.Common
 
         [Description("Factions")]
         Factions
+    }
+
+    /// <summary>
+    /// Enumeration of contact group.
+    /// </summary>
+    public enum ContactGroup
+    {
+        [Description("Personal")]
+        Contact,
+
+        [Description("Corporation")]
+        Corporate,
+
+        [Description("Alliance")]
+        Alliance,
+
+        [Description("Agents")]
+        Agent,
+    }
+
+    public enum AgentType
+    {
+        [Description]
+        NonAgent,
+
+        [Description("Agents")]
+        BasicAgent,
+
+        [Description("Tutorial")]
+        TutorialAgent,
+
+        [Description("Research")]
+        ResearchAgent,
+
+        [Description("CONCORD")]
+        CONCORDAgent,
+
+        [Description("Storyline")]
+        GenericStorylineMissionAgent,
+
+        [Description("Stolyline")]
+        StorylineMissionAgent,
+
+        [Description("Event")]
+        EventMissionAgent,
+
+        [Description("Factional Warfare")]
+        FactionalWarfareAgent,
+
+        [Description("Epic")]
+        EpicArcAgent,
+
+        [Description("Aura")]
+        AuraAgent,
+
+        [Description("Career")]
+        CareerAgent
     }
 
     #endregion

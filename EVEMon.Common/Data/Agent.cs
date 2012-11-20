@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Serialization.Datafiles;
+﻿using System;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -19,7 +20,9 @@ namespace EVEMon.Common.Data
             Level = src.Level;
             Quality = src.Quality;
             Division = src.DivisionName;
-            AgentType = src.AgentType;
+            AgentType = Enum.IsDefined(typeof(AgentType), src.AgentType)
+                            ? (AgentType)Enum.Parse(typeof(AgentType), src.AgentType)
+                            : AgentType.NonAgent;
             ResearchSkill = StaticSkills.GetSkillName(src.ResearchSkillID);
             LocatorService = src.LocatorService;
         }
@@ -69,7 +72,7 @@ namespace EVEMon.Common.Data
         /// Gets or sets the type of the agent.
         /// </summary>
         /// <value>The type of the agent.</value>
-        public string AgentType { get; private set; }
+        public AgentType AgentType { get; private set; }
 
         /// <summary>
         /// Gets or sets the division.
