@@ -158,17 +158,28 @@ namespace EVEMon.CharacterMonitoring
                 if (ShowContactsInWatchList)
                     contacts = contacts.Where(contact => contact.IsInWatchlist);
 
-                IEnumerable<IGrouping<ContactGroup, Contact>> groups = contacts.GroupBy(
-                    x => x.Group).Reverse();
+                List<IGrouping<ContactGroup, Contact>> groups = contacts.GroupBy(x => x.Group).ToList();
+                
+                // Place the agent group always at the bottom
+                IGrouping<ContactGroup, Contact> agentGroup = groups.FirstOrDefault(x => x.Key == ContactGroup.Agent);
+                if (agentGroup != null)
+                {
+                    int index = groups.IndexOf(agentGroup);
+                    groups.RemoveAt(index);
+                    groups.Add(agentGroup);
+                }
 
                 // Scroll through groups
                 lbContacts.Items.Clear();
                 foreach (IGrouping<ContactGroup, Contact> group in groups)
                 {
-                    lbContacts.Items.Add(group.Key.GetDescription());
+                    string groupHeaderText = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
+                                                           group.Key.GetDescription(),
+                                                           group.Count());
+                    lbContacts.Items.Add(groupHeaderText);
 
                     // Add items in the group when it's not collapsed
-                    if (m_collapsedGroups.Contains(group.Key.GetDescription()))
+                    if (m_collapsedGroups.Contains(groupHeaderText))
                         continue;
 
                     foreach (Contact contact in group.OrderBy(contact => contact.Name))
@@ -212,7 +223,7 @@ namespace EVEMon.CharacterMonitoring
             if (contact != null)
                 DrawItem(contact, e);
             else
-                DrawItem((String)item, e);
+                DrawItem((string)item, e);
         }
 
         /// <summary>
@@ -250,7 +261,6 @@ namespace EVEMon.CharacterMonitoring
 
             // Draw background
             g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
-
 
             // Measure texts
             Size contactTextSize = TextRenderer.MeasureText(g, contact.Name, m_contactsBoldFont, Size.Empty, Format);
@@ -378,7 +388,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="group"></param>
         /// <param name="e"></param>
-        private void DrawItem(String group, DrawItemEventArgs e)
+        private void DrawItem(string group, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 

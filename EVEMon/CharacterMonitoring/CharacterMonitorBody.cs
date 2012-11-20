@@ -200,9 +200,14 @@ namespace EVEMon.CharacterMonitoring
                     item.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 }
 
-                featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
-                preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
+                foreach (ToolStripButton item in toolStripContextual.Items.OfType<ToolStripButton>())
+                {
+                    item.DisplayStyle = ToolStripItemDisplayStyle.Image;
+                }
 
+                featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
+                
+                preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
             finally
@@ -682,6 +687,39 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             WindowsFactory.ShowByTag<WalletJournalChartWindow, CCPCharacter>(ccpCharacter);
+        }
+
+        /// <summary>
+        /// Handles the Click event of the contactsToolbarIcon control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void contactsToolbarIcon_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripButton item in toolStripContextual.Items.OfType<ToolStripButton>())
+            {
+                item.Checked = (item == sender);
+            }
+
+            contactsList.ShowAllContacts = sender.Equals(allContacts);
+            contactsList.ShowContactsInWatchList = sender.Equals(inWatchList);
+
+            if (sender.Equals(contactsExcellent))
+                contactsList.ShowContactsWithStandings = StandingStatus.Excellent;
+
+            if (sender.Equals(contactsGood))
+                contactsList.ShowContactsWithStandings = StandingStatus.Good;
+
+            if (sender.Equals(contactsNeutral))
+                contactsList.ShowContactsWithStandings = StandingStatus.Neutral;
+
+            if (sender.Equals(contactsBad))
+                contactsList.ShowContactsWithStandings = StandingStatus.Bad;
+
+            if (sender.Equals(contactsTerrible))
+                contactsList.ShowContactsWithStandings = StandingStatus.Terrible;
+
+            contactsList.UpdateContent();
         }
 
 
@@ -1563,40 +1601,6 @@ namespace EVEMon.CharacterMonitoring
         }
 
         # endregion
-
-
-        /// <summary>
-        /// Handles the Click event of the contactsToolbarIcon control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void contactsToolbarIcon_Click(object sender, EventArgs e)
-        {
-            foreach (ToolStripButton item in toolStripContextual.Items.OfType<ToolStripButton>())
-            {
-                item.Checked = (item == sender);
-            }
-
-            contactsList.ShowAllContacts = sender.Equals(allContacts);
-            contactsList.ShowContactsInWatchList = sender.Equals(inWatchList);
-
-            if (sender.Equals(contactsExcellent))
-                contactsList.ShowContactsWithStandings = StandingStatus.Excellent;
-
-            if (sender.Equals(contactsGood))
-                contactsList.ShowContactsWithStandings = StandingStatus.Good;
-
-            if (sender.Equals(contactsNeutral))
-                contactsList.ShowContactsWithStandings = StandingStatus.Neutral;
-
-            if (sender.Equals(contactsBad))
-                contactsList.ShowContactsWithStandings = StandingStatus.Bad;
-
-            if (sender.Equals(contactsTerrible))
-                contactsList.ShowContactsWithStandings = StandingStatus.Terrible;
-
-            contactsList.UpdateContent();
-        }
 
     }
 }

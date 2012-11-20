@@ -74,18 +74,18 @@ namespace EVEMon.Common
         {
             get
             {
-                if (m_image == null)
-                    GetImage();
-
                 // When the contact type changed update the image
                 if (m_contactTypeChanged)
                 {
-                    GetImage();
+                    m_image = null;
                     
                     // Reset flag
                     m_contactTypeChanged = false;
                 }
 
+                if (m_image == null)
+                    GetImage();
+                
                 return m_image;
             }
         }
@@ -100,6 +100,17 @@ namespace EVEMon.Common
         /// </summary>
         private void GetContactType()
         {
+            // Quit here if it's an EVE agent
+            if (Group == ContactGroup.Agent)
+                return;
+
+            // Assign the contact type if it's an EVE Faction
+            if(DBConstants.FactionIDs.Contains((int)m_contactID))
+            {
+                m_contactType = ContactType.Alliance;
+                return;
+            }
+
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
                 APICharacterMethods.CharacterInfo, 0, null, m_contactID, OnCharacterInfoQueried);
         }

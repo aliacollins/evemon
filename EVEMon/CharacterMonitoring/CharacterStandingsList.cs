@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -189,7 +188,7 @@ namespace EVEMon.CharacterMonitoring
             if (standing != null)
                 DrawItem(standing, e);
             else
-                DrawItem((String)item, e);
+                DrawItem((string)item, e);
         }
 
         /// <summary>
@@ -295,7 +294,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="group"></param>
         /// <param name="e"></param>
-        private void DrawItem(String group, DrawItemEventArgs e)
+        private void DrawItem(string group, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
