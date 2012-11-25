@@ -1407,8 +1407,11 @@ namespace EVEMon.Common
         [Header("Finished contracts")]
         Finished = 6,
 
+        [Header("Failed contracts")]
+        Failed = 7,
+
         [Header("Unknown contracts")]
-        Unknown = 7
+        Unknown = 8
     }
 
     /// <summary>
