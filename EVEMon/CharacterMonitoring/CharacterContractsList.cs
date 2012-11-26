@@ -609,6 +609,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 case ContractColumn.Status:
                     item.Text = contract.Status.GetDescription();
+                    item.ForeColor = (contract.Overdue ? Color.Red : Color.Black);
                     break;
                 case ContractColumn.ContractText:
                     item.Text = contract.ContractText;
@@ -786,7 +787,7 @@ namespace EVEMon.CharacterMonitoring
             if (contract.State == ContractState.Expired)
                 format.TextColor = Color.Red;
 
-            if (contract.State == ContractState.Rejected)
+            if (contract.State == ContractState.Rejected || contract.State == ContractState.Failed)
                 format.TextColor = Color.DarkRed;
 
             if (contract.State == ContractState.Finished)

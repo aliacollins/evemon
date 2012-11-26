@@ -107,6 +107,9 @@ namespace EVEMon.Common.Serialization.API
         [Description("Rejected")]
         Rejected,
 
+        [Description("Overdue")]
+        Overdue,
+
         [Description("Reversed")]
         Reversed
     }

@@ -317,7 +317,19 @@ namespace EVEMon.Common
         /// </summary>
         public bool NeedsAttention
         {
-            get { return m_state == ContractState.Expired || m_state == ContractState.Rejected; }
+            get { return m_state == ContractState.Expired || m_state == ContractState.Rejected || Overdue; }
+        }
+
+        /// <summary>
+        /// Gets true if contract completion is ovedue.
+        /// </summary>
+        public bool Overdue
+        {
+            get
+            {
+                return Status == CCPContractStatus.Overdue ||
+                       (Status == CCPContractStatus.InProgress && Accepted.AddDays(DaysToComplete) < DateTime.UtcNow);
+            }
         }
 
         /// <summary>
@@ -364,7 +376,7 @@ namespace EVEMon.Common
             ContractState state = GetState(src);
             if (state != m_state || NeedsAttention)
             {
-                if (state != m_state)
+                if (state != m_state || Overdue)
                 {
                     // Update state
                     m_state = state;
@@ -444,6 +456,9 @@ namespace EVEMon.Common
         private void UpdateContractInfo(SerializableContractListItem src)
         {
             Status = GetStatus(src);
+
+            if (Overdue)
+                Status = CCPContractStatus.Overdue;
 
             Accepted = src.DateAccepted;
             Completed = src.DateCompleted;
@@ -595,6 +610,7 @@ namespace EVEMon.Common
                     return ContractState.Failed;
                 case CCPContractStatus.Canceled:
                     return ContractState.Canceled;
+                case CCPContractStatus.Overdue:
                 case CCPContractStatus.Outstanding:
                 case CCPContractStatus.InProgress:
                     return (IssuerID != Character.CharacterID) ? ContractState.Assigned : ContractState.Created;
@@ -619,10 +635,9 @@ namespace EVEMon.Common
         private static CCPContractStatus GetStatus(SerializableContractListItem src)
         {
             return Enum.IsDefined(typeof(CCPContractStatus), src.Status)
-                       ? (CCPContractStatus)Enum.Parse(typeof(CCPContractStatus), src.Status)
-                       : CCPContractStatus.None;
+                ? (CCPContractStatus)Enum.Parse(typeof(CCPContractStatus), src.Status)
+                : CCPContractStatus.None;
         }
-
 
         #endregion
     }
