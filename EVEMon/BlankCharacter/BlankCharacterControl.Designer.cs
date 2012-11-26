@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BlankCharacterControl));
-            this.flpGender = new System.Windows.Forms.FlowLayoutPanel();
             this.rbFemale = new System.Windows.Forms.RadioButton();
             this.rbMale = new System.Windows.Forms.RadioButton();
             this.tbCharacterName = new System.Windows.Forms.TextBox();
@@ -67,7 +66,11 @@
             this.gbGender = new System.Windows.Forms.GroupBox();
             this.gbCharacterName = new System.Windows.Forms.GroupBox();
             this.ilBloodline = new System.Windows.Forms.ImageList(this.components);
-            this.flpGender.SuspendLayout();
+            this.tlpGender = new System.Windows.Forms.TableLayoutPanel();
+            this.pbFemale = new System.Windows.Forms.PictureBox();
+            this.pbMale = new System.Windows.Forms.PictureBox();
+            this.lblFemale = new System.Windows.Forms.Label();
+            this.lblMale = new System.Windows.Forms.Label();
             this.gbRace.SuspendLayout();
             this.tlpRaces.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -86,42 +89,36 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbAncestry3)).BeginInit();
             this.gbGender.SuspendLayout();
             this.gbCharacterName.SuspendLayout();
+            this.tlpGender.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFemale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMale)).BeginInit();
             this.SuspendLayout();
-            // 
-            // flpGender
-            // 
-            this.flpGender.Controls.Add(this.rbFemale);
-            this.flpGender.Controls.Add(this.rbMale);
-            this.flpGender.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpGender.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpGender.Location = new System.Drawing.Point(3, 16);
-            this.flpGender.Name = "flpGender";
-            this.flpGender.Size = new System.Drawing.Size(140, 193);
-            this.flpGender.TabIndex = 3;
             // 
             // rbFemale
             // 
             this.rbFemale.AutoSize = true;
             this.rbFemale.Checked = true;
-            this.rbFemale.Location = new System.Drawing.Point(33, 55);
-            this.rbFemale.Margin = new System.Windows.Forms.Padding(33, 55, 3, 3);
+            this.rbFemale.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rbFemale.Location = new System.Drawing.Point(3, 3);
             this.rbFemale.Name = "rbFemale";
-            this.rbFemale.Size = new System.Drawing.Size(59, 17);
+            this.rbFemale.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            this.tlpGender.SetRowSpan(this.rbFemale, 2);
+            this.rbFemale.Size = new System.Drawing.Size(43, 94);
             this.rbFemale.TabIndex = 0;
             this.rbFemale.TabStop = true;
-            this.rbFemale.Text = "Female";
             this.rbFemale.UseVisualStyleBackColor = true;
             this.rbFemale.Click += new System.EventHandler(this.rbFemale_Click);
             // 
             // rbMale
             // 
             this.rbMale.AutoSize = true;
-            this.rbMale.Location = new System.Drawing.Point(33, 115);
-            this.rbMale.Margin = new System.Windows.Forms.Padding(33, 40, 3, 3);
+            this.rbMale.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rbMale.Location = new System.Drawing.Point(3, 103);
             this.rbMale.Name = "rbMale";
-            this.rbMale.Size = new System.Drawing.Size(48, 17);
+            this.rbMale.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            this.tlpGender.SetRowSpan(this.rbMale, 2);
+            this.rbMale.Size = new System.Drawing.Size(43, 87);
             this.rbMale.TabIndex = 1;
-            this.rbMale.Text = "Male";
             this.rbMale.UseVisualStyleBackColor = true;
             this.rbMale.Click += new System.EventHandler(this.rbMale_Click);
             // 
@@ -559,7 +556,7 @@
             // 
             // gbGender
             // 
-            this.gbGender.Controls.Add(this.flpGender);
+            this.gbGender.Controls.Add(this.tlpGender);
             this.gbGender.Location = new System.Drawing.Point(337, 156);
             this.gbGender.Name = "gbGender";
             this.gbGender.Size = new System.Drawing.Size(146, 212);
@@ -595,6 +592,72 @@
             this.ilBloodline.Images.SetKeyName(10, "brutor.png");
             this.ilBloodline.Images.SetKeyName(11, "verokhior.png");
             // 
+            // tlpGender
+            // 
+            this.tlpGender.ColumnCount = 2;
+            this.tlpGender.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.tlpGender.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65F));
+            this.tlpGender.Controls.Add(this.rbFemale, 0, 0);
+            this.tlpGender.Controls.Add(this.pbFemale, 1, 0);
+            this.tlpGender.Controls.Add(this.rbMale, 0, 2);
+            this.tlpGender.Controls.Add(this.pbMale, 1, 2);
+            this.tlpGender.Controls.Add(this.lblFemale, 1, 1);
+            this.tlpGender.Controls.Add(this.lblMale, 1, 3);
+            this.tlpGender.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpGender.Location = new System.Drawing.Point(3, 16);
+            this.tlpGender.Name = "tlpGender";
+            this.tlpGender.RowCount = 4;
+            this.tlpGender.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpGender.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpGender.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpGender.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpGender.Size = new System.Drawing.Size(140, 193);
+            this.tlpGender.TabIndex = 2;
+            // 
+            // pbFemale
+            // 
+            this.pbFemale.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbFemale.Image = ((System.Drawing.Image)(resources.GetObject("pbFemale.Image")));
+            this.pbFemale.Location = new System.Drawing.Point(52, 3);
+            this.pbFemale.Name = "pbFemale";
+            this.pbFemale.Size = new System.Drawing.Size(85, 74);
+            this.pbFemale.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbFemale.TabIndex = 2;
+            this.pbFemale.TabStop = false;
+            // 
+            // pbMale
+            // 
+            this.pbMale.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbMale.Image = ((System.Drawing.Image)(resources.GetObject("pbMale.Image")));
+            this.pbMale.Location = new System.Drawing.Point(52, 103);
+            this.pbMale.Name = "pbMale";
+            this.pbMale.Size = new System.Drawing.Size(85, 66);
+            this.pbMale.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbMale.TabIndex = 3;
+            this.pbMale.TabStop = false;
+            // 
+            // lblFemale
+            // 
+            this.lblFemale.AutoSize = true;
+            this.lblFemale.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblFemale.Location = new System.Drawing.Point(52, 80);
+            this.lblFemale.Name = "lblFemale";
+            this.lblFemale.Size = new System.Drawing.Size(85, 20);
+            this.lblFemale.TabIndex = 4;
+            this.lblFemale.Text = "Female";
+            this.lblFemale.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // lblMale
+            // 
+            this.lblMale.AutoSize = true;
+            this.lblMale.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMale.Location = new System.Drawing.Point(52, 172);
+            this.lblMale.Name = "lblMale";
+            this.lblMale.Size = new System.Drawing.Size(85, 21);
+            this.lblMale.TabIndex = 5;
+            this.lblMale.Text = "Male";
+            this.lblMale.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // BlankCharacterControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -608,8 +671,6 @@
             this.Name = "BlankCharacterControl";
             this.Size = new System.Drawing.Size(497, 425);
             this.Load += new System.EventHandler(this.BlankCharacterControl_Load);
-            this.flpGender.ResumeLayout(false);
-            this.flpGender.PerformLayout();
             this.gbRace.ResumeLayout(false);
             this.tlpRaces.ResumeLayout(false);
             this.tlpRaces.PerformLayout();
@@ -632,13 +693,16 @@
             this.gbGender.ResumeLayout(false);
             this.gbCharacterName.ResumeLayout(false);
             this.gbCharacterName.PerformLayout();
+            this.tlpGender.ResumeLayout(false);
+            this.tlpGender.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFemale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMale)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.FlowLayoutPanel flpGender;
         private System.Windows.Forms.GroupBox gbRace;
         private System.Windows.Forms.RadioButton rbAmarr;
         private System.Windows.Forms.GroupBox gbBloodline;
@@ -675,5 +739,10 @@
         private System.Windows.Forms.PictureBox pbAncestry2;
         private System.Windows.Forms.PictureBox pbAncestry3;
         private System.Windows.Forms.TextBox tbCharacterName;
+        private System.Windows.Forms.TableLayoutPanel tlpGender;
+        private System.Windows.Forms.PictureBox pbFemale;
+        private System.Windows.Forms.PictureBox pbMale;
+        private System.Windows.Forms.Label lblFemale;
+        private System.Windows.Forms.Label lblMale;
     }
 }
