@@ -916,7 +916,6 @@
             // 
             // standingsList
             // 
-            this.standingsList.Character = null;
             this.standingsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.standingsList.Location = new System.Drawing.Point(0, 0);
             this.standingsList.Name = "standingsList";
@@ -925,7 +924,6 @@
             // 
             // skillsList
             // 
-            this.skillsList.Character = null;
             this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsList.Location = new System.Drawing.Point(0, 0);
             this.skillsList.Margin = new System.Windows.Forms.Padding(0);
@@ -935,20 +933,15 @@
             // 
             // ordersList
             // 
-            this.ordersList.Character = null;
             this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
             this.ordersList.Location = new System.Drawing.Point(0, 0);
             this.ordersList.Name = "ordersList";
-            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.ordersList.Size = new System.Drawing.Size(564, 181);
             this.ordersList.TabIndex = 13;
-            this.ordersList.TextFilter = "";
-            this.ordersList.Visibility = false;
             // 
             // skillQueueList
             // 
-            this.skillQueueList.Character = null;
             this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillQueueList.Location = new System.Drawing.Point(0, 0);
             this.skillQueueList.Name = "skillQueueList";
@@ -957,55 +950,42 @@
             // 
             // jobsList
             // 
-            this.jobsList.Character = null;
             this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
-            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.jobsList.Size = new System.Drawing.Size(568, 308);
             this.jobsList.TabIndex = 0;
-            this.jobsList.TextFilter = "";
-            this.jobsList.Visibility = false;
             // 
             // researchList
             // 
-            this.researchList.Character = null;
             this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.researchList.Grouping = null;
             this.researchList.Location = new System.Drawing.Point(0, 0);
             this.researchList.Name = "researchList";
             this.researchList.Size = new System.Drawing.Size(568, 86);
             this.researchList.TabIndex = 0;
-            this.researchList.TextFilter = "";
             // 
             // mailMessagesList
             // 
-            this.mailMessagesList.Character = null;
             this.mailMessagesList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mailMessagesList.Grouping = EVEMon.Common.SettingsObjects.EVEMailMessagesGrouping.State;
             this.mailMessagesList.Location = new System.Drawing.Point(0, 0);
             this.mailMessagesList.Name = "mailMessagesList";
-            this.mailMessagesList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
             this.mailMessagesList.Size = new System.Drawing.Size(568, 87);
             this.mailMessagesList.TabIndex = 0;
-            this.mailMessagesList.TextFilter = "";
             // 
             // eveNotificationsList
             // 
-            this.eveNotificationsList.Character = null;
             this.eveNotificationsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.eveNotificationsList.Grouping = EVEMon.Common.SettingsObjects.EVENotificationsGrouping.Type;
             this.eveNotificationsList.Location = new System.Drawing.Point(0, 0);
             this.eveNotificationsList.Name = "eveNotificationsList";
-            this.eveNotificationsList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
             this.eveNotificationsList.Size = new System.Drawing.Size(568, 86);
             this.eveNotificationsList.TabIndex = 0;
-            this.eveNotificationsList.TextFilter = "";
             // 
             // employmentList
             // 
-            this.employmentList.Character = null;
             this.employmentList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.employmentList.Location = new System.Drawing.Point(0, 0);
             this.employmentList.Name = "employmentList";
@@ -1014,53 +994,42 @@
             // 
             // contractsList
             // 
-            this.contractsList.Character = null;
             this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
             this.contractsList.Location = new System.Drawing.Point(0, 0);
             this.contractsList.Name = "contractsList";
-            this.contractsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.contractsList.Size = new System.Drawing.Size(564, 181);
             this.contractsList.TabIndex = 0;
-            this.contractsList.TextFilter = "";
-            this.contractsList.Visibility = false;
             // 
             // assetsList
             // 
-            this.assetsList.Character = null;
             this.assetsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.None;
             this.assetsList.Location = new System.Drawing.Point(0, 0);
             this.assetsList.Name = "assetsList";
             this.assetsList.Size = new System.Drawing.Size(568, 308);
             this.assetsList.TabIndex = 0;
-            this.assetsList.TextFilter = "";
             // 
             // walletJournalList
             // 
-            this.walletJournalList.Character = null;
             this.walletJournalList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.walletJournalList.Grouping = EVEMon.Common.SettingsObjects.WalletJournalGrouping.None;
             this.walletJournalList.Location = new System.Drawing.Point(0, 0);
             this.walletJournalList.Name = "walletJournalList";
             this.walletJournalList.Size = new System.Drawing.Size(568, 86);
             this.walletJournalList.TabIndex = 0;
-            this.walletJournalList.TextFilter = "";
             // 
             // walletTransactionsList
             // 
-            this.walletTransactionsList.Character = null;
             this.walletTransactionsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.walletTransactionsList.Grouping = EVEMon.Common.SettingsObjects.WalletTransactionGrouping.None;
             this.walletTransactionsList.Location = new System.Drawing.Point(0, 0);
             this.walletTransactionsList.Name = "walletTransactionsList";
             this.walletTransactionsList.Size = new System.Drawing.Size(568, 86);
             this.walletTransactionsList.TabIndex = 0;
-            this.walletTransactionsList.TextFilter = "";
             // 
             // factionalWarfareStatsList
             // 
-            this.factionalWarfareStatsList.Character = null;
             this.factionalWarfareStatsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.factionalWarfareStatsList.Location = new System.Drawing.Point(0, 0);
             this.factionalWarfareStatsList.Name = "factionalWarfareStatsList";
@@ -1069,13 +1038,9 @@
             // 
             // contactsList
             // 
-            this.contactsList.Character = null;
             this.contactsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contactsList.Location = new System.Drawing.Point(0, 0);
             this.contactsList.Name = "contactsList";
-            this.contactsList.ShowAllContacts = false;
-            this.contactsList.ShowContactsInWatchList = false;
-            this.contactsList.ShowContactsWithStandings = EVEMon.Common.StandingStatus.Excellent;
             this.contactsList.Size = new System.Drawing.Size(564, 181);
             this.contactsList.TabIndex = 0;
             // 

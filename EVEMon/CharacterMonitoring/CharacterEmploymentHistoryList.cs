@@ -48,13 +48,12 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
 
         /// <summary>

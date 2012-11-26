@@ -81,20 +81,18 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvJobs"/> is visible.
         /// </summary>
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
-        [Browsable(false)]
-        public bool Visibility
+        internal bool Visibility
         {
             get { return lvJobs.Visible; }
             set { lvJobs.Visible = value; }
@@ -103,8 +101,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
-        [Browsable(false)]
-        public string TextFilter
+        internal string TextFilter
         {
             get { return m_textFilter; }
             set
@@ -133,8 +130,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets which "Issued for" jobs to display.
         /// </summary>
-        [Browsable(false)]
-        public IssuedFor ShowIssuedFor
+        internal IssuedFor ShowIssuedFor
         {
             get { return m_showIssuedFor; }
             set
@@ -148,8 +144,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets true when character has active jobs issued for corporation.
         /// </summary>
-        [Browsable(false)]
-        public bool HasActiveCorporationIssuedJobs
+        private bool HasActiveCorporationIssuedJobs
         {
             get { return m_list.Any(x => x.State == JobState.Active && x.IssuedFor == IssuedFor.Corporation); }
         }
@@ -157,9 +152,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of jobs to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<IndustryJob> Jobs
+        internal IEnumerable<IndustryJob> Jobs
         {
             get { return m_list; }
             set

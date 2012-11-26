@@ -64,19 +64,17 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
-        [Browsable(false)]
-        public string TextFilter
+        internal string TextFilter
         {
             get { return m_textFilter; }
             set
@@ -90,9 +88,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of assets to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<Asset> Assets
+        private IEnumerable<Asset> Assets
         {
             get { return m_list; }
             set

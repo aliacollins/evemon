@@ -67,20 +67,18 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvContracts"/> is visible.
         /// </summary>
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
-        [Browsable(false)]
-        public bool Visibility
+        internal bool Visibility
         {
             get { return lvContracts.Visible; }
             set { lvContracts.Visible = value; }
@@ -89,8 +87,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
-        [Browsable(false)]
-        public string TextFilter
+        internal string TextFilter
         {
             get { return m_textFilter; }
             set
@@ -104,9 +101,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of research points to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<Contract> Contracts
+        internal IEnumerable<Contract> Contracts
         {
             get { return m_list; }
             set
@@ -137,8 +132,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets which "Issued for" contracts to display.
         /// </summary>
-        [Browsable(false)]
-        public IssuedFor ShowIssuedFor
+        internal IssuedFor ShowIssuedFor
         {
             get { return m_showIssuedFor; }
             set

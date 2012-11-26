@@ -58,19 +58,17 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
-        [Browsable(false)]
-        public string TextFilter
+        internal string TextFilter
         {
             get { return m_textFilter; }
             set
@@ -97,10 +95,9 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// 
+        /// Gets or sets the pane position.
         /// </summary>
-        [Browsable(false)]
-        public ReadingPanePositioning PanePosition
+        internal ReadingPanePositioning PanePosition
         {
             get { return m_panePosition; }
             set
@@ -113,9 +110,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of EVE mail messages to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<EveNotification> EVENotifications
+        private IEnumerable<EveNotification> EVENotifications
         {
             get { return m_list; }
             set
