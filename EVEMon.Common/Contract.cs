@@ -369,8 +369,8 @@ namespace EVEMon.Common
                     // Update state
                     m_state = state;
 
-                    // Update Status
-                    Status = GetStatus(src);
+                    // Update modified info
+                    UpdateContractInfo(src);
                 }
 
                 // Should we notify it to the user ?
@@ -395,15 +395,12 @@ namespace EVEMon.Common
             ID = src.ContractID;
             IssuerID = src.IssuerID;
             AssigneeID = src.AssigneeID;
-            AcceptorID = src.AcceptorID;
             Description = String.IsNullOrWhiteSpace(src.Title) ? "(None)" : src.Title;
             IssuedFor = src.ForCorp ? IssuedFor.Corporation : IssuedFor.Character;
             Issued = src.DateIssued;
             Expiration = src.DateExpired;
-            Accepted = src.DateAccepted;
             Duration = Convert.ToInt32(src.DateExpired.Subtract(src.DateIssued).TotalDays);
             DaysToComplete = src.NumDays;
-            Completed = src.DateCompleted;
             Price = src.Price;
             Reward = src.Reward;
             Collateral = src.Collateral;
@@ -411,8 +408,8 @@ namespace EVEMon.Common
             Volume = src.Volume;
             m_startStationID = src.StartStationID;
             m_endStationID = src.EndStationID;
-            Status = GetStatus(src);
             UpdateStation();
+            UpdateContractInfo(src);
 
             Availability = Enum.IsDefined(typeof(ContractAvailability), src.Availability)
                                ? (ContractAvailability)Enum.Parse(typeof(ContractAvailability), src.Availability)
@@ -435,14 +432,27 @@ namespace EVEMon.Common
                                    ? Character.Corporation.Name
                                    : EveIDToName.GetIDToName(src.AssigneeID);
 
-            m_acceptor = src.AcceptorID == Character.CharacterID
-                             ? Character.Name
-                             : src.AcceptorID == Character.CorporationID
-                                   ? Character.Corporation.Name
-                                   : EveIDToName.GetIDToName(src.AcceptorID);
 
             if (ContractType != ContractType.Courier)
                 GetContractItems();
+        }
+
+        /// <summary>
+        /// Updates the contract info.
+        /// </summary>
+        /// <param name="src">The source.</param>
+        private void UpdateContractInfo(SerializableContractListItem src)
+        {
+            Status = GetStatus(src);
+
+            Accepted = src.DateAccepted;
+            Completed = src.DateCompleted;
+            AcceptorID = src.AcceptorID;
+            m_acceptor = src.AcceptorID == Character.CharacterID
+                           ? Character.Name
+                           : src.AcceptorID == Character.CorporationID
+                                 ? Character.Corporation.Name
+                                 : EveIDToName.GetIDToName(src.AcceptorID);
         }
 
         /// <summary>
