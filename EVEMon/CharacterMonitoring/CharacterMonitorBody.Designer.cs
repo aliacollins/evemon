@@ -63,6 +63,8 @@
             this.standingsIcon = new System.Windows.Forms.ToolStripButton();
             this.contactsIcon = new System.Windows.Forms.ToolStripButton();
             this.factionalWarfareStatsIcon = new System.Windows.Forms.ToolStripButton();
+            this.medalsIcon = new System.Windows.Forms.ToolStripButton();
+            this.killlogIcon = new System.Windows.Forms.ToolStripButton();
             this.assetsIcon = new System.Windows.Forms.ToolStripButton();
             this.ordersIcon = new System.Windows.Forms.ToolStripButton();
             this.contractsIcon = new System.Windows.Forms.ToolStripButton();
@@ -72,6 +74,7 @@
             this.researchIcon = new System.Windows.Forms.ToolStripButton();
             this.mailMessagesIcon = new System.Windows.Forms.ToolStripButton();
             this.eveNotificationsIcon = new System.Windows.Forms.ToolStripButton();
+            this.calendarEventsIcon = new System.Windows.Forms.ToolStripButton();
             this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
@@ -79,6 +82,7 @@
             this.DisableAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectionToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.filterTimer = new System.Windows.Forms.Timer(this.components);
             this.borderPanel = new EVEMon.Common.Controls.BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
@@ -98,7 +102,6 @@
             this.factionalWarfareStatsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.contactsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.warningLabel = new System.Windows.Forms.Label();
-            this.filterTimer = new System.Windows.Forms.Timer(this.components);
             this.standingsList = new EVEMon.CharacterMonitoring.CharacterStandingsList();
             this.skillsList = new EVEMon.CharacterMonitoring.CharacterSkillsList();
             this.ordersList = new EVEMon.CharacterMonitoring.CharacterMarketOrdersList();
@@ -147,7 +150,7 @@
             this.toolstripPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolstripPanel.Location = new System.Drawing.Point(0, 0);
             this.toolstripPanel.Name = "toolstripPanel";
-            this.toolstripPanel.Size = new System.Drawing.Size(570, 56);
+            this.toolstripPanel.Size = new System.Drawing.Size(614, 56);
             this.toolstripPanel.TabIndex = 17;
             // 
             // toolStripContextual
@@ -168,7 +171,7 @@
             this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripContextual.Location = new System.Drawing.Point(0, 31);
             this.toolStripContextual.Name = "toolStripContextual";
-            this.toolStripContextual.Size = new System.Drawing.Size(570, 25);
+            this.toolStripContextual.Size = new System.Drawing.Size(614, 25);
             this.toolStripContextual.TabIndex = 15;
             // 
             // preferencesMenu
@@ -413,6 +416,8 @@
             this.standingsIcon,
             this.contactsIcon,
             this.factionalWarfareStatsIcon,
+            this.medalsIcon,
+            this.killlogIcon,
             this.assetsIcon,
             this.ordersIcon,
             this.contractsIcon,
@@ -422,14 +427,15 @@
             this.researchIcon,
             this.mailMessagesIcon,
             this.eveNotificationsIcon,
-            this.toggleSkillsIcon,
-            this.tsToggleSeparator,
+            this.calendarEventsIcon,
             this.featuresMenu,
+            this.tsToggleSeparator,
+            this.toggleSkillsIcon,
             this.tsPagesSeparator});
             this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripFeatures.Location = new System.Drawing.Point(0, 0);
             this.toolStripFeatures.Name = "toolStripFeatures";
-            this.toolStripFeatures.Size = new System.Drawing.Size(570, 31);
+            this.toolStripFeatures.Size = new System.Drawing.Size(614, 31);
             this.toolStripFeatures.TabIndex = 13;
             // 
             // skillsIcon
@@ -505,6 +511,30 @@
             this.factionalWarfareStatsIcon.Text = "Factional Warfare";
             this.factionalWarfareStatsIcon.ToolTipText = "Display factional warfare stats";
             this.factionalWarfareStatsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // medalsIcon
+            // 
+            this.medalsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.medalsIcon.Image = ((System.Drawing.Image)(resources.GetObject("medalsIcon.Image")));
+            this.medalsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.medalsIcon.Name = "medalsIcon";
+            this.medalsIcon.Size = new System.Drawing.Size(28, 28);
+            this.medalsIcon.Tag = "medalsPage";
+            this.medalsIcon.Text = "Medals";
+            this.medalsIcon.ToolTipText = "Display medals";
+            this.medalsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // killlogIcon
+            // 
+            this.killlogIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.killlogIcon.Image = ((System.Drawing.Image)(resources.GetObject("killlogIcon.Image")));
+            this.killlogIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.killlogIcon.Name = "killlogIcon";
+            this.killlogIcon.Size = new System.Drawing.Size(28, 28);
+            this.killlogIcon.Tag = "killlogPage";
+            this.killlogIcon.Text = "Combat Log";
+            this.killlogIcon.ToolTipText = "Display combat log";
+            this.killlogIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
             // assetsIcon
             // 
@@ -614,6 +644,18 @@
             this.eveNotificationsIcon.ToolTipText = "Display EVE notifications";
             this.eveNotificationsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
+            // calendarEventsIcon
+            // 
+            this.calendarEventsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.calendarEventsIcon.Image = ((System.Drawing.Image)(resources.GetObject("calendarEventsIcon.Image")));
+            this.calendarEventsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.calendarEventsIcon.Name = "calendarEventsIcon";
+            this.calendarEventsIcon.Size = new System.Drawing.Size(28, 28);
+            this.calendarEventsIcon.Tag = "calendarEventsPage";
+            this.calendarEventsIcon.Text = "Calendar";
+            this.calendarEventsIcon.ToolTipText = "Display calendar events";
+            this.calendarEventsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
             // toggleSkillsIcon
             // 
             this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -678,6 +720,11 @@
             this.tsPagesSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.tsPagesSeparator.Size = new System.Drawing.Size(6, 31);
             // 
+            // filterTimer
+            // 
+            this.filterTimer.Interval = 300;
+            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
+            // 
             // borderPanel
             // 
             this.borderPanel.AutoSize = true;
@@ -690,7 +737,7 @@
             this.borderPanel.Margin = new System.Windows.Forms.Padding(0);
             this.borderPanel.Name = "borderPanel";
             this.borderPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
-            this.borderPanel.Size = new System.Drawing.Size(570, 275);
+            this.borderPanel.Size = new System.Drawing.Size(614, 275);
             this.borderPanel.TabIndex = 18;
             // 
             // corePanel
@@ -702,7 +749,7 @@
             this.corePanel.Margin = new System.Windows.Forms.Padding(0);
             this.corePanel.Name = "corePanel";
             this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
-            this.corePanel.Size = new System.Drawing.Size(567, 199);
+            this.corePanel.Size = new System.Drawing.Size(611, 199);
             this.corePanel.TabIndex = 14;
             // 
             // multiPanel
@@ -726,7 +773,7 @@
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.SelectedPage = this.skillsPage;
-            this.multiPanel.Size = new System.Drawing.Size(564, 181);
+            this.multiPanel.Size = new System.Drawing.Size(608, 181);
             this.multiPanel.TabIndex = 14;
             // 
             // standingsPage
@@ -746,7 +793,7 @@
             this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsPage.Location = new System.Drawing.Point(0, 0);
             this.skillsPage.Name = "skillsPage";
-            this.skillsPage.Size = new System.Drawing.Size(564, 181);
+            this.skillsPage.Size = new System.Drawing.Size(608, 181);
             this.skillsPage.TabIndex = 0;
             this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
@@ -904,15 +951,10 @@
             this.warningLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.warningLabel.Location = new System.Drawing.Point(1, 1);
             this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(564, 17);
+            this.warningLabel.Size = new System.Drawing.Size(608, 17);
             this.warningLabel.TabIndex = 1;
             this.warningLabel.Text = "This character has no associated API key, data won\'t be updated.";
             this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // filterTimer
-            // 
-            this.filterTimer.Interval = 300;
-            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
             // 
             // standingsList
             // 
@@ -928,7 +970,7 @@
             this.skillsList.Location = new System.Drawing.Point(0, 0);
             this.skillsList.Margin = new System.Windows.Forms.Padding(0);
             this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(564, 181);
+            this.skillsList.Size = new System.Drawing.Size(608, 181);
             this.skillsList.TabIndex = 12;
             // 
             // ordersList
@@ -1051,7 +1093,7 @@
             this.notificationList.Location = new System.Drawing.Point(2, 2);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(567, 72);
+            this.notificationList.Size = new System.Drawing.Size(611, 72);
             this.notificationList.TabIndex = 13;
             // 
             // CharacterMonitorBody
@@ -1061,7 +1103,7 @@
             this.Controls.Add(this.borderPanel);
             this.Controls.Add(this.toolstripPanel);
             this.Name = "CharacterMonitorBody";
-            this.Size = new System.Drawing.Size(570, 331);
+            this.Size = new System.Drawing.Size(614, 331);
             this.toolstripPanel.ResumeLayout(false);
             this.toolstripPanel.PerformLayout();
             this.toolStripContextual.ResumeLayout(false);
@@ -1178,5 +1220,8 @@
         private System.Windows.Forms.ToolStripButton contactsBad;
         private System.Windows.Forms.ToolStripButton contactsTerrible;
         private System.Windows.Forms.ToolStripButton inWatchList;
+        private System.Windows.Forms.ToolStripButton medalsIcon;
+        private System.Windows.Forms.ToolStripButton killlogIcon;
+        private System.Windows.Forms.ToolStripButton calendarEventsIcon;
     }
 }

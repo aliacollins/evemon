@@ -206,7 +206,7 @@ namespace EVEMon.CharacterMonitoring
                 }
 
                 featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
-                
+
                 preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
@@ -240,7 +240,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="button">The button.</param>
         private void SetVisibility(ToolStripButton button)
         {
-            IEnumerable<IQueryMonitor> monitors = ButtonToMonitors(button);
+            IEnumerable<IQueryMonitor> monitors = GetButtonMonitors(button);
             bool visible = monitors.Any(monitor => monitor.HasAccess) && IsEnabledFeature(button.Text);
             button.Visible = visible;
 
@@ -298,11 +298,10 @@ namespace EVEMon.CharacterMonitoring
             // Show the wallet journal charts button only when on wallet journal page
             walletJournalCharts.Visible = (multiPanel.SelectedPage == walletJournalPage);
 
-            allContacts.Visible = contactsExcellent.Visible = contactsGood.Visible =
-                                                              contactsNeutral.Visible =
-                                                              contactsBad.Visible = contactsTerrible.Visible =
-                                                                                    inWatchList.Visible =
-                                                                                    (multiPanel.SelectedPage == contactsPage);
+            // Show contacts buttons only when on contacts page
+            allContacts.Visible = contactsExcellent.Visible = (multiPanel.SelectedPage == contactsPage);
+            contactsGood.Visible = contactsNeutral.Visible = (multiPanel.SelectedPage == contactsPage);
+            contactsBad.Visible = contactsTerrible.Visible = inWatchList.Visible = (multiPanel.SelectedPage == contactsPage);
 
             // Enables / Disables the contacts page related controls
             if (multiPanel.SelectedPage == contactsPage)
@@ -360,7 +359,7 @@ namespace EVEMon.CharacterMonitoring
 
             foreach (ToolStripButton button in m_advancedFeatures)
             {
-                List<IQueryMonitor> monitors = ButtonToMonitors(button);
+                List<IQueryMonitor> monitors = GetButtonMonitors(button);
 
                 if (!monitors.Any())
                     continue;
@@ -543,7 +542,7 @@ namespace EVEMon.CharacterMonitoring
                     // Checks it
                     button.Checked = true;
                 }
-                    // Or another one representing another page ?
+                // Or another one representing another page ?
                 else if (button != null)
                 {
                     // Unchecks it
@@ -577,10 +576,11 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Create the menu items
-            List<ToolStripMenuItem> toolStripMenuItems = m_advancedFeatures.Select(
-                button => new { button, monitor = ButtonToMonitors(button) }).Where(
-                    item => item.monitor != null).Select(
-                        item =>
+            List<ToolStripMenuItem> toolStripMenuItems = m_advancedFeatures
+                .Select(button => new { button, monitor = GetButtonMonitors(button) })
+                .Where(item => item.monitor != null
+                               && multiPanel.Controls.OfType<MultiPanelPage>().Any(page => page.Name == (string)item.button.Tag))
+                .Select(item =>
                             {
                                 ToolStripMenuItem tsmi;
                                 ToolStripMenuItem tempToolStripMenuItem = null;
@@ -1402,25 +1402,25 @@ namespace EVEMon.CharacterMonitoring
                 grouping => new { grouping, group = grouping as Enum }).Where(
                     menu => menu.group != null).Select(
                         menu =>
+                        {
+                            ToolStripButton tsb;
+                            ToolStripButton tempToolStripButton = null;
+                            try
                             {
-                                ToolStripButton tsb;
-                                ToolStripButton tempToolStripButton = null;
-                                try
-                                {
-                                    tempToolStripButton = new ToolStripButton(menu.group.GetHeader());
-                                    tempToolStripButton.Checked = (list.Grouping.CompareTo(menu.group) == 0);
-                                    tempToolStripButton.Tag = menu.grouping;
+                                tempToolStripButton = new ToolStripButton(menu.group.GetHeader());
+                                tempToolStripButton.Checked = (list.Grouping.CompareTo(menu.group) == 0);
+                                tempToolStripButton.Tag = menu.grouping;
 
-                                    tsb = tempToolStripButton;
-                                    tempToolStripButton = null;
-                                }
-                                finally
-                                {
-                                    if (tempToolStripButton != null)
-                                        tempToolStripButton.Dispose();
-                                }
-                                return tsb;
-                            }))
+                                tsb = tempToolStripButton;
+                                tempToolStripButton = null;
+                            }
+                            finally
+                            {
+                                if (tempToolStripButton != null)
+                                    tempToolStripButton.Dispose();
+                            }
+                            return tsb;
+                        }))
             {
                 groupMenu.DropDownItems.Add(menu);
             }
@@ -1513,9 +1513,10 @@ namespace EVEMon.CharacterMonitoring
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
                                             {
-                                                standingsIcon, contactsIcon, factionalWarfareStatsIcon, assetsIcon,
-                                                ordersIcon, contractsIcon, walletJournalIcon, walletTransactionsIcon,
-                                                jobsIcon, researchIcon, mailMessagesIcon, eveNotificationsIcon
+                                                standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
+                                                killlogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
+                                                walletTransactionsIcon, jobsIcon, researchIcon, mailMessagesIcon,
+                                                eveNotificationsIcon, calendarEventsIcon
                                             });
 
             // Hide all advanced features related controls
@@ -1547,7 +1548,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="button">The button.</param>
         /// <returns></returns>
-        private List<IQueryMonitor> ButtonToMonitors(ToolStripItem button)
+        private List<IQueryMonitor> GetButtonMonitors(ToolStripItem button)
         {
             MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(x => x.Name == (string)button.Tag);
             CCPCharacter ccpCharacter = (CCPCharacter)m_character;

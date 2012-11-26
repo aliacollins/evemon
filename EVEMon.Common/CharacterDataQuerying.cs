@@ -106,13 +106,17 @@ namespace EVEMon.Common
 
             // Add the monitors in an order as they will appear in the throbber menu
             m_characterQueryMonitors.AddRange(new IQueryMonitorEx[]
-                {
-                    m_charSheetMonitor, m_skillQueueMonitor, m_charStandingsMonitor, m_charContactsMonitor, m_charMedalsMonitor,
-                    m_charFacWarStatsMonitor, m_charKillLogMonitor, m_charAssetsMonitor, m_charMarketOrdersMonitor,
-                    m_charContractsMonitor, m_charWalletJournalMonitor, m_charWalletTransactionsMonitor, m_charIndustryJobsMonitor,
-                    m_charResearchPointsMonitor, m_charEVEMailMessagesMonitor, m_charEVENotificationsMonitor,
-                    m_charUpcomingCalendarEventsMonitor
-                });
+                                                  {
+                                                      m_charSheetMonitor, m_skillQueueMonitor, m_charStandingsMonitor,
+                                                      m_charContactsMonitor, m_charFacWarStatsMonitor,
+                                                      m_charMedalsMonitor, m_charKillLogMonitor, m_charAssetsMonitor,
+                                                      m_charMarketOrdersMonitor,
+                                                      m_charContractsMonitor, m_charWalletJournalMonitor,
+                                                      m_charWalletTransactionsMonitor, m_charIndustryJobsMonitor,
+                                                      m_charResearchPointsMonitor, m_charEVEMailMessagesMonitor,
+                                                      m_charEVENotificationsMonitor,
+                                                      m_charUpcomingCalendarEventsMonitor
+                                                  });
 
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
