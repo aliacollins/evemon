@@ -92,6 +92,7 @@ namespace EVEMon.About
                                    { "gareth", 6 },
                                    { "gavinl", 6 },
                                    { "GoneWacko", 6 },
+                                   { "Good speed", 6 },
                                    { "happyslinky", 6 },
                                    { "Jazzy_Josh", 6 },
                                    { "jdread", 6 },
