@@ -392,10 +392,7 @@ namespace EVEMon.SkillPlanner
 
                     // Calculate the perfect material efficiency level if it's a raw material
                     if (isRawMaterial)
-                    {
-                        perfectMELevel = (int)Math.Round(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity, 0,
-                                                         MidpointRounding.AwayFromZero);
-                    }
+                        perfectMELevel = (int)Math.Floor(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity);
 
                     // Store the highest perfect material efficiency level
                     if (perfectMELevel > perfectME)
