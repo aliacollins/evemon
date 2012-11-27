@@ -28,7 +28,7 @@ namespace EVEMon.Common.Serialization.API
             {
                 foreach (SerializableMedalsListItem medal in m_corporationMedals)
                 {
-                    medal.Group = MedalGroup.CurrentCorporation;
+                    medal.Group = MedalGroup.Corporation;
                 }
                 return m_corporationMedals;
             }

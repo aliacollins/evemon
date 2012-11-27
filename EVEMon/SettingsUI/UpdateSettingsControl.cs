@@ -97,6 +97,9 @@ namespace EVEMon.SettingsUI
             if (combo.SelectedIndex < 0 || combo.SelectedIndex >= periods.Count)
                 return;
 
+            if (method.Equals(APICharacterMethods.Medals))
+                m_settings.Periods[APICorporationMethods.CorporationMedals.ToString()] = periods[combo.SelectedIndex];
+      
             if (method.Equals(APICharacterMethods.MarketOrders))
                 m_settings.Periods[APICorporationMethods.CorporationMarketOrders.ToString()] = periods[combo.SelectedIndex];
 

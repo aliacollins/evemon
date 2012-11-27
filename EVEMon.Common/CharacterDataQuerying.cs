@@ -14,8 +14,8 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIStandings> m_charStandingsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIContactList> m_charContactsMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIMedals> m_charMedalsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIFactionalWarfareStats> m_charFacWarStatsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIMedals> m_charMedalsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIKillLog> m_charKillLogMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIAssetList> m_charAssetsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIResearch> m_charResearchPointsMonitor;
@@ -63,6 +63,12 @@ namespace EVEMon.Common
                                                                                 APICharacterMethods.FactionalWarfareStats,
                                                                                 OnFactionalWarfareStatsUpdated)
                     { QueryOnStartup = true };
+            m_charMedalsMonitor =
+                new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, APICharacterMethods.Medals,
+                                                                 OnMedalsUpdated) { QueryOnStartup = true };
+            m_charKillLogMonitor =
+                new CharacterQueryMonitor<SerializableAPIKillLog>(ccpCharacter, APICharacterMethods.KillLog,
+                                                                  OnKillLogUpdated) { QueryOnStartup = true };
             m_charAssetsMonitor =
                 new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
                                                                     OnAssetsUpdated) { QueryOnStartup = true };
@@ -91,18 +97,11 @@ namespace EVEMon.Common
             m_charEVENotificationsMonitor =
                 new CharacterQueryMonitor<SerializableAPINotifications>(ccpCharacter, APICharacterMethods.Notifications,
                                                                         OnEVENotificationsUpdated) { QueryOnStartup = true };
-            m_charMedalsMonitor =
-                new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, APICharacterMethods.Medals,
-                                                                 OnMedalsUpdated) { QueryOnStartup = true };
             m_charUpcomingCalendarEventsMonitor =
                 new CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents>(ccpCharacter,
                                                                                  APICharacterMethods.UpcomingCalendarEvents,
                                                                                  OnUpcomingCalendarEventsUpdated)
                     { QueryOnStartup = true };
-
-            m_charKillLogMonitor =
-                new CharacterQueryMonitor<SerializableAPIKillLog>(ccpCharacter, APICharacterMethods.KillLog,
-                                                                  OnKillLogUpdated) { QueryOnStartup = true };
 
             // Add the monitors in an order as they will appear in the throbber menu
             m_characterQueryMonitors.AddRange(new IQueryMonitorEx[]
@@ -773,7 +772,7 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_ccpCharacter.Medals.Import(result.Result.CharacterAllMedals);
+            m_ccpCharacter.CharacterMedals.Import(result.Result.CharacterAllMedals);
 
             // Fires the event regarding medals update
             EveMonClient.OnCharacterMedalsUpdated(m_ccpCharacter);

@@ -59,7 +59,8 @@ namespace EVEMon.Common
             EVEMailingLists = new EveMailingListCollection(this);
             EVENotifications = new EveNotificationCollection(this);
             Contacts = new ContactCollection(this);
-            Medals = new MedalCollection(this);
+            CharacterMedals = new MedalCollection(this);
+            CorporationMedals = new MedalCollection(this);
             UpcomingCalendarEvents = new UpcomingCalendarEventCollection(this);
             KillLog = new KillLogCollection(this);
 
@@ -259,9 +260,14 @@ namespace EVEMon.Common
         public ContactCollection Contacts { get; private set; }
 
         /// <summary>
-        /// Gets the collection of medals.
+        /// Gets the collection of character medals.
         /// </summary>
-        public MedalCollection Medals { get; private set; }
+        public MedalCollection CharacterMedals { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of corporation medals.
+        /// </summary>
+        public MedalCollection CorporationMedals { get; private set; }
 
         /// <summary>
         /// Gets the collection of upcoming calendar events.

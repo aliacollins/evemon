@@ -712,6 +712,11 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterMedalsUpdated;
 
         /// <summary>
+        /// Occurs when the text of a corporation medals have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CorporationMedalsUpdated;
+
+        /// <summary>
         /// Occurs when the text of a character upcoming calendar events have been updated.
         /// </summary>
         public static event EventHandler<CharacterChangedEventArgs> CharacterUpcomingCalendarEventsUpdated;
@@ -1273,6 +1278,17 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterMedalsUpdated - {0}", character.Name);
             if (CharacterMedalsUpdated != null)
                 CharacterMedalsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the corporation medals updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCorporationMedalsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCorporationMedalsUpdated - {0}", character.Name);
+            if (CorporationMedalsUpdated != null)
+                CorporationMedalsUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

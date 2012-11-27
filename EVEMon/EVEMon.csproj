@@ -173,6 +173,12 @@
     <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.Designer.cs">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMedalsList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMedalsList.Designer.cs">
+      <DependentUpon>CharacterMedalsList.cs</DependentUpon>
+    </Compile>
     <Compile Include="CharacterMonitoring\CharacterMonitorBody.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -483,6 +489,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.resx">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterMedalsList.resx">
+      <DependentUpon>CharacterMedalsList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorBody.resx">
       <DependentUpon>CharacterMonitorBody.cs</DependentUpon>

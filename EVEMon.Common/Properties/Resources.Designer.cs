@@ -261,6 +261,13 @@ namespace EVEMon.Common.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap Medal32 {
+            get {
+                object obj = ResourceManager.GetObject("Medal32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap NeutralStanding {
             get {
                 object obj = ResourceManager.GetObject("NeutralStanding", resourceCulture);

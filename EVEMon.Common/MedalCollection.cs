@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 
@@ -29,6 +30,12 @@ namespace EVEMon.Common
             foreach (SerializableMedalsListItem srcMedal in src)
             {
                 Items.Add(new Medal(srcMedal));
+            }
+
+            // Assign the 'number of times awarded'
+            foreach (Medal medal in Items.ToList())
+            {
+                medal.TimesAwarded = Items.Count(x => x.ID == medal.ID);
             }
         }
     }

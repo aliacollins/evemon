@@ -738,6 +738,23 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Notifies a corporation medals querying error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCorporationMedalsError(CCPCharacter character, APIResult<SerializableAPIMedals> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occurred while querying the corporation medals.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
+        /// <summary>
         /// Notifies an upcoming calendar events query error.
         /// </summary>
         /// <param name="character">The character.</param>

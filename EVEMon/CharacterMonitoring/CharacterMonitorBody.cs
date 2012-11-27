@@ -505,6 +505,7 @@ namespace EVEMon.CharacterMonitoring
             tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
                                                                            (string)button.Tag != factionalWarfareStatsPage.Text &&
+                                                                           (string)button.Tag != medalsPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
             // Reset the text filter
@@ -1499,6 +1500,7 @@ namespace EVEMon.CharacterMonitoring
             standingsList.Character = ccpCharacter;
             contactsList.Character = ccpCharacter;
             factionalWarfareStatsList.Character = ccpCharacter;
+            medalsList.Character = ccpCharacter;
             assetsList.Character = ccpCharacter;
             ordersList.Character = ccpCharacter;
             contractsList.Character = ccpCharacter;

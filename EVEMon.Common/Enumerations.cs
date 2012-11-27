@@ -165,25 +165,29 @@ namespace EVEMon.Common
         /// <summary>
         /// The basic character features of APIMethods.
         /// </summary>
-        BasicCharacterFeatures =
-            APICharacterMethods.CharacterSheet | APICharacterMethods.CharacterInfo | APICharacterMethods.SkillQueue |
-            APICharacterMethods.SkillInTraining,
+        BasicCharacterFeatures = APICharacterMethods.CharacterSheet | APICharacterMethods.CharacterInfo |
+                                 APICharacterMethods.SkillQueue | APICharacterMethods.SkillInTraining,
 
         /// <summary>
         /// The advanced character features of APIMethods.
         /// </summary>
-        AdvancedCharacterFeatures =
-            APICharacterMethods.AccountStatus | APICharacterMethods.AssetList |
-            APICharacterMethods.ContactList | APICharacterMethods.Contracts | APICharacterMethods.FactionalWarfareStats |
-            APICharacterMethods.FactionalWarfareStats | APICharacterMethods.IndustryJobs | APICharacterMethods.ResearchPoints |
-            APICharacterMethods.Standings | APICharacterMethods.MailMessages | APICharacterMethods.MailBodies |
-            APICharacterMethods.MailingLists | APICharacterMethods.MarketOrders | APICharacterMethods.Notifications |
-            APICharacterMethods.NotificationTexts | APICharacterMethods.WalletJournal | APICharacterMethods.WalletTransactions,
+        AdvancedCharacterFeatures = APICharacterMethods.AccountStatus | APICharacterMethods.AssetList |
+                                    /*APICharacterMethods.CalendarEventAttendees |*/ APICharacterMethods.ContactList |
+                                    APICharacterMethods.Contracts | APICharacterMethods.FactionalWarfareStats |
+                                    APICharacterMethods.FactionalWarfareStats | APICharacterMethods.IndustryJobs |
+                                    /* APICharacterMethods.KillLog |*/ APICharacterMethods.MailMessages |
+                                    APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
+                                    APICharacterMethods.MarketOrders | APICharacterMethods.Medals |
+                                    APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts |
+                                    APICharacterMethods.ResearchPoints | APICharacterMethods.Standings |
+                                    APICharacterMethods.WalletJournal | APICharacterMethods.WalletTransactions /*|
+            APICharacterMethods.UpcomingCalendarEvents*/,
 
         /// <summary>
         /// The advanced corporation features of APIMethods.
         /// </summary>
-        AdvancedCorporationFeatures = APICorporationMethods.CorporationContracts | APICorporationMethods.CorporationMarketOrders |
+        AdvancedCorporationFeatures = APICorporationMethods.CorporationContracts | APICorporationMethods.CorporationMedals |
+                                      APICorporationMethods.CorporationMarketOrders |
                                       APICorporationMethods.CorporationIndustryJobs,
 
         /// <summary>
@@ -366,16 +370,25 @@ namespace EVEMon.Common
         /// <summary>
         /// The Kill log for a character (Kill mails).
         /// </summary>
+        //[Header("Combat Log")]
+        //[Description("The combat log of a character.")]
+        //[Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         KillLog = 1 << 8,
 
         /// <summary>
         /// The medals of a character.
         /// </summary>
+        [Header("Medals")]
+        [Description("The medals of a character.")]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Short)]
         Medals = 1 << 13,
 
         /// <summary>
         /// The upcoming calendar events for a character.
         /// </summary>
+        //[Header("Calendar Events")]
+        //[Description("The upcoming calendar events of a character.")]
+        //[Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
         UpcomingCalendarEvents = 1 << 20,
 
         /// <summary>
@@ -456,6 +469,9 @@ namespace EVEMon.Common
         /// <summary>
         /// List of all medals created by the corporation.
         /// </summary>
+        [Header("Medals")]
+        [Description("The corporation medals of a character.")]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Short)]
         CorporationMedals = 1 << 13,
 
         /// <summary>
@@ -1076,15 +1092,6 @@ namespace EVEMon.Common
         Alliance,
     }
 
-    /// <summary>
-    /// Enumeration of medal group.
-    /// </summary>
-    public enum MedalGroup
-    {
-        CurrentCorporation,
-        OtherCorporation,
-    }
-
     #endregion
 
 
@@ -1324,6 +1331,21 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// Enumeration of medal group.
+    /// </summary>
+    public enum MedalGroup
+    {
+        [Description("Corporation")]
+        Corporation,
+
+        [Description("Current Corporation")]
+        CurrentCorporation,
+
+        [Description("Other Corporation")]
+        OtherCorporation,
+    }
+
+    /// <summary>
     /// The contract type.
     /// </summary>
     public enum ContractType
@@ -1342,7 +1364,6 @@ namespace EVEMon.Common
         [Description("Auction")]
         Auction
     }
-
 
     /// <summary>
     /// The contract availability.
