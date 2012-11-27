@@ -437,6 +437,15 @@ namespace EVEMon.Common
         #region Helper Methods
 
         /// <summary>
+        /// Forces the update.
+        /// </summary>
+        public void ForceUpdate()
+        {
+            ((IQueryMonitorEx)m_apiKeyInfoMonitor).ForceUpdate();
+            ((IQueryMonitorEx)m_accountStatusMonitor).ForceUpdate();
+        }
+
+        /// <summary>
         /// Notifies for the API key expiration.
         /// </summary>
         private void NotifyAPIKeyExpiration()
@@ -795,5 +804,6 @@ namespace EVEMon.Common
 
 
         #endregion
+
     }
 }

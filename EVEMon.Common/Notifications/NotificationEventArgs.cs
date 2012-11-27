@@ -5,6 +5,7 @@ namespace EVEMon.Common.Notifications
     /// <summary>
     /// Represents an argument for a notification invalidation.
     /// </summary>
+    [Serializable]
     public class NotificationEventArgs : EventArgs
     {
         /// <summary>

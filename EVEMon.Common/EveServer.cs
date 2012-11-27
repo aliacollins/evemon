@@ -74,7 +74,7 @@ namespace EVEMon.Common
         /// </summary>
         public void ForceUpdate()
         {
-            m_serverStatusMonitor.ForceUpdate(false);
+            ((IQueryMonitorEx)m_serverStatusMonitor).ForceUpdate();
         }
 
         /// <summary>

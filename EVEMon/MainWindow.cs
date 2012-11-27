@@ -2101,6 +2101,11 @@ namespace EVEMon
             m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
             EveMonClient.EVEServer.ForceUpdate();
 
+            foreach (APIKey apiKey in EveMonClient.APIKeys)
+            {
+                apiKey.ForceUpdate();
+            }
+
             foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.OfType<CCPCharacter>())
             {
                 character.QueryMonitors.QueryEverything();

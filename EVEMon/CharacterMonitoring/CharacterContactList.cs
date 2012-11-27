@@ -268,7 +268,7 @@ namespace EVEMon.CharacterMonitoring
             // Draw texts
             TextRenderer.DrawText(g, contact.Name, m_contactsBoldFont,
                                   new Rectangle(
-                                      e.Bounds.Left + contact.EntityImage.Size.Width + 4,
+                                      e.Bounds.Left + contact.EntityImage.Width + 4,
                                       e.Bounds.Top + (contact.Group == ContactGroup.Agent
                                                           ? PadTop
                                                           : (e.Bounds.Height - contactTextSize.Height) / 2),
@@ -298,7 +298,7 @@ namespace EVEMon.CharacterMonitoring
                 // Draw agent level and division text
                 TextRenderer.DrawText(g, agentLevelDivisionText, m_contactsFont,
                                       new Rectangle(
-                                          e.Bounds.Left + contact.EntityImage.Size.Width + 4 + contactTextSize.Width + PadRight,
+                                          e.Bounds.Left + contact.EntityImage.Width + 4 + contactTextSize.Width + PadRight,
                                           e.Bounds.Top + PadTop,
                                           agentLevelDivisionTextSize.Width + PadLeft,
                                           agentLevelDivisionTextSize.Height), Color.Black, Format);
@@ -306,7 +306,7 @@ namespace EVEMon.CharacterMonitoring
                 // Draw agent location
                 TextRenderer.DrawText(g, agentLocationText, m_contactsFont,
                                       new Rectangle(
-                                          e.Bounds.Left + contact.EntityImage.Size.Width + 4,
+                                          e.Bounds.Left + contact.EntityImage.Width + 4,
                                           e.Bounds.Top + PadTop + agentLevelDivisionTextSize.Height,
                                           agentLocationTextSize.Width + PadLeft,
                                           agentLocationTextSize.Height), Color.Black);
@@ -327,7 +327,7 @@ namespace EVEMon.CharacterMonitoring
                     // Draw contact standing status text
                     TextRenderer.DrawText(g, contactStandingStatusText, m_contactsFont,
                                           new Rectangle(
-                                              e.Bounds.Left + contact.EntityImage.Size.Width + 4 + contactTextSize.Width +
+                                              e.Bounds.Left + contact.EntityImage.Width + 4 + contactTextSize.Width +
                                               PadRight,
                                               e.Bounds.Top + (e.Bounds.Height - contactStandingStatusTextSize.Height) / 2,
                                               contactStandingStatusTextSize.Width + PadLeft,
@@ -342,7 +342,7 @@ namespace EVEMon.CharacterMonitoring
 
                         TextRenderer.DrawText(g, ContactInWatchListText, m_contactsFont,
                                               new Rectangle(
-                                                  e.Bounds.Left + contact.EntityImage.Size.Width + 4 + contactTextSize.Width +
+                                                  e.Bounds.Left + contact.EntityImage.Width + 4 + contactTextSize.Width +
                                                   contactStandingStatusTextSize.Width + PadRight,
                                                   e.Bounds.Top + (e.Bounds.Height - contactStandingStatusTextSize.Height) / 2,
                                                   contactInWatchListTextSize.Width + PadLeft,
@@ -355,7 +355,7 @@ namespace EVEMon.CharacterMonitoring
                     Image standingImage = Standing.GetStandingImage((int)contact.Standing);
                     g.DrawImage(standingImage,
                                 new Rectangle(
-                                    e.Bounds.Left + contact.EntityImage.Size.Width + 4 + contactTextSize.Width + PadRight * 2,
+                                    e.Bounds.Left + contact.EntityImage.Width + 4 + contactTextSize.Width + PadRight * 2,
                                     e.Bounds.Top + ((e.Bounds.Height - standingImage.Size.Height) / 2),
                                     standingImage.Width, standingImage.Height));
 
@@ -364,7 +364,7 @@ namespace EVEMon.CharacterMonitoring
                     {
                         g.DrawImage(Resources.Watch,
                                     new Rectangle(
-                                        e.Bounds.Left + contact.EntityImage.Size.Width + 4 + contactTextSize.Width +
+                                        e.Bounds.Left + contact.EntityImage.Width + 4 + contactTextSize.Width +
                                         standingImage.Width + PadRight * 3,
                                         e.Bounds.Top + ((e.Bounds.Height - Resources.Watch.Height) / 2),
                                         Resources.Watch.Width, Resources.Watch.Height));

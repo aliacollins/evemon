@@ -253,7 +253,7 @@ namespace EVEMon.CharacterMonitoring
             // Draw texts
             TextRenderer.DrawText(g, standingText, m_standingsBoldFont,
                                   new Rectangle(
-                                      e.Bounds.Left + standing.EntityImage.Size.Width + 4,
+                                      e.Bounds.Left + standing.EntityImage.Width + 4,
                                       e.Bounds.Top + (standingsDiffer
                                                           ? PadTop
                                                           : (e.Bounds.Height - standingTextSize.Height) / 2),
@@ -262,7 +262,7 @@ namespace EVEMon.CharacterMonitoring
 
             TextRenderer.DrawText(g, standingStatusText, m_standingsBoldFont,
                                   new Rectangle(
-                                      e.Bounds.Left + standing.EntityImage.Size.Width + 4 + standingTextSize.Width + PadRight,
+                                      e.Bounds.Left + standing.EntityImage.Width + 4 + standingTextSize.Width + PadRight,
                                       e.Bounds.Top + (standingsDiffer
                                                           ? PadTop
                                                           : (e.Bounds.Height - standingStatusTextSize.Height) / 2),
@@ -273,7 +273,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 TextRenderer.DrawText(g, standingsDetailsText, m_standingsFont,
                                       new Rectangle(
-                                          e.Bounds.Left + standing.EntityImage.Size.Width + 4,
+                                          e.Bounds.Left + standing.EntityImage.Width + 4,
                                           e.Bounds.Top + PadTop + standingTextSize.Height,
                                           standingsDetailsTextSize.Width + PadLeft,
                                           standingsDetailsTextSize.Height), Color.Black);
