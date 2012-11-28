@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -19,6 +18,8 @@ namespace EVEMon.Controls
     /// </summary>
     public partial class NotificationList : UserControl
     {
+        #region Fields
+
         private readonly Color m_warningColor = Color.LightGoldenrodYellow;
         private readonly Color m_errorColor = Color.LavenderBlush;
         private readonly Color m_infoColor = Color.AliceBlue;
@@ -34,6 +35,11 @@ namespace EVEMon.Controls
 
         private bool m_pendingUpdate;
 
+        #endregion
+
+
+        #region Constructor
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -46,6 +52,12 @@ namespace EVEMon.Controls
             listBox.MouseDown += listBox_MouseDown;
             listBox.MouseLeave += listBox_MouseLeave;
         }
+
+
+        #endregion
+
+
+        #region Inherited Events
 
         /// <summary>
         /// On load, fils up the list for the design mode.
@@ -90,12 +102,15 @@ namespace EVEMon.Controls
             base.OnVisibleChanged(e);
         }
 
+        #endregion
+
+
+        #region Properties
+
         /// <summary>
         /// Gets or sets the displayed notifications.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<NotificationEventArgs> Notifications
+        internal IEnumerable<NotificationEventArgs> Notifications
         {
             get { return m_notifications; }
             set
@@ -112,59 +127,10 @@ namespace EVEMon.Controls
             }
         }
 
-        /// <summary>
-        /// Calculates the maximum text length of the list with given font.
-        /// </summary>
-        /// <param name="font"></param>
-        /// <returns></returns>
-        private int CalculateMaxTextLength(Font font)
-        {
-            int maxTextLength = 0;
+        #endregion
 
-            foreach (Size textSize in listBox.Items.Cast<object>().Select(item => item.ToString()).Select(
-                text => TextRenderer.MeasureText(text, font)).Where(textSize => textSize.Width > maxTextLength))
-            {
-                maxTextLength = textSize.Width;
-            }
 
-            return maxTextLength;
-        }
-
-        /// <summary>
-        /// Calculates the font according to the notifications to display.
-        /// </summary>
-        private void CalculateFontSize()
-        {
-            if (Width == 0)
-                return;
-
-            Font font = Font;
-            float fontSize = font.Size;
-
-            // Check for magnifier icon
-            NotificationEventArgs itemWithDetails = listBox.Items.OfType<NotificationEventArgs>().FirstOrDefault(x => x.HasDetails);
-            int magnifierIconSize = itemWithDetails != null ? IconMagnifierPositionFromRight : 0;
-
-            // Calculates the available text space
-            int availableTextSpace = Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight -
-                                     RightPadding;
-
-            // If any text length exceeds our bounds we decrease the font size
-            while ((CalculateMaxTextLength(font) > availableTextSpace) && (fontSize > 6.5f))
-            {
-                fontSize -= 0.05f;
-                font = FontFactory.GetFont("Tahoma", fontSize);
-            }
-
-            // If any text length fits better in our bounds we increase the font size
-            while ((CalculateMaxTextLength(font) < availableTextSpace) && (fontSize < 8.25f))
-            {
-                fontSize += 0.05f;
-                font = FontFactory.GetFont("Tahoma", fontSize);
-            }
-
-            Font = font;
-        }
+        #region Content Management
 
         /// <summary>
         /// Updates the content of the listbox.
@@ -206,6 +172,11 @@ namespace EVEMon.Controls
             CalculateFontSize();
             Invalidate();
         }
+
+        #endregion
+
+
+        #region Local Events
 
         /// <summary>
         /// Draws an item.
@@ -358,6 +329,79 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
+        /// When the mouse leaves the control, we "unhover" the delete icon.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listBox_MouseLeave(object sender, EventArgs e)
+        {
+            if (m_hoveredIndex == -1)
+                return;
+
+            m_hoveredIndex = -1;
+            listBox.Invalidate();
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Calculates the maximum text length of the list with given font.
+        /// </summary>
+        /// <param name="font"></param>
+        /// <returns></returns>
+        private int CalculateMaxTextLength(Font font)
+        {
+            int maxTextLength = 0;
+
+            foreach (Size textSize in listBox.Items.Cast<object>().Select(item => item.ToString()).Select(
+                text => TextRenderer.MeasureText(text, font)).Where(textSize => textSize.Width > maxTextLength))
+            {
+                maxTextLength = textSize.Width;
+            }
+
+            return maxTextLength;
+        }
+
+        /// <summary>
+        /// Calculates the font according to the notifications to display.
+        /// </summary>
+        private void CalculateFontSize()
+        {
+            if (Width == 0)
+                return;
+
+            Font font = Font;
+            float fontSize = font.Size;
+
+            // Check for magnifier icon
+            NotificationEventArgs itemWithDetails = listBox.Items.OfType<NotificationEventArgs>().FirstOrDefault(x => x.HasDetails);
+            int magnifierIconSize = itemWithDetails != null ? IconMagnifierPositionFromRight : 0;
+
+            // Calculates the available text space
+            int availableTextSpace = Width - LeftPadding - TextLeft - magnifierIconSize - IconDeletePositionFromRight -
+                                     RightPadding;
+
+            // If any text length exceeds our bounds we decrease the font size
+            while ((CalculateMaxTextLength(font) > availableTextSpace) && (fontSize > 6.5f))
+            {
+                fontSize -= 0.05f;
+                font = FontFactory.GetFont("Tahoma", fontSize);
+            }
+
+            // If any text length fits better in our bounds we increase the font size
+            while ((CalculateMaxTextLength(font) < availableTextSpace) && (fontSize < 8.25f))
+            {
+                fontSize += 0.05f;
+                font = FontFactory.GetFont("Tahoma", fontSize);
+            }
+
+            Font = font;
+        }
+
+        /// <summary>
         /// Show the details for the given notification.
         /// </summary>
         /// <param name="notification"></param>
@@ -497,6 +541,55 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
+        /// Sets the tool tip.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="active">if set to <c>true</c> [active].</param>
+        private void SetToolTip(bool active, string message = null)
+        {
+            toolTip.Active = active;
+
+            if (active)
+                toolTip.SetToolTip(listBox, message);
+        }
+
+        /// <summary>
+        /// Gets the rectangle of the "magnifier" icon for the listbox item at the given index.
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        private static Rectangle GetMagnifierIconRect(Rectangle rect)
+        {
+            Bitmap icon = Resources.Magnifier;
+            int yOffset = (rect.Height - icon.Height) / 2;
+            Rectangle magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset,
+                                                        icon.Width, icon.Height);
+            magnifierIconRect.Inflate(2, 8);
+            return magnifierIconRect;
+        }
+
+        /// <summary>
+        /// Gets the rectangle of the "delete" icon for the listbox item at the given index.
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        private static Rectangle GetDeleteIconRect(Rectangle rect)
+        {
+            Bitmap icon = Resources.CrossBlack;
+            int yOffset = (rect.Height - icon.Height) / 2;
+            Rectangle deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width,
+                                                     icon.Height);
+            deleteIconRect.Inflate(2, 8);
+            return deleteIconRect;
+        }
+
+
+        #endregion
+
+
+        #region Notification Messages Methods
+
+        /// <summary>
         /// Builds the skill completion message.
         /// </summary>
         /// <param name="skillNotifications">The <see cref="EVEMon.Common.Notifications.SkillCompletionNotificationEventArgs"/> instance containing the event data.</param>
@@ -600,66 +693,11 @@ namespace EVEMon.Controls
             {
                 builder.Append(job.InstalledItem.Name).Append(" at ");
                 builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}",
-                    job.SolarSystem.Name, job.Installation).AppendLine();
+                                     job.SolarSystem.Name, job.Installation).AppendLine();
             }
             return builder.ToString();
         }
 
-        /// <summary>
-        /// Sets the tool tip.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="active">if set to <c>true</c> [active].</param>
-        private void SetToolTip(bool active, string message = null)
-        {
-            toolTip.Active = active;
-            
-            if (active)
-                toolTip.SetToolTip(listBox, message);
-        }
-
-        /// <summary>
-        /// When the mouse leaves the control, we "unhover" the delete icon.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listBox_MouseLeave(object sender, EventArgs e)
-        {
-            if (m_hoveredIndex == -1)
-                return;
-
-            m_hoveredIndex = -1;
-            listBox.Invalidate();
-        }
-
-        /// <summary>
-        /// Gets the rectangle of the "magnifier" icon for the listbox item at the given index.
-        /// </summary>
-        /// <param name="rect"></param>
-        /// <returns></returns>
-        private static Rectangle GetMagnifierIconRect(Rectangle rect)
-        {
-            Bitmap icon = Resources.Magnifier;
-            int yOffset = (rect.Height - icon.Height) / 2;
-            Rectangle magnifierIconRect = new Rectangle(rect.Right - IconMagnifierPositionFromRight, rect.Top + yOffset,
-                                                        icon.Width, icon.Height);
-            magnifierIconRect.Inflate(2, 8);
-            return magnifierIconRect;
-        }
-
-        /// <summary>
-        /// Gets the rectangle of the "delete" icon for the listbox item at the given index.
-        /// </summary>
-        /// <param name="rect"></param>
-        /// <returns></returns>
-        private static Rectangle GetDeleteIconRect(Rectangle rect)
-        {
-            Bitmap icon = Resources.CrossBlack;
-            int yOffset = (rect.Height - icon.Height) / 2;
-            Rectangle deleteIconRect = new Rectangle(rect.Right - IconDeletePositionFromRight, rect.Top + yOffset, icon.Width,
-                                                     icon.Height);
-            deleteIconRect.Inflate(2, 8);
-            return deleteIconRect;
-        }
+        #endregion
     }
 }
