@@ -18,5 +18,20 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlAttribute("corporationName")]
         public string CorporationName { get; set; }
+
+        [XmlAttribute("allianceID")]
+        public long AllianceID { get; set; }
+
+        [XmlAttribute("allianceName")]
+        public string AllianceName { get; set; }
+
+        [XmlAttribute("factionID")]
+        public int FactionID { get; set; }
+
+        [XmlAttribute("factionName")]
+        public string FactionName { get; set; }
+
+        [XmlAttribute("shipTypeID")]
+        public int ShipTypeID { get; set; }
     }
 }

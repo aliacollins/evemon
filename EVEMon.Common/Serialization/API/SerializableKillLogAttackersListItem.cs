@@ -2,7 +2,7 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
-    public sealed class SerializableKillLogAttackersListItem : SerializableKillLogVictim
+    public sealed class SerializableKillLogAttackersListItem : SerializableCharacterListItem
     {
         [XmlAttribute("damageDone")]
         public int DamageDone { get; set; }
