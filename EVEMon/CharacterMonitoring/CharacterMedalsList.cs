@@ -15,7 +15,6 @@ namespace EVEMon.CharacterMonitoring
     public partial class CharacterMedalsList : UserControl
     {
         #region Fields
-
         
         private const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix;
 
@@ -491,7 +490,7 @@ namespace EVEMon.CharacterMonitoring
         #region Helper Methods
 
         /// <summary>
-        /// Displays the tooltip for the given item (skill or skillgroup).
+        /// Displays the tooltip for the given item (medal).
         /// </summary>
         /// <param name="item"></param>
         private void DisplayTooltip(Medal item)

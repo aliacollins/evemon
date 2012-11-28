@@ -257,9 +257,6 @@ namespace EVEMon.CharacterMonitoring
 
                 // We update the content
                 UpdateContent();
-
-                // Adjust the size of the columns
-                AdjustColumns();
             }
             finally
             {
@@ -305,6 +302,9 @@ namespace EVEMon.CharacterMonitoring
                         lvItem.Selected = true;
                     }
                 }
+
+                // Adjust the size of the columns
+                AdjustColumns();
 
                 UpdateListVisibility();
             }

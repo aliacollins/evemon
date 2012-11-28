@@ -158,16 +158,7 @@ namespace EVEMon.CharacterMonitoring
                 if (ShowContactsInWatchList)
                     contacts = contacts.Where(contact => contact.IsInWatchlist);
 
-                List<IGrouping<ContactGroup, Contact>> groups = contacts.GroupBy(x => x.Group).ToList();
-                
-                // Place the agent group always at the bottom
-                IGrouping<ContactGroup, Contact> agentGroup = groups.FirstOrDefault(x => x.Key == ContactGroup.Agent);
-                if (agentGroup != null)
-                {
-                    int index = groups.IndexOf(agentGroup);
-                    groups.RemoveAt(index);
-                    groups.Add(agentGroup);
-                }
+                IEnumerable<IGrouping<ContactGroup, Contact>> groups = contacts.GroupBy(x => x.Group).OrderBy(x => (int)x.Key);
 
                 // Scroll through groups
                 lbContacts.Items.Clear();
