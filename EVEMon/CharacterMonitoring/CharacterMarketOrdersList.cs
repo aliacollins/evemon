@@ -123,7 +123,8 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
-        internal string TextFilter
+        [Browsable(false)]
+        public string TextFilter
         {
             get { return m_textFilter; }
             set
