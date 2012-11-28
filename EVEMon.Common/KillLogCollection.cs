@@ -32,7 +32,7 @@ namespace EVEMon.Common
             // Import the kill log from the API
             foreach (SerializableKillLogListItem srcKillLog in src)
             {
-                Items.Add(new KillLog(srcKillLog));
+                Items.Add(new KillLog(m_ccpCharacter, srcKillLog));
             }
         }
     }

@@ -173,6 +173,12 @@
     <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.Designer.cs">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\CharacterKillLogList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterKillLogList.Designer.cs">
+      <DependentUpon>CharacterKillLogList.cs</DependentUpon>
+    </Compile>
     <Compile Include="CharacterMonitoring\CharacterMedalsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -490,11 +496,15 @@
     <EmbeddedResource Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.resx">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterKillLogList.resx">
+      <DependentUpon>CharacterKillLogList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterMedalsList.resx">
       <DependentUpon>CharacterMedalsList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorBody.resx">
       <DependentUpon>CharacterMonitorBody.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorFooter.resx">
       <DependentUpon>CharacterMonitorFooter.cs</DependentUpon>

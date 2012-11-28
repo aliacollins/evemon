@@ -779,31 +779,6 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Processes the queried character's upcoming calendar events.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnUpcomingCalendarEventsUpdated(APIResult<SerializableAPIUpcomingCalendarEvents> result)
-        {
-            // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
-                return;
-
-            // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.UpcomingCalendarEvents))
-                EveMonClient.Notifications.NotifyCharacterUpcomindCalendarEventsError(m_ccpCharacter, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            m_ccpCharacter.UpcomingCalendarEvents.Import(result.Result.UpcomingEvents);
-
-            // Fires the event regarding upcoming calendar events update
-            EveMonClient.OnCharacterUpcomingCalendarEventsUpdated(m_ccpCharacter);
-        }
-
-        /// <summary>
         /// Processes the queried character's kill log.
         /// </summary>
         /// <param name="result"></param>
@@ -826,6 +801,31 @@ namespace EVEMon.Common
 
             // Fires the event regarding kill log update
             EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
+        }
+
+        /// <summary>
+        /// Processes the queried character's upcoming calendar events.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnUpcomingCalendarEventsUpdated(APIResult<SerializableAPIUpcomingCalendarEvents> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
+                return;
+
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.UpcomingCalendarEvents))
+                EveMonClient.Notifications.NotifyCharacterUpcomindCalendarEventsError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_ccpCharacter.UpcomingCalendarEvents.Import(result.Result.UpcomingEvents);
+
+            // Fires the event regarding upcoming calendar events update
+            EveMonClient.OnCharacterUpcomingCalendarEventsUpdated(m_ccpCharacter);
         }
 
         #endregion

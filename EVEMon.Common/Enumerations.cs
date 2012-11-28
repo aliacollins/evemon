@@ -175,7 +175,7 @@ namespace EVEMon.Common
                                     /*APICharacterMethods.CalendarEventAttendees |*/ APICharacterMethods.ContactList |
                                     APICharacterMethods.Contracts | APICharacterMethods.FactionalWarfareStats |
                                     APICharacterMethods.FactionalWarfareStats | APICharacterMethods.IndustryJobs |
-                                    /* APICharacterMethods.KillLog |*/ APICharacterMethods.MailMessages |
+                                    APICharacterMethods.KillLog | APICharacterMethods.MailMessages |
                                     APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
                                     APICharacterMethods.MarketOrders | APICharacterMethods.Medals |
                                     APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts |
@@ -370,9 +370,9 @@ namespace EVEMon.Common
         /// <summary>
         /// The Kill log for a character (Kill mails).
         /// </summary>
-        //[Header("Combat Log")]
-        //[Description("The combat log of a character.")]
-        //[Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        [Header("Combat Log")]
+        [Description("The combat log of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
         KillLog = 1 << 8,
 
         /// <summary>
@@ -1649,21 +1649,25 @@ namespace EVEMon.Common
     /// <summary>
     /// Enumeration of contact group.
     /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
     public enum ContactGroup
     {
         [Description("Personal")]
-        Contact,
+        Contact = 0,
 
         [Description("Corporation")]
-        Corporate,
+        Corporate = 1,
 
         [Description("Alliance")]
-        Alliance,
+        Alliance = 2,
 
         [Description("Agents")]
-        Agent,
+        Agent = 3,
     }
 
+    /// <summary>
+    /// Enumeration of Agent type.
+    /// </summary>
     public enum AgentType
     {
         [Description]
@@ -1701,6 +1705,16 @@ namespace EVEMon.Common
 
         [Description("Career")]
         CareerAgent
+    }
+
+    /// <summary>
+    /// Enumeration of Kill log group.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum KillGroup
+    {
+        Kills = 0,
+        Losses = 1
     }
 
     #endregion

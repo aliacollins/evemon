@@ -305,7 +305,18 @@ namespace EVEMon.CharacterMonitoring
 
             // Enables / Disables the contacts page related controls
             if (multiPanel.SelectedPage == contactsPage)
+            {
                 groupMenu.Visible = searchTextBox.Visible = preferencesMenu.Visible = false;
+                toolStripContextual.Enabled = true;
+            }
+
+            // Enables / Disables the kill logs page related controls
+            if (multiPanel.SelectedPage == killLogPage)
+            {
+                groupMenu.Visible = false;
+                searchTextBox.Visible = Settings.UI.MainWindow.CombatLog.ShowCondensedLogs;
+                toolStripContextual.Enabled = true;
+            }
 
             // Enables / Disables the assets page related controls
             if (multiPanel.SelectedPage == assetsPage)
@@ -334,8 +345,8 @@ namespace EVEMon.CharacterMonitoring
             // Enables / Disables the research points page related controls
             if (multiPanel.SelectedPage == researchPage)
             {
-                toolStripContextual.Enabled = ccpCharacter.ResearchPoints.Any();
                 groupMenu.Visible = false;
+                toolStripContextual.Enabled = ccpCharacter.ResearchPoints.Any();
             }
 
             // Enables / Disables the EVE mail messages page related controls
@@ -676,6 +687,8 @@ namespace EVEMon.CharacterMonitoring
         #region Contextual Toolstip Controls Event Handlers
 
 
+        #region WalletJournal Control Event Handlers
+
         /// <summary>
         /// Handles the Click event of the walletJournalCharts control.
         /// </summary>
@@ -689,6 +702,11 @@ namespace EVEMon.CharacterMonitoring
 
             WindowsFactory.ShowByTag<WalletJournalChartWindow, CCPCharacter>(ccpCharacter);
         }
+
+        #endregion
+
+
+        #region Contacts Control Event Handlers
 
         /// <summary>
         /// Handles the Click event of the contactsToolbarIcon control.
@@ -722,6 +740,8 @@ namespace EVEMon.CharacterMonitoring
 
             contactsList.UpdateContent();
         }
+
+        #endregion
 
 
         #region GroupBy Control Event Handlers
@@ -819,32 +839,12 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void filterTimer_Tick(object sender, EventArgs e)
         {
-            if (multiPanel.SelectedPage == assetsPage)
-                assetsList.TextFilter = searchTextBox.Text;
+            IListView list = multiPanel.SelectedPage.Controls.OfType<IListView>().FirstOrDefault();
 
-            if (multiPanel.SelectedPage == ordersPage)
-                ordersList.TextFilter = searchTextBox.Text;
+            if (list == null)
+                return;
 
-            if (multiPanel.SelectedPage == contractsPage)
-                contractsList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == walletJournalPage)
-                walletJournalList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == walletTransactionsPage)
-                walletTransactionsList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == jobsPage)
-                jobsList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == researchPage)
-                researchList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == mailMessagesPage)
-                mailMessagesList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == eveNotificationsPage)
-                eveNotificationsList.TextFilter = searchTextBox.Text;
+            list.TextFilter = searchTextBox.Text;
 
             filterTimer.Stop();
         }
@@ -863,7 +863,19 @@ namespace EVEMon.CharacterMonitoring
         {
             bool hideInactive = true;
 
-            if (multiPanel.SelectedPage == assetsPage)
+            if (multiPanel.SelectedPage == killLogPage)
+            {
+                preferencesMenu.DropDownItems.Clear();
+                preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
+                preferencesMenu.DropDownItems.Add(combatLogSeparator);
+                preferencesMenu.DropDownItems.Add(combatLogMenuItem);
+
+                combatLogMenuItem.Checked = Settings.UI.MainWindow.CombatLog.ShowCondensedLogs;
+                autoSizeColumnMenuItem.Enabled = combatLogMenuItem.Checked;
+            }
+
+            if (multiPanel.SelectedPage == assetsPage || multiPanel.SelectedPage == walletJournalPage
+                || multiPanel.SelectedPage == walletTransactionsPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
 
@@ -871,7 +883,8 @@ namespace EVEMon.CharacterMonitoring
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
                             !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
-                            !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                            !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -886,7 +899,8 @@ namespace EVEMon.CharacterMonitoring
 
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
-                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -903,7 +917,8 @@ namespace EVEMon.CharacterMonitoring
 
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
-                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -913,38 +928,6 @@ namespace EVEMon.CharacterMonitoring
                 showOnlyCorpMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
-            if (multiPanel.SelectedPage == walletJournalPage)
-            {
-                bool numberFormat = Settings.UI.MainWindow.WalletJournal.NumberAbsFormat;
-
-                preferencesMenu.DropDownItems.Clear();
-                foreach (ToolStripItem item in m_preferenceMenu.Where(
-                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
-                            !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
-                            !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
-                {
-                    preferencesMenu.DropDownItems.Add(item);
-                }
-
-                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
-            }
-
-            if (multiPanel.SelectedPage == walletTransactionsPage)
-            {
-                bool numberFormat = Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat;
-
-                preferencesMenu.DropDownItems.Clear();
-                foreach (ToolStripItem item in m_preferenceMenu.Where(
-                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
-                            !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
-                            !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
-                {
-                    preferencesMenu.DropDownItems.Add(item);
-                }
-
-                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
-            }
-
             if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
@@ -952,7 +935,8 @@ namespace EVEMon.CharacterMonitoring
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(numberAbsFormatMenuItem) && !item.Equals(tsReadingPaneSeparator) &&
-                            !item.Equals(readingPaneMenuItem)))
+                            !item.Equals(readingPaneMenuItem) && !item.Equals(combatLogSeparator) &&
+                            !item.Equals(combatLogMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -1379,6 +1363,18 @@ namespace EVEMon.CharacterMonitoring
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the combatLogMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void combatLogMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.UI.MainWindow.CombatLog.ShowCondensedLogs = combatLogMenuItem.Checked;
+            killLogList.UpdateKillLogView();
+            UpdatePageControls();
+        }
+
         #endregion
 
 
@@ -1501,6 +1497,7 @@ namespace EVEMon.CharacterMonitoring
             contactsList.Character = ccpCharacter;
             factionalWarfareStatsList.Character = ccpCharacter;
             medalsList.Character = ccpCharacter;
+            killLogList.Character = ccpCharacter;
             assetsList.Character = ccpCharacter;
             ordersList.Character = ccpCharacter;
             contractsList.Character = ccpCharacter;
@@ -1516,7 +1513,7 @@ namespace EVEMon.CharacterMonitoring
             m_advancedFeatures.AddRange(new[]
                                             {
                                                 standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
-                                                killlogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
+                                                killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
                                                 walletTransactionsIcon, jobsIcon, researchIcon, mailMessagesIcon,
                                                 eveNotificationsIcon, calendarEventsIcon
                                             });
