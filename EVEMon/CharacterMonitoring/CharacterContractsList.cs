@@ -796,8 +796,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void ShowContractDetails()
         {
-            ListViewItem item = lvContracts.SelectedItems[0];
-            Contract contract = (Contract)item.Tag;
+            Contract contract = (Contract)lvContracts.SelectedItems[0].Tag;
 
             // Quit if for any reason the contract's item list is empty
             if (contract.ContractType != ContractType.Courier && !contract.ContractItems.Any())

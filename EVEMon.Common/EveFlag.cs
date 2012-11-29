@@ -48,9 +48,8 @@ namespace EVEMon.Common
                 using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
                 {
                     // Apply the XSL transform
-                    XslCompiledTransform transform = Util.LoadXslt(Properties.Resources.RowsetsXSLT);
                     writer.Formatting = Formatting.Indented;
-                    transform.Transform(reader, writer);
+                    APIProvider.RowsetsTransform.Transform(reader, writer);
                     writer.Flush();
 
                     // Deserialize from the given stream

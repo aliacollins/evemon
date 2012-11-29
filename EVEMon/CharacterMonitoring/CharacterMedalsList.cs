@@ -513,10 +513,10 @@ namespace EVEMon.CharacterMonitoring
         private static string GetTooltipText(Medal item)
         {
             StringBuilder toolTip = new StringBuilder();
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Issuer: {0}\n", item.Issuer);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}\n", item.Issued.ToLocalTime());
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Issuer: {0}", item.Issuer).AppendLine();
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", item.Issued.ToLocalTime()).AppendLine();
             if (item.Group == MedalGroup.OtherCorporation)
-                toolTip.AppendFormat(CultureConstants.DefaultCulture, "Corporation: {0}\n", item.CorporationName);
+                toolTip.AppendFormat(CultureConstants.DefaultCulture, "Corporation: {0}", item.CorporationName).AppendLine();
             toolTip.AppendFormat(CultureConstants.DefaultCulture, "Reason: {0}", item.Reason.WordWrap(50));
             return toolTip.ToString();
         }

@@ -670,10 +670,10 @@ namespace EVEMon.Controls
                 {
                     builder.Append(contract.ContractText).Append(" | ");
                     builder.Append(contract.ContractType).Append(" | ");
-                    builder.Append(contract.Status);
+                    builder.Append(contract.Status).Append(" | ");
 
                     if (contract.State == ContractState.Finished)
-                        builder.Append(" accepted by  ").Append(contract.Acceptor);
+                        builder.Append("Accepted by  ").Append(contract.Acceptor);
 
                     builder.Append(" at ").AppendLine(contract.StartStation.Name);
                 }
