@@ -796,6 +796,11 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
+            // Save the file to our cache
+            string filename = String.Format(CultureConstants.InvariantCulture, "{0}-{1}", m_ccpCharacter.Name,
+                                            APICharacterMethods.KillLog);
+            LocalXmlCache.Save(filename, result.XmlDocument);
+
             // Import the data
             m_ccpCharacter.KillLog.Import(result.Result.Kills);
 

@@ -88,6 +88,13 @@ namespace EVEMon.Common.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap Copy {
+            get {
+                object obj = ResourceManager.GetObject("Copy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap CrossBlack {
             get {
                 object obj = ResourceManager.GetObject("CrossBlack", resourceCulture);

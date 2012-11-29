@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -11,7 +12,9 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Properties;
+using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.NotificationWindow;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -31,6 +34,7 @@ namespace EVEMon.CharacterMonitoring
 
         // KillLog drawing - Kill
         private const int KillDetailHeight = 34;
+        private const string CopyKillInfoText = "Copy Kill Information";
 
         // KillLog drawing - KillLog groups
         private const int KillGroupHeaderHeight = 21;
@@ -40,12 +44,14 @@ namespace EVEMon.CharacterMonitoring
         private readonly Font m_killBoldFont;
         private readonly List<string> m_collapsedGroups = new List<string>();
 
+        private int m_copyPositionFromRight;
+        private Size m_copyKillInfoTextSize;
+
         #endregion
 
 
         #region ListView Fields
-
-
+        
         private readonly List<KillLogColumnSettings> m_columns = new List<KillLogColumnSettings>();
 
         private ColumnHeader m_sortCriteria;
@@ -71,8 +77,6 @@ namespace EVEMon.CharacterMonitoring
             ListViewHelper.EnableDoubleBuffer(lvKillLog);
             lvKillLog.ColumnClick += lvKillLog_ColumnClick;
             m_sortCriteria = lvKillLog.Columns[0];
-
-
 
             m_killFont = FontFactory.GetFont("Tahoma", 6.25F);
             m_killBoldFont = FontFactory.GetFont("Tahoma", 6.25F, FontStyle.Bold);
@@ -451,7 +455,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = kill.KillTime.ToLocalTime().ToString();
                     break;
                 case 1:
-                    item.Text = kill.VictimShipName;
+                    item.Text = kill.Victim.ShipTypeName;
                     break;
                 case 2:
                     item.Text = kill.Victim.Name;
@@ -460,10 +464,10 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = kill.Victim.CorporationName;
                     break;
                 case 4:
-                    item.Text = String.IsNullOrEmpty(kill.Victim.AllianceName) ? "Unknown" : kill.Victim.AllianceName;
+                    item.Text = kill.Victim.AllianceName;
                     break;
                 case 5:
-                    item.Text = String.IsNullOrEmpty(kill.Victim.FactionName) ? "Unknown" : kill.Victim.FactionName;
+                    item.Text = kill.Victim.FactionName;
                     break;
                 default:
                     throw new NotImplementedException();
@@ -540,15 +544,34 @@ namespace EVEMon.CharacterMonitoring
             if (killLog.Group == KillGroup.Losses)
                 DrawLossText(killLog, e);
 
+            // If 'Safe for work' draw 'copy' text
+            if (Settings.UI.SafeForWork)
+            {
+                m_copyKillInfoTextSize = TextRenderer.MeasureText(g, CopyKillInfoText, m_killFont, Size.Empty, Format);
+                m_copyPositionFromRight = m_copyKillInfoTextSize.Width + PadRight;
+                TextRenderer.DrawText(g, CopyKillInfoText, m_killFont,
+                      new Rectangle(e.Bounds.Right - m_copyPositionFromRight,
+                                    e.Bounds.Top + PadTop,
+                                    m_copyKillInfoTextSize.Width + PadLeft,
+                                    m_copyKillInfoTextSize.Height), Color.Black);
+
+            }
+
             // Draw images
             if (Settings.UI.SafeForWork)
                 return;
 
             // Draw the kill image
-            g.DrawImage(killLog.VictimImage, new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                                           (KillDetailHeight / 2) - (killLog.VictimImage.Height / 2) +
-                                                           e.Bounds.Top,
-                                                           killLog.VictimImage.Width, killLog.VictimImage.Height));
+            g.DrawImage(killLog.VictimImage,
+                        new Rectangle(e.Bounds.Left + PadLeft / 2,
+                                      (KillDetailHeight / 2) - (killLog.VictimImage.Height / 2) + e.Bounds.Top,
+                                      killLog.VictimImage.Width, killLog.VictimImage.Height));
+
+            // Draw the copy image
+            m_copyPositionFromRight = 24;
+            g.DrawImage(Resources.Copy, new Rectangle(e.Bounds.Right - m_copyPositionFromRight,
+                                                      e.Bounds.Top + PadTop,
+                                                      Resources.Copy.Width, Resources.Copy.Height));
         }
 
         /// <summary>
@@ -568,7 +591,7 @@ namespace EVEMon.CharacterMonitoring
                                                                                         DescriptiveTextOptions.FullText));
             string victimNameCorpAndAllianceName = GetText(killLog.Victim.CorporationName, killLog.Victim.AllianceName);
             string whatAndWhereInfo = String.Format(CultureConstants.DefaultCulture, "{0}, {1}, {2}, {3:N1}",
-                                                    killLog.VictimShipName, killLog.SolarSystem.Name,
+                                                    killLog.Victim.ShipTypeName, killLog.SolarSystem.Name,
                                                     killLog.SolarSystem.Constellation.Region.Name,
                                                     killLog.SolarSystem.SecurityLevel);
 
@@ -623,11 +646,11 @@ namespace EVEMon.CharacterMonitoring
                                                                                         DescriptiveTextOptions.FullText));
             string finalBlowAttackerCorpAndAllianceName = GetText(killLog.FinalBlowAttacker.CorporationName,
                                                                   killLog.FinalBlowAttacker.AllianceName);
-            string finalBlowAttackerShipAndModuleName = GetText(killLog.FinalBlowAttacker.ShipTypeID,
-                                                                killLog.FinalBlowAttacker.WeaponTypeID);
+            string finalBlowAttackerShipAndModuleName = GetText(killLog.FinalBlowAttacker.ShipTypeName,
+                                                                killLog.FinalBlowAttacker.WeaponTypeName);
 
             // Measure texts
-            Size killShipNameTextSize = TextRenderer.MeasureText(g, killLog.VictimShipName, m_killBoldFont, Size.Empty, Format);
+            Size killShipNameTextSize = TextRenderer.MeasureText(g, killLog.Victim.ShipTypeName, m_killBoldFont, Size.Empty, Format);
             Size killTimeTextSize = TextRenderer.MeasureText(g, killTimeText, m_killFont, Size.Empty, Format);
             Size finalBlowAttackerCorpAndAllianceNameSize = TextRenderer.MeasureText(g, finalBlowAttackerCorpAndAllianceName,
                                                                                      m_killFont, Size.Empty, Format);
@@ -635,7 +658,7 @@ namespace EVEMon.CharacterMonitoring
                                                                                    m_killFont, Size.Empty, Format);
 
             // Draw texts
-            TextRenderer.DrawText(g, killLog.VictimShipName, m_killBoldFont,
+            TextRenderer.DrawText(g, killLog.Victim.ShipTypeName, m_killBoldFont,
                                   new Rectangle(e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight,
                                                 e.Bounds.Top,
                                                 killShipNameTextSize.Width + PadLeft,
@@ -811,23 +834,52 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // For a kills group, we have to handle the collapse/expand mechanism
-            Object item = lbKillLog.Items[index];
-            String standingsGroup = item as String;
-            if (standingsGroup == null)
+            String killsGroup = lbKillLog.Items[index] as String;
+            if (killsGroup == null)
+            {
+                itemRect = lbKillLog.GetItemRectangle(index);
+                Rectangle copyKillInfoRect = GetCopyKillInfoRect(itemRect);
+                if (copyKillInfoRect.Contains(e.Location))
+                    CopyKillInfoToClipboard();
+
                 return;
+            }
 
             // Left button : expand/collapse
             if (e.Button != MouseButtons.Right)
             {
-                ToggleGroupExpandCollapse(standingsGroup);
+                ToggleGroupExpandCollapse(killsGroup);
                 return;
             }
 
             // If right click on the button, still expand/collapse
-            itemRect = lbKillLog.GetItemRectangle(lbKillLog.Items.IndexOf(item));
-            Rectangle buttonRect = GetButtonRectangle(standingsGroup, itemRect);
+            itemRect = lbKillLog.GetItemRectangle(index);
+            Rectangle buttonRect = GetButtonRectangle(killsGroup, itemRect);
             if (buttonRect.Contains(e.Location))
-                ToggleGroupExpandCollapse(standingsGroup);
+                ToggleGroupExpandCollapse(killsGroup);
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event of the lbKillLog control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbKillLog_MouseMove(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < lbKillLog.Items.Count; i++)
+            {
+                if (!(lbKillLog.Items[i] is KillLog))
+                    continue;
+
+                Rectangle rect = GetCopyKillInfoRect(lbKillLog.GetItemRectangle(i));
+                if (!rect.Contains(e.Location))
+                    continue;
+
+                DisplayTooltip();
+                return;
+            }
+
+            toolTip.Active = false;
         }
 
         /// <summary>
@@ -850,6 +902,56 @@ namespace EVEMon.CharacterMonitoring
             UpdateSort();
         }
 
+        /// <summary>
+        /// Handles the Opening event of the contextMenuStrip control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            e.Cancel = lvKillLog.SelectedItems.Count == 0;
+        }
+
+        /// <summary>
+        /// Handles the MouseDoubleClick event of the lbKillLog control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
+        private void lbKillLog_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ShowKillDetails();
+        }
+
+        /// <summary>
+        /// Handles the DoubleClick event of the lvKillLog control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void lvKillLog_DoubleClick(object sender, EventArgs e)
+        {
+            ShowKillDetails();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiShowDetails control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tsmiShowDetails_Click(object sender, EventArgs e)
+        {
+            ShowKillDetails();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiCopyKillInfo control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tsmiCopyKillInfo_Click(object sender, EventArgs e)
+        {
+            CopyKillInfoToClipboard();
+        }
+
         #endregion
 
 
@@ -866,7 +968,7 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(KillLog x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.VictimShipName.ToLowerInvariant().Contains(text)
+                   || x.Victim.ShipTypeName.ToLowerInvariant().Contains(text)
                    || x.Victim.Name.ToLowerInvariant().Contains(text)
                    || x.Victim.CorporationName.ToLowerInvariant().Contains(text)
                    || x.Victim.AllianceName.ToLowerInvariant().Contains(text)
@@ -884,35 +986,10 @@ namespace EVEMon.CharacterMonitoring
             StringBuilder sb = new StringBuilder();
             sb.Append(text1);
 
-            if (!String.IsNullOrEmpty(text2))
+            if (!String.IsNullOrEmpty(text2) && text2 != "Unknown")
                 sb.AppendFormat(" / {0}", text2);
 
             return sb.ToString();
-        }
-
-        /// <summary>
-        /// Gets the text.
-        /// </summary>
-        /// <param name="shipID">The ship ID.</param>
-        /// <param name="weaponID">The weapon ID.</param>
-        /// <returns></returns>
-        private static string GetText(int shipID, int weaponID)
-        {
-            Item ship = StaticItems.GetItemByID(shipID);
-            string shipName = shipID == 0
-                                  ? String.Empty
-                                  : ship == null
-                                        ? "Unknown"
-                                        : ship.Name;
-
-            Item weapon = StaticItems.GetItemByID(weaponID);
-            string weaponName = weaponID == 0
-                                    ? String.Empty
-                                    : weapon == null
-                                          ? "Unknown"
-                                          : weapon.Name;
-
-            return GetText(shipName, weaponName);
         }
 
         /// <summary>
@@ -954,6 +1031,226 @@ namespace EVEMon.CharacterMonitoring
             return new Rectangle(btnPoint, btnImage.Size);
         }
 
+        /// <summary>
+        /// Shows the kill details.
+        /// </summary>
+        private void ShowKillDetails()
+        {
+            KillLog killLog = GetKillLog();
+
+            if (killLog == null)
+                return;
+
+            //WindowsFactory.ShowByTag<KillDetailsWindow, KillLog>(killLog);
+        }
+
+        /// <summary>
+        /// Copies the kill info to clipboard.
+        /// </summary>
+        private void CopyKillInfoToClipboard()
+        {
+            try
+            {
+                string killLogInfoText = GetKillText();
+                if (String.IsNullOrEmpty(killLogInfoText))
+                {
+                    MessageBox.Show("No kill info was available. Nothing has been copied to the clipboard.", "Copy",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                Clipboard.SetText(killLogInfoText, TextDataFormat.Text);
+                MessageBox.Show("The kill info have been copied to the clipboard.", "Copy", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+            }
+            catch (ExternalException ex)
+            {
+                // Occurs when another process is using the clipboard
+                ExceptionHandler.LogException(ex, true);
+                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process. " +
+                                "Wait a few moments and try again.");
+            }
+        }
+
+        /// <summary>
+        /// Gets the kill text.
+        /// </summary>
+        /// <returns></returns>
+        private string GetKillText()
+        {
+            KillLog killLog = GetKillLog();
+
+            if (killLog == null)
+                return String.Empty;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(killLog.KillTime.ToString("yyyy.MM.dd HH:mm:ss", CultureConstants.InvariantCulture)).AppendLine();
+            sb.AppendFormat(CultureConstants.InvariantCulture, "Victim: {0}", killLog.Victim.Name).AppendLine();
+            sb.AppendFormat(CultureConstants.InvariantCulture, "Corp: {0}", killLog.Victim.CorporationName).AppendLine();
+            sb.AppendFormat(CultureConstants.InvariantCulture, "Alliance: {0}", killLog.Victim.AllianceName).AppendLine();
+            sb.AppendFormat(CultureConstants.InvariantCulture, "Faction: {0}", killLog.Victim.FactionName).AppendLine();
+            sb.AppendFormat(CultureConstants.InvariantCulture, "Destroyed: {0}", killLog.Victim.ShipTypeName).AppendLine();
+            sb.AppendFormat(CultureConstants.InvariantCulture, "System: {0}", killLog.SolarSystem.Name).AppendLine();
+            sb.AppendFormat(CultureConstants.InvariantCulture, "Security: {0:N1}", killLog.SolarSystem.SecurityLevel).AppendLine();
+            sb.AppendFormat(CultureConstants.InvariantCulture, "Damage Taken: {0}", killLog.Victim.DamageTaken).AppendLine();
+
+            sb.AppendLine();
+            sb.AppendLine("Involved parties:");
+            sb.AppendLine();
+
+            foreach (SerializableKillLogAttackersListItem attacker in killLog.Attackers.OrderByDescending(x=> x.DamageDone))
+            {
+                // Append info for NPC or player entities
+                if (String.IsNullOrEmpty(attacker.Name))
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Name: {0} / {1}", attacker.ShipTypeName, attacker.CorporationName);
+                else
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Name: {0}", attacker.Name);
+                
+                if (attacker.FinalBlow)
+                    sb.Append(" (laid the final blow)");
+                sb.AppendLine();
+
+                // Append info only for player entities
+                if (!String.IsNullOrEmpty(attacker.Name))
+                {
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Security: {0:N1}", attacker.SecurityStatus).AppendLine();
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Corp: {0}", attacker.CorporationName).AppendLine();
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Alliance: {0}",
+                                    attacker.AllianceName == "Unknown" ? "None" : attacker.AllianceName).AppendLine();
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Faction: {0}",
+                                    attacker.FactionName == "Unknown" ? "None" : attacker.FactionName).AppendLine();
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Ship: {0}", attacker.ShipTypeName).AppendLine();
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Weapon: {0}", attacker.WeaponTypeName).AppendLine();
+                }
+
+                sb.AppendFormat(CultureConstants.InvariantCulture, "Damage Done: {0}", attacker.DamageDone).AppendLine();
+                sb.AppendLine();
+            }
+
+            if (killLog.Items.Any(x => x.QtyDestroyed != 0))
+            {
+                sb.AppendLine("Destroyed items:");
+                sb.AppendLine();
+                AppendDestroyedItems(sb, killLog.Items.Where(x => x.QtyDestroyed != 0));
+                sb.AppendLine();
+            }
+
+            if (killLog.Items.Any(x => x.QtyDropped != 0))
+            {
+                sb.AppendLine("Dropped items:");
+                sb.AppendLine();
+                AppendDroppedItems(sb, killLog.Items.Where(x => x.QtyDropped != 0));
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("<-- Generated by EVEMon -->");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Appends the dropped items.
+        /// </summary>
+        /// <param name="sb">The sb.</param>
+        /// <param name="droppedItems">The dropped items.</param>
+        private static void AppendDroppedItems(StringBuilder sb, IEnumerable<SerializableKillLogItemListItem> droppedItems)
+        {
+            foreach (SerializableKillLogItemListItem droppedItem in droppedItems)
+            {
+                Item item = StaticItems.GetItemByID(droppedItem.TypeID);
+                if (item == null)
+                    continue;
+
+                if (droppedItem.EVEFlag == 0)
+                    continue;
+
+                sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} ({2})",
+                                item.Name,
+                                droppedItem.QtyDropped > 1
+                                    ? String.Format(CultureConstants.InvariantCulture, ", Qty: {0}", droppedItem.QtyDropped)
+                                    : String.Empty, droppedItem.InventoryText).AppendLine();
+
+                // Append any items inside a container
+                if (droppedItem.Items.Count != 0)
+                    AppendDestroyedItems(sb, droppedItem.Items.Where(x => x.QtyDropped != 0));
+            }
+        }
+
+        /// <summary>
+        /// Appends the destroyed items.
+        /// </summary>
+        /// <param name="sb">The sb.</param>
+        /// <param name="destroyedItems">The destroyed items.</param>
+        private static void AppendDestroyedItems(StringBuilder sb, IEnumerable<SerializableKillLogItemListItem> destroyedItems)
+        {
+            foreach (SerializableKillLogItemListItem destroyedItem in destroyedItems)
+            {
+                Item item = StaticItems.GetItemByID(destroyedItem.TypeID);
+                if (item == null)
+                    continue;
+
+                if (destroyedItem.EVEFlag == 0)
+                    continue;
+                
+                sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} ({2})",
+                                item.Name,
+                                destroyedItem.QtyDestroyed > 1
+                                    ? String.Format(CultureConstants.InvariantCulture, ", Qty: {0}", destroyedItem.QtyDestroyed)
+                                    : String.Empty, destroyedItem.InventoryText).AppendLine();
+
+                // Append any items inside a container
+                if (destroyedItem.Items.Count != 0)
+                    AppendDestroyedItems(sb, destroyedItem.Items.Where(x => x.QtyDestroyed != 0));
+            }
+        }
+
+        /// <summary>
+        /// Gets the kill log.
+        /// </summary>
+        /// <returns></returns>
+        private KillLog GetKillLog()
+        {
+            KillLog killLog = null;
+
+            if (lvKillLog.SelectedItems.Count != 0)
+                killLog = lvKillLog.SelectedItems[0].Tag as KillLog;
+
+            if (lbKillLog.SelectedItems.Count != 0)
+                killLog = lbKillLog.SelectedItems[0] as KillLog;
+
+            return killLog;
+        }
+
+        /// <summary>
+        /// Displays the tooltip.
+        /// </summary>
+        private void DisplayTooltip()
+        {
+            if (toolTip.Active || Settings.UI.SafeForWork)
+                return;
+
+            toolTip.Active = false;
+            toolTip.SetToolTip(lbKillLog, CopyKillInfoText);
+            toolTip.Active = true;
+        }
+
+        /// <summary>
+        /// Gets the rectangle of the "copy" icon for the listbox item at the given index.
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        private Rectangle GetCopyKillInfoRect(Rectangle rect)
+        {
+            Bitmap icon = Resources.Copy;
+            Size copyKillInfoSize = Settings.UI.SafeForWork
+                            ? m_copyKillInfoTextSize
+                            : icon.Size;
+            Rectangle copyKillInfoRect =  new Rectangle(rect.Right - m_copyPositionFromRight, rect.Top + PadTop,
+                                                             copyKillInfoSize.Width, copyKillInfoSize.Height);
+            copyKillInfoRect.Inflate(2, 8);
+            return copyKillInfoRect;
+        }
+
         #endregion
 
 
@@ -984,5 +1281,6 @@ namespace EVEMon.CharacterMonitoring
         }
 
         #endregion
+
     }
 }

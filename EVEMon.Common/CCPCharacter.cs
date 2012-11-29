@@ -482,6 +482,9 @@ namespace EVEMon.Common
             // EVE notifications IDs
             EVENotifications.Import(serial.EveNotificationsIDs);
 
+            // Kill Logs
+            KillLog.ImportFromCacheFile();
+
             // Fire the global event
             EveMonClient.OnCharacterUpdated(this);
         }

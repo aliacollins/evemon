@@ -1,4 +1,5 @@
 using System.Xml.Serialization;
+using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -15,5 +16,19 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlAttribute("weaponTypeID")]
         public int WeaponTypeID { get; set; }
+
+
+        [XmlIgnore]
+        public string WeaponTypeName
+        {
+            get
+            {
+                if (WeaponTypeID == 0)
+                    return string.Empty;
+
+                Item weapon = StaticItems.GetItemByID(WeaponTypeID);
+                return weapon == null ? "Unknown" : weapon.Name;
+            }
+        }
     }
 }

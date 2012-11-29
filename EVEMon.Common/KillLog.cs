@@ -77,18 +77,6 @@ namespace EVEMon.Common
         public SerializableKillLogVictim Victim { get; private set; }
 
         /// <summary>
-        /// Gets the victim.
-        /// </summary>
-        public string VictimShipName
-        {
-            get
-            {
-                Item ship = StaticItems.GetItemByID(Victim.ShipTypeID);
-                return ship == null ? "Unknown" : ship.Name;
-            }
-        }
-
-        /// <summary>
         /// Gets the final blow attacker.
         /// </summary>
         public SerializableKillLogAttackersListItem FinalBlowAttacker

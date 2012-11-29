@@ -66,7 +66,7 @@ namespace EVEMon.Common
                 case 0:
                     return x.KillTime.CompareTo(y.KillTime);
                 case 1:
-                    return String.Compare(x.VictimShipName, y.VictimShipName, StringComparison.CurrentCulture);
+                    return String.Compare(x.Victim.ShipTypeName, y.Victim.ShipTypeName, StringComparison.CurrentCulture);
                 case 2:
                     return String.Compare(x.Victim.Name, y.Victim.Name, StringComparison.CurrentCulture);
                 case 3:

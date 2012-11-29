@@ -33,5 +33,11 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return m_items; }
         }
+
+        [XmlIgnore]
+        public string InventoryText
+        {
+            get { return EveFlag.GetFlagText(EVEFlag); }
+        }
     }
 }
