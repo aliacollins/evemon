@@ -12,6 +12,9 @@ namespace EVEMon.NotificationWindow
     {
         private readonly bool m_init;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndustryJobsWindow"/> class.
+        /// </summary>
         public IndustryJobsWindow()
         {
             InitializeComponent();
@@ -22,8 +25,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        [Browsable(false)]
-        public Enum Grouping
+        internal Enum Grouping
         {
             get { return jobsList.Grouping; }
             set
@@ -41,8 +43,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the showIssuedFor mode.
         /// </summary>
-        [Browsable(false)]
-        public IssuedFor ShowIssuedFor
+        internal IssuedFor ShowIssuedFor
         {
             get { return jobsList.ShowIssuedFor; }
             set
@@ -60,9 +61,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the enumeration of jobs to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<IndustryJob> Jobs
+        internal IEnumerable<IndustryJob> Jobs
         {
             get { return jobsList.Jobs; }
             set { jobsList.Jobs = value; }
@@ -71,9 +70,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the enumeration of displayed columns.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<IColumnSettings> Columns
+        internal IEnumerable<IColumnSettings> Columns
         {
             get { return jobsList.Columns; }
             set
