@@ -89,7 +89,7 @@ namespace EVEMon.Common.Serialization.API
         [Description("Deleted")]
         Deleted,
 
-        [Description("Completed")]
+        [Description("Finished")]
         Completed,
 
         [Description("Failed")]
