@@ -67,7 +67,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public StaticCertificate LowestGradeCertificate
         {
-            get { return m_certificates.Where(cert => cert != null).FirstOrDefault(); }
+            get { return m_certificates.FirstOrDefault(cert => cert != null); }
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public StaticCertificate HighestGradeCertificate
         {
-            get { return m_certificates.Where(cert => cert != null).LastOrDefault(); }
+            get { return m_certificates.LastOrDefault(cert => cert != null); }
         }
 
         #endregion

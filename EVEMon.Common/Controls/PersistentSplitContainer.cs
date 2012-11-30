@@ -44,7 +44,6 @@ namespace EVEMon.Common.Controls
                     // when the control is a subcontrol of a user control, so we should handle
                     // this here :(
                     ExceptionHandler.LogException(err, false);
-                    return;
                 }
                 catch (Exception ex)
                 {

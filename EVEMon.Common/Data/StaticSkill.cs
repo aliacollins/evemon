@@ -56,7 +56,7 @@ namespace EVEMon.Common.Data
                 return;
 
             // Check trainableOnTrialAccount on its childrens to be sure it's really trainable
-            if (!Prerequisites.Any(prereq => !prereq.Skill.IsTrainableOnTrialAccount))
+            if (Prerequisites.All(prereq => prereq.Skill.IsTrainableOnTrialAccount))
                 return;
 
             IsTrainableOnTrialAccount = false;

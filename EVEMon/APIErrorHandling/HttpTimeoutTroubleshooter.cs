@@ -38,11 +38,11 @@ namespace EVEMon.ApiErrorHandling
             }
 
             // If the current is set to something odd we add it and sort by Seconds
-            if (!options.Any(x => x.Seconds == Settings.Updates.HttpTimeout))
+            if (options.All(x => x.Seconds != Settings.Updates.HttpTimeout))
                 options.Add(new TimeoutOption(Settings.Updates.HttpTimeout, "Current"));
 
             // If the default is not in the list we add it
-            if (!options.Any(x => x.Seconds == updateSettings.HttpTimeout))
+            if (options.All(x => x.Seconds != updateSettings.HttpTimeout))
                 options.Add(new TimeoutOption(updateSettings.HttpTimeout, "Default"));
 
             options.Sort((a, b) => a.Seconds.CompareTo(b.Seconds));

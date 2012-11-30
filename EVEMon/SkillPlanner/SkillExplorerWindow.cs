@@ -582,7 +582,7 @@ namespace EVEMon.SkillPlanner
         private static IEnumerable<SkillLevel> CreatePrereqList(IEnumerable<SkillLevel> prerequisites)
         {
             List<SkillLevel> prereqList = new List<SkillLevel>();
-            foreach (SkillLevel prereq in prerequisites.Where(prereq => !prereqList.Any(x => x.ToString() == prereq.ToString())))
+            foreach (SkillLevel prereq in prerequisites.Where(prereq => prereqList.All(x => x.ToString() != prereq.ToString())))
             {
                 prereqList.Add(prereq);
             }
@@ -668,9 +668,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Update the "plan to X" menus
-            tsAddPlan.Enabled = false;
-            if (skill.Level < 5)
-                tsAddPlan.Enabled = true;
+            tsAddPlan.Enabled = skill.Level < 5;
 
             for (int i = 1; i <= 5; i++)
             {
