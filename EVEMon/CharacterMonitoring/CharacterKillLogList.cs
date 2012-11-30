@@ -1038,7 +1038,7 @@ namespace EVEMon.CharacterMonitoring
             if (killLog == null)
                 return;
 
-            //WindowsFactory.ShowByTag<KillDetailsWindow, KillLog>(killLog);
+            WindowsFactory.ShowByTag<KillReportWindow, KillLog>(killLog);
         }
 
         /// <summary>

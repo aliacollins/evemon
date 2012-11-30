@@ -251,6 +251,30 @@
     <Compile Include="CharacterMonitoring\CharacterMonitorHeader.Designer.cs">
       <DependentUpon>CharacterMonitorHeader.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KillReportAttacker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KillReportAttacker.Designer.cs">
+      <DependentUpon>KillReportAttacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KillReportFittingContent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KillReportFittingContent.Designer.cs">
+      <DependentUpon>KillReportFittingContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KillReportVictim.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KillReportVictim.Designer.cs">
+      <DependentUpon>KillReportVictim.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KillReportInvolvedParties.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KillReportInvolvedParties.Designer.cs">
+      <DependentUpon>KillReportInvolvedParties.cs</DependentUpon>
+    </Compile>
     <Compile Include="NotificationWindow\ClaimableCertificateWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -281,6 +305,12 @@
     </Compile>
     <Compile Include="CharacterMonitoring\CharacterStandingsList.Designer.cs">
       <DependentUpon>CharacterStandingsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotificationWindow\KillReportWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotificationWindow\KillReportWindow.Designer.cs">
+      <DependentUpon>KillReportWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -532,11 +562,26 @@
       <SubType>Designer</SubType>
       <DependentUpon>CharacterMonitor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\KillReportAttacker.resx">
+      <DependentUpon>KillReportAttacker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\KillReportFittingContent.resx">
+      <DependentUpon>KillReportFittingContent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\KillReportInvolvedParties.resx">
+      <DependentUpon>KillReportInvolvedParties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\KillReportVictim.resx">
+      <DependentUpon>KillReportVictim.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NotificationWindow\ContractDetailsWindow.resx">
       <DependentUpon>ContractDetailsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NotificationWindow\ContractsWindow.resx">
       <DependentUpon>ContractsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotificationWindow\KillReportWindow.resx">
+      <DependentUpon>KillReportWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -1180,6 +1225,7 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
