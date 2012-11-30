@@ -96,7 +96,7 @@ namespace EVEMon.NotificationWindow
             m_mediumBoldFont = FontFactory.GetDefaultFont(9.25f, FontStyle.Bold);
             m_bigBoldFont = FontFactory.GetDefaultFont(10.25f, FontStyle.Bold);
 
-            // Initialize a control for the contract's outsourcing items
+            // Initialize a control for the contract's outgoing items
             if (m_contractItems.Any(x => x.Included) && m_contractItems.Count(x => x.Included) > 1)
             {
                 m_lvIncludedItems = new ContractItemsListView(m_contractItems.Where(x => x.Included));
@@ -112,9 +112,16 @@ namespace EVEMon.NotificationWindow
                 Controls.Add(m_lvNotIncludedItems);
             }
 
+            // Form has fixed size if it doesn't contain any list
+            if (!Controls.OfType<ContractItemsListView>().Any())
+                FormBorderStyle = FormBorderStyle.FixedDialog;
+
             // Adjust the control's height to our needs
-            if (m_contract.IsTrading)
-                Height += ListViewHeight;
+            if (!m_contract.IsTrading)
+                return;
+
+            Height += ListViewHeight;
+            MinimumSize = new Size(Width, Height);
         }
 
 
@@ -320,7 +327,7 @@ namespace EVEMon.NotificationWindow
             listView.Visible = true;
 
             int listViewHeight = m_contract.IsTrading && listView == m_lvIncludedItems
-                                     ? ListViewHeight
+                                     ? (DetailsPanel.Height - m_height - Pad * 2) / 2
                                      : DetailsPanel.Height - m_height - Pad * 2;
             listView.Size = new Size(DetailsPanel.Width - FirstIntendPosition * 2, listViewHeight);
 
@@ -1065,7 +1072,9 @@ namespace EVEMon.NotificationWindow
                 return;
             }
 
-            Width += RoutePanelParent.Width;
+            int width = Width + RoutePanelParent.Width;
+            MaximumSize = new Size(width, MaximumSize.Height);
+            MinimumSize = new Size(width, MinimumSize.Height);
             RoutePanelParent.Visible = true;
             m_oldRoute = m_route;
         }
@@ -1079,7 +1088,9 @@ namespace EVEMon.NotificationWindow
                 return;
 
             RoutePanelParent.Visible = !RoutePanelParent.Visible;
-            Width -= RoutePanelParent.Width;
+            int width = Width - RoutePanelParent.Width;
+            MaximumSize = new Size(width, MaximumSize.Height);
+            MinimumSize = new Size(width, MinimumSize.Height);
         }
 
 
@@ -1338,8 +1349,7 @@ namespace EVEMon.NotificationWindow
             #endregion
         }
 
-        #endregion
-
+            #endregion
 
         #endregion
     }
