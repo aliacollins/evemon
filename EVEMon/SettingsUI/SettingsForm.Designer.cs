@@ -194,7 +194,7 @@ namespace EVEMon.SettingsUI
             this.updatesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
             this.lblUpdatesPage = new System.Windows.Forms.Label();
-            this.cbCheckTimeOnStartup = new System.Windows.Forms.CheckBox();
+            this.cbCheckTime = new System.Windows.Forms.CheckBox();
             this.cbCheckForUpdates = new System.Windows.Forms.CheckBox();
             this.schedulerUIPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.panelColorText = new System.Windows.Forms.Panel();
@@ -1759,7 +1759,7 @@ namespace EVEMon.SettingsUI
             // 
             this.updatesPage.Controls.Add(this.updateSettingsControl);
             this.updatesPage.Controls.Add(this.lblUpdatesPage);
-            this.updatesPage.Controls.Add(this.cbCheckTimeOnStartup);
+            this.updatesPage.Controls.Add(this.cbCheckTime);
             this.updatesPage.Controls.Add(this.cbCheckForUpdates);
             this.updatesPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.updatesPage.Location = new System.Drawing.Point(5, 5);
@@ -1793,15 +1793,15 @@ namespace EVEMon.SettingsUI
             this.lblUpdatesPage.Text = "The following settings help reducing the network load, especially for high-latenc" +
     "y connections and clients with many characters.";
             // 
-            // cbCheckTimeOnStartup
+            // cbCheckTime
             // 
-            this.cbCheckTimeOnStartup.AutoSize = true;
-            this.cbCheckTimeOnStartup.Location = new System.Drawing.Point(15, 39);
-            this.cbCheckTimeOnStartup.Name = "cbCheckTimeOnStartup";
-            this.cbCheckTimeOnStartup.Size = new System.Drawing.Size(201, 17);
-            this.cbCheckTimeOnStartup.TabIndex = 0;
-            this.cbCheckTimeOnStartup.Text = "Check the computer clock on startup";
-            this.cbCheckTimeOnStartup.UseVisualStyleBackColor = true;
+            this.cbCheckTime.AutoSize = true;
+            this.cbCheckTime.Location = new System.Drawing.Point(15, 39);
+            this.cbCheckTime.Name = "cbCheckTime";
+            this.cbCheckTime.Size = new System.Drawing.Size(146, 17);
+            this.cbCheckTime.TabIndex = 0;
+            this.cbCheckTime.Text = "Check system clock sync";
+            this.cbCheckTime.UseVisualStyleBackColor = true;
             // 
             // cbCheckForUpdates
             // 
@@ -2852,7 +2852,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Button btnAddAPIServer;
         private System.Windows.Forms.Button btnEditAPIServer;
         private System.Windows.Forms.Button btnDeleteAPIServer;
-        private System.Windows.Forms.CheckBox cbCheckTimeOnStartup;
+        private System.Windows.Forms.CheckBox cbCheckTime;
         private System.Windows.Forms.GroupBox ApiProxyGroupBox;
         private System.Windows.Forms.CheckBox cbShowOverViewTab;
         private System.Windows.Forms.ComboBox compatibilityCombo;

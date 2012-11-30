@@ -143,7 +143,7 @@ namespace EVEMon.SettingsUI
             proxyAuthenticationButton.Tag = m_settings.Proxy;
 
             // Updates
-            cbCheckTimeOnStartup.Checked = m_settings.Updates.CheckTimeOnStartup;
+            cbCheckTime.Checked = m_settings.Updates.CheckTimeOnStartup;
             cbCheckForUpdates.Checked = m_settings.Updates.CheckEVEMonVersion;
             updateSettingsControl.Settings = m_settings.Updates;
 
@@ -503,7 +503,7 @@ namespace EVEMon.SettingsUI
 
             // Updates
             m_settings.Updates.CheckEVEMonVersion = cbCheckForUpdates.Checked;
-            m_settings.Updates.CheckTimeOnStartup = cbCheckTimeOnStartup.Checked;
+            m_settings.Updates.CheckTimeOnStartup = cbCheckTime.Checked;
 
             // Scheduler colors
             m_settings.UI.Scheduler.BlockingColor = (SerializableColor)panelColorBlocking.BackColor;

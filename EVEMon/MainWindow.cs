@@ -166,6 +166,7 @@ namespace EVEMon
             if (NetworkMonitor.IsNetworkAvailable)
             {
                 TimeCheck.CheckIsSynchronised(TimeCheckCallback);
+                Dispatcher.Schedule(TimeSpan.FromDays(1), CheckTimeSynchronization);
                 return;
             }
 
