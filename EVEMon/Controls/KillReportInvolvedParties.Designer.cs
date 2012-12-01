@@ -63,7 +63,7 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(262, 293);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(262, 401);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // InvolvedPartiesLabel
@@ -113,7 +113,7 @@
             this.InvolvedPartiesPanel.Location = new System.Drawing.Point(0, 209);
             this.InvolvedPartiesPanel.Margin = new System.Windows.Forms.Padding(0);
             this.InvolvedPartiesPanel.Name = "InvolvedPartiesPanel";
-            this.InvolvedPartiesPanel.Size = new System.Drawing.Size(262, 84);
+            this.InvolvedPartiesPanel.Size = new System.Drawing.Size(262, 192);
             this.InvolvedPartiesPanel.TabIndex = 6;
             // 
             // FinalBlowAttacker
@@ -125,6 +125,7 @@
             this.FinalBlowAttacker.Name = "FinalBlowAttacker";
             this.FinalBlowAttacker.Size = new System.Drawing.Size(256, 71);
             this.FinalBlowAttacker.TabIndex = 2;
+            this.FinalBlowAttacker.TotalDamageDone = 0;
             // 
             // TopDamageAttacker
             // 
@@ -135,6 +136,7 @@
             this.TopDamageAttacker.Name = "TopDamageAttacker";
             this.TopDamageAttacker.Size = new System.Drawing.Size(256, 71);
             this.TopDamageAttacker.TabIndex = 3;
+            this.TopDamageAttacker.TotalDamageDone = 0;
             // 
             // KillReportInvolvedParties
             // 
@@ -143,7 +145,7 @@
             this.Controls.Add(this.MainTableLayoutPanel);
             this.Name = "KillReportInvolvedParties";
             this.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.Size = new System.Drawing.Size(262, 296);
+            this.Size = new System.Drawing.Size(262, 404);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();
             this.ResumeLayout(false);

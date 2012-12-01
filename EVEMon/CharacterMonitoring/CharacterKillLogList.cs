@@ -559,10 +559,10 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             // Draw the kill image
-            g.DrawImage(killLog.VictimImage,
+            g.DrawImage(killLog.VictimShipImage,
                         new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                      (KillDetailHeight / 2) - (killLog.VictimImage.Height / 2) + e.Bounds.Top,
-                                      killLog.VictimImage.Width, killLog.VictimImage.Height));
+                                      (KillDetailHeight / 2) - (killLog.VictimShipImage.Height / 2) + e.Bounds.Top,
+                                      killLog.VictimShipImage.Width, killLog.VictimShipImage.Height));
 
             // Draw the copy image
             m_copyPositionFromRight = 24;
@@ -601,26 +601,26 @@ namespace EVEMon.CharacterMonitoring
 
             // Draw texts
             TextRenderer.DrawText(g, victimNameText, m_killBoldFont,
-                                  new Rectangle(e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight,
+                                  new Rectangle(e.Bounds.Left + killLog.VictimShipImage.Width + 4 + PadRight,
                                                 e.Bounds.Top,
                                                 victimNameTextSize.Width + PadLeft,
                                                 victimNameTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, killTimeText, m_killFont,
                                   new Rectangle(
-                                      e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight * 3 + victimNameTextSize.Width,
+                                      e.Bounds.Left + killLog.VictimShipImage.Width + 4 + PadRight * 3 + victimNameTextSize.Width,
                                       e.Bounds.Top,
                                       killTimeTextSize.Width + PadLeft,
                                       killTimeTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, victimNameCorpAndAllianceName, m_killFont,
-                                  new Rectangle(e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight,
+                                  new Rectangle(e.Bounds.Left + killLog.VictimShipImage.Width + 4 + PadRight,
                                                 e.Bounds.Top + victimNameTextSize.Height,
                                                 victimNameCorpAndAllianceNameSize.Width + PadLeft,
                                                 victimNameCorpAndAllianceNameSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, whatAndWhereInfo, m_killFont,
-                                  new Rectangle(e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight,
+                                  new Rectangle(e.Bounds.Left + killLog.VictimShipImage.Width + 4 + PadRight,
                                                 e.Bounds.Top + victimNameTextSize.Height +
                                                 victimNameCorpAndAllianceNameSize.Height,
                                                 whatAndWhereInfoSize.Width + PadLeft,
@@ -656,26 +656,26 @@ namespace EVEMon.CharacterMonitoring
 
             // Draw texts
             TextRenderer.DrawText(g, killLog.Victim.ShipTypeName, m_killBoldFont,
-                                  new Rectangle(e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight,
+                                  new Rectangle(e.Bounds.Left + killLog.VictimShipImage.Width + 4 + PadRight,
                                                 e.Bounds.Top,
                                                 killShipNameTextSize.Width + PadLeft,
                                                 killShipNameTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, killTimeText, m_killFont,
                                   new Rectangle(
-                                      e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight * 3 + killShipNameTextSize.Width,
+                                      e.Bounds.Left + killLog.VictimShipImage.Width + 4 + PadRight * 3 + killShipNameTextSize.Width,
                                       e.Bounds.Top,
                                       killTimeTextSize.Width + PadLeft,
                                       killTimeTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, finalBlowAttackerCorpAndAllianceName, m_killFont,
-                                  new Rectangle(e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight,
+                                  new Rectangle(e.Bounds.Left + killLog.VictimShipImage.Width + 4 + PadRight,
                                                 e.Bounds.Top + killShipNameTextSize.Height,
                                                 finalBlowAttackerCorpAndAllianceNameSize.Width + PadLeft,
                                                 finalBlowAttackerCorpAndAllianceNameSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, finalBlowAttackerShipAndModuleName, m_killFont,
-                                  new Rectangle(e.Bounds.Left + killLog.VictimImage.Width + 4 + PadRight,
+                                  new Rectangle(e.Bounds.Left + killLog.VictimShipImage.Width + 4 + PadRight,
                                                 e.Bounds.Top + killShipNameTextSize.Height +
                                                 finalBlowAttackerCorpAndAllianceNameSize.Height,
                                                 finalBlowAttackerShipAndModuleNameSize.Width + PadLeft,
@@ -1049,10 +1049,10 @@ namespace EVEMon.CharacterMonitoring
         {
             KillLog killLog = null;
 
-            if (lvKillLog.SelectedItems.Count != 0)
+            if (lvKillLog.Visible && lvKillLog.SelectedItems.Count != 0)
                 killLog = lvKillLog.SelectedItems[0].Tag as KillLog;
 
-            if (lbKillLog.SelectedItems.Count != 0)
+            if (lbKillLog.Visible && lbKillLog.SelectedItems.Count != 0)
                 killLog = lbKillLog.SelectedItems[0] as KillLog;
 
             return killLog;

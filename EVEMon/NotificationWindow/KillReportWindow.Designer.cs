@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.killReportFittingContent1 = new EVEMon.Controls.KillReportFittingContent();
+            this.killReportFittingContent = new EVEMon.Controls.KillReportFittingContent();
             this.killReportInvolvedParties = new EVEMon.Controls.KillReportInvolvedParties();
-            this.killReportHeader1 = new EVEMon.Controls.KillReportVictim();
+            this.killReportVictim = new EVEMon.Controls.KillReportVictim();
             this.SuspendLayout();
             // 
-            // killReportFittingContent1
+            // killReportFittingContent
             // 
-            this.killReportFittingContent1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.killReportFittingContent1.Location = new System.Drawing.Point(262, 142);
-            this.killReportFittingContent1.Name = "killReportFittingContent1";
-            this.killReportFittingContent1.Size = new System.Drawing.Size(322, 440);
-            this.killReportFittingContent1.TabIndex = 2;
+            this.killReportFittingContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.killReportFittingContent.Location = new System.Drawing.Point(262, 142);
+            this.killReportFittingContent.Name = "killReportFittingContent";
+            this.killReportFittingContent.Size = new System.Drawing.Size(322, 440);
+            this.killReportFittingContent.TabIndex = 2;
             // 
             // killReportInvolvedParties
             // 
@@ -50,25 +50,25 @@
             this.killReportInvolvedParties.Size = new System.Drawing.Size(262, 440);
             this.killReportInvolvedParties.TabIndex = 1;
             // 
-            // killReportHeader1
+            // killReportVictim
             // 
-            this.killReportHeader1.AutoSize = true;
-            this.killReportHeader1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.killReportHeader1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.killReportHeader1.Location = new System.Drawing.Point(0, 0);
-            this.killReportHeader1.Name = "killReportHeader1";
-            this.killReportHeader1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
-            this.killReportHeader1.Size = new System.Drawing.Size(584, 142);
-            this.killReportHeader1.TabIndex = 0;
+            this.killReportVictim.AutoSize = true;
+            this.killReportVictim.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.killReportVictim.Dock = System.Windows.Forms.DockStyle.Top;
+            this.killReportVictim.Location = new System.Drawing.Point(0, 0);
+            this.killReportVictim.Name = "killReportVictim";
+            this.killReportVictim.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
+            this.killReportVictim.Size = new System.Drawing.Size(584, 142);
+            this.killReportVictim.TabIndex = 0;
             // 
             // KillReportWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 582);
-            this.Controls.Add(this.killReportFittingContent1);
+            this.Controls.Add(this.killReportFittingContent);
             this.Controls.Add(this.killReportInvolvedParties);
-            this.Controls.Add(this.killReportHeader1);
+            this.Controls.Add(this.killReportVictim);
             this.MinimumSize = new System.Drawing.Size(600, 620);
             this.Name = "KillReportWindow";
             this.Text = "Kill Report";
@@ -79,9 +79,9 @@
 
         #endregion
 
-        private Controls.KillReportVictim killReportHeader1;
+        private Controls.KillReportVictim killReportVictim;
         private Controls.KillReportInvolvedParties killReportInvolvedParties;
-        private Controls.KillReportFittingContent killReportFittingContent1;
+        private Controls.KillReportFittingContent killReportFittingContent;
 
     }
 }

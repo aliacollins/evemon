@@ -102,7 +102,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the victim image.
         /// </summary>
-        public Image VictimImage
+        public Image VictimShipImage
         {
             get
             {
