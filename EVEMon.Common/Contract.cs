@@ -455,19 +455,19 @@ namespace EVEMon.Common
         /// <param name="src">The source.</param>
         private void UpdateContractInfo(SerializableContractListItem src)
         {
-            Status = GetStatus(src);
-
-            if (Overdue)
-                Status = CCPContractStatus.Overdue;
-
             Accepted = src.DateAccepted;
             Completed = src.DateCompleted;
             AcceptorID = src.AcceptorID;
             m_acceptor = src.AcceptorID == Character.CharacterID
-                           ? Character.Name
-                           : src.AcceptorID == Character.CorporationID
-                                 ? Character.Corporation.Name
-                                 : EveIDToName.GetIDToName(src.AcceptorID);
+                             ? Character.Name
+                             : src.AcceptorID == Character.CorporationID
+                                   ? Character.Corporation.Name
+                                   : EveIDToName.GetIDToName(src.AcceptorID);
+
+            Status = GetStatus(src);
+
+            if (Overdue)
+                Status = CCPContractStatus.Overdue;
         }
 
         /// <summary>

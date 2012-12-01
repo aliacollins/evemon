@@ -447,8 +447,23 @@ namespace EVEMon.NotificationWindow
         {
             m_height += Pad;
 
-            DrawText(e, "Complete In", String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", m_contract.DaysToComplete,
-                                                     (m_contract.DaysToComplete > 1 ? "s" : String.Empty)), Font);
+            if (m_contract.Accepted == DateTime.MinValue)
+            {
+                DrawText(e, "Complete In", String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", m_contract.DaysToComplete,
+                                                         (m_contract.DaysToComplete > 1 ? "s" : String.Empty)), Font);
+            }
+            else
+            {
+                DrawText(e, "Time Left",
+                         String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
+                                       m_contract.Accepted.AddDays(m_contract.DaysToComplete).Subtract(DateTime.UtcNow)
+                                           .ToDescriptiveText(DescriptiveTextOptions.SpaceText |
+                                                              DescriptiveTextOptions.FullText |
+                                                              DescriptiveTextOptions.SpaceBetween, false),
+                                       m_contract.Accepted.AddDays(m_contract.DaysToComplete)
+                                           .ToLocalTime().ToString("yyyy.MM.dd  HH:mm", CultureConstants.DefaultCulture)), Font);
+            }
+
             DrawText(e, "Volume", String.Format(CultureConstants.DefaultCulture, "{0:N1} m³", m_contract.Volume), Font);
 
             string text = String.Format(CultureConstants.DefaultCulture, GetNumberFormat(m_contract.Reward), m_contract.Reward,
@@ -500,6 +515,7 @@ namespace EVEMon.NotificationWindow
             DrawStationText(e, "Location", m_contract.StartStation);
             DrawText(e, "Issued Date",
                      m_contract.Issued.ToLocalTime().ToString("yyyy.MM.dd  HH:mm", CultureConstants.DefaultCulture), Font);
+
             DrawExpirationOrCompletionText(e);
 
             // Draw the lower line
@@ -517,6 +533,13 @@ namespace EVEMon.NotificationWindow
                 return;
 
             DrawExpirationText(e);
+
+            if (m_contract.ContractType == ContractType.Courier && m_contract.Accepted != DateTime.MinValue)
+            {
+                DrawText(e, "Complete Before",
+                         m_contract.Accepted.AddDays(m_contract.DaysToComplete)
+                             .ToLocalTime().ToString("yyyy.MM.dd  HH:mm", CultureConstants.DefaultCulture), Font);
+            }
 
             if (m_contract.Status != CCPContractStatus.Outstanding && m_contract.Completed != DateTime.MinValue)
             {
