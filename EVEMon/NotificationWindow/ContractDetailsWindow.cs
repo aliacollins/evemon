@@ -510,7 +510,8 @@ namespace EVEMon.NotificationWindow
             DrawText(e, "Type", m_contract.ContractType.GetDescription(), Font);
             DrawText(e, "Issued by", m_contract.Issuer, Font);
             DrawText(e, "Availability", AvailabilityInfo, Font);
-            DrawContractorText(e);
+            if (m_contract.AcceptorID != 0)
+                DrawText(e, "Contractor", m_contract.Acceptor, Font);
             DrawText(e, "Status", m_contract.Status.GetDescription(), Font);
             DrawStationText(e, "Location", m_contract.StartStation);
             DrawText(e, "Issued Date",
@@ -579,16 +580,6 @@ namespace EVEMon.NotificationWindow
             DrawColoredText(e, expirationRemainingTimeText, Font, point, color, false);
             position += expirationRemainingTimeTextSize.Width;
             DrawText(e, String.Empty, ")", Font, true, position);
-        }
-
-        /// <summary>
-        /// Draws the contractor text.
-        /// </summary>
-        /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
-        private void DrawContractorText(PaintEventArgs e)
-        {
-            if (m_contract.State == ContractState.Finished)
-                DrawText(e, "Contractor", m_contract.Acceptor, Font);
         }
 
         /// <summary>
