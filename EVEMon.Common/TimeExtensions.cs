@@ -264,7 +264,10 @@ namespace EVEMon.Common
             }
 
             if ((dto & DescriptiveTextOptions.SpaceBetween) != 0)
-                sb.Append(" ");
+            {
+                if (sb.Length > 0)
+                    sb.Append(' ');
+            }
 
             sb.Append(p.ToString(CultureConstants.DefaultCulture));
 

@@ -201,7 +201,7 @@ namespace EVEMon.CharacterMonitoring
             DateTime dt = previousRecord == null ? DateTime.UtcNow : previousRecord.StartDate;
             string recordPeriodText = String.Format(CultureConstants.DefaultCulture, "( {0} )",
                                                     dt.Subtract(record.StartDate).ToDescriptiveText(
-                                                        DescriptiveTextOptions.SpaceBetween, false).Trim());
+                                                        DescriptiveTextOptions.SpaceBetween, false));
             string recordStartDateText = String.Format(CultureConstants.DefaultCulture, DateTimeFormat,
                                                        record.StartDate.ToLocalTime());
             string recordEndDateText = previousRecord == null

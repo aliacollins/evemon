@@ -439,7 +439,7 @@ namespace EVEMon.Common.Controls
         private void DisplayFreeRoomToolTip(Rectangle emptyRect)
         {
             TimeSpan leftTime = (m_skillQueue.IsPaused ? s_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;
-            string text = String.Format(CultureConstants.DefaultCulture, "Free room:{0}",
+            string text = String.Format(CultureConstants.DefaultCulture, "Free room: {0}",
                                         leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);

@@ -361,7 +361,7 @@ namespace EVEMon.LogitechG15
                 }
 
                 m_lcdLines.Add(new LineProcess(skill.EndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
-                    DescriptiveTextOptions.SpaceBetween).TrimStart(' '), m_defaultFont));
+                    DescriptiveTextOptions.SpaceBetween), m_defaultFont));
             }
             else
             {
