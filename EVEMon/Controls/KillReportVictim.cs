@@ -74,7 +74,7 @@ namespace EVEMon.Controls
             ShipNameLabel.Text = ship.Name;
             ShipGroupLabel.Text = String.Format(CultureConstants.DefaultCulture, ShipGroupLabel.Text, ship.GroupName);
 
-            KillTimeLabel.Text = m_killLog.KillTime.ToLocalTime().ToString("yyyy.MM.dd HH:mm");
+            KillTimeLabel.Text = m_killLog.KillTime.ToLocalTime().ToString("yyyy.MM.dd  HH:mm");
             SolarSystemLabel.Text = m_killLog.SolarSystem.Name;
             SecStatusLabel.Text = m_killLog.SolarSystem.SecurityLevel.ToString("N1");
             SecStatusLabel.ForeColor = m_killLog.SolarSystem.SecurityLevelColor;

@@ -175,8 +175,8 @@
   <data name="ShipPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOvQAA
-        Dr0BR/uQrQAAAglJREFUSEvtlM2nglEQxvsjIyIiUqJVtIyI1CYi2tQm4hKJVhGReGkVKa0iUiIiok33
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOvAAA
+        DrwBlbxySQAAAglJREFUSEvtlM2nglEQxvsjIyIiUqJVtIyI1CYi2tQm4hKJVhGReGkVKa0iUiIiok33
         dz05vXL7uG8fi6tZHHPmzMxzzjNnxnV4sbhenP/wAbjJ8H+laDqdftlkMplARbfb7XQ6MqPsdjuzxXKJ
         q98pGo/H+Xze7XanUqloNJrL5YgPhUKFQgEjRxgzmUwymYzFYmyRvwHIm1yj0ciyrEAgMJvNPB4POkaO
         eKLX6wXgyt2V5FqRBbDf730+H48gHVsBLBYLlOcAkI7spGu32wag1+sFg0EAEokEj+BlzikiUsxsNhsB
@@ -191,8 +191,8 @@
   <data name="WeaponPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOvQAA
-        Dr0BR/uQrQAAAglJREFUSEvtlM2nglEQxvsjIyIiUqJVtIyI1CYi2tQm4hKJVhGReGkVKa0iUiIiok33
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOvAAA
+        DrwBlbxySQAAAglJREFUSEvtlM2nglEQxvsjIyIiUqJVtIyI1CYi2tQm4hKJVhGReGkVKa0iUiIiok33
         dz05vXL7uG8fi6tZHHPmzMxzzjNnxnV4sbhenP/wAbjJ8H+laDqdftlkMplARbfb7XQ6MqPsdjuzxXKJ
         q98pGo/H+Xze7XanUqloNJrL5YgPhUKFQgEjRxgzmUwymYzFYmyRvwHIm1yj0ciyrEAgMJvNPB4POkaO
         eKLX6wXgyt2V5FqRBbDf730+H48gHVsBLBYLlOcAkI7spGu32wag1+sFg0EAEokEj+BlzikiUsxsNhsB
