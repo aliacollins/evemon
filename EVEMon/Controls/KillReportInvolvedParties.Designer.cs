@@ -84,7 +84,7 @@
             this.TotalDamageTakenLabel.Name = "TotalDamageTakenLabel";
             this.TotalDamageTakenLabel.Size = new System.Drawing.Size(125, 13);
             this.TotalDamageTakenLabel.TabIndex = 1;
-            this.TotalDamageTakenLabel.Text = "{0} Total Damage Taken";
+            this.TotalDamageTakenLabel.Text = "{0:N0} Total Damage Taken";
             // 
             // FinalBlowLabel
             // 
@@ -99,7 +99,7 @@
             // TopDamageLabel
             // 
             this.TopDamageLabel.AutoSize = true;
-            this.TopDamageLabel.Location = new System.Drawing.Point(3, 119);
+            this.TopDamageLabel.Location = new System.Drawing.Point(3, 118);
             this.TopDamageLabel.Name = "TopDamageLabel";
             this.TopDamageLabel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.TopDamageLabel.Size = new System.Drawing.Size(67, 19);
@@ -110,10 +110,10 @@
             // 
             this.InvolvedPartiesPanel.AutoScroll = true;
             this.InvolvedPartiesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.InvolvedPartiesPanel.Location = new System.Drawing.Point(0, 209);
+            this.InvolvedPartiesPanel.Location = new System.Drawing.Point(0, 207);
             this.InvolvedPartiesPanel.Margin = new System.Windows.Forms.Padding(0);
             this.InvolvedPartiesPanel.Name = "InvolvedPartiesPanel";
-            this.InvolvedPartiesPanel.Size = new System.Drawing.Size(262, 192);
+            this.InvolvedPartiesPanel.Size = new System.Drawing.Size(262, 194);
             this.InvolvedPartiesPanel.TabIndex = 6;
             // 
             // FinalBlowAttacker
@@ -123,7 +123,7 @@
             this.FinalBlowAttacker.Location = new System.Drawing.Point(3, 48);
             this.FinalBlowAttacker.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.FinalBlowAttacker.Name = "FinalBlowAttacker";
-            this.FinalBlowAttacker.Size = new System.Drawing.Size(256, 71);
+            this.FinalBlowAttacker.Size = new System.Drawing.Size(256, 70);
             this.FinalBlowAttacker.TabIndex = 2;
             this.FinalBlowAttacker.TotalDamageDone = 0;
             // 
@@ -131,10 +131,10 @@
             // 
             this.TopDamageAttacker.AutoSize = true;
             this.TopDamageAttacker.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TopDamageAttacker.Location = new System.Drawing.Point(3, 138);
+            this.TopDamageAttacker.Location = new System.Drawing.Point(3, 137);
             this.TopDamageAttacker.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.TopDamageAttacker.Name = "TopDamageAttacker";
-            this.TopDamageAttacker.Size = new System.Drawing.Size(256, 71);
+            this.TopDamageAttacker.Size = new System.Drawing.Size(256, 70);
             this.TopDamageAttacker.TabIndex = 3;
             this.TopDamageAttacker.TotalDamageDone = 0;
             // 

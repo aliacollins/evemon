@@ -67,7 +67,8 @@ namespace EVEMon.Common
             {
                 // Append info for NPC or player entities
                 if (String.IsNullOrEmpty(attacker.Name))
-                    sb.AppendFormat(CultureConstants.InvariantCulture, "Name: {0} / {1}", attacker.ShipTypeName, attacker.CorporationName);
+                    sb.AppendFormat(CultureConstants.InvariantCulture, "Name: {0} / {1}", attacker.ShipTypeName,
+                                    attacker.CorporationName);
                 else
                     sb.AppendFormat(CultureConstants.InvariantCulture, "Name: {0}", attacker.Name);
 
@@ -118,26 +119,19 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sb">The sb.</param>
         /// <param name="droppedItems">The dropped items.</param>
-        private static void AppendDroppedItems(StringBuilder sb, IEnumerable<SerializableKillLogItemListItem> droppedItems)
+        private static void AppendDroppedItems(StringBuilder sb, IEnumerable<KillLogItem> droppedItems)
         {
-            foreach (SerializableKillLogItemListItem droppedItem in droppedItems)
+            foreach (KillLogItem droppedItem in droppedItems.Where(droppedItem => droppedItem.EVEFlag != 0))
             {
-                Item item = StaticItems.GetItemByID(droppedItem.TypeID);
-                if (item == null)
-                    continue;
-
-                if (droppedItem.EVEFlag == 0)
-                    continue;
-
                 sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} ({2})",
-                                item.Name,
+                                droppedItem.Name,
                                 droppedItem.QtyDropped > 1
                                     ? String.Format(CultureConstants.InvariantCulture, ", Qty: {0}", droppedItem.QtyDropped)
                                     : String.Empty, droppedItem.InventoryText).AppendLine();
 
                 // Append any items inside a container
-                if (droppedItem.Items.Count != 0)
-                    AppendDestroyedItems(sb, droppedItem.Items.Where(x => x.QtyDropped != 0));
+                if (droppedItem.Items.Any())
+                    AppendDroppedItems(sb, droppedItem.Items.Where(x => x.QtyDropped != 0));
             }
         }
 
@@ -146,25 +140,18 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sb">The sb.</param>
         /// <param name="destroyedItems">The destroyed items.</param>
-        private static void AppendDestroyedItems(StringBuilder sb, IEnumerable<SerializableKillLogItemListItem> destroyedItems)
+        private static void AppendDestroyedItems(StringBuilder sb, IEnumerable<KillLogItem> destroyedItems)
         {
-            foreach (SerializableKillLogItemListItem destroyedItem in destroyedItems)
+            foreach (KillLogItem destroyedItem in destroyedItems.Where(destroyedItem => destroyedItem.EVEFlag != 0))
             {
-                Item item = StaticItems.GetItemByID(destroyedItem.TypeID);
-                if (item == null)
-                    continue;
-
-                if (destroyedItem.EVEFlag == 0)
-                    continue;
-
                 sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} ({2})",
-                                item.Name,
+                                destroyedItem.Name,
                                 destroyedItem.QtyDestroyed > 1
                                     ? String.Format(CultureConstants.InvariantCulture, ", Qty: {0}", destroyedItem.QtyDestroyed)
                                     : String.Empty, destroyedItem.InventoryText).AppendLine();
 
                 // Append any items inside a container
-                if (destroyedItem.Items.Count != 0)
+                if (destroyedItem.Items.Any())
                     AppendDestroyedItems(sb, destroyedItem.Items.Where(x => x.QtyDestroyed != 0));
             }
         }

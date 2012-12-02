@@ -133,7 +133,7 @@
             // CorpPictureBox
             // 
             this.CorpPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("CorpPictureBox.Image")));
-            this.CorpPictureBox.Location = new System.Drawing.Point(3, 35);
+            this.CorpPictureBox.Location = new System.Drawing.Point(3, 33);
             this.CorpPictureBox.Name = "CorpPictureBox";
             this.CorpPictureBox.Size = new System.Drawing.Size(32, 32);
             this.CorpPictureBox.TabIndex = 1;
@@ -142,7 +142,7 @@
             // AlliancePictureBox
             // 
             this.AlliancePictureBox.Image = ((System.Drawing.Image)(resources.GetObject("AlliancePictureBox.Image")));
-            this.AlliancePictureBox.Location = new System.Drawing.Point(41, 35);
+            this.AlliancePictureBox.Location = new System.Drawing.Point(41, 33);
             this.AlliancePictureBox.Name = "AlliancePictureBox";
             this.AlliancePictureBox.Size = new System.Drawing.Size(32, 32);
             this.AlliancePictureBox.TabIndex = 2;
@@ -246,7 +246,7 @@
             this.CorpAllianceFlowLayoutPanel.Controls.Add(this.AllianceNameLabel);
             this.CorpAllianceFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CorpAllianceFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.CorpAllianceFlowLayoutPanel.Location = new System.Drawing.Point(76, 32);
+            this.CorpAllianceFlowLayoutPanel.Location = new System.Drawing.Point(76, 30);
             this.CorpAllianceFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.CorpAllianceFlowLayoutPanel.Name = "CorpAllianceFlowLayoutPanel";
             this.CorpAllianceFlowLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 0);
@@ -279,18 +279,18 @@
             this.ShipNameGroupFlowLayoutPanel.Controls.Add(this.ShipNameLabel);
             this.ShipNameGroupFlowLayoutPanel.Controls.Add(this.ShipGroupLabel);
             this.ShipNameGroupFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShipNameGroupFlowLayoutPanel.Location = new System.Drawing.Point(0, 70);
+            this.ShipNameGroupFlowLayoutPanel.Location = new System.Drawing.Point(0, 68);
             this.ShipNameGroupFlowLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ShipNameGroupFlowLayoutPanel.Name = "ShipNameGroupFlowLayoutPanel";
-            this.ShipNameGroupFlowLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 9, 0, 6);
-            this.ShipNameGroupFlowLayoutPanel.Size = new System.Drawing.Size(270, 28);
+            this.ShipNameGroupFlowLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 8, 0, 6);
+            this.ShipNameGroupFlowLayoutPanel.Size = new System.Drawing.Size(270, 30);
             this.ShipNameGroupFlowLayoutPanel.TabIndex = 8;
             // 
             // ShipNameLabel
             // 
             this.ShipNameLabel.AutoSize = true;
             this.ShipNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.ShipNameLabel.Location = new System.Drawing.Point(0, 9);
+            this.ShipNameLabel.Location = new System.Drawing.Point(0, 8);
             this.ShipNameLabel.Margin = new System.Windows.Forms.Padding(0);
             this.ShipNameLabel.Name = "ShipNameLabel";
             this.ShipNameLabel.Size = new System.Drawing.Size(68, 13);
@@ -300,7 +300,7 @@
             // ShipGroupLabel
             // 
             this.ShipGroupLabel.AutoSize = true;
-            this.ShipGroupLabel.Location = new System.Drawing.Point(71, 9);
+            this.ShipGroupLabel.Location = new System.Drawing.Point(71, 8);
             this.ShipGroupLabel.Name = "ShipGroupLabel";
             this.ShipGroupLabel.Size = new System.Drawing.Size(27, 13);
             this.ShipGroupLabel.TabIndex = 4;
@@ -315,7 +315,7 @@
             this.CharacterNamePanel.Location = new System.Drawing.Point(0, 0);
             this.CharacterNamePanel.Margin = new System.Windows.Forms.Padding(0);
             this.CharacterNamePanel.Name = "CharacterNamePanel";
-            this.CharacterNamePanel.Size = new System.Drawing.Size(270, 32);
+            this.CharacterNamePanel.Size = new System.Drawing.Size(270, 30);
             this.CharacterNamePanel.TabIndex = 9;
             // 
             // CopyPictureBox
@@ -335,11 +335,10 @@
             // 
             this.CharacterNameLabel.AutoSize = true;
             this.CharacterNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.CharacterNameLabel.Location = new System.Drawing.Point(-1, 0);
+            this.CharacterNameLabel.Location = new System.Drawing.Point(-1, 3);
             this.CharacterNameLabel.Margin = new System.Windows.Forms.Padding(0);
             this.CharacterNameLabel.Name = "CharacterNameLabel";
-            this.CharacterNameLabel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 6);
-            this.CharacterNameLabel.Size = new System.Drawing.Size(146, 32);
+            this.CharacterNameLabel.Size = new System.Drawing.Size(146, 20);
             this.CharacterNameLabel.TabIndex = 0;
             this.CharacterNameLabel.Text = "Character Name";
             // 

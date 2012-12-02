@@ -336,7 +336,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Gets the preferred size from the preferred size of the skills list.
+        /// Gets the preferred size from the preferred size of the list.
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>

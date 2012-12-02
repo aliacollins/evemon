@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Serialization.API;
@@ -9,13 +10,23 @@ namespace EVEMon.Controls
     {
         private SerializableKillLogAttackersListItem m_attacker;
 
+
+        #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="KillReportAttacker"/> class.
         /// </summary>
         public KillReportAttacker()
         {
             InitializeComponent();
+
+            // Set the mouse click event for each control to handle the parent panel scrolling
+            SetControlMouseEvents(Controls);
         }
+
+
+        #endregion
+
 
         #region Properties
 
@@ -44,6 +55,9 @@ namespace EVEMon.Controls
         public int TotalDamageDone { get; set; }
 
         #endregion
+
+
+        #region Content Management Methods
 
         /// <summary>
         /// Updates the content.
@@ -94,5 +108,44 @@ namespace EVEMon.Controls
                                                              });
             }
         }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Sets the control mouse events.
+        /// </summary>
+        /// <param name="controls">The controls.</param>
+        private void SetControlMouseEvents(IEnumerable controls)
+        {
+            // Give focus to parent panel for mouse wheel scrolling
+            foreach (Control control in controls)
+            {
+                control.MouseClick += control_MouseClick;
+
+                if (control.Controls.Count > 0)
+                    SetControlMouseEvents(control.Controls);
+            }
+        }
+
+        #endregion
+
+
+        #region Local Events
+
+        /// <summary>
+        /// Handles the MouseEnter event of the control control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void control_MouseClick(object sender, MouseEventArgs e)
+        {
+            Parent.Focus();
+        }
+
+
+        #endregion
     }
 }

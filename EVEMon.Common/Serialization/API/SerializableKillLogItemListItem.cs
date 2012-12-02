@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -32,12 +33,6 @@ namespace EVEMon.Common.Serialization.API
         public Collection<SerializableKillLogItemListItem> Items
         {
             get { return m_items; }
-        }
-
-        [XmlIgnore]
-        public string InventoryText
-        {
-            get { return EveFlag.GetFlagText(EVEFlag); }
         }
     }
 }

@@ -249,7 +249,7 @@ namespace EVEMon.CharacterMonitoring
 
                     foreach (KillLog kill in group)
                     {
-                        kill.KillLogImageUpdated += kill_KillLogImageUpdated;
+                        kill.KillLogVictimShipImageUpdated += KillKillLogVictimShipImageUpdated;
                         lbKillLog.Items.Add(kill);
                     }
                 }
@@ -729,7 +729,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Gets the preferred size from the preferred size of the skills list.
+        /// Gets the preferred size from the preferred size of the list.
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
@@ -748,7 +748,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void kill_KillLogImageUpdated(object sender, EventArgs e)
+        private void KillKillLogVictimShipImageUpdated(object sender, EventArgs e)
         {
             // Force to redraw
             lbKillLog.Invalidate();

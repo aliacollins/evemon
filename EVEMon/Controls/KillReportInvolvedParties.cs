@@ -82,9 +82,9 @@ namespace EVEMon.Controls
                 attackerControl.TotalDamageDone = m_killLog.Victim.DamageTaken;
                 attackerControl.Attacker = attacker;
             }
-
-            #endregion
-       
         }
+
+        #endregion
+
     }
 }

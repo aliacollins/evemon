@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
@@ -10,14 +9,17 @@ namespace EVEMon.Common
 {
     public sealed class KillLog
     {
-        public event EventHandler KillLogImageUpdated;
+        /// <summary>
+        /// Occurs when kill log victim ship image updated.
+        /// </summary>
+        public event EventHandler KillLogVictimShipImageUpdated;
 
 
         #region Fields
 
-        private Image m_image;
+        private readonly List<KillLogItem> m_items = new List<KillLogItem>(); 
         private readonly int m_solarSystemID;
-        private readonly long m_killID;
+        private Image m_image;
 
         #endregion
 
@@ -31,14 +33,14 @@ namespace EVEMon.Common
         /// <param name="src">The source.</param>
         internal KillLog(Character character, SerializableKillLogListItem src)
         {
-            m_killID = src.KillID;
             m_solarSystemID = src.SolarSystemID;
             KillTime = src.KillTime;
             TimeSinceKill = DateTime.UtcNow.Subtract(src.KillTime);
             MoonID = src.MoonID;
             Victim = src.Victim;
             Attackers = src.Attackers;
-            Items = src.Items;
+
+            m_items.AddRange(src.Items.Select(item => new KillLogItem(item)));
 
             Group = src.Victim.ID == character.CharacterID ? KillGroup.Losses : KillGroup.Kills;
         }
@@ -77,27 +79,29 @@ namespace EVEMon.Common
         public SerializableKillLogVictim Victim { get; private set; }
 
         /// <summary>
+        /// Gets the attackers.
+        /// </summary>
+        public IEnumerable<SerializableKillLogAttackersListItem> Attackers { get; private set; }
+
+        /// <summary>
         /// Gets the final blow attacker.
         /// </summary>
         public SerializableKillLogAttackersListItem FinalBlowAttacker
         {
             get { return Attackers.Single(x => x.FinalBlow); }
         }
-
-        /// <summary>
-        /// Gets the attackers.
-        /// </summary>
-        public IEnumerable<SerializableKillLogAttackersListItem> Attackers { get; private set; }
-
-        /// <summary>
-        /// Gets the items.
-        /// </summary>
-        public IEnumerable<SerializableKillLogItemListItem> Items { get; private set; }
-
         /// <summary>
         /// Gets or sets the group.
         /// </summary>
         public KillGroup Group { get; private set; }
+
+        /// <summary>
+        /// Gets the items.
+        /// </summary>
+        public IEnumerable<KillLogItem> Items
+        {
+            get { return m_items; }
+        }
 
         /// <summary>
         /// Gets the victim image.
@@ -107,7 +111,7 @@ namespace EVEMon.Common
             get
             {
                 if (m_image == null)
-                    GetImage();
+                    GetVictimShipImage();
 
                 return m_image;
             }
@@ -119,9 +123,9 @@ namespace EVEMon.Common
         #region Helper Methods
 
         /// <summary>
-        /// Gets the entity image.
+        /// Gets the victim's ship image.
         /// </summary>
-        private void GetImage()
+        private void GetVictimShipImage()
         {
             m_image = new Bitmap(32, 32);
             ImageService.GetImageAsync(GetImageUrl(), img =>
@@ -132,8 +136,8 @@ namespace EVEMon.Common
                                                               m_image = img;
 
                                                               // Notify the subscriber that we got the image
-                                                              if (KillLogImageUpdated != null)
-                                                                  KillLogImageUpdated(this, EventArgs.Empty);
+                                                              if (KillLogVictimShipImageUpdated != null)
+                                                                  KillLogVictimShipImageUpdated(this, EventArgs.Empty);
                                                           });
         }
 

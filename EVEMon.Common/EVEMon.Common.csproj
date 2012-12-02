@@ -275,6 +275,7 @@
     <Compile Include="KillLogCollection.cs" />
     <Compile Include="KillLogComparer.cs" />
     <Compile Include="KillLogExporter.cs" />
+    <Compile Include="KillLogItem.cs" />
     <Compile Include="Medal.cs" />
     <Compile Include="MedalCollection.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
