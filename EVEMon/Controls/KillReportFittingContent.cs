@@ -148,7 +148,7 @@ namespace EVEMon.Controls
 
             // Get the items cost
             double itemsCost;
-            unknownCost |= GetItemsCost(out itemsCost);
+            unknownCost |= GetItemsCost(m_killLog.Items, out itemsCost);
             totalCost += itemsCost;
 
             return unknownCost ? "Unknown" : String.Format(CultureConstants.DefaultCulture, " {0:N2} ISK", totalCost);
@@ -157,12 +157,14 @@ namespace EVEMon.Controls
         /// <summary>
         /// Gets the items cost.
         /// </summary>
+        /// <param name="items">The items.</param>
         /// <param name="totalCost">The total cost.</param>
-        private bool GetItemsCost(out double totalCost)
+        /// <returns></returns>
+        private static bool GetItemsCost(IEnumerable<KillLogItem>items, out double totalCost)
         {
             bool unknownCost = false;
             double itemCost = 0d;
-            foreach (KillLogItem item in m_killLog.Items)
+            foreach (KillLogItem item in items)
             {
                 double price = item.Price;
                 unknownCost |= Math.Abs(price) < double.Epsilon;
@@ -171,10 +173,10 @@ namespace EVEMon.Controls
                 if (!item.Items.Any())
                     continue;
 
-                unknownCost |= GetItemsCost(out totalCost);
+                unknownCost |= GetItemsCost(item.Items, out totalCost);
                 itemCost += totalCost;
             }
-            
+
             totalCost = itemCost;
 
             return unknownCost;
@@ -333,11 +335,10 @@ namespace EVEMon.Controls
                 case KillLogFittingContentGroup.SubsystemSlot:
                     return imageList.Images[6];
                 case KillLogFittingContentGroup.DroneBay:
-                    return imageList.Images[7];
+                    return imageList.Images[0];
                 case KillLogFittingContentGroup.Implant:
-                    return imageList.Images[8];
                 case KillLogFittingContentGroup.Booster:
-                    return imageList.Images[9];
+                    return imageList.Images[8];
                 default:
                     return imageList.Images[0];
             }
@@ -375,7 +376,7 @@ namespace EVEMon.Controls
                     if (FittingContentListBox.TopIndex - i >= 0)
                         item = FittingContentListBox.Items[FittingContentListBox.TopIndex - i];
                 }
-                    // Going down
+                // Going down
                 else
                 {
                     // Compute the height of the items from current the topindex (included)

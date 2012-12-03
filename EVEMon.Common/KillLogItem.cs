@@ -52,11 +52,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the EVE flag.
         /// </summary>
-        public int TypeID { get; private set; }
-
-        /// <summary>
-        /// Gets the EVE flag.
-        /// </summary>
         public short EVEFlag { get; private set; }
 
         /// <summary>
