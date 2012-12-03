@@ -85,13 +85,13 @@ namespace EVEMon.Controls
             {
                 IEnumerable<KillLogItem> items = m_killLog.Items;
                 IEnumerable<IGrouping<KillLogFittingContentGroup, KillLogItem>> groups = items
-                    .GroupBy(item => item.FittingContentGroup).OrderBy(x => x .Key);
+                    .GroupBy(item => item.FittingContentGroup).OrderBy(x => x.Key);
 
                 // Scroll through groups
                 FittingContentListBox.Items.Clear();
                 foreach (IGrouping<KillLogFittingContentGroup, KillLogItem> group in groups)
                 {
-                    FittingContentListBox.Items.Add(group.Key.GetDescription());
+                    FittingContentListBox.Items.Add(group.Key);
 
                     foreach (KillLogItem item in group)
                     {
@@ -127,7 +127,6 @@ namespace EVEMon.Controls
             {
                 FittingContentListBox.EndUpdate();
             }
-
         }
 
         #endregion
@@ -174,7 +173,7 @@ namespace EVEMon.Controls
                 }
             }
             else
-                DrawItem((string)listItem, e);
+                DrawItem((KillLogFittingContentGroup)listItem, e);
         }
 
         /// <summary>
@@ -188,7 +187,7 @@ namespace EVEMon.Controls
             Graphics g = e.Graphics;
 
             // Draw background
-            g.FillRectangle(itemIsDropped ? Brushes.DarkGreen : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(itemIsDropped ? Brushes.Green : Brushes.LightGray, e.Bounds);
 
             int itemQty = itemIsDropped ? item.QtyDropped : item.QtyDestroyed;
 
@@ -209,8 +208,8 @@ namespace EVEMon.Controls
                 return;
 
             g.DrawImage(item.ItemImage, new Rectangle(e.Bounds.Left + PadLeft * 2,
-                                                      e.Bounds.Top + ((FittingDetailHeight - ItemImageSize) / 2),
-                                                      24, 24));
+                                                      e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
+                                                      ItemImageSize, ItemImageSize));
         }
 
         /// <summary>
@@ -218,7 +217,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="group"></param>
         /// <param name="e"></param>
-        private void DrawItem(string group, DrawItemEventArgs e)
+        private void DrawItem(KillLogFittingContentGroup group, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
@@ -235,16 +234,63 @@ namespace EVEMon.Controls
                 g.DrawLine(pen, e.Bounds.Left, e.Bounds.Top, e.Bounds.Right + 1, e.Bounds.Top);
             }
 
-            Size fittingGroupTextSize = TextRenderer.MeasureText(g, group, m_fittingBoldFont, Size.Empty, Format);
-            Rectangle fittingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
-                                                                             e.Bounds.Top +
-                                                                             ((e.Bounds.Height - fittingGroupTextSize.Height) / 2),
-                                                                             fittingGroupTextSize.Width + PadRight,
-                                                                             fittingGroupTextSize.Height);
+            Size fittingGroupTextSize = TextRenderer.MeasureText(g, group.GetDescription(), m_fittingBoldFont, Size.Empty, Format);
+            Rectangle fittingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft / 3 + ItemImageSize,
+                                                           e.Bounds.Top +
+                                                           ((e.Bounds.Height - fittingGroupTextSize.Height) / 2),
+                                                           fittingGroupTextSize.Width + PadRight,
+                                                           fittingGroupTextSize.Height);
 
-            TextRenderer.DrawText(g, group, m_fittingBoldFont, fittingGroupTextRect, Color.White);
+            TextRenderer.DrawText(g, group.GetDescription(), m_fittingBoldFont, fittingGroupTextRect, Color.White);
+
+            // Draw the group image
+            if (Settings.UI.SafeForWork)
+                return;
+
+            Rectangle fittingGroupImageRect = new Rectangle(e.Bounds.Left + PadLeft / 3,
+                                                            e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
+                                                            ItemImageSize, ItemImageSize);
+
+            g.DrawImage(GetGroupImage(group), fittingGroupImageRect);
         }
 
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets the group image.
+        /// </summary>
+        /// <param name="group">The group.</param>
+        /// <returns></returns>
+        private Image GetGroupImage(KillLogFittingContentGroup group)
+        {
+            switch (group)
+            {
+                case KillLogFittingContentGroup.HighSlot:
+                    return imageList.Images[2];
+                case KillLogFittingContentGroup.MediumSlot:
+                    return imageList.Images[3];
+                case KillLogFittingContentGroup.LowSlot:
+                    return imageList.Images[4];
+                case KillLogFittingContentGroup.RigSlot:
+                    return imageList.Images[5];
+                case KillLogFittingContentGroup.SubsystemSlot:
+                    return imageList.Images[6];
+                case KillLogFittingContentGroup.DroneBay:
+                    return imageList.Images[7];
+                case KillLogFittingContentGroup.Implant:
+                    return imageList.Images[8];
+                case KillLogFittingContentGroup.Booster:
+                    return imageList.Images[9];
+                case KillLogFittingContentGroup.Cargo:
+                case KillLogFittingContentGroup.Other:
+                    return imageList.Images[1];
+                default:
+                    return imageList.Images[0];
+            }
+        }
 
         #endregion
 

@@ -47,6 +47,7 @@
             this.DroppedItemLabel = new System.Windows.Forms.Label();
             this.DestroyedItemLabel = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.MainTableLayoutPanel.SuspendLayout();
             this.HeaderPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ToggleColorKeyPictureBox)).BeginInit();
@@ -235,7 +236,7 @@
             // DroppedItemLabel
             // 
             this.DroppedItemLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.DroppedItemLabel.BackColor = System.Drawing.Color.DarkGreen;
+            this.DroppedItemLabel.BackColor = System.Drawing.Color.Green;
             this.DroppedItemLabel.Location = new System.Drawing.Point(207, 0);
             this.DroppedItemLabel.Name = "DroppedItemLabel";
             this.DroppedItemLabel.Size = new System.Drawing.Size(71, 19);
@@ -253,6 +254,21 @@
             this.DestroyedItemLabel.TabIndex = 1;
             this.DestroyedItemLabel.Text = "Destroyed Item";
             this.DestroyedItemLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // imageList
+            // 
+            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList.Images.SetKeyName(0, "Hold.png");
+            this.imageList.Images.SetKeyName(1, "Cargo.png");
+            this.imageList.Images.SetKeyName(2, "HighSlot.png");
+            this.imageList.Images.SetKeyName(3, "MediumSlot.png");
+            this.imageList.Images.SetKeyName(4, "LowSlot.png");
+            this.imageList.Images.SetKeyName(5, "RigSlot.png");
+            this.imageList.Images.SetKeyName(6, "SubsystemSlot.png");
+            this.imageList.Images.SetKeyName(7, "DroneBay.png");
+            this.imageList.Images.SetKeyName(8, "Implant.png");
+            this.imageList.Images.SetKeyName(9, "Booster.png");
             // 
             // KillReportFittingContent
             // 
@@ -298,5 +314,6 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.GroupBox ColorKeyGroupBox;
         private System.Windows.Forms.Panel ColorKeyGroupBoxPanel;
+        private System.Windows.Forms.ImageList imageList;
     }
 }
