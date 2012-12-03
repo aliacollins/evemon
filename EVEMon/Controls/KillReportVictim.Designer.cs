@@ -327,9 +327,8 @@
             this.CopyPictureBox.Size = new System.Drawing.Size(16, 16);
             this.CopyPictureBox.TabIndex = 1;
             this.CopyPictureBox.TabStop = false;
+            this.toolTip.SetToolTip(this.CopyPictureBox, "Copy Kill Information");
             this.CopyPictureBox.Click += new System.EventHandler(this.CopyPictureBox_Click);
-            this.CopyPictureBox.MouseLeave += new System.EventHandler(this.CopyPictureBox_MouseLeave);
-            this.CopyPictureBox.MouseHover += new System.EventHandler(this.CopyPictureBox_MouseHover);
             // 
             // CharacterNameLabel
             // 

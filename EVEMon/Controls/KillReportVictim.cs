@@ -18,7 +18,6 @@ namespace EVEMon.Controls
         public KillReportVictim()
         {
             InitializeComponent();
-            toolTip.SetToolTip(CopyPictureBox, "Copy Kill Information");
         }
 
         #endregion
@@ -134,26 +133,6 @@ namespace EVEMon.Controls
         private void CopyPictureBox_Click(object sender, EventArgs e)
         {
             KillLogExporter.CopyKillInfoToClipboard(m_killLog);
-        }
-
-        /// <summary>
-        /// Handles the MouseHover event of the CopyPictureBox control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void CopyPictureBox_MouseHover(object sender, EventArgs e)
-        {
-            toolTip.Active = true;
-        }
-
-        /// <summary>
-        /// Handles the MouseLeave event of the CopyPictureBox control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void CopyPictureBox_MouseLeave(object sender, EventArgs e)
-        {
-            toolTip.Active = false;
         }
 
         #endregion
