@@ -400,14 +400,21 @@ namespace EVEMon.ApiTester
                 textbox.Equals(KeyIDTextBox) && textbox.Text.Length == 0 && VCodeTextBox.Text.Length == 0)
                 return;
 
+            string[] ids = textbox.Text.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+
             if (String.IsNullOrEmpty(textbox.Text))
             {
-                ErrorProvider.SetError(textbox, "ID cannot be blank.");
+                string errorText = String.Format(CultureConstants.DefaultCulture, "{0} can not be blank.",
+                                                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID)
+                                                     ? "Names"
+                                                     : "IDs");
+                ErrorProvider.SetError(textbox, errorText);
                 e.Cancel = true;
                 return;
             }
 
-            string[] ids = textbox.Text.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID))
+                return;
 
             if (ids.Any(id => id == "0"))
             {
