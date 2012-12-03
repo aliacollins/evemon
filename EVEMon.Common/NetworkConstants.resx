@@ -498,4 +498,8 @@
   <data name="PostDataWithCharIDAndRowCount" xml:space="preserve">
     <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;rowCount={3}</value>
   </data>
+  <data name="BattleclinicItemPrices" xml:space="preserve">
+    <value>http://eve.battleclinic.com/xml_item_prices.php</value>
+    <comment>Used for fetching item prices from BattleClinic</comment>
+  </data>
 </root>

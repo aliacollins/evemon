@@ -817,6 +817,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://eve.battleclinic.com/xml_item_prices.php.
+        /// </summary>
+        public static string BattleclinicItemPrices {
+            get {
+                return ResourceManager.GetString("BattleclinicItemPrices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://eve.battleclinic.com/ship_loadout_feed.php?id={0}.
         /// </summary>
         public static string BattleclinicLoadoutDetails {

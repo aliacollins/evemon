@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.BattleClinic.MarketPrices;
 
 namespace EVEMon.Common
 {
@@ -51,6 +52,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the EVE flag.
         /// </summary>
+        public int TypeID { get; private set; }
+
+        /// <summary>
+        /// Gets the EVE flag.
+        /// </summary>
         public short EVEFlag { get; private set; }
 
         /// <summary>
@@ -79,6 +85,14 @@ namespace EVEMon.Common
         public IEnumerable<KillLogItem> Items
         {
             get { return m_items; }
+        }
+
+        /// <summary>
+        /// Gets the price.
+        /// </summary>
+        public double Price
+        {
+            get { return BCItemPrices.GetPriceByTypeID(m_typeID); }
         }
 
         /// <summary>

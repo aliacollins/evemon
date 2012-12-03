@@ -5,6 +5,8 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Data;
+using EVEMon.Common.Serialization.BattleClinic.MarketPrices;
 
 namespace EVEMon.Controls
 {
@@ -46,6 +48,9 @@ namespace EVEMon.Controls
             m_fittingFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_fittingBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noItemsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
+            BCItemPrices.BCItemPricesUpdated += BCItemPrices_BCItemPricesUpdated;
+            Disposed += OnDisposed;
         }
 
         #endregion
@@ -70,6 +75,7 @@ namespace EVEMon.Controls
         }
 
         #endregion
+
 
 
         #region Content Management
@@ -126,7 +132,52 @@ namespace EVEMon.Controls
             finally
             {
                 FittingContentListBox.EndUpdate();
+                ItemsCostLabel.Text = GetTotalCost();
             }
+        }
+
+        /// <summary>
+        /// Gets the total cost.
+        /// </summary>
+        /// <returns></returns>
+        private string GetTotalCost()
+        {
+            double shipCost = BCItemPrices.GetPriceByTypeID(m_killLog.Victim.ShipTypeID);
+            bool unknownCost = m_killLog.Victim.ShipTypeID != DBConstants.CapsuleID && Math.Abs(shipCost) < double.Epsilon;
+            double totalCost = shipCost;
+
+            // Get the items cost
+            double itemsCost;
+            unknownCost |= GetItemsCost(out itemsCost);
+            totalCost += itemsCost;
+
+            return unknownCost ? "Unknown" : String.Format(CultureConstants.DefaultCulture, " {0:N2} ISK", totalCost);
+        }
+
+        /// <summary>
+        /// Gets the items cost.
+        /// </summary>
+        /// <param name="totalCost">The total cost.</param>
+        private bool GetItemsCost(out double totalCost)
+        {
+            bool unknownCost = false;
+            double itemCost = 0d;
+            foreach (KillLogItem item in m_killLog.Items)
+            {
+                double price = item.Price;
+                unknownCost |= Math.Abs(price) < double.Epsilon;
+                itemCost += price * (item.QtyDestroyed + item.QtyDropped);
+
+                if (!item.Items.Any())
+                    continue;
+
+                unknownCost |= GetItemsCost(out totalCost);
+                itemCost += totalCost;
+            }
+            
+            totalCost = itemCost;
+
+            return unknownCost;
         }
 
         #endregion
@@ -268,6 +319,9 @@ namespace EVEMon.Controls
         {
             switch (group)
             {
+                case KillLogFittingContentGroup.Cargo:
+                case KillLogFittingContentGroup.Other:
+                    return imageList.Images[1];
                 case KillLogFittingContentGroup.HighSlot:
                     return imageList.Images[2];
                 case KillLogFittingContentGroup.MediumSlot:
@@ -284,9 +338,6 @@ namespace EVEMon.Controls
                     return imageList.Images[8];
                 case KillLogFittingContentGroup.Booster:
                     return imageList.Images[9];
-                case KillLogFittingContentGroup.Cargo:
-                case KillLogFittingContentGroup.Other:
-                    return imageList.Images[1];
                 default:
                     return imageList.Images[0];
             }
@@ -380,6 +431,26 @@ namespace EVEMon.Controls
         private void ToggleColorKeyPictureBox_Click(object sender, EventArgs e)
         {
             ColorKeyGroupBox.Visible = !ColorKeyGroupBox.Visible;
+        }
+
+        /// <summary>
+        /// Handles the BCItemPricesUpdated event of the BCItemPrices control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void BCItemPrices_BCItemPricesUpdated(object sender, EventArgs e)
+        {
+            ItemsCostLabel.Text = GetTotalCost();
+        }
+
+        /// <summary>
+        /// Called when disposed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnDisposed(object sender, EventArgs e)
+        {
+            BCItemPrices.BCItemPricesUpdated -= BCItemPrices_BCItemPricesUpdated;
         }
 
         #endregion

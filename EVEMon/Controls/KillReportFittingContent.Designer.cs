@@ -36,7 +36,7 @@
             this.SaveFittingButton = new System.Windows.Forms.Button();
             this.FittingContentLabel = new System.Windows.Forms.Label();
             this.FooterPanel = new System.Windows.Forms.Panel();
-            this.CostLabel = new System.Windows.Forms.Label();
+            this.ItemsCostLabel = new System.Windows.Forms.Label();
             this.EstimatedTotalLossLabel = new System.Windows.Forms.Label();
             this.BorderPanel = new EVEMon.Common.Controls.BorderPanel();
             this.noItemsLabel = new System.Windows.Forms.Label();
@@ -126,7 +126,7 @@
             // FooterPanel
             // 
             this.FooterPanel.AutoSize = true;
-            this.FooterPanel.Controls.Add(this.CostLabel);
+            this.FooterPanel.Controls.Add(this.ItemsCostLabel);
             this.FooterPanel.Controls.Add(this.EstimatedTotalLossLabel);
             this.FooterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FooterPanel.Location = new System.Drawing.Point(0, 514);
@@ -135,17 +135,17 @@
             this.FooterPanel.Size = new System.Drawing.Size(338, 16);
             this.FooterPanel.TabIndex = 3;
             // 
-            // CostLabel
+            // ItemsCostLabel
             // 
-            this.CostLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CostLabel.AutoSize = true;
-            this.CostLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.CostLabel.ForeColor = System.Drawing.Color.Red;
-            this.CostLabel.Location = new System.Drawing.Point(275, 0);
-            this.CostLabel.Name = "CostLabel";
-            this.CostLabel.Size = new System.Drawing.Size(63, 16);
-            this.CostLabel.TabIndex = 0;
-            this.CostLabel.Text = "Unknown";
+            this.ItemsCostLabel.AutoSize = true;
+            this.ItemsCostLabel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.ItemsCostLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.ItemsCostLabel.ForeColor = System.Drawing.Color.Red;
+            this.ItemsCostLabel.Location = new System.Drawing.Point(275, 0);
+            this.ItemsCostLabel.Name = "ItemsCostLabel";
+            this.ItemsCostLabel.Size = new System.Drawing.Size(63, 16);
+            this.ItemsCostLabel.TabIndex = 0;
+            this.ItemsCostLabel.Text = "Unknown";
             // 
             // EstimatedTotalLossLabel
             // 
@@ -302,7 +302,7 @@
         private System.Windows.Forms.Button SaveFittingButton;
         private System.Windows.Forms.Label FittingContentLabel;
         private System.Windows.Forms.Panel FooterPanel;
-        private System.Windows.Forms.Label CostLabel;
+        private System.Windows.Forms.Label ItemsCostLabel;
         private System.Windows.Forms.Label EstimatedTotalLossLabel;
         private Common.Controls.NoFlickerListBox FittingContentListBox;
         private System.Windows.Forms.Label noItemsLabel;

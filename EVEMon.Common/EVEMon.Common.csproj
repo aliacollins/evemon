@@ -356,6 +356,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>BCAPISettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Serialization\BattleClinic\MarketPrices\BCItemPrices.cs" />
+    <Compile Include="Serialization\BattleClinic\MarketPrices\SerializableBCItemPrice.cs" />
+    <Compile Include="Serialization\BattleClinic\MarketPrices\SerializableBCItemPrices.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
@@ -1003,6 +1006,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Serialization\Flags.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
