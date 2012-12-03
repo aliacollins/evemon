@@ -6,7 +6,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 
-namespace EVEMon.CharacterMonitoring
+namespace EVEMon.DetailsWindow
 {
     public partial class WalletJournalChartWindow : EVEMonForm
     {

@@ -27,6 +27,7 @@ using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
+using EVEMon.DetailsWindow;
 using EVEMon.ImplantControls;
 using EVEMon.MarketUnifiedUploader;
 using EVEMon.NotificationWindow;
@@ -1284,8 +1285,8 @@ namespace EVEMon
             if (result != DialogResult.OK)
                 return;
 
-            // Close any open associated windows
-            CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
+            // Close any open character associated windows
+            WindowsFactory.CloseAllTagged();
 
             // Clear any notifications
             ClearNotifications();
@@ -1336,8 +1337,8 @@ namespace EVEMon
             if (dr != DialogResult.Yes)
                 return;
 
-            // Close any open associated windows
-            CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
+            // Close any open character associated windows
+            WindowsFactory.CloseAllTagged();
 
             // Clear any notifications
             ClearNotifications();
@@ -1787,18 +1788,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Closes any open windows of the specified characters.
-        /// </summary>
-        /// <param name="monitoredCharacters">The monitored characters.</param>
-        private static void CloseOpenWindowsOf(IEnumerable<Character> monitoredCharacters)
-        {
-            foreach (Character character in monitoredCharacters)
-            {
-                CloseOpenWindowsOf(character);
-            }
-        }
-
-        /// <summary>
         /// Closes any open windows of the specified character.
         /// </summary>
         /// <param name="character">The character.</param>
@@ -1807,21 +1796,47 @@ namespace EVEMon
             // Close any open Skill Planner window
             foreach (Plan plan in character.Plans)
             {
-                PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(plan);
-
-                if (planWindow != null)
-                    WindowsFactory.CloseByTag(planWindow, plan);
+                WindowsFactory.GetAndCloseByTag<PlanWindow, Plan>(plan);
             }
 
             // Close any open Skill Pie Chart window
-            SkillsPieChart skillsPieChart = WindowsFactory.GetByTag<SkillsPieChart, Character>(character);
-            if (skillsPieChart != null)
-                WindowsFactory.CloseByTag(skillsPieChart, character);
+            WindowsFactory.GetAndCloseByTag<SkillsPieChart, Character>(character);
 
             // Close any open Implant Groups window
-            ImplantSetsWindow implantSetsWindow = WindowsFactory.GetByTag<ImplantSetsWindow, Character>(character);
-            if (implantSetsWindow != null)
-                WindowsFactory.CloseByTag(implantSetsWindow, character);
+            WindowsFactory.GetAndCloseByTag<ImplantSetsWindow, Character>(character);
+
+            // Now CCP character related windows
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+
+            if (ccpCharacter == null)
+                return;
+
+            // Close any open Wallet Journal Chart window
+            WindowsFactory.GetAndCloseByTag<WalletJournalChartWindow, CCPCharacter>(ccpCharacter);
+
+            // Close any open EVE Mail window
+            foreach (EveMailMessage mailMessage in ccpCharacter.EVEMailMessages)
+            {
+                WindowsFactory.GetAndCloseByTag<EveMessageWindow, EveMailMessage>(mailMessage);
+            }
+
+            // Close any open EVE Notification window
+            foreach (EveNotification eveNotification in ccpCharacter.EVENotifications)
+            {
+                WindowsFactory.GetAndCloseByTag<EveMessageWindow, EveNotification>(eveNotification);
+            }
+
+            // Close any open Contract Details window
+            foreach (Contract contract in ccpCharacter.Contracts)
+            {
+                WindowsFactory.GetAndCloseByTag<ContractDetailsWindow, Contract>(contract);
+            }
+
+            // Close any open Kill Report window
+            foreach (KillLog killLog in ccpCharacter.KillLog)
+            {
+                WindowsFactory.GetAndCloseByTag<KillReportWindow, KillLog>(killLog);
+            }
         }
 
         /// <summary>

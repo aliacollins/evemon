@@ -11,7 +11,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.NotificationWindow;
+using EVEMon.DetailsWindow;
 
 namespace EVEMon.CharacterMonitoring
 {

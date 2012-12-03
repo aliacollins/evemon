@@ -2,7 +2,7 @@
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 
-namespace EVEMon.NotificationWindow
+namespace EVEMon.DetailsWindow
 {
     public partial class KillReportWindow : EVEMonForm
     {

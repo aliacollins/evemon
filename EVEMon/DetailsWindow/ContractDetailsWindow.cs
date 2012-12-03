@@ -11,7 +11,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using Region = EVEMon.Common.Data.Region;
 
-namespace EVEMon.NotificationWindow
+namespace EVEMon.DetailsWindow
 {
     public sealed partial class ContractDetailsWindow : EVEMonForm
     {

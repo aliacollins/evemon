@@ -9,6 +9,7 @@ using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.DetailsWindow;
 
 namespace EVEMon.CharacterMonitoring
 {

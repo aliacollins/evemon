@@ -1,4 +1,4 @@
-﻿namespace EVEMon.NotificationWindow
+﻿namespace EVEMon.DetailsWindow
 {
     sealed partial class ContractDetailsWindow
     {

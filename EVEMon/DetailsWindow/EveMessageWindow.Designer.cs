@@ -1,6 +1,6 @@
 using EVEMon.CharacterMonitoring;
 
-namespace EVEMon.NotificationWindow
+namespace EVEMon.DetailsWindow
 {
     partial class EveMessageWindow
     {

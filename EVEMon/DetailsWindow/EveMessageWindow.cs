@@ -6,7 +6,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
 
-namespace EVEMon.NotificationWindow
+namespace EVEMon.DetailsWindow
 {
     public sealed partial class EveMessageWindow : EVEMonForm
     {
