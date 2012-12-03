@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -123,11 +122,15 @@ namespace EVEMon.Common
         {
             foreach (KillLogItem droppedItem in droppedItems.Where(droppedItem => droppedItem.EVEFlag != 0))
             {
-                sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} ({2})",
+                sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} {2}",
                                 droppedItem.Name,
                                 droppedItem.QtyDropped > 1
                                     ? String.Format(CultureConstants.InvariantCulture, ", Qty: {0}", droppedItem.QtyDropped)
-                                    : String.Empty, droppedItem.InventoryText).AppendLine();
+                                    : String.Empty,
+                                String.IsNullOrEmpty(droppedItem.InventoryText)
+                                    ? droppedItem.InventoryText
+                                    : String.Format(CultureConstants.InvariantCulture, "({0})", droppedItem.InventoryText)
+                    ).AppendLine();
 
                 // Append any items inside a container
                 if (droppedItem.Items.Any())
@@ -144,11 +147,15 @@ namespace EVEMon.Common
         {
             foreach (KillLogItem destroyedItem in destroyedItems.Where(destroyedItem => destroyedItem.EVEFlag != 0))
             {
-                sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} ({2})",
+                sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} {2}",
                                 destroyedItem.Name,
                                 destroyedItem.QtyDestroyed > 1
                                     ? String.Format(CultureConstants.InvariantCulture, ", Qty: {0}", destroyedItem.QtyDestroyed)
-                                    : String.Empty, destroyedItem.InventoryText).AppendLine();
+                                    : String.Empty,
+                                String.IsNullOrEmpty(destroyedItem.InventoryText)
+                                    ? destroyedItem.InventoryText
+                                    : String.Format(CultureConstants.InvariantCulture, "({0})", destroyedItem.InventoryText)
+                    ).AppendLine();
 
                 // Append any items inside a container
                 if (destroyedItem.Items.Any())

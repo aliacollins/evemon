@@ -8,552 +8,7 @@ namespace EVEMon.Common
 {
 
 
-    #region Flag Enumerations
-
-    /// <summary>
-    /// Describes the kind of changes which occurred.
-    /// </summary>
-    [Flags]
-    public enum PlanChange
-    {
-        None = 0,
-        Notification = 1,
-        Prerequisites = 2,
-        All = Notification | Prerequisites
-    }
-
-    /// <summary>
-    /// Flags for the races.
-    /// </summary>
-    [Flags]
-    public enum Race
-    {
-        [XmlEnum("Caldari")]
-        Caldari = 1,
-
-        [XmlEnum("Minmatar")]
-        Minmatar = 2,
-
-        [XmlEnum("Amarr")]
-        Amarr = 4,
-
-        [XmlEnum("Gallente")]
-        Gallente = 8,
-
-        [XmlEnum("Jove")]
-        Jove = 16,
-
-        [XmlEnum("Faction")]
-        Faction = 32,
-
-        [XmlEnum("Sleepers")]
-        Sleepers = 64,
-
-        [XmlEnum("ORE")]
-        Ore = 128,
-
-        None = 0,
-        All = Amarr | Minmatar | Caldari | Gallente | Jove | Faction | Sleepers | Ore
-    }
-
-    /// <summary>
-    /// Represents the metagroup of an item.
-    /// </summary>
-    [Flags]
-    public enum ItemMetaGroup
-    {
-        T1 = 2,
-        T2 = 4,
-        T3 = 8,
-        Faction = 16,
-        Officer = 32,
-        Deadspace = 64,
-        Storyline = 128,
-
-        None = 0,
-        AllTechLevel = T1 | T2 | T3,
-        AllNonTechLevel = Faction | Officer | Deadspace | Storyline,
-        All = AllTechLevel | AllNonTechLevel
-    }
-
-    /// <summary>
-    /// Flags for the items slots.
-    /// </summary>
-    [Flags]
-    public enum ItemSlot
-    {
-        None = 0,
-        NoSlot = 1,
-        Low = 2,
-        Medium = 4,
-        High = 8,
-
-        All = Low | Medium | High | NoSlot
-    }
-
-    /// <summary>
-    /// Flags options for the text representation format of a skill.
-    /// </summary>
-    [Flags]
-    public enum DescriptiveTextOptions
-    {
-        None = 0,
-        FullText = 1,
-        UppercaseText = 2,
-        SpaceText = 4,
-        IncludeCommas = 8,
-        IncludeZeroes = 16,
-        SpaceBetween = 32,
-        FirstLetterUppercase = 64
-    }
-
-    /// <summary>
-    /// Represents the options one can use with <see cref="CharacterScratchpad.SetSkillLevel"/>. Those are only optimizations.
-    /// </summary>
-    [Flags]
-    public enum LearningOptions
-    {
-        /// <summary>
-        /// None, regular learning.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// Do not update the total SP count.
-        /// </summary>
-        FreezeSP = 1,
-
-        /// <summary>
-        /// Do not update the training time and the trained skills enumeration.
-        /// </summary>
-        IgnoreTraining = 2,
-
-        /// <summary>
-        /// Assume the prerequisites are already known.
-        /// </summary>
-        IgnorePrereqs = 4,
-
-        /// <summary>
-        /// Ignore the changes when the given target level is lower than the current one
-        /// </summary>
-        UpgradeOnly = 8
-    }
-
-    /// <summary>
-    /// Represents the image size of an EVE icon.
-    /// </summary>
-    [Flags]
-    public enum EveImageSize
-    {
-        None = 0,
-        x0 = 1,
-        x16 = 16,
-        x32 = 32,
-        x64 = 64,
-        x128 = 128,
-        x256 = 256
-    }
-
-    /// <summary>
-    /// Enumerations to support APIMethods.
-    /// </summary>
-    [Flags]
-    public enum APIMethodsExtensions
-    {
-        None = 0,
-
-        /// <summary>
-        /// The basic character features of APIMethods.
-        /// </summary>
-        BasicCharacterFeatures = APICharacterMethods.CharacterSheet | APICharacterMethods.CharacterInfo |
-                                 APICharacterMethods.SkillQueue | APICharacterMethods.SkillInTraining,
-
-        /// <summary>
-        /// The advanced character features of APIMethods.
-        /// </summary>
-        AdvancedCharacterFeatures = APICharacterMethods.AccountStatus | APICharacterMethods.AssetList |
-                                    /*APICharacterMethods.CalendarEventAttendees |*/ APICharacterMethods.ContactList |
-                                    APICharacterMethods.Contracts | APICharacterMethods.FactionalWarfareStats |
-                                    APICharacterMethods.FactionalWarfareStats | APICharacterMethods.IndustryJobs |
-                                    APICharacterMethods.KillLog | APICharacterMethods.MailMessages |
-                                    APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
-                                    APICharacterMethods.MarketOrders | APICharacterMethods.Medals |
-                                    APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts |
-                                    APICharacterMethods.ResearchPoints | APICharacterMethods.Standings |
-                                    APICharacterMethods.WalletJournal | APICharacterMethods.WalletTransactions /*|
-            APICharacterMethods.UpcomingCalendarEvents*/,
-
-        /// <summary>
-        /// The advanced corporation features of APIMethods.
-        /// </summary>
-        AdvancedCorporationFeatures = APICorporationMethods.CorporationContracts | APICorporationMethods.CorporationMedals |
-                                      APICorporationMethods.CorporationMarketOrders |
-                                      APICorporationMethods.CorporationIndustryJobs,
-
-        /// <summary>
-        /// All character features of APIMethods
-        /// </summary>
-        AllCharacterFeatures = BasicCharacterFeatures | AdvancedCharacterFeatures,
-    }
-
-    /// <summary>
-    /// Enumeration of the character related API methods. Each method has an access mask.
-    /// Each method should have an entry in APIMethods and an equivalent string entry 
-    /// in NetworkConstants indicating the default path of the method.
-    /// </summary>
-    [Flags]
-    public enum APICharacterMethods
-    {
-        None = 0,
-
-        /// <summary>
-        /// The account status. Used to retreive account create and expiration date.
-        /// </summary>
-        [Header("Account Status")]
-        [Description("The status of an account.")]
-        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
-        [ForcedOnStartup]
-        AccountStatus = 1 << 25,
-
-        /// <summary>
-        /// A character sheet (bio, skills, implants, etc).
-        /// </summary>
-        [Header("Character Sheet")]
-        [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        CharacterSheet = 1 << 3,
-
-        /// <summary>
-        /// The skill queue of a character.
-        /// </summary>
-        [Header("Skill Queue")]
-        [Description("The skill queue of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        SkillQueue = 1 << 18,
-
-        /// <summary>
-        /// A character's standings towards NPC's.
-        /// </summary>
-        [Header("NPC Standings")]
-        [Description("The NPC standings of a character.")]
-        [Update(UpdatePeriod.Hours3, UpdatePeriod.Hours3, CacheStyle.Short)]
-        Standings = 1 << 19,
-
-        /// <summary>
-        /// The factional warfare stats of a character.
-        /// </summary>
-        [Header("Factional Warfare Stats")]
-        [Description("The factional warfare stats of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        FactionalWarfareStats = 1 << 6,
-
-        /// <summary>
-        /// The assets of a character.
-        /// </summary>
-        [Header("Assets")]
-        [Description("The assets of a character.")]
-        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Long)]
-        AssetList = 1 << 1,
-
-        /// <summary>
-        /// The personal issued market orders of a character.
-        /// </summary>
-        [Header("Market Orders")]
-        [Description("The market orders of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        MarketOrders = 1 << 12,
-
-        /// <summary>
-        /// The personal issued contracts of a character.
-        /// </summary>
-        [Header("Contracts")]
-        [Description("The contracts of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
-        Contracts = 1 << 26,
-
-        /// <summary>
-        /// The personal issued industry jobs of a character.
-        /// </summary>
-        [Header("Industry Jobs")]
-        [Description("The industry jobs of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
-        IndustryJobs = 1 << 7,
-
-        /// <summary>
-        /// The research points of a character.
-        /// </summary>
-        [Header("Research Points")]
-        [Description("The research points of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
-        ResearchPoints = 1 << 16,
-
-        /// <summary>
-        /// Mail messages for a character.
-        /// </summary>
-        [Header("EVE Mail Messages")]
-        [Description("The EVE mails of a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
-        MailMessages = 1 << 11,
-
-        /// <summary>
-        /// The EVE notifications of a character.
-        /// </summary>
-        [Header("EVE Notifications")]
-        [Description("The EVE notifications of a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
-        Notifications = 1 << 14,
-
-        /// <summary>
-        /// The wallet journal of a character.
-        /// </summary>
-        [Header("Wallet Journal")]
-        [Description("The wallet journal of a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
-        WalletJournal = 1 << 21,
-
-        /// <summary>
-        /// The wallet transactions of a character.
-        /// </summary>
-        [Header("Wallet Transactions")]
-        [Description("The wallet transactions of a character.")]
-        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
-        WalletTransactions = 1 << 22,
-
-        /// <summary>
-        /// The skill in training of a character. Used to determine if an account type API key has a character in training.
-        /// </summary>
-        SkillInTraining = 1 << 17,
-
-        /// <summary>
-        /// A character's wallet balance.
-        /// </summary>
-        AccountBalance = 1 << 0,
-
-        /// <summary>
-        /// The character mailing lists. Used to convert mailing list IDs to Names.
-        /// </summary>
-        MailingLists = 1 << 10,
-
-        /// <summary>
-        /// The body text of an EVE mail message.
-        /// </summary>
-        MailBodies = 1 << 9,
-
-        /// <summary>
-        /// The body text of an EVE notification.
-        /// </summary>
-        NotificationTexts = 1 << 15,
-
-        /// <summary>
-        /// The character info. Used to fetch active ship, security status and last known location. 
-        /// </summary>
-        CharacterInfo = 1 << 23 | 1 << 24,
-
-        /// <summary>
-        /// Tha attendees to a character's calendar event.
-        /// </summary>
-        CalendarEventAttendees = 1 << 2,
-
-        /// <summary>
-        /// The contact list of a character.
-        /// </summary>
-        [Header("Contacts")]
-        [Description("The contacts of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
-        ContactList = 1 << 4,
-
-        /// <summary>
-        /// Contact notifications for a character.
-        /// </summary>
-        ContactNotifications = 1 << 5,
-
-        /// <summary>
-        /// The Kill log for a character (Kill mails).
-        /// </summary>
-        [Header("Combat Log")]
-        [Description("The combat log of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        KillLog = 1 << 8,
-
-        /// <summary>
-        /// The medals of a character.
-        /// </summary>
-        [Header("Medals")]
-        [Description("The medals of a character.")]
-        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Short)]
-        Medals = 1 << 13,
-
-        /// <summary>
-        /// The upcoming calendar events for a character.
-        /// </summary>
-        //[Header("Calendar Events")]
-        //[Description("The upcoming calendar events of a character.")]
-        //[Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
-        UpcomingCalendarEvents = 1 << 20,
-
-        /// <summary>
-        /// Allows the fetching of coordinate and name data for items owned by the character.
-        /// </summary>
-        Locations = 1 << 27
-    }
-
-    /// <summary>
-    /// Enumeration of the corporation related API methods. Each method has an access mask.
-    /// Each method should have an entry in APIMethods and
-    /// an equivalent string entry in NetworkConstants indicating the default path of the method.
-    /// </summary>
-    [Flags]
-    public enum APICorporationMethods
-    {
-        None = 0,
-
-        /// <summary>
-        /// The corporation issued market orders.
-        /// </summary>
-        [Header("Market Orders")]
-        [Description("The corporation market orders of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
-        CorporationMarketOrders = 1 << 12,
-
-        /// <summary>
-        /// The corporation issued contracts.
-        /// </summary>
-        [Header("Contracts")]
-        [Description("The corporation contracts of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
-        CorporationContracts = 1 << 23,
-
-        /// <summary>
-        /// The corporation issued industry jobs.
-        /// </summary>
-        [Header("Industry Jobs")]
-        [Description("The corporation industry jobs of a character.")]
-        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
-        CorporationIndustryJobs = 1 << 7,
-
-        /// <summary>
-        /// A corporation's wallet balances.
-        /// </summary>
-        CorporationAccountBalance = 1 << 0,
-
-        /// <summary>
-        /// Asset list of a corporation.
-        /// </summary>
-        CorporationAssetList = 1 << 1,
-
-        /// <summary>
-        /// A list of corporation contacts.
-        /// </summary>
-        CorporationContactList = 1 << 4,
-
-        /// <summary>
-        /// The log of the corporation's containers.
-        /// </summary>
-        CorporationContainerLog = 1 << 5,
-
-        /// <summary>
-        /// A corporation sheet.
-        /// </summary>
-        CorporationSheet = 1 << 3,
-
-        /// <summary>
-        /// Factional warfare statistics for a corporation.
-        /// </summary>
-        CorporationFactionalWarfareStats = 1 << 6,
-
-        /// <summary>
-        /// The Kill log for a corporation (Kill mails).
-        /// </summary>
-        CorporationKillLog = 1 << 8,
-
-        /// <summary>
-        /// List of all medals created by the corporation.
-        /// </summary>
-        [Header("Medals")]
-        [Description("The corporation medals of a character.")]
-        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Short)]
-        CorporationMedals = 1 << 13,
-
-        /// <summary>
-        /// List of medals awarded to corporation members.
-        /// </summary>
-        CorporationMemberMedals = 1 << 2,
-
-        /// <summary>
-        /// Member roles and titles.
-        /// </summary>
-        CorporationMemberSecurity = 1 << 9,
-
-        /// <summary>
-        /// Member role and title change log.
-        /// </summary>
-        CorporationMemberSecurityLog = 1 << 10,
-
-        /// <summary>
-        /// Limited Member information.
-        /// </summary>
-        CorporationMemberTrackingLimited = 1 << 11,
-
-        /// <summary>
-        /// Extensive Member information. Time of last logoff, last known location and ship.
-        /// </summary>
-        CorporationMemberTrackingExtended = 1 << 25,
-
-        /// <summary>
-        /// List of all outposts controlled by the corporation.
-        /// </summary>
-        CorporationOutpostList = 1 << 14,
-
-        /// <summary>
-        /// List of all service settings of corporate outposts.
-        /// </summary>
-        CorporationOutpostServiceDetail = 1 << 15,
-
-        /// <summary>
-        /// Shareholders of the corporation.
-        /// </summary>
-        CorporationShareholders = 1 << 16,
-
-        /// <summary>
-        /// NPC Standings towards corporation.
-        /// </summary>
-        CorporationStandings = 1 << 18,
-
-        /// <summary>
-        /// List of all settings of corporate starbases.
-        /// </summary>
-        CorporationStarbaseDetails = 1 << 17,
-
-        /// <summary>
-        /// List of all corporate starbases.
-        /// </summary>
-        CorporationStarbaseList = 1 << 19,
-
-        /// <summary>
-        /// Titles of corporation and the roles they grant.
-        /// </summary>
-        CorporationTitles = 1 << 22,
-
-        /// <summary>
-        /// Wallet journal for all corporate accounts.
-        /// </summary>
-        CorporationWalletJournal = 1 << 20,
-
-        /// <summary>
-        /// Market transactions of all corporate accounts.
-        /// </summary>
-        CorporationWalletTransactions = 1 << 21,
-
-        /// <summary>
-        /// Allows the fetching of coordinate and name data for items owned by the corporation.
-        /// </summary>
-        CorporationLocations = 1 << 24
-    }
-
-    #endregion
-
-
-    #region Simple Enumerations
+    #region Non Attribute Enumerations
 
     /// <summary>
     /// Enumeration of the throbber state.
@@ -1092,10 +547,566 @@ namespace EVEMon.Common
         Alliance,
     }
 
+    /// <summary>
+    /// Enumeration of Kill log group.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum KillGroup
+    {
+        Kills = 0,
+        Losses = 1
+    }
+
     #endregion
 
 
-    #region Enumerations with attributes
+    #region Flag Enumerations
+
+    /// <summary>
+    /// Describes the kind of changes which occurred.
+    /// </summary>
+    [Flags]
+    public enum PlanChange
+    {
+        None = 0,
+        Notification = 1,
+        Prerequisites = 2,
+        All = Notification | Prerequisites
+    }
+
+    /// <summary>
+    /// Flags for the races.
+    /// </summary>
+    [Flags]
+    public enum Race
+    {
+        [XmlEnum("Caldari")]
+        Caldari = 1,
+
+        [XmlEnum("Minmatar")]
+        Minmatar = 2,
+
+        [XmlEnum("Amarr")]
+        Amarr = 4,
+
+        [XmlEnum("Gallente")]
+        Gallente = 8,
+
+        [XmlEnum("Jove")]
+        Jove = 16,
+
+        [XmlEnum("Faction")]
+        Faction = 32,
+
+        [XmlEnum("Sleepers")]
+        Sleepers = 64,
+
+        [XmlEnum("ORE")]
+        Ore = 128,
+
+        None = 0,
+        All = Amarr | Minmatar | Caldari | Gallente | Jove | Faction | Sleepers | Ore
+    }
+
+    /// <summary>
+    /// Represents the metagroup of an item.
+    /// </summary>
+    [Flags]
+    public enum ItemMetaGroup
+    {
+        T1 = 2,
+        T2 = 4,
+        T3 = 8,
+        Faction = 16,
+        Officer = 32,
+        Deadspace = 64,
+        Storyline = 128,
+
+        None = 0,
+        AllTechLevel = T1 | T2 | T3,
+        AllNonTechLevel = Faction | Officer | Deadspace | Storyline,
+        All = AllTechLevel | AllNonTechLevel
+    }
+
+    /// <summary>
+    /// Flags for the items slots.
+    /// </summary>
+    [Flags]
+    public enum ItemSlot
+    {
+        None = 0,
+        NoSlot = 1,
+        Low = 2,
+        Medium = 4,
+        High = 8,
+
+        All = Low | Medium | High | NoSlot
+    }
+
+    /// <summary>
+    /// Flags options for the text representation format of a skill.
+    /// </summary>
+    [Flags]
+    public enum DescriptiveTextOptions
+    {
+        None = 0,
+        FullText = 1,
+        UppercaseText = 2,
+        SpaceText = 4,
+        IncludeCommas = 8,
+        IncludeZeroes = 16,
+        SpaceBetween = 32,
+        FirstLetterUppercase = 64
+    }
+
+    /// <summary>
+    /// Represents the options one can use with <see cref="CharacterScratchpad.SetSkillLevel"/>. Those are only optimizations.
+    /// </summary>
+    [Flags]
+    public enum LearningOptions
+    {
+        /// <summary>
+        /// None, regular learning.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Do not update the total SP count.
+        /// </summary>
+        FreezeSP = 1,
+
+        /// <summary>
+        /// Do not update the training time and the trained skills enumeration.
+        /// </summary>
+        IgnoreTraining = 2,
+
+        /// <summary>
+        /// Assume the prerequisites are already known.
+        /// </summary>
+        IgnorePrereqs = 4,
+
+        /// <summary>
+        /// Ignore the changes when the given target level is lower than the current one
+        /// </summary>
+        UpgradeOnly = 8
+    }
+
+    /// <summary>
+    /// Represents the image size of an EVE icon.
+    /// </summary>
+    [Flags]
+    public enum EveImageSize
+    {
+        None = 0,
+        x0 = 1,
+        x16 = 16,
+        x32 = 32,
+        x64 = 64,
+        x128 = 128,
+        x256 = 256
+    }
+
+    /// <summary>
+    /// Enumerations to support APIMethods.
+    /// </summary>
+    [Flags]
+    public enum APIMethodsExtensions
+    {
+        None = 0,
+
+        /// <summary>
+        /// The basic character features of APIMethods.
+        /// </summary>
+        BasicCharacterFeatures = APICharacterMethods.CharacterSheet | APICharacterMethods.CharacterInfo |
+                                 APICharacterMethods.SkillQueue | APICharacterMethods.SkillInTraining,
+
+        /// <summary>
+        /// The advanced character features of APIMethods.
+        /// </summary>
+        AdvancedCharacterFeatures = APICharacterMethods.AccountStatus | APICharacterMethods.AssetList |
+                                    /*APICharacterMethods.CalendarEventAttendees |*/ APICharacterMethods.ContactList |
+                                    APICharacterMethods.Contracts | APICharacterMethods.FactionalWarfareStats |
+                                    APICharacterMethods.FactionalWarfareStats | APICharacterMethods.IndustryJobs |
+                                    APICharacterMethods.KillLog | APICharacterMethods.MailMessages |
+                                    APICharacterMethods.MailBodies | APICharacterMethods.MailingLists |
+                                    APICharacterMethods.MarketOrders | APICharacterMethods.Medals |
+                                    APICharacterMethods.Notifications | APICharacterMethods.NotificationTexts |
+                                    APICharacterMethods.ResearchPoints | APICharacterMethods.Standings |
+                                    APICharacterMethods.WalletJournal | APICharacterMethods.WalletTransactions /*|
+            APICharacterMethods.UpcomingCalendarEvents*/
+        ,
+
+        /// <summary>
+        /// The advanced corporation features of APIMethods.
+        /// </summary>
+        AdvancedCorporationFeatures = APICorporationMethods.CorporationContracts | APICorporationMethods.CorporationMedals |
+                                      APICorporationMethods.CorporationMarketOrders |
+                                      APICorporationMethods.CorporationIndustryJobs,
+
+        /// <summary>
+        /// All character features of APIMethods
+        /// </summary>
+        AllCharacterFeatures = BasicCharacterFeatures | AdvancedCharacterFeatures,
+    }
+
+    /// <summary>
+    /// Enumeration of the character related API methods. Each method has an access mask.
+    /// Each method should have an entry in APIMethods and an equivalent string entry 
+    /// in NetworkConstants indicating the default path of the method.
+    /// </summary>
+    [Flags]
+    public enum APICharacterMethods
+    {
+        None = 0,
+
+        /// <summary>
+        /// The account status. Used to retreive account create and expiration date.
+        /// </summary>
+        [Header("Account Status")]
+        [Description("The status of an account.")]
+        [Update(UpdatePeriod.Day, UpdatePeriod.Hours1, CacheStyle.Short)]
+        [ForcedOnStartup]
+        AccountStatus = 1 << 25,
+
+        /// <summary>
+        /// A character sheet (bio, skills, implants, etc).
+        /// </summary>
+        [Header("Character Sheet")]
+        [Description("A character's sheet listing biography, skills, attributes and implants informations.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        CharacterSheet = 1 << 3,
+
+        /// <summary>
+        /// The skill queue of a character.
+        /// </summary>
+        [Header("Skill Queue")]
+        [Description("The skill queue of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        SkillQueue = 1 << 18,
+
+        /// <summary>
+        /// A character's standings towards NPC's.
+        /// </summary>
+        [Header("NPC Standings")]
+        [Description("The NPC standings of a character.")]
+        [Update(UpdatePeriod.Hours3, UpdatePeriod.Hours3, CacheStyle.Short)]
+        Standings = 1 << 19,
+
+        /// <summary>
+        /// The factional warfare stats of a character.
+        /// </summary>
+        [Header("Factional Warfare Stats")]
+        [Description("The factional warfare stats of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        FactionalWarfareStats = 1 << 6,
+
+        /// <summary>
+        /// The assets of a character.
+        /// </summary>
+        [Header("Assets")]
+        [Description("The assets of a character.")]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Long)]
+        AssetList = 1 << 1,
+
+        /// <summary>
+        /// The personal issued market orders of a character.
+        /// </summary>
+        [Header("Market Orders")]
+        [Description("The market orders of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        MarketOrders = 1 << 12,
+
+        /// <summary>
+        /// The personal issued contracts of a character.
+        /// </summary>
+        [Header("Contracts")]
+        [Description("The contracts of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        Contracts = 1 << 26,
+
+        /// <summary>
+        /// The personal issued industry jobs of a character.
+        /// </summary>
+        [Header("Industry Jobs")]
+        [Description("The industry jobs of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        IndustryJobs = 1 << 7,
+
+        /// <summary>
+        /// The research points of a character.
+        /// </summary>
+        [Header("Research Points")]
+        [Description("The research points of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        ResearchPoints = 1 << 16,
+
+        /// <summary>
+        /// Mail messages for a character.
+        /// </summary>
+        [Header("EVE Mail Messages")]
+        [Description("The EVE mails of a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        MailMessages = 1 << 11,
+
+        /// <summary>
+        /// The EVE notifications of a character.
+        /// </summary>
+        [Header("EVE Notifications")]
+        [Description("The EVE notifications of a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        Notifications = 1 << 14,
+
+        /// <summary>
+        /// The wallet journal of a character.
+        /// </summary>
+        [Header("Wallet Journal")]
+        [Description("The wallet journal of a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        WalletJournal = 1 << 21,
+
+        /// <summary>
+        /// The wallet transactions of a character.
+        /// </summary>
+        [Header("Wallet Transactions")]
+        [Description("The wallet transactions of a character.")]
+        [Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        WalletTransactions = 1 << 22,
+
+        /// <summary>
+        /// The skill in training of a character. Used to determine if an account type API key has a character in training.
+        /// </summary>
+        SkillInTraining = 1 << 17,
+
+        /// <summary>
+        /// A character's wallet balance.
+        /// </summary>
+        AccountBalance = 1 << 0,
+
+        /// <summary>
+        /// The character mailing lists. Used to convert mailing list IDs to Names.
+        /// </summary>
+        MailingLists = 1 << 10,
+
+        /// <summary>
+        /// The body text of an EVE mail message.
+        /// </summary>
+        MailBodies = 1 << 9,
+
+        /// <summary>
+        /// The body text of an EVE notification.
+        /// </summary>
+        NotificationTexts = 1 << 15,
+
+        /// <summary>
+        /// The character info. Used to fetch active ship, security status and last known location. 
+        /// </summary>
+        CharacterInfo = 1 << 23 | 1 << 24,
+
+        /// <summary>
+        /// Tha attendees to a character's calendar event.
+        /// </summary>
+        CalendarEventAttendees = 1 << 2,
+
+        /// <summary>
+        /// The contact list of a character.
+        /// </summary>
+        [Header("Contacts")]
+        [Description("The contacts of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Short)]
+        ContactList = 1 << 4,
+
+        /// <summary>
+        /// Contact notifications for a character.
+        /// </summary>
+        ContactNotifications = 1 << 5,
+
+        /// <summary>
+        /// The Kill log for a character (Kill mails).
+        /// </summary>
+        [Header("Combat Log")]
+        [Description("The combat log of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        KillLog = 1 << 8,
+
+        /// <summary>
+        /// The medals of a character.
+        /// </summary>
+        [Header("Medals")]
+        [Description("The medals of a character.")]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Short)]
+        Medals = 1 << 13,
+
+        /// <summary>
+        /// The upcoming calendar events for a character.
+        /// </summary>
+        //[Header("Calendar Events")]
+        //[Description("The upcoming calendar events of a character.")]
+        //[Update(UpdatePeriod.Minutes30, UpdatePeriod.Minutes30, CacheStyle.Short)]
+        UpcomingCalendarEvents = 1 << 20,
+
+        /// <summary>
+        /// Allows the fetching of coordinate and name data for items owned by the character.
+        /// </summary>
+        Locations = 1 << 27
+    }
+
+    /// <summary>
+    /// Enumeration of the corporation related API methods. Each method has an access mask.
+    /// Each method should have an entry in APIMethods and
+    /// an equivalent string entry in NetworkConstants indicating the default path of the method.
+    /// </summary>
+    [Flags]
+    public enum APICorporationMethods
+    {
+        None = 0,
+
+        /// <summary>
+        /// The corporation issued market orders.
+        /// </summary>
+        [Header("Market Orders")]
+        [Description("The corporation market orders of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Long)]
+        CorporationMarketOrders = 1 << 12,
+
+        /// <summary>
+        /// The corporation issued contracts.
+        /// </summary>
+        [Header("Contracts")]
+        [Description("The corporation contracts of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        CorporationContracts = 1 << 23,
+
+        /// <summary>
+        /// The corporation issued industry jobs.
+        /// </summary>
+        [Header("Industry Jobs")]
+        [Description("The corporation industry jobs of a character.")]
+        [Update(UpdatePeriod.Minutes15, UpdatePeriod.Minutes15, CacheStyle.Long)]
+        CorporationIndustryJobs = 1 << 7,
+
+        /// <summary>
+        /// A corporation's wallet balances.
+        /// </summary>
+        CorporationAccountBalance = 1 << 0,
+
+        /// <summary>
+        /// Asset list of a corporation.
+        /// </summary>
+        CorporationAssetList = 1 << 1,
+
+        /// <summary>
+        /// A list of corporation contacts.
+        /// </summary>
+        CorporationContactList = 1 << 4,
+
+        /// <summary>
+        /// The log of the corporation's containers.
+        /// </summary>
+        CorporationContainerLog = 1 << 5,
+
+        /// <summary>
+        /// A corporation sheet.
+        /// </summary>
+        CorporationSheet = 1 << 3,
+
+        /// <summary>
+        /// Factional warfare statistics for a corporation.
+        /// </summary>
+        CorporationFactionalWarfareStats = 1 << 6,
+
+        /// <summary>
+        /// The Kill log for a corporation (Kill mails).
+        /// </summary>
+        CorporationKillLog = 1 << 8,
+
+        /// <summary>
+        /// List of all medals created by the corporation.
+        /// </summary>
+        [Header("Medals")]
+        [Description("The corporation medals of a character.")]
+        [Update(UpdatePeriod.Hours6, UpdatePeriod.Hours6, CacheStyle.Short)]
+        CorporationMedals = 1 << 13,
+
+        /// <summary>
+        /// List of medals awarded to corporation members.
+        /// </summary>
+        CorporationMemberMedals = 1 << 2,
+
+        /// <summary>
+        /// Member roles and titles.
+        /// </summary>
+        CorporationMemberSecurity = 1 << 9,
+
+        /// <summary>
+        /// Member role and title change log.
+        /// </summary>
+        CorporationMemberSecurityLog = 1 << 10,
+
+        /// <summary>
+        /// Limited Member information.
+        /// </summary>
+        CorporationMemberTrackingLimited = 1 << 11,
+
+        /// <summary>
+        /// Extensive Member information. Time of last logoff, last known location and ship.
+        /// </summary>
+        CorporationMemberTrackingExtended = 1 << 25,
+
+        /// <summary>
+        /// List of all outposts controlled by the corporation.
+        /// </summary>
+        CorporationOutpostList = 1 << 14,
+
+        /// <summary>
+        /// List of all service settings of corporate outposts.
+        /// </summary>
+        CorporationOutpostServiceDetail = 1 << 15,
+
+        /// <summary>
+        /// Shareholders of the corporation.
+        /// </summary>
+        CorporationShareholders = 1 << 16,
+
+        /// <summary>
+        /// NPC Standings towards corporation.
+        /// </summary>
+        CorporationStandings = 1 << 18,
+
+        /// <summary>
+        /// List of all settings of corporate starbases.
+        /// </summary>
+        CorporationStarbaseDetails = 1 << 17,
+
+        /// <summary>
+        /// List of all corporate starbases.
+        /// </summary>
+        CorporationStarbaseList = 1 << 19,
+
+        /// <summary>
+        /// Titles of corporation and the roles they grant.
+        /// </summary>
+        CorporationTitles = 1 << 22,
+
+        /// <summary>
+        /// Wallet journal for all corporate accounts.
+        /// </summary>
+        CorporationWalletJournal = 1 << 20,
+
+        /// <summary>
+        /// Market transactions of all corporate accounts.
+        /// </summary>
+        CorporationWalletTransactions = 1 << 21,
+
+        /// <summary>
+        /// Allows the fetching of coordinate and name data for items owned by the corporation.
+        /// </summary>
+        CorporationLocations = 1 << 24
+    }
+
+    #endregion
+
+
+    #region Various Attributes Enumerations
 
     /// <summary>
     /// Enumeration of the generic API methods. Those methods do not have access mask.
@@ -1708,14 +1719,44 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Enumeration of Kill log group.
+    /// Enumeration of Kill log fitting and content group.
     /// </summary>
-    /// <remarks>The integer value determines the sort order.</remarks>
-    public enum KillGroup
+    public enum KillLogFittingContentGroup
     {
-        Kills = 0,
-        Losses = 1
+        [Description("Unknown")]
+        None = 0,
+
+        [Description("High Power Slots")]
+        HighSlot = 1,
+
+        [Description("Medium Power Slots")]
+        MediumSlot = 2,
+
+        [Description("Low Power Slots")]
+        LowSlot = 3,
+
+        [Description("Subsystem Slots")]
+        SubsystemSlot = 4,
+
+        [Description("Rig Slots")]
+        RigSlot = 5,
+
+        [Description("Drone Bay")]
+        DroneBay = 6,
+
+        [Description("Cargo Bay")]
+        Cargo = 7,
+
+        [Description("Implants")]
+        Implant = 8,
+
+        [Description("Boosters")]
+        Booster = 9,
+
+        [Description("Other")]
+        Other = 10
     }
 
     #endregion
+
 }

@@ -14,16 +14,18 @@ namespace EVEMon.Controls
 
         private const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix;
 
-        private KillLog m_killLog;
-
+        // KillReportFittingContent drawing - Region & text padding
         private const byte PadLeft = 6;
         private const byte PadRight = 7;
+
+        // KillReportFittingContent drawing - Item
+        private const byte FittingDetailHeight = 26;
+        private const byte ItemImageSize = 24;
 
         private readonly Font m_fittingFont;
         private readonly Font m_fittingBoldFont;
 
-        private const byte FittingDetailHeight = 26;
-        private const byte ItemImageSize = 24;
+        private KillLog m_killLog;
 
         #endregion
 
@@ -39,6 +41,7 @@ namespace EVEMon.Controls
 
             FittingContentListBox.Visible = false;
             SaveFittingButton.Visible = false;
+            ColorKeyGroupBox.Visible = false;
 
             m_fittingFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_fittingBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
@@ -81,13 +84,14 @@ namespace EVEMon.Controls
             try
             {
                 IEnumerable<KillLogItem> items = m_killLog.Items;
-                IEnumerable<IGrouping<string, KillLogItem>> groups = items.GroupBy(item => item.GroupText);
+                IEnumerable<IGrouping<KillLogFittingContentGroup, KillLogItem>> groups = items
+                    .GroupBy(item => item.FittingContentGroup).OrderBy(x => x .Key);
 
                 // Scroll through groups
                 FittingContentListBox.Items.Clear();
-                foreach (IGrouping<string, KillLogItem> group in groups)
+                foreach (IGrouping<KillLogFittingContentGroup, KillLogItem> group in groups)
                 {
-                    FittingContentListBox.Items.Add(group.Key);
+                    FittingContentListBox.Items.Add(group.Key.GetDescription());
 
                     foreach (KillLogItem item in group)
                     {
@@ -232,12 +236,13 @@ namespace EVEMon.Controls
             }
 
             Size fittingGroupTextSize = TextRenderer.MeasureText(g, group, m_fittingBoldFont, Size.Empty, Format);
-
-            TextRenderer.DrawText(g, group, m_fittingBoldFont, new Rectangle(e.Bounds.Left + PadLeft,
+            Rectangle fittingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                                                                              e.Bounds.Top +
                                                                              ((e.Bounds.Height - fittingGroupTextSize.Height) / 2),
                                                                              fittingGroupTextSize.Width + PadRight,
-                                                                             fittingGroupTextSize.Height), Color.White);
+                                                                             fittingGroupTextSize.Height);
+
+            TextRenderer.DrawText(g, group, m_fittingBoldFont, fittingGroupTextRect, Color.White);
         }
 
 
@@ -321,7 +326,16 @@ namespace EVEMon.Controls
             FittingContentListBox.Invalidate();
         }
 
-        #endregion
+        /// <summary>
+        /// Handles the Click event of the ToggleColorKeyPictureBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void ToggleColorKeyPictureBox_Click(object sender, EventArgs e)
+        {
+            ColorKeyGroupBox.Visible = !ColorKeyGroupBox.Visible;
+        }
 
+        #endregion
     }
 }

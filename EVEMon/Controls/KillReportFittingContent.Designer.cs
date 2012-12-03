@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KillReportFittingContent));
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.HeaderPanel = new System.Windows.Forms.Panel();
+            this.ToggleColorKeyPictureBox = new System.Windows.Forms.PictureBox();
             this.SaveFittingButton = new System.Windows.Forms.Button();
             this.FittingContentLabel = new System.Windows.Forms.Label();
             this.FooterPanel = new System.Windows.Forms.Panel();
@@ -38,10 +41,20 @@
             this.BorderPanel = new EVEMon.Common.Controls.BorderPanel();
             this.noItemsLabel = new System.Windows.Forms.Label();
             this.FittingContentListBox = new EVEMon.Common.Controls.NoFlickerListBox();
+            this.ColorKeyPanel = new System.Windows.Forms.Panel();
+            this.ColorKeyGroupBox = new System.Windows.Forms.GroupBox();
+            this.ColorKeyGroupBoxPanel = new System.Windows.Forms.Panel();
+            this.DroppedItemLabel = new System.Windows.Forms.Label();
+            this.DestroyedItemLabel = new System.Windows.Forms.Label();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.MainTableLayoutPanel.SuspendLayout();
             this.HeaderPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ToggleColorKeyPictureBox)).BeginInit();
             this.FooterPanel.SuspendLayout();
             this.BorderPanel.SuspendLayout();
+            this.ColorKeyPanel.SuspendLayout();
+            this.ColorKeyGroupBox.SuspendLayout();
+            this.ColorKeyGroupBoxPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTableLayoutPanel
@@ -50,12 +63,14 @@
             this.MainTableLayoutPanel.ColumnCount = 1;
             this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.MainTableLayoutPanel.Controls.Add(this.HeaderPanel, 0, 0);
-            this.MainTableLayoutPanel.Controls.Add(this.FooterPanel, 0, 2);
-            this.MainTableLayoutPanel.Controls.Add(this.BorderPanel, 0, 1);
+            this.MainTableLayoutPanel.Controls.Add(this.FooterPanel, 0, 3);
+            this.MainTableLayoutPanel.Controls.Add(this.BorderPanel, 0, 2);
+            this.MainTableLayoutPanel.Controls.Add(this.ColorKeyPanel, 0, 1);
             this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.MainTableLayoutPanel.Name = "MainTableLayoutPanel";
-            this.MainTableLayoutPanel.RowCount = 3;
+            this.MainTableLayoutPanel.RowCount = 4;
+            this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -65,6 +80,7 @@
             // HeaderPanel
             // 
             this.HeaderPanel.AutoSize = true;
+            this.HeaderPanel.Controls.Add(this.ToggleColorKeyPictureBox);
             this.HeaderPanel.Controls.Add(this.SaveFittingButton);
             this.HeaderPanel.Controls.Add(this.FittingContentLabel);
             this.HeaderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -73,6 +89,17 @@
             this.HeaderPanel.Name = "HeaderPanel";
             this.HeaderPanel.Size = new System.Drawing.Size(338, 23);
             this.HeaderPanel.TabIndex = 1;
+            // 
+            // ToggleColorKeyPictureBox
+            // 
+            this.ToggleColorKeyPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("ToggleColorKeyPictureBox.Image")));
+            this.ToggleColorKeyPictureBox.Location = new System.Drawing.Point(123, 3);
+            this.ToggleColorKeyPictureBox.Name = "ToggleColorKeyPictureBox";
+            this.ToggleColorKeyPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.ToggleColorKeyPictureBox.TabIndex = 2;
+            this.ToggleColorKeyPictureBox.TabStop = false;
+            this.toolTip.SetToolTip(this.ToggleColorKeyPictureBox, "Toggle Color Key");
+            this.ToggleColorKeyPictureBox.Click += new System.EventHandler(this.ToggleColorKeyPictureBox_Click);
             // 
             // SaveFittingButton
             // 
@@ -137,11 +164,11 @@
             this.BorderPanel.Controls.Add(this.noItemsLabel);
             this.BorderPanel.Controls.Add(this.FittingContentListBox);
             this.BorderPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BorderPanel.Location = new System.Drawing.Point(0, 23);
+            this.BorderPanel.Location = new System.Drawing.Point(0, 63);
             this.BorderPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BorderPanel.Name = "BorderPanel";
             this.BorderPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
-            this.BorderPanel.Size = new System.Drawing.Size(338, 491);
+            this.BorderPanel.Size = new System.Drawing.Size(338, 451);
             this.BorderPanel.TabIndex = 4;
             // 
             // noItemsLabel
@@ -151,7 +178,7 @@
             this.noItemsLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.noItemsLabel.Location = new System.Drawing.Point(2, 2);
             this.noItemsLabel.Name = "noItemsLabel";
-            this.noItemsLabel.Size = new System.Drawing.Size(335, 487);
+            this.noItemsLabel.Size = new System.Drawing.Size(335, 447);
             this.noItemsLabel.TabIndex = 5;
             this.noItemsLabel.Text = "No Items Found.";
             this.noItemsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -164,12 +191,68 @@
             this.FittingContentListBox.FormattingEnabled = true;
             this.FittingContentListBox.Location = new System.Drawing.Point(2, 2);
             this.FittingContentListBox.Name = "FittingContentListBox";
-            this.FittingContentListBox.Size = new System.Drawing.Size(335, 487);
+            this.FittingContentListBox.Size = new System.Drawing.Size(335, 447);
             this.FittingContentListBox.TabIndex = 4;
             this.FittingContentListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FittingContentListBox_DrawItem);
             this.FittingContentListBox.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.FittingContentListBox_MeasureItem);
             this.FittingContentListBox.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.FittingContentListBox_MouseWheel);
             this.FittingContentListBox.Resize += new System.EventHandler(this.FittingContentListBox_Resize);
+            // 
+            // ColorKeyPanel
+            // 
+            this.ColorKeyPanel.AutoSize = true;
+            this.ColorKeyPanel.Controls.Add(this.ColorKeyGroupBox);
+            this.ColorKeyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ColorKeyPanel.Location = new System.Drawing.Point(0, 23);
+            this.ColorKeyPanel.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.ColorKeyPanel.Name = "ColorKeyPanel";
+            this.ColorKeyPanel.Size = new System.Drawing.Size(338, 38);
+            this.ColorKeyPanel.TabIndex = 5;
+            // 
+            // ColorKeyGroupBox
+            // 
+            this.ColorKeyGroupBox.AutoSize = true;
+            this.ColorKeyGroupBox.Controls.Add(this.ColorKeyGroupBoxPanel);
+            this.ColorKeyGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ColorKeyGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.ColorKeyGroupBox.Name = "ColorKeyGroupBox";
+            this.ColorKeyGroupBox.Size = new System.Drawing.Size(338, 38);
+            this.ColorKeyGroupBox.TabIndex = 2;
+            this.ColorKeyGroupBox.TabStop = false;
+            this.ColorKeyGroupBox.Text = "Color Keys";
+            // 
+            // ColorKeyGroupBoxPanel
+            // 
+            this.ColorKeyGroupBoxPanel.AutoSize = true;
+            this.ColorKeyGroupBoxPanel.Controls.Add(this.DroppedItemLabel);
+            this.ColorKeyGroupBoxPanel.Controls.Add(this.DestroyedItemLabel);
+            this.ColorKeyGroupBoxPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ColorKeyGroupBoxPanel.Location = new System.Drawing.Point(3, 16);
+            this.ColorKeyGroupBoxPanel.Name = "ColorKeyGroupBoxPanel";
+            this.ColorKeyGroupBoxPanel.Size = new System.Drawing.Size(332, 19);
+            this.ColorKeyGroupBoxPanel.TabIndex = 2;
+            // 
+            // DroppedItemLabel
+            // 
+            this.DroppedItemLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.DroppedItemLabel.BackColor = System.Drawing.Color.DarkGreen;
+            this.DroppedItemLabel.Location = new System.Drawing.Point(207, 0);
+            this.DroppedItemLabel.Name = "DroppedItemLabel";
+            this.DroppedItemLabel.Size = new System.Drawing.Size(71, 19);
+            this.DroppedItemLabel.TabIndex = 0;
+            this.DroppedItemLabel.Text = "Dropped Item";
+            this.DroppedItemLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // DestroyedItemLabel
+            // 
+            this.DestroyedItemLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.DestroyedItemLabel.BackColor = System.Drawing.Color.LightGray;
+            this.DestroyedItemLabel.Location = new System.Drawing.Point(42, 0);
+            this.DestroyedItemLabel.Name = "DestroyedItemLabel";
+            this.DestroyedItemLabel.Size = new System.Drawing.Size(80, 19);
+            this.DestroyedItemLabel.TabIndex = 1;
+            this.DestroyedItemLabel.Text = "Destroyed Item";
+            this.DestroyedItemLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // KillReportFittingContent
             // 
@@ -182,9 +265,15 @@
             this.MainTableLayoutPanel.PerformLayout();
             this.HeaderPanel.ResumeLayout(false);
             this.HeaderPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ToggleColorKeyPictureBox)).EndInit();
             this.FooterPanel.ResumeLayout(false);
             this.FooterPanel.PerformLayout();
             this.BorderPanel.ResumeLayout(false);
+            this.ColorKeyPanel.ResumeLayout(false);
+            this.ColorKeyPanel.PerformLayout();
+            this.ColorKeyGroupBox.ResumeLayout(false);
+            this.ColorKeyGroupBox.PerformLayout();
+            this.ColorKeyGroupBoxPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -202,5 +291,12 @@
         private Common.Controls.NoFlickerListBox FittingContentListBox;
         private System.Windows.Forms.Label noItemsLabel;
         private Common.Controls.BorderPanel BorderPanel;
+        private System.Windows.Forms.Panel ColorKeyPanel;
+        private System.Windows.Forms.PictureBox ToggleColorKeyPictureBox;
+        private System.Windows.Forms.Label DestroyedItemLabel;
+        private System.Windows.Forms.Label DroppedItemLabel;
+        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.GroupBox ColorKeyGroupBox;
+        private System.Windows.Forms.Panel ColorKeyGroupBoxPanel;
     }
 }

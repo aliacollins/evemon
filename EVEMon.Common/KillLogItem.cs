@@ -38,6 +38,8 @@ namespace EVEMon.Common
             QtyDropped = src.QtyDropped;
             Singleton = src.Singleton;
 
+            FittingContentGroup = GetFittingContentGroup();
+
             m_items.AddRange(src.Items.Select(item => new KillLogItem(item)));
         }
 
@@ -67,6 +69,11 @@ namespace EVEMon.Common
         public byte Singleton { get; private set; }
 
         /// <summary>
+        /// Gets the fitting content group.
+        /// </summary>
+        public KillLogFittingContentGroup FittingContentGroup { get; private set; }
+
+        /// <summary>
         /// Gets the items.
         /// </summary>
         public IEnumerable<KillLogItem> Items
@@ -79,7 +86,18 @@ namespace EVEMon.Common
         /// </summary>
         public string InventoryText
         {
-            get { return EveFlag.GetFlagText(EVEFlag); }
+            get
+            {
+                switch (FittingContentGroup)
+                {
+                    case KillLogFittingContentGroup.Implant:
+                    case KillLogFittingContentGroup.DroneBay:
+                    case KillLogFittingContentGroup.Cargo:
+                        return EveFlag.GetFlagText(EVEFlag);
+                    default:
+                        return String.Empty;
+                }
+            }
         }
 
         /// <summary>
@@ -92,29 +110,6 @@ namespace EVEMon.Common
                 Item item = StaticItems.GetItemByID(m_typeID);
                 return item == null ? "Unknown" : item.Name;
             }
-        }
-
-        /// <summary>
-        /// Gets the group text.
-        /// </summary>
-        /// <returns></returns>
-        public string GroupText
-        {
-            get
-            {
-                switch (EVEFlag)
-                {
-                    case 0:
-                        return "Other";
-                    case 5:
-                        return "Cargo Bay";
-                    case 89:
-                        return "Implants";
-                    default:
-                        return EveFlag.GetFlagText(EVEFlag);
-                }
-            }
-
         }
 
         /// <summary>
@@ -134,6 +129,74 @@ namespace EVEMon.Common
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Gets the fiiting and content group.
+        /// </summary>
+        /// <returns></returns>
+        private KillLogFittingContentGroup GetFittingContentGroup()
+        {
+            switch (EVEFlag)
+            {
+                case 0:
+                    return KillLogFittingContentGroup.Other;
+                case 5:
+                    return KillLogFittingContentGroup.Cargo;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                    return KillLogFittingContentGroup.LowSlot;
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 24:
+                case 25:
+                case 26:
+                    return KillLogFittingContentGroup.MediumSlot;
+                case 27:
+                case 28:
+                case 29:
+                case 30:
+                case 31:
+                case 32:
+                case 33:
+                case 34:
+                    return KillLogFittingContentGroup.HighSlot;
+                case 87:
+                    return KillLogFittingContentGroup.DroneBay;
+                case 88:
+                    return KillLogFittingContentGroup.Booster;
+                case 89:
+                    return KillLogFittingContentGroup.Implant;
+                case 92:
+                case 93:
+                case 94:
+                case 95:
+                case 96:
+                case 97:
+                case 98:
+                case 99:
+                    return KillLogFittingContentGroup.RigSlot;
+                case 125:
+                case 126:
+                case 127:
+                case 128:
+                case 129:
+                case 130:
+                case 131:
+                case 132:
+                    return KillLogFittingContentGroup.SubsystemSlot;
+                default:
+                    return KillLogFittingContentGroup.None;
+            }
+        }
 
         /// <summary>
         /// Gets the item image.
