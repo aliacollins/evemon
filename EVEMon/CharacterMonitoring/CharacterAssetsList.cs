@@ -51,6 +51,8 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.AllowColumnReorder = true;
             lvAssets.Columns.Clear();
 
+            estimatedCostFlowLayoutPanel.Visible = false;
+
             noAssetsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             ListViewHelper.EnableDoubleBuffer(lvAssets);
