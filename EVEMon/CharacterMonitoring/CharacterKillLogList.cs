@@ -49,8 +49,6 @@ namespace EVEMon.CharacterMonitoring
 
         #region ListView Fields
         
-        private readonly List<KillLogColumnSettings> m_columns = new List<KillLogColumnSettings>();
-
         private ColumnHeader m_sortCriteria;
 
         private string m_textFilter = String.Empty;
@@ -100,7 +98,8 @@ namespace EVEMon.CharacterMonitoring
             set
             {
                 m_textFilter = value;
-                UpdateColumns();
+                if (!DesignMode && !this.IsDesignModeHosted())
+                    UpdateColumns();
             }
         }
 
@@ -110,6 +109,7 @@ namespace EVEMon.CharacterMonitoring
         /// <value></value>
         /// <remarks>Not used anywhere; Only to implement IListView</remarks>
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Enum Grouping { get; set; }
 
         /// <summary>
@@ -117,27 +117,8 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <remarks>Not used anywhere; Only to implement IListView</remarks>
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<IColumnSettings> Columns
-        {
-            get
-            {
-                return lvKillLog.Columns.Cast<ColumnHeader>()
-                    .OrderBy(x => x.Index)
-                    .Select(column => new KillLogColumnSettings
-                                          {
-                                              Column = column,
-                                              Visible = true,
-                                              Width = -2
-                                          }).ToList();
-            }
-            set
-            {
-                m_columns.Clear();
-                if (value != null)
-                    m_columns.AddRange(value.Cast<KillLogColumnSettings>());
-            }
-        }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IEnumerable<IColumnSettings> Columns{ get; set; }
 
         #endregion
 

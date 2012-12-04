@@ -859,6 +859,7 @@
             this.ordersList.Name = "ordersList";
             this.ordersList.Size = new System.Drawing.Size(564, 181);
             this.ordersList.TabIndex = 13;
+            this.ordersList.TextFilter = "";
             // 
             // skillQueuePage
             // 
@@ -898,6 +899,7 @@
             this.jobsList.Name = "jobsList";
             this.jobsList.Size = new System.Drawing.Size(608, 181);
             this.jobsList.TabIndex = 0;
+            this.jobsList.TextFilter = "";
             // 
             // researchPage
             // 
@@ -918,6 +920,7 @@
             this.researchList.Name = "researchList";
             this.researchList.Size = new System.Drawing.Size(568, 86);
             this.researchList.TabIndex = 0;
+            this.researchList.TextFilter = "";
             // 
             // mailMessagesPage
             // 
@@ -938,6 +941,7 @@
             this.mailMessagesList.Name = "mailMessagesList";
             this.mailMessagesList.Size = new System.Drawing.Size(608, 181);
             this.mailMessagesList.TabIndex = 0;
+            this.mailMessagesList.TextFilter = "";
             // 
             // eveNotificationsPage
             // 
@@ -958,6 +962,7 @@
             this.eveNotificationsList.Name = "eveNotificationsList";
             this.eveNotificationsList.Size = new System.Drawing.Size(568, 86);
             this.eveNotificationsList.TabIndex = 0;
+            this.eveNotificationsList.TextFilter = "";
             // 
             // employmentPage
             // 
@@ -997,6 +1002,7 @@
             this.contractsList.Name = "contractsList";
             this.contractsList.Size = new System.Drawing.Size(564, 181);
             this.contractsList.TabIndex = 0;
+            this.contractsList.TextFilter = "";
             // 
             // assetsPage
             // 
@@ -1017,6 +1023,7 @@
             this.assetsList.Name = "assetsList";
             this.assetsList.Size = new System.Drawing.Size(568, 308);
             this.assetsList.TabIndex = 0;
+            this.assetsList.TextFilter = "";
             // 
             // walletJournalPage
             // 
@@ -1037,6 +1044,7 @@
             this.walletJournalList.Name = "walletJournalList";
             this.walletJournalList.Size = new System.Drawing.Size(568, 86);
             this.walletJournalList.TabIndex = 0;
+            this.walletJournalList.TextFilter = "";
             // 
             // walletTransactionsPage
             // 
@@ -1057,6 +1065,7 @@
             this.walletTransactionsList.Name = "walletTransactionsList";
             this.walletTransactionsList.Size = new System.Drawing.Size(568, 86);
             this.walletTransactionsList.TabIndex = 0;
+            this.walletTransactionsList.TextFilter = "";
             // 
             // factionalWarfareStatsPage
             // 
@@ -1133,6 +1142,7 @@
             this.killLogList.Name = "killLogList";
             this.killLogList.Size = new System.Drawing.Size(608, 181);
             this.killLogList.TabIndex = 0;
+            this.killLogList.TextFilter = "";
             // 
             // warningLabel
             // 
