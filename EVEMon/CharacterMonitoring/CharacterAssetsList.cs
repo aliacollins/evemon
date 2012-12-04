@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Serialization.BattleClinic.MarketPrices;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using Region = EVEMon.Common.Data.Region;
@@ -21,14 +22,15 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<AssetColumnSettings> m_columns = new List<AssetColumnSettings>();
         private readonly List<Asset> m_list = new List<Asset>();
-        
+ 
         private InfiniteDisplayToolTip m_tooltip;
         private AssetGrouping m_grouping;
         private AssetColumn m_sortCriteria;
 
         private string m_textFilter = String.Empty;
+        private string m_totalCostLabelDefaultText;
+        
         private bool m_sortAscending = true;
-
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
         private bool m_init;
@@ -170,12 +172,15 @@ namespace EVEMon.CharacterMonitoring
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            m_totalCostLabelDefaultText = lblTotalCost.Text;
+
             m_tooltip = new InfiniteDisplayToolTip(lvAssets);
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
+            BCItemPrices.BCItemPricesUpdated += BCItemPrices_BCItemPricesUpdated;
             Disposed += OnDisposed;
         }
 
@@ -192,6 +197,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
+            BCItemPrices.BCItemPricesUpdated -= BCItemPrices_BCItemPricesUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -252,6 +258,8 @@ namespace EVEMon.CharacterMonitoring
 
                     switch (column.Column)
                     {
+                        case AssetColumn.UnitaryPrice:
+                        case AssetColumn.TotalPrice:
                         case AssetColumn.Quantity:
                         case AssetColumn.Volume:
                             header.TextAlign = HorizontalAlignment.Right;
@@ -310,6 +318,8 @@ namespace EVEMon.CharacterMonitoring
                 // Adjust the size of the columns
                 AdjustColumns();
 
+                UpdateItemsCost(assets);
+
                 UpdateListVisibility();
             }
             finally
@@ -317,6 +327,25 @@ namespace EVEMon.CharacterMonitoring
                 lvAssets.EndUpdate();
                 lvAssets.SetVerticalScrollBarPosition(scrollBarPosition);
             }
+        }
+
+        /// <summary>
+        /// Updates the items cost.
+        /// </summary>
+        /// <param name="assets">The assets.</param>
+        private void UpdateItemsCost(IEnumerable<Asset> assets)
+        {
+            bool unknownPrice = false;
+            double totalCost = 0d;
+            foreach (Asset asset in assets)
+            {
+                double price = asset.Price;
+                unknownPrice |= Math.Abs(price) < double.Epsilon;
+                totalCost += price * asset.Quantity;
+            }
+
+            lblTotalCost.Text = String.Format(CultureConstants.DefaultCulture, m_totalCostLabelDefaultText, totalCost);
+            noPricesFoundLabel.Visible = unknownPrice;
         }
 
         /// <summary>
@@ -330,6 +359,7 @@ namespace EVEMon.CharacterMonitoring
 
             noAssetsLabel.Visible = lvAssets.Items.Count == 0;
             lvAssets.Visible = !noAssetsLabel.Visible;
+            estimatedCostFlowLayoutPanel.Visible = lvAssets.Visible;
         }
 
         /// <summary>
@@ -567,12 +597,18 @@ namespace EVEMon.CharacterMonitoring
                 case AssetColumn.Quantity:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(asset.Quantity, AbbreviationFormat.AbbreviationSymbols)
-                                     : asset.Quantity.ToString("N0", CultureConstants.DefaultCulture));
+                                     : asset.Quantity.ToNumericString(0));
+                    break;
+                case AssetColumn.UnitaryPrice:
+                    item.Text = asset.Price.ToNumericString(2);
+                    break;
+                case AssetColumn.TotalPrice:
+                    item.Text = asset.Cost.ToNumericString(2);
                     break;
                 case AssetColumn.Volume:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(asset.TotalVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : asset.TotalVolume.ToString("N2", CultureConstants.DefaultCulture));
+                                     : asset.TotalVolume.ToNumericString(2));
                     break;
                 case AssetColumn.BlueprintType:
                     item.Text = asset.BlueprintType;
@@ -839,7 +875,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             Assets = Character.Assets;
-            UpdateColumns();
+            UpdateContent();
         }
 
         /// <summary>
@@ -867,6 +903,16 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             UpdateAssetLocation();
+        }
+
+        /// <summary>
+        /// Handles the BCItemPricesUpdated event of the BCItemPrices control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void BCItemPrices_BCItemPricesUpdated(object sender, EventArgs e)
+        {
+            UpdateContent();
         }
 
         # endregion

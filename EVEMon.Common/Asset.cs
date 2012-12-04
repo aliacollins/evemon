@@ -1,6 +1,7 @@
 using System;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.BattleClinic.MarketPrices;
 
 namespace EVEMon.Common
 {
@@ -116,6 +117,22 @@ namespace EVEMon.Common
         /// Gets the total volume.
         /// </summary>
         public decimal TotalVolume { get; private set; }
+
+        /// <summary>
+        /// Gets the price.
+        /// </summary>
+        public double Price
+        {
+            get { return BCItemPrices.GetPriceByTypeID(Item.ID); }
+        }
+
+        /// <summary>
+        /// Gets the cost.
+        /// </summary>
+        public double Cost
+        {
+            get { return Price * Quantity; }
+        }
 
         #endregion
 
