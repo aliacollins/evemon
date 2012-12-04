@@ -69,6 +69,7 @@
             this.Controls.Add(this.killReportFittingContent);
             this.Controls.Add(this.killReportInvolvedParties);
             this.Controls.Add(this.killReportVictim);
+            this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 620);
             this.Name = "KillReportWindow";
             this.Text = "Kill Report";

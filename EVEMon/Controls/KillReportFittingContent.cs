@@ -48,9 +48,6 @@ namespace EVEMon.Controls
             m_fittingFont = FontFactory.GetFont("Tahoma", 8.25F);
             m_fittingBoldFont = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             noItemsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-
-            BCItemPrices.BCItemPricesUpdated += BCItemPrices_BCItemPricesUpdated;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -70,12 +67,13 @@ namespace EVEMon.Controls
             set
             {
                 m_killLog = value;
-                UpdateContent();
+
+                if (!DesignMode || this.IsDesignModeHosted())
+                    UpdateContent();
             }
         }
 
         #endregion
-
 
 
         #region Content Management
@@ -183,6 +181,21 @@ namespace EVEMon.Controls
         }
 
         #endregion
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            BCItemPrices.BCItemPricesUpdated += BCItemPrices_BCItemPricesUpdated;
+            Disposed += OnDisposed;
+        }
 
 
         #region Drawing
