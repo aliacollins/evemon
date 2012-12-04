@@ -282,6 +282,9 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvOrders.Visible = false;
+            marketExpPanelControl.Visible = false;
+
             Orders = (Character == null ? null : Character.MarketOrders);
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
             Grouping = (Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy);
@@ -416,9 +419,9 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             noOrdersLabel.Visible = lvOrders.Items.Count == 0;
-            lvOrders.Visible = !noOrdersLabel.Visible;
-            marketExpPanelControl.Visible = true;
             marketExpPanelControl.Header.Visible = true;
+            marketExpPanelControl.Visible = true;
+            lvOrders.Visible = !noOrdersLabel.Visible;
         }
 
         /// <summary>

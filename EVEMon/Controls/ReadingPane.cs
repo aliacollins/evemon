@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Data;
 
-namespace EVEMon.CharacterMonitoring
+namespace EVEMon.Controls
 {
     public partial class ReadingPane : UserControl
     {

@@ -1,4 +1,5 @@
 using EVEMon.CharacterMonitoring;
+using EVEMon.Controls;
 
 namespace EVEMon.DetailsWindow
 {

@@ -201,6 +201,8 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvWalletJournal.Visible = false;
+
             WalletJournal = (Character == null ? null : Character.WalletJournal);
             Columns = Settings.UI.MainWindow.WalletJournal.Columns;
             Grouping = (Character == null ? WalletJournalGrouping.None : Character.UISettings.WalletJournalGroupBy);

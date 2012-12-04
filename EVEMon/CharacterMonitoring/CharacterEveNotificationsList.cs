@@ -217,6 +217,9 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvNotifications.Visible = false;
+            eveNotificationReadingPane.HidePane();
+
             EVENotifications = (Character == null ? null : Character.EVENotifications);
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
             Grouping = (Character == null ? EVENotificationsGrouping.Type : Character.UISettings.EVENotificationsGroupBy);

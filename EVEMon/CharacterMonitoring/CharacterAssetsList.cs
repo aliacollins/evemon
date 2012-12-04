@@ -220,6 +220,9 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvAssets.Visible = false;
+            estimatedCostFlowLayoutPanel.Visible = false;
+
             Assets = Character == null ? null : Character.Assets;
             Columns = Settings.UI.MainWindow.Assets.Columns;
             Grouping = (Character == null ? AssetGrouping.None : Character.UISettings.AssetsGroupBy);
@@ -360,8 +363,8 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             noAssetsLabel.Visible = lvAssets.Items.Count == 0;
+            estimatedCostFlowLayoutPanel.Visible = !noAssetsLabel.Visible;
             lvAssets.Visible = !noAssetsLabel.Visible;
-            estimatedCostFlowLayoutPanel.Visible = lvAssets.Visible;
         }
 
         /// <summary>

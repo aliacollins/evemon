@@ -242,6 +242,8 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvContracts.Visible = false;
+
             Contracts = (Character == null ? null : Character.Contracts);
             Columns = Settings.UI.MainWindow.Contracts.Columns;
             Grouping = (Character == null ? ContractGrouping.State : Character.UISettings.ContractsGroupBy);

@@ -20,7 +20,7 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
-        
+
         private InfiniteDisplayToolTip m_tooltip;
         private Timer m_refreshTimer;
         private IndustryJobGrouping m_grouping;
@@ -269,6 +269,9 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvJobs.Visible = false;
+            industryExpPanelControl.Visible = false;
+
             Jobs = (Character == null ? null : Character.IndustryJobs);
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             Grouping = (Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy);
@@ -387,10 +390,10 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             noJobsLabel.Visible = lvJobs.Items.Count == 0;
-            lvJobs.Visible = !noJobsLabel.Visible;
-            m_refreshTimer.Enabled = lvJobs.Visible;
             industryExpPanelControl.Visible = true;
             industryExpPanelControl.Header.Visible = true;
+            lvJobs.Visible = !noJobsLabel.Visible;
+            m_refreshTimer.Enabled = lvJobs.Visible;
         }
 
         /// <summary>

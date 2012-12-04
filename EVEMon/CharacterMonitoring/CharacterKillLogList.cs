@@ -164,8 +164,12 @@ namespace EVEMon.CharacterMonitoring
 
             base.OnVisibleChanged(e);
 
-            if (Visible)
-                UpdateKillLogView();
+            if (!Visible)
+                return;
+
+            lbKillLog.Visible = false;
+            lvKillLog.Visible = false;
+            UpdateKillLogView();
         }
 
         #endregion

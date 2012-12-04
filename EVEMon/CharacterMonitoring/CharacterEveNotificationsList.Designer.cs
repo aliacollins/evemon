@@ -1,4 +1,6 @@
-﻿namespace EVEMon.CharacterMonitoring
+﻿using EVEMon.Controls;
+
+namespace EVEMon.CharacterMonitoring
 {
     partial class CharacterEveNotificationsList
     {
@@ -36,7 +38,7 @@
             this.chType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSentDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
-            this.eveNotificationReadingPane = new EVEMon.CharacterMonitoring.ReadingPane();
+            this.eveNotificationReadingPane = new ReadingPane();
             this.noEVENotificationsLabel = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);

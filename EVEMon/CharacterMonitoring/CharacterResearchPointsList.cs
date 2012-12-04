@@ -188,6 +188,8 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvResearchPoints.Visible = false;
+
             ResearchPoints = (Character == null ? null : Character.ResearchPoints);
             Columns = Settings.UI.MainWindow.Research.Columns;
             TextFilter = String.Empty;

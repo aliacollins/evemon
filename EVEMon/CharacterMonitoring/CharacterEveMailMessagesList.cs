@@ -221,6 +221,9 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvMailMessages.Visible = false;
+            eveMailReadingPane.HidePane();
+
             EVEMailMessages = (Character == null ? null : Character.EVEMailMessages);
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;
             Grouping = (Character == null ? EVEMailMessagesGrouping.State : Character.UISettings.EVEMailMessagesGroupBy);
