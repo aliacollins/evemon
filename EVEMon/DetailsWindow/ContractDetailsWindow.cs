@@ -461,7 +461,7 @@ namespace EVEMon.DetailsWindow
                                                               DescriptiveTextOptions.FullText |
                                                               DescriptiveTextOptions.SpaceBetween, false),
                                        m_contract.Accepted.AddDays(m_contract.DaysToComplete)
-                                           .ToLocalTime().ToString("yyyy.MM.dd  HH:mm", CultureConstants.DefaultCulture)), Font);
+                                           .ToLocalTime().DateTimeToDotFormattedString()), Font);
             }
 
             DrawText(e, "Volume", String.Format(CultureConstants.DefaultCulture, "{0:N1} m³", m_contract.Volume), Font);
@@ -515,7 +515,7 @@ namespace EVEMon.DetailsWindow
             DrawText(e, "Status", m_contract.Status.GetDescription(), Font);
             DrawStationText(e, "Location", m_contract.StartStation);
             DrawText(e, "Issued Date",
-                     m_contract.Issued.ToLocalTime().ToString("yyyy.MM.dd  HH:mm", CultureConstants.DefaultCulture), Font);
+                     m_contract.Issued.ToLocalTime().DateTimeToDotFormattedString(), Font);
 
             DrawExpirationOrCompletionText(e);
 
@@ -539,13 +539,13 @@ namespace EVEMon.DetailsWindow
             {
                 DrawText(e, "Complete Before",
                          m_contract.Accepted.AddDays(m_contract.DaysToComplete)
-                             .ToLocalTime().ToString("yyyy.MM.dd  HH:mm", CultureConstants.DefaultCulture), Font);
+                             .ToLocalTime().DateTimeToDotFormattedString(), Font);
             }
 
             if (m_contract.Status != CCPContractStatus.Outstanding && m_contract.Completed != DateTime.MinValue)
             {
                 DrawText(e, "Completed Date",
-                         m_contract.Completed.ToLocalTime().ToString("yyyy.MM.dd  HH:mm", CultureConstants.DefaultCulture), Font);
+                         m_contract.Completed.ToLocalTime().DateTimeToDotFormattedString(), Font);
             }
         }
 
@@ -558,8 +558,7 @@ namespace EVEMon.DetailsWindow
             if (m_contract.Status != CCPContractStatus.Outstanding)
                 return;
 
-            string expirationTimeText = m_contract.Expiration.ToLocalTime().ToString("yyyy.MM.dd  HH:mm",
-                                                                                     CultureConstants.DefaultCulture);
+            string expirationTimeText = m_contract.Expiration.ToLocalTime().DateTimeToDotFormattedString();
             string expirationRemainingTimeText = m_contract.IsAvailable
                                                      ? m_contract.Expiration.ToRemainingTimeShortDescription(DateTimeKind.Utc)
                                                      : m_contract.State.ToString();

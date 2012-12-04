@@ -14,7 +14,6 @@ namespace EVEMon.CharacterMonitoring
         private const int PadTop = 2;
         private const int PadLeft = 6;
         private const TextFormatFlags TextFormat = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
-        private const string DateTimeFormat = "{0:yyyy.MM.dd} {0:HH:mm}";
         private const string RecordDateFromText = "From";
         private const string RecordDateToText = "to";
         private const string RecordDateTodayText = "this day";
@@ -201,12 +200,10 @@ namespace EVEMon.CharacterMonitoring
             string recordPeriodText = String.Format(CultureConstants.DefaultCulture, "( {0} )",
                                                     dt.Subtract(record.StartDate).ToDescriptiveText(
                                                         DescriptiveTextOptions.SpaceBetween, false));
-            string recordStartDateText = String.Format(CultureConstants.DefaultCulture, DateTimeFormat,
-                                                       record.StartDate.ToLocalTime());
+            string recordStartDateText = record.StartDate.ToLocalTime().DateTimeToDotFormattedString();
             string recordEndDateText = previousRecord == null
                                            ? RecordDateTodayText
-                                           : String.Format(CultureConstants.DefaultCulture, DateTimeFormat,
-                                                           previousRecord.StartDate.ToLocalTime());
+                                           : previousRecord.StartDate.ToLocalTime().DateTimeToDotFormattedString();
 
             Size recordCorporationNameTextSize = TextRenderer.MeasureText(g, record.CorporationName, m_recordBoldFont, Size.Empty,
                                                                           TextFormat);

@@ -48,7 +48,7 @@ namespace EVEMon.Common
                 return String.Empty;
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(killLog.KillTime.ToString("yyyy.MM.dd HH:mm:ss", CultureConstants.InvariantCulture)).AppendLine();
+            sb.AppendLine(killLog.KillTime.DateTimeToDotFormattedString()).AppendLine();
             sb.AppendFormat(CultureConstants.InvariantCulture, "Victim: {0}", killLog.Victim.Name).AppendLine();
             sb.AppendFormat(CultureConstants.InvariantCulture, "Corp: {0}", killLog.Victim.CorporationName).AppendLine();
             sb.AppendFormat(CultureConstants.InvariantCulture, "Alliance: {0}", killLog.Victim.AllianceName).AppendLine();
@@ -118,23 +118,30 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sb">The sb.</param>
         /// <param name="droppedItems">The dropped items.</param>
-        private static void AppendDroppedItems(StringBuilder sb, IEnumerable<KillLogItem> droppedItems)
+        /// <param name="isInContainer">if set to <c>true</c> [in container].</param>
+        private static void AppendDroppedItems(StringBuilder sb, IEnumerable<KillLogItem> droppedItems, bool isInContainer = false)
         {
-            foreach (KillLogItem droppedItem in droppedItems.Where(droppedItem => droppedItem.EVEFlag != 0))
+            foreach (KillLogItem droppedItem in droppedItems.Where(droppedItem => droppedItem.EVEFlag != 0 || isInContainer))
             {
-                sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} {2}",
-                                droppedItem.Name,
-                                droppedItem.QtyDropped > 1
-                                    ? String.Format(CultureConstants.InvariantCulture, ", Qty: {0}", droppedItem.QtyDropped)
-                                    : String.Empty,
-                                String.IsNullOrEmpty(droppedItem.InventoryText)
-                                    ? droppedItem.InventoryText
-                                    : String.Format(CultureConstants.InvariantCulture, "({0})", droppedItem.InventoryText)
-                    ).AppendLine();
+                if (isInContainer)
+                    sb.Append("   ");
+
+                sb.Append(droppedItem.Name);
+
+                if (droppedItem.QtyDropped > 1)
+                    sb.AppendFormat(CultureConstants.InvariantCulture, ", Qty: {0}", droppedItem.QtyDropped);
+
+                if (!String.IsNullOrEmpty(droppedItem.InventoryText))
+                    sb.AppendFormat(CultureConstants.InvariantCulture, " ({0})", droppedItem.InventoryText);
+
+                if (isInContainer)
+                    sb.Append(" (In Container)");
+
+                sb.AppendLine();
 
                 // Append any items inside a container
                 if (droppedItem.Items.Any())
-                    AppendDroppedItems(sb, droppedItem.Items.Where(x => x.QtyDropped != 0));
+                    AppendDroppedItems(sb, droppedItem.Items.Where(x => x.QtyDropped != 0), true);
             }
         }
 
@@ -143,23 +150,29 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sb">The sb.</param>
         /// <param name="destroyedItems">The destroyed items.</param>
-        private static void AppendDestroyedItems(StringBuilder sb, IEnumerable<KillLogItem> destroyedItems)
+        private static void AppendDestroyedItems(StringBuilder sb, IEnumerable<KillLogItem> destroyedItems, bool isInContainer = false)
         {
-            foreach (KillLogItem destroyedItem in destroyedItems.Where(destroyedItem => destroyedItem.EVEFlag != 0))
+            foreach (KillLogItem destroyedItem in destroyedItems.Where(destroyedItem => destroyedItem.EVEFlag != 0 || isInContainer))
             {
-                sb.AppendFormat(CultureConstants.InvariantCulture, "{0}{1} {2}",
-                                destroyedItem.Name,
-                                destroyedItem.QtyDestroyed > 1
-                                    ? String.Format(CultureConstants.InvariantCulture, ", Qty: {0}", destroyedItem.QtyDestroyed)
-                                    : String.Empty,
-                                String.IsNullOrEmpty(destroyedItem.InventoryText)
-                                    ? destroyedItem.InventoryText
-                                    : String.Format(CultureConstants.InvariantCulture, "({0})", destroyedItem.InventoryText)
-                    ).AppendLine();
+                if (isInContainer)
+                    sb.Append("   ");
+
+                sb.Append(destroyedItem.Name);
+
+                if (destroyedItem.QtyDestroyed > 1)
+                    sb.AppendFormat(CultureConstants.InvariantCulture, ", Qty: {0}", destroyedItem.QtyDestroyed);
+
+                if (!String.IsNullOrEmpty(destroyedItem.InventoryText))
+                    sb.AppendFormat(CultureConstants.InvariantCulture, " ({0})", destroyedItem.InventoryText);
+
+                if (isInContainer)
+                    sb.Append(" (In Container)");
+
+                sb.AppendLine();
 
                 // Append any items inside a container
                 if (destroyedItem.Items.Any())
-                    AppendDestroyedItems(sb, destroyedItem.Items.Where(x => x.QtyDestroyed != 0));
+                    AppendDestroyedItems(sb, destroyedItem.Items.Where(x => x.QtyDestroyed != 0), true);
             }
         }
     }
