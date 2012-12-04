@@ -116,6 +116,15 @@ namespace EVEMon.SkillPlanner
         #region Content update
 
         /// <summary>
+        /// Updates the skill browser.
+        /// </summary>
+        internal void UpdateSkillBrowser()
+        {
+            skillSelectControl.UpdateContent();
+            UpdateContent();
+        }
+
+        /// <summary>
         /// Updates the control visibility.
         /// </summary>
         private void UpdateControlVisibility()
@@ -351,6 +360,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void ownsBookMenu_Click(object sender, EventArgs e)
         {
+            // Set button check state according to skills 'owned' property;
+            // this will also trigger a check through the character's assets
+            ownsBookMenu.Checked = !ownsBookMenu.Checked | (m_selectedSkill.HasSkillBookInAssets && !m_selectedSkill.IsKnown);
+            
+            // Set skill's 'owned' property according to button check state
             m_selectedSkill.IsOwned = ownsBookMenu.Checked;
             skillSelectControl.UpdateContent();
 

@@ -244,7 +244,6 @@ namespace EVEMon.SkillPlanner
             // ownsBookMenu
             // 
             this.ownsBookMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ownsBookMenu.CheckOnClick = true;
             this.ownsBookMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.ownsBookMenu.Image = ((System.Drawing.Image)(resources.GetObject("ownsBookMenu.Image")));
             this.ownsBookMenu.ImageTransparentColor = System.Drawing.Color.Magenta;

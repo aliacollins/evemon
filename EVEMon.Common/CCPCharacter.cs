@@ -72,6 +72,7 @@ namespace EVEMon.Common
 
             m_jobsCompletedForCharacter = new List<IndustryJob>();
 
+            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CorporationMarketOrdersUpdated += EveMonClient_CorporationMarketOrdersUpdated;
             EveMonClient.CharacterContractsUpdated += EveMonClient_CharacterContractsUpdated;
@@ -530,6 +531,7 @@ namespace EVEMon.Common
         internal override void Dispose()
         {
             // Unsubscribe events
+            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CorporationMarketOrdersUpdated -= EveMonClient_CorporationMarketOrdersUpdated;
             EveMonClient.CharacterContractsUpdated -= EveMonClient_CharacterContractsUpdated;
@@ -797,6 +799,20 @@ namespace EVEMon.Common
                 ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods),
                                                                                         lastUpdate.Method)));
             }
+        }
+
+        /// <summary>
+        /// Handles the CharacterAssetsUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <remarks>Triggering a settings exportation to update the character owned skillbooks found in Assets</remarks>
+        private void EveMonClient_CharacterAssetsUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            Export();
         }
 
         /// <summary>

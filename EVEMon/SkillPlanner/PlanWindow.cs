@@ -380,10 +380,9 @@ namespace EVEMon.SkillPlanner
         /// Sets the plan editor's skill selection control selected skill.
         /// </summary>
         /// <param name="skill">The skill.</param>
-        public void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
+        internal void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
         {
-            SkillSelectControl skillSelectControl = (SkillSelectControl)planEditor.SkillSelectControl;
-            skillSelectControl.SelectedSkill = skill;
+            planEditor.SetPlanEditorSkillSelectorSelectedSkill(skill);
         }
 
         /// <summary>
@@ -391,8 +390,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         internal void UpdatePlanEditorSkillSelection()
         {
-            SkillSelectControl skillSelectControl = (SkillSelectControl)planEditor.SkillSelectControl;
-            skillSelectControl.UpdateContent();
+            planEditor.UpdatePlanEditorSkillSelection();
         }
 
         /// <summary>
@@ -400,7 +398,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         internal void UpdateSkillBrowser()
         {
-            skillBrowser.UpdateContent();
+            skillBrowser.UpdateSkillBrowser();
         }
 
         #endregion
