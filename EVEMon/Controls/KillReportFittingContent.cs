@@ -182,6 +182,9 @@ namespace EVEMon.Controls
 
         #endregion
 
+
+        #region Inherited Events
+
         /// <summary>
         /// On load subscribe the events.
         /// </summary>
@@ -196,6 +199,8 @@ namespace EVEMon.Controls
             BCItemPrices.BCItemPricesUpdated += BCItemPrices_BCItemPricesUpdated;
             Disposed += OnDisposed;
         }
+
+        #endregion
 
 
         #region Drawing
@@ -465,6 +470,7 @@ namespace EVEMon.Controls
         private void OnDisposed(object sender, EventArgs e)
         {
             BCItemPrices.BCItemPricesUpdated -= BCItemPrices_BCItemPricesUpdated;
+            Disposed -= OnDisposed;
         }
 
         #endregion
