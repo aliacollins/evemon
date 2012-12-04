@@ -14,6 +14,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.NotificationWindow;
 
 namespace EVEMon.SkillPlanner
 {
@@ -1762,6 +1763,14 @@ namespace EVEMon.SkillPlanner
                 return;
 
             planWindow.UpdateSkillBrowser();
+
+            // Update the Owned Skill books window if open
+            OwnedSkillBooksWindow ownedSkillBooksWindow =
+                WindowsFactory.GetByTag<OwnedSkillBooksWindow, Character>((Character)m_plan.Character);
+            if (ownedSkillBooksWindow == null || ownedSkillBooksWindow.IsDisposed)
+                return;
+
+            ownedSkillBooksWindow.UpdateList();
         }
 
         /// <summary>

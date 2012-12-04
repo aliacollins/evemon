@@ -1642,39 +1642,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void tsShowOwnedSkillbooks_Click(object sender, EventArgs e)
         {
-            Character character = GetCurrentCharacter();
-            if (character == null)
-                return;
-
-            // Collect the owned skillbooks and sort them by name
-            SortedList<string, bool> sortedSkills = new SortedList<string, bool>();
-            foreach (Skill skill in character.Skills.Where(skill => skill.IsOwned && !skill.IsKnown))
-            {
-                sortedSkills.Add(skill.Name, skill.ArePrerequisitesMet);
-            }
-
-            // Build a string representation of the list
-            bool firstSkill = true;
-            StringBuilder sb = new StringBuilder();
-            foreach (string skillName in sortedSkills.Keys)
-            {
-                if (!firstSkill)
-                    sb.Append("\n");
-
-                firstSkill = false;
-
-                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}", skillName,
-                                sortedSkills[skillName] ? " (prereqs met)" : " (prereqs not met)");
-            }
-
-            // Prints the message box
-            if (firstSkill)
-                sb.Append("You don't have any skill books marked as \"Owned\".");
-
-            MessageBox.Show(sb.ToString(),
-                            String.Format(CultureConstants.DefaultCulture, "Skill books owned by {0}", character.Name),
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+            WindowsFactory.ShowByTag<OwnedSkillBooksWindow, Character>(GetCurrentCharacter());
         }
 
         /// <summary>

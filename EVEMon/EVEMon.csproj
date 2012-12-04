@@ -312,6 +312,12 @@
     <Compile Include="DetailsWindow\KillReportWindow.Designer.cs">
       <DependentUpon>KillReportWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="NotificationWindow\OwnedSkillBooksWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotificationWindow\OwnedSkillBooksWindow.Designer.cs">
+      <DependentUpon>OwnedSkillBooksWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -582,6 +588,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DetailsWindow\KillReportWindow.resx">
       <DependentUpon>KillReportWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotificationWindow\OwnedSkillBooksWindow.resx">
+      <DependentUpon>OwnedSkillBooksWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -342,6 +342,7 @@ namespace EVEMon.CharacterMonitoring
                 lvKillLog.SetVerticalScrollBarPosition(scrollBarPosition);
             }
         }
+
         /// <summary>
         /// Creates the list view sub items.
         /// </summary>

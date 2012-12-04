@@ -112,7 +112,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_owned | (HasSkillBookInAssets && !m_known);
+                return m_owned | (HasBookInAssets && !m_known);
             }
             set
             {
@@ -127,7 +127,7 @@ namespace EVEMon.Common
         /// <value>
         /// 	<c>true</c> if this instance has book in assets; otherwise, <c>false</c>.
         /// </value>
-        public bool HasSkillBookInAssets
+        public bool HasBookInAssets
         {
             get
             {
