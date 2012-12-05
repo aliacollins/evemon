@@ -99,23 +99,17 @@ namespace EVEMon.Controls
 
                     foreach (KillLogItem item in group)
                     {
-                        bool eventHandlerAdded = false;
+                        // Add the item to the list
+                        AddItem(item);
 
-                        // Add if the item was destroyed
-                        if (item.QtyDestroyed > 0)
-                        {
-                            FittingContentListBox.Items.Add(item);
-                            item.KillLogItemImageUpdated += item_KillLogItemImageUpdated;
-                            eventHandlerAdded = true;
-                        }
-
-                        // Re-add if the item was also dropped
-                        if (item.QtyDropped <= 0)
+                        if (!item.Items.Any())
                             continue;
 
-                        FittingContentListBox.Items.Add(item);
-                        if (!eventHandlerAdded)
-                            item.KillLogItemImageUpdated += item_KillLogItemImageUpdated;
+                        // Add items in a container to the list
+                        foreach (KillLogItem itemInItem in item.Items)
+                        {
+                            AddItem(itemInItem);
+                        }
                     }
                 }
 
@@ -132,6 +126,31 @@ namespace EVEMon.Controls
                 FittingContentListBox.EndUpdate();
                 ItemsCostLabel.Text = GetTotalCost();
             }
+        }
+
+        /// <summary>
+        /// Adds the item.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        private void AddItem(KillLogItem item)
+        {
+            bool eventHandlerAdded = false;
+
+            // Add if the item was destroyed
+            if (item.QtyDestroyed > 0)
+            {
+                FittingContentListBox.Items.Add(item);
+                item.KillLogItemImageUpdated += item_KillLogItemImageUpdated;
+                eventHandlerAdded = true;
+            }
+
+            // Re-add if the item was also dropped
+            if (item.QtyDropped <= 0)
+                return;
+
+            FittingContentListBox.Items.Add(item);
+            if (!eventHandlerAdded)
+                item.KillLogItemImageUpdated += item_KillLogItemImageUpdated;
         }
 
         /// <summary>
@@ -261,24 +280,28 @@ namespace EVEMon.Controls
             g.FillRectangle(itemIsDropped ? Brushes.Green : Brushes.LightGray, e.Bounds);
 
             int itemQty = itemIsDropped ? item.QtyDropped : item.QtyDestroyed;
+            int inContainerPad = item.IsInContainer ? PadLeft * 2 : 0;
 
+            // Texts size measure
             Size itemTextSize = TextRenderer.MeasureText(g, item.Name, m_fittingFont, Size.Empty, Format);
             Size itemQtyTextSize = TextRenderer.MeasureText(g, itemQty.ToNumericString(0), m_fittingFont);
 
-            Rectangle itemTextRect = new Rectangle(e.Bounds.Left + PadLeft * 2 + ItemImageSize,
+            Rectangle itemTextRect = new Rectangle(e.Bounds.Left + inContainerPad + PadLeft * 2 + ItemImageSize,
                                                    e.Bounds.Top + ((e.Bounds.Height - itemTextSize.Height) / 2),
                                                    itemTextSize.Width + PadRight, itemTextSize.Height);
             Rectangle itemQtyTextRect = new Rectangle(e.Bounds.Right - itemQtyTextSize.Width - PadRight,
                                                       e.Bounds.Top + ((e.Bounds.Height - itemTextSize.Height) / 2),
                                                       itemQtyTextSize.Width + PadRight, itemQtyTextSize.Height);
 
+            // Draw texts
             TextRenderer.DrawText(g, item.Name, m_fittingFont, itemTextRect, Color.Black);
             TextRenderer.DrawText(g, itemQty.ToNumericString(0), m_fittingFont, itemQtyTextRect, Color.Black);
 
+            // Draw the image
             if (Settings.UI.SafeForWork)
                 return;
 
-            g.DrawImage(item.ItemImage, new Rectangle(e.Bounds.Left + PadLeft * 2,
+            g.DrawImage(item.ItemImage, new Rectangle(e.Bounds.Left + inContainerPad + PadLeft * 2,
                                                       e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
                                                       ItemImageSize, ItemImageSize));
         }

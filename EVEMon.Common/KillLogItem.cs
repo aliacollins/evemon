@@ -30,8 +30,9 @@ namespace EVEMon.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="KillLogItem"/> class.
         /// </summary>
-        /// <param name="src">The SRC.</param>
-        public KillLogItem(SerializableKillLogItemListItem src)
+        /// <param name="src">The source.</param>
+        /// <param name="isInContainer">if set to <c>true</c> item is in container.</param>
+        public KillLogItem(SerializableKillLogItemListItem src, bool isInContainer = false)
         {
             m_typeID = src.TypeID;
             EVEFlag = src.EVEFlag;
@@ -40,8 +41,9 @@ namespace EVEMon.Common
             Singleton = src.Singleton;
 
             FittingContentGroup = GetFittingContentGroup();
+            IsInContainer = isInContainer;
 
-            m_items.AddRange(src.Items.Select(item => new KillLogItem(item)));
+            m_items.AddRange(src.Items.Select(item => new KillLogItem(item, true)));
         }
 
         #endregion
@@ -68,6 +70,11 @@ namespace EVEMon.Common
         /// Gets the singleton.
         /// </summary>
         public byte Singleton { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the item is in a container.
+        /// </summary>
+        public bool IsInContainer { get; private set; }
 
         /// <summary>
         /// Gets the fitting content group.

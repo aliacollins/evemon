@@ -492,6 +492,7 @@ namespace EVEMon.CharacterMonitoring
         {
             if (e.Index < 0)
                 return;
+
             e.ItemHeight = GetItemHeight(lbKillLog.Items[e.Index]);
         }
 

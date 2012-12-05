@@ -118,12 +118,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sb">The sb.</param>
         /// <param name="droppedItems">The dropped items.</param>
-        /// <param name="isInContainer">if set to <c>true</c> [in container].</param>
-        private static void AppendDroppedItems(StringBuilder sb, IEnumerable<KillLogItem> droppedItems, bool isInContainer = false)
+        private static void AppendDroppedItems(StringBuilder sb, IEnumerable<KillLogItem> droppedItems)
         {
-            foreach (KillLogItem droppedItem in droppedItems.Where(droppedItem => droppedItem.EVEFlag != 0 || isInContainer))
+            foreach (KillLogItem droppedItem in droppedItems.Where(droppedItem => droppedItem.EVEFlag != 0 || droppedItem.IsInContainer))
             {
-                if (isInContainer)
+                if (droppedItem.IsInContainer)
                     sb.Append("   ");
 
                 sb.Append(droppedItem.Name);
@@ -134,14 +133,14 @@ namespace EVEMon.Common
                 if (!String.IsNullOrEmpty(droppedItem.InventoryText))
                     sb.AppendFormat(CultureConstants.InvariantCulture, " ({0})", droppedItem.InventoryText);
 
-                if (isInContainer)
+                if (droppedItem.IsInContainer)
                     sb.Append(" (In Container)");
 
                 sb.AppendLine();
 
                 // Append any items inside a container
                 if (droppedItem.Items.Any())
-                    AppendDroppedItems(sb, droppedItem.Items.Where(x => x.QtyDropped != 0), true);
+                    AppendDroppedItems(sb, droppedItem.Items.Where(x => x.QtyDropped != 0));
             }
         }
 
@@ -150,11 +149,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sb">The sb.</param>
         /// <param name="destroyedItems">The destroyed items.</param>
-        private static void AppendDestroyedItems(StringBuilder sb, IEnumerable<KillLogItem> destroyedItems, bool isInContainer = false)
+        private static void AppendDestroyedItems(StringBuilder sb, IEnumerable<KillLogItem> destroyedItems)
         {
-            foreach (KillLogItem destroyedItem in destroyedItems.Where(destroyedItem => destroyedItem.EVEFlag != 0 || isInContainer))
+            foreach (KillLogItem destroyedItem in destroyedItems.Where(destroyedItem => destroyedItem.EVEFlag != 0 || destroyedItem.IsInContainer))
             {
-                if (isInContainer)
+                if (destroyedItem.IsInContainer)
                     sb.Append("   ");
 
                 sb.Append(destroyedItem.Name);
@@ -165,14 +164,14 @@ namespace EVEMon.Common
                 if (!String.IsNullOrEmpty(destroyedItem.InventoryText))
                     sb.AppendFormat(CultureConstants.InvariantCulture, " ({0})", destroyedItem.InventoryText);
 
-                if (isInContainer)
+                if (destroyedItem.IsInContainer)
                     sb.Append(" (In Container)");
 
                 sb.AppendLine();
 
                 // Append any items inside a container
                 if (destroyedItem.Items.Any())
-                    AppendDestroyedItems(sb, destroyedItem.Items.Where(x => x.QtyDestroyed != 0), true);
+                    AppendDestroyedItems(sb, destroyedItem.Items.Where(x => x.QtyDestroyed != 0));
             }
         }
     }
