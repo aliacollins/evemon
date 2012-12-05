@@ -32,7 +32,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="src">The source.</param>
         /// <param name="isInContainer">if set to <c>true</c> item is in container.</param>
-        public KillLogItem(SerializableKillLogItemListItem src, bool isInContainer = false)
+        internal KillLogItem(SerializableKillLogItemListItem src, bool isInContainer = false)
         {
             m_typeID = src.TypeID;
             EVEFlag = src.EVEFlag;
@@ -219,7 +219,7 @@ namespace EVEMon.Common
         /// </summary>
         private void GetItemImage()
         {
-            m_image = new Bitmap(24, 24);
+            m_image = GetDefaultImage();
             ImageService.GetImageAsync(GetImageUrl(), img =>
                                                           {
                                                               if (img == null)
@@ -231,6 +231,15 @@ namespace EVEMon.Common
                                                               if (KillLogItemImageUpdated != null)
                                                                   KillLogItemImageUpdated(this, EventArgs.Empty);
                                                           });
+        }
+
+        /// <summary>
+        /// Gets the default image.
+        /// </summary>
+        /// <returns></returns>
+        private static Bitmap GetDefaultImage()
+        {
+            return new Bitmap(24, 24);
         }
 
         /// <summary>

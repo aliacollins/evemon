@@ -22,7 +22,7 @@ namespace EVEMon.Common
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable medals from the API.</param>
-        public void Import(IEnumerable<SerializableMedalsListItem> src)
+        internal void Import(IEnumerable<SerializableMedalsListItem> src)
         {
             Items.Clear();
 

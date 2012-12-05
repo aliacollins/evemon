@@ -127,7 +127,7 @@ namespace EVEMon.Common
         /// </summary>
         private void GetVictimShipImage()
         {
-            m_image = new Bitmap(32, 32);
+            m_image = GetDefaultImage();
             ImageService.GetImageAsync(GetImageUrl(), img =>
                                                           {
                                                               if (img == null)
@@ -139,6 +139,15 @@ namespace EVEMon.Common
                                                               if (KillLogVictimShipImageUpdated != null)
                                                                   KillLogVictimShipImageUpdated(this, EventArgs.Empty);
                                                           });
+        }
+
+        /// <summary>
+        /// Gets the default image.
+        /// </summary>
+        /// <returns></returns>
+        private static Bitmap GetDefaultImage()
+        {
+            return new Bitmap(32, 32);
         }
 
         /// <summary>
