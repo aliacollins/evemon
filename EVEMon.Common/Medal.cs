@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -6,6 +7,8 @@ namespace EVEMon.Common
     public sealed class Medal
     {
         #region Fields
+
+        private CCPCharacter m_ccpCharacter;
 
         private string m_issuer;
         private string m_corporationName;
@@ -18,9 +21,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Constructor from the API.
         /// </summary>
-        /// <param name="src"></param>
-        internal Medal(SerializableMedalsListItem src)
+        /// <param name="ccpCharacter">The CCP character.</param>
+        /// <param name="src">The source.</param>
+        internal Medal(CCPCharacter ccpCharacter, SerializableMedalsListItem src)
         {
+            m_ccpCharacter = ccpCharacter;
+
             ID = src.MedalID;
             Reason = src.Reason;
             Status = src.Status;
@@ -114,6 +120,35 @@ namespace EVEMon.Common
                            ? m_corporationName = EveIDToName.GetIDToName(IssuerID)
                            : m_corporationName;
             }
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Tries the assign missing title and description.
+        /// </summary>
+        /// <returns></returns>
+        public bool TryAssignMissingTitleAndDescription()
+        {
+            if (!String.IsNullOrEmpty(Title) && !String.IsNullOrEmpty(Description))
+                return true;
+
+            // Find the related medal in the corporation's medals
+            Medal corporationMedal = m_ccpCharacter.CorporationMedals.SingleOrDefault(corpMedal => corpMedal.ID == ID);
+
+            if (corporationMedal == null)
+                return false;
+
+            if (String.IsNullOrEmpty(Title))
+                Title = corporationMedal.Title;
+
+            if (String.IsNullOrEmpty(Description))
+                Description = corporationMedal.Description;
+
+            return true;
         }
 
         #endregion

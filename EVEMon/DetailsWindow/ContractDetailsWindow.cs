@@ -637,20 +637,39 @@ namespace EVEMon.DetailsWindow
             if (station is ConquerableStation)
                 DrawColoredText(e, "Station may be inaccesible!", Font, new Point(SecondIntendPosition, m_height), Color.DarkRed);
 
+            // Draw jumps from
+            DrawJumps(e, station);
+
+            // Draw the "route through" info text
+            DrawRouteThroughText(e, station);
+        }
+
+        /// <summary>
+        /// Draws the jumps.
+        /// </summary>
+        /// <param name="e">The <see cref="System.Windows.Forms.PaintEventArgs"/> instance containing the event data.</param>
+        /// <param name="station">The station.</param>
+        private void DrawJumps(PaintEventArgs e, Station station)
+        {
+            Graphics g = e.Graphics;
+
             int startToEndSystemJumps;
+            string jumpsText;
+            Size jumpsTextSize;
+
             // Draw the "jumps from current location to contract's start solar system" info text
             if (m_characterLastSolarSystem != null && station == m_contract.StartStation)
             {
                 startToEndSystemJumps = GetCharacterLastLocationToStartRoute.Count(system => system != station.SolarSystem);
-                string jumpsText = m_contract.Character.LastKnownStation == station
-                                       ? "Current Station"
-                                       : startToEndSystemJumps == 0
-                                             ? "Current System"
-                                             : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} away - ",
-                                                             startToEndSystemJumps,
-                                                             startToEndSystemJumps > 1 ? "s" : String.Empty);
+                jumpsText = m_contract.Character.LastKnownStation == station
+                                ? "Current Station"
+                                : startToEndSystemJumps == 0
+                                      ? "Current System"
+                                      : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} away - ",
+                                                      startToEndSystemJumps,
+                                                      startToEndSystemJumps > 1 ? "s" : String.Empty);
 
-                Size jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
+                jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
                 if (startToEndSystemJumps != 0)
                 {
                     CurrentToStartLinkLabel.Location = new Point(SecondIntendPosition + jumpsTextSize.Width, m_height);
@@ -666,16 +685,16 @@ namespace EVEMon.DetailsWindow
                 station == m_contract.EndStation)
             {
                 startToEndSystemJumps = GetCharacterLastLocationToEndRoute.Count(system => system != station.SolarSystem);
-                string jumpsText = m_contract.Character.LastKnownStation == station
-                                       ? "Current Station"
-                                       : startToEndSystemJumps == 0
-                                             ? "Destination is within same solar system of start location"
-                                             : String.Format(CultureConstants.DefaultCulture,
-                                                             "{0} jump{1} from current location - ",
-                                                             startToEndSystemJumps,
-                                                             startToEndSystemJumps > 1 ? "s" : String.Empty);
+                jumpsText = m_contract.Character.LastKnownStation == station
+                                ? "Current Station"
+                                : startToEndSystemJumps == 0
+                                      ? "Destination is within same solar system of start location"
+                                      : String.Format(CultureConstants.DefaultCulture,
+                                                      "{0} jump{1} from current location - ",
+                                                      startToEndSystemJumps,
+                                                      startToEndSystemJumps > 1 ? "s" : String.Empty);
 
-                Size jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
+                jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
                 if (startToEndSystemJumps != 0)
                 {
                     CurrentToEndLinkLabel.Location = new Point(SecondIntendPosition + jumpsTextSize.Width, m_height);
@@ -687,29 +706,26 @@ namespace EVEMon.DetailsWindow
             }
 
             // Draw the "jumps between start and end solar system" info text
-            if (m_contract.StartStation != m_contract.EndStation && station == m_contract.EndStation &&
-                (m_characterLastSolarSystem == null ||
-                 (m_characterLastSolarSystem != null && m_characterLastSolarSystem != m_contract.StartStation.SolarSystem)))
+            if (m_contract.StartStation == m_contract.EndStation || station != m_contract.EndStation ||
+                (m_characterLastSolarSystem != null &&
+                 (m_characterLastSolarSystem == null || m_characterLastSolarSystem == m_contract.StartStation.SolarSystem)))
+                return;
+
+            startToEndSystemJumps = GetStartToEndRoute.Count(system => system != station.SolarSystem);
+            jumpsText = startToEndSystemJumps == 0
+                            ? "Destination is within same solar system of start location"
+                            : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} from start location - ",
+                                            startToEndSystemJumps, startToEndSystemJumps > 1 ? "s" : String.Empty);
+
+            jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
+            if (startToEndSystemJumps != 0)
             {
-                startToEndSystemJumps = GetStartToEndRoute.Count(system => system != station.SolarSystem);
-                string jumpsText = startToEndSystemJumps == 0
-                                       ? "Destination is within same solar system of start location"
-                                       : String.Format(CultureConstants.DefaultCulture, "{0} jump{1} from start location - ",
-                                                       startToEndSystemJumps, startToEndSystemJumps > 1 ? "s" : String.Empty);
-
-                Size jumpsTextSize = g.MeasureString(jumpsText, Font).ToSize();
-                if (startToEndSystemJumps != 0)
-                {
-                    StartToEndLinkLabel.Location = new Point(SecondIntendPosition + jumpsTextSize.Width, m_height);
-                    StartToEndLinkLabel.BringToFront();
-                    StartToEndLinkLabel.Visible = true;
-                }
-
-                DrawText(e, String.Empty, jumpsText, Font);
+                StartToEndLinkLabel.Location = new Point(SecondIntendPosition + jumpsTextSize.Width, m_height);
+                StartToEndLinkLabel.BringToFront();
+                StartToEndLinkLabel.Visible = true;
             }
 
-            // Draw the "route through" info text
-            DrawRouteThroughText(e, station);
+            DrawText(e, String.Empty, jumpsText, Font);
         }
 
         /// <summary>

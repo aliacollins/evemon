@@ -29,7 +29,7 @@ namespace EVEMon.Common
             // Import the medals from the API
             foreach (SerializableMedalsListItem srcMedal in src)
             {
-                Items.Add(new Medal(srcMedal));
+                Items.Add(new Medal(m_character, srcMedal));
             }
 
             // Assign the 'number of times awarded'

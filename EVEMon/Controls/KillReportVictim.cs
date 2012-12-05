@@ -75,7 +75,7 @@ namespace EVEMon.Controls
 
             KillTimeLabel.Text = m_killLog.KillTime.ToLocalTime().DateTimeToDotFormattedString();
             SolarSystemLabel.Text = m_killLog.SolarSystem.Name;
-            SecStatusLabel.Text = m_killLog.SolarSystem.SecurityLevel.ToString("N1");
+            SecStatusLabel.Text = m_killLog.SolarSystem.SecurityLevel.ToNumericString(1);
             SecStatusLabel.ForeColor = m_killLog.SolarSystem.SecurityLevelColor;
             ConstelationLabel.Text = m_killLog.SolarSystem.Constellation.Name;
             RegionLabel.Text = m_killLog.SolarSystem.Constellation.Region.Name;

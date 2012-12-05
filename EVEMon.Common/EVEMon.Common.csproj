@@ -278,6 +278,7 @@
     <Compile Include="KillLogItem.cs" />
     <Compile Include="Medal.cs" />
     <Compile Include="MedalCollection.cs" />
+    <Compile Include="MedalComparer.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
     <Compile Include="Notifications\APIErrorNotificationEventArgs.cs" />
     <Compile Include="Notifications\ClaimableCertificateNotificationEventArgs.cs" />

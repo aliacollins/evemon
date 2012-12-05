@@ -140,28 +140,12 @@ namespace EVEMon.CharacterMonitoring
             lbMedals.BeginUpdate();
             try
             {
-                IEnumerable<Medal> medals = Character.CharacterMedals;
+                // Get the medals rewarded and try assign missing title and description from corp medals
+                // Also prevents multi rewarded medals from being iterated
+                IEnumerable<Medal> medals = Character.CharacterMedals.Distinct(new MedalComparer())
+                    .Where(medal => medal.TryAssignMissingTitleAndDescription());
 
-                // Try assign missing title and description from corporation medals
-                foreach (Medal medal in medals
-                    .Where(medal => String.IsNullOrEmpty(medal.Title) || String.IsNullOrEmpty(medal.Description)))
-                {
-                    // Find the related medal in the corporation's medals
-                    Medal corporationMedal = Character.CorporationMedals.SingleOrDefault(corpMedal => corpMedal.ID == medal.ID);
-
-                    if (corporationMedal == null)
-                        continue;
-
-                    if (String.IsNullOrEmpty(medal.Title))
-                        medal.Title = corporationMedal.Title;
-
-                    if (String.IsNullOrEmpty(medal.Description))
-                        medal.Description = corporationMedal.Description;
-                }
-
-                IEnumerable<IGrouping<MedalGroup, Medal>> groups = medals
-                    .Where(medal => !String.IsNullOrEmpty(medal.Title) || !String.IsNullOrEmpty(medal.Description))
-                    .GroupBy(x => x.Group);
+                IEnumerable<IGrouping<MedalGroup, Medal>> groups = medals.GroupBy(x => x.Group);
 
                 // Scroll through groups
                 lbMedals.Items.Clear();
@@ -173,7 +157,8 @@ namespace EVEMon.CharacterMonitoring
                     if (m_collapsedGroups.Contains(group.Key.GetDescription()))
                         continue;
 
-                    foreach (Medal medal in group.Where(medal => lbMedals.Items.OfType<Medal>().All(item => item.ID != medal.ID)))
+                    // Prevents multi rewarded medals to be drawn
+                    foreach (Medal medal in group)
                     {
                         lbMedals.Items.Add(medal);
                     }
@@ -256,7 +241,8 @@ namespace EVEMon.CharacterMonitoring
             string medalTitleText = medal.Title;
             string medalDescriptionText = medal.Description;
             string medalStatusText = medal.Status.ToTitleCase();
-            string medalTimesAwardedText = String.Format("Number of times awarded: {0}", medal.TimesAwarded);
+            string medalTimesAwardedText = String.Format(CultureConstants.DefaultCulture, "Number of times awarded: {0:N0}",
+                                                         medal.TimesAwarded);
 
             // Measure texts
             Size medalTitleTextSize = TextRenderer.MeasureText(g, medalTitleText, m_medalsBoldFont, Size.Empty, Format);
