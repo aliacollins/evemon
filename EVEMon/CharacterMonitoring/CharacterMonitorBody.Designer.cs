@@ -46,15 +46,27 @@
             this.paneRightMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.paneBottomMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.paneOffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.combatLogSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.combatLogMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.groupMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.walletJournalCharts = new System.Windows.Forms.ToolStripButton();
+            this.allContacts = new System.Windows.Forms.ToolStripButton();
+            this.contactsExcellent = new System.Windows.Forms.ToolStripButton();
+            this.contactsGood = new System.Windows.Forms.ToolStripButton();
+            this.contactsNeutral = new System.Windows.Forms.ToolStripButton();
+            this.contactsBad = new System.Windows.Forms.ToolStripButton();
+            this.contactsTerrible = new System.Windows.Forms.ToolStripButton();
+            this.inWatchList = new System.Windows.Forms.ToolStripButton();
             this.toolStripFeatures = new System.Windows.Forms.ToolStrip();
             this.skillsIcon = new System.Windows.Forms.ToolStripButton();
             this.skillQueueIcon = new System.Windows.Forms.ToolStripButton();
             this.employmentIcon = new System.Windows.Forms.ToolStripButton();
             this.standingsIcon = new System.Windows.Forms.ToolStripButton();
+            this.contactsIcon = new System.Windows.Forms.ToolStripButton();
             this.factionalWarfareStatsIcon = new System.Windows.Forms.ToolStripButton();
+            this.medalsIcon = new System.Windows.Forms.ToolStripButton();
+            this.killLogIcon = new System.Windows.Forms.ToolStripButton();
             this.assetsIcon = new System.Windows.Forms.ToolStripButton();
             this.ordersIcon = new System.Windows.Forms.ToolStripButton();
             this.contractsIcon = new System.Windows.Forms.ToolStripButton();
@@ -64,13 +76,15 @@
             this.researchIcon = new System.Windows.Forms.ToolStripButton();
             this.mailMessagesIcon = new System.Windows.Forms.ToolStripButton();
             this.eveNotificationsIcon = new System.Windows.Forms.ToolStripButton();
-            this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
-            this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.calendarEventsIcon = new System.Windows.Forms.ToolStripButton();
             this.featuresMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.EnableAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DisableAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectionToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.tsPagesSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
+            this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.filterTimer = new System.Windows.Forms.Timer(this.components);
             this.borderPanel = new EVEMon.Common.Controls.BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
@@ -102,9 +116,14 @@
             this.walletTransactionsList = new EVEMon.CharacterMonitoring.CharacterWalletTransactionsList();
             this.factionalWarfareStatsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.factionalWarfareStatsList = new EVEMon.CharacterMonitoring.CharacterFactionalWarfareStatsList();
+            this.contactsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.contactsList = new EVEMon.CharacterMonitoring.CharacterContactList();
+            this.medalsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.medalsList = new EVEMon.CharacterMonitoring.CharacterMedalsList();
+            this.killLogPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.killLogList = new EVEMon.CharacterMonitoring.CharacterKillLogList();
             this.warningLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.Controls.NotificationList();
-            this.filterTimer = new System.Windows.Forms.Timer(this.components);
             this.toolstripPanel.SuspendLayout();
             this.toolStripContextual.SuspendLayout();
             this.toolStripFeatures.SuspendLayout();
@@ -125,6 +144,9 @@
             this.walletJournalPage.SuspendLayout();
             this.walletTransactionsPage.SuspendLayout();
             this.factionalWarfareStatsPage.SuspendLayout();
+            this.contactsPage.SuspendLayout();
+            this.medalsPage.SuspendLayout();
+            this.killLogPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolstripPanel
@@ -136,7 +158,7 @@
             this.toolstripPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolstripPanel.Location = new System.Drawing.Point(0, 0);
             this.toolstripPanel.Name = "toolstripPanel";
-            this.toolstripPanel.Size = new System.Drawing.Size(570, 56);
+            this.toolstripPanel.Size = new System.Drawing.Size(614, 56);
             this.toolstripPanel.TabIndex = 17;
             // 
             // toolStripContextual
@@ -146,11 +168,18 @@
             this.preferencesMenu,
             this.searchTextBox,
             this.groupMenu,
-            this.walletJournalCharts});
+            this.walletJournalCharts,
+            this.allContacts,
+            this.contactsExcellent,
+            this.contactsGood,
+            this.contactsNeutral,
+            this.contactsBad,
+            this.contactsTerrible,
+            this.inWatchList});
             this.toolStripContextual.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripContextual.Location = new System.Drawing.Point(0, 31);
             this.toolStripContextual.Name = "toolStripContextual";
-            this.toolStripContextual.Size = new System.Drawing.Size(570, 25);
+            this.toolStripContextual.Size = new System.Drawing.Size(614, 25);
             this.toolStripContextual.TabIndex = 15;
             // 
             // preferencesMenu
@@ -167,7 +196,9 @@
             this.showOnlyCharMenuItem,
             this.showOnlyCorpMenuItem,
             this.tsReadingPaneSeparator,
-            this.readingPaneMenuItem});
+            this.readingPaneMenuItem,
+            this.combatLogSeparator,
+            this.combatLogMenuItem});
             this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
             this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.preferencesMenu.Name = "preferencesMenu";
@@ -252,7 +283,7 @@
             // 
             this.paneRightMenuItem.CheckOnClick = true;
             this.paneRightMenuItem.Name = "paneRightMenuItem";
-            this.paneRightMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.paneRightMenuItem.Size = new System.Drawing.Size(114, 22);
             this.paneRightMenuItem.Tag = "Right";
             this.paneRightMenuItem.Text = "Right";
             this.paneRightMenuItem.Click += new System.EventHandler(this.paneRightMenuItem_Click);
@@ -261,7 +292,7 @@
             // 
             this.paneBottomMenuItem.CheckOnClick = true;
             this.paneBottomMenuItem.Name = "paneBottomMenuItem";
-            this.paneBottomMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.paneBottomMenuItem.Size = new System.Drawing.Size(114, 22);
             this.paneBottomMenuItem.Tag = "Bottom";
             this.paneBottomMenuItem.Text = "Bottom";
             this.paneBottomMenuItem.Click += new System.EventHandler(this.paneBottomMenuItem_Click);
@@ -270,10 +301,23 @@
             // 
             this.paneOffMenuItem.CheckOnClick = true;
             this.paneOffMenuItem.Name = "paneOffMenuItem";
-            this.paneOffMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.paneOffMenuItem.Size = new System.Drawing.Size(114, 22);
             this.paneOffMenuItem.Tag = "Off";
             this.paneOffMenuItem.Text = "Off";
             this.paneOffMenuItem.Click += new System.EventHandler(this.paneOffMenuItem_Click);
+            // 
+            // combatLogSeparator
+            // 
+            this.combatLogSeparator.Name = "combatLogSeparator";
+            this.combatLogSeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // combatLogMenuItem
+            // 
+            this.combatLogMenuItem.CheckOnClick = true;
+            this.combatLogMenuItem.Name = "combatLogMenuItem";
+            this.combatLogMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.combatLogMenuItem.Text = "Show Condensed Combat Logs";
+            this.combatLogMenuItem.Click += new System.EventHandler(this.combatLogMenuItem_Click);
             // 
             // searchTextBox
             // 
@@ -311,6 +355,79 @@
             this.walletJournalCharts.ToolTipText = "Charts";
             this.walletJournalCharts.Click += new System.EventHandler(this.walletJournalCharts_Click);
             // 
+            // allContacts
+            // 
+            this.allContacts.Checked = true;
+            this.allContacts.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.allContacts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.allContacts.Image = ((System.Drawing.Image)(resources.GetObject("allContacts.Image")));
+            this.allContacts.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.allContacts.Name = "allContacts";
+            this.allContacts.Size = new System.Drawing.Size(23, 22);
+            this.allContacts.Text = "All contacts";
+            this.allContacts.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsExcellent
+            // 
+            this.contactsExcellent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsExcellent.Image = ((System.Drawing.Image)(resources.GetObject("contactsExcellent.Image")));
+            this.contactsExcellent.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsExcellent.Name = "contactsExcellent";
+            this.contactsExcellent.Size = new System.Drawing.Size(23, 22);
+            this.contactsExcellent.Text = "Excellent standing";
+            this.contactsExcellent.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsGood
+            // 
+            this.contactsGood.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsGood.Image = ((System.Drawing.Image)(resources.GetObject("contactsGood.Image")));
+            this.contactsGood.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsGood.Name = "contactsGood";
+            this.contactsGood.Size = new System.Drawing.Size(23, 22);
+            this.contactsGood.Tag = "Good";
+            this.contactsGood.Text = "Good standing";
+            this.contactsGood.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsNeutral
+            // 
+            this.contactsNeutral.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsNeutral.Image = ((System.Drawing.Image)(resources.GetObject("contactsNeutral.Image")));
+            this.contactsNeutral.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsNeutral.Name = "contactsNeutral";
+            this.contactsNeutral.Size = new System.Drawing.Size(23, 22);
+            this.contactsNeutral.Text = "Neutral standing";
+            this.contactsNeutral.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsBad
+            // 
+            this.contactsBad.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsBad.Image = ((System.Drawing.Image)(resources.GetObject("contactsBad.Image")));
+            this.contactsBad.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsBad.Name = "contactsBad";
+            this.contactsBad.Size = new System.Drawing.Size(23, 22);
+            this.contactsBad.Text = "Bad standing";
+            this.contactsBad.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // contactsTerrible
+            // 
+            this.contactsTerrible.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsTerrible.Image = ((System.Drawing.Image)(resources.GetObject("contactsTerrible.Image")));
+            this.contactsTerrible.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsTerrible.Name = "contactsTerrible";
+            this.contactsTerrible.Size = new System.Drawing.Size(23, 22);
+            this.contactsTerrible.Text = "Terrible standing";
+            this.contactsTerrible.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
+            // inWatchList
+            // 
+            this.inWatchList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.inWatchList.Image = ((System.Drawing.Image)(resources.GetObject("inWatchList.Image")));
+            this.inWatchList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.inWatchList.Name = "inWatchList";
+            this.inWatchList.Size = new System.Drawing.Size(23, 22);
+            this.inWatchList.Text = "Watch List";
+            this.inWatchList.Click += new System.EventHandler(this.contactsToolbarIcon_Click);
+            // 
             // toolStripFeatures
             // 
             this.toolStripFeatures.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -320,7 +437,10 @@
             this.skillQueueIcon,
             this.employmentIcon,
             this.standingsIcon,
+            this.contactsIcon,
             this.factionalWarfareStatsIcon,
+            this.medalsIcon,
+            this.killLogIcon,
             this.assetsIcon,
             this.ordersIcon,
             this.contractsIcon,
@@ -330,14 +450,15 @@
             this.researchIcon,
             this.mailMessagesIcon,
             this.eveNotificationsIcon,
-            this.toggleSkillsIcon,
-            this.tsToggleSeparator,
+            this.calendarEventsIcon,
             this.featuresMenu,
-            this.tsPagesSeparator});
+            this.tsPagesSeparator,
+            this.toggleSkillsIcon,
+            this.tsToggleSeparator});
             this.toolStripFeatures.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStripFeatures.Location = new System.Drawing.Point(0, 0);
             this.toolStripFeatures.Name = "toolStripFeatures";
-            this.toolStripFeatures.Size = new System.Drawing.Size(570, 31);
+            this.toolStripFeatures.Size = new System.Drawing.Size(614, 31);
             this.toolStripFeatures.TabIndex = 13;
             // 
             // skillsIcon
@@ -390,6 +511,18 @@
             this.standingsIcon.ToolTipText = "Display standings";
             this.standingsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
+            // contactsIcon
+            // 
+            this.contactsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.contactsIcon.Image = ((System.Drawing.Image)(resources.GetObject("contactsIcon.Image")));
+            this.contactsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.contactsIcon.Name = "contactsIcon";
+            this.contactsIcon.Size = new System.Drawing.Size(28, 28);
+            this.contactsIcon.Tag = "contactsPage";
+            this.contactsIcon.Text = "Contacts";
+            this.contactsIcon.ToolTipText = "Display contacts";
+            this.contactsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
             // factionalWarfareStatsIcon
             // 
             this.factionalWarfareStatsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -401,6 +534,30 @@
             this.factionalWarfareStatsIcon.Text = "Factional Warfare";
             this.factionalWarfareStatsIcon.ToolTipText = "Display factional warfare stats";
             this.factionalWarfareStatsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // medalsIcon
+            // 
+            this.medalsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.medalsIcon.Image = ((System.Drawing.Image)(resources.GetObject("medalsIcon.Image")));
+            this.medalsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.medalsIcon.Name = "medalsIcon";
+            this.medalsIcon.Size = new System.Drawing.Size(28, 28);
+            this.medalsIcon.Tag = "medalsPage";
+            this.medalsIcon.Text = "Medals";
+            this.medalsIcon.ToolTipText = "Display medals";
+            this.medalsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
+            // killLogIcon
+            // 
+            this.killLogIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.killLogIcon.Image = ((System.Drawing.Image)(resources.GetObject("killLogIcon.Image")));
+            this.killLogIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.killLogIcon.Name = "killLogIcon";
+            this.killLogIcon.Size = new System.Drawing.Size(28, 28);
+            this.killLogIcon.Tag = "killLogPage";
+            this.killLogIcon.Text = "Combat Log";
+            this.killLogIcon.ToolTipText = "Display combat log";
+            this.killLogIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
             // assetsIcon
             // 
@@ -510,25 +667,17 @@
             this.eveNotificationsIcon.ToolTipText = "Display EVE notifications";
             this.eveNotificationsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
-            // toggleSkillsIcon
+            // calendarEventsIcon
             // 
-            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toggleSkillsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
-            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
-            this.toggleSkillsIcon.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toggleSkillsIcon.Size = new System.Drawing.Size(28, 28);
-            this.toggleSkillsIcon.Text = "Toggle All Skills";
-            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
-            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
-            // 
-            // tsToggleSeparator
-            // 
-            this.tsToggleSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsToggleSeparator.Name = "tsToggleSeparator";
-            this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.tsToggleSeparator.Size = new System.Drawing.Size(6, 31);
+            this.calendarEventsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.calendarEventsIcon.Image = ((System.Drawing.Image)(resources.GetObject("calendarEventsIcon.Image")));
+            this.calendarEventsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.calendarEventsIcon.Name = "calendarEventsIcon";
+            this.calendarEventsIcon.Size = new System.Drawing.Size(28, 28);
+            this.calendarEventsIcon.Tag = "calendarEventsPage";
+            this.calendarEventsIcon.Text = "Calendar";
+            this.calendarEventsIcon.ToolTipText = "Display calendar events";
+            this.calendarEventsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
             // featuresMenu
             // 
@@ -551,21 +700,21 @@
             // EnableAllToolStripMenuItem
             // 
             this.EnableAllToolStripMenuItem.Name = "EnableAllToolStripMenuItem";
-            this.EnableAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.EnableAllToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.EnableAllToolStripMenuItem.Text = "Enable All";
             this.EnableAllToolStripMenuItem.Click += new System.EventHandler(this.EnableAllToolStripMenuItem_Click);
             // 
             // DisableAllToolStripMenuItem
             // 
             this.DisableAllToolStripMenuItem.Name = "DisableAllToolStripMenuItem";
-            this.DisableAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.DisableAllToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.DisableAllToolStripMenuItem.Text = "Disable All";
             this.DisableAllToolStripMenuItem.Click += new System.EventHandler(this.DisableAllToolStripMenuItem_Click);
             // 
             // SelectionToolStripSeparator
             // 
             this.SelectionToolStripSeparator.Name = "SelectionToolStripSeparator";
-            this.SelectionToolStripSeparator.Size = new System.Drawing.Size(149, 6);
+            this.SelectionToolStripSeparator.Size = new System.Drawing.Size(126, 6);
             // 
             // tsPagesSeparator
             // 
@@ -573,6 +722,31 @@
             this.tsPagesSeparator.Name = "tsPagesSeparator";
             this.tsPagesSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.tsPagesSeparator.Size = new System.Drawing.Size(6, 31);
+            // 
+            // toggleSkillsIcon
+            // 
+            this.toggleSkillsIcon.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toggleSkillsIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleSkillsIcon.Image = ((System.Drawing.Image)(resources.GetObject("toggleSkillsIcon.Image")));
+            this.toggleSkillsIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleSkillsIcon.Name = "toggleSkillsIcon";
+            this.toggleSkillsIcon.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toggleSkillsIcon.Size = new System.Drawing.Size(28, 28);
+            this.toggleSkillsIcon.Text = "Toggle All Skills";
+            this.toggleSkillsIcon.ToolTipText = "Toggle all skills";
+            this.toggleSkillsIcon.Click += new System.EventHandler(this.toggleSkillsIcon_Click);
+            // 
+            // tsToggleSeparator
+            // 
+            this.tsToggleSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsToggleSeparator.Name = "tsToggleSeparator";
+            this.tsToggleSeparator.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.tsToggleSeparator.Size = new System.Drawing.Size(6, 31);
+            // 
+            // filterTimer
+            // 
+            this.filterTimer.Interval = 300;
+            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
             // 
             // borderPanel
             // 
@@ -586,7 +760,7 @@
             this.borderPanel.Margin = new System.Windows.Forms.Padding(0);
             this.borderPanel.Name = "borderPanel";
             this.borderPanel.Padding = new System.Windows.Forms.Padding(2, 2, 1, 2);
-            this.borderPanel.Size = new System.Drawing.Size(570, 275);
+            this.borderPanel.Size = new System.Drawing.Size(614, 275);
             this.borderPanel.TabIndex = 18;
             // 
             // corePanel
@@ -598,7 +772,7 @@
             this.corePanel.Margin = new System.Windows.Forms.Padding(0);
             this.corePanel.Name = "corePanel";
             this.corePanel.Padding = new System.Windows.Forms.Padding(1, 1, 2, 0);
-            this.corePanel.Size = new System.Drawing.Size(567, 199);
+            this.corePanel.Size = new System.Drawing.Size(611, 199);
             this.corePanel.TabIndex = 14;
             // 
             // multiPanel
@@ -617,11 +791,14 @@
             this.multiPanel.Controls.Add(this.walletJournalPage);
             this.multiPanel.Controls.Add(this.walletTransactionsPage);
             this.multiPanel.Controls.Add(this.factionalWarfareStatsPage);
+            this.multiPanel.Controls.Add(this.contactsPage);
+            this.multiPanel.Controls.Add(this.medalsPage);
+            this.multiPanel.Controls.Add(this.killLogPage);
             this.multiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.multiPanel.Location = new System.Drawing.Point(1, 18);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.SelectedPage = this.skillsPage;
-            this.multiPanel.Size = new System.Drawing.Size(564, 181);
+            this.multiPanel.Size = new System.Drawing.Size(608, 181);
             this.multiPanel.TabIndex = 14;
             // 
             // standingsPage
@@ -630,18 +807,17 @@
             this.standingsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.standingsPage.Location = new System.Drawing.Point(0, 0);
             this.standingsPage.Name = "standingsPage";
-            this.standingsPage.Size = new System.Drawing.Size(568, 308);
+            this.standingsPage.Size = new System.Drawing.Size(608, 181);
             this.standingsPage.TabIndex = 7;
             this.standingsPage.Tag = "Standings";
             this.standingsPage.Text = "standingsPage";
             // 
             // standingsList
             // 
-            this.standingsList.Character = null;
             this.standingsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.standingsList.Location = new System.Drawing.Point(0, 0);
             this.standingsList.Name = "standingsList";
-            this.standingsList.Size = new System.Drawing.Size(568, 308);
+            this.standingsList.Size = new System.Drawing.Size(608, 181);
             this.standingsList.TabIndex = 0;
             // 
             // skillsPage
@@ -650,19 +826,18 @@
             this.skillsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsPage.Location = new System.Drawing.Point(0, 0);
             this.skillsPage.Name = "skillsPage";
-            this.skillsPage.Size = new System.Drawing.Size(564, 181);
+            this.skillsPage.Size = new System.Drawing.Size(608, 181);
             this.skillsPage.TabIndex = 0;
             this.skillsPage.Tag = "CharacterSheet";
             this.skillsPage.Text = "skillsPage";
             // 
             // skillsList
             // 
-            this.skillsList.Character = null;
             this.skillsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillsList.Location = new System.Drawing.Point(0, 0);
             this.skillsList.Margin = new System.Windows.Forms.Padding(0);
             this.skillsList.Name = "skillsList";
-            this.skillsList.Size = new System.Drawing.Size(564, 181);
+            this.skillsList.Size = new System.Drawing.Size(608, 181);
             this.skillsList.TabIndex = 12;
             // 
             // ordersPage
@@ -678,16 +853,13 @@
             // 
             // ordersList
             // 
-            this.ordersList.Character = null;
             this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ordersList.Grouping = EVEMon.Common.SettingsObjects.MarketOrderGrouping.State;
             this.ordersList.Location = new System.Drawing.Point(0, 0);
             this.ordersList.Name = "ordersList";
-            this.ordersList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.ordersList.Size = new System.Drawing.Size(564, 181);
             this.ordersList.TabIndex = 13;
             this.ordersList.TextFilter = "";
-            this.ordersList.Visibility = false;
             // 
             // skillQueuePage
             // 
@@ -702,7 +874,6 @@
             // 
             // skillQueueList
             // 
-            this.skillQueueList.Character = null;
             this.skillQueueList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skillQueueList.Location = new System.Drawing.Point(0, 0);
             this.skillQueueList.Name = "skillQueueList";
@@ -715,23 +886,20 @@
             this.jobsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jobsPage.Location = new System.Drawing.Point(0, 0);
             this.jobsPage.Name = "jobsPage";
-            this.jobsPage.Size = new System.Drawing.Size(568, 308);
+            this.jobsPage.Size = new System.Drawing.Size(608, 181);
             this.jobsPage.TabIndex = 3;
             this.jobsPage.Tag = "IndustryJobs";
             this.jobsPage.Text = "jobsPage";
             // 
             // jobsList
             // 
-            this.jobsList.Character = null;
             this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jobsList.Grouping = EVEMon.Common.SettingsObjects.IndustryJobGrouping.State;
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
-            this.jobsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.jobsList.Size = new System.Drawing.Size(568, 308);
+            this.jobsList.Size = new System.Drawing.Size(608, 181);
             this.jobsList.TabIndex = 0;
             this.jobsList.TextFilter = "";
-            this.jobsList.Visibility = false;
             // 
             // researchPage
             // 
@@ -746,7 +914,6 @@
             // 
             // researchList
             // 
-            this.researchList.Character = null;
             this.researchList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.researchList.Grouping = null;
             this.researchList.Location = new System.Drawing.Point(0, 0);
@@ -761,20 +928,18 @@
             this.mailMessagesPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mailMessagesPage.Location = new System.Drawing.Point(0, 0);
             this.mailMessagesPage.Name = "mailMessagesPage";
-            this.mailMessagesPage.Size = new System.Drawing.Size(568, 87);
+            this.mailMessagesPage.Size = new System.Drawing.Size(608, 181);
             this.mailMessagesPage.TabIndex = 5;
             this.mailMessagesPage.Tag = "MailMessages";
             this.mailMessagesPage.Text = "mailMessagesPage";
             // 
             // mailMessagesList
             // 
-            this.mailMessagesList.Character = null;
             this.mailMessagesList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mailMessagesList.Grouping = EVEMon.Common.SettingsObjects.EVEMailMessagesGrouping.State;
             this.mailMessagesList.Location = new System.Drawing.Point(0, 0);
             this.mailMessagesList.Name = "mailMessagesList";
-            this.mailMessagesList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
-            this.mailMessagesList.Size = new System.Drawing.Size(568, 87);
+            this.mailMessagesList.Size = new System.Drawing.Size(608, 181);
             this.mailMessagesList.TabIndex = 0;
             this.mailMessagesList.TextFilter = "";
             // 
@@ -791,12 +956,10 @@
             // 
             // eveNotificationsList
             // 
-            this.eveNotificationsList.Character = null;
             this.eveNotificationsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.eveNotificationsList.Grouping = EVEMon.Common.SettingsObjects.EVENotificationsGrouping.Type;
             this.eveNotificationsList.Location = new System.Drawing.Point(0, 0);
             this.eveNotificationsList.Name = "eveNotificationsList";
-            this.eveNotificationsList.PanePosition = EVEMon.Common.SettingsObjects.ReadingPanePositioning.Off;
             this.eveNotificationsList.Size = new System.Drawing.Size(568, 86);
             this.eveNotificationsList.TabIndex = 0;
             this.eveNotificationsList.TextFilter = "";
@@ -814,7 +977,6 @@
             // 
             // employmentList
             // 
-            this.employmentList.Character = null;
             this.employmentList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.employmentList.Location = new System.Drawing.Point(0, 0);
             this.employmentList.Name = "employmentList";
@@ -827,23 +989,20 @@
             this.contractsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contractsPage.Location = new System.Drawing.Point(0, 0);
             this.contractsPage.Name = "contractsPage";
-            this.contractsPage.Size = new System.Drawing.Size(568, 308);
+            this.contractsPage.Size = new System.Drawing.Size(564, 181);
             this.contractsPage.TabIndex = 9;
             this.contractsPage.Tag = "Contracts";
             this.contractsPage.Text = "contractsPage";
             // 
             // contractsList
             // 
-            this.contractsList.Character = null;
             this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
             this.contractsList.Location = new System.Drawing.Point(0, 0);
             this.contractsList.Name = "contractsList";
-            this.contractsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
-            this.contractsList.Size = new System.Drawing.Size(568, 308);
+            this.contractsList.Size = new System.Drawing.Size(564, 181);
             this.contractsList.TabIndex = 0;
             this.contractsList.TextFilter = "";
-            this.contractsList.Visibility = false;
             // 
             // assetsPage
             // 
@@ -858,7 +1017,6 @@
             // 
             // assetsList
             // 
-            this.assetsList.Character = null;
             this.assetsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.assetsList.Grouping = EVEMon.Common.SettingsObjects.AssetGrouping.None;
             this.assetsList.Location = new System.Drawing.Point(0, 0);
@@ -880,7 +1038,6 @@
             // 
             // walletJournalList
             // 
-            this.walletJournalList.Character = null;
             this.walletJournalList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.walletJournalList.Grouping = EVEMon.Common.SettingsObjects.WalletJournalGrouping.None;
             this.walletJournalList.Location = new System.Drawing.Point(0, 0);
@@ -902,7 +1059,6 @@
             // 
             // walletTransactionsList
             // 
-            this.walletTransactionsList.Character = null;
             this.walletTransactionsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.walletTransactionsList.Grouping = EVEMon.Common.SettingsObjects.WalletTransactionGrouping.None;
             this.walletTransactionsList.Location = new System.Drawing.Point(0, 0);
@@ -924,12 +1080,69 @@
             // 
             // factionalWarfareStatsList
             // 
-            this.factionalWarfareStatsList.Character = null;
             this.factionalWarfareStatsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.factionalWarfareStatsList.Location = new System.Drawing.Point(0, 0);
             this.factionalWarfareStatsList.Name = "factionalWarfareStatsList";
             this.factionalWarfareStatsList.Size = new System.Drawing.Size(568, 156);
             this.factionalWarfareStatsList.TabIndex = 0;
+            // 
+            // contactsPage
+            // 
+            this.contactsPage.Controls.Add(this.contactsList);
+            this.contactsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contactsPage.Location = new System.Drawing.Point(0, 0);
+            this.contactsPage.Name = "contactsPage";
+            this.contactsPage.Size = new System.Drawing.Size(564, 181);
+            this.contactsPage.TabIndex = 14;
+            this.contactsPage.Tag = "ContactList";
+            this.contactsPage.Text = "contactsPage";
+            // 
+            // contactsList
+            // 
+            this.contactsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.contactsList.Location = new System.Drawing.Point(0, 0);
+            this.contactsList.Name = "contactsList";
+            this.contactsList.Size = new System.Drawing.Size(564, 181);
+            this.contactsList.TabIndex = 0;
+            // 
+            // medalsPage
+            // 
+            this.medalsPage.Controls.Add(this.medalsList);
+            this.medalsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.medalsPage.Location = new System.Drawing.Point(0, 0);
+            this.medalsPage.Name = "medalsPage";
+            this.medalsPage.Size = new System.Drawing.Size(608, 181);
+            this.medalsPage.TabIndex = 15;
+            this.medalsPage.Tag = "Medals";
+            this.medalsPage.Text = "medalsPage";
+            // 
+            // medalsList
+            // 
+            this.medalsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.medalsList.Location = new System.Drawing.Point(0, 0);
+            this.medalsList.Name = "medalsList";
+            this.medalsList.Size = new System.Drawing.Size(608, 181);
+            this.medalsList.TabIndex = 0;
+            // 
+            // killLogPage
+            // 
+            this.killLogPage.Controls.Add(this.killLogList);
+            this.killLogPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.killLogPage.Location = new System.Drawing.Point(0, 0);
+            this.killLogPage.Name = "killLogPage";
+            this.killLogPage.Size = new System.Drawing.Size(608, 181);
+            this.killLogPage.TabIndex = 16;
+            this.killLogPage.Tag = "KillLog";
+            this.killLogPage.Text = "killLogPage";
+            // 
+            // killLogList
+            // 
+            this.killLogList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.killLogList.Location = new System.Drawing.Point(0, 0);
+            this.killLogList.Name = "killLogList";
+            this.killLogList.Size = new System.Drawing.Size(608, 181);
+            this.killLogList.TabIndex = 0;
+            this.killLogList.TextFilter = "";
             // 
             // warningLabel
             // 
@@ -941,7 +1154,7 @@
             this.warningLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.warningLabel.Location = new System.Drawing.Point(1, 1);
             this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(564, 17);
+            this.warningLabel.Size = new System.Drawing.Size(608, 17);
             this.warningLabel.TabIndex = 1;
             this.warningLabel.Text = "This character has no associated API key, data won\'t be updated.";
             this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -953,13 +1166,8 @@
             this.notificationList.Location = new System.Drawing.Point(2, 2);
             this.notificationList.Margin = new System.Windows.Forms.Padding(0);
             this.notificationList.Name = "notificationList";
-            this.notificationList.Size = new System.Drawing.Size(567, 72);
+            this.notificationList.Size = new System.Drawing.Size(611, 72);
             this.notificationList.TabIndex = 13;
-            // 
-            // filterTimer
-            // 
-            this.filterTimer.Interval = 300;
-            this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
             // 
             // CharacterMonitorBody
             // 
@@ -968,7 +1176,7 @@
             this.Controls.Add(this.borderPanel);
             this.Controls.Add(this.toolstripPanel);
             this.Name = "CharacterMonitorBody";
-            this.Size = new System.Drawing.Size(570, 331);
+            this.Size = new System.Drawing.Size(614, 331);
             this.toolstripPanel.ResumeLayout(false);
             this.toolstripPanel.PerformLayout();
             this.toolStripContextual.ResumeLayout(false);
@@ -992,6 +1200,9 @@
             this.walletJournalPage.ResumeLayout(false);
             this.walletTransactionsPage.ResumeLayout(false);
             this.factionalWarfareStatsPage.ResumeLayout(false);
+            this.contactsPage.ResumeLayout(false);
+            this.medalsPage.ResumeLayout(false);
+            this.killLogPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1074,5 +1285,24 @@
         private System.Windows.Forms.Label warningLabel;
         private Controls.NotificationList notificationList;
         private System.Windows.Forms.Timer filterTimer;
+        private System.Windows.Forms.ToolStripButton contactsIcon;
+        private Common.Controls.MultiPanel.MultiPanelPage contactsPage;
+        private CharacterContactList contactsList;
+        private System.Windows.Forms.ToolStripButton allContacts;
+        private System.Windows.Forms.ToolStripButton contactsExcellent;
+        private System.Windows.Forms.ToolStripButton contactsGood;
+        private System.Windows.Forms.ToolStripButton contactsNeutral;
+        private System.Windows.Forms.ToolStripButton contactsBad;
+        private System.Windows.Forms.ToolStripButton contactsTerrible;
+        private System.Windows.Forms.ToolStripButton inWatchList;
+        private System.Windows.Forms.ToolStripButton medalsIcon;
+        private System.Windows.Forms.ToolStripButton killLogIcon;
+        private System.Windows.Forms.ToolStripButton calendarEventsIcon;
+        private Common.Controls.MultiPanel.MultiPanelPage medalsPage;
+        private CharacterMedalsList medalsList;
+        private Common.Controls.MultiPanel.MultiPanelPage killLogPage;
+        private CharacterKillLogList killLogList;
+        private System.Windows.Forms.ToolStripSeparator combatLogSeparator;
+        private System.Windows.Forms.ToolStripMenuItem combatLogMenuItem;
     }
 }

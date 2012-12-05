@@ -38,7 +38,7 @@ namespace EVEMon.CharacterMonitoring
 
         #endregion
 
-        
+
         #region Inherited Events
 
         /// <summary>
@@ -61,6 +61,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated += EveMonClient_MarketOrdersUpdated;
+            EveMonClient.AccountStatusUpdated += EveMonClient_AccountStatusUpdated;
             Disposed += OnDisposed;
 
             base.OnLoad(e);
@@ -93,6 +94,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.MarketOrdersUpdated -= EveMonClient_MarketOrdersUpdated;
+            EveMonClient.AccountStatusUpdated -= EveMonClient_AccountStatusUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -161,6 +163,8 @@ namespace EVEMon.CharacterMonitoring
                 FormatAttributes();
 
                 UpdateInfoControls();
+
+                UpdateAccountStatusInfo();
             }
             finally
             {
@@ -186,6 +190,44 @@ namespace EVEMon.CharacterMonitoring
                 APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterInfo);
                 LocationInfoIndicationPictureBox.Visible =
                     apiKey != null && !String.IsNullOrWhiteSpace(m_character.LastKnownLocation);
+            }
+            finally
+            {
+                ResumeLayout();
+            }
+        }
+
+        /// <summary>
+        /// Updates the account status info.
+        /// </summary>
+        private void UpdateAccountStatusInfo()
+        {
+            if (m_character == null)
+                return;
+
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            if (ccpCharacter == null)
+            {
+                AccountStatusTableLayoutPanel.Visible = false;
+                return;
+            }
+
+            SuspendLayout();
+            try
+            {
+                APIKey apiKey = ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.AccountStatus);
+
+                AccountActivityLabel.Text = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
+                                                ? "???"
+                                                : apiKey.AccountExpires > DateTime.UtcNow ? "Active" : "Expired";
+
+                AccountActivityLabel.ForeColor = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
+                                                     ? SystemColors.ControlText
+                                                     : apiKey.AccountExpires > DateTime.UtcNow ? Color.DarkGreen : Color.Red;
+
+                PaidUntilLabel.Text = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
+                                          ? String.Empty
+                                          : apiKey.AccountExpires.ToLocalTime().ToString();
             }
             finally
             {
@@ -607,6 +649,16 @@ namespace EVEMon.CharacterMonitoring
             FormatBalance();
         }
 
+        /// <summary>
+        /// Handles the AccountStatusUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_AccountStatusUpdated(object sender, EventArgs e)
+        {
+            UpdateAccountStatusInfo();
+        }
+
         #endregion
 
 
@@ -617,7 +669,7 @@ namespace EVEMon.CharacterMonitoring
         /// Query the API for or a full update when possible, or show the throbber's context menu.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
         private void UpdateThrobber_Click(object sender, MouseEventArgs e)
         {
             CCPCharacter ccpCharacter = m_character as CCPCharacter;
@@ -852,5 +904,6 @@ namespace EVEMon.CharacterMonitoring
         }
 
         #endregion
+
     }
 }

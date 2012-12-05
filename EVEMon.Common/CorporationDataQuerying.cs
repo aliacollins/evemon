@@ -9,6 +9,7 @@ namespace EVEMon.Common
     {
         #region Fields
 
+        private readonly CorporationQueryMonitor<SerializableAPIMedals> m_corpMedalsMonitor;
         private readonly CorporationQueryMonitor<SerializableAPIMarketOrders> m_corpMarketOrdersMonitor;
         private readonly CorporationQueryMonitor<SerializableAPIContracts> m_corpContractsMonitor;
         private readonly CorporationQueryMonitor<SerializableAPIIndustryJobs> m_corpIndustryJobsMonitor;
@@ -26,24 +27,29 @@ namespace EVEMon.Common
             m_corporationQueryMonitors = new List<IQueryMonitorEx>();
 
             // Initializes the query monitors 
+            m_corpMedalsMonitor =
+                new CorporationQueryMonitor<SerializableAPIMedals>(ccpCharacter,
+                                                                         APICorporationMethods.CorporationMedals,
+                                                                         OnMedalsUpdated) { QueryOnStartup = true };
             m_corpMarketOrdersMonitor =
                 new CorporationQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter,
                                                                          APICorporationMethods.CorporationMarketOrders,
                                                                          OnMarketOrdersUpdated) { QueryOnStartup = true };
-            m_corporationQueryMonitors.Add(m_corpMarketOrdersMonitor);
-
             m_corpContractsMonitor =
                 new CorporationQueryMonitor<SerializableAPIContracts>(ccpCharacter,
                                                                       APICorporationMethods.CorporationContracts,
                                                                       OnContractsUpdated) { QueryOnStartup = true };
-            m_corporationQueryMonitors.Add(m_corpContractsMonitor);
-
             m_corpIndustryJobsMonitor =
                 new CorporationQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter,
                                                                          APICorporationMethods.CorporationIndustryJobs,
                                                                          OnIndustryJobsUpdated) { QueryOnStartup = true };
-            m_corporationQueryMonitors.Add(m_corpIndustryJobsMonitor);
 
+            // Add the monitors in an order as they will appear in the throbber menu
+            m_corporationQueryMonitors.AddRange(new IQueryMonitorEx[]
+                                                    {
+                                                       m_corpMedalsMonitor, m_corpMarketOrdersMonitor, m_corpContractsMonitor,
+                                                        m_corpIndustryJobsMonitor
+                                                    });
             m_corporationQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
         }
 
@@ -127,6 +133,31 @@ namespace EVEMon.Common
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
                 OnCorporationContractBidsUpdated);
+        }
+
+        /// <summary>
+        /// Processes the queried character's corporation medals.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnMedalsUpdated(APIResult<SerializableAPIMedals> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
+                return;
+
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationMedals))
+                EveMonClient.Notifications.NotifyCorporationMedalsError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_ccpCharacter.CorporationMedals.Import(result.Result.CorporationMedals);
+
+            // Fires the event regarding corporation medals update
+            EveMonClient.OnCorporationMedalsUpdated(m_ccpCharacter);
         }
 
         /// <summary>

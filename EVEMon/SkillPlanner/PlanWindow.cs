@@ -141,9 +141,7 @@ namespace EVEMon.SkillPlanner
                 e.CloseReason != CloseReason.WindowsShutDown) // and Windows is not shutting down
             {
                 // Tell the skill explorer we're closing down
-                SkillExplorerWindow skillExplorerWindow = WindowsFactory.GetByTag<SkillExplorerWindow, PlanWindow>(this);
-                if (skillExplorerWindow != null && !skillExplorerWindow.IsDisposed)
-                    WindowsFactory.CloseByTag(skillExplorerWindow, this);
+                WindowsFactory.GetAndCloseByTag<SkillExplorerWindow, PlanWindow>(this);
 
                 // Tell the attributes optimization window we're closing down
                 if (m_attributesOptimizerWindow != null)
@@ -382,10 +380,9 @@ namespace EVEMon.SkillPlanner
         /// Sets the plan editor's skill selection control selected skill.
         /// </summary>
         /// <param name="skill">The skill.</param>
-        public void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
+        internal void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
         {
-            SkillSelectControl skillSelectControl = (SkillSelectControl)planEditor.SkillSelectControl;
-            skillSelectControl.SelectedSkill = skill;
+            planEditor.SetPlanEditorSkillSelectorSelectedSkill(skill);
         }
 
         /// <summary>
@@ -393,8 +390,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         internal void UpdatePlanEditorSkillSelection()
         {
-            SkillSelectControl skillSelectControl = (SkillSelectControl)planEditor.SkillSelectControl;
-            skillSelectControl.UpdateContent();
+            planEditor.UpdatePlanEditorSkillSelection();
         }
 
         /// <summary>
@@ -402,7 +398,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         internal void UpdateSkillBrowser()
         {
-            skillBrowser.UpdateContent();
+            skillBrowser.UpdateSkillBrowser();
         }
 
         #endregion
@@ -562,9 +558,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Close the skill explorer
-            SkillExplorerWindow skillExplorerWindow = WindowsFactory.GetByTag<SkillExplorerWindow, PlanWindow>(this);
-            if (skillExplorerWindow != null && !skillExplorerWindow.IsDisposed)
-                WindowsFactory.CloseByTag(skillExplorerWindow, this);
+            WindowsFactory.GetAndCloseByTag<SkillExplorerWindow, PlanWindow>(this);
 
             // Remove the plan
             int index = Character.Plans.IndexOf(m_plan);

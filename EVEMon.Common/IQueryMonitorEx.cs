@@ -17,6 +17,6 @@ namespace EVEMon.Common
         /// Forces an update.
         /// </summary>
         /// <param name="retryOnError">When true, the update will be reattempted until succesful.</param>
-        void ForceUpdate(bool retryOnError);
+        void ForceUpdate(bool retryOnError = false);
     }
 }

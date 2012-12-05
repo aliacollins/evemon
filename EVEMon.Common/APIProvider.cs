@@ -25,9 +25,10 @@ namespace EVEMon.Common
         private static XslCompiledTransform s_rowsetsTransform;
 
         private readonly List<APIMethod> m_methods;
+        private bool m_supportsCompressedResponse;
 
         /// <summary>
-        /// Default constructor 
+        /// Default constructor.
         /// </summary>
         internal APIProvider()
         {
@@ -37,7 +38,7 @@ namespace EVEMon.Common
         }
 
 
-        #region Configuration
+        #region Properties
 
         /// <summary>
         /// Returns the name of this APIConfiguration.
@@ -54,13 +55,20 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<APIMethod> Methods
         {
-            get { return m_methods.AsReadOnly(); }
+            get { return m_methods; }
         }
 
-        #endregion
-
-
-        #region Helpers
+        /// <summary>
+        /// Gets or sets a value indicating whether the provider supports compressed responses.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the provider supports compressed responses; otherwise, <c>false</c>.
+        /// </value>
+        public bool SupportsCompressedResponse
+        {
+            get { return IsDefault || this == TestProvider || m_supportsCompressedResponse; }
+            set { m_supportsCompressedResponse = value; }
+        }
 
         /// <summary>
         /// Returns true if this APIConfiguration represents the default API service.
@@ -69,6 +77,31 @@ namespace EVEMon.Common
         {
             get { return (this == DefaultProvider); }
         }
+
+        /// <summary>
+        /// Gets the default API provider
+        /// </summary>
+        public static APIProvider DefaultProvider
+        {
+            get { return s_ccpProvider ?? (s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" }); }
+        }
+
+        /// <summary>
+        /// Gets the test API provider
+        /// </summary>
+        public static APIProvider TestProvider
+        {
+            get
+            {
+                return s_ccpTestProvider ??
+                       (s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" });
+            }
+        }
+
+        #endregion
+
+
+        #region Helpers
 
         /// <summary>
         /// Returns the request method.
@@ -107,26 +140,6 @@ namespace EVEMon.Common
             return uriBuilder.Uri;
         }
 
-        /// <summary>
-        /// Gets the default API provider
-        /// </summary>
-        public static APIProvider DefaultProvider
-        {
-            get { return s_ccpProvider ?? (s_ccpProvider = new APIProvider { Url = new Uri(NetworkConstants.APIBase), Name = "CCP" }); }
-        }
-
-        /// <summary>
-        /// Gets the test API provider
-        /// </summary>
-        public static APIProvider TestProvider
-        {
-            get
-            {
-                return s_ccpTestProvider ??
-                       (s_ccpTestProvider = new APIProvider { Url = new Uri(NetworkConstants.APITestBase), Name = "CCP Test API" });
-            }
-        }
-
         #endregion
 
 
@@ -150,13 +163,13 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
         /// <param name="method">The method.</param>
-        /// <param name="id">The API key's ID</param>
+        /// <param name="keyId">The API key's ID</param>
         /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, QueryCallback<T> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                                            id, verificationCode);
+                                            keyId, verificationCode);
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
@@ -165,24 +178,40 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
         /// <param name="method">The method.</param>
-        /// <param name="id">The API key's ID</param>
+        /// <param name="keyId">The API key's ID</param>
         /// <param name="verificationCode">The API key's verification code</param>
-        /// <param name="characterID">The character ID.</param>
+        /// <param name="id">The character or corporation ID.</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, QueryCallback<T> callback)
         {
             if (method == null)
                 throw new ArgumentNullException("method");
 
-            string postData = method.Equals(APICharacterMethods.WalletJournal) ||
-                              method.Equals(APICharacterMethods.WalletTransactions)
-                                  ? String.Format(CultureConstants.InvariantCulture,
-                                                  NetworkConstants.PostDataWithCharIDAndRowCount,
-                                                  id, verificationCode, characterID, 2560)
-                                  : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                                  id, verificationCode, characterID);
+            string postData = GetPostDataString(method, keyId, verificationCode, id);
 
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
+        }
+
+        private static string GetPostDataString(Enum method, long id, string verificationCode, long characterID)
+        {
+            if (method.Equals(APICharacterMethods.CharacterInfo) && id == 0 && string.IsNullOrEmpty(verificationCode))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly, characterID);
+            }
+
+            if (method.Equals(APICorporationMethods.CorporationSheet) && id == 0 && string.IsNullOrEmpty(verificationCode))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCorporationIDOnly, characterID);
+            }
+
+            if (method.Equals(APICharacterMethods.WalletJournal) || method.Equals(APICharacterMethods.WalletTransactions))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndRowCount,
+                                     id, verificationCode, characterID, 2560);
+            }
+
+            return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                 id, verificationCode, characterID);
         }
 
         /// <summary>
@@ -190,16 +219,16 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="method">The method.</param>
-        /// <param name="id">The API key's ID</param>
+        /// <param name="keyId">The API key's ID</param>
         /// <param name="verificationCode">The API key's verification code</param>
-        /// <param name="characterID">The character ID.</param>
+        /// <param name="id">The character ID.</param>
         /// <param name="messageID">The message ID.</param>
         /// <param name="callback">The callback.</param>
-        public void QueryMethodAsync<T>(Enum method, long id, string verificationCode, long characterID, long messageID,
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, long messageID,
                                         QueryCallback<T> callback)
         {
-            string postData = String.Format(CultureConstants.InvariantCulture, GetPostDataURL(method),
-                                            id, verificationCode, characterID, messageID);
+            string postData = String.Format(CultureConstants.InvariantCulture, GetPostDataFormat(method),
+                                            keyId, verificationCode, id, messageID);
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
@@ -234,7 +263,7 @@ namespace EVEMon.Common
         {
             // Download
             Uri url = GetMethodUrl(method);
-            APIResult<T> result = Util.DownloadAPIResult<T>(url, postData, transform);
+            APIResult<T> result = Util.DownloadAPIResult<T>(url, SupportsCompressedResponse, postData, transform);
 
             // On failure with a custom method, fallback to CCP
             return ShouldRetryWithCCP(result) ? s_ccpProvider.QueryMethod<T>(method, postData, transform) : result;
@@ -273,7 +302,7 @@ namespace EVEMon.Common
                         // Invokes the callback
                         callback(result);
                     },
-                postData, transform);
+                    SupportsCompressedResponse, postData, transform);
         }
 
         /// <summary>
@@ -288,11 +317,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets the post data URL.
+        /// Gets the post data format.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns></returns>
-        private static string GetPostDataURL(Enum method)
+        private static string GetPostDataFormat(Enum method)
         {
             return (method.GetType() == typeof(APICharacterMethods))
                        ? NetworkConstants.PostDataWithCharIDAndIDS

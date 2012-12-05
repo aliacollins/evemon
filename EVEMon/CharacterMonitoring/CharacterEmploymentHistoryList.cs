@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -15,7 +14,6 @@ namespace EVEMon.CharacterMonitoring
         private const int PadTop = 2;
         private const int PadLeft = 6;
         private const TextFormatFlags TextFormat = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
-        private const string DateTimeFormat = "{0:yyyy.MM.dd} {0:HH:mm}";
         private const string RecordDateFromText = "From";
         private const string RecordDateToText = "to";
         private const string RecordDateTodayText = "this day";
@@ -48,13 +46,12 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
 
         /// <summary>
@@ -202,13 +199,11 @@ namespace EVEMon.CharacterMonitoring
             DateTime dt = previousRecord == null ? DateTime.UtcNow : previousRecord.StartDate;
             string recordPeriodText = String.Format(CultureConstants.DefaultCulture, "( {0} )",
                                                     dt.Subtract(record.StartDate).ToDescriptiveText(
-                                                        DescriptiveTextOptions.SpaceBetween, false).Trim());
-            string recordStartDateText = String.Format(CultureConstants.DefaultCulture, DateTimeFormat,
-                                                       record.StartDate.ToLocalTime());
+                                                        DescriptiveTextOptions.SpaceBetween, false));
+            string recordStartDateText = record.StartDate.ToLocalTime().DateTimeToDotFormattedString();
             string recordEndDateText = previousRecord == null
                                            ? RecordDateTodayText
-                                           : String.Format(CultureConstants.DefaultCulture, DateTimeFormat,
-                                                           previousRecord.StartDate.ToLocalTime());
+                                           : previousRecord.StartDate.ToLocalTime().DateTimeToDotFormattedString();
 
             Size recordCorporationNameTextSize = TextRenderer.MeasureText(g, record.CorporationName, m_recordBoldFont, Size.Empty,
                                                                           TextFormat);
@@ -278,7 +273,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Gets the preferred size from the preferred size of the skills list.
+        /// Gets the preferred size from the preferred size of the list.
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>

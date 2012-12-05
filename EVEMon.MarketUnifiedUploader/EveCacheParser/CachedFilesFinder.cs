@@ -167,7 +167,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
             // Finds the cached files that are legit EVE files and satisfy the methods search criteria
             return cachedFiles.Where(cachedFile => cachedFile.Exists).Select(
                 cachedFile => new CachedFileReader(cachedFile, false)).Where(
-                    reader => reader.Buffer.First() == (byte)StreamType.StreamStart).Where(
+                    reader => reader.Buffer != null && reader.Buffer.First() == (byte)StreamType.StreamStart).Where(
                         cachedFile =>
                         s_methodIncludeFilter.Any()
                             ? s_methodIncludeFilter.Any(method => Encoding.ASCII.GetString(cachedFile.Buffer).Contains(method))

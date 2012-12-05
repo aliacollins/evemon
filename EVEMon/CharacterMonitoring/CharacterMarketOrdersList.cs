@@ -103,20 +103,18 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvOrders"/> is visible.
         /// </summary>
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
-        [Browsable(false)]
-        public bool Visibility
+        internal bool Visibility
         {
             get { return lvOrders.Visible; }
             set { lvOrders.Visible = value; }
@@ -155,8 +153,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets which "Issued for" orders to display.
         /// </summary>
-        [Browsable(false)]
-        public IssuedFor ShowIssuedFor
+        internal IssuedFor ShowIssuedFor
         {
             get { return m_showIssuedFor; }
             set
@@ -170,8 +167,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets true when character has active issued order for corporation.
         /// </summary>
-        [Browsable(false)]
-        public bool HasActiveCorporationIssuedOrders
+        private bool HasActiveCorporationIssuedOrders
         {
             get
             {
@@ -183,9 +179,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of orders to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<MarketOrder> Orders
+        internal IEnumerable<MarketOrder> Orders
         {
             get { return m_list; }
             set
@@ -288,6 +282,9 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvOrders.Visible = false;
+            marketExpPanelControl.Visible = false;
+
             Orders = (Character == null ? null : Character.MarketOrders);
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
             Grouping = (Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy);
@@ -346,9 +343,6 @@ namespace EVEMon.CharacterMonitoring
 
                 // We update the content
                 UpdateContent();
-
-                // Adjust the size of the columns
-                AdjustColumns();
             }
             finally
             {
@@ -400,6 +394,9 @@ namespace EVEMon.CharacterMonitoring
                     }
                 }
 
+                // Adjust the size of the columns
+                AdjustColumns();
+
                 // Update the expandable panel info
                 UpdateExpPanelContent();
 
@@ -422,9 +419,9 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             noOrdersLabel.Visible = lvOrders.Items.Count == 0;
-            lvOrders.Visible = !noOrdersLabel.Visible;
-            marketExpPanelControl.Visible = true;
             marketExpPanelControl.Header.Visible = true;
+            marketExpPanelControl.Visible = true;
+            lvOrders.Visible = !noOrdersLabel.Visible;
         }
 
         /// <summary>

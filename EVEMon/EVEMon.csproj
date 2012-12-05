@@ -161,11 +161,29 @@
     <Compile Include="CharacterMonitoring\CharacterAssetsList.Designer.cs">
       <DependentUpon>CharacterAssetsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\CharacterContactList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterContactList.Designer.cs">
+      <DependentUpon>CharacterContactList.cs</DependentUpon>
+    </Compile>
     <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.Designer.cs">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterKillLogList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterKillLogList.Designer.cs">
+      <DependentUpon>CharacterKillLogList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMedalsList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\CharacterMedalsList.Designer.cs">
+      <DependentUpon>CharacterMedalsList.cs</DependentUpon>
     </Compile>
     <Compile Include="CharacterMonitoring\CharacterMonitorBody.cs">
       <SubType>UserControl</SubType>
@@ -191,10 +209,10 @@
     <Compile Include="CharacterMonitoring\CharacterWalletTransactionsList.Designer.cs">
       <DependentUpon>CharacterWalletTransactionsList.cs</DependentUpon>
     </Compile>
-    <Compile Include="CharacterMonitoring\WalletJournalChartWindow.cs">
+    <Compile Include="DetailsWindow\WalletJournalChartWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CharacterMonitoring\WalletJournalChartWindow.Designer.cs">
+    <Compile Include="DetailsWindow\WalletJournalChartWindow.Designer.cs">
       <DependentUpon>WalletJournalChartWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="CharacterMonitoring\WalletJournalColumnsSelectWindow.cs">
@@ -233,16 +251,40 @@
     <Compile Include="CharacterMonitoring\CharacterMonitorHeader.Designer.cs">
       <DependentUpon>CharacterMonitorHeader.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KillReportAttacker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KillReportAttacker.Designer.cs">
+      <DependentUpon>KillReportAttacker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KillReportFittingContent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KillReportFittingContent.Designer.cs">
+      <DependentUpon>KillReportFittingContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KillReportVictim.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KillReportVictim.Designer.cs">
+      <DependentUpon>KillReportVictim.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\KillReportInvolvedParties.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\KillReportInvolvedParties.Designer.cs">
+      <DependentUpon>KillReportInvolvedParties.cs</DependentUpon>
+    </Compile>
     <Compile Include="NotificationWindow\ClaimableCertificateWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="NotificationWindow\ClaimableCertificateWindow.Designer.cs">
       <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="NotificationWindow\ContractDetailsWindow.cs">
+    <Compile Include="DetailsWindow\ContractDetailsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NotificationWindow\ContractDetailsWindow.Designer.cs">
+    <Compile Include="DetailsWindow\ContractDetailsWindow.Designer.cs">
       <DependentUpon>ContractDetailsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="CharacterMonitoring\ContractsColumnsSelectWindow.cs">
@@ -264,21 +306,33 @@
     <Compile Include="CharacterMonitoring\CharacterStandingsList.Designer.cs">
       <DependentUpon>CharacterStandingsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="DetailsWindow\KillReportWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailsWindow\KillReportWindow.Designer.cs">
+      <DependentUpon>KillReportWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotificationWindow\OwnedSkillBooksWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotificationWindow\OwnedSkillBooksWindow.Designer.cs">
+      <DependentUpon>OwnedSkillBooksWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="CharacterMonitoring\ReadingPane.cs">
+    <Compile Include="Controls\ReadingPane.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CharacterMonitoring\ReadingPane.Designer.cs">
+    <Compile Include="Controls\ReadingPane.Designer.cs">
       <DependentUpon>ReadingPane.cs</DependentUpon>
     </Compile>
-    <Compile Include="NotificationWindow\EveMessageWindow.cs">
+    <Compile Include="DetailsWindow\EveMessageWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NotificationWindow\EveMessageWindow.Designer.cs">
+    <Compile Include="DetailsWindow\EveMessageWindow.Designer.cs">
       <DependentUpon>EveMessageWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="CharacterMonitoring\EveNotificationsColumnsSelectWindow.cs">
@@ -472,11 +526,21 @@
     <EmbeddedResource Include="CharacterMonitoring\CharacterAssetsList.resx">
       <DependentUpon>CharacterAssetsList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterContactList.resx">
+      <DependentUpon>CharacterContactList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterFactionalWarfareStatsList.resx">
       <DependentUpon>CharacterFactionalWarfareStatsList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterKillLogList.resx">
+      <DependentUpon>CharacterKillLogList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterMedalsList.resx">
+      <DependentUpon>CharacterMedalsList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorBody.resx">
       <DependentUpon>CharacterMonitorBody.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorFooter.resx">
       <DependentUpon>CharacterMonitorFooter.cs</DependentUpon>
@@ -488,7 +552,7 @@
     <EmbeddedResource Include="CharacterMonitoring\CharacterWalletTransactionsList.resx">
       <DependentUpon>CharacterWalletTransactionsList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CharacterMonitoring\WalletJournalChartWindow.resx">
+    <EmbeddedResource Include="DetailsWindow\WalletJournalChartWindow.resx">
       <DependentUpon>WalletJournalChartWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharactersComparison\CharactersComparisonWindow.resx">
@@ -504,11 +568,29 @@
       <SubType>Designer</SubType>
       <DependentUpon>CharacterMonitor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NotificationWindow\ContractDetailsWindow.resx">
+    <EmbeddedResource Include="Controls\KillReportAttacker.resx">
+      <DependentUpon>KillReportAttacker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\KillReportFittingContent.resx">
+      <DependentUpon>KillReportFittingContent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\KillReportInvolvedParties.resx">
+      <DependentUpon>KillReportInvolvedParties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\KillReportVictim.resx">
+      <DependentUpon>KillReportVictim.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailsWindow\ContractDetailsWindow.resx">
       <DependentUpon>ContractDetailsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NotificationWindow\ContractsWindow.resx">
       <DependentUpon>ContractsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailsWindow\KillReportWindow.resx">
+      <DependentUpon>KillReportWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotificationWindow\OwnedSkillBooksWindow.resx">
+      <DependentUpon>OwnedSkillBooksWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -520,11 +602,11 @@
     <EmbeddedResource Include="CharacterMonitoring\CharacterStandingsList.resx">
       <DependentUpon>CharacterStandingsList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CharacterMonitoring\ReadingPane.resx">
+    <EmbeddedResource Include="Controls\ReadingPane.resx">
       <DependentUpon>ReadingPane.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NotificationWindow\EveMessageWindow.resx">
+    <EmbeddedResource Include="DetailsWindow\EveMessageWindow.resx">
       <DependentUpon>EveMessageWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
@@ -1152,6 +1234,7 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->

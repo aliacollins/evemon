@@ -18,7 +18,7 @@ namespace EVEMon.Common.Serialization.API
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    InWatchlist = Convert.ToBoolean(value);
+                    InWatchlist = Convert.ToBoolean(value, CultureConstants.InvariantCulture);
             }
         }
 

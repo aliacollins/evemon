@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 
 namespace EVEMon.Sales
 {
-    public class MatariParser : IMineralParser
+    public class EveAddictsParser : IMineralParser
     {
         /// <summary>
         /// Gets the name.
@@ -11,7 +11,7 @@ namespace EVEMon.Sales
         /// <value>The name.</value>
         public string Name
         {
-            get { return "matari"; }
+            get { return "eveaddicts"; }
         }
 
 
@@ -21,7 +21,7 @@ namespace EVEMon.Sales
         /// <value>The title.</value>
         public string Title
         {
-            get { return "Matari Mineral Index"; }
+            get { return "Eve Addicts Mineral Feed"; }
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace EVEMon.Sales
         /// <value>The courtesy URL.</value>
         public Uri CourtesyUrl
         {
-            get { return new Uri("http://www.evegeek.com/"); }
+            get { return new Uri("http://eve.addicts.nl/"); }
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace EVEMon.Sales
         /// <value>The courtesy text.</value>
         public string CourtesyText
         {
-            get { return "EVE[geek]"; }
+            get { return "Eve Addicts"; }
         }
 
         /// <summary>
@@ -50,8 +50,12 @@ namespace EVEMon.Sales
         {
             get
             {
-                return new Regex(@"\<td.*?\>(?<name>\w*)\</td\>\<td.*?align.*?\>(?<price>(\d|\.|,)*)\</td\>\<td",
-                    RegexOptions.Compiled);
+                return new Regex(@"<typeID\sid='(?<name>\d+?)'>.+?<five_percent_sell_price>(?<price>.+?)</five_percent_sell_price>",
+                                 RegexOptions.Compiled
+                                 | RegexOptions.IgnorePatternWhitespace
+                                 | RegexOptions.Singleline
+                                 | RegexOptions.Multiline
+                                 | RegexOptions.IgnoreCase);
             }
         }
 
@@ -61,7 +65,7 @@ namespace EVEMon.Sales
         /// <value>The URL.</value>
         public Uri URL
         {
-            get { return new Uri("http://www.evegeek.com/mineralindex.php"); }
+            get { return new Uri("http://eve.addicts.nl/api/prices.php?typeID=34,35,36,37,38,39,40,11399&detailed=true"); }
         }
     }
 }

@@ -9,6 +9,7 @@ using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.DetailsWindow;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -200,9 +201,14 @@ namespace EVEMon.CharacterMonitoring
                     item.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 }
 
-                featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
-                preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
+                foreach (ToolStripButton item in toolStripContextual.Items.OfType<ToolStripButton>())
+                {
+                    item.DisplayStyle = ToolStripItemDisplayStyle.Image;
+                }
 
+                featuresMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
+
+                preferencesMenu.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 groupMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
             finally
@@ -235,7 +241,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="button">The button.</param>
         private void SetVisibility(ToolStripButton button)
         {
-            IEnumerable<IQueryMonitor> monitors = ButtonToMonitors(button);
+            IEnumerable<IQueryMonitor> monitors = GetButtonMonitors(button);
             bool visible = monitors.Any(monitor => monitor.HasAccess) && IsEnabledFeature(button.Text);
             button.Visible = visible;
 
@@ -291,7 +297,27 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Show the wallet journal charts button only when on wallet journal page
-            walletJournalCharts.Visible = multiPanel.SelectedPage == walletJournalPage;
+            walletJournalCharts.Visible = (multiPanel.SelectedPage == walletJournalPage);
+
+            // Show contacts buttons only when on contacts page
+            allContacts.Visible = contactsExcellent.Visible = (multiPanel.SelectedPage == contactsPage);
+            contactsGood.Visible = contactsNeutral.Visible = (multiPanel.SelectedPage == contactsPage);
+            contactsBad.Visible = contactsTerrible.Visible = inWatchList.Visible = (multiPanel.SelectedPage == contactsPage);
+
+            // Enables / Disables the contacts page related controls
+            if (multiPanel.SelectedPage == contactsPage)
+            {
+                groupMenu.Visible = searchTextBox.Visible = preferencesMenu.Visible = false;
+                toolStripContextual.Enabled = true;
+            }
+
+            // Enables / Disables the kill logs page related controls
+            if (multiPanel.SelectedPage == killLogPage)
+            {
+                groupMenu.Visible = false;
+                searchTextBox.Visible = Settings.UI.MainWindow.CombatLog.ShowCondensedLogs;
+                toolStripContextual.Enabled = true;
+            }
 
             // Enables / Disables the assets page related controls
             if (multiPanel.SelectedPage == assetsPage)
@@ -320,8 +346,8 @@ namespace EVEMon.CharacterMonitoring
             // Enables / Disables the research points page related controls
             if (multiPanel.SelectedPage == researchPage)
             {
-                toolStripContextual.Enabled = ccpCharacter.ResearchPoints.Any();
                 groupMenu.Visible = false;
+                toolStripContextual.Enabled = ccpCharacter.ResearchPoints.Any();
             }
 
             // Enables / Disables the EVE mail messages page related controls
@@ -345,7 +371,7 @@ namespace EVEMon.CharacterMonitoring
 
             foreach (ToolStripButton button in m_advancedFeatures)
             {
-                List<IQueryMonitor> monitors = ButtonToMonitors(button);
+                List<IQueryMonitor> monitors = GetButtonMonitors(button);
 
                 if (!monitors.Any())
                     continue;
@@ -491,6 +517,7 @@ namespace EVEMon.CharacterMonitoring
             tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
                                                                            (string)button.Tag != factionalWarfareStatsPage.Text &&
+                                                                           (string)button.Tag != medalsPage.Text &&
                                                                            (string)button.Tag == e.NewPage.Text);
 
             // Reset the text filter
@@ -528,7 +555,7 @@ namespace EVEMon.CharacterMonitoring
                     // Checks it
                     button.Checked = true;
                 }
-                    // Or another one representing another page ?
+                // Or another one representing another page ?
                 else if (button != null)
                 {
                     // Unchecks it
@@ -562,10 +589,11 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Create the menu items
-            List<ToolStripMenuItem> toolStripMenuItems = m_advancedFeatures.Select(
-                button => new { button, monitor = ButtonToMonitors(button) }).Where(
-                    item => item.monitor != null).Select(
-                        item =>
+            List<ToolStripMenuItem> toolStripMenuItems = m_advancedFeatures
+                .Select(button => new { button, monitor = GetButtonMonitors(button) })
+                .Where(item => item.monitor != null
+                               && multiPanel.Controls.OfType<MultiPanelPage>().Any(page => page.Name == (string)item.button.Tag))
+                .Select(item =>
                             {
                                 ToolStripMenuItem tsmi;
                                 ToolStripMenuItem tempToolStripMenuItem = null;
@@ -589,7 +617,7 @@ namespace EVEMon.CharacterMonitoring
             // Add items to dropdown menu
             featuresMenu.DropDownItems.AddRange(toolStripMenuItems.ToArray<ToolStripItem>());
 
-            // Enable or Disable controls
+            // Enable/Disable the "Enable All / Disable All" controls
             EnableAllToolStripMenuItem.Enabled = toolStripMenuItems.Where(item => item.Enabled).Any(item => !item.Checked);
             DisableAllToolStripMenuItem.Enabled = toolStripMenuItems.Where(item => item.Enabled).Any(item => item.Checked);
         }
@@ -660,6 +688,8 @@ namespace EVEMon.CharacterMonitoring
         #region Contextual Toolstip Controls Event Handlers
 
 
+        #region WalletJournal Control Event Handlers
+
         /// <summary>
         /// Handles the Click event of the walletJournalCharts control.
         /// </summary>
@@ -673,6 +703,46 @@ namespace EVEMon.CharacterMonitoring
 
             WindowsFactory.ShowByTag<WalletJournalChartWindow, CCPCharacter>(ccpCharacter);
         }
+
+        #endregion
+
+
+        #region Contacts Control Event Handlers
+
+        /// <summary>
+        /// Handles the Click event of the contactsToolbarIcon control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void contactsToolbarIcon_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripButton item in toolStripContextual.Items.OfType<ToolStripButton>())
+            {
+                item.Checked = (item == sender);
+            }
+
+            contactsList.ShowAllContacts = sender.Equals(allContacts);
+            contactsList.ShowContactsInWatchList = sender.Equals(inWatchList);
+
+            if (sender.Equals(contactsExcellent))
+                contactsList.ShowContactsWithStandings = StandingStatus.Excellent;
+
+            if (sender.Equals(contactsGood))
+                contactsList.ShowContactsWithStandings = StandingStatus.Good;
+
+            if (sender.Equals(contactsNeutral))
+                contactsList.ShowContactsWithStandings = StandingStatus.Neutral;
+
+            if (sender.Equals(contactsBad))
+                contactsList.ShowContactsWithStandings = StandingStatus.Bad;
+
+            if (sender.Equals(contactsTerrible))
+                contactsList.ShowContactsWithStandings = StandingStatus.Terrible;
+
+            contactsList.UpdateContent();
+        }
+
+        #endregion
 
 
         #region GroupBy Control Event Handlers
@@ -770,32 +840,12 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void filterTimer_Tick(object sender, EventArgs e)
         {
-            if (multiPanel.SelectedPage == assetsPage)
-                assetsList.TextFilter = searchTextBox.Text;
+            IListView list = multiPanel.SelectedPage.Controls.OfType<IListView>().FirstOrDefault();
 
-            if (multiPanel.SelectedPage == ordersPage)
-                ordersList.TextFilter = searchTextBox.Text;
+            if (list == null)
+                return;
 
-            if (multiPanel.SelectedPage == contractsPage)
-                contractsList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == walletJournalPage)
-                walletJournalList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == walletTransactionsPage)
-                walletTransactionsList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == jobsPage)
-                jobsList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == researchPage)
-                researchList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == mailMessagesPage)
-                mailMessagesList.TextFilter = searchTextBox.Text;
-
-            if (multiPanel.SelectedPage == eveNotificationsPage)
-                eveNotificationsList.TextFilter = searchTextBox.Text;
+            list.TextFilter = searchTextBox.Text;
 
             filterTimer.Stop();
         }
@@ -814,7 +864,19 @@ namespace EVEMon.CharacterMonitoring
         {
             bool hideInactive = true;
 
-            if (multiPanel.SelectedPage == assetsPage)
+            if (multiPanel.SelectedPage == killLogPage)
+            {
+                preferencesMenu.DropDownItems.Clear();
+                preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
+                preferencesMenu.DropDownItems.Add(combatLogSeparator);
+                preferencesMenu.DropDownItems.Add(combatLogMenuItem);
+
+                combatLogMenuItem.Checked = Settings.UI.MainWindow.CombatLog.ShowCondensedLogs;
+                autoSizeColumnMenuItem.Enabled = combatLogMenuItem.Checked;
+            }
+
+            if (multiPanel.SelectedPage == assetsPage || multiPanel.SelectedPage == walletJournalPage
+                || multiPanel.SelectedPage == walletTransactionsPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
 
@@ -822,7 +884,8 @@ namespace EVEMon.CharacterMonitoring
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
                             !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
-                            !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                            !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -837,7 +900,8 @@ namespace EVEMon.CharacterMonitoring
 
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
-                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -854,7 +918,8 @@ namespace EVEMon.CharacterMonitoring
 
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
-                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
+                    item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -864,38 +929,6 @@ namespace EVEMon.CharacterMonitoring
                 showOnlyCorpMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
-            if (multiPanel.SelectedPage == walletJournalPage)
-            {
-                bool numberFormat = Settings.UI.MainWindow.WalletJournal.NumberAbsFormat;
-
-                preferencesMenu.DropDownItems.Clear();
-                foreach (ToolStripItem item in m_preferenceMenu.Where(
-                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
-                            !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
-                            !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
-                {
-                    preferencesMenu.DropDownItems.Add(item);
-                }
-
-                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
-            }
-
-            if (multiPanel.SelectedPage == walletTransactionsPage)
-            {
-                bool numberFormat = Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat;
-
-                preferencesMenu.DropDownItems.Clear();
-                foreach (ToolStripItem item in m_preferenceMenu.Where(
-                    item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
-                            !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
-                            !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem)))
-                {
-                    preferencesMenu.DropDownItems.Add(item);
-                }
-
-                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
-            }
-
             if (multiPanel.SelectedPage == jobsPage)
             {
                 hideInactive = Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs;
@@ -903,7 +936,8 @@ namespace EVEMon.CharacterMonitoring
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(numberAbsFormatMenuItem) && !item.Equals(tsReadingPaneSeparator) &&
-                            !item.Equals(readingPaneMenuItem)))
+                            !item.Equals(readingPaneMenuItem) && !item.Equals(combatLogSeparator) &&
+                            !item.Equals(combatLogMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -1330,6 +1364,18 @@ namespace EVEMon.CharacterMonitoring
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the combatLogMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void combatLogMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.UI.MainWindow.CombatLog.ShowCondensedLogs = combatLogMenuItem.Checked;
+            killLogList.UpdateKillLogView();
+            UpdatePageControls();
+        }
+
         #endregion
 
 
@@ -1354,25 +1400,25 @@ namespace EVEMon.CharacterMonitoring
                 grouping => new { grouping, group = grouping as Enum }).Where(
                     menu => menu.group != null).Select(
                         menu =>
+                        {
+                            ToolStripButton tsb;
+                            ToolStripButton tempToolStripButton = null;
+                            try
                             {
-                                ToolStripButton tsb;
-                                ToolStripButton tempToolStripButton = null;
-                                try
-                                {
-                                    tempToolStripButton = new ToolStripButton(menu.group.GetHeader());
-                                    tempToolStripButton.Checked = (list.Grouping.CompareTo(menu.group) == 0);
-                                    tempToolStripButton.Tag = menu.grouping;
+                                tempToolStripButton = new ToolStripButton(menu.group.GetHeader());
+                                tempToolStripButton.Checked = (list.Grouping.CompareTo(menu.group) == 0);
+                                tempToolStripButton.Tag = menu.grouping;
 
-                                    tsb = tempToolStripButton;
-                                    tempToolStripButton = null;
-                                }
-                                finally
-                                {
-                                    if (tempToolStripButton != null)
-                                        tempToolStripButton.Dispose();
-                                }
-                                return tsb;
-                            }))
+                                tsb = tempToolStripButton;
+                                tempToolStripButton = null;
+                            }
+                            finally
+                            {
+                                if (tempToolStripButton != null)
+                                    tempToolStripButton.Dispose();
+                            }
+                            return tsb;
+                        }))
             {
                 groupMenu.DropDownItems.Add(menu);
             }
@@ -1449,7 +1495,10 @@ namespace EVEMon.CharacterMonitoring
             skillQueueList.Character = ccpCharacter;
             employmentList.Character = ccpCharacter;
             standingsList.Character = ccpCharacter;
+            contactsList.Character = ccpCharacter;
             factionalWarfareStatsList.Character = ccpCharacter;
+            medalsList.Character = ccpCharacter;
+            killLogList.Character = ccpCharacter;
             assetsList.Character = ccpCharacter;
             ordersList.Character = ccpCharacter;
             contractsList.Character = ccpCharacter;
@@ -1464,9 +1513,10 @@ namespace EVEMon.CharacterMonitoring
             // Create a list of the advanced features
             m_advancedFeatures.AddRange(new[]
                                             {
-                                                standingsIcon, factionalWarfareStatsIcon, assetsIcon,
-                                                ordersIcon, contractsIcon, walletJournalIcon, walletTransactionsIcon,
-                                                jobsIcon, researchIcon, mailMessagesIcon, eveNotificationsIcon
+                                                standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
+                                                killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
+                                                walletTransactionsIcon, jobsIcon, researchIcon, mailMessagesIcon,
+                                                eveNotificationsIcon, calendarEventsIcon
                                             });
 
             // Hide all advanced features related controls
@@ -1498,7 +1548,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="button">The button.</param>
         /// <returns></returns>
-        private List<IQueryMonitor> ButtonToMonitors(ToolStripItem button)
+        private List<IQueryMonitor> GetButtonMonitors(ToolStripItem button)
         {
             MultiPanelPage page = multiPanel.Controls.Cast<MultiPanelPage>().FirstOrDefault(x => x.Name == (string)button.Tag);
             CCPCharacter ccpCharacter = (CCPCharacter)m_character;

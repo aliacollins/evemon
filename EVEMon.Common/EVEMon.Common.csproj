@@ -273,8 +273,12 @@
     <Compile Include="ISkillLevel.cs" />
     <Compile Include="KillLog.cs" />
     <Compile Include="KillLogCollection.cs" />
+    <Compile Include="KillLogComparer.cs" />
+    <Compile Include="KillLogExporter.cs" />
+    <Compile Include="KillLogItem.cs" />
     <Compile Include="Medal.cs" />
     <Compile Include="MedalCollection.cs" />
+    <Compile Include="MedalComparer.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
     <Compile Include="Notifications\APIErrorNotificationEventArgs.cs" />
     <Compile Include="Notifications\ClaimableCertificateNotificationEventArgs.cs" />
@@ -353,6 +357,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>BCAPISettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Serialization\BattleClinic\MarketPrices\BCItemPrices.cs" />
+    <Compile Include="Serialization\BattleClinic\MarketPrices\SerializableBCItemPrice.cs" />
+    <Compile Include="Serialization\BattleClinic\MarketPrices\SerializableBCItemPrices.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
@@ -410,6 +417,7 @@
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
+    <Compile Include="SettingsObjects\CombatLogSettings.cs" />
     <Compile Include="SettingsObjects\PortableEveInstallationsSettings.cs" />
     <Compile Include="Serialization\Settings\SerializablePortableEveInstallation.cs" />
     <Compile Include="Serialization\Settings\SerializableStanding.cs" />
@@ -998,6 +1006,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Serialization\Flags.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->

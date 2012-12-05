@@ -12,6 +12,7 @@ namespace EVEMon.Common
 
         #region Fields
 
+        private readonly int m_entityID;
         private readonly Character m_character;
         private Image m_image;
 
@@ -29,7 +30,7 @@ namespace EVEMon.Common
         {
             m_character = character;
 
-            EntityID = src.ID;
+            m_entityID = src.ID;
             EntityName = src.Name;
             StandingValue = src.StandingValue;
             Group = src.Group;
@@ -39,12 +40,6 @@ namespace EVEMon.Common
 
 
         #region Public Properties
-
-        /// <summary>
-        /// Gets or sets the entity ID.
-        /// </summary>
-        /// <value>The entity ID.</value>
-        public int EntityID { get; private set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -98,21 +93,37 @@ namespace EVEMon.Common
         /// Gets the standing status.
         /// </summary>
         /// <value>The status.</value>
-        public StandingStatus Status
+        public static StandingStatus Status(double standing)
         {
-            get
-            {
-                if (EffectiveStanding <= -5.5)
+                if (standing <= -5.5)
                     return StandingStatus.Terrible;
 
-                if (EffectiveStanding <= -0.5)
+                if (standing <= -0.5)
                     return StandingStatus.Bad;
 
-                if (EffectiveStanding < 0.5)
+                if (standing < 0.5)
                     return StandingStatus.Neutral;
 
-                return EffectiveStanding < 5.5 ? StandingStatus.Good : StandingStatus.Excellent;
-            }
+                return standing < 5.5 ? StandingStatus.Good : StandingStatus.Excellent;
+        }
+
+        /// <summary>
+        /// Gets the standing image.
+        /// </summary>
+        /// <param name="standing">The standing.</param>
+        /// <returns></returns>
+        public static Image GetStandingImage(int standing)
+        {
+            if (standing <= -5.5)
+                return Properties.Resources.TerribleStanding;
+
+            if (standing <= -0.5)
+                return Properties.Resources.BadStanding;
+
+            if (standing < 0.5)
+                return Properties.Resources.NeutralStanding;
+
+            return standing < 5.5 ? Properties.Resources.GoodStanding : Properties.Resources.ExcellentStanding;
         }
 
         #endregion
@@ -134,8 +145,6 @@ namespace EVEMon.Common
                                                               m_image = img;
 
                                                               // Notify the subscriber that we got the image
-                                                              // Note that if the image is in cache the event doesn't get fired
-                                                              // as the event object is null
                                                               if (StandingImageUpdated != null)
                                                                   StandingImageUpdated(this, EventArgs.Empty);
                                                           });
@@ -167,11 +176,11 @@ namespace EVEMon.Common
         {
             if (Group == StandingGroup.Agents)
                 return new Uri(String.Format(CultureConstants.InvariantCulture,
-                                             NetworkConstants.CCPPortraits, EntityID, (int)EveImageSize.x32));
+                                             NetworkConstants.CCPPortraits, m_entityID, (int)EveImageSize.x32));
 
             return new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
                                  (Group == StandingGroup.Factions ? "alliance" : "corporation"),
-                                 EntityID, (int)EveImageSize.x32));
+                                 m_entityID, (int)EveImageSize.x32));
         }
 
         #endregion

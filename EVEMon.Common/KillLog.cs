@@ -1,26 +1,48 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
     public sealed class KillLog
     {
+        /// <summary>
+        /// Occurs when kill log victim ship image updated.
+        /// </summary>
+        public event EventHandler KillLogVictimShipImageUpdated;
+
+
+        #region Fields
+
+        private readonly List<KillLogItem> m_items = new List<KillLogItem>(); 
+        private readonly int m_solarSystemID;
+        private Image m_image;
+
+        #endregion
+
+
         #region Constructor
 
         /// <summary>
         /// Constructor from the API.
         /// </summary>
-        /// <param name="src"></param>
-        internal KillLog(SerializableKillLogListItem src)
+        /// <param name="character">The character.</param>
+        /// <param name="src">The source.</param>
+        internal KillLog(Character character, SerializableKillLogListItem src)
         {
-            KillID = src.KillID;
-            SolarSystemID = src.SolarSystemID;
+            m_solarSystemID = src.SolarSystemID;
             KillTime = src.KillTime;
+            TimeSinceKill = DateTime.UtcNow.Subtract(src.KillTime);
             MoonID = src.MoonID;
             Victim = src.Victim;
             Attackers = src.Attackers;
-            Items = src.Items;
+
+            m_items.AddRange(src.Items.Select(item => new KillLogItem(item)));
+
+            Group = src.Victim.ID == character.CharacterID ? KillGroup.Losses : KillGroup.Kills;
         }
 
         #endregion
@@ -29,19 +51,22 @@ namespace EVEMon.Common
         #region Public Properties
 
         /// <summary>
-        /// Gets the kill ID.
+        /// Gets the solar system.
         /// </summary>
-        public long KillID { get; private set; }
-
-        /// <summary>
-        /// Gets the solar system ID.
-        /// </summary>
-        public int SolarSystemID { get; private set; }
+        public SolarSystem SolarSystem
+        {
+            get { return StaticGeography.GetSolarSystemByID(m_solarSystemID); }
+        }
 
         /// <summary>
         /// Gets the kill time.
         /// </summary>
         public DateTime KillTime { get; private set; }
+
+        /// <summary>
+        /// Gets the time since kill.
+        /// </summary>
+        public TimeSpan TimeSinceKill { get; private set; }
 
         /// <summary>
         /// Gets the moon ID.
@@ -59,9 +84,82 @@ namespace EVEMon.Common
         public IEnumerable<SerializableKillLogAttackersListItem> Attackers { get; private set; }
 
         /// <summary>
+        /// Gets the final blow attacker.
+        /// </summary>
+        public SerializableKillLogAttackersListItem FinalBlowAttacker
+        {
+            get { return Attackers.Single(x => x.FinalBlow); }
+        }
+        /// <summary>
+        /// Gets or sets the group.
+        /// </summary>
+        public KillGroup Group { get; private set; }
+
+        /// <summary>
         /// Gets the items.
         /// </summary>
-        public IEnumerable<SerializableKillLogItemListItem> Items { get; private set; }
+        public IEnumerable<KillLogItem> Items
+        {
+            get { return m_items; }
+        }
+
+        /// <summary>
+        /// Gets the victim image.
+        /// </summary>
+        public Image VictimShipImage
+        {
+            get
+            {
+                if (m_image == null)
+                    GetVictimShipImage();
+
+                return m_image;
+            }
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets the victim's ship image.
+        /// </summary>
+        private void GetVictimShipImage()
+        {
+            m_image = GetDefaultImage();
+            ImageService.GetImageAsync(GetImageUrl(), img =>
+                                                          {
+                                                              if (img == null)
+                                                                  return;
+
+                                                              m_image = img;
+
+                                                              // Notify the subscriber that we got the image
+                                                              if (KillLogVictimShipImageUpdated != null)
+                                                                  KillLogVictimShipImageUpdated(this, EventArgs.Empty);
+                                                          });
+        }
+
+        /// <summary>
+        /// Gets the default image.
+        /// </summary>
+        /// <returns></returns>
+        private static Bitmap GetDefaultImage()
+        {
+            return new Bitmap(32, 32);
+        }
+
+        /// <summary>
+        /// Gets the image URL.
+        /// </summary>
+        /// <returns></returns>
+        private Uri GetImageUrl()
+        {
+            return new Uri(String.Format(CultureConstants.InvariantCulture,
+                                         NetworkConstants.CCPIconsFromImageServer, "type", Victim.ShipTypeID,
+                                         (int)EveImageSize.x32));
+        }
 
         #endregion
     }

@@ -95,7 +95,7 @@ namespace EVEMon.Common
 
             IQueryMonitorEx monitor = this[method] as IQueryMonitorEx;
             if (monitor != null && monitor.HasAccess)
-                monitor.ForceUpdate(false);
+                monitor.ForceUpdate();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace EVEMon.Common
             IEnumerable<IQueryMonitorEx> monitors = methods.Select(apiMethod => this[apiMethod]).Cast<IQueryMonitorEx>();
             foreach (IQueryMonitorEx monitor in monitors.Where(monitor => monitor.HasAccess))
             {
-                monitor.ForceUpdate(false);
+                monitor.ForceUpdate();
             }
         }
 
@@ -118,7 +118,7 @@ namespace EVEMon.Common
         {
             foreach (IQueryMonitorEx monitor in Items.Where(monitor => monitor.HasAccess))
             {
-                monitor.ForceUpdate(false);
+                monitor.ForceUpdate();
             }
         }
 

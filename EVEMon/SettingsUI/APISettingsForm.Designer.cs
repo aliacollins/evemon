@@ -42,6 +42,7 @@ namespace EVEMon.SettingsUI
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.SupportsCompressedResponseCheckBox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dgMethods)).BeginInit();
@@ -171,7 +172,7 @@ namespace EVEMon.SettingsUI
             // 
             this.groupBox1.Controls.Add(this.dgMethods);
             this.groupBox1.Controls.Add(this.btnUseDefaults);
-            this.groupBox1.Location = new System.Drawing.Point(3, 71);
+            this.groupBox1.Location = new System.Drawing.Point(3, 90);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(388, 198);
             this.groupBox1.TabIndex = 1;
@@ -187,25 +188,36 @@ namespace EVEMon.SettingsUI
             this.flowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(396, 310);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(396, 328);
             this.flowLayoutPanel.TabIndex = 7;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.SupportsCompressedResponseCheckBox);
             this.panel1.Controls.Add(this.lblConfigurationName);
             this.panel1.Controls.Add(this.txtConfigurationName);
             this.panel1.Controls.Add(this.lblAPIHost);
             this.panel1.Controls.Add(this.txtAPIHost);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(388, 62);
+            this.panel1.Size = new System.Drawing.Size(388, 81);
             this.panel1.TabIndex = 0;
+            // 
+            // SupportsCompressedResponseCheckBox
+            // 
+            this.SupportsCompressedResponseCheckBox.AutoSize = true;
+            this.SupportsCompressedResponseCheckBox.Location = new System.Drawing.Point(12, 61);
+            this.SupportsCompressedResponseCheckBox.Name = "SupportsCompressedResponseCheckBox";
+            this.SupportsCompressedResponseCheckBox.Size = new System.Drawing.Size(179, 17);
+            this.SupportsCompressedResponseCheckBox.TabIndex = 3;
+            this.SupportsCompressedResponseCheckBox.Text = "Supports compressed responses";
+            this.SupportsCompressedResponseCheckBox.UseVisualStyleBackColor = true;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.btnOK);
             this.panel2.Controls.Add(this.btnCancel);
-            this.panel2.Location = new System.Drawing.Point(3, 275);
+            this.panel2.Location = new System.Drawing.Point(3, 294);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(388, 31);
             this.panel2.TabIndex = 2;
@@ -221,7 +233,7 @@ namespace EVEMon.SettingsUI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(396, 310);
+            this.ClientSize = new System.Drawing.Size(396, 328);
             this.Controls.Add(this.flowLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -257,5 +269,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.CheckBox SupportsCompressedResponseCheckBox;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace EVEMon.NotificationWindow
+﻿namespace EVEMon.DetailsWindow
 {
     sealed partial class ContractDetailsWindow
     {
@@ -120,7 +120,7 @@
             this.CurrentToStartLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 10);
             this.CurrentToStartLinkLabel.Location = new System.Drawing.Point(0, 0);
             this.CurrentToStartLinkLabel.Name = "CurrentToStartLinkLabel";
-            this.CurrentToStartLinkLabel.Size = new System.Drawing.Size(67, 17);
+            this.CurrentToStartLinkLabel.Size = new System.Drawing.Size(59, 17);
             this.CurrentToStartLinkLabel.TabIndex = 9;
             this.CurrentToStartLinkLabel.TabStop = true;
             this.CurrentToStartLinkLabel.Text = "show route";
@@ -134,7 +134,7 @@
             this.CurrentToEndLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 10);
             this.CurrentToEndLinkLabel.Location = new System.Drawing.Point(0, 0);
             this.CurrentToEndLinkLabel.Name = "CurrentToEndLinkLabel";
-            this.CurrentToEndLinkLabel.Size = new System.Drawing.Size(67, 17);
+            this.CurrentToEndLinkLabel.Size = new System.Drawing.Size(59, 17);
             this.CurrentToEndLinkLabel.TabIndex = 10;
             this.CurrentToEndLinkLabel.TabStop = true;
             this.CurrentToEndLinkLabel.Text = "show route";
@@ -148,7 +148,7 @@
             this.StartToEndLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 10);
             this.StartToEndLinkLabel.Location = new System.Drawing.Point(0, 0);
             this.StartToEndLinkLabel.Name = "StartToEndLinkLabel";
-            this.StartToEndLinkLabel.Size = new System.Drawing.Size(67, 17);
+            this.StartToEndLinkLabel.Size = new System.Drawing.Size(59, 17);
             this.StartToEndLinkLabel.TabIndex = 11;
             this.StartToEndLinkLabel.TabStop = true;
             this.StartToEndLinkLabel.Text = "show route";
@@ -179,8 +179,9 @@
             this.Controls.Add(this.StartToEndLinkLabel);
             this.Controls.Add(this.ItemImage);
             this.Controls.Add(this.RoutePanelParent);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(480, 1280);
+            this.MinimumSize = new System.Drawing.Size(480, 465);
             this.Name = "ContractDetailsWindow";
             this.Text = "Contract Details";
             this.ButtonPanel.ResumeLayout(false);

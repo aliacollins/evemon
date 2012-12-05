@@ -35,16 +35,12 @@ namespace EVEMon.NotificationWindow
             // 
             // contractsList
             // 
-            this.contractsList.Character = null;
             this.contractsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contractsList.Grouping = EVEMon.Common.SettingsObjects.ContractGrouping.State;
             this.contractsList.Location = new System.Drawing.Point(0, 0);
             this.contractsList.Name = "contractsList";
-            this.contractsList.ShowIssuedFor = EVEMon.Common.IssuedFor.All;
             this.contractsList.Size = new System.Drawing.Size(292, 266);
             this.contractsList.TabIndex = 0;
-            this.contractsList.TextFilter = "";
-            this.contractsList.Visibility = false;
             // 
             // ContractsWindow
             // 

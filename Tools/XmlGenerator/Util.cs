@@ -218,9 +218,8 @@ namespace EVEMon.XmlGenerator
                     if (fi.Directory.Exists && fi.Directory.Parent != null && fi.Directory.Parent.Parent != null)
                     {
                         File.Copy(srcFile, destFile, true);
-                        Console.WriteLine(String.Format(CultureConstants.DefaultCulture, @"*** {0}\{1}\{2}",
-                                                        fi.Directory.Parent.Parent.Name,
-                                                        fi.Directory.Parent.Name, fi.Directory.Name));
+                        Console.WriteLine(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name, fi.Directory.Parent.Name,
+                                          fi.Directory.Name);
                     }
                     else
                         Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0} doesn't exist, copy failed",

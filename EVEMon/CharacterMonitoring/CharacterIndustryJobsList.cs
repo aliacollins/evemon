@@ -20,7 +20,7 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<IndustryJobColumnSettings> m_columns = new List<IndustryJobColumnSettings>();
         private readonly List<IndustryJob> m_list = new List<IndustryJob>();
-        
+
         private InfiniteDisplayToolTip m_tooltip;
         private Timer m_refreshTimer;
         private IndustryJobGrouping m_grouping;
@@ -81,20 +81,18 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvJobs"/> is visible.
         /// </summary>
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
-        [Browsable(false)]
-        public bool Visibility
+        internal bool Visibility
         {
             get { return lvJobs.Visible; }
             set { lvJobs.Visible = value; }
@@ -133,8 +131,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets which "Issued for" jobs to display.
         /// </summary>
-        [Browsable(false)]
-        public IssuedFor ShowIssuedFor
+        internal IssuedFor ShowIssuedFor
         {
             get { return m_showIssuedFor; }
             set
@@ -148,8 +145,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets true when character has active jobs issued for corporation.
         /// </summary>
-        [Browsable(false)]
-        public bool HasActiveCorporationIssuedJobs
+        private bool HasActiveCorporationIssuedJobs
         {
             get { return m_list.Any(x => x.State == JobState.Active && x.IssuedFor == IssuedFor.Corporation); }
         }
@@ -157,9 +153,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of jobs to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<IndustryJob> Jobs
+        internal IEnumerable<IndustryJob> Jobs
         {
             get { return m_list; }
             set
@@ -275,6 +269,9 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvJobs.Visible = false;
+            industryExpPanelControl.Visible = false;
+
             Jobs = (Character == null ? null : Character.IndustryJobs);
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
             Grouping = (Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy);
@@ -316,9 +313,6 @@ namespace EVEMon.CharacterMonitoring
 
                 // We update the content
                 UpdateContent();
-
-                // Adjust the size of the columns
-                AdjustColumns();
             }
             finally
             {
@@ -371,6 +365,9 @@ namespace EVEMon.CharacterMonitoring
                     }
                 }
 
+                // Adjust the size of the columns
+                AdjustColumns();
+
                 // Update the expandable panel info
                 UpdateExpPanelContent();
 
@@ -393,10 +390,10 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             noJobsLabel.Visible = lvJobs.Items.Count == 0;
-            lvJobs.Visible = !noJobsLabel.Visible;
-            m_refreshTimer.Enabled = lvJobs.Visible;
             industryExpPanelControl.Visible = true;
             industryExpPanelControl.Header.Visible = true;
+            lvJobs.Visible = !noJobsLabel.Visible;
+            m_refreshTimer.Enabled = lvJobs.Visible;
         }
 
         /// <summary>

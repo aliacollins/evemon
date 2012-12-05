@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -13,7 +12,7 @@ namespace EVEMon.NotificationWindow
         private ClaimableCertificateNotificationEventArgs m_notification;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="ClaimableCertificateWindow"/> class.
         /// </summary>
         public ClaimableCertificateWindow()
         {
@@ -24,8 +23,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the list of completed skills.
         /// </summary> 
-        [Browsable(false)]
-        public ClaimableCertificateNotificationEventArgs Notification
+        internal ClaimableCertificateNotificationEventArgs Notification
         {
             get { return m_notification; }
             set

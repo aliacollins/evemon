@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 
@@ -7,6 +9,7 @@ namespace EVEMon.Common
     public sealed class KillLogCollection : ReadonlyCollection<KillLog>
     {
         private readonly CCPCharacter m_ccpCharacter;
+
 
         #region Constructor
 
@@ -21,6 +24,9 @@ namespace EVEMon.Common
 
         #endregion
 
+
+        #region Importation
+
         /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
@@ -32,8 +38,26 @@ namespace EVEMon.Common
             // Import the kill log from the API
             foreach (SerializableKillLogListItem srcKillLog in src)
             {
-                Items.Add(new KillLog(srcKillLog));
+                Items.Add(new KillLog(m_ccpCharacter, srcKillLog));
             }
         }
+
+        /// <summary>
+        /// Imports the kill logs from a cached file.
+        /// </summary>
+        public void ImportFromCacheFile()
+        {
+            string filename = LocalXmlCache.GetFile(String.Format(CultureConstants.InvariantCulture, "{0}-{1}",
+                                                                  m_ccpCharacter.Name, APICharacterMethods.KillLog)).FullName;
+
+            if (!File.Exists(filename))
+                return;
+
+            APIResult<SerializableAPIKillLog> result = Util.DeserializeAPIResult<SerializableAPIKillLog>(
+                filename, APIProvider.RowsetsTransform);
+            Import(result.Result.Kills);
+        }
+
+        #endregion
     }
 }

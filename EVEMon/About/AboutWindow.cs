@@ -92,6 +92,7 @@ namespace EVEMon.About
                                    { "gareth", 6 },
                                    { "gavinl", 6 },
                                    { "GoneWacko", 6 },
+                                   { "Good speed", 6 },
                                    { "happyslinky", 6 },
                                    { "Jazzy_Josh", 6 },
                                    { "jdread", 6 },
@@ -178,7 +179,7 @@ namespace EVEMon.About
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
             AddLinkToLabel(battleclinicLinkLabel, "BattleClinic", "http://www.battleclinic.com/");
             AddLinkToLabel(eveCentralLinkLabel, "EVE-Central", "http://www.eve-central.com/");
-            AddLinkToLabel(eveDevLinkLabel, "EVEDev", "http://http://wiki.eve-id.net/Main_Page");
+            AddLinkToLabel(eveDevLinkLabel, "EVEDev", "http://wiki.eve-id.net/Main_Page");
             AddLinkToLabel(googleDataLinkLabel, "Google.Data", "http://code.google.com/apis/gdata/client-cs.html");
             AddLinkToLabel(lironLeviLinkLabel, "Liron Levi", "http://www.codeproject.com/KB/cs/multipanelcontrol.aspx");
             AddLinkToLabel(stackOverflowLinkLabel, "Stack Overflow", "http://stackoverflow.com");
@@ -230,16 +231,6 @@ namespace EVEMon.About
             }
 
             devsList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-        }
-
-        /// <summary>
-        /// Handles the Click event of the btnOk control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnOk_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
         /// <summary>

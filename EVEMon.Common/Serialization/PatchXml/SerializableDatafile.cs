@@ -1,6 +1,7 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace EVEMon.Common.Serialization.PatchXml
 {
@@ -19,7 +20,7 @@ namespace EVEMon.Common.Serialization.PatchXml
         public string Address { get; set; }
 
         [XmlElement("message")]
-        public XmlCDataSection MessageXml
+        public IXPathNavigable MessageXml
         {
             get { return new XmlDocument().CreateCDataSection(Message); }
             set
@@ -27,7 +28,7 @@ namespace EVEMon.Common.Serialization.PatchXml
                 if (value == null)
                     throw new ArgumentNullException("value");
 
-                Message = value.Data;
+                Message = ((XmlCDataSection)value).Data;
             }
         }
 

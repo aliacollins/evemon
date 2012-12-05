@@ -57,13 +57,12 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -83,9 +82,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of wallet transactions to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<WalletTransaction> WalletTransactions
+        private IEnumerable<WalletTransaction> WalletTransactions
         {
             get { return m_list; }
             set
@@ -203,6 +200,8 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvWalletTransactions.Visible = false;
+
             WalletTransactions = (Character == null ? null : Character.WalletTransactions);
             Columns = Settings.UI.MainWindow.WalletTransactions.Columns;
             Grouping = (Character == null ? WalletTransactionGrouping.None : Character.UISettings.WalletTransactionsGroupBy);
@@ -253,9 +252,6 @@ namespace EVEMon.CharacterMonitoring
 
                 // We update the content
                 UpdateContent();
-
-                // Adjust the size of the columns
-                AdjustColumns();
             }
             finally
             {
@@ -300,6 +296,9 @@ namespace EVEMon.CharacterMonitoring
                         lvItem.Selected = true;
                     }
                 }
+
+                // Adjust the size of the columns
+                AdjustColumns();
 
                 UpdateListVisibility();
             }

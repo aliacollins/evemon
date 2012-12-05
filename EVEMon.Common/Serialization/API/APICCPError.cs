@@ -110,5 +110,23 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return ErrorCode == 222; }
         }
+
+        /// <summary>
+        /// Gets true when getting character information fails.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsCharacterInfoFailure
+        {
+            get { return ErrorCode == 522; }
+        }
+
+        /// <summary>
+        /// Gets true when getting corporation information fails.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsCorporationInfoFailure
+        {
+            get { return ErrorCode == 523; }
+        }
     }
 }

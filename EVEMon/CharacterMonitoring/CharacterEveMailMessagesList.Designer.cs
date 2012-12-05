@@ -1,3 +1,5 @@
+using EVEMon.Controls;
+
 namespace EVEMon.CharacterMonitoring
 {
     partial class CharacterEveMailMessagesList
@@ -48,7 +50,7 @@ namespace EVEMon.CharacterMonitoring
             this.chToCharacterIDs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToCorpOrAlliance = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chToListID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.eveMailReadingPane = new EVEMon.CharacterMonitoring.ReadingPane();
+            this.eveMailReadingPane = new ReadingPane();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();

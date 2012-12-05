@@ -6,30 +6,21 @@ using System.Reflection;
 
 namespace EVEMon.MarketUnifiedUploader
 {
-    internal class UnifiedFormat
+    internal static class UnifiedFormat
     {
         private const string UnifiedFormatVersion = "0.1";
-        private readonly AssemblyName m_assembly = Assembly.GetExecutingAssembly().GetName();
-        private readonly Dictionary<string, object> m_data = new Dictionary<string, object>();
-        private readonly string[] m_orderColumns = new[]
+        private static readonly AssemblyName s_assembly = Assembly.GetExecutingAssembly().GetName();
+        private static readonly Dictionary<string, object> s_data = new Dictionary<string, object>();
+        private static readonly string[] s_orderColumns = new[]
                                                        {
                                                            "price", "volRemaining", "range", "orderID", "volEntered", "minVolume",
                                                            "bid", "issueDate", "duration", "stationID", "solarSystemID"
                                                        };
 
-        private readonly string[] m_historyColumns = new[]
+        private static readonly string[] s_historyColumns = new[]
                                                          {
                                                              "date", "orders", "quantity", "low", "high", "average"
                                                          };
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnifiedFormat"/> class.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        private UnifiedFormat(KeyValuePair<object, object> input)
-        {
-            Format(input);
-        }
 
         /// <summary>
         /// Gets the JSON object.
@@ -38,20 +29,21 @@ namespace EVEMon.MarketUnifiedUploader
         /// <returns></returns>
         public static Dictionary<string, object> GetJSONObject(KeyValuePair<object, object> input)
         {
-            UnifiedFormat unifiedFormat = new UnifiedFormat(input);
-            return unifiedFormat.m_data;
+            return Format(input);
         }
 
         /// <summary>
         /// Formats the specified result.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void Format(KeyValuePair<object, object> result)
+        private static Dictionary<string, object> Format(KeyValuePair<object, object> result)
         {
+            s_data.Clear();
+
             List<object> key = ((List<object>)((Tuple<object>)result.Key).Item1);
 
             if ((string)key[0] != "marketProxy")
-                return;
+                return s_data;
 
             List<object> version = (List<object>)((Dictionary<object, object>)result.Value)["version"];
             string generatedAt = DateTime.FromFileTimeUtc((long)version[0]).ToIsoDateTimeUTCString();
@@ -71,8 +63,8 @@ namespace EVEMon.MarketUnifiedUploader
             // Generator info
             Dictionary<string, object> generator = new Dictionary<string, object>
                                                        {
-                                                           { "name", m_assembly.Name },
-                                                           { "version", m_assembly.Version.ToString() }
+                                                           { "name", s_assembly.Name },
+                                                           { "version", s_assembly.Version.ToString() }
                                                        };
 
             // Columns and Rows info
@@ -83,18 +75,18 @@ namespace EVEMon.MarketUnifiedUploader
             switch ((string)key[1])
             {
                 case "GetOrders":
-                    columns.AddRange(m_orderColumns);
+                    columns.AddRange(s_orderColumns);
                     GenerateOrdersFormat(value, rows);
                     resultType = "orders";
                     break;
                 case "GetNewPriceHistory":
                 case "GetOldPriceHistory":
-                    columns.AddRange(m_historyColumns);
+                    columns.AddRange(s_historyColumns);
                     GenerateHistoryFormat(value, rows);
                     resultType = "history";
                     break;
                 default:
-                    return;
+                    return s_data;
             }
 
             // Rowsets
@@ -110,13 +102,15 @@ namespace EVEMon.MarketUnifiedUploader
                                     };
 
             // The actual unified format
-            m_data.Add("resultType", resultType);
-            m_data.Add("version", UnifiedFormatVersion);
-            m_data.Add("uploadKeys", uploadKeys);
-            m_data.Add("generator", generator);
-            m_data.Add("currentTime", DateTime.UtcNow.ToIsoDateTimeUTCString());
-            m_data.Add("columns", columns);
-            m_data.Add("rowsets", rowsets);
+            s_data.Add("resultType", resultType);
+            s_data.Add("version", UnifiedFormatVersion);
+            s_data.Add("uploadKeys", uploadKeys);
+            s_data.Add("generator", generator);
+            s_data.Add("currentTime", DateTime.UtcNow.ToIsoDateTimeUTCString());
+            s_data.Add("columns", columns);
+            s_data.Add("rowsets", rowsets);
+
+            return s_data;
         }
 
         /// <summary>

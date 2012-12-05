@@ -192,7 +192,6 @@ namespace EVEMon.MarketUnifiedUploader
                             Status = UploaderStatus.Disabled;
                             nextRun = GetNextRun(TimeSpan.FromSeconds(1));
                             Console.WriteLine("Network Unavailable. Next run at: {0}", nextRun);
-                            continue;
                         }
                         continue;
                     }
@@ -250,7 +249,7 @@ namespace EVEMon.MarketUnifiedUploader
                                                  : ex.InnerException.Message,
                                              DateTime.Now.ToUniversalDateTimeString(),
                                              Environment.NewLine);
-                Settings.MarketUnifiedUploader.Enabled = false;
+
                 Stop();
             }
         }
@@ -344,7 +343,7 @@ namespace EVEMon.MarketUnifiedUploader
             string response;
             try
             {
-                response = HttpWebService.DownloadString(endPoint.Url, endPoint.Method, postdata,
+                response = HttpWebService.DownloadString(endPoint.Url, endPoint.Method, false, postdata,
                                                          endPoint.DataCompression);
             }
             catch (HttpWebServiceException ex)
@@ -417,7 +416,7 @@ namespace EVEMon.MarketUnifiedUploader
                 endPoint.UploadInterval = TimeSpan.Zero;
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow;
 
-                ProgressText = String.Format(CultureConstants.DefaultCulture, "{1}: Uploaded to {0} succesfully.{2}",
+                ProgressText = String.Format(CultureConstants.DefaultCulture, "{1}: Uploaded to {0} successfully.{2}",
                                              endPoint.Name, DateTime.Now.ToUniversalDateTimeString(),
                                              Environment.NewLine);
 

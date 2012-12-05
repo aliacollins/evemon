@@ -118,9 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="LatestBinariesLinkLabel.Text" xml:space="preserve">
-    <value>Use the latest snapshot binaries (beta) as the problem may have been already solved
-or delete your settings (after you have made a backup) and cache, to see if the problem persists 
-(start menu &gt; run &gt; "%APPDATA%\EVEMon").</value>
+    <value>Use the latest snapshot binaries (beta) as the problem may have been already solved or 
+go to EVEMon's data directory (by cliking on the related button below) and delete, your settings file 
+(after you have made a backup), cache folder and data files (*.gz),  to see if the problem persists.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="KnownProblemsPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -170,7 +170,7 @@ or delete your settings (after you have made a backup) and cache, to see if the 
         XTesb3QPLh88M+QwdP6m681Lt7xuXbu94vbgcOjwnZHokdE77DtTd1PuvriXeW/h/sYH6AdFD6UeVjxS
         fNTws+7PbaOWo6fHXMf6Hwc/vj/OGn/2S8Yv7ycKnpCfVEyqTDZPmU2dmnafvvF05dOJZ+nPFmYKf5X+
         tfa5zvMffnP8rX82YnbiBf/Fp99LXsq/PPRq2aueuYC5R69TXy/MF72Rf3P4LeNt37vwd5MLWe+x7ys/
-        6H7o/ujz8cGn1E+f/gUDmPP8usTo0wAAAAlwSFlzAAALEQAACxEBf2RfkQAAAsdJREFUOE+NU19IU3EU
+        6H7o/ujz8cGn1E+f/gUDmPP8usTo0wAAAAlwSFlzAAALDwAACw8BkvkDpQAAAsdJREFUOE+NU19IU3EU
         9v7bve7e659pNf8tdTmxtGJWvrhmBZLVgxtSmBYV9FIPQWDUgwiL0IqgB5FBEET40EsSUs2HeigKjCBx
         PgS6KAplimlsTEjZ6Tt3EzR66MJh43fO953vO7/zy8nJfAJCFgTBLopCoSiKJZIkbUdUI6okSSzHWTHy
         BsKWrc9CM3iFkyjaJsuSR1UVr6apzXa7dig3V/Wrqq1JUeSdTIS6/L9JJBzoADu5iAGmaQ+YptGFuGAY
@@ -188,7 +188,7 @@ or delete your settings (after you have made a backup) and cache, to see if the 
   <data name="LatestBinariesPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAACxEAAAsRAX9kX5EAAAAGYktHRAD/AP8A/6C9p5MAAAAHdElNRQfZDBEQDCPGRKey
+        YQUAAAAJcEhZcwAACw8AAAsPAZL5A6UAAAAGYktHRAD/AP8A/6C9p5MAAAAHdElNRQfZDBEQDCPGRKey
         AAADGUlEQVQ4T3VTC0iTURTedDqdKx+VUhQUPrJS5nQun7mpU9N0peUjJTR72eYMCx9UlFmaWERWYNmD
         gkjRMJloLyVaGmlkWlaSWKFlYXNaUNLj/zr/ckaRBz7Oveee79zv3nsuh/OPmZmZmSJcGnDNychPBf/N
         n27Oki3yNKoY8rZLXJ0XcLhcAZ/Pt6QN/l/MyXGOqZhlUf6uwqba6vc97Tq03Wl9/bSj41OITOaiVqmW

@@ -472,27 +472,39 @@ namespace EVEMon.SkillPlanner
                     if (fuelMaterials.Where(x => x.Purpose == purpose).All(x => x.ID != item.ID))
                         continue;
 
-                    // Create the list of materials we need to scroll through
-                    List<Material> materials = new List<Material>();
-                    foreach (Item obj in SelectControl.SelectedObjects)
-                    {
-                        // Compensate for missing entries
-                        if (!obj.ControlTowerFuel.Any())
-                        {
-                            materials.Add(null);
-                            continue;
-                        }
-
-                        materials.Add(obj.ControlTowerFuel.Where(
-                            x => x.ID == item.ID && fuelMaterials.Any(y => y == x)).Select(
-                                x => new ControlTowerFuel(x)).FirstOrDefault());
-                    }
+                    IEnumerable<Material> materials = GetMaterials(fuelMaterials, item);
 
                     AddListViewItem(prop, items, group, item, materials);
                 }
 
                 PropertiesList.Groups.Add(group);
             }
+        }
+
+        /// <summary>
+        /// Gets the materials.
+        /// </summary>
+        /// <param name="fuelMaterials">The fuel materials.</param>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
+        private IEnumerable<Material> GetMaterials(IEnumerable<SerializableControlTowerFuel> fuelMaterials, Item item)
+        {
+            // Create the list of materials we need to scroll through
+            List<Material> materials = new List<Material>();
+            foreach (Item obj in SelectControl.SelectedObjects)
+            {
+                // Compensate for missing entries
+                if (!obj.ControlTowerFuel.Any())
+                {
+                    materials.Add(null);
+                    continue;
+                }
+
+                materials.Add(obj.ControlTowerFuel.Where(
+                    x => x.ID == item.ID && fuelMaterials.Any(y => y == x)).Select(
+                        x => new ControlTowerFuel(x)).FirstOrDefault());
+            }
+            return materials;
         }
 
         /// <summary>

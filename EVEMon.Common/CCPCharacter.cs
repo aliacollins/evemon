@@ -59,7 +59,8 @@ namespace EVEMon.Common
             EVEMailingLists = new EveMailingListCollection(this);
             EVENotifications = new EveNotificationCollection(this);
             Contacts = new ContactCollection(this);
-            Medals = new MedalCollection(this);
+            CharacterMedals = new MedalCollection(this);
+            CorporationMedals = new MedalCollection(this);
             UpcomingCalendarEvents = new UpcomingCalendarEventCollection(this);
             KillLog = new KillLogCollection(this);
 
@@ -71,6 +72,7 @@ namespace EVEMon.Common
 
             m_jobsCompletedForCharacter = new List<IndustryJob>();
 
+            EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterMarketOrdersUpdated += EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CorporationMarketOrdersUpdated += EveMonClient_CorporationMarketOrdersUpdated;
             EveMonClient.CharacterContractsUpdated += EveMonClient_CharacterContractsUpdated;
@@ -259,9 +261,14 @@ namespace EVEMon.Common
         public ContactCollection Contacts { get; private set; }
 
         /// <summary>
-        /// Gets the collection of medals.
+        /// Gets the collection of character medals.
         /// </summary>
-        public MedalCollection Medals { get; private set; }
+        public MedalCollection CharacterMedals { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of corporation medals.
+        /// </summary>
+        public MedalCollection CorporationMedals { get; private set; }
 
         /// <summary>
         /// Gets the collection of upcoming calendar events.
@@ -476,6 +483,9 @@ namespace EVEMon.Common
             // EVE notifications IDs
             EVENotifications.Import(serial.EveNotificationsIDs);
 
+            // Kill Logs
+            KillLog.ImportFromCacheFile();
+
             // Fire the global event
             EveMonClient.OnCharacterUpdated(this);
         }
@@ -521,6 +531,7 @@ namespace EVEMon.Common
         internal override void Dispose()
         {
             // Unsubscribe events
+            EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterMarketOrdersUpdated -= EveMonClient_CharacterMarketOrdersUpdated;
             EveMonClient.CorporationMarketOrdersUpdated -= EveMonClient_CorporationMarketOrdersUpdated;
             EveMonClient.CharacterContractsUpdated -= EveMonClient_CharacterContractsUpdated;
@@ -788,6 +799,20 @@ namespace EVEMon.Common
                 ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods),
                                                                                         lastUpdate.Method)));
             }
+        }
+
+        /// <summary>
+        /// Handles the CharacterAssetsUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs"/> instance containing the event data.</param>
+        /// <remarks>Triggering a settings exportation to update the character owned skillbooks found in Assets</remarks>
+        private void EveMonClient_CharacterAssetsUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            Export();
         }
 
         /// <summary>

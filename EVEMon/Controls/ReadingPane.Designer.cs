@@ -1,4 +1,4 @@
-namespace EVEMon.CharacterMonitoring
+namespace EVEMon.Controls
 {
     partial class ReadingPane
     {

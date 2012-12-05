@@ -27,6 +27,7 @@ using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
+using EVEMon.DetailsWindow;
 using EVEMon.ImplantControls;
 using EVEMon.MarketUnifiedUploader;
 using EVEMon.NotificationWindow;
@@ -44,21 +45,22 @@ namespace EVEMon
     {
         #region Fields
 
+        private readonly List<NotificationEventArgs> m_popupNotifications = new List<NotificationEventArgs>();
+        private readonly bool m_startMinimized;
+
         private Form m_trayPopup;
         private IgbServer m_igbServer;
         private UploaderStatus m_uploaderStatus;
+        private DateTime m_nextPopupUpdate = DateTime.UtcNow;
 
+        private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
+        private bool m_isMouseClicked;
         private bool m_isUpdating;
         private bool m_isUpdatingData;
         private bool m_isShowingUpdateWindow;
         private bool m_isShowingDataUpdateWindow;
         private bool m_isUpdatingTabOrder;
         private bool m_isUpdateEventsSubscribed;
-
-        private readonly List<NotificationEventArgs> m_popupNotifications = new List<NotificationEventArgs>();
-        private DateTime m_nextPopupUpdate = DateTime.UtcNow;
-        private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
-        private bool m_mouseClicked;
 
         #endregion
 
@@ -73,7 +75,6 @@ namespace EVEMon
             InitializeComponent();
             RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
-            Visible = false;
 
             tabCreationLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             noCharactersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
@@ -88,16 +89,7 @@ namespace EVEMon
         public MainWindow(bool startMinimized)
             : this()
         {
-            // Start minimized ?
-            if (startMinimized)
-            {
-                WindowState = FormWindowState.Minimized;
-                ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
-                                || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
-                Visible = ShowInTaskbar;
-            }
-
-            TriggerAutoShrink();
+            m_startMinimized = startMinimized;
         }
 
         /// <summary>
@@ -123,6 +115,15 @@ namespace EVEMon
 
             if (DesignMode)
                 return;
+
+            // Start minimized ?
+            if (m_startMinimized)
+            {
+                WindowState = FormWindowState.Minimized;
+                ShowInTaskbar = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
+                                || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
+                Visible = ShowInTaskbar;
+            }
 
             // Start the one-second timer 
             EveMonClient.Run(this);
@@ -152,6 +153,9 @@ namespace EVEMon
 
             // Updates the controls visibility according to settings
             UpdateControlsVisibility();
+
+            // Force cleanup
+            TriggerAutoShrink();
         }
 
         /// <summary>
@@ -163,6 +167,7 @@ namespace EVEMon
             if (NetworkMonitor.IsNetworkAvailable)
             {
                 TimeCheck.CheckIsSynchronised(TimeCheckCallback);
+                Dispatcher.Schedule(TimeSpan.FromDays(1), CheckTimeSynchronization);
                 return;
             }
 
@@ -1280,8 +1285,8 @@ namespace EVEMon
             if (result != DialogResult.OK)
                 return;
 
-            // Close any open associated windows
-            CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
+            // Close any open character associated windows
+            WindowsFactory.CloseAllTagged();
 
             // Clear any notifications
             ClearNotifications();
@@ -1332,8 +1337,8 @@ namespace EVEMon
             if (dr != DialogResult.Yes)
                 return;
 
-            // Close any open associated windows
-            CloseOpenWindowsOf(EveMonClient.MonitoredCharacters);
+            // Close any open character associated windows
+            WindowsFactory.CloseAllTagged();
 
             // Clear any notifications
             ClearNotifications();
@@ -1637,39 +1642,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void tsShowOwnedSkillbooks_Click(object sender, EventArgs e)
         {
-            Character character = GetCurrentCharacter();
-            if (character == null)
-                return;
-
-            // Collect the owned skillbooks and sort them by name
-            SortedList<string, bool> sortedSkills = new SortedList<string, bool>();
-            foreach (Skill skill in character.Skills.Where(skill => skill.IsOwned && !skill.IsKnown))
-            {
-                sortedSkills.Add(skill.Name, skill.ArePrerequisitesMet);
-            }
-
-            // Build a string representation of the list
-            bool firstSkill = true;
-            StringBuilder sb = new StringBuilder();
-            foreach (string skillName in sortedSkills.Keys)
-            {
-                if (!firstSkill)
-                    sb.Append("\n");
-
-                firstSkill = false;
-
-                sb.AppendFormat(CultureConstants.DefaultCulture, "{0} {1}", skillName,
-                                sortedSkills[skillName] ? " (prereqs met)" : " (prereqs not met)");
-            }
-
-            // Prints the message box
-            if (firstSkill)
-                sb.Append("You don't have any skill books marked as \"Owned\".");
-
-            MessageBox.Show(sb.ToString(),
-                            String.Format(CultureConstants.DefaultCulture, "Skill books owned by {0}", character.Name),
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+            WindowsFactory.ShowByTag<OwnedSkillBooksWindow, Character>(GetCurrentCharacter());
         }
 
         /// <summary>
@@ -1783,18 +1756,6 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Closes any open windows of the specified characters.
-        /// </summary>
-        /// <param name="monitoredCharacters">The monitored characters.</param>
-        private static void CloseOpenWindowsOf(IEnumerable<Character> monitoredCharacters)
-        {
-            foreach (Character character in monitoredCharacters)
-            {
-                CloseOpenWindowsOf(character);
-            }
-        }
-
-        /// <summary>
         /// Closes any open windows of the specified character.
         /// </summary>
         /// <param name="character">The character.</param>
@@ -1803,21 +1764,47 @@ namespace EVEMon
             // Close any open Skill Planner window
             foreach (Plan plan in character.Plans)
             {
-                PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(plan);
-
-                if (planWindow != null)
-                    WindowsFactory.CloseByTag(planWindow, plan);
+                WindowsFactory.GetAndCloseByTag<PlanWindow, Plan>(plan);
             }
 
             // Close any open Skill Pie Chart window
-            SkillsPieChart skillsPieChart = WindowsFactory.GetByTag<SkillsPieChart, Character>(character);
-            if (skillsPieChart != null)
-                WindowsFactory.CloseByTag(skillsPieChart, character);
+            WindowsFactory.GetAndCloseByTag<SkillsPieChart, Character>(character);
 
             // Close any open Implant Groups window
-            ImplantSetsWindow implantSetsWindow = WindowsFactory.GetByTag<ImplantSetsWindow, Character>(character);
-            if (implantSetsWindow != null)
-                WindowsFactory.CloseByTag(implantSetsWindow, character);
+            WindowsFactory.GetAndCloseByTag<ImplantSetsWindow, Character>(character);
+
+            // Now CCP character related windows
+            CCPCharacter ccpCharacter = character as CCPCharacter;
+
+            if (ccpCharacter == null)
+                return;
+
+            // Close any open Wallet Journal Chart window
+            WindowsFactory.GetAndCloseByTag<WalletJournalChartWindow, CCPCharacter>(ccpCharacter);
+
+            // Close any open EVE Mail window
+            foreach (EveMailMessage mailMessage in ccpCharacter.EVEMailMessages)
+            {
+                WindowsFactory.GetAndCloseByTag<EveMessageWindow, EveMailMessage>(mailMessage);
+            }
+
+            // Close any open EVE Notification window
+            foreach (EveNotification eveNotification in ccpCharacter.EVENotifications)
+            {
+                WindowsFactory.GetAndCloseByTag<EveMessageWindow, EveNotification>(eveNotification);
+            }
+
+            // Close any open Contract Details window
+            foreach (Contract contract in ccpCharacter.Contracts)
+            {
+                WindowsFactory.GetAndCloseByTag<ContractDetailsWindow, Contract>(contract);
+            }
+
+            // Close any open Kill Report window
+            foreach (KillLog killLog in ccpCharacter.KillLog)
+            {
+                WindowsFactory.GetAndCloseByTag<KillReportWindow, KillLog>(killLog);
+            }
         }
 
         /// <summary>
@@ -1873,7 +1860,7 @@ namespace EVEMon
                 return;
 
             // Set the mouse clicked flag
-            m_mouseClicked = true;
+            m_isMouseClicked = true;
 
             // Update the tray icon's visibility
             HidePopup();
@@ -1891,9 +1878,9 @@ namespace EVEMon
         private void trayIcon_MouseHover(object sender, EventArgs e)
         {
             // When clicking on the tray icon we need to prevent the popup showing due to pending hovering event
-            if (m_mouseClicked)
+            if (m_isMouseClicked)
             {
-                m_mouseClicked = false;
+                m_isMouseClicked = false;
                 return;
             }
 
@@ -2097,6 +2084,11 @@ namespace EVEMon
 
             m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
             EveMonClient.EVEServer.ForceUpdate();
+
+            foreach (APIKey apiKey in EveMonClient.APIKeys)
+            {
+                apiKey.ForceUpdate();
+            }
 
             foreach (CCPCharacter character in EveMonClient.MonitoredCharacters.OfType<CCPCharacter>())
             {

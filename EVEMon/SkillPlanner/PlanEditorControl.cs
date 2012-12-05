@@ -14,6 +14,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
+using EVEMon.NotificationWindow;
 
 namespace EVEMon.SkillPlanner
 {
@@ -223,16 +224,6 @@ namespace EVEMon.SkillPlanner
         public long NotKnownSkillBooksCost
         {
             get { return SelectedEntries.GetNotKnownSkillBooksCost(); }
-        }
-
-        /// <summary>
-        /// Gets the skill select control.
-        /// </summary>
-        /// <value>The skill select control.</value>
-        [Browsable(false)]
-        public Control SkillSelectControl
-        {
-            get { return skillSelectControl; }
         }
 
         #endregion
@@ -921,6 +912,23 @@ namespace EVEMon.SkillPlanner
 
 
         #region Generic helper methods
+
+        /// <summary>
+        /// Updates the plan editor's skill selection control.
+        /// </summary>
+        internal void UpdatePlanEditorSkillSelection()
+        {
+            skillSelectControl.UpdateContent();
+        }
+
+        /// <summary>
+        /// Sets the plan editor's skill selection control selected skill.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        internal void SetPlanEditorSkillSelectorSelectedSkill(Skill skill)
+        {
+            skillSelectControl.SelectedSkill = skill;
+        }
 
         /// <summary>
         /// From an entry of the display plan, retrieve the entry of the base plan.
@@ -1755,6 +1763,14 @@ namespace EVEMon.SkillPlanner
                 return;
 
             planWindow.UpdateSkillBrowser();
+
+            // Update the Owned Skill books window if open
+            OwnedSkillBooksWindow ownedSkillBooksWindow =
+                WindowsFactory.GetByTag<OwnedSkillBooksWindow, Character>((Character)m_plan.Character);
+            if (ownedSkillBooksWindow == null || ownedSkillBooksWindow.IsDisposed)
+                return;
+
+            ownedSkillBooksWindow.UpdateList();
         }
 
         /// <summary>

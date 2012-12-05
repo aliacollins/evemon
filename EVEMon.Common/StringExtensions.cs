@@ -156,6 +156,40 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Convert an Double number to string with the specified decimals.
+        /// </summary>
+        /// <param name="number">The number.</param>
+        /// <param name="decimals">The decimals.</param>
+        /// <returns></returns>
+        public static string ToNumericString(this double number, int decimals)
+        {
+            string decimalsString = String.Format(CultureConstants.DefaultCulture, "N{0}", decimals);
+            return number.ToString(decimalsString, CultureConstants.DefaultCulture);
+        }
+
+        /// <summary>
+        /// Convert an Single number to string with the specified decimals.
+        /// </summary>
+        /// <param name="number">The number.</param>
+        /// <param name="decimals">The decimals.</param>
+        /// <returns></returns>
+        public static string ToNumericString(this float number, int decimals)
+        {
+            return ToNumericString(Convert.ToDouble(number), decimals);
+        }
+
+        /// <summary>
+        /// Convert an Decimal number to string with the specified decimals.
+        /// </summary>
+        /// <param name="number">The number.</param>
+        /// <param name="decimals">The decimals.</param>
+        /// <returns></returns>
+        public static string ToNumericString(this decimal number, int decimals)
+        {
+            return ToNumericString(Convert.ToDouble(number), decimals);
+        }
+
+        /// <summary>
         /// Remove line feeds and some other characters to format the string.
         /// </summary>
         /// <param name="text"></param>

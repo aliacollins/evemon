@@ -15,48 +15,56 @@ namespace EVEMon.Common.SettingsObjects
         [Description("Quantity")]
         Quantity = 1,
 
+        [Header("Unit Price")]
+        [Description("Unit Price")]
+        UnitaryPrice = 2,
+
+        [Header("Total Price")]
+        [Description("Total Price")]
+        TotalPrice = 3,
+
         [Header("Volume (m³)")]
         [Description("Total Volume")]
-        Volume = 2,
+        Volume = 4,
 
         [Header("Blueprint type")]
         [Description("Blueprint Type (Original or Copy)")]
-        BlueprintType = 3,
+        BlueprintType = 5,
 
         [Header("Group")]
         [Description("Item Group")]
-        Group = 4,
+        Group = 6,
 
         [Header("Category")]
         [Description("Item Category")]
-        Category = 5,
+        Category = 7,
 
         [Header("Container")]
         [Description("Container (Containing the item)")]
-        Container = 6,
+        Container = 8,
 
         [Header("Flag")]
         [Description("Item Flag")]
-        Flag = 7,
+        Flag = 9,
 
         [Header("Location")]
         [Description("Location (Station or Solar System)")]
-        Location = 8,
+        Location = 10,
 
         [Header("Region")]
         [Description("Location (Region)")]
-        Region = 9,
+        Region = 11,
 
         [Header("System")]
         [Description("Location (Solar System)")]
-        SolarSystem = 10,
+        SolarSystem = 12,
 
         [Header("Path")]
         [Description("Location (Full)")]
-        FullLocation = 11,
+        FullLocation = 13,
 
         [Header("Jumps")]
         [Description("Jumps (From character's last known location)")]
-        Jumps = 12
+        Jumps = 14
     }
 }

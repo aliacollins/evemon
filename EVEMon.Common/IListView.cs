@@ -6,6 +6,14 @@ namespace EVEMon.Common
 {
     public interface IListView
     {
+        /// <summary>
+        /// Gets or sets the text filter.
+        /// </summary>
+        /// <value>
+        /// The text filter.
+        /// </value>
+        string TextFilter { get; set; }
+
         /// <summary> 
         /// Gets or sets the grouping of a listview. 
         /// </summary> 

@@ -21,7 +21,7 @@ namespace EVEMon.Common
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable contacts from the API.</param>
-        public void Import(IEnumerable<SerializableContactListItem> src)
+        internal void Import(IEnumerable<SerializableContactListItem> src)
         {
             Items.Clear();
 

@@ -262,7 +262,7 @@ namespace EVEMon.Common
                 LastStateChange = DateTime.UtcNow;
 
                 // Should we notify it to the user ?
-                if ((state == OrderState.Expired || state == OrderState.Fulfilled))
+                if (state == OrderState.Expired || state == OrderState.Fulfilled)
                     endedOrders.Add(this);
             }
 

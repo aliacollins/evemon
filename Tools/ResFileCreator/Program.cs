@@ -25,9 +25,9 @@ namespace EVEMon.ResFileCreator
         [STAThread]
         private static void Main()
         {
-            Directory.SetCurrentDirectory(@"..\..\..\..");
+            Directory.SetCurrentDirectory(@"..\..\..\..\..");
 
-            s_assemblyInfoFilePath = Path.GetFullPath(@"..\EVEMon\Properties\AssemblyInfo.cs");
+            s_assemblyInfoFilePath = Path.GetFullPath(@"EVEMon\Properties\AssemblyInfo.cs");
 
             s_rcexe = FindRcExe();
             if (String.IsNullOrEmpty(s_rcexe))
@@ -68,7 +68,8 @@ namespace EVEMon.ResFileCreator
             int index = s_assemblyInfoFileContent.IndexOf(key, StringComparison.InvariantCulture) + key.Length;
             string substring = s_assemblyInfoFileContent.Substring(index);
             int length = substring.IndexOf(")", StringComparison.InvariantCulture) - 1;
-            string value = s_assemblyInfoFileContent.Substring(index, length).Replace("(\"", String.Empty).Replace("\")", String.Empty);
+            string value = s_assemblyInfoFileContent.Substring(index, length).Replace("(\"", String.Empty).Replace("\")",
+                                                                                                                   String.Empty);
             return value;
         }
 
@@ -78,7 +79,7 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static bool GenerateRcFile()
         {
-            s_filePath = Path.GetFullPath(String.Format(@"..\EVEMon\{0}.rc", s_dictionary["AssemblyTitle"]));
+            s_filePath = Path.GetFullPath(String.Format(@"EVEMon\{0}.rc", s_dictionary["AssemblyTitle"]));
 
             StringBuilder sb = new StringBuilder();
 
@@ -152,11 +153,13 @@ namespace EVEMon.ResFileCreator
         /// <param name="sb">The sb.</param>
         private static void AddManifest(StringBuilder sb)
         {
-            if (!File.Exists(@"..\EVEMon\app.manifest"))
+            const string ManifestFile = @"EVEMon\\app.manifest";
+
+            if (!File.Exists(ManifestFile))
                 return;
 
             sb.AppendLine("// Manifest");
-            sb.AppendLine("1 24 \"app.manifest\"");
+            sb.AppendFormat("1 24 \"{0}\"", ManifestFile);
             sb.AppendLine();
         }
 
@@ -166,8 +169,9 @@ namespace EVEMon.ResFileCreator
         /// <param name="sb">The sb.</param>
         private static void AddIcons(StringBuilder sb)
         {
-            const string IconsDir = @"..\EVEMon.Common\Resources\Icons";
+            const string IconsDir = @"EVEMon.Common\Resources\Icons";
             List<string> iconFilesPath = new List<string>();
+
             if (Directory.Exists(IconsDir))
                 iconFilesPath = Directory.GetFiles(IconsDir, "*.ico", SearchOption.AllDirectories).ToList();
 
@@ -216,7 +220,7 @@ namespace EVEMon.ResFileCreator
                 exitCode = makeResProcess.ExitCode;
             }
 
-            Console.WriteLine(exitCode == 1 ? "RC exited with errors." : "Resource file compiled successfully.");
+            Console.WriteLine(exitCode != 0 ? "RC exited with errors." : "Resource file compiled successfully.");
         }
 
         /// <summary>
@@ -225,12 +229,22 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static string FindRcExe()
         {
-            string[] locations = new string[4];
+            string[] locations = new[]
+                                     {
+                                         String.Format(CultureInfo.InvariantCulture,
+                                                       @"{0}\Microsoft SDKs\Windows\v7.0A\Bin\RC.exe", s_programFilesDir),
+                                         String.Format(CultureInfo.InvariantCulture,
+                                                       @"{0}\Microsoft SDKs\Windows\v7.0A\Bin\RC.exe", s_programFilesX86Dir),
+                                         String.Format(CultureInfo.InvariantCulture, @"{0}\Microsoft SDKs\Windows\v7.1\Bin\RC.exe",
+                                                       s_programFilesDir),
+                                         String.Format(CultureInfo.InvariantCulture, @"{0}\Microsoft SDKs\Windows\v7.1\Bin\RC.exe",
+                                                       s_programFilesX86Dir),
+                                         // Possible location in TeamCity server
+                                         @"F:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\RC.exe",
+                                         // Possible location in TeamCity server
+                                         @"F:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Bin\RC.exe"
+                                     };
 
-            locations[0] = String.Format(CultureInfo.InvariantCulture, "{0}\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\RC.exe", s_programFilesDir);
-            locations[1] = String.Format(CultureInfo.InvariantCulture, "{0}\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\RC.exe", s_programFilesX86Dir);
-            locations[2] = @"F:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\RC.exe"; // Possible location in TeamCity server
-            locations[3] = @"F:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Bin\RC.exe"; // Possible location in TeamCity server
             foreach (string path in locations.Where(File.Exists))
             {
                 return path;

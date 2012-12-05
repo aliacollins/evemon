@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -24,8 +23,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the list of completed skills.
         /// </summary> 
-        [Browsable(false)]
-        public SkillCompletionNotificationEventArgs Notification
+        internal SkillCompletionNotificationEventArgs Notification
         {
             get { return m_notification; }
             set

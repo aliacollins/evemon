@@ -47,7 +47,7 @@ namespace EVEMon.SettingsUI
             PortNumericUpDown.Value = newLocalhost.Url.Port;
             PathTextBox.Text = newLocalhost.Url.AbsolutePath;
 
-            if (PathTextBox.Text.StartsWith(Path.AltDirectorySeparatorChar.ToString()))
+            if (PathTextBox.Text.StartsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase))
                 PathTextBox.Text = PathTextBox.Text.Remove(0, 1);
         }
 
@@ -67,10 +67,11 @@ namespace EVEMon.SettingsUI
             if (!ValidateChildren())
                 return;
 
-            if (PathTextBox.Text.StartsWith(Path.AltDirectorySeparatorChar.ToString()))
+            if (PathTextBox.Text.StartsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase))
                 PathTextBox.Text = PathTextBox.Text.Remove(0, 1);
             m_newLocalhost.Name = LocalhostNameTextBox.Text;
-            m_newLocalhost.Url = new Uri(String.Format("http://127.0.0.1:{0}/{1}", PortNumericUpDown.Value, PathTextBox.Text));
+            m_newLocalhost.Url = new Uri(String.Format(CultureConstants.InvariantCulture, "http://127.0.0.1:{0}/{1}",
+                                                       PortNumericUpDown.Value, PathTextBox.Text));
 
             DialogResult = DialogResult.OK;
         }

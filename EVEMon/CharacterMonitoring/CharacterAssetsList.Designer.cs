@@ -40,7 +40,11 @@
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
+            this.noPricesFoundLabel = new System.Windows.Forms.Label();
+            this.lblTotalCost = new System.Windows.Forms.Label();
+            this.estimatedCostFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.contextMenu.SuspendLayout();
+            this.estimatedCostFlowLayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // noAssetsLabel
@@ -49,7 +53,7 @@
             this.noAssetsLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.noAssetsLabel.Location = new System.Drawing.Point(0, 0);
             this.noAssetsLabel.Name = "noAssetsLabel";
-            this.noAssetsLabel.Size = new System.Drawing.Size(454, 434);
+            this.noAssetsLabel.Size = new System.Drawing.Size(454, 404);
             this.noAssetsLabel.TabIndex = 3;
             this.noAssetsLabel.Text = "No assets are available.";
             this.noAssetsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -69,7 +73,7 @@
             this.lvAssets.HideSelection = false;
             this.lvAssets.Location = new System.Drawing.Point(0, 0);
             this.lvAssets.Name = "lvAssets";
-            this.lvAssets.Size = new System.Drawing.Size(454, 434);
+            this.lvAssets.Size = new System.Drawing.Size(454, 404);
             this.lvAssets.SmallImageList = this.ilIcons;
             this.lvAssets.TabIndex = 3;
             this.lvAssets.UseCompatibleStateImageBehavior = false;
@@ -104,7 +108,7 @@
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportToCSVToolStripMenuItem});
             this.contextMenu.Name = "ItemAttributeContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(155, 48);
+            this.contextMenu.Size = new System.Drawing.Size(155, 26);
             // 
             // exportToCSVToolStripMenuItem
             // 
@@ -121,6 +125,38 @@
             this.ilIcons.Images.SetKeyName(1, "arrow_down.png");
             this.ilIcons.Images.SetKeyName(2, "16x16Transparant.png");
             // 
+            // noPricesFoundLabel
+            // 
+            this.noPricesFoundLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.noPricesFoundLabel.AutoSize = true;
+            this.noPricesFoundLabel.ForeColor = System.Drawing.Color.DarkRed;
+            this.noPricesFoundLabel.Location = new System.Drawing.Point(216, 8);
+            this.noPricesFoundLabel.Name = "noPricesFoundLabel";
+            this.noPricesFoundLabel.Size = new System.Drawing.Size(208, 13);
+            this.noPricesFoundLabel.TabIndex = 1;
+            this.noPricesFoundLabel.Text = "* Prices for some items could not be found.";
+            // 
+            // lblTotalCost
+            // 
+            this.lblTotalCost.AutoSize = true;
+            this.lblTotalCost.Location = new System.Drawing.Point(3, 8);
+            this.lblTotalCost.Name = "lblTotalCost";
+            this.lblTotalCost.Size = new System.Drawing.Size(207, 13);
+            this.lblTotalCost.TabIndex = 0;
+            this.lblTotalCost.Text = "Estimated Cost of shown items: {0:N2} ISK";
+            // 
+            // estimatedCostFlowLayoutPanel
+            // 
+            this.estimatedCostFlowLayoutPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.estimatedCostFlowLayoutPanel.Controls.Add(this.lblTotalCost);
+            this.estimatedCostFlowLayoutPanel.Controls.Add(this.noPricesFoundLabel);
+            this.estimatedCostFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.estimatedCostFlowLayoutPanel.Location = new System.Drawing.Point(0, 404);
+            this.estimatedCostFlowLayoutPanel.Name = "estimatedCostFlowLayoutPanel";
+            this.estimatedCostFlowLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
+            this.estimatedCostFlowLayoutPanel.Size = new System.Drawing.Size(454, 30);
+            this.estimatedCostFlowLayoutPanel.TabIndex = 4;
+            // 
             // CharacterAssetsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -128,9 +164,12 @@
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvAssets);
             this.Controls.Add(this.noAssetsLabel);
+            this.Controls.Add(this.estimatedCostFlowLayoutPanel);
             this.Name = "CharacterAssetsList";
             this.Size = new System.Drawing.Size(454, 434);
             this.contextMenu.ResumeLayout(false);
+            this.estimatedCostFlowLayoutPanel.ResumeLayout(false);
+            this.estimatedCostFlowLayoutPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -147,5 +186,8 @@
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
+        private System.Windows.Forms.Label lblTotalCost;
+        private System.Windows.Forms.Label noPricesFoundLabel;
+        private System.Windows.Forms.FlowLayoutPanel estimatedCostFlowLayoutPanel;
     }
 }

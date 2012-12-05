@@ -17,7 +17,6 @@ using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.MarketUnifiedUploader;
 using Microsoft.Win32;
 
 namespace EVEMon.SettingsUI
@@ -62,10 +61,7 @@ namespace EVEMon.SettingsUI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SettingsForm_Load(object sender, EventArgs e)
-        {
-            Uploader.StatusChanged += Uploader_StatusChanged;
-            Disposed += OnDisposed;
-            
+        {          
             // Initialize members
             m_isLoading = true;
 
@@ -147,7 +143,7 @@ namespace EVEMon.SettingsUI
             proxyAuthenticationButton.Tag = m_settings.Proxy;
 
             // Updates
-            cbCheckTimeOnStartup.Checked = m_settings.Updates.CheckTimeOnStartup;
+            cbCheckTime.Checked = m_settings.Updates.CheckTimeOnStartup;
             cbCheckForUpdates.Checked = m_settings.Updates.CheckEVEMonVersion;
             updateSettingsControl.Settings = m_settings.Updates;
 
@@ -192,28 +188,6 @@ namespace EVEMon.SettingsUI
 
             // Enables / disables controls
             UpdateDisables();
-        }
-
-        /// <summary>
-        /// On dispose unsubscribe the events.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void OnDisposed(object sender, EventArgs e)
-        {
-            Uploader.StatusChanged -= Uploader_StatusChanged;
-            Disposed -= OnDisposed;
-        }
-
-        /// <summary>
-        /// Enable/Disable uploader according to its state.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        /// <remarks>A special condition so not to disable the uploader if network is unavailable.</remarks>
-        private void Uploader_StatusChanged(object sender, EventArgs e)
-        {
-            marketUnifiedUploaderCheckBox.Checked = Uploader.IsRunning;
         }
 
         /// <summary>
@@ -529,7 +503,7 @@ namespace EVEMon.SettingsUI
 
             // Updates
             m_settings.Updates.CheckEVEMonVersion = cbCheckForUpdates.Checked;
-            m_settings.Updates.CheckTimeOnStartup = cbCheckTimeOnStartup.Checked;
+            m_settings.Updates.CheckTimeOnStartup = cbCheckTime.Checked;
 
             // Scheduler colors
             m_settings.UI.Scheduler.BlockingColor = (SerializableColor)panelColorBlocking.BackColor;
@@ -590,7 +564,11 @@ namespace EVEMon.SettingsUI
         {
             cbAPIServer.Items.Clear();
             cbAPIServer.Items.Add(GlobalAPIProviderCollection.DefaultProvider.Name);
-            cbAPIServer.Items.Add(GlobalAPIProviderCollection.TestProvider.Name);
+
+            // Test Provider is only available in debug mode
+            if (EveMonClient.IsDebugBuild)
+                cbAPIServer.Items.Add(GlobalAPIProviderCollection.TestProvider.Name);
+
             foreach (SerializableAPIProvider provider in m_settings.APIProviders.CustomProviders)
             {
                 cbAPIServer.Items.Add(provider.Name);
@@ -599,7 +577,7 @@ namespace EVEMon.SettingsUI
             }
 
             if (m_settings.APIProviders.CurrentProviderName == GlobalAPIProviderCollection.TestProvider.Name)
-                cbAPIServer.SelectedIndex = 1;
+                cbAPIServer.SelectedIndex = EveMonClient.IsDebugBuild ? 1 : 0;
 
             // Selects the default API server if none selected
             if (cbAPIServer.SelectedIndex == -1)

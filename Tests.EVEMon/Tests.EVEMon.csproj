@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\CompressionUncompressionTests.cs" />
     <Compile Include="Common\TimeExtensionsTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="PathVersion.cs" />

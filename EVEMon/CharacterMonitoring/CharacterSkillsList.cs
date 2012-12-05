@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -71,13 +70,12 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public Character Character { get; set; }
+        internal Character Character { get; set; }
 
         #endregion
 
@@ -460,9 +458,8 @@ namespace EVEMon.CharacterMonitoring
             // Draws the background
             using (Brush brush = Settings.UI.SafeForWork
                                      ? new SolidBrush(Color.FromArgb(75, 75, 75))
-                                     : (Brush)
-                                       new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, 21F),
-                                                               Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
+                                     : (Brush)new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, SkillHeaderHeight),
+                                                                      Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
             {
                 g.FillRectangle(brush, e.Bounds);
             }
@@ -537,7 +534,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Gets the preferred size from the preferred size of the skills list.
+        /// Gets the preferred size from the preferred size of the list.
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>

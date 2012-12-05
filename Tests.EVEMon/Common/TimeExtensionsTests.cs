@@ -33,6 +33,14 @@ namespace Tests.EVEMon.Common
             get { return new DateTime(2010, 05, 07, 18, 23, 32); }
         }
 
+        /// <summary>
+        /// Valid dot formated date/time string.
+        /// </summary>
+        private static string ValidDotFormattedDateTimeString
+        {
+            get { return "2010.05.07 18:23:32"; }
+        }
+
         #endregion
 
 
@@ -76,6 +84,16 @@ namespace Tests.EVEMon.Common
         {
             DateTime result = String.Empty.TimeStringToDateTime();
             Assert.AreEqual(DateTime.MinValue, result);
+        }
+
+        /// <summary>
+        /// Able to convert a <c>DateTime</c> to a dot formatted date/time string.
+        /// </summary>
+        [Test]
+        public static void ConvertDateTimeToDotFormattedString()
+        {
+            string result = PointInTime.DateTimeToDotFormattedString();
+            Assert.AreEqual(ValidDotFormattedDateTimeString, result);
         }
 
         /// <summary>

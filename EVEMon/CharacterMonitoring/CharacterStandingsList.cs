@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -16,6 +15,8 @@ namespace EVEMon.CharacterMonitoring
     public partial class CharacterStandingsList : UserControl
     {
         #region Fields
+
+        private const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping | TextFormatFlags.NoPrefix;
 
         // Standings drawing - Region & text padding
         private const int PadTop = 2;
@@ -52,13 +53,12 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         #endregion
 
@@ -188,7 +188,7 @@ namespace EVEMon.CharacterMonitoring
             if (standing != null)
                 DrawItem(standing, e);
             else
-                DrawItem((String)item, e);
+                DrawItem((string)item, e);
         }
 
         /// <summary>
@@ -227,22 +227,23 @@ namespace EVEMon.CharacterMonitoring
             // Draw background
             g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
-            // Measure texts
-            const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
             Skill diplomacySkill = Character.Skills[DBConstants.DiplomacySkillID];
             Skill connectionsSkill = Character.Skills[DBConstants.ConnectionsSkillID];
             SkillLevel diplomacySkillLevel = new SkillLevel(diplomacySkill, diplomacySkill.LastConfirmedLvl);
             SkillLevel connectionsSkillLevel = new SkillLevel(connectionsSkill, connectionsSkill.LastConfirmedLvl);
 
+            // Texts
             string standingText = String.Format(CultureConstants.DefaultCulture, "{0}  {1:N2}", standing.EntityName,
                                                 standing.EffectiveStanding);
-            string standingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})", standing.Status);
+            string standingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})",
+                                                      Standing.Status(standing.EffectiveStanding));
             string standingsDetailsText = String.Format(CultureConstants.DefaultCulture,
                                                         "{0} raises your effective standing from {1:N2}",
                                                         (standing.StandingValue < 0 ? diplomacySkillLevel : connectionsSkillLevel),
                                                         standing.StandingValue);
 
+            // Measure texts
             Size standingTextSize = TextRenderer.MeasureText(g, standingText, m_standingsBoldFont, Size.Empty, Format);
             Size standingStatusTextSize = TextRenderer.MeasureText(g, standingStatusText, m_standingsBoldFont, Size.Empty, Format);
             Size standingsDetailsTextSize = TextRenderer.MeasureText(g, standingsDetailsText, m_standingsFont, Size.Empty, Format);
@@ -252,27 +253,27 @@ namespace EVEMon.CharacterMonitoring
             // Draw texts
             TextRenderer.DrawText(g, standingText, m_standingsBoldFont,
                                   new Rectangle(
-                                      e.Bounds.Left + PadLeft * 6,
+                                      e.Bounds.Left + standing.EntityImage.Width + 4,
                                       e.Bounds.Top + (standingsDiffer
                                                           ? PadTop
-                                                          : ((e.Bounds.Height - standingTextSize.Height) / 2)),
+                                                          : (e.Bounds.Height - standingTextSize.Height) / 2),
                                       standingTextSize.Width + PadLeft,
                                       standingTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, standingStatusText, m_standingsBoldFont,
                                   new Rectangle(
-                                      e.Bounds.Left + PadLeft * 6 + standingTextSize.Width + PadRight,
+                                      e.Bounds.Left + standing.EntityImage.Width + 4 + standingTextSize.Width + PadRight,
                                       e.Bounds.Top + (standingsDiffer
                                                           ? PadTop
-                                                          : ((e.Bounds.Height - standingStatusTextSize.Height) / 2)),
+                                                          : (e.Bounds.Height - standingStatusTextSize.Height) / 2),
                                       standingStatusTextSize.Width + PadLeft,
-                                      standingStatusTextSize.Height), GetStatusColor(standing.Status));
+                                      standingStatusTextSize.Height), GetStatusColor(Standing.Status(standing.EffectiveStanding)));
 
             if (standingsDiffer)
             {
                 TextRenderer.DrawText(g, standingsDetailsText, m_standingsFont,
                                       new Rectangle(
-                                          e.Bounds.Left + PadLeft * 6,
+                                          e.Bounds.Left + standing.EntityImage.Width + 4,
                                           e.Bounds.Top + PadTop + standingTextSize.Height,
                                           standingsDetailsTextSize.Width + PadLeft,
                                           standingsDetailsTextSize.Height), Color.Black);
@@ -289,11 +290,11 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Draws the list item for the given skill group.
+        /// Draws the list item for the given group.
         /// </summary>
         /// <param name="group"></param>
         /// <param name="e"></param>
-        private void DrawItem(String group, DrawItemEventArgs e)
+        private void DrawItem(string group, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
@@ -313,8 +314,6 @@ namespace EVEMon.CharacterMonitoring
             NativeMethods.SetTextCharacterSpacing(g, 4);
 
             // Measure texts
-            const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
-
             Size standingGroupTextSize = TextRenderer.MeasureText(g, group.ToUpper(CultureConstants.DefaultCulture),
                                                                   m_standingsBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
@@ -337,7 +336,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Gets the preferred size from the preferred size of the skills list.
+        /// Gets the preferred size from the preferred size of the list.
         /// </summary>
         /// <param name="proposedSize"></param>
         /// <returns></returns>
@@ -477,15 +476,15 @@ namespace EVEMon.CharacterMonitoring
             switch (status)
             {
                 case StandingStatus.Neutral:
-                    return Color.DarkGray;
+                    return Color.FromArgb(255, 178, 178, 178);
                 case StandingStatus.Terrible:
-                    return Color.Red;
+                    return Color.FromArgb(255, 191, 0, 0);
                 case StandingStatus.Bad:
-                    return Color.OrangeRed;
+                    return Color.FromArgb(255, 255, 89, 0);
                 case StandingStatus.Good:
-                    return Color.CornflowerBlue;
+                    return Color.FromArgb(255, 51, 127, 255);
                 case StandingStatus.Excellent:
-                    return Color.Blue;
+                    return Color.FromArgb(255, 0, 38, 153);
                 default:
                     throw new NotImplementedException();
             }

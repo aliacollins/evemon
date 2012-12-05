@@ -11,7 +11,7 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.NotificationWindow;
+using EVEMon.DetailsWindow;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -67,20 +67,18 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="lvContracts"/> is visible.
         /// </summary>
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
-        [Browsable(false)]
-        public bool Visibility
+        internal bool Visibility
         {
             get { return lvContracts.Visible; }
             set { lvContracts.Visible = value; }
@@ -104,9 +102,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of research points to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<Contract> Contracts
+        internal IEnumerable<Contract> Contracts
         {
             get { return m_list; }
             set
@@ -137,8 +133,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets which "Issued for" contracts to display.
         /// </summary>
-        [Browsable(false)]
-        public IssuedFor ShowIssuedFor
+        internal IssuedFor ShowIssuedFor
         {
             get { return m_showIssuedFor; }
             set
@@ -247,6 +242,8 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvContracts.Visible = false;
+
             Contracts = (Character == null ? null : Character.Contracts);
             Columns = Settings.UI.MainWindow.Contracts.Columns;
             Grouping = (Character == null ? ContractGrouping.State : Character.UISettings.ContractsGroupBy);
@@ -302,9 +299,6 @@ namespace EVEMon.CharacterMonitoring
 
                 // We update the content
                 UpdateContent();
-
-                // Adjust the size of the columns
-                AdjustColumns();
             }
             finally
             {
@@ -356,6 +350,9 @@ namespace EVEMon.CharacterMonitoring
                         lvItem.Selected = true;
                     }
                 }
+
+                // Adjust the size of the columns
+                AdjustColumns();
 
                 UpdateListVisibility();
             }
@@ -609,6 +606,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 case ContractColumn.Status:
                     item.Text = contract.Status.GetDescription();
+                    item.ForeColor = (contract.Overdue ? Color.Red : Color.Black);
                     break;
                 case ContractColumn.ContractText:
                     item.Text = contract.ContractText;
@@ -786,7 +784,7 @@ namespace EVEMon.CharacterMonitoring
             if (contract.State == ContractState.Expired)
                 format.TextColor = Color.Red;
 
-            if (contract.State == ContractState.Rejected)
+            if (contract.State == ContractState.Rejected || contract.State == ContractState.Failed)
                 format.TextColor = Color.DarkRed;
 
             if (contract.State == ContractState.Finished)
@@ -800,8 +798,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void ShowContractDetails()
         {
-            ListViewItem item = lvContracts.SelectedItems[0];
-            Contract contract = (Contract)item.Tag;
+            Contract contract = (Contract)lvContracts.SelectedItems[0].Tag;
 
             // Quit if for any reason the contract's item list is empty
             if (contract.ContractType != ContractType.Courier && !contract.ContractItems.Any())

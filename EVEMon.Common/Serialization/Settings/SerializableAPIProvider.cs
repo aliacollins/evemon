@@ -14,8 +14,12 @@ namespace EVEMon.Common.Serialization.Settings
         {
             Name = "New provider";
             Address = NetworkConstants.APIBase;
+            SupportsCompressedResponse = false;
             m_methods = new Collection<SerializableAPIMethod>();
         }
+
+        [XmlAttribute("supportsCompressedResponses")]
+        public bool SupportsCompressedResponse { get; set; }
 
         [XmlElement("name")]
         public string Name { get; set; }

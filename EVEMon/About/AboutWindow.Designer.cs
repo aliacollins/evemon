@@ -37,6 +37,7 @@ namespace EVEMon.About
             this.EVEMonLabel = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.CopyrightLabel = new System.Windows.Forms.Label();
+            this.DevelopmentTeamLabel = new System.Windows.Forms.Label();
             this.HomePageLinkLabel = new System.Windows.Forms.LinkLabel();
             this.BodyLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.leftPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -56,8 +57,6 @@ namespace EVEMon.About
             this.lironLeviLinkLabel = new System.Windows.Forms.LinkLabel();
             this.stackOverflowLinkLabel = new System.Windows.Forms.LinkLabel();
             this.forgotLabel = new System.Windows.Forms.Label();
-            this.OkButton = new System.Windows.Forms.Button();
-            this.DevelopmentTeamLabel = new System.Windows.Forms.Label();
             this.LegalLayoutPanel.SuspendLayout();
             this.HeaderLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).BeginInit();
@@ -72,19 +71,19 @@ namespace EVEMon.About
             // 
             this.LegalLayoutPanel.AutoSize = true;
             this.LegalLayoutPanel.Controls.Add(this.GplLabel);
-            this.LegalLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.LegalLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LegalLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.LegalLayoutPanel.Location = new System.Drawing.Point(0, 115);
+            this.LegalLayoutPanel.Location = new System.Drawing.Point(0, 100);
             this.LegalLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.LegalLayoutPanel.Name = "LegalLayoutPanel";
-            this.LegalLayoutPanel.Size = new System.Drawing.Size(304, 230);
+            this.LegalLayoutPanel.Size = new System.Drawing.Size(304, 221);
             this.LegalLayoutPanel.TabIndex = 10;
             // 
             // GplLabel
             // 
             this.GplLabel.AutoSize = true;
             this.GplLabel.Location = new System.Drawing.Point(3, 9);
-            this.GplLabel.Margin = new System.Windows.Forms.Padding(3, 9, 3, 39);
+            this.GplLabel.Margin = new System.Windows.Forms.Padding(3, 9, 3, 30);
             this.GplLabel.Name = "GplLabel";
             this.GplLabel.Size = new System.Drawing.Size(298, 182);
             this.GplLabel.TabIndex = 6;
@@ -95,16 +94,17 @@ namespace EVEMon.About
             this.HeaderLayoutPanel.AutoSize = true;
             this.HeaderLayoutPanel.Controls.Add(this.LogoPictureBox);
             this.HeaderLayoutPanel.Controls.Add(this.VerCopyLayoutPanel);
-            this.HeaderLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.HeaderLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.HeaderLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.HeaderLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderLayoutPanel.Name = "HeaderLayoutPanel";
-            this.HeaderLayoutPanel.Size = new System.Drawing.Size(263, 115);
+            this.HeaderLayoutPanel.Size = new System.Drawing.Size(263, 100);
             this.HeaderLayoutPanel.TabIndex = 0;
             this.HeaderLayoutPanel.WrapContents = false;
             // 
             // LogoPictureBox
             // 
+            this.LogoPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.LogoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("LogoPictureBox.Image")));
             this.LogoPictureBox.Location = new System.Drawing.Point(0, 0);
             this.LogoPictureBox.Margin = new System.Windows.Forms.Padding(0);
@@ -122,19 +122,20 @@ namespace EVEMon.About
             this.VerCopyLayoutPanel.Controls.Add(this.CopyrightLabel);
             this.VerCopyLayoutPanel.Controls.Add(this.DevelopmentTeamLabel);
             this.VerCopyLayoutPanel.Controls.Add(this.HomePageLinkLabel);
+            this.VerCopyLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.VerCopyLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.VerCopyLayoutPanel.Location = new System.Drawing.Point(100, 0);
             this.VerCopyLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.VerCopyLayoutPanel.Name = "VerCopyLayoutPanel";
-            this.VerCopyLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 25, 0, 25);
-            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(163, 115);
+            this.VerCopyLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 17, 0, 0);
+            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(163, 100);
             this.VerCopyLayoutPanel.TabIndex = 8;
             this.VerCopyLayoutPanel.WrapContents = false;
             // 
             // EVEMonLabel
             // 
             this.EVEMonLabel.AutoSize = true;
-            this.EVEMonLabel.Location = new System.Drawing.Point(3, 25);
+            this.EVEMonLabel.Location = new System.Drawing.Point(3, 17);
             this.EVEMonLabel.Name = "EVEMonLabel";
             this.EVEMonLabel.Size = new System.Drawing.Size(49, 13);
             this.EVEMonLabel.TabIndex = 0;
@@ -143,7 +144,7 @@ namespace EVEMon.About
             // VersionLabel
             // 
             this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(3, 38);
+            this.VersionLabel.Location = new System.Drawing.Point(3, 30);
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(59, 13);
             this.VersionLabel.TabIndex = 1;
@@ -152,16 +153,25 @@ namespace EVEMon.About
             // CopyrightLabel
             // 
             this.CopyrightLabel.AutoSize = true;
-            this.CopyrightLabel.Location = new System.Drawing.Point(3, 51);
+            this.CopyrightLabel.Location = new System.Drawing.Point(3, 43);
             this.CopyrightLabel.Name = "CopyrightLabel";
             this.CopyrightLabel.Size = new System.Drawing.Size(107, 13);
             this.CopyrightLabel.TabIndex = 5;
             this.CopyrightLabel.Text = "Copyright © 2006-{0}";
             // 
+            // DevelopmentTeamLabel
+            // 
+            this.DevelopmentTeamLabel.AutoSize = true;
+            this.DevelopmentTeamLabel.Location = new System.Drawing.Point(3, 56);
+            this.DevelopmentTeamLabel.Name = "DevelopmentTeamLabel";
+            this.DevelopmentTeamLabel.Size = new System.Drawing.Size(145, 13);
+            this.DevelopmentTeamLabel.TabIndex = 6;
+            this.DevelopmentTeamLabel.Text = "EVEMon Development Team";
+            // 
             // HomePageLinkLabel
             // 
             this.HomePageLinkLabel.AutoSize = true;
-            this.HomePageLinkLabel.Location = new System.Drawing.Point(3, 77);
+            this.HomePageLinkLabel.Location = new System.Drawing.Point(3, 69);
             this.HomePageLinkLabel.Name = "HomePageLinkLabel";
             this.HomePageLinkLabel.Size = new System.Drawing.Size(157, 13);
             this.HomePageLinkLabel.TabIndex = 0;
@@ -171,25 +181,24 @@ namespace EVEMon.About
             // 
             // BodyLayoutPanel
             // 
-            this.BodyLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.BodyLayoutPanel.AutoSize = true;
             this.BodyLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BodyLayoutPanel.ColumnCount = 3;
             this.BodyLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.BodyLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.BodyLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.BodyLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.1236F));
+            this.BodyLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.8764F));
             this.BodyLayoutPanel.Controls.Add(this.leftPanel, 0, 0);
             this.BodyLayoutPanel.Controls.Add(this.DevContribLabel, 1, 0);
             this.BodyLayoutPanel.Controls.Add(this.devsList, 1, 1);
             this.BodyLayoutPanel.Controls.Add(this.CredentialsLabels, 2, 0);
             this.BodyLayoutPanel.Controls.Add(this.flowLayoutPanel1, 2, 1);
-            this.BodyLayoutPanel.Location = new System.Drawing.Point(12, 12);
+            this.BodyLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BodyLayoutPanel.Location = new System.Drawing.Point(9, 9);
             this.BodyLayoutPanel.Name = "BodyLayoutPanel";
             this.BodyLayoutPanel.RowCount = 2;
             this.BodyLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.BodyLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.BodyLayoutPanel.Size = new System.Drawing.Size(755, 399);
+            this.BodyLayoutPanel.Size = new System.Drawing.Size(764, 394);
             this.BodyLayoutPanel.TabIndex = 11;
             // 
             // leftPanel
@@ -201,7 +210,7 @@ namespace EVEMon.About
             this.leftPanel.Location = new System.Drawing.Point(3, 3);
             this.leftPanel.Name = "leftPanel";
             this.BodyLayoutPanel.SetRowSpan(this.leftPanel, 2);
-            this.leftPanel.Size = new System.Drawing.Size(304, 393);
+            this.leftPanel.Size = new System.Drawing.Size(304, 388);
             this.leftPanel.TabIndex = 7;
             // 
             // AuthorsLayoutPanel
@@ -210,9 +219,9 @@ namespace EVEMon.About
             this.AuthorsLayoutPanel.Controls.Add(this.CreatedByLabel);
             this.AuthorsLayoutPanel.Controls.Add(this.ContinuedByLabel);
             this.AuthorsLayoutPanel.Controls.Add(this.DonationsLabel);
-            this.AuthorsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.AuthorsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AuthorsLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.AuthorsLayoutPanel.Location = new System.Drawing.Point(0, 345);
+            this.AuthorsLayoutPanel.Location = new System.Drawing.Point(0, 321);
             this.AuthorsLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.AuthorsLayoutPanel.Name = "AuthorsLayoutPanel";
             this.AuthorsLayoutPanel.Size = new System.Drawing.Size(285, 39);
@@ -266,7 +275,7 @@ namespace EVEMon.About
             this.devsList.Location = new System.Drawing.Point(313, 16);
             this.devsList.MultiSelect = false;
             this.devsList.Name = "devsList";
-            this.devsList.Size = new System.Drawing.Size(172, 380);
+            this.devsList.Size = new System.Drawing.Size(180, 375);
             this.devsList.TabIndex = 9;
             this.devsList.UseCompatibleStateImageBehavior = false;
             this.devsList.View = System.Windows.Forms.View.Details;
@@ -274,7 +283,7 @@ namespace EVEMon.About
             // CredentialsLabels
             // 
             this.CredentialsLabels.AutoSize = true;
-            this.CredentialsLabels.Location = new System.Drawing.Point(491, 0);
+            this.CredentialsLabels.Location = new System.Drawing.Point(499, 0);
             this.CredentialsLabels.Name = "CredentialsLabels";
             this.CredentialsLabels.Size = new System.Drawing.Size(183, 13);
             this.CredentialsLabels.TabIndex = 10;
@@ -292,9 +301,9 @@ namespace EVEMon.About
             this.flowLayoutPanel1.Controls.Add(this.forgotLabel);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(491, 16);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(499, 16);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(261, 380);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(262, 375);
             this.flowLayoutPanel1.TabIndex = 11;
             // 
             // ccpGamesLinkLabel
@@ -401,37 +410,14 @@ namespace EVEMon.About
     "lp us deal with users, all the people who reported bugs to the BC forums and the" +
     " ones who dared to test our betas.";
             // 
-            // OkButton
-            // 
-            this.OkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OkButton.Location = new System.Drawing.Point(692, 420);
-            this.OkButton.Margin = new System.Windows.Forms.Padding(6);
-            this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(75, 23);
-            this.OkButton.TabIndex = 0;
-            this.OkButton.Text = "OK";
-            this.OkButton.UseVisualStyleBackColor = true;
-            this.OkButton.Click += new System.EventHandler(this.btnOk_Click);
-            // 
-            // DevelopmentTeamLabel
-            // 
-            this.DevelopmentTeamLabel.AutoSize = true;
-            this.DevelopmentTeamLabel.Location = new System.Drawing.Point(3, 64);
-            this.DevelopmentTeamLabel.Name = "DevelopmentTeamLabel";
-            this.DevelopmentTeamLabel.Size = new System.Drawing.Size(145, 13);
-            this.DevelopmentTeamLabel.TabIndex = 6;
-            this.DevelopmentTeamLabel.Text = "EVEMon Development Team";
-            // 
             // AboutWindow
             // 
-            this.AcceptButton = this.OkButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(782, 458);
-            this.Controls.Add(this.OkButton);
+            this.ClientSize = new System.Drawing.Size(782, 412);
             this.Controls.Add(this.BodyLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -457,6 +443,7 @@ namespace EVEMon.About
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -476,7 +463,6 @@ namespace EVEMon.About
         private System.Windows.Forms.Label CreatedByLabel;
         private System.Windows.Forms.Label ContinuedByLabel;
         private System.Windows.Forms.Label DonationsLabel;
-        private System.Windows.Forms.Button OkButton;
         private System.Windows.Forms.FlowLayoutPanel leftPanel;
         private System.Windows.Forms.Label DevContribLabel;
         private System.Windows.Forms.ListView devsList;

@@ -13,7 +13,10 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPISkillQueue> m_skillQueueMonitor;
         private readonly CharacterQueryMonitor<SerializableAPICharacterSheet> m_charSheetMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIStandings> m_charStandingsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIContactList> m_charContactsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIFactionalWarfareStats> m_charFacWarStatsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIMedals> m_charMedalsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIKillLog> m_charKillLogMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIAssetList> m_charAssetsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIResearch> m_charResearchPointsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMarketOrders> m_charMarketOrdersMonitor;
@@ -23,10 +26,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIIndustryJobs> m_charIndustryJobsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIContactList> m_charContactsMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIMedals> m_charMedalsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents> m_charUpcomingCalendarEventsMonitor;
-        private readonly CharacterQueryMonitor<SerializableAPIKillLog> m_charKillLogMonitor;
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
         private readonly CCPCharacter m_ccpCharacter;
@@ -49,92 +49,74 @@ namespace EVEMon.Common
             m_charSheetMonitor =
                 new CharacterQueryMonitor<SerializableAPICharacterSheet>(ccpCharacter, APICharacterMethods.CharacterSheet,
                                                                          OnCharacterSheetUpdated);
-            m_characterQueryMonitors.Add(m_charSheetMonitor);
-
             m_skillQueueMonitor =
                 new CharacterQueryMonitor<SerializableAPISkillQueue>(ccpCharacter, APICharacterMethods.SkillQueue,
                                                                      OnSkillQueueUpdated);
-            m_characterQueryMonitors.Add(m_skillQueueMonitor);
-
             m_charStandingsMonitor =
                 new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings,
                                                                     OnStandingsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charStandingsMonitor);
-
+            m_charContactsMonitor =
+                new CharacterQueryMonitor<SerializableAPIContactList>(ccpCharacter, APICharacterMethods.ContactList,
+                                                                      OnContactsUpdated) { QueryOnStartup = true };
             m_charFacWarStatsMonitor =
                 new CharacterQueryMonitor<SerializableAPIFactionalWarfareStats>(ccpCharacter,
                                                                                 APICharacterMethods.FactionalWarfareStats,
                                                                                 OnFactionalWarfareStatsUpdated)
                     { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charFacWarStatsMonitor);
-
+            m_charMedalsMonitor =
+                new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, APICharacterMethods.Medals,
+                                                                 OnMedalsUpdated) { QueryOnStartup = true };
+            m_charKillLogMonitor =
+                new CharacterQueryMonitor<SerializableAPIKillLog>(ccpCharacter, APICharacterMethods.KillLog,
+                                                                  OnKillLogUpdated) { QueryOnStartup = true };
             m_charAssetsMonitor =
                 new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
                                                                     OnAssetsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charAssetsMonitor);
-
             m_charMarketOrdersMonitor =
                 new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,
                                                                        OnMarketOrdersUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charMarketOrdersMonitor);
-
             m_charContractsMonitor =
                 new CharacterQueryMonitor<SerializableAPIContracts>(ccpCharacter, APICharacterMethods.Contracts,
                                                                     OnContractsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charContractsMonitor);
-
             m_charWalletJournalMonitor =
                 new CharacterQueryMonitor<SerializableAPIWalletJournal>(ccpCharacter, APICharacterMethods.WalletJournal,
                                                                         OnWalletJournalUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charWalletJournalMonitor);
-
             m_charWalletTransactionsMonitor =
                 new CharacterQueryMonitor<SerializableAPIWalletTransactions>(ccpCharacter, APICharacterMethods.WalletTransactions,
                                                                              OnWalletTransactionsUpdated)
                     { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charWalletTransactionsMonitor);
-
             m_charIndustryJobsMonitor =
                 new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, APICharacterMethods.IndustryJobs,
                                                                        OnIndustryJobsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charIndustryJobsMonitor);
-
             m_charResearchPointsMonitor =
                 new CharacterQueryMonitor<SerializableAPIResearch>(ccpCharacter, APICharacterMethods.ResearchPoints,
                                                                    OnResearchPointsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charResearchPointsMonitor);
-
             m_charEVEMailMessagesMonitor =
                 new CharacterQueryMonitor<SerializableAPIMailMessages>(ccpCharacter, APICharacterMethods.MailMessages,
                                                                        OnEVEMailMessagesUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charEVEMailMessagesMonitor);
-
             m_charEVENotificationsMonitor =
                 new CharacterQueryMonitor<SerializableAPINotifications>(ccpCharacter, APICharacterMethods.Notifications,
                                                                         OnEVENotificationsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charEVENotificationsMonitor);
-
-            m_charContactsMonitor =
-                new CharacterQueryMonitor<SerializableAPIContactList>(ccpCharacter, APICharacterMethods.ContactList,
-                                                                      OnContactsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charContactsMonitor);
-
-            m_charMedalsMonitor =
-                new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, APICharacterMethods.Medals,
-                                                                 OnMedalsUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charMedalsMonitor);
-
             m_charUpcomingCalendarEventsMonitor =
                 new CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents>(ccpCharacter,
                                                                                  APICharacterMethods.UpcomingCalendarEvents,
                                                                                  OnUpcomingCalendarEventsUpdated)
                     { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charUpcomingCalendarEventsMonitor);
 
-            m_charKillLogMonitor =
-                new CharacterQueryMonitor<SerializableAPIKillLog>(ccpCharacter, APICharacterMethods.KillLog,
-                                                                  OnKillLogUpdated) { QueryOnStartup = true };
-            m_characterQueryMonitors.Add(m_charKillLogMonitor);
+            // Add the monitors in an order as they will appear in the throbber menu
+            m_characterQueryMonitors.AddRange(new IQueryMonitorEx[]
+                                                  {
+                                                      m_charSheetMonitor, m_skillQueueMonitor, m_charStandingsMonitor,
+                                                      m_charContactsMonitor, m_charFacWarStatsMonitor,
+                                                      m_charMedalsMonitor, m_charKillLogMonitor, m_charAssetsMonitor,
+                                                      m_charMarketOrdersMonitor,
+                                                      m_charContractsMonitor, m_charWalletJournalMonitor,
+                                                      m_charWalletTransactionsMonitor, m_charIndustryJobsMonitor,
+                                                      m_charResearchPointsMonitor, m_charEVEMailMessagesMonitor,
+                                                      m_charEVENotificationsMonitor,
+                                                      m_charUpcomingCalendarEventsMonitor
+                                                  });
+
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
                 monitor => new { monitor, method = (APICharacterMethods)monitor.Method }).Where(
@@ -790,10 +772,40 @@ namespace EVEMon.Common
                 return;
 
             // Import the data
-            m_ccpCharacter.Medals.Import(result.Result.CharacterAllMedals);
+            m_ccpCharacter.CharacterMedals.Import(result.Result.CharacterAllMedals);
 
             // Fires the event regarding medals update
             EveMonClient.OnCharacterMedalsUpdated(m_ccpCharacter);
+        }
+
+        /// <summary>
+        /// Processes the queried character's kill log.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnKillLogUpdated(APIResult<SerializableAPIKillLog> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
+                return;
+
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.KillLog))
+                EveMonClient.Notifications.NotifyCharacterKillLogError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Save the file to our cache
+            string filename = String.Format(CultureConstants.InvariantCulture, "{0}-{1}", m_ccpCharacter.Name,
+                                            APICharacterMethods.KillLog);
+            LocalXmlCache.Save(filename, result.XmlDocument);
+
+            // Import the data
+            m_ccpCharacter.KillLog.Import(result.Result.Kills);
+
+            // Fires the event regarding kill log update
+            EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
         }
 
         /// <summary>
@@ -819,31 +831,6 @@ namespace EVEMon.Common
 
             // Fires the event regarding upcoming calendar events update
             EveMonClient.OnCharacterUpcomingCalendarEventsUpdated(m_ccpCharacter);
-        }
-
-        /// <summary>
-        /// Processes the queried character's kill log.
-        /// </summary>
-        /// <param name="result"></param>
-        private void OnKillLogUpdated(APIResult<SerializableAPIKillLog> result)
-        {
-            // Character may have been deleted or set to not be monitored since we queried
-            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
-                return;
-
-            // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.KillLog))
-                EveMonClient.Notifications.NotifyCharacterKillLogError(m_ccpCharacter, result);
-
-            // Quits if there is an error
-            if (result.HasError)
-                return;
-
-            // Import the data
-            m_ccpCharacter.KillLog.Import(result.Result.Kills);
-
-            // Fires the event regarding kill log update
-            EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
         }
 
         #endregion

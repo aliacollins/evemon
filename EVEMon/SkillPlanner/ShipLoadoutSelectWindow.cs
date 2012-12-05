@@ -97,7 +97,7 @@ namespace EVEMon.SkillPlanner
             // Download the loadouts feed
             Uri url = new Uri(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed,
                                        m_ship.ID));
-            Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutFeedDownloaded);
+            Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutFeedDownloaded, true);
 
             // Set labels while the user wait
             lblShipName.Text = m_ship.Name;
@@ -252,7 +252,7 @@ namespace EVEMon.SkillPlanner
             // Download the loadout details
             Uri url = new Uri(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails,
                                        m_selectedLoadout.LoadoutID));
-            Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutDownloaded);
+            Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutDownloaded, true);
         }
 
         /// <summary>

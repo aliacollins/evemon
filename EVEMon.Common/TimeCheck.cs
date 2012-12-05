@@ -14,11 +14,13 @@ namespace EVEMon.Common
         /// Asynchronous method to determine if the user's clock is syncrhonized to BattleClinic time.
         /// </summary>
         /// <param name="callback"></param>
+        /// <remarks>We are sending also a unique id to use for statistical purposes.</remarks>
         public static void CheckIsSynchronised(TimeSynchronisationCallback callback)
         {
             SyncState state = new SyncState(callback);
             Uri url = new Uri(NetworkConstants.BatlleclinicTimeSynch);
-            HttpWebService.DownloadStringAsync(url, SyncDownloadCompleted, state);
+            string postdata = String.Format(CultureConstants.InvariantCulture, "id={0}", Util.CreateSHA1SumFromMacAddress());
+            HttpWebService.DownloadStringAsync(url, SyncDownloadCompleted, state, HttpMethod.Post, false, postdata);
         }
 
         /// <summary>

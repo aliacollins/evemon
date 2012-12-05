@@ -1,4 +1,4 @@
-﻿namespace EVEMon.CharacterMonitoring
+﻿namespace EVEMon.DetailsWindow
 {
     partial class WalletJournalChartWindow
     {

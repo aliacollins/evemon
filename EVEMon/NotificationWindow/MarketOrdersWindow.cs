@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
@@ -12,6 +11,9 @@ namespace EVEMon.NotificationWindow
     {
         private readonly bool m_init;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MarketOrdersWindow"/> class.
+        /// </summary>
         public MarketOrdersWindow()
         {
             InitializeComponent();
@@ -22,8 +24,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the grouping mode.
         /// </summary>
-        [Browsable(false)]
-        public Enum Grouping
+        internal Enum Grouping
         {
             get { return ordersList.Grouping; }
             set
@@ -41,8 +42,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the ShowIssuedFor mode.
         /// </summary>
-        [Browsable(false)]
-        public IssuedFor ShowIssuedFor
+        internal IssuedFor ShowIssuedFor
         {
             get { return ordersList.ShowIssuedFor; }
             set
@@ -60,9 +60,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the enumeration of orders to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<MarketOrder> Orders
+        internal IEnumerable<MarketOrder> Orders
         {
             get { return ordersList.Orders; }
             set { ordersList.Orders = value; }
@@ -71,9 +69,7 @@ namespace EVEMon.NotificationWindow
         /// <summary>
         /// Gets or sets the enumeration of displayed columns.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<IColumnSettings> Columns
+        internal IEnumerable<IColumnSettings> Columns
         {
             get { return ordersList.Columns; }
             set

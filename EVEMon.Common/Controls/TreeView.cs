@@ -1094,10 +1094,7 @@ namespace EVEMon.Common.Controls
 
                             if (!IsPlusMinusClicked(endNode, e))
                             {
-                                bool blnNodeWasSelected = false;
-                                if (IsNodeSelected(endNode))
-                                    blnNodeWasSelected = true;
-
+                                bool blnNodeWasSelected = IsNodeSelected(endNode);
 
                                 UnselectAllNodesExceptNode(endNode, tva);
                                 SelectNode(endNode, true, tva);

@@ -326,9 +326,9 @@ namespace EVEMon.Common.IgbService
 
             if (!request.Equals(HttpWebServiceRequest.HttpMethodToString(HttpMethod.Get)))
             {
-                sw.WriteLine(String.Format(CultureConstants.InvariantCulture,
-                                           "<h1>Error loading requested URL</h1>The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",
-                                           request));
+                sw.WriteLine("<h1>Error loading requested URL</h1>" +
+                             "The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",
+                             request);
                 return;
             }
 

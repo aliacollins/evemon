@@ -17,6 +17,9 @@ namespace EVEMon.ExceptionHandling
     {
         private readonly Exception m_exception;
 
+
+        #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UnhandledExceptionWindow"/> class.
         /// </summary>
@@ -35,6 +38,11 @@ namespace EVEMon.ExceptionHandling
             m_exception = exception;
         }
 
+        #endregion
+
+
+        #region Inherited Events
+
         /// <summary>
         /// Loads resources, generates the report
         /// </summary>
@@ -44,30 +52,60 @@ namespace EVEMon.ExceptionHandling
         {
             WhatCanYouDoLabel.Font = FontFactory.GetFont("Tahoma", 10F);
 
-            try
-            {
-                Bitmap bug = Resources.Bug;
+            SetBugImage();
 
-                int oHeight = bug.Height;
-                int oWidth = bug.Width;
-                if (bug.Height > BugPictureBox.ClientSize.Height)
-                {
-                    double scale = (double)(BugPictureBox.ClientSize.Height) / bug.Height;
-                    oHeight = (int)(oHeight * scale);
-                    oWidth = (int)(oWidth * scale);
-                    BugPictureBox.Image = new Bitmap(bug, new Size(oWidth, oHeight));
-                    BugPictureBox.ClientSize = new Size(oWidth, oHeight);
-                }
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.LogRethrowException(ex);
-                throw;
-            }
+            BuildExceptionMessage();
+        }
 
-            string trace;
+        #endregion
+
+
+        #region Content Management
+
+        /// <summary>
+        /// Builds the exception message.
+        /// </summary>
+        private void BuildExceptionMessage()
+        {
             EveMonClient.StopTraceLogging();
 
+            try
+            {
+                StringBuilder exceptionReport = new StringBuilder();
+                OperatingSystem os = Environment.OSVersion;
+
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}{1}", Application.ProductVersion,
+                                             Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}{1}", Environment.Version,
+                                             Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Operating System: {0}{1}", os.VersionString,
+                                             Environment.NewLine);
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Executable Path: {0}{1}", Environment.CommandLine,
+                                             Environment.NewLine);
+                exceptionReport.AppendLine();
+                exceptionReport.Append(GetRecursiveStackTrace()).AppendLine();
+                exceptionReport.AppendLine();
+                exceptionReport.Append(GetDatafileReport()).AppendLine();
+                exceptionReport.AppendLine();
+                exceptionReport.Append("Diagnostic Log:").AppendLine();
+                exceptionReport.Append(GetTraceLog().Trim()).AppendLine();
+
+                TechnicalDetailsTextBox.Text = exceptionReport.ToString();
+            }
+            catch (InvalidOperationException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+                TechnicalDetailsTextBox.Text = "Error retrieving error data. Wow, things are *really* screwed up!";
+            }
+        }
+
+        /// <summary>
+        /// Gets the trace log.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetTraceLog()
+        {
+            string trace;
             FileStream traceStream = null;
             try
             {
@@ -94,34 +132,33 @@ namespace EVEMon.ExceptionHandling
                 if (traceStream != null)
                     traceStream.Dispose();
             }
+            return trace;
+        }
 
+        /// <summary>
+        /// Sets the bug image.
+        /// </summary>
+        private void SetBugImage()
+        {
             try
             {
-                StringBuilder exceptionReport = new StringBuilder();
-                OperatingSystem os = Environment.OSVersion;
+                Bitmap bug = Resources.Bug;
 
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}{1}", Application.ProductVersion,
-                                             Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}{1}", Environment.Version,
-                                             Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Operating System: {0}{1}", os.VersionString,
-                                             Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Executable Path: {0}{1}", Environment.CommandLine,
-                                             Environment.NewLine);
-                exceptionReport.AppendLine();
-                exceptionReport.Append(RecursiveStackTrace).AppendLine();
-                exceptionReport.AppendLine();
-                exceptionReport.Append(DatafileReport).AppendLine();
-                exceptionReport.AppendLine();
-                exceptionReport.Append("Diagnostic Log:").AppendLine();
-                exceptionReport.Append(trace.Trim()).AppendLine();
+                int oHeight = bug.Height;
+                int oWidth = bug.Width;
+                if (bug.Height <= BugPictureBox.ClientSize.Height)
+                    return;
 
-                TechnicalDetailsTextBox.Text = exceptionReport.ToString();
+                double scale = (double)(BugPictureBox.ClientSize.Height) / bug.Height;
+                oHeight = (int)(oHeight * scale);
+                oWidth = (int)(oWidth * scale);
+                BugPictureBox.Image = new Bitmap(bug, new Size(oWidth, oHeight));
+                BugPictureBox.ClientSize = new Size(oWidth, oHeight);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                ExceptionHandler.LogException(ex, true);
-                TechnicalDetailsTextBox.Text = "Error retrieving error data. Wow, things are *really* screwed up!";
+                ExceptionHandler.LogRethrowException(ex);
+                throw;
             }
         }
 
@@ -129,61 +166,60 @@ namespace EVEMon.ExceptionHandling
         /// Gets the datafile report.
         /// </summary>
         /// <value>The datafile report.</value>
-        private static string DatafileReport
+        private static string GetDatafileReport()
         {
-            get
+            StringBuilder datafileReport = new StringBuilder();
+
+            try
             {
-                StringBuilder datafileReport = new StringBuilder();
+                string[] datafiles = Directory.GetFiles(EveMonClient.EVEMonDataDir, "*.gz", SearchOption.TopDirectoryOnly);
 
-                try
+                datafileReport.AppendLine("Datafile report:");
+
+                foreach (string datafile in datafiles)
                 {
-                    string[] datafiles = Directory.GetFiles(EveMonClient.EVEMonDataDir, "*.gz", SearchOption.TopDirectoryOnly);
+                    FileInfo info = new FileInfo(datafile);
+                    Datafile file = new Datafile(Path.GetFileName(datafile));
 
-                    datafileReport.AppendLine("Datafile report:");
-
-                    foreach (string datafile in datafiles)
-                    {
-                        FileInfo info = new FileInfo(datafile);
-                        Datafile file = new Datafile(Path.GetFileName(datafile));
-
-                        datafileReport.AppendFormat(CultureConstants.DefaultCulture, "  {0} ({1}KiB - {2}){3}", info.Name,
-                                                    info.Length / 1024, file.MD5Sum, Environment.NewLine);
-                    }
+                    datafileReport.AppendFormat(CultureConstants.DefaultCulture, "  {0} ({1}KiB - {2}){3}", info.Name,
+                                                info.Length / 1024, file.MD5Sum, Environment.NewLine);
                 }
-                catch (UnauthorizedAccessException ex)
-                {
-                    ExceptionHandler.LogException(ex, true);
-                    datafileReport.Append("Unable to create datafile report").AppendLine();
-                }
-                return datafileReport.ToString();
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                ExceptionHandler.LogException(ex, true);
+                datafileReport.Append("Unable to create datafile report").AppendLine();
+            }
+            return datafileReport.ToString();
         }
 
         /// <summary>
         /// Gets the recursive stack trace.
         /// </summary>
         /// <value>The recursive stack trace.</value>
-        private string RecursiveStackTrace
+        private string GetRecursiveStackTrace()
         {
-            get
+            StringBuilder stackTraceBuilder = new StringBuilder();
+            Exception ex = m_exception;
+
+            stackTraceBuilder.Append(ex).AppendLine();
+
+            while (ex.InnerException != null)
             {
-                StringBuilder stackTraceBuilder = new StringBuilder();
-                Exception ex = m_exception;
+                ex = ex.InnerException;
 
-                stackTraceBuilder.Append(ex.ToString()).AppendLine();
-
-                while (ex.InnerException != null)
-                {
-                    ex = ex.InnerException;
-
-                    stackTraceBuilder.AppendLine();
-                    stackTraceBuilder.Append(ex.ToString()).AppendLine();
-                }
-
-                // Remove project local path from message
-                return stackTraceBuilder.ToString().RemoveProjectLocalPath();
+                stackTraceBuilder.AppendLine();
+                stackTraceBuilder.Append(ex).AppendLine();
             }
+
+            // Remove project local path from message
+            return stackTraceBuilder.ToString().RemoveProjectLocalPath();
         }
+
+        #endregion
+
+
+        #region Local Events
 
         /// <summary>
         /// Handles the Click event of the CloseButton control.
@@ -219,28 +255,13 @@ namespace EVEMon.ExceptionHandling
         }
 
         /// <summary>
-        /// Handles the Click event of the ResetButtonLinkLabel control.
+        /// Handles the Click event of the DataDirectoryButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void ResetButtonLinkLabel_Click(object sender, EventArgs e)
+        private void DataDirectoryButton_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("This will clear all your saved settings, including skill plans and " +
-                                              "character logins. You should only try this if EVEMon has errored more " +
-                                              "than once.\r\n\r\nClear settings?",
-                                              "Clear Settings?",
-                                              MessageBoxButtons.YesNo,
-                                              MessageBoxIcon.Warning,
-                                              MessageBoxDefaultButton.Button2);
-
-            if (dr != DialogResult.Yes)
-                return;
-
-            Settings.Reset();
-            MessageBox.Show("Your settings have been reset.",
-                            "Settings Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            Close();
+            Util.OpenURL(new Uri(EveMonClient.EVEMonDataDir));
         }
 
         /// <summary>
@@ -272,5 +293,7 @@ namespace EVEMon.ExceptionHandling
         {
             Util.OpenURL(new Uri(NetworkConstants.EVEMonMainPage));
         }
+
+        #endregion
     }
 }

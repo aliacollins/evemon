@@ -35,13 +35,11 @@ namespace EVEMon.NotificationWindow
             // 
             // jobsList
             // 
-            this.jobsList.Character = null;
             this.jobsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.jobsList.Location = new System.Drawing.Point(0, 0);
             this.jobsList.Name = "jobsList";
             this.jobsList.Size = new System.Drawing.Size(292, 266);
             this.jobsList.TabIndex = 0;
-            this.jobsList.TextFilter = "";
             // 
             // IndustryJobsWindow
             // 

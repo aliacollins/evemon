@@ -11,6 +11,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             ShowOverview = true;
             ShowMenuBar = true;
+            CombatLog = new CombatLogSettings();
             Assets = new AssetSettings();
             WalletJournal = new WalletJournalSettings();
             WalletTransactions = new WalletTransactionSettings();
@@ -177,6 +178,13 @@ namespace EVEMon.Common.SettingsObjects
         /// </value>
         [XmlElement("useIncreasedContrastOnOverview")]
         public bool UseIncreasedContrastOnOverview { get; set; }
+
+        /// <summary>
+        /// Gets or sets the combat log.
+        /// </summary>
+        /// <value>The combat log.</value>
+        [XmlElement("combatLog")]
+        public CombatLogSettings CombatLog { get; set; }
 
         /// <summary>
         /// Gets or sets the assets.

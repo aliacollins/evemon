@@ -195,8 +195,8 @@
     <value>/char/IndustryJobs.xml.aspx</value>
   </data>
   <data name="APITestBase" xml:space="preserve">
-    <value>https://apitest.eveonline.com</value>
-    <comment>Test API Service announced as part of Tyrannis 1.2</comment>
+    <value>https://api.testeveonline.com</value>
+    <comment>Test API Service announced as part of Tyrannis 1.2; Url changed as of Retribution 1.0</comment>
   </data>
   <data name="APIResearchPoints" xml:space="preserve">
     <value>/char/Research.xml.aspx</value>
@@ -497,5 +497,9 @@
   </data>
   <data name="PostDataWithCharIDAndRowCount" xml:space="preserve">
     <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;rowCount={3}</value>
+  </data>
+  <data name="BattleclinicItemPrices" xml:space="preserve">
+    <value>http://eve.battleclinic.com/xml_item_prices.php</value>
+    <comment>Used for fetching item prices from BattleClinic</comment>
   </data>
 </root>

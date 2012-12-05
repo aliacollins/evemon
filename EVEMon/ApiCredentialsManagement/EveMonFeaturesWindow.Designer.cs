@@ -49,6 +49,8 @@
             this.EVEMailMessagesLabel = new System.Windows.Forms.Label();
             this.EVENotificationsLabel = new System.Windows.Forms.Label();
             this.CreateAdvancedAPIKeyLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.ContactsLabel = new System.Windows.Forms.Label();
+            this.MedalsLabel = new System.Windows.Forms.Label();
             this.MainFlowLayoutPanel.SuspendLayout();
             this.basicFeaturesflowLayoutPanel.SuspendLayout();
             this.advanceFeaturesFlowLayoutPanel.SuspendLayout();
@@ -142,7 +144,9 @@
             // 
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.AccountStatusLabel);
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.StandingsLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.ContactsLabel);
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.FactionalWarfareLabel);
+            this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.MedalsLabel);
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.AssetsLabel);
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.MarketOrdersLabel);
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.ContractsLabel);
@@ -181,7 +185,7 @@
             // FactionalWarfareLabel
             // 
             this.FactionalWarfareLabel.AutoSize = true;
-            this.FactionalWarfareLabel.Location = new System.Drawing.Point(3, 62);
+            this.FactionalWarfareLabel.Location = new System.Drawing.Point(3, 93);
             this.FactionalWarfareLabel.Name = "FactionalWarfareLabel";
             this.FactionalWarfareLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.FactionalWarfareLabel.Size = new System.Drawing.Size(168, 31);
@@ -191,7 +195,7 @@
             // AssetsLabel
             // 
             this.AssetsLabel.AutoSize = true;
-            this.AssetsLabel.Location = new System.Drawing.Point(3, 93);
+            this.AssetsLabel.Location = new System.Drawing.Point(3, 155);
             this.AssetsLabel.Name = "AssetsLabel";
             this.AssetsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.AssetsLabel.Size = new System.Drawing.Size(115, 31);
@@ -201,7 +205,7 @@
             // MarketOrdersLabel
             // 
             this.MarketOrdersLabel.AutoSize = true;
-            this.MarketOrdersLabel.Location = new System.Drawing.Point(3, 124);
+            this.MarketOrdersLabel.Location = new System.Drawing.Point(3, 186);
             this.MarketOrdersLabel.Name = "MarketOrdersLabel";
             this.MarketOrdersLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.MarketOrdersLabel.Size = new System.Drawing.Size(149, 31);
@@ -211,7 +215,7 @@
             // ContractsLabel
             // 
             this.ContractsLabel.AutoSize = true;
-            this.ContractsLabel.Location = new System.Drawing.Point(3, 155);
+            this.ContractsLabel.Location = new System.Drawing.Point(3, 217);
             this.ContractsLabel.Name = "ContractsLabel";
             this.ContractsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.ContractsLabel.Size = new System.Drawing.Size(129, 31);
@@ -221,7 +225,7 @@
             // WalletJournalLabel
             // 
             this.WalletJournalLabel.AutoSize = true;
-            this.WalletJournalLabel.Location = new System.Drawing.Point(3, 186);
+            this.WalletJournalLabel.Location = new System.Drawing.Point(177, 0);
             this.WalletJournalLabel.Name = "WalletJournalLabel";
             this.WalletJournalLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.WalletJournalLabel.Size = new System.Drawing.Size(151, 31);
@@ -231,7 +235,7 @@
             // WalletTransactionsLabel
             // 
             this.WalletTransactionsLabel.AutoSize = true;
-            this.WalletTransactionsLabel.Location = new System.Drawing.Point(3, 217);
+            this.WalletTransactionsLabel.Location = new System.Drawing.Point(177, 31);
             this.WalletTransactionsLabel.Name = "WalletTransactionsLabel";
             this.WalletTransactionsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.WalletTransactionsLabel.Size = new System.Drawing.Size(178, 31);
@@ -241,7 +245,7 @@
             // IndustryJobsLabel
             // 
             this.IndustryJobsLabel.AutoSize = true;
-            this.IndustryJobsLabel.Location = new System.Drawing.Point(187, 0);
+            this.IndustryJobsLabel.Location = new System.Drawing.Point(177, 62);
             this.IndustryJobsLabel.Name = "IndustryJobsLabel";
             this.IndustryJobsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.IndustryJobsLabel.Size = new System.Drawing.Size(143, 31);
@@ -251,7 +255,7 @@
             // ResearchPointsLabel
             // 
             this.ResearchPointsLabel.AutoSize = true;
-            this.ResearchPointsLabel.Location = new System.Drawing.Point(187, 31);
+            this.ResearchPointsLabel.Location = new System.Drawing.Point(177, 93);
             this.ResearchPointsLabel.Name = "ResearchPointsLabel";
             this.ResearchPointsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.ResearchPointsLabel.Size = new System.Drawing.Size(161, 31);
@@ -261,7 +265,7 @@
             // EVEMailMessagesLabel
             // 
             this.EVEMailMessagesLabel.AutoSize = true;
-            this.EVEMailMessagesLabel.Location = new System.Drawing.Point(187, 62);
+            this.EVEMailMessagesLabel.Location = new System.Drawing.Point(177, 124);
             this.EVEMailMessagesLabel.Name = "EVEMailMessagesLabel";
             this.EVEMailMessagesLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.EVEMailMessagesLabel.Size = new System.Drawing.Size(177, 57);
@@ -271,7 +275,7 @@
             // EVENotificationsLabel
             // 
             this.EVENotificationsLabel.AutoSize = true;
-            this.EVENotificationsLabel.Location = new System.Drawing.Point(187, 119);
+            this.EVENotificationsLabel.Location = new System.Drawing.Point(177, 181);
             this.EVENotificationsLabel.Name = "EVENotificationsLabel";
             this.EVENotificationsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
             this.EVENotificationsLabel.Size = new System.Drawing.Size(166, 44);
@@ -292,6 +296,26 @@
             this.CreateAdvancedAPIKeyLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CreateAdvancedAPIKeyLinkLabel.UseCompatibleTextRendering = true;
             this.CreateAdvancedAPIKeyLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CreateAllFeaturesAPIKeyLinkLabel_LinkClicked);
+            // 
+            // ContactsLabel
+            // 
+            this.ContactsLabel.AutoSize = true;
+            this.ContactsLabel.Location = new System.Drawing.Point(3, 62);
+            this.ContactsLabel.Name = "ContactsLabel";
+            this.ContactsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.ContactsLabel.Size = new System.Drawing.Size(126, 31);
+            this.ContactsLabel.TabIndex = 17;
+            this.ContactsLabel.Text = "For Contacts monitoring:\r\n- ContactList";
+            // 
+            // MedalsLabel
+            // 
+            this.MedalsLabel.AutoSize = true;
+            this.MedalsLabel.Location = new System.Drawing.Point(3, 124);
+            this.MedalsLabel.Name = "MedalsLabel";
+            this.MedalsLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.MedalsLabel.Size = new System.Drawing.Size(118, 31);
+            this.MedalsLabel.TabIndex = 18;
+            this.MedalsLabel.Text = "For Medals monitoring:\r\n- Medals";
             // 
             // EVEMonFeaturesWindow
             // 
@@ -341,5 +365,7 @@
         private System.Windows.Forms.Label ContractsLabel;
         private System.Windows.Forms.Label WalletJournalLabel;
         private System.Windows.Forms.Label WalletTransactionsLabel;
+        private System.Windows.Forms.Label ContactsLabel;
+        private System.Windows.Forms.Label MedalsLabel;
     }
 }

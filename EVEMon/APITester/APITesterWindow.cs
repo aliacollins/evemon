@@ -189,11 +189,12 @@ namespace EVEMon.ApiTester
             // Get the raw xml document to use when saving
             if (m_url != m_defaultUri)
             {
-                Uri nUrl = EveMonClient.APIProviders.CurrentProvider.GetMethodUrl((Enum)ApiTesterUIHelper.SelectedItem);
+                APIProvider provider = EveMonClient.APIProviders.CurrentProvider;
+                Uri nUrl = provider.GetMethodUrl((Enum)ApiTesterUIHelper.SelectedItem);
                 string postData = m_url.Query.Replace("?", String.Empty);
                 try
                 {
-                    m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, postData);
+                    m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, provider.SupportsCompressedResponse, postData);
                 }
                 catch (HttpWebServiceException ex)
                 {
@@ -399,14 +400,21 @@ namespace EVEMon.ApiTester
                 textbox.Equals(KeyIDTextBox) && textbox.Text.Length == 0 && VCodeTextBox.Text.Length == 0)
                 return;
 
+            string[] ids = textbox.Text.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+
             if (String.IsNullOrEmpty(textbox.Text))
             {
-                ErrorProvider.SetError(textbox, "ID cannot be blank.");
+                string errorText = String.Format(CultureConstants.DefaultCulture, "{0} can not be blank.",
+                                                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID)
+                                                     ? "Names"
+                                                     : "IDs");
+                ErrorProvider.SetError(textbox, errorText);
                 e.Cancel = true;
                 return;
             }
 
-            string[] ids = textbox.Text.Split(",".ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID))
+                return;
 
             if (ids.Any(id => id == "0"))
             {

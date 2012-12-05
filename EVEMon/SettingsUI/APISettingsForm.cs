@@ -46,6 +46,7 @@ namespace EVEMon.SettingsUI
 
             txtConfigurationName.Text = m_provider.Name;
             txtAPIHost.Text = m_provider.Address;
+            SupportsCompressedResponseCheckBox.Checked = m_provider.SupportsCompressedResponse;
             InitializeDataGrid();
         }
 
@@ -104,6 +105,7 @@ namespace EVEMon.SettingsUI
 
             m_provider.Name = txtConfigurationName.Text;
             m_provider.Address = txtAPIHost.Text;
+            m_provider.SupportsCompressedResponse = SupportsCompressedResponseCheckBox.Checked;
 
             foreach (DataGridViewRow row in dgMethods.Rows)
             {

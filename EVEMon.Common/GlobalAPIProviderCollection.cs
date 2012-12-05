@@ -49,7 +49,7 @@ namespace EVEMon.Common
         /// </summary>
         public IEnumerable<APIProvider> CustomProviders
         {
-            get { return m_customProviders.AsReadOnly(); }
+            get { return m_customProviders; }
         }
 
         /// <summary>
@@ -114,7 +114,12 @@ namespace EVEMon.Common
             // Providers
             foreach (SerializableAPIProvider sProvider in serial.CustomProviders)
             {
-                APIProvider provider = new APIProvider { Name = sProvider.Name, Url = new Uri(sProvider.Address) };
+                APIProvider provider = new APIProvider
+                    {
+                        Name = sProvider.Name,
+                        Url = new Uri(sProvider.Address),
+                        SupportsCompressedResponse = sProvider.SupportsCompressedResponse
+                    };
 
                 // Providers' methods
                 foreach (SerializableAPIMethod sMethod in sProvider.Methods)
@@ -138,8 +143,9 @@ namespace EVEMon.Common
             if (newCurrentProvider != null)
                 CurrentProvider = newCurrentProvider;
 
+            // Test Provider is only available in debug mode
             if (serial.CurrentProviderName == TestProvider.Name)
-                CurrentProvider = TestProvider;
+                CurrentProvider = EveMonClient.IsDebugBuild ? TestProvider : DefaultProvider;
         }
 
         /// <summary>
@@ -154,7 +160,12 @@ namespace EVEMon.Common
             foreach (APIProvider provider in CustomProviders)
             {
                 SerializableAPIProvider serialProvider = new SerializableAPIProvider
-                                                             { Name = provider.Name, Address = provider.Url.AbsoluteUri };
+                    {
+                        Name = provider.Name,
+                        Address = provider.Url.AbsoluteUri,
+                        SupportsCompressedResponse = provider.SupportsCompressedResponse
+                    };
+
                 serial.CustomProviders.Add(serialProvider);
 
                 // Methods

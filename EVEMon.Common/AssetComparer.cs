@@ -64,6 +64,10 @@ namespace EVEMon.Common
                     return String.Compare(x.Item.Name, y.Item.Name, StringComparison.CurrentCulture);
                 case AssetColumn.Quantity:
                     return x.Quantity.CompareTo(y.Quantity);
+                case AssetColumn.UnitaryPrice:
+                    return x.Price.CompareTo(y.Price);
+                case AssetColumn.TotalPrice:
+                    return x.Cost.CompareTo(y.Cost);
                 case AssetColumn.Volume:
                     return x.Volume.CompareTo(y.Volume);
                 case AssetColumn.BlueprintType:

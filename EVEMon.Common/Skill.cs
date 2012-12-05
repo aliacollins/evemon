@@ -98,7 +98,7 @@ namespace EVEMon.Common
                                                       Name = StaticData.Name,
                                                       Level = Math.Min(m_level, 5),
                                                       Skillpoints = m_currentSkillPoints,
-                                                      OwnsBook = m_owned,
+                                                      OwnsBook = IsOwned,
                                                       IsKnown = m_known
                                                   };
 
@@ -110,11 +110,29 @@ namespace EVEMon.Common
         /// </summary>
         public bool IsOwned
         {
-            get { return m_owned; }
+            get
+            {
+                return m_owned | (HasBookInAssets && !m_known);
+            }
             set
             {
                 m_owned = value;
                 EveMonClient.OnCharacterUpdated(Character);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has book in assets.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has book in assets; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasBookInAssets
+        {
+            get
+            {
+                CCPCharacter ccpCharacter = Character as CCPCharacter;
+                return (ccpCharacter != null) && ccpCharacter.Assets.Any(asset => asset.Item.ID == ID);
             }
         }
 

@@ -14,14 +14,7 @@ namespace EVEMon.Common
         public static string DateTimeToTimeString(this DateTime timeUTC)
         {
             // timeUTC = yyyy-MM-dd HH:mm:ss
-            string result = String.Format(CultureConstants.DefaultCulture, "{0:d4}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}",
-                                          timeUTC.Year,
-                                          timeUTC.Month,
-                                          timeUTC.Day,
-                                          timeUTC.Hour,
-                                          timeUTC.Minute,
-                                          timeUTC.Second);
-            return result;
+            return timeUTC.ToString("yyyy-MM-dd HH:mm:ss", CultureConstants.DefaultCulture);
         }
 
         /// <summary>
@@ -36,6 +29,18 @@ namespace EVEMon.Common
             return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture, DateTimeStyles.AdjustToUniversal, out dt)
                        ? dt
                        : default(DateTime);
+        }
+
+        /// <summary>
+        /// Converts a DateTime to  a dot formatted date/time string.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <remarks>String Format: yyyy.MM.dd HH:mm:ss</remarks>
+        /// <returns></returns>
+        public static string DateTimeToDotFormattedString(this DateTime time)
+        {
+            // time = yyyy-MM-dd HH:mm:ss
+            return time.ToString("yyyy.MM.dd HH:mm:ss", CultureConstants.DefaultCulture);
         }
 
         /// <summary>
@@ -264,7 +269,10 @@ namespace EVEMon.Common
             }
 
             if ((dto & DescriptiveTextOptions.SpaceBetween) != 0)
-                sb.Append(" ");
+            {
+                if (sb.Length > 0)
+                    sb.Append(' ');
+            }
 
             sb.Append(p.ToString(CultureConstants.DefaultCulture));
 

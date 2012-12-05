@@ -91,7 +91,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the event attendees.
         /// </summary>
-        public IEnumerable<CalendarEventAttendee> EventAttendees
+        public IEnumerable<CalendarEventAttendee> Attendees
         {
             get { return m_eventAttendees; }
         }

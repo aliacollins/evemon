@@ -27,6 +27,7 @@ namespace EVEMon.Common.Net
 
         private int m_redirectsRemaining;
         private bool m_cancelled;
+        private bool m_acceptEncoding;
 
         /// <summary>
         /// Initialises a new instance of HttpWebServiceRequest to be submitted as a POST request.
@@ -74,7 +75,7 @@ namespace EVEMon.Common.Net
         /// Delegate for asynchronous invocation of GetResponse.
         /// </summary>
         private delegate void GetResponseDelegate(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
-                                                  Stream responseStream, string accept);
+                                                  Stream responseStream, bool acceptEncoded, string accept);
 
         /// <summary>
         /// Retrieve the response from the reguested URL to the specified response stream
@@ -82,7 +83,7 @@ namespace EVEMon.Common.Net
         /// The download process is broken into chunks for future implementation of asynchronous requests
         /// </summary>
         internal void GetResponse(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
-                                  Stream responseStream, string accept)
+                                  Stream responseStream, bool acceptEncoding, string accept)
         {
             // Store params
             m_url = url;
@@ -91,6 +92,7 @@ namespace EVEMon.Common.Net
             m_postData = postData;
             m_method = postData == null ? HttpMethod.Get : method;
             m_dataCompression = postData == null ? DataCompression.None : dataCompression;
+            m_acceptEncoding = acceptEncoding;
             ResponseStream = responseStream;
 
             Stream webResponseStream = null;
@@ -102,11 +104,11 @@ namespace EVEMon.Common.Net
                 int bytesRead = 0;
                 long totalBytesRead = 0;
                 long rawBufferSize = webResponse.ContentLength / 100;
-                int bufferSize =
-                    (int)
-                    (rawBufferSize > HttpWebServiceState.MaxBufferSize
-                         ? HttpWebServiceState.MaxBufferSize
-                         : (rawBufferSize < HttpWebServiceState.MinBufferSize ? HttpWebServiceState.MinBufferSize : rawBufferSize));
+                int bufferSize = (int)(rawBufferSize > HttpWebServiceState.MaxBufferSize
+                                           ? HttpWebServiceState.MaxBufferSize
+                                           : (rawBufferSize < HttpWebServiceState.MinBufferSize
+                                                  ? HttpWebServiceState.MinBufferSize
+                                                  : rawBufferSize));
                 do
                 {
                     byte[] buffer = new byte[bufferSize];
@@ -154,17 +156,17 @@ namespace EVEMon.Common.Net
         /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
         public void GetResponseAsync(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
-                                     Stream responseStream, string accept, WebRequestAsyncState state)
+                                     Stream responseStream, bool acceptEncoded, string accept, WebRequestAsyncState state)
         {
             m_asyncState = state;
             m_asyncState.Request = this;
             if (Dispatcher.IsMultiThreaded)
             {
                 GetResponseDelegate caller = GetResponse;
-                caller.BeginInvoke(url, method, postData, dataCompression, responseStream, accept, GetResponseAsyncCompleted, caller);
+                caller.BeginInvoke(url, method, postData, dataCompression, responseStream, acceptEncoded, accept, GetResponseAsyncCompleted, caller);
             }
             else
-                GetResponseAsyncCompletedCore(() => GetResponse(url, method, postData, dataCompression, responseStream, accept));
+                GetResponseAsyncCompletedCore(() => GetResponse(url, method, postData, dataCompression, responseStream, acceptEncoded, accept));
         }
 
         /// <summary>
@@ -251,6 +253,12 @@ namespace EVEMon.Common.Net
             request.Accept = m_accept;
             request.Timeout = m_timeout;
             request.Method = HttpMethodToString(m_method);
+
+            if (m_acceptEncoding)
+                request.Headers[HttpRequestHeader.AcceptEncoding] = String.Join(", ",
+                                                                                DataCompression.Gzip.ToString().ToLowerInvariant(),
+                                                                                DataCompression.Deflate.ToString().
+                                                                                    ToLowerInvariant());
 
             if (m_referer != null)
                 request.Referer = m_referer;

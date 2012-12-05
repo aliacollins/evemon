@@ -89,7 +89,7 @@ namespace EVEMon.Common.Serialization.API
         [Description("Deleted")]
         Deleted,
 
-        [Description("Completed")]
+        [Description("Finished")]
         Completed,
 
         [Description("Failed")]
@@ -106,6 +106,9 @@ namespace EVEMon.Common.Serialization.API
 
         [Description("Rejected")]
         Rejected,
+
+        [Description("Overdue")]
+        Overdue,
 
         [Description("Reversed")]
         Reversed

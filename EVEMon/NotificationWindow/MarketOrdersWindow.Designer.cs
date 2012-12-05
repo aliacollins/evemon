@@ -35,13 +35,11 @@ namespace EVEMon.NotificationWindow
             // 
             // ordersList
             // 
-            this.ordersList.Character = null;
             this.ordersList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ordersList.Location = new System.Drawing.Point(0, 0);
             this.ordersList.Name = "ordersList";
             this.ordersList.Size = new System.Drawing.Size(292, 266);
             this.ordersList.TabIndex = 0;
-            this.ordersList.TextFilter = "";
             // 
             // MarketOrdersWindow
             // 

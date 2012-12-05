@@ -14,12 +14,14 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="filePath">The file path.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="method">The method.</param>
         /// <param name="postdata">The post data.</param>
-        /// <param name="dataCompression">The compression.</param>
+        /// <param name="dataCompression">The post data compression method.</param>
         /// <returns></returns>
         public static FileInfo DownloadFile(Uri url, string filePath, HttpMethod method = HttpMethod.Get,
-                                     string postdata = null, DataCompression dataCompression = DataCompression.None)
+                                            bool acceptEncoded = false, string postdata = null,
+                                            DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -38,7 +40,7 @@ namespace EVEMon.Common.Net
                 {
                     throw HttpWebServiceException.FileError(url, ex);
                 }
-                request.GetResponse(url, method, postData, dataCompression, responseStream, FileAccept);
+                request.GetResponse(url, method, postData, dataCompression, responseStream, acceptEncoded, FileAccept);
                 return new FileInfo(filePath);
             }
             finally
@@ -56,12 +58,14 @@ namespace EVEMon.Common.Net
         /// <param name="callback">A <see cref="DownloadImageCompletedCallback"/> to be invoked when the request is completed</param>
         /// <param name="progressCallback">The progress callback.</param>
         /// <param name="method">The method.</param>
-        /// <param name="postdata">The postdata.</param>
-        /// <param name="dataCompression">The compression.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
+        /// <param name="postdata">The post data.</param>
+        /// <param name="dataCompression">The post data compression method.</param>
         /// <returns></returns>
         public static object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
-                                        DownloadProgressChangedCallback progressCallback, HttpMethod method = HttpMethod.Get,
-                                        string postdata = null, DataCompression dataCompression = DataCompression.None)
+                                               DownloadProgressChangedCallback progressCallback,
+                                               HttpMethod method = HttpMethod.Get, bool acceptEncoded = false,
+                                               string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;
             if (!IsValidURL(url, out urlValidationError))
@@ -72,7 +76,7 @@ namespace EVEMon.Common.Net
             HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
             FileStream responseStream = Util.GetFileStream(filePath, FileMode.Create, FileAccess.Write);
-            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, FileAccept, state);
+            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, acceptEncoded, FileAccept, state);
             return request;
         }
 

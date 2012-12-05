@@ -60,6 +60,17 @@ namespace EVEMon.Common.Serialization.BattleClinic
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the provider supports compressed responses.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the provider supports compressed responses; otherwise, <c>false</c>.
+        /// </value>
+        private static bool SupportsCompressedResponse
+        {
+            get { return true; }
+        }
+
         #endregion
 
 
@@ -246,7 +257,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                                             BCAPISettings.Default.BCApplicationKey,
                                             EveMonClient.SettingsFileName, SettingsFileContent);
 
-            return QueryMethod<SerializableBCAPIFiles>(BCAPIMethods.FileSave, postData);
+            return QueryMethod<SerializableBCAPIFiles>(BCAPIMethods.FileSave, postData, DataCompression.Gzip);
         }
 
         /// <summary>
@@ -269,7 +280,8 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <param name="userID">The user ID.</param>
         /// <param name="apiKey">The API key.</param>
         /// <param name="callback">The callback.</param>
-        public static void CheckAPICredentialsAsync(uint userID, string apiKey, QueryCallback<SerializableBCAPICredentials> callback)
+        public static void CheckAPICredentialsAsync(uint userID, string apiKey,
+                                                    QueryCallback<SerializableBCAPICredentials> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture,
                                             "userID={0}&apiKey={1}&applicationKey={2}",
@@ -290,7 +302,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
                                             BCAPISettings.Default.BCApplicationKey,
                                             EveMonClient.SettingsFileName, SettingsFileContent);
 
-            QueryMethodAsync(BCAPIMethods.FileSave, callback, postData);
+            QueryMethodAsync(BCAPIMethods.FileSave, callback, postData, DataCompression.Gzip);
         }
 
         /// <summary>
@@ -316,12 +328,16 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <summary>
         /// Query this method with the provided HTTP POST data.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="method">The method.</param>
         /// <param name="postData">The post data.</param>
-        private static BCAPIResult<T> QueryMethod<T>(BCAPIMethods method, string postData = null)
+        /// <param name="dataCompression">The data compression.</param>
+        /// <returns></returns>
+        private static BCAPIResult<T> QueryMethod<T>(BCAPIMethods method, string postData = null,
+                                                     DataCompression dataCompression = DataCompression.None)
         {
             Uri url = GetMethodUrl(method);
-            return Util.DownloadBCAPIResult<T>(url, postData);
+            return Util.DownloadBCAPIResult<T>(url, SupportsCompressedResponse, postData, dataCompression);
         }
 
         /// <summary>
@@ -329,16 +345,18 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="method">The method.</param>
-        /// <param name="postData">The post data.</param>
         /// <param name="callback">The callback.</param>
-        private static void QueryMethodAsync<T>(BCAPIMethods method, QueryCallback<T> callback, string postData = null)
+        /// <param name="postData">The post data.</param>
+        /// <param name="dataCompression">The data compression.</param>
+        private static void QueryMethodAsync<T>(BCAPIMethods method, QueryCallback<T> callback, string postData = null,
+                                                DataCompression dataCompression = DataCompression.None)
         {
             // Check callback not null
             if (callback == null)
                 throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             Uri url = GetMethodUrl(method);
-            Util.DownloadBCAPIResultAsync(url, callback, postData);
+            Util.DownloadBCAPIResultAsync(url, callback, SupportsCompressedResponse, postData, dataCompression);
         }
 
         /// <summary>

@@ -342,5 +342,37 @@ namespace EVEMon.Common
                 }
             }
         }
+
+        /// <summary>
+        /// Gets and closes the window with the given tag.
+        /// </summary>
+        /// <typeparam name="TForm">The type of the form.</typeparam>
+        /// <typeparam name="TTag">The type of the tag.</typeparam>
+        /// <param name="tag">The tag.</param>
+        public static void GetAndCloseByTag<TForm, TTag>(TTag tag)
+            where TForm : Form
+            where TTag : class
+        {
+            TForm window = GetByTag<TForm, TTag>(tag);
+
+            if (window != null)
+                CloseByTag(window, tag);
+        }
+
+        /// <summary>
+        /// Closes all tagged windows.
+        /// </summary>
+        public static void CloseAllTagged()
+        {
+            lock (s_syncLock)
+            {
+                List<Form> formsToClose = s_taggedWindows.ToList();
+                foreach (Form existingWindow in formsToClose.Where(form => !form.IsDisposed))
+                {
+                    existingWindow.Close();
+                }
+                s_taggedWindows.Clear();
+            }
+        }
     }
 }

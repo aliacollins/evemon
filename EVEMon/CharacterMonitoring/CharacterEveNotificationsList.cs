@@ -11,7 +11,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.NotificationWindow;
+using EVEMon.DetailsWindow;
 
 namespace EVEMon.CharacterMonitoring
 {
@@ -58,13 +58,12 @@ namespace EVEMon.CharacterMonitoring
         #endregion
 
 
-        #region Public Properties
+        #region Properties
 
         /// <summary>
         /// Gets the character associated with this monitor.
         /// </summary>
-        [Browsable(false)]
-        public CCPCharacter Character { get; set; }
+        internal CCPCharacter Character { get; set; }
 
         /// <summary>
         /// Gets or sets the text filter.
@@ -97,10 +96,9 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// 
+        /// Gets or sets the pane position.
         /// </summary>
-        [Browsable(false)]
-        public ReadingPanePositioning PanePosition
+        internal ReadingPanePositioning PanePosition
         {
             get { return m_panePosition; }
             set
@@ -113,9 +111,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of EVE mail messages to display.
         /// </summary>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public IEnumerable<EveNotification> EVENotifications
+        private IEnumerable<EveNotification> EVENotifications
         {
             get { return m_list; }
             set
@@ -221,6 +217,9 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
+            lvNotifications.Visible = false;
+            eveNotificationReadingPane.HidePane();
+
             EVENotifications = (Character == null ? null : Character.EVENotifications);
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
             Grouping = (Character == null ? EVENotificationsGrouping.Type : Character.UISettings.EVENotificationsGroupBy);
@@ -262,9 +261,6 @@ namespace EVEMon.CharacterMonitoring
 
                 // We update the content
                 UpdateContent();
-
-                // Adjust the size of the columns
-                AdjustColumns();
             }
             finally
             {
@@ -310,6 +306,9 @@ namespace EVEMon.CharacterMonitoring
                         lvItem.Selected = true;
                     }
                 }
+
+                // Adjust the size of the columns
+                AdjustColumns();
 
                 UpdateListVisibility();
             }
