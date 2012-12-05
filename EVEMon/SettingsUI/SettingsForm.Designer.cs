@@ -87,14 +87,14 @@ namespace EVEMon.SettingsUI
             this.cancelButton = new System.Windows.Forms.Button();
             this.lblMainWindowPage = new System.Windows.Forms.Label();
             this.lblSize = new System.Windows.Forms.Label();
-            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.CharacterMonitorGroupBox = new System.Windows.Forms.GroupBox();
             this.cbColorQueuedSkills = new System.Windows.Forms.CheckBox();
             this.cbShowPrereqMetSkills = new System.Windows.Forms.CheckBox();
             this.cbColorPartialSkills = new System.Windows.Forms.CheckBox();
             this.cbAlwaysShowSkillQueueTime = new System.Windows.Forms.CheckBox();
             this.cbShowNonPublicSkills = new System.Windows.Forms.CheckBox();
             this.cbShowAllPublicSkills = new System.Windows.Forms.CheckBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.WindowTitleGroupBox = new System.Windows.Forms.GroupBox();
             this.cbWindowsTitleList = new System.Windows.Forms.ComboBox();
             this.cbSkillInTitle = new System.Windows.Forms.CheckBox();
             this.cbTitleToTime = new System.Windows.Forms.CheckBox();
@@ -103,8 +103,8 @@ namespace EVEMon.SettingsUI
             this.lblSkillPlannerPage = new System.Windows.Forms.Label();
             this.lblNetworkPageAPIProvider = new System.Windows.Forms.Label();
             this.lblNetworkPageProxy = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
+            this.lblProxyHostIPAddress = new System.Windows.Forms.Label();
+            this.lblProxyPort = new System.Windows.Forms.Label();
             this.lblHTTP = new System.Windows.Forms.Label();
             this.lblEmailNotificationPage = new System.Windows.Forms.Label();
             this.lblNotificationsPage = new System.Windows.Forms.Label();
@@ -124,15 +124,15 @@ namespace EVEMon.SettingsUI
             this.lblG15CycleCharSeconds = new System.Windows.Forms.Label();
             this.lblIgbServerPage = new System.Windows.Forms.Label();
             this.lblIGBPort = new System.Windows.Forms.Label();
-            this.flowLayoutPanel28 = new System.Windows.Forms.FlowLayoutPanel();
+            this.igbAddressFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.igbHelpLabel = new System.Windows.Forms.Label();
             this.igbUrlTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblIconsPage = new System.Windows.Forms.Label();
             this.gbSkillBrowserIconSet = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.iconsSetTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.cbSkillIconSet = new System.Windows.Forms.ComboBox();
             this.tvlist = new System.Windows.Forms.TreeView();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblObsoletePlanEntries = new System.Windows.Forms.Label();
             this.ttToolTipCodes = new System.Windows.Forms.ToolTip(this.components);
             this.cbUseIncreasedContrastOnOverview = new System.Windows.Forms.CheckBox();
             this.overviewGroupCharactersInTrainingCheckBox = new System.Windows.Forms.CheckBox();
@@ -151,7 +151,7 @@ namespace EVEMon.SettingsUI
             this.compatibilityCombo = new System.Windows.Forms.ComboBox();
             this.runAtStartupComboBox = new System.Windows.Forms.CheckBox();
             this.mainWindowPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.OverviewGroupBox = new System.Windows.Forms.GroupBox();
             this.overviewPanel = new System.Windows.Forms.Panel();
             this.overviewPortraitSizeComboBox = new System.Windows.Forms.ComboBox();
             this.skillPlannerPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
@@ -243,7 +243,7 @@ namespace EVEMon.SettingsUI
             this.igbServerPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.igbCheckBox = new System.Windows.Forms.CheckBox();
             this.igbFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel27 = new System.Windows.Forms.FlowLayoutPanel();
+            this.igbPortFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.igbPortTextBox = new System.Windows.Forms.TextBox();
             this.cbIGBPublic = new System.Windows.Forms.CheckBox();
             this.iconsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
@@ -269,21 +269,21 @@ namespace EVEMon.SettingsUI
             this.marketUnifiedUploaderCheckBox = new System.Windows.Forms.CheckBox();
             this.marketUnifiedUploaderPageLabel = new System.Windows.Forms.Label();
             this.portableEveClientsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblPECIDescription = new System.Windows.Forms.Label();
             this.PECIGroupBox = new System.Windows.Forms.GroupBox();
             this.portableEveClientsControl = new EVEMon.SettingsUI.PortableEveClientsControl();
             this.systemTrayIconGroupBox.SuspendLayout();
             this.bottomPanel.SuspendLayout();
-            this.groupBox15.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.flowLayoutPanel28.SuspendLayout();
+            this.CharacterMonitorGroupBox.SuspendLayout();
+            this.WindowTitleGroupBox.SuspendLayout();
+            this.igbAddressFlowLayoutPanel.SuspendLayout();
             this.gbSkillBrowserIconSet.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
+            this.iconsSetTableLayoutPanel.SuspendLayout();
             this.leftPanel.SuspendLayout();
             this.multiPanel.SuspendLayout();
             this.generalPage.SuspendLayout();
             this.mainWindowPage.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.OverviewGroupBox.SuspendLayout();
             this.overviewPanel.SuspendLayout();
             this.skillPlannerPage.SuspendLayout();
             this.networkPage.SuspendLayout();
@@ -310,7 +310,7 @@ namespace EVEMon.SettingsUI
             ((System.ComponentModel.ISupportInitialize)(this.ACycleInterval)).BeginInit();
             this.igbServerPage.SuspendLayout();
             this.igbFlowPanel.SuspendLayout();
-            this.flowLayoutPanel27.SuspendLayout();
+            this.igbPortFlowLayoutPanel.SuspendLayout();
             this.iconsPage.SuspendLayout();
             this.messagesPage.SuspendLayout();
             this.gbMessageBox.SuspendLayout();
@@ -443,22 +443,22 @@ namespace EVEMon.SettingsUI
             this.lblSize.TabIndex = 31;
             this.lblSize.Text = "Size";
             // 
-            // groupBox15
+            // CharacterMonitorGroupBox
             // 
-            this.groupBox15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.CharacterMonitorGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox15.Controls.Add(this.cbColorQueuedSkills);
-            this.groupBox15.Controls.Add(this.cbShowPrereqMetSkills);
-            this.groupBox15.Controls.Add(this.cbColorPartialSkills);
-            this.groupBox15.Controls.Add(this.cbAlwaysShowSkillQueueTime);
-            this.groupBox15.Controls.Add(this.cbShowNonPublicSkills);
-            this.groupBox15.Controls.Add(this.cbShowAllPublicSkills);
-            this.groupBox15.Location = new System.Drawing.Point(3, 180);
-            this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(426, 85);
-            this.groupBox15.TabIndex = 7;
-            this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "Character Monitor";
+            this.CharacterMonitorGroupBox.Controls.Add(this.cbColorQueuedSkills);
+            this.CharacterMonitorGroupBox.Controls.Add(this.cbShowPrereqMetSkills);
+            this.CharacterMonitorGroupBox.Controls.Add(this.cbColorPartialSkills);
+            this.CharacterMonitorGroupBox.Controls.Add(this.cbAlwaysShowSkillQueueTime);
+            this.CharacterMonitorGroupBox.Controls.Add(this.cbShowNonPublicSkills);
+            this.CharacterMonitorGroupBox.Controls.Add(this.cbShowAllPublicSkills);
+            this.CharacterMonitorGroupBox.Location = new System.Drawing.Point(3, 180);
+            this.CharacterMonitorGroupBox.Name = "CharacterMonitorGroupBox";
+            this.CharacterMonitorGroupBox.Size = new System.Drawing.Size(426, 85);
+            this.CharacterMonitorGroupBox.TabIndex = 7;
+            this.CharacterMonitorGroupBox.TabStop = false;
+            this.CharacterMonitorGroupBox.Text = "Character Monitor";
             // 
             // cbColorQueuedSkills
             // 
@@ -528,19 +528,19 @@ namespace EVEMon.SettingsUI
             this.cbShowAllPublicSkills.UseVisualStyleBackColor = true;
             this.cbShowAllPublicSkills.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
-            // groupBox7
+            // WindowTitleGroupBox
             // 
-            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.WindowTitleGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox7.Controls.Add(this.cbWindowsTitleList);
-            this.groupBox7.Controls.Add(this.cbSkillInTitle);
-            this.groupBox7.Controls.Add(this.cbTitleToTime);
-            this.groupBox7.Location = new System.Drawing.Point(3, 67);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(426, 105);
-            this.groupBox7.TabIndex = 14;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Window Title";
+            this.WindowTitleGroupBox.Controls.Add(this.cbWindowsTitleList);
+            this.WindowTitleGroupBox.Controls.Add(this.cbSkillInTitle);
+            this.WindowTitleGroupBox.Controls.Add(this.cbTitleToTime);
+            this.WindowTitleGroupBox.Location = new System.Drawing.Point(3, 67);
+            this.WindowTitleGroupBox.Name = "WindowTitleGroupBox";
+            this.WindowTitleGroupBox.Size = new System.Drawing.Size(426, 105);
+            this.WindowTitleGroupBox.TabIndex = 14;
+            this.WindowTitleGroupBox.TabStop = false;
+            this.WindowTitleGroupBox.Text = "Window Title";
             // 
             // cbWindowsTitleList
             // 
@@ -640,27 +640,27 @@ namespace EVEMon.SettingsUI
             this.lblNetworkPageProxy.Text = "By default, EVEMon will use the same Proxy settings as Internet Explorer (can be " +
     "configured through the Control Panel).";
             // 
-            // label12
+            // lblProxyHostIPAddress
             // 
-            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lblProxyHostIPAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label12.Location = new System.Drawing.Point(50, 8);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(165, 13);
-            this.label12.TabIndex = 3;
-            this.label12.Text = "Host/IP Address";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblProxyHostIPAddress.Location = new System.Drawing.Point(50, 8);
+            this.lblProxyHostIPAddress.Name = "lblProxyHostIPAddress";
+            this.lblProxyHostIPAddress.Size = new System.Drawing.Size(165, 13);
+            this.lblProxyHostIPAddress.TabIndex = 3;
+            this.lblProxyHostIPAddress.Text = "Host/IP Address";
+            this.lblProxyHostIPAddress.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // label11
+            // lblProxyPort
             // 
-            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lblProxyPort.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label11.Location = new System.Drawing.Point(221, 8);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(39, 13);
-            this.label11.TabIndex = 4;
-            this.label11.Text = "Port";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblProxyPort.Location = new System.Drawing.Point(221, 8);
+            this.lblProxyPort.Name = "lblProxyPort";
+            this.lblProxyPort.Size = new System.Drawing.Size(39, 13);
+            this.lblProxyPort.TabIndex = 4;
+            this.lblProxyPort.Text = "Port";
+            this.lblProxyPort.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // lblHTTP
             // 
@@ -859,14 +859,14 @@ namespace EVEMon.SettingsUI
             this.lblIGBPort.Text = "IGB Port:";
             this.lblIGBPort.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // flowLayoutPanel28
+            // igbAddressFlowLayoutPanel
             // 
-            this.flowLayoutPanel28.Controls.Add(this.igbHelpLabel);
-            this.flowLayoutPanel28.Controls.Add(this.igbUrlTextBox);
-            this.flowLayoutPanel28.Location = new System.Drawing.Point(12, 37);
-            this.flowLayoutPanel28.Name = "flowLayoutPanel28";
-            this.flowLayoutPanel28.Size = new System.Drawing.Size(334, 22);
-            this.flowLayoutPanel28.TabIndex = 11;
+            this.igbAddressFlowLayoutPanel.Controls.Add(this.igbHelpLabel);
+            this.igbAddressFlowLayoutPanel.Controls.Add(this.igbUrlTextBox);
+            this.igbAddressFlowLayoutPanel.Location = new System.Drawing.Point(12, 37);
+            this.igbAddressFlowLayoutPanel.Name = "igbAddressFlowLayoutPanel";
+            this.igbAddressFlowLayoutPanel.Size = new System.Drawing.Size(334, 22);
+            this.igbAddressFlowLayoutPanel.TabIndex = 11;
             // 
             // igbHelpLabel
             // 
@@ -888,23 +888,23 @@ namespace EVEMon.SettingsUI
             this.igbUrlTextBox.TabIndex = 10;
             this.igbUrlTextBox.Text = "http://localhost:80/";
             // 
-            // label1
+            // lblIconsPage
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lblIconsPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label1.Location = new System.Drawing.Point(4, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(424, 32);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "You can customize the icons used in the skill planner; if you have a good idea fo" +
+            this.lblIconsPage.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.lblIconsPage.Location = new System.Drawing.Point(4, 20);
+            this.lblIconsPage.Name = "lblIconsPage";
+            this.lblIconsPage.Size = new System.Drawing.Size(424, 32);
+            this.lblIconsPage.TabIndex = 15;
+            this.lblIconsPage.Text = "You can customize the icons used in the skill planner; if you have a good idea fo" +
     "r a set of icons instructions to create your own can be found on BattleClinic.";
             // 
             // gbSkillBrowserIconSet
             // 
             this.gbSkillBrowserIconSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbSkillBrowserIconSet.Controls.Add(this.tableLayoutPanel4);
+            this.gbSkillBrowserIconSet.Controls.Add(this.iconsSetTableLayoutPanel);
             this.gbSkillBrowserIconSet.Location = new System.Drawing.Point(7, 55);
             this.gbSkillBrowserIconSet.Name = "gbSkillBrowserIconSet";
             this.gbSkillBrowserIconSet.Size = new System.Drawing.Size(225, 204);
@@ -912,21 +912,21 @@ namespace EVEMon.SettingsUI
             this.gbSkillBrowserIconSet.TabStop = false;
             this.gbSkillBrowserIconSet.Text = "Skill Browser Icon Set";
             // 
-            // tableLayoutPanel4
+            // iconsSetTableLayoutPanel
             // 
-            this.tableLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel4.ColumnCount = 1;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.cbSkillIconSet, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.tvlist, 0, 1);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 16);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 2;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(219, 185);
-            this.tableLayoutPanel4.TabIndex = 15;
+            this.iconsSetTableLayoutPanel.AutoSize = true;
+            this.iconsSetTableLayoutPanel.ColumnCount = 1;
+            this.iconsSetTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.iconsSetTableLayoutPanel.Controls.Add(this.cbSkillIconSet, 0, 0);
+            this.iconsSetTableLayoutPanel.Controls.Add(this.tvlist, 0, 1);
+            this.iconsSetTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.iconsSetTableLayoutPanel.Location = new System.Drawing.Point(3, 16);
+            this.iconsSetTableLayoutPanel.Name = "iconsSetTableLayoutPanel";
+            this.iconsSetTableLayoutPanel.RowCount = 2;
+            this.iconsSetTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.iconsSetTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.iconsSetTableLayoutPanel.Size = new System.Drawing.Size(219, 185);
+            this.iconsSetTableLayoutPanel.TabIndex = 15;
             // 
             // cbSkillIconSet
             // 
@@ -969,16 +969,16 @@ namespace EVEMon.SettingsUI
             this.tvlist.Size = new System.Drawing.Size(213, 152);
             this.tvlist.TabIndex = 9;
             // 
-            // label2
+            // lblObsoletePlanEntries
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lblObsoletePlanEntries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label2.Location = new System.Drawing.Point(5, 30);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(424, 28);
-            this.label2.TabIndex = 24;
-            this.label2.Text = "You can configure how EVEMon handles skills that appear to be completed and reset" +
+            this.lblObsoletePlanEntries.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.lblObsoletePlanEntries.Location = new System.Drawing.Point(5, 30);
+            this.lblObsoletePlanEntries.Name = "lblObsoletePlanEntries";
+            this.lblObsoletePlanEntries.Size = new System.Drawing.Size(424, 28);
+            this.lblObsoletePlanEntries.TabIndex = 24;
+            this.lblObsoletePlanEntries.Text = "You can configure how EVEMon handles skills that appear to be completed and reset" +
     " the appearing messages behavior.";
             // 
             // cbUseIncreasedContrastOnOverview
@@ -1288,9 +1288,9 @@ namespace EVEMon.SettingsUI
             // mainWindowPage
             // 
             this.mainWindowPage.Controls.Add(this.lblMainWindowPage);
-            this.mainWindowPage.Controls.Add(this.groupBox2);
-            this.mainWindowPage.Controls.Add(this.groupBox15);
-            this.mainWindowPage.Controls.Add(this.groupBox7);
+            this.mainWindowPage.Controls.Add(this.OverviewGroupBox);
+            this.mainWindowPage.Controls.Add(this.CharacterMonitorGroupBox);
+            this.mainWindowPage.Controls.Add(this.WindowTitleGroupBox);
             this.mainWindowPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainWindowPage.Location = new System.Drawing.Point(5, 5);
             this.mainWindowPage.Name = "mainWindowPage";
@@ -1298,18 +1298,18 @@ namespace EVEMon.SettingsUI
             this.mainWindowPage.TabIndex = 1;
             this.mainWindowPage.Text = "mainWindowPage";
             // 
-            // groupBox2
+            // OverviewGroupBox
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.OverviewGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.overviewPanel);
-            this.groupBox2.Controls.Add(this.cbShowOverViewTab);
-            this.groupBox2.Location = new System.Drawing.Point(1, 274);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(428, 127);
-            this.groupBox2.TabIndex = 15;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Overview";
+            this.OverviewGroupBox.Controls.Add(this.overviewPanel);
+            this.OverviewGroupBox.Controls.Add(this.cbShowOverViewTab);
+            this.OverviewGroupBox.Location = new System.Drawing.Point(1, 274);
+            this.OverviewGroupBox.Name = "OverviewGroupBox";
+            this.OverviewGroupBox.Size = new System.Drawing.Size(428, 127);
+            this.OverviewGroupBox.TabIndex = 15;
+            this.OverviewGroupBox.TabStop = false;
+            this.OverviewGroupBox.Text = "Overview";
             // 
             // overviewPanel
             // 
@@ -1518,9 +1518,9 @@ namespace EVEMon.SettingsUI
             this.customProxyPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.customProxyPanel.Controls.Add(this.proxyPortTextBox);
-            this.customProxyPanel.Controls.Add(this.label12);
+            this.customProxyPanel.Controls.Add(this.lblProxyHostIPAddress);
             this.customProxyPanel.Controls.Add(this.proxyAuthenticationButton);
-            this.customProxyPanel.Controls.Add(this.label11);
+            this.customProxyPanel.Controls.Add(this.lblProxyPort);
             this.customProxyPanel.Controls.Add(this.lblHTTP);
             this.customProxyPanel.Controls.Add(this.proxyHttpHostTextBox);
             this.customProxyPanel.Location = new System.Drawing.Point(17, 97);
@@ -2374,8 +2374,8 @@ namespace EVEMon.SettingsUI
             this.igbFlowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.igbFlowPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.igbFlowPanel.Controls.Add(this.flowLayoutPanel27);
-            this.igbFlowPanel.Controls.Add(this.flowLayoutPanel28);
+            this.igbFlowPanel.Controls.Add(this.igbPortFlowLayoutPanel);
+            this.igbFlowPanel.Controls.Add(this.igbAddressFlowLayoutPanel);
             this.igbFlowPanel.Controls.Add(this.cbIGBPublic);
             this.igbFlowPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.igbFlowPanel.Location = new System.Drawing.Point(7, 138);
@@ -2384,14 +2384,14 @@ namespace EVEMon.SettingsUI
             this.igbFlowPanel.Size = new System.Drawing.Size(413, 95);
             this.igbFlowPanel.TabIndex = 4;
             // 
-            // flowLayoutPanel27
+            // igbPortFlowLayoutPanel
             // 
-            this.flowLayoutPanel27.Controls.Add(this.lblIGBPort);
-            this.flowLayoutPanel27.Controls.Add(this.igbPortTextBox);
-            this.flowLayoutPanel27.Location = new System.Drawing.Point(12, 3);
-            this.flowLayoutPanel27.Name = "flowLayoutPanel27";
-            this.flowLayoutPanel27.Size = new System.Drawing.Size(125, 28);
-            this.flowLayoutPanel27.TabIndex = 7;
+            this.igbPortFlowLayoutPanel.Controls.Add(this.lblIGBPort);
+            this.igbPortFlowLayoutPanel.Controls.Add(this.igbPortTextBox);
+            this.igbPortFlowLayoutPanel.Location = new System.Drawing.Point(12, 3);
+            this.igbPortFlowLayoutPanel.Name = "igbPortFlowLayoutPanel";
+            this.igbPortFlowLayoutPanel.Size = new System.Drawing.Size(125, 28);
+            this.igbPortFlowLayoutPanel.TabIndex = 7;
             // 
             // igbPortTextBox
             // 
@@ -2416,7 +2416,7 @@ namespace EVEMon.SettingsUI
             // 
             // iconsPage
             // 
-            this.iconsPage.Controls.Add(this.label1);
+            this.iconsPage.Controls.Add(this.lblIconsPage);
             this.iconsPage.Controls.Add(this.gbSkillBrowserIconSet);
             this.iconsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.iconsPage.Location = new System.Drawing.Point(5, 5);
@@ -2428,7 +2428,7 @@ namespace EVEMon.SettingsUI
             // messagesPage
             // 
             this.messagesPage.Controls.Add(this.gbMessageBox);
-            this.messagesPage.Controls.Add(this.label2);
+            this.messagesPage.Controls.Add(this.lblObsoletePlanEntries);
             this.messagesPage.Controls.Add(this.ObsoleteEntryRemovalGroupBox);
             this.messagesPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.messagesPage.Location = new System.Drawing.Point(5, 5);
@@ -2652,7 +2652,7 @@ namespace EVEMon.SettingsUI
             // 
             // portableEveClientsPage
             // 
-            this.portableEveClientsPage.Controls.Add(this.label3);
+            this.portableEveClientsPage.Controls.Add(this.lblPECIDescription);
             this.portableEveClientsPage.Controls.Add(this.PECIGroupBox);
             this.portableEveClientsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.portableEveClientsPage.Location = new System.Drawing.Point(5, 5);
@@ -2661,16 +2661,16 @@ namespace EVEMon.SettingsUI
             this.portableEveClientsPage.TabIndex = 20;
             this.portableEveClientsPage.Text = "portableEveClientsPage";
             // 
-            // label3
+            // lblPECIDescription
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lblPECIDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label3.Location = new System.Drawing.Point(4, 15);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(424, 95);
-            this.label3.TabIndex = 21;
-            this.label3.Text = resources.GetString("label3.Text");
+            this.lblPECIDescription.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.lblPECIDescription.Location = new System.Drawing.Point(4, 15);
+            this.lblPECIDescription.Name = "lblPECIDescription";
+            this.lblPECIDescription.Size = new System.Drawing.Size(424, 95);
+            this.lblPECIDescription.TabIndex = 21;
+            this.lblPECIDescription.Text = resources.GetString("lblPECIDescription.Text");
             // 
             // PECIGroupBox
             // 
@@ -2714,22 +2714,22 @@ namespace EVEMon.SettingsUI
             this.systemTrayIconGroupBox.ResumeLayout(false);
             this.systemTrayIconGroupBox.PerformLayout();
             this.bottomPanel.ResumeLayout(false);
-            this.groupBox15.ResumeLayout(false);
-            this.groupBox15.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
-            this.flowLayoutPanel28.ResumeLayout(false);
-            this.flowLayoutPanel28.PerformLayout();
+            this.CharacterMonitorGroupBox.ResumeLayout(false);
+            this.CharacterMonitorGroupBox.PerformLayout();
+            this.WindowTitleGroupBox.ResumeLayout(false);
+            this.WindowTitleGroupBox.PerformLayout();
+            this.igbAddressFlowLayoutPanel.ResumeLayout(false);
+            this.igbAddressFlowLayoutPanel.PerformLayout();
             this.gbSkillBrowserIconSet.ResumeLayout(false);
             this.gbSkillBrowserIconSet.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
+            this.iconsSetTableLayoutPanel.ResumeLayout(false);
             this.leftPanel.ResumeLayout(false);
             this.multiPanel.ResumeLayout(false);
             this.generalPage.ResumeLayout(false);
             this.generalPage.PerformLayout();
             this.mainWindowPage.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.OverviewGroupBox.ResumeLayout(false);
+            this.OverviewGroupBox.PerformLayout();
             this.overviewPanel.ResumeLayout(false);
             this.overviewPanel.PerformLayout();
             this.skillPlannerPage.ResumeLayout(false);
@@ -2777,8 +2777,8 @@ namespace EVEMon.SettingsUI
             this.igbServerPage.PerformLayout();
             this.igbFlowPanel.ResumeLayout(false);
             this.igbFlowPanel.PerformLayout();
-            this.flowLayoutPanel27.ResumeLayout(false);
-            this.flowLayoutPanel27.PerformLayout();
+            this.igbPortFlowLayoutPanel.ResumeLayout(false);
+            this.igbPortFlowLayoutPanel.PerformLayout();
             this.iconsPage.ResumeLayout(false);
             this.messagesPage.ResumeLayout(false);
             this.gbMessageBox.ResumeLayout(false);
@@ -2819,7 +2819,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.FlowLayoutPanel igbFlowPanel;
         private System.Windows.Forms.CheckBox igbCheckBox;
         private System.Windows.Forms.CheckBox cbIGBPublic;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel27;
+        private System.Windows.Forms.FlowLayoutPanel igbPortFlowLayoutPanel;
         private System.Windows.Forms.ToolTip ttToolTipCodes;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.CheckBox cbSkillInTitle;
@@ -2882,7 +2882,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label lblUpdatesPage;
         private System.Windows.Forms.Button applyButton;
         private System.Windows.Forms.Panel externalCalendarPanel;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox OverviewGroupBox;
         private System.Windows.Forms.ComboBox overviewPortraitSizeComboBox;
         private System.Windows.Forms.CheckBox overviewShowPortraitCheckBox;
         private System.Windows.Forms.CheckBox overviewShowWalletCheckBox;
@@ -2915,7 +2915,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.CheckBox cbG15ShowEVETime;
         private System.Windows.Forms.CheckBox cbUseIncreasedContrastOnOverview;
         private MultiPanelPage iconsPage;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.TableLayoutPanel iconsSetTableLayoutPanel;
         private System.Windows.Forms.ComboBox cbSkillIconSet;
         private System.Windows.Forms.TreeView tvlist;
         private MultiPanelPage messagesPage;
@@ -2943,15 +2943,15 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Panel bottomPanel;
         private System.Windows.Forms.Label lblMainWindowPage;
         private System.Windows.Forms.Label lblSize;
-        private System.Windows.Forms.GroupBox groupBox15;
-        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.GroupBox CharacterMonitorGroupBox;
+        private System.Windows.Forms.GroupBox WindowTitleGroupBox;
         private System.Windows.Forms.Label lblGeneralPage;
         private System.Windows.Forms.Label lblEnvironment;
         private System.Windows.Forms.Label lblSkillPlannerPage;
         private System.Windows.Forms.Label lblNetworkPageAPIProvider;
         private System.Windows.Forms.Label lblNetworkPageProxy;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lblProxyHostIPAddress;
+        private System.Windows.Forms.Label lblProxyPort;
         private System.Windows.Forms.Label lblHTTP;
         private System.Windows.Forms.Label lblEmailNotificationPage;
         private System.Windows.Forms.Label lblNotificationsPage;
@@ -2971,11 +2971,11 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label lblG15CycleCharSeconds;
         private System.Windows.Forms.Label lblIgbServerPage;
         private System.Windows.Forms.Label lblIGBPort;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel28;
+        private System.Windows.Forms.FlowLayoutPanel igbAddressFlowLayoutPanel;
         private System.Windows.Forms.Label igbHelpLabel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblIconsPage;
         private System.Windows.Forms.GroupBox gbSkillBrowserIconSet;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblObsoletePlanEntries;
         private System.Windows.Forms.GroupBox systemTrayIconGroupBox;
         private System.Windows.Forms.Button btnEVEMonDataDir;
         private EmailNotificationsControl emailNotificationsControl;
@@ -2991,7 +2991,7 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label marketUnifiedUploaderPageLabel;
         private MarketUnifiedUploaderControl marketUnifiedUploaderControl;
         private MultiPanelPage portableEveClientsPage;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblPECIDescription;
         private System.Windows.Forms.GroupBox PECIGroupBox;
         private PortableEveClientsControl portableEveClientsControl;
     }
