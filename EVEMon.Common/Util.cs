@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -34,6 +36,8 @@ namespace EVEMon.Common
     /// </summary>
     public static class Util
     {
+        private static string s_macAddressSHA1Sum;
+
         /// <summary>
         /// Opens the provided url in a new process.
         /// </summary>
@@ -824,23 +828,79 @@ namespace EVEMon.Common
             if (!File.Exists(filename))
                 throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", filename));
 
+            Stream fileStream = GetFileStream(filename, FileMode.Open, FileAccess.Read);
+            return CreateMD5(fileStream);
+        }
+
+        /// <summary>
+        /// Creates an MD5Sum from a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns></returns>
+        public static string CreateMD5(Stream stream)
+        {
             StringBuilder builder = new StringBuilder();
 
-            Stream fileStream = GetFileStream(filename, FileMode.Open, FileAccess.Read);
-            int bufferSize = Convert.ToInt32(fileStream.Length);
-            using (Stream bufferedStream = new BufferedStream(fileStream, bufferSize))
+            int bufferSize = Convert.ToInt32(stream.Length);
+            using (Stream bufferedStream = new BufferedStream(stream, bufferSize))
             {
                 using (MD5 md5 = MD5.Create())
                 {
                     byte[] hash = md5.ComputeHash(bufferedStream);
                     foreach (byte b in hash)
                     {
-                        builder.Append(
-                            b.ToString("x2", CultureConstants.InvariantCulture).ToLower(CultureConstants.InvariantCulture));
+                        builder.Append(b.ToString("x2", CultureConstants.InvariantCulture)
+                                           .ToLower(CultureConstants.InvariantCulture));
                     }
                 }
             }
+            return builder.ToString();
+        }
 
+        /// <summary>
+        /// Creates an SHA1Sum from the mac address of the first operational network interface.
+        /// </summary>
+        /// <returns></returns>
+        public static string CreateSHA1SumFromMacAddress()
+        {
+            if (String.IsNullOrEmpty(s_macAddressSHA1Sum))
+            {
+                s_macAddressSHA1Sum = String.Empty;
+                NetworkInterface ni = NetworkInterface.GetAllNetworkInterfaces()
+                    .FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up);
+
+                if (ni != null)
+                {
+                    Stream stream = GetMemoryStream(ni.GetPhysicalAddress().GetAddressBytes());
+                    s_macAddressSHA1Sum = CreateSHA1(stream);
+                }
+            }
+
+            return s_macAddressSHA1Sum;
+        }
+
+        /// <summary>
+        /// Creates an SHA1Sum from a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns></returns>
+        public static string CreateSHA1(Stream stream)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            int bufferSize = Convert.ToInt32(stream.Length);
+            using (Stream bufferedStream = new BufferedStream(stream, bufferSize))
+            {
+                using (SHA1 sha1 = SHA1.Create())
+                {
+                    byte[] hash = sha1.ComputeHash(bufferedStream);
+                    foreach (byte b in hash)
+                    {
+                        builder.Append(b.ToString("x2", CultureConstants.InvariantCulture)
+                                           .ToLower(CultureConstants.InvariantCulture));
+                    }
+                }
+            }
             return builder.ToString();
         }
 

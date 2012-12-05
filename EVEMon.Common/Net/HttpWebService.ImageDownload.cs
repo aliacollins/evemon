@@ -20,7 +20,7 @@ namespace EVEMon.Common.Net
         /// <param name="method">The method.</param>
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The post data.</param>
-        /// <param name="dataCompression">The compression.</param>
+        /// <param name="dataCompression">The post data compression method.</param>
         /// <returns></returns>
         public static Image DownloadImage(Uri url, HttpMethod method = HttpMethod.Get, bool acceptEncoded = false, 
                                           string postdata = null, DataCompression dataCompression = DataCompression.None)
@@ -52,8 +52,8 @@ namespace EVEMon.Common.Net
         /// <param name="userState">A state object to be returned to the callback</param>
         /// <param name="method">The method.</param>
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postdata">The postdata.</param>
-        /// <param name="dataCompression">The compression.</param>
+        /// <param name="postdata">The post data.</param>
+        /// <param name="dataCompression">The post data compression method.</param>
         public static void DownloadImageAsync(Uri url, DownloadImageCompletedCallback callback, object userState,
                                               HttpMethod method = HttpMethod.Get, bool acceptEncoded = false,
                                               string postdata = null,

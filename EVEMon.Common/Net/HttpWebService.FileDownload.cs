@@ -17,7 +17,7 @@ namespace EVEMon.Common.Net
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="method">The method.</param>
         /// <param name="postdata">The post data.</param>
-        /// <param name="dataCompression">The compression.</param>
+        /// <param name="dataCompression">The post data compression method.</param>
         /// <returns></returns>
         public static FileInfo DownloadFile(Uri url, string filePath, HttpMethod method = HttpMethod.Get,
                                             bool acceptEncoded = false, string postdata = null,
@@ -59,8 +59,8 @@ namespace EVEMon.Common.Net
         /// <param name="progressCallback">The progress callback.</param>
         /// <param name="method">The method.</param>
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postdata">The postdata.</param>
-        /// <param name="dataCompression">The compression.</param>
+        /// <param name="postdata">The post data.</param>
+        /// <param name="dataCompression">The post data compression method.</param>
         /// <returns></returns>
         public static object DownloadFileAsync(Uri url, string filePath, DownloadFileCompletedCallback callback,
                                                DownloadProgressChangedCallback progressCallback,
