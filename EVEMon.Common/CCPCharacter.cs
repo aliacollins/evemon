@@ -682,9 +682,7 @@ namespace EVEMon.Common
             // Notify ended contracts issued by the character
             if (m_endedContractsForCharacter.Any(x => !x.NotificationSend))
             {
-                EveMonClient.Notifications.NotifyCharacterContractsEnded(this,
-                                                                         m_endedContractsForCharacter.Where(
-                                                                             x => !x.NotificationSend));
+                EveMonClient.Notifications.NotifyCharacterContractsEnded(this, m_endedContractsForCharacter);
                 m_endedContractsForCharacter.ForEach(x => x.NotificationSend = true);
             }
 
@@ -693,9 +691,7 @@ namespace EVEMon.Common
             //if (m_endedContractsForCorporation.All(x => x.NotificationSend))
             //    return;
 
-            //EveMonClient.Notifications.NotifyCorporationContractsEnded(Corporation,
-            //                                                           m_endedContractsForCorporation.Where(
-            //                                                               x => !x.NotificationSend));
+            //EveMonClient.Notifications.NotifyCorporationContractsEnded(Corporation, m_endedContractsForCorporation);
             //m_endedContractsForCorporation.ForEach(x => x.NotificationSend = true);
         }
 
