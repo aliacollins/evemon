@@ -839,22 +839,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string CreateMD5(Stream stream)
         {
-            StringBuilder builder = new StringBuilder();
-
-            int bufferSize = Convert.ToInt32(stream.Length);
-            using (Stream bufferedStream = new BufferedStream(stream, bufferSize))
+            using (stream)
+            using (MD5 md5 = MD5.Create())
             {
-                using (MD5 md5 = MD5.Create())
-                {
-                    byte[] hash = md5.ComputeHash(bufferedStream);
-                    foreach (byte b in hash)
-                    {
-                        builder.Append(b.ToString("x2", CultureConstants.InvariantCulture)
-                                           .ToLower(CultureConstants.InvariantCulture));
-                    }
-                }
+                byte[] hash = md5.ComputeHash(stream);
+                return BitConverter.ToString(hash).Replace("-", String.Empty).ToLowerInvariant();
             }
-            return builder.ToString();
         }
 
         /// <summary>
@@ -886,22 +876,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string CreateSHA1(Stream stream)
         {
-            StringBuilder builder = new StringBuilder();
-
-            int bufferSize = Convert.ToInt32(stream.Length);
-            using (Stream bufferedStream = new BufferedStream(stream, bufferSize))
+            using (stream)
+            using (SHA1 sha1 = SHA1.Create())
             {
-                using (SHA1 sha1 = SHA1.Create())
-                {
-                    byte[] hash = sha1.ComputeHash(bufferedStream);
-                    foreach (byte b in hash)
-                    {
-                        builder.Append(b.ToString("x2", CultureConstants.InvariantCulture)
-                                           .ToLower(CultureConstants.InvariantCulture));
-                    }
-                }
+                byte[] hash = sha1.ComputeHash(stream);
+                return BitConverter.ToString(hash).Replace("-", String.Empty).ToLowerInvariant();
             }
-            return builder.ToString();
         }
 
         /// <summary>
