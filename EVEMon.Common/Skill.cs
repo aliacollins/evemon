@@ -132,7 +132,7 @@ namespace EVEMon.Common
             get
             {
                 CCPCharacter ccpCharacter = Character as CCPCharacter;
-                return (ccpCharacter != null) && ccpCharacter.Assets.Any(asset => asset.Item.ID == ID);
+                return (ccpCharacter != null) && ccpCharacter.Assets.Any(asset => asset.Item != null && asset.Item.ID == ID);
             }
         }
 
