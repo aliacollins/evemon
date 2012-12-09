@@ -14,7 +14,7 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<string, StaticCertificateClass> s_classesByName =
             new Dictionary<string, StaticCertificateClass>();
 
-        private static readonly Dictionary<long, StaticCertificate> s_certificatesByID = new Dictionary<long, StaticCertificate>();
+        private static readonly Dictionary<int, StaticCertificate> s_certificatesByID = new Dictionary<int, StaticCertificate>();
 
 
         #region Initialization

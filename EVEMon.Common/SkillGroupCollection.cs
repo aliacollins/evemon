@@ -9,7 +9,7 @@ namespace EVEMon.Common
     /// Represents a collection of a character's skills groups
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class SkillGroupCollection : ReadonlyKeyedCollection<long, SkillGroup>
+    public sealed class SkillGroupCollection : ReadonlyKeyedCollection<int, SkillGroup>
     {
         /// <summary>
         /// Constructor
@@ -28,7 +28,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SkillGroup this[long id]
+        public SkillGroup this[int id]
         {
             get { return GetByKey(id); }
         }

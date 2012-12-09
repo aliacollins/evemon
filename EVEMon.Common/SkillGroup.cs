@@ -34,7 +34,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the group's ID
         /// </summary>
-        public long ID
+        public int ID
         {
             get { return StaticData.ID; }
         }

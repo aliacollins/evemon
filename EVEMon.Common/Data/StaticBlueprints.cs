@@ -9,7 +9,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public static class StaticBlueprints
     {
-        private static readonly Dictionary<long, Blueprint> s_blueprintsByID = new Dictionary<long, Blueprint>();
+        private static readonly Dictionary<int, Blueprint> s_blueprintsByID = new Dictionary<int, Blueprint>();
 
 
         #region Initialization
@@ -78,7 +78,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="blueprintId">The id of the blueprint to find.</param>
         /// <returns>The first blueprint which id matches blueprintId, Null if no such blueprint is found.</returns>
-        public static Blueprint GetBlueprintByID(long blueprintId)
+        public static Blueprint GetBlueprintByID(int blueprintId)
         {
             Blueprint value;
             s_blueprintsByID.TryGetValue(blueprintId, out value);

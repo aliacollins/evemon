@@ -38,7 +38,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this category's id.
         /// </summary>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets this category's name.

@@ -17,7 +17,7 @@ namespace EVEMon.Common.Serialization.Settings
         }
 
         [XmlAttribute("skillID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlAttribute("skill")]
         public string SkillName { get; set; }

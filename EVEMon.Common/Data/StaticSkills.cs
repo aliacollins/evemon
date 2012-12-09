@@ -13,9 +13,9 @@ namespace EVEMon.Common.Data
     {
         private static int s_arrayIndicesCount;
         private static StaticSkill[] s_skills;
-        private static readonly Dictionary<long, StaticSkill> s_skillsByID = new Dictionary<long, StaticSkill>();
+        private static readonly Dictionary<int, StaticSkill> s_skillsByID = new Dictionary<int, StaticSkill>();
         private static readonly Dictionary<string, StaticSkill> s_skillsByName = new Dictionary<string, StaticSkill>();
-        private static readonly Dictionary<long, StaticSkillGroup> s_skillGroupsByID = new Dictionary<long, StaticSkillGroup>();
+        private static readonly Dictionary<int, StaticSkillGroup> s_skillGroupsByID = new Dictionary<int, StaticSkillGroup>();
 
 
         #region Initialization
@@ -111,7 +111,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The skill name or "Unknown" if the is no such skill in our data.</returns>
-        public static string GetSkillName(long id)
+        public static string GetSkillName(int id)
         {
             if (id == 0)
                 return string.Empty;
@@ -137,7 +137,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static StaticSkill GetSkillByID(long id)
+        public static StaticSkill GetSkillByID(int id)
         {
             StaticSkill skill;
             s_skillsByID.TryGetValue(id, out skill);

@@ -11,7 +11,7 @@ namespace EVEMon.Common
     /// Represents a collection of skills.
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class SkillCollection : ReadonlyKeyedCollection<long, Skill>
+    public sealed class SkillCollection : ReadonlyKeyedCollection<int, Skill>
     {
         private readonly Skill[] m_itemsArray = new Skill[StaticSkills.ArrayIndicesCount];
 
@@ -39,7 +39,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Skill this[long id]
+        public Skill this[int id]
         {
             get { return GetByKey(id); }
         }
