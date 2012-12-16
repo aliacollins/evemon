@@ -10,8 +10,12 @@ namespace EVEMon.ResFileCreator
 {
     internal static class Program
     {
-        private static readonly string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-        private static readonly string s_programFilesX86Dir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+        private static readonly string[] s_programFilesFolders = new[]
+                                                                     {
+                                                                         "Program Files",
+                                                                         "Program Files (x86)"
+                                                                     };
+        private static readonly string[] s_sdkVersions = new [] { "7.1A", "7.1", "7.0A", "7.0" };
         private static readonly Dictionary<string, object> s_dictionary = new Dictionary<string, object>();
         private static string s_assemblyInfoFilePath;
         private static string s_assemblyInfoFileContent;
@@ -229,28 +233,17 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static string FindRcExe()
         {
-            string[] locations = new[]
-                                     {
-                                         String.Format(CultureInfo.InvariantCulture,
-                                                       @"{0}\Microsoft SDKs\Windows\v7.0A\Bin\RC.exe", s_programFilesDir),
-                                         String.Format(CultureInfo.InvariantCulture,
-                                                       @"{0}\Microsoft SDKs\Windows\v7.0A\Bin\RC.exe", s_programFilesX86Dir),
-                                         String.Format(CultureInfo.InvariantCulture, @"{0}\Microsoft SDKs\Windows\v7.1\Bin\RC.exe",
-                                                       s_programFilesDir),
-                                         String.Format(CultureInfo.InvariantCulture, @"{0}\Microsoft SDKs\Windows\v7.1\Bin\RC.exe",
-                                                       s_programFilesX86Dir),
-                                         // Possible location in TeamCity server
-                                         @"F:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\RC.exe",
-                                         // Possible location in TeamCity server
-                                         @"F:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\Bin\RC.exe"
-                                     };
+            // Creates all possible folder and sdk version paths
+            IEnumerable<string> locations = Environment.GetLogicalDrives()
+                .SelectMany(drive => s_programFilesFolders,
+                            (drive, programFilesFolder) => new { drive, programFilesFolder })
+                .SelectMany(programFilesFolder => s_sdkVersions,
+                            (programFilesFolder, sdkVersion) =>
+                            String.Format(CultureInfo.InvariantCulture,
+                                          @"{0}{1}\Microsoft SDKs\Windows\v{2}\Bin\RC.exe",
+                                          programFilesFolder.drive, programFilesFolder.programFilesFolder, sdkVersion)).Where(File.Exists);
 
-            foreach (string path in locations.Where(File.Exists))
-            {
-                return path;
-            }
-
-            return String.Empty;
+            return locations.FirstOrDefault();
         }
     }
 }
