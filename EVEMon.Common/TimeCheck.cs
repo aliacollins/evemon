@@ -10,6 +10,8 @@ namespace EVEMon.Common
     /// </summary>
     public static class TimeCheck
     {
+        private static string s_macAddressSHA1Sum;
+
         /// <summary>
         /// Asynchronous method to determine if the user's clock is syncrhonized to BattleClinic time.
         /// </summary>
@@ -19,7 +21,8 @@ namespace EVEMon.Common
         {
             SyncState state = new SyncState(callback);
             Uri url = new Uri(NetworkConstants.BatlleclinicTimeSynch);
-            string postdata = String.Format(CultureConstants.InvariantCulture, "id={0}", Util.CreateSHA1SumFromMacAddress());
+            string id = s_macAddressSHA1Sum ?? (s_macAddressSHA1Sum = Util.CreateSHA1SumFromMacAddress());
+            string postdata = String.Format(CultureConstants.InvariantCulture, "id={0}", id);
             HttpWebService.DownloadStringAsync(url, SyncDownloadCompleted, state, HttpMethod.Post, false, postdata);
         }
 

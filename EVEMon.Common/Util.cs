@@ -36,8 +36,6 @@ namespace EVEMon.Common
     /// </summary>
     public static class Util
     {
-        private static string s_macAddressSHA1Sum;
-
         /// <summary>
         /// Opens the provided url in a new process.
         /// </summary>
@@ -853,20 +851,14 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string CreateSHA1SumFromMacAddress()
         {
-            if (String.IsNullOrEmpty(s_macAddressSHA1Sum))
-            {
-                s_macAddressSHA1Sum = String.Empty;
-                NetworkInterface ni = NetworkInterface.GetAllNetworkInterfaces()
-                    .FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up);
+            NetworkInterface ni = NetworkInterface.GetAllNetworkInterfaces()
+                .FirstOrDefault(nic => nic.OperationalStatus == OperationalStatus.Up);
 
-                if (ni != null)
-                {
-                    Stream stream = GetMemoryStream(ni.GetPhysicalAddress().GetAddressBytes());
-                    s_macAddressSHA1Sum = CreateSHA1(stream);
-                }
-            }
+            if (ni == null)
+                return String.Empty;
 
-            return s_macAddressSHA1Sum;
+            Stream stream = GetMemoryStream(ni.GetPhysicalAddress().GetAddressBytes());
+            return CreateSHA1(stream);
         }
 
         /// <summary>
