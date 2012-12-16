@@ -14,7 +14,7 @@ namespace EVEMon.XmlGenerator
     {
         private static DateTime s_startTime;
 
-        internal const int TotalTablesCount = 34;
+        internal static int TotalTablesCount;
 
         internal static int PropertiesTotalCount;
         internal static int ItemsTotalCount;
@@ -317,6 +317,8 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         internal static void CreateTables()
         {
+            TotalTablesCount = Util.GetCountOfTypesInNamespace("EVEMon.XmlGenerator.StaticData");
+            
             CreateConnection();
 
             // Data dumps are available from CCP
