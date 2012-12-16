@@ -43,6 +43,9 @@ namespace EVEMon.Common.Serialization.Datafiles
         [XmlAttribute("descr")]
         public string Description { get; set; }
 
+        /// <summary>
+        /// Gets the certificates.
+        /// </summary>
         [XmlElement("certificate")]
         public Collection<SerializableCertificate> Certificates
         {

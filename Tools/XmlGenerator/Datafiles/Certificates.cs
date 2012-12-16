@@ -11,6 +11,13 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     public static class Certificates
     {
+        internal static readonly int[] ExcludedCertClassesIDs = new[]
+                                                                    {
+                                                                        DBConstants.IndustrialHarvestingID,
+                                                                        DBConstants.AutomatedMiningID,
+                                                                        DBConstants.ProductionInternID
+                                                                    };
+
         /// <summary>
         /// Generate the certificates datafile.
         /// </summary>        
@@ -60,14 +67,10 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             List<SerializableCertificateClass> listOfCertClasses = new List<SerializableCertificateClass>();
 
-            int categoryID = 0;
-            foreach (CrtClasses certClass in Database.CrtClassesTable)
+            // Exclude unused classes
+            foreach (CrtClasses certClass in Database.CrtClassesTable.Where(x => ExcludedCertClassesIDs.All(y => y != x.ID)))
             {
-                // Exclude unused classes
-                if (certClass.ID == DBConstants.IndustrialHarvestingID ||
-                    certClass.ID == DBConstants.AutomatedMiningID ||
-                    certClass.ID == DBConstants.ProductionInternID)
-                    continue;
+                Util.UpdatePercentDone(Database.CertificatesTotalCount);
 
                 SerializableCertificateClass crtClasses = new SerializableCertificateClass
                                                               {
@@ -77,18 +80,10 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                               };
 
                 // Export certificates
-                List<SerializableCertificate> listOfCertificates = new List<SerializableCertificate>();
+                IEnumerable<SerializableCertificate> listOfCertificates = Database.CrtCertificatesTable
+                    .Where(x => x.ClassID == certClass.ID && x.CategoryID == category.ID).Select(ExportCertificate);
 
-                foreach (CrtCertificates certificate in Database.CrtCertificatesTable.Where(x => x.ClassID == certClass.ID))
-                {
-                    // Storing the certificate categoryID for use in classes
-                    categoryID = certificate.CategoryID;
-
-                    ExportCertificate(listOfCertificates, certificate);
-                }
-
-                // Grouping certificates according to their classes
-                if (categoryID != category.ID)
+                if (!listOfCertificates.Any())
                     continue;
 
                 // Add certificates to classes
@@ -103,18 +98,16 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Exports the certificate.
         /// </summary>
-        /// <param name="listOfCertificates">The list of certificates.</param>
         /// <param name="certificate">The certificate.</param>
-        private static void ExportCertificate(ICollection<SerializableCertificate> listOfCertificates, CrtCertificates certificate)
+        private static SerializableCertificate ExportCertificate(CrtCertificates certificate)
         {
-            Util.UpdatePercentDone(Database.CertificatesTotalCount);
 
-            SerializableCertificate crtCertificates = new SerializableCertificate
-                                                          {
-                                                              ID = certificate.ID,
-                                                              Grade = GetGrade(certificate.Grade),
-                                                              Description = certificate.Description
-                                                          };
+            SerializableCertificate crtCertificate = new SerializableCertificate
+                                                         {
+                                                             ID = certificate.ID,
+                                                             Grade = GetGrade(certificate.Grade),
+                                                             Description = certificate.Description
+                                                         };
 
             // Export prerequesities
             List<SerializableCertificatePrerequisite> listOfPrereq = new List<SerializableCertificatePrerequisite>();
@@ -148,7 +141,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             }
 
             //Add prerequisites to certificate
-            crtCertificates.Prerequisites.AddRange(listOfPrereq);
+            crtCertificate.Prerequisites.AddRange(listOfPrereq);
 
             // Add recommendations to certificate
             IEnumerable<SerializableCertificateRecommendation> listOfRecommendations = Database.CrtRecommendationsTable.Where(
@@ -165,10 +158,10 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                        Level = certRecom.recommendation.Level
                                                    });
 
-            crtCertificates.Recommendations.AddRange(listOfRecommendations);
+            crtCertificate.Recommendations.AddRange(listOfRecommendations);
 
             // Add certificate
-            listOfCertificates.Add(crtCertificates);
+            return crtCertificate;
         }
 
         /// <summary>

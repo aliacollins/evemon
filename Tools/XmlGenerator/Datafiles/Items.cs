@@ -243,27 +243,28 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="item">The item.</param>
         private static void AddControlTowerFuelInfo(IHasID srcItem, SerializableItem item)
         {
-            var controlTowerResourcesTable = Database.InvControlTowerResourcesTable.Join(
-                Database.InvControlTowerResourcePurposesTable,
-                ctr => ctr.PurposeID, ctrp => ctrp.ID,
-                (ctr, ctrp) => new { ctr, ctrp }).Where(x => x.ctr.ID == srcItem.ID);
+            IEnumerable<SerializableControlTowerFuel> controlTowerResourcesTable = Database.InvControlTowerResourcesTable
+                .Join(Database.InvControlTowerResourcePurposesTable, ctr => ctr.PurposeID, ctrp => ctrp.ID,
+                      (ctr, ctrp) => new { ctr, ctrp })
+                .Where(x => x.ctr.ID == srcItem.ID)
+                .Select(resource => new SerializableControlTowerFuel
+                                        {
+                                            ID = resource.ctr.ResourceID,
+                                            Purpose = resource.ctrp.PurposeName,
+                                            Quantity = resource.ctr.Quantity,
+                                            MinSecurityLevel = resource.ctr.MinSecurityLevel.HasValue
+                                                                   ? resource.ctr.MinSecurityLevel.Value.ToString()
+                                                                   : String.Empty,
+                                            FactionID = resource.ctr.FactionID.HasValue
+                                                            ? resource.ctr.FactionID.Value.ToString()
+                                                            : String.Empty,
+                                            FactionName = resource.ctr.FactionID.HasValue
+                                                              ? Database.ChrFactionsTable[resource.ctr.FactionID.Value].
+                                                                    FactionName
+                                                              : String.Empty
+                                        });
 
-            item.ControlTowerFuelInfo.AddRange(controlTowerResourcesTable.Select(
-                resource => new SerializableControlTowerFuel
-                                {
-                                    ID = resource.ctr.ResourceID,
-                                    Purpose = resource.ctrp.PurposeName,
-                                    Quantity = resource.ctr.Quantity,
-                                    MinSecurityLevel = resource.ctr.MinSecurityLevel.HasValue
-                                                           ? resource.ctr.MinSecurityLevel.Value.ToString()
-                                                           : String.Empty,
-                                    FactionID = resource.ctr.FactionID.HasValue
-                                                    ? resource.ctr.FactionID.Value.ToString()
-                                                    : String.Empty,
-                                    FactionName = resource.ctr.FactionID.HasValue
-                                                      ? Database.ChrFactionsTable[resource.ctr.FactionID.Value].FactionName
-                                                      : String.Empty
-                                }));
+            item.ControlTowerFuelInfo.AddRange(controlTowerResourcesTable);
         }
 
         /// <summary>
