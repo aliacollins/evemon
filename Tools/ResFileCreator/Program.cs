@@ -17,7 +17,6 @@ namespace EVEMon.ResFileCreator
                                                                      };
         private static readonly string[] s_sdkVersions = new [] { "7.1A", "7.1", "7.0A", "7.0" };
         private static readonly Dictionary<string, object> s_dictionary = new Dictionary<string, object>();
-        private static string s_assemblyInfoFilePath;
         private static string s_assemblyInfoFileContent;
         private static string s_filePath;
         private static string s_rcexe;
@@ -30,8 +29,6 @@ namespace EVEMon.ResFileCreator
         private static void Main()
         {
             Directory.SetCurrentDirectory(@"..\..\..\..\..");
-
-            s_assemblyInfoFilePath = Path.GetFullPath(@"EVEMon\Properties\AssemblyInfo.cs");
 
             s_rcexe = FindRcExe();
             if (String.IsNullOrEmpty(s_rcexe))
@@ -54,7 +51,7 @@ namespace EVEMon.ResFileCreator
         /// </summary>
         private static void ParserAssemblyInfo()
         {
-            s_assemblyInfoFileContent = File.ReadAllText(s_assemblyInfoFilePath);
+            s_assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"EVEMon\Properties\AssemblyInfo.cs"));
             s_dictionary["AssemblyTitle"] = GetValueOf("AssemblyTitle");
             s_dictionary["AssemblyCompany"] = GetValueOf("AssemblyCompany");
             s_dictionary["AssemblyProduct"] = GetValueOf("AssemblyProduct");
