@@ -35,7 +35,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the group's identifier.
         /// </summary>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets the group's name.

@@ -9,7 +9,7 @@ namespace EVEMon.Common
     /// Represents a certificate category.
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class CertificateCategoryCollection : ReadonlyKeyedCollection<long, CertificateCategory>
+    public sealed class CertificateCategoryCollection : ReadonlyKeyedCollection<int, CertificateCategory>
     {
         /// <summary>
         /// Constructor for the character initialization.

@@ -5,7 +5,7 @@ namespace EVEMon.Common
 {
     public interface IStaticSkill
     {
-        long ID { get; }
+        int ID { get; }
         int ArrayIndex { get; }
         string Name { get; }
 

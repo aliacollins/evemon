@@ -6,7 +6,7 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableQueuedSkill : ISynchronizableWithLocalClock
     {
         [XmlAttribute("typeID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlAttribute("level")]
         public int Level { get; set; }

@@ -10,7 +10,7 @@ namespace EVEMon.Common
     /// Represents a collection of certificates
     /// </summary>
     [EnforceUIThreadAffinity]
-    public sealed class CertificateCollection : ReadonlyKeyedCollection<long, Certificate>
+    public sealed class CertificateCollection : ReadonlyKeyedCollection<int, Certificate>
     {
         /// <summary>
         /// Constructor
@@ -37,7 +37,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Certificate this[long id]
+        public Certificate this[int id]
         {
             get { return GetByKey(id); }
         }

@@ -8,7 +8,7 @@ namespace EVEMon.Common.Serialization.API
     public sealed class SerializableCharacterSkill
     {
         [XmlAttribute("typeID")]
-        public long ID { get; set; }
+        public int ID { get; set; }
 
         [XmlAttribute("name")]
         public string Name { get; set; }

@@ -14,12 +14,12 @@ namespace EVEMon.XmlGenerator
     {
         private static DateTime s_startTime;
 
-        internal const int TotalTablesCount = 34;
-        internal const int CertificatesTotalCount = 4272;
+        internal static int TotalTablesCount;
 
         internal static int PropertiesTotalCount;
         internal static int ItemsTotalCount;
         internal static int SkillsTotalCount;
+        internal static int CertificatesTotalCount;
         internal static int BlueprintsTotalCount;
         internal static int GeographyTotalCount;
         internal static int ReprocessingTotalCount;
@@ -317,6 +317,8 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         internal static void CreateTables()
         {
+            TotalTablesCount = Util.GetCountOfTypesInNamespace("EVEMon.XmlGenerator.StaticData");
+            
             CreateConnection();
 
             // Data dumps are available from CCP
@@ -566,6 +568,8 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
+            CertificatesTotalCount = collection.Items.Count;
+
             return collection.ToBag();
         }
 
@@ -621,6 +625,9 @@ namespace EVEMon.XmlGenerator
 
                 collection.Items.Add(item);
             }
+
+            CertificatesTotalCount *= collection.Items
+                .Count(x => Datafiles.Certificates.ExcludedCertClassesIDs.All(y => y != x.ID));
 
             return collection.ToBag();
         }

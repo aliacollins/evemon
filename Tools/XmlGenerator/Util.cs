@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -213,18 +214,18 @@ namespace EVEMon.XmlGenerator
             try
             {
                 FileInfo fi = new FileInfo(destFile);
-                if (fi.Directory != null)
+                if (fi.Directory == null)
+                    return;
+
+                if (fi.Directory.Exists && fi.Directory.Parent != null && fi.Directory.Parent.Parent != null)
                 {
-                    if (fi.Directory.Exists && fi.Directory.Parent != null && fi.Directory.Parent.Parent != null)
-                    {
-                        File.Copy(srcFile, destFile, true);
-                        Console.WriteLine(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name, fi.Directory.Parent.Name,
-                                          fi.Directory.Name);
-                    }
-                    else
-                        Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0} doesn't exist, copy failed",
-                                                      fi.Directory.FullName));
+                    File.Copy(srcFile, destFile, true);
+                    Console.WriteLine(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name, fi.Directory.Parent.Name,
+                                      fi.Directory.Name);
                 }
+                else
+                    Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0} doesn't exist, copy failed",
+                                                  fi.Directory.FullName));
             }
             catch (IOException exc)
             {
@@ -294,6 +295,15 @@ namespace EVEMon.XmlGenerator
             Console.Write(s_text);
         }
 
+        /// <summary>
+        /// Gets the count of types in a specified namespace.
+        /// </summary>
+        /// <param name="nameSpace">The namespace.</param>
+        /// <returns></returns>
+        internal static int GetCountOfTypesInNamespace(string nameSpace)
+        {
+            return Assembly.GetExecutingAssembly().GetTypes().Count(type => type.Namespace == nameSpace);
+        }
         #endregion
     }
 }

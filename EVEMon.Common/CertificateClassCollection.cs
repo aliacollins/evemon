@@ -6,7 +6,7 @@ namespace EVEMon.Common
     /// <summary>
     /// Represetns a collection of character's certificate class
     /// </summary>
-    public sealed class CertificateClassCollection : ReadonlyKeyedCollection<long, CertificateClass>
+    public sealed class CertificateClassCollection : ReadonlyKeyedCollection<int, CertificateClass>
     {
         /// <summary>
         /// Constructor.
@@ -25,7 +25,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public CertificateClass this[long id]
+        public CertificateClass this[int id]
         {
             get { return GetByKey(id); }
         }

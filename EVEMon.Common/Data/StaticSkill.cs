@@ -33,7 +33,7 @@ namespace EVEMon.Common.Data
             ArrayIndex = arrayIndex;
             Group = group;
             Prerequisites = new Collection<StaticSkillLevel>();
-            FormattedCost = String.Format(CultureConstants.DefaultCulture, "{0:N0}", Cost);
+            FormattedCost = Cost.ToNumericString(0);
         }
 
         #endregion
@@ -70,7 +70,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the ID of this skill.
         /// </summary>
-        public long ID { get; private set; }
+        public int ID { get; private set; }
 
         /// <summary>
         /// Gets a zero-based index for skills (allow the use of arrays to optimize computations).
