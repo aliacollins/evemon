@@ -537,6 +537,8 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private void ExportDatafiles(ICollection<SerializableDatafile> datafiles)
         {
+            const string CompatibilityMessage = "\nNOT COMPATIBLE with EVEMon prior to version 1.7.0";
+
             string url = String.Format(CultureConstants.InvariantCulture, "{1}{2}{0}{3}",
                                        Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
 
@@ -553,6 +555,9 @@ namespace EVEMon.PatchXmlCreator
                     serialDatafile.MD5Sum = dfControl.lblMD5Sum.Text;
                     serialDatafile.Address = url;
                     serialDatafile.Message = dfControl.rtbDatafileMessage.Text.Trim();
+
+                    if (!serialDatafile.Message.Contains(CompatibilityMessage))
+                        serialDatafile.Message += CompatibilityMessage;
                 }
             }
         }
