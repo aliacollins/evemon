@@ -1145,7 +1145,6 @@ namespace EVEMon.XmlGenerator
                                     {
                                         ID = type.typeID,
                                         Description = type.description,
-                                        IconID = type.iconID,
                                         MarketGroupID = type.marketGroupID,
                                         Name = type.typeName,
                                         RaceID = type.raceID

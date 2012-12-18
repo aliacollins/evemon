@@ -10253,30 +10253,6 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Double> _chanceOfDuplicating;
         partial void OnchanceOfDuplicatingChanging(Nullable<global::System.Double> value);
         partial void OnchanceOfDuplicatingChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> iconID
-        {
-            get
-            {
-                return _iconID;
-            }
-            set
-            {
-                OniconIDChanging(value);
-                ReportPropertyChanging("iconID");
-                _iconID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("iconID");
-                OniconIDChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _iconID;
-        partial void OniconIDChanging(Nullable<global::System.Int32> value);
-        partial void OniconIDChanged();
 
         #endregion
     
