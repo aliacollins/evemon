@@ -277,6 +277,9 @@ namespace EVEMon.SettingsUI
             // Selects the first local host if any
             if (LocalhostComboBox.Enabled)
                 LocalhostComboBox.SelectedIndex = 0;
+
+            EditButton.Enabled = LocalhostComboBox.Items.Count > 0;
+            DeleteButton.Enabled = LocalhostComboBox.Items.Count > 0;
         }
 
         #endregion
