@@ -44,7 +44,7 @@ namespace EVEMon.Common
         /// Gets or sets the raw quantity.
         /// </summary>
         /// <value>The raw quantity.</value>
-        public short RawQuantity { get; private set; }
+        public int RawQuantity { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="ContractItem"/> is singleton.
