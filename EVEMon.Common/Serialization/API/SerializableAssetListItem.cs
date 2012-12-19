@@ -38,6 +38,6 @@ namespace EVEMon.Common.Serialization.API
         public byte Singleton { get; set; }
 
         [XmlAttribute("rawQuantity")]
-        public short RawQuantity { get; set; }
+        public int RawQuantity { get; set; }
     }
 }

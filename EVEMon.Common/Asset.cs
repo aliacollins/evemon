@@ -144,7 +144,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="rawQuantity">The raw quantity.</param>
         /// <returns></returns>
-        private string GetBlueprintType(short rawQuantity)
+        private string GetBlueprintType(int rawQuantity)
         {
             return Item != null && Item.Family == ItemFamily.Blueprint
                        ? rawQuantity == -2 ? Common.BlueprintType.Copy.ToString() : Common.BlueprintType.Original.ToString()
