@@ -1,90 +1,111 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>09 August 2012</date>
-    <version>1.7.2.3882</version>
-    <md5>0e6b34cb3bf6bbbf40856d05c869c1e3</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,168500.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.7.2.3882.exe</autopatchurl>
+    <date>19 December 2012</date>
+    <version>1.8.0.3987</version>
+    <md5>7360543204987d10bd755bd27e9c6168</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,172379</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.0.3987.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[== Contributors for this version ==
+    <message><![CDATA[== Breaking Changes ==
+
+EMUU has been forcibly re-enabled due to changes in its behavior and settings. We apologize for any inconvenience caused.
+
+== Contributors for this version ==
 
 * Jimi
+* Good speed
+
+== New Features ==
+
+* EVEMon now has a character contacts monitor.
+* EVEMon now has a character medals monitor.
+* EVEMon now has a character combat log monitor.
 
 == Bug Fixes ==
 
-* Fixed a bug where an Asset distance from character's last known location where not in sync when Character info updated.
-* Fixed a bug where notifications where not displayed in a Character monitor on EVEMon launch and notifications are available.
-* Fixed a visual bug where non-implemented API calls where shown in the character's API timer tooltip.
-* Fixed a crash bug when closing a character's Pie Chart when the character doesn't have skills info.
-* Fixed a crash bug for the rare case where a skill has itself as a prerequisite (only seen in Non-Public skills like 'Polaris').
+* Fixed a trivial bug (related with the taskbar) when EVEMon starts minimized.
+* Fixed (once again) a visual issue in API key management window when using large fonts.
+* Fixed a typo in the address that links to the EVE Dev site.
+* Fixed a bug where the contract status was not getting updated.
+* Fixes a calculation bug for the prefect ME in blueprint browser.
+* Fixed a bug when trying to use CharacterID API call in APITester feature.
+* Fixed a bug where the 'owned' icon of a skill was not properly updated in Skill Browser skill selector, when set from the plan editor.
 
 == Enhancements ==
 
-* Added reaction material info for reactions in Item Browser.
-* Added control tower fuel info for control towers in Item Browser.
+* Account status info are now shown in each character monitor.
+* Added mineral price feed from Eve Addicts in the Mineral Worksheet tool.
+* Added support for compressed responses (gzip, deflate) from CCP API server or 3rd party EVE API services.
+* Added info for failed and overdue contracts.
+* Contract details window is now vertically resizable when it contains list of items.
+* Time sync check is now done on daily bases if EVEMon is kept running continuously.
+* Added more info to Contract details window when contract is of type Courier and in progress.
+* Added estimated items value in Asset monitor (includes related columns).
+* Added ability to combine user set owned skillbooks combined with those found in a character's assets.
+* Replaced the 'Show Owned Skillbooks' message window with a list based window.
 
 == Misc ==
 
-* Switched the exporting to CSV delimiter to use semicolon instead of comma, in order to support number formatting for different cultures.
+* Design changes to About Window, removed redundant 'OK' button and fixed design issues when using large fonts.
 * Several improvements have been done to the base code to make EVEMon a better, faster and more stable application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>09 August 2012</date>
-      <md5>11bbb1f581cb58328ed960bb2b1008d0</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
-      <message><![CDATA[Inferno 1.2 (404131) blueprints data file by the EVEMon Development Team
+      <date>19 December 2012</date>
+      <md5>22126daa393cbfc05a1ad7b97c3af1e3</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Retribution/462689</url>
+      <message><![CDATA[Retribution 1.0 (462689) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>09 August 2012</date>
-      <md5>fef1c73230ef067b2ba7902fde45a0fc</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
-      <message><![CDATA[Inferno 1.2 (404131) certificates data file by the EVEMon Development Team
+      <date>19 December 2012</date>
+      <md5>3c2a3cf2a0a8928f309f070ba89785b3</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Retribution/462689</url>
+      <message><![CDATA[Retribution 1.0 (462689) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>09 August 2012</date>
-      <md5>f72ab1f371090f43e77d8db15e4bd6b6</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
-      <message><![CDATA[Inferno 1.2 (404131) geography data file by the EVEMon Development Team
+      <date>19 December 2012</date>
+      <md5>cab58b90afa9a61a3926f959acba177b</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Retribution/462689</url>
+      <message><![CDATA[Retribution 1.0 (462689) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>09 August 2012</date>
-      <md5>5abe64ccd5b57aca691dfa4decfa4126</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
-      <message><![CDATA[Inferno 1.2 (404131) items data file by the EVEMon Development Team
+      <date>19 December 2012</date>
+      <md5>4d39b23df70dfc3818f73982a4ef01d1</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Retribution/462689</url>
+      <message><![CDATA[Retribution 1.0 (462689) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>09 August 2012</date>
-      <md5>28bebae965bc193c2003086a2d9044f7</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
-      <message><![CDATA[Inferno 1.2 (404131) properties data file by the EVEMon Development Team
+      <date>19 December 2012</date>
+      <md5>75224ec8529413a48fd5d2d61e063984</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Retribution/462689</url>
+      <message><![CDATA[Retribution 1.0 (462689) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>09 August 2012</date>
-      <md5>552ab7ca12dedccd0ee589c020eb5cb4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
-      <message><![CDATA[Inferno 1.2 (404131) reprocessing data file by the EVEMon Development Team
+      <date>19 December 2012</date>
+      <md5>dde2d963c5c9280c886a6feb96df7be9</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Retribution/462689</url>
+      <message><![CDATA[Retribution 1.0 (462689) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>09 August 2012</date>
-      <md5>3efd345a3ea44dd0db5fe6fc87a2c6e4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Inferno/404131</url>
-      <message><![CDATA[Inferno 1.2 (404131) skills data file by the EVEMon Development Team
+      <date>19 December 2012</date>
+      <md5>f45f628171728eca5454b4450a14f8d2</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Retribution/462689</url>
+      <message><![CDATA[Retribution 1.0 (462689) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
   </datafiles>
