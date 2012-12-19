@@ -132,5 +132,6 @@
     <row flagID="152" flagName="DustCharacterDatabank" flagText="Dust Character Databank" />
     <row flagID="153" flagName="DustCharacterBattle" flagText="Dust Character Battle" />
     <row flagID="154" flagName="QuafeBay" flagText="Quafe Bay" />
+    <row flagID="155" flagName="FleetHangar" flagText="Fleet Hangar" />
   </rowset>
 </invFlags>
