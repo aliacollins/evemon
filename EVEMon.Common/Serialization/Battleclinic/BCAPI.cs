@@ -157,29 +157,47 @@ namespace EVEMon.Common.Serialization.BattleClinic
         /// <summary>
         /// Uploads the settings file.
         /// </summary>
-        public static void UploadSettingsFile()
+        public static bool UploadSettingsFile()
         {
             if (!BCAPISettings.Default.UploadAlways || !HasCredentialsStored)
-                return;
+                return true;
 
+            // Quit if user is not authenticated
             if (!IsAuthenticated && !CheckAPICredentials())
             {
-                MessageBox.Show("The BattleClinic API credentials could not be authenticated.",
-                                "BattleClinic API Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
+                MessageBox.Show("The BattleClinic API credentials could not be authenticated.", "BattleClinic API Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
             EveMonClient.Trace("BCAPI.UploadSettingsFile - Initiated");
 
-            BCAPIResult<SerializableBCAPIFiles> result = FileSave();
-            if (result.HasError)
+            // Ask for user action if uploading fails
+            while (true)
             {
-                MessageBox.Show(result.Error.ErrorMessage, "BattleClinic API Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
+                BCAPIResult<SerializableBCAPIFiles> result = FileSave();
 
-            EveMonClient.Trace("BCAPI.UploadSettingsFile - Completed");
+                if (!result.HasError)
+                {
+                    EveMonClient.Trace("BCAPI.UploadSettingsFile - Completed");
+                    return true;
+                }
+
+                DialogResult dialogResult = MessageBox.Show(result.Error.ErrorMessage, "BattleClinic API Error",
+                                                            MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+
+                if (dialogResult == DialogResult.Abort)
+                {
+                    EveMonClient.Trace("BCAPI.UploadSettingsFile - Failed and Aborted");
+                    return false;
+                }
+
+                if (dialogResult == DialogResult.Retry)
+                    continue;
+
+                EveMonClient.Trace("BCAPI.UploadSettingsFile - Failed and Ignored");
+                return true;
+            }
         }
 
         /// <summary>
