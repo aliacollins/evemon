@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 
@@ -160,7 +161,7 @@ namespace EVEMon.Common.Net
         {
             m_asyncState = state;
             m_asyncState.Request = this;
-            if (Dispatcher.IsMultiThreaded)
+            if (Thread.CurrentThread.IsBackground)
             {
                 GetResponseDelegate caller = GetResponse;
                 caller.BeginInvoke(url, method, postData, dataCompression, responseStream, acceptEncoded, accept, GetResponseAsyncCompleted, caller);
