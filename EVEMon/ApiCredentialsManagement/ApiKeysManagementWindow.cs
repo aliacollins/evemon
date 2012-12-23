@@ -277,11 +277,15 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e"></param>
         private void deleteAPIKeyMenu_Click(object sender, EventArgs e)
         {
+            if (apiKeysListBox.SelectedIndex == -1)
+                return;
+
             APIKey apiKey = apiKeysListBox.APIKeys.ElementAt(apiKeysListBox.SelectedIndex);
             using (ApiKeyDeletionWindow window = new ApiKeyDeletionWindow(apiKey))
             {
                 window.ShowDialog(this);
             }
+
             deleteAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
             editAPIKeyMenu.Enabled = (apiKeysListBox.SelectedIndex != -1);
         }

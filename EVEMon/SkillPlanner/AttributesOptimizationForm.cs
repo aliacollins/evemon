@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.SkillPlanner
 {
@@ -189,7 +190,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 // Update the controls for every attribute
-                Invoke((MethodInvoker)(() => UpdateForm(remapping, remappingList)));
+                Dispatcher.Invoke(() => UpdateForm(remapping, remappingList));
             }
         }
 

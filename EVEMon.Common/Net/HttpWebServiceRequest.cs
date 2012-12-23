@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 
@@ -195,6 +196,7 @@ namespace EVEMon.Common.Net
             // Prevents invoking the callback on the UI thread when the application has been closed
             if (EveMonClient.Closed)
                 return;
+
             m_asyncState.Callback(m_asyncState);
         }
 

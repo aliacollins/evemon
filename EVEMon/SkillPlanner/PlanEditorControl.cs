@@ -25,6 +25,7 @@ namespace EVEMon.SkillPlanner
     {
         #region Fields
 
+        private const string PluggableColumn = "chPluggable";
         private const int ArrowUpIndex = 4;
         private const int ArrowDownIndex = 5;
 
@@ -55,7 +56,7 @@ namespace EVEMon.SkillPlanner
         private readonly List<PlanColumnSettings> m_columns = new List<PlanColumnSettings>();
 
         // Tooltip
-        private InfiniteDisplayToolTip m_tooltip;
+        private readonly InfiniteDisplayToolTip m_tooltip;
 
         #endregion
 
@@ -460,6 +461,7 @@ namespace EVEMon.SkillPlanner
                         lvi.SubItems.Add(String.Empty);
                     }
 
+                    // The item represents a skill level entry
                     if (entry != null)
                         FormatEntry(entry, lvi);
                         // The item represents a remapping point
@@ -731,7 +733,7 @@ namespace EVEMon.SkillPlanner
                     if (m_pluggable == null || column.Column != PlanColumn.TrainingTime)
                         continue;
 
-                    header = lvSkills.Columns.Add("Diff with Calc Atts", -2);
+                    header = lvSkills.Columns.Add(PluggableColumn, "Diff with Calc Atts", -2);
                     header.Tag = null;
                 }
 
@@ -1358,17 +1360,26 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void AdjustColumns()
         {
+            // Find the index of the pluggable column
+            int pluggableColumnIndex = lvSkills.Columns.IndexOfKey(PluggableColumn);
+
             foreach (ColumnHeader column in lvSkills.Columns.Cast<ColumnHeader>())
             {
-                if (m_columns[column.Index].Width == -1)
-                    m_columns[column.Index].Width = -2;
+                // Adjust the column index when we are past the pluggable column
+                // in order to avoid an ArgumentOutOfRangeException
+                int columnIndex = column.Index;
+                if (pluggableColumnIndex != -1 && column.Index > pluggableColumnIndex)
+                    columnIndex--;
 
-                column.Width = m_columns[column.Index].Width;
+                if (m_columns[columnIndex].Width == -1)
+                    m_columns[columnIndex].Width = -2;
+
+                column.Width = m_columns[columnIndex].Width;
 
                 // Due to .NET design we need to prevent the last colummn to resize to the right end
 
                 // Return if it's not the last column and not set to auto-resize
-                if (column.Index != lvSkills.Columns.Count - 1 || m_columns[column.Index].Width != -2)
+                if (column.Index != lvSkills.Columns.Count - 1 || m_columns[columnIndex].Width != -2)
                     continue;
 
                 const int Pad = 4;
@@ -1381,8 +1392,8 @@ namespace EVEMon.SkillPlanner
                     columnHeaderWidth += lvSkills.SmallImageList.ImageSize.Width + Pad;
 
                 // Calculate the width of the header and the items of the column
-                int columnMaxWidth = lvSkills.Columns[column.Index].ListView.Items.Cast<ListViewItem>().Select(
-                    item => TextRenderer.MeasureText(item.SubItems[column.Index].Text, Font).Width).Concat(
+                int columnMaxWidth = lvSkills.Columns[columnIndex].ListView.Items.Cast<ListViewItem>().Select(
+                    item => TextRenderer.MeasureText(item.SubItems[columnIndex].Text, Font).Width).Concat(
                         new[] { columnHeaderWidth }).Max() + Pad + 1;
 
                 // Assign the width found

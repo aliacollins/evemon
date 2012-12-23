@@ -87,7 +87,6 @@ namespace EVEMon
                 // Save before we quit
                 Settings.SaveImmediate();
                 EveIDToName.SaveImmediate();
-                BCAPI.UploadSettingsFile();
 
                 // Stop the one-second timer right now
                 EveMonClient.Shutdown();

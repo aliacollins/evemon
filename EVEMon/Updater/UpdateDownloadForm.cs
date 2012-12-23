@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Net;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Updater
 {
@@ -42,8 +43,7 @@ namespace EVEMon.Updater
         {
             try
             {
-                m_request = HttpWebService.DownloadFileAsync(m_url, m_fileName, DownloadCompletedCallback,
-                                                                          ProgressChangedCallback);
+                m_request = HttpWebService.DownloadFileAsync(m_url, m_fileName, DownloadCompleted, ProgressChanged);
             }
             catch (Exception ex)
             {
@@ -53,25 +53,22 @@ namespace EVEMon.Updater
         }
 
         /// <summary>
-        /// Progresses the changed callback.
-        /// </summary>
-        /// <param name="e">The e.</param>
-        private void ProgressChangedCallback(DownloadProgressChangedArgs e)
-        {
-            Invoke((MethodInvoker)(() => ProgressChanged(e)));
-        }
-
-        /// <summary>
         /// Progresses the changed.
         /// </summary>
         /// <param name="e">The event.</param>
         private void ProgressChanged(DownloadProgressChangedArgs e)
         {
+            if (InvokeRequired)
+            {
+                Dispatcher.Invoke(() => ProgressChanged(e));
+                return;
+            }
+
             if (e.TotalBytesToReceive > 0)
             {
-                label1.Text = String.Format(CultureConstants.DefaultCulture,
-                                            "Downloading update ({0}%, {1:N0} of {2:N0} bytes received)...",
-                                            e.ProgressPercentage, e.BytesReceived, e.TotalBytesToReceive);
+                ProgressLabel.Text = String.Format(CultureConstants.DefaultCulture,
+                                                   "Downloading update ({0}%, {1:N0} of {2:N0} bytes received)...",
+                                                   e.ProgressPercentage, e.BytesReceived, e.TotalBytesToReceive);
                 pbProgress.Style = ProgressBarStyle.Blocks;
                 pbProgress.Minimum = 0;
                 pbProgress.Maximum = 100;
@@ -84,19 +81,11 @@ namespace EVEMon.Updater
             }
             else
             {
-                label1.Text = String.Format(CultureConstants.DefaultCulture, "Downloading update ({0:N0} bytes received)...",
-                                            e.BytesReceived);
+                ProgressLabel.Text = String.Format(CultureConstants.DefaultCulture,
+                                                   "Downloading update ({0:N0} bytes received)...",
+                                                   e.BytesReceived);
                 pbProgress.Style = ProgressBarStyle.Marquee;
             }
-        }
-
-        /// <summary>
-        /// Callback for the completed download.
-        /// </summary>
-        /// <param name="e">The event.</param>
-        private void DownloadCompletedCallback(DownloadFileAsyncResult e)
-        {
-            Invoke((MethodInvoker)(() => DownloadCompleted(e)));
         }
 
         /// <summary>
@@ -105,6 +94,12 @@ namespace EVEMon.Updater
         /// <param name="e">The event.</param>
         private void DownloadCompleted(DownloadFileAsyncResult e)
         {
+            if (InvokeRequired)
+            {
+                Dispatcher.Invoke(() => DownloadCompleted(e));
+                return;
+            }
+
             if (e.Error != null)
             {
                 ExceptionHandler.LogException(e.Error, true);
@@ -135,6 +130,7 @@ namespace EVEMon.Updater
             }
             else
                 DialogResult = DialogResult.OK;
+
             Close();
         }
 

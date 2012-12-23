@@ -174,18 +174,9 @@ namespace EVEMon.Common
             if (extensionMatch.Success)
                 ext = "." + extensionMatch.Groups[1];
 
-            StringBuilder sb = new StringBuilder();
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(url.AbsoluteUri));
-                foreach (byte bit in hash)
-                {
-                    sb.Append(String.Format(CultureConstants.DefaultCulture, "{0:x2}", bit));
-                }
-            }
-            sb.Append(ext);
-
-            return sb.ToString();
+            Stream stream = Util.GetMemoryStream(Encoding.UTF8.GetBytes(url.AbsoluteUri));
+            string md5Sum = Util.CreateMD5(stream);
+            return String.Concat(md5Sum, ext);
         }
 
         /// <summary>

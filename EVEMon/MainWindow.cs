@@ -24,6 +24,7 @@ using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Properties;
 using EVEMon.Common.Scheduling;
+using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
@@ -225,7 +226,9 @@ namespace EVEMon
             // Is there a reason that we should really close the window
             if (!Visible || m_isUpdating || m_isUpdatingData || e.CloseReason == CloseReason.ApplicationExitCall ||
                 e.CloseReason == CloseReason.TaskManagerClosing || e.CloseReason == CloseReason.WindowsShutDown)
+            {
                 return;
+            }
 
             // Should we actually just minimize ?
             if (Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.Exit)
@@ -1070,7 +1073,7 @@ namespace EVEMon
             // Ensure it is invoked on the proper thread
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(() => OnUpdateAvailable(sender, e)));
+                Dispatcher.Invoke(() => OnUpdateAvailable(sender, e));
                 return;
             }
 
@@ -1081,8 +1084,7 @@ namespace EVEMon
             m_isShowingUpdateWindow = true;
             using (UpdateNotifyForm f = new UpdateNotifyForm(e))
             {
-                f.ShowDialog();
-                if (f.DialogResult == DialogResult.OK)
+                if (f.ShowDialog() == DialogResult.OK)
                 {
                     m_isUpdating = true;
 
@@ -1104,7 +1106,7 @@ namespace EVEMon
             // Ensure it is invoked on the proper thread
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(() => OnDataUpdateAvailable(sender, e)));
+                Dispatcher.Invoke(() => OnDataUpdateAvailable(sender, e));
                 return;
             }
 
@@ -1363,6 +1365,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!BCAPI.UploadSettingsFile())
+                return;
+
             Application.Exit();
         }
 
