@@ -29,27 +29,27 @@ namespace EVEMon.Updater
         private void InitializeComponent()
         {
             this.pbProgress = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
+            this.ProgressLabel = new System.Windows.Forms.Label();
             this.btCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // pbProgress
             // 
-            this.pbProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pbProgress.Location = new System.Drawing.Point(12, 12);
             this.pbProgress.Name = "pbProgress";
             this.pbProgress.Size = new System.Drawing.Size(388, 18);
             this.pbProgress.TabIndex = 0;
             // 
-            // label1
+            // ProgressLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(117, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Downloading update...";
+            this.ProgressLabel.AutoSize = true;
+            this.ProgressLabel.Location = new System.Drawing.Point(9, 33);
+            this.ProgressLabel.Name = "ProgressLabel";
+            this.ProgressLabel.Size = new System.Drawing.Size(114, 13);
+            this.ProgressLabel.TabIndex = 1;
+            this.ProgressLabel.Text = "Downloading update...";
             // 
             // btCancel
             // 
@@ -66,8 +66,9 @@ namespace EVEMon.Updater
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(412, 87);
+            this.ControlBox = false;
             this.Controls.Add(this.btCancel);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.ProgressLabel);
             this.Controls.Add(this.pbProgress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -75,6 +76,7 @@ namespace EVEMon.Updater
             this.Name = "UpdateDownloadForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Downloading Update...";
+            this.TopMost = true;
             this.Shown += new System.EventHandler(this.UpdateDownloadForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -84,7 +86,7 @@ namespace EVEMon.Updater
         #endregion
 
         private System.Windows.Forms.ProgressBar pbProgress;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label ProgressLabel;
         private System.Windows.Forms.Button btCancel;
     }
 }

@@ -85,7 +85,7 @@ namespace EVEMon.Updater
         private bool DownloadUpdate()
         {
             string filename = Path.GetFileName(m_args.InstallerUrl.AbsoluteUri);
-            if (filename == null)
+            if (String.IsNullOrWhiteSpace(filename))
                 return false;
 
             string localFilename = Path.Combine(EveMonClient.EVEMonDataDir, filename);
@@ -96,17 +96,15 @@ namespace EVEMon.Updater
 
             using (UpdateDownloadForm form = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
             {
-                form.ShowDialog();
+                if (form.ShowDialog() != DialogResult.OK)
+                    return true;
 
-                if (form.DialogResult == DialogResult.OK)
-                {
-                    string downloadedFileMD5Sum = Util.CreateMD5From(localFilename);
-                    if (m_args.MD5Sum != null && m_args.MD5Sum != downloadedFileMD5Sum)
-                        return false;
+                string downloadedFileMD5Sum = Util.CreateMD5From(localFilename);
+                if (m_args.MD5Sum != null && m_args.MD5Sum != downloadedFileMD5Sum)
+                    return false;
 
-                    UpdateManager.DeleteDataFiles();
-                    ExecutePatcher(localFilename, m_args.AutoInstallArguments);
-                }
+                UpdateManager.DeleteDataFiles();
+                ExecutePatcher(localFilename, m_args.AutoInstallArguments);
             }
             return true;
         }

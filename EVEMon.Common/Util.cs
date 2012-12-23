@@ -440,7 +440,6 @@ namespace EVEMon.Common
                         try
                         {
                             // Was there an HTTP error ?
-
                             if (asyncResult.Error != null)
                             {
                                 errorMessage = asyncResult.Error.InnerException == null

@@ -161,7 +161,7 @@ namespace EVEMon.Common.Net
         {
             m_asyncState = state;
             m_asyncState.Request = this;
-            if (Thread.CurrentThread.IsBackground)
+            if (Dispatcher.IsMultiThreaded)
             {
                 GetResponseDelegate caller = GetResponse;
                 caller.BeginInvoke(url, method, postData, dataCompression, responseStream, acceptEncoded, accept, GetResponseAsyncCompleted, caller);
@@ -196,6 +196,7 @@ namespace EVEMon.Common.Net
             // Prevents invoking the callback on the UI thread when the application has been closed
             if (EveMonClient.Closed)
                 return;
+
             m_asyncState.Callback(m_asyncState);
         }
 

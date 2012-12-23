@@ -227,9 +227,6 @@ namespace EVEMon
             if (!Visible || m_isUpdating || m_isUpdatingData || e.CloseReason == CloseReason.ApplicationExitCall ||
                 e.CloseReason == CloseReason.TaskManagerClosing || e.CloseReason == CloseReason.WindowsShutDown)
             {
-                if (!BCAPI.UploadSettingsFile())
-                    e.Cancel = true;
-
                 return;
             }
 
@@ -1076,7 +1073,7 @@ namespace EVEMon
             // Ensure it is invoked on the proper thread
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(() => OnUpdateAvailable(sender, e)));
+                Dispatcher.Invoke(() => OnUpdateAvailable(sender, e));
                 return;
             }
 
@@ -1087,8 +1084,7 @@ namespace EVEMon
             m_isShowingUpdateWindow = true;
             using (UpdateNotifyForm f = new UpdateNotifyForm(e))
             {
-                f.ShowDialog();
-                if (f.DialogResult == DialogResult.OK)
+                if (f.ShowDialog() == DialogResult.OK)
                 {
                     m_isUpdating = true;
 
@@ -1110,7 +1106,7 @@ namespace EVEMon
             // Ensure it is invoked on the proper thread
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(() => OnDataUpdateAvailable(sender, e)));
+                Dispatcher.Invoke(() => OnDataUpdateAvailable(sender, e));
                 return;
             }
 
@@ -1369,6 +1365,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!BCAPI.UploadSettingsFile())
+                return;
+
             Application.Exit();
         }
 
