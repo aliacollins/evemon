@@ -55,6 +55,10 @@ namespace EVEMon.Common
 
             APIResult<SerializableAPIKillLog> result = Util.DeserializeAPIResult<SerializableAPIKillLog>(
                 filename, APIProvider.RowsetsTransform);
+
+            if (result == null)
+                return;
+
             Import(result.Result.Kills);
         }
 
