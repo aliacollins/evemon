@@ -184,49 +184,52 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
                 int i = 0;
                 while (i < data.Count)
                 {
-                    byte b = data[i++];
-                    byte tlen = (byte)((byte)(b << 5) >> 5);
-                    bool tzero = (byte)((byte)(b << 4) >> 7) == 1;
-                    byte blen = (byte)((byte)(b << 1) >> 5);
-                    bool bzero = (byte)(b >> 7) == 1;
-
-                    if (tzero)
+                    unchecked
                     {
-                        byte count = (byte)(tlen + 1);
-                        for (; count > 0; count--)
+                        byte b = data[i++];
+                        byte tlen = (byte)((byte)(b << 5) >> 5);
+                        bool tzero = (byte)((byte)(b << 4) >> 7) == 1;
+                        byte blen = (byte)((byte)(b << 1) >> 5);
+                        bool bzero = (byte)(b >> 7) == 1;
+
+                        if (tzero)
                         {
-                            buffer.Add(0);
+                            byte count = (byte)(tlen + 1);
+                            for (; count > 0; count--)
+                            {
+                                buffer.Add(0);
+                            }
                         }
-                    }
-                    else
-                    {
-                        byte count = (byte)(8 - tlen);
-                        for (; count > 0; count--)
+                        else
                         {
-                            buffer.Add(data[i++]);
+                            byte count = (byte)(8 - tlen);
+                            for (; count > 0; count--)
+                            {
+                                buffer.Add(data[i++]);
+                            }
                         }
-                    }
 
-                    if (bzero)
-                    {
-                        if (i == data.Count)
-                            break;
-
-                        byte count = (byte)(blen + 1);
-                        for (; count > 0; count--)
+                        if (bzero)
                         {
-                            buffer.Add(0);
+                            if (i == data.Count)
+                                break;
+
+                            byte count = (byte)(blen + 1);
+                            for (; count > 0; count--)
+                            {
+                                buffer.Add(0);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (i == data.Count)
-                            break;
-
-                        byte count = (byte)(8 - blen);
-                        for (; count > 0; count--)
+                        else
                         {
-                            buffer.Add(data[i++]);
+                            if (i == data.Count)
+                                break;
+
+                            byte count = (byte)(8 - blen);
+                            for (; count > 0; count--)
+                            {
+                                buffer.Add(data[i++]);
+                            }
                         }
                     }
                 }
