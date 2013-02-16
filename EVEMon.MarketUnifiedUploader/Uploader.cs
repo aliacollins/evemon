@@ -210,9 +210,16 @@ namespace EVEMon.MarketUnifiedUploader
                                                  : Settings.PortableEveInstallations.EVEClients.SelectMany(
                                                      eveClient => Parser.GetMachoNetCachedFiles(eveClient.Path)).ToArray();
 
-                    // Parse the cahced files and upload the data to the selected endpoints
-                    foreach (FileInfo cachedFile in cachedFiles.Where(x => x.Exists))
+                    // Parse the cached files and upload the data to the selected endpoints
+                    foreach (FileInfo cachedFile in cachedFiles.Where(file => file.Exists))
                     {
+                        // Delete older than 90 days cached files
+                        if (cachedFile.LastWriteTimeUtc.AddDays(90) < DateTime.UtcNow)
+                        {
+                            DeleteCachedFile(cachedFile);
+                            continue;
+                        }
+
                         // Parse the cached file
                         KeyValuePair<object, object> result = ParseCacheFile(cachedFile);
 
@@ -423,21 +430,33 @@ namespace EVEMon.MarketUnifiedUploader
                 Console.Write(s_progressText);
 
                 // Delete the cached file
-                try
-                {
-                    Console.WriteLine("Deleting cache file.");
-                    cachedfile.Delete();
-                }
-                catch (IOException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, false));
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, false));
-                }
+                DeleteCachedFile(cachedfile);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the cached file.
+        /// </summary>
+        /// <param name="cachedfile">The cachedfile.</param>
+        private static void DeleteCachedFile(FileSystemInfo cachedfile)
+        {
+            if (!cachedfile.Exists)
+                return;
+
+            try
+            {
+                Console.WriteLine("Deleting cache file.");
+                cachedfile.Delete();
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, false));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Dispatcher.Invoke(() => ExceptionHandler.LogException(ex, false));
             }
         }
 
