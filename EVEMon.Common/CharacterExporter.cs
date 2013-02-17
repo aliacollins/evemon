@@ -96,7 +96,7 @@ namespace EVEMon.Common
             int count =
                 skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
                     x => GetMergedSkill(plan, x)).Count();
-            int skillGroupTotalSP =
+            Int64 skillGroupTotalSP =
                 skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
                     x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
 
@@ -261,7 +261,7 @@ namespace EVEMon.Common
         {
             int count = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
                 x => GetMergedSkill(plan, x)).Count();
-            int skillGroupTotalSP = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
+            Int64 skillGroupTotalSP = skillGroup.Where(x => x.IsKnown || (plan != null && plan.IsPlanned(x))).Select(
                 x => GetMergedSkill(plan, x)).Sum(x => x.Skillpoints);
 
             OutputSkillGroup outGroup = new OutputSkillGroup

@@ -502,19 +502,19 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static void MaterialPrereqSkill(RamTypeRequirements requirement,
                                                 ICollection<SerializablePrereqSkill> prerequisiteSkills)
         {
-            int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Count];
-            int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Count];
+            Int64[] prereqSkills = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
+            Int64[] prereqLevels = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
 
             foreach (DgmTypeAttributes attribute in Database.DgmTypeAttributesTable.Where(
                 x => x.ItemID == requirement.RequiredTypeID))
             {
-                int attributeIntValue = attribute.GetIntValue;
+                long attributeInt64Value = attribute.GetInt64Value;
 
                 // Is it a prereq skill ?
                 int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(attribute.AttributeID);
                 if (prereqIndex >= 0)
                 {
-                    prereqSkills[prereqIndex] = attributeIntValue;
+                    prereqSkills[prereqIndex] = attributeInt64Value;
                     continue;
                 }
 
@@ -523,7 +523,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (prereqIndex < 0)
                     continue;
 
-                prereqLevels[prereqIndex] = attributeIntValue;
+                prereqLevels[prereqIndex] = attributeInt64Value;
             }
 
             // Add the prerequisite skills

@@ -117,7 +117,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public string GetLabelOrDefault(Item obj)
+        public String GetLabelOrDefault(Item obj)
         {
             if (obj == null)
                 throw new ArgumentNullException("obj");
@@ -132,18 +132,20 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public float GetNumericValue(Item obj)
+        public Double GetNumericValue(Item obj)
         {
             if (obj == null)
                 throw new ArgumentNullException("obj");
 
             // Retrieve the string for the number
-            EvePropertyValue? value = obj.Properties[ID];
-            string number = (value == null ? DefaultValue : value.Value.Value);
+            Nullable<EvePropertyValue> value = obj.Properties[ID];
+            String number = (value == null ? DefaultValue : value.Value.Value);
 
-            // Try to parse it as a float
-            float result;
-            return float.TryParse(number, NumberStyles.Number, CultureConstants.InvariantCulture, out result) ? result : default(float);
+            // Try to parse it as a real
+            Single result;
+            return Single.TryParse(number, NumberStyles.Number, CultureConstants.InvariantCulture, out result)
+                       ? result
+                       : default(Single);
         }
 
         /// <summary>
@@ -151,15 +153,15 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private string Format(string value)
+        private String Format(String value)
         {
-            float numericValue;
-            if (float.TryParse(value, NumberStyles.Number, CultureConstants.InvariantCulture, out numericValue))
+            Single numericValue;
+            if (Single.TryParse(value, NumberStyles.Number, CultureConstants.InvariantCulture, out numericValue))
             {
                 try
                 {
                     // Format a value of Packaged Volume
-                    if (Name == "Packaged Volume")
+                    if (Name == DBConstants.PackagedVolumePropertyName)
                         return String.Format(CultureConstants.DefaultCulture, "{0:N1} {1}", numericValue, Unit);
 
                     // Format a value of Structure Volume

@@ -267,13 +267,13 @@ namespace EVEMon.SkillPlanner
                     AdjustColumns();
 
                 // Restore the selected item (if any)
-                if (selectedItem > 0)
+                if (selectedItem <= 0)
+                    return;
+
+                foreach (ListViewItem lvItem in PropertiesList.Items.Cast<ListViewItem>().Where(
+                    lvItem => lvItem.Tag.GetHashCode() == selectedItem))
                 {
-                    foreach (ListViewItem lvItem in PropertiesList.Items.Cast<ListViewItem>().Where(
-                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
-                    {
-                        lvItem.Selected = true;
-                    }
+                    lvItem.Selected = true;
                 }
             }
             finally
@@ -371,8 +371,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="prop">The property.</param>
         private void AddPropertyValue(ICollection<ListViewItem> items, ListViewGroup group, EveProperty prop)
         {
-            string[] labels = SelectControl.SelectedObjects.Select(prop.GetLabelOrDefault).ToArray();
-            float[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
+            String[] labels = SelectControl.SelectedObjects.Select(prop.GetLabelOrDefault).ToArray();
+            Double[] values = SelectControl.SelectedObjects.Select(prop.GetNumericValue).ToArray();
 
             // Create the list view item
             ListViewItem item = new ListViewItem(group) { ToolTipText = prop.Description, Text = prop.Name, Tag = prop };
@@ -388,10 +388,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="item">The list of items.</param>
         /// <param name="labels">The labels.</param>
         /// <param name="values">The values.</param>
-        private void AddValueForSelectedObjects(EveProperty prop, ListViewItem item, IList<string> labels, IList<float> values)
+        private void AddValueForSelectedObjects(EveProperty prop, ListViewItem item, IList<String> labels, IList<Double> values)
         {
-            float min = 0f;
-            float max = 0f;
+            Double min = 0f;
+            Double max = 0f;
             bool allEqual = true;
 
             if (values.Any())
@@ -401,7 +401,7 @@ namespace EVEMon.SkillPlanner
                 allEqual = values.All(x => Math.Abs(x - min) < float.Epsilon);
                 if (prop != null && !prop.HigherIsBetter)
                 {
-                    float temp = min;
+                    Double temp = min;
                     min = max;
                     max = temp;
                 }
@@ -446,7 +446,7 @@ namespace EVEMon.SkillPlanner
             items.Add(item);
 
             // Add the value for every selected item
-            AddValueForSelectedObjects(null, item, labels, new float[] { });
+            AddValueForSelectedObjects(null, item, labels, new Double[] { });
         }
 
         /// <summary>
@@ -649,8 +649,8 @@ namespace EVEMon.SkillPlanner
                                      IEnumerable<Material> materials)
         {
             // Create the list of labels and values
-            List<string> labels = new List<string>();
-            List<float> values = new List<float>();
+            List<String> labels = new List<String>();
+            List<Double> values = new List<Double>();
             foreach (Material material in materials)
             {
                 // Add default labels and values for non existing materials
@@ -708,7 +708,7 @@ namespace EVEMon.SkillPlanner
             items.Add(item);
 
             // Add the value for every selected item
-            AddValueForSelectedObjects(null, item, labels, new float[] { });
+            AddValueForSelectedObjects(null, item, labels, new Double[] { });
         }
 
         /// <summary>

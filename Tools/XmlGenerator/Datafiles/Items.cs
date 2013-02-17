@@ -281,7 +281,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                        multiplier = Database.DgmTypeAttributesTable.Where(
                                            x => x.ItemID == srcReaction.TypeID &&
                                                 x.AttributeID == DBConstants.MoonMiningAmountPropertyID).Select(
-                                                    x => x.GetIntValue).FirstOrDefault()
+                                                    x => x.GetInt64Value).FirstOrDefault()
                                    }).Select(
                                        reaction => new SerializableReactionInfo
                                                        {
@@ -369,20 +369,20 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <returns></returns>
         private static IEnumerable<SerializablePropertyValue> AddItemPropsAndPrereq(InvTypes srcItem, SerializableItem item)
         {
-            int[] prereqSkills = new int[DBConstants.RequiredSkillPropertyIDs.Count];
-            int[] prereqLevels = new int[DBConstants.RequiredSkillPropertyIDs.Count];
+            Int64[] prereqSkills = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
+            Int64[] prereqLevels = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
             List<SerializablePropertyValue> props = new List<SerializablePropertyValue>();
             const int BaseWarpSpeed = 3;
             double warpSpeedMultiplier = 1;
             foreach (DgmTypeAttributes srcProp in Database.DgmTypeAttributesTable.Where(x => x.ItemID == srcItem.ID))
             {
-                int propIntValue = srcProp.GetIntValue;
+                Int64 propInt64Value = srcProp.GetInt64Value;
 
                 // Is it a prereq skill ?
                 int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (prereqIndex > -1)
                 {
-                    prereqSkills[prereqIndex] = propIntValue;
+                    prereqSkills[prereqIndex] = propInt64Value;
                     continue;
                 }
 
@@ -390,7 +390,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 prereqIndex = DBConstants.RequiredSkillLevelPropertyIDs.IndexOf(srcProp.AttributeID);
                 if (prereqIndex > -1)
                 {
-                    prereqLevels[prereqIndex] = propIntValue;
+                    prereqLevels[prereqIndex] = propInt64Value;
                     continue;
                 }
 
@@ -401,8 +401,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
-                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                                  ? Database.InvGroupsTable[propInt64Value].Name
                                                   : String.Empty
                                   });
                     continue;
@@ -415,8 +415,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
-                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                                  ? Database.InvGroupsTable[propInt64Value].Name
                                                   : String.Empty
                                   });
                     continue;
@@ -429,8 +429,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
-                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                                  ? Database.InvGroupsTable[propInt64Value].Name
                                                   : String.Empty
                                   });
                     continue;
@@ -443,8 +443,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
-                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                                  ? Database.InvGroupsTable[propInt64Value].Name
                                                   : String.Empty
                                   });
                     continue;
@@ -457,8 +457,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
-                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                                  ? Database.InvGroupsTable[propInt64Value].Name
                                                   : String.Empty
                                   });
                     continue;
@@ -471,8 +471,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
-                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                                  ? Database.InvGroupsTable[propInt64Value].Name
                                                   : String.Empty
                                   });
                     continue;
@@ -485,8 +485,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propIntValue)
-                                                  ? Database.InvGroupsTable[propIntValue].Name
+                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                                                  ? Database.InvGroupsTable[propInt64Value].Name
                                                   : String.Empty
                                   });
                     continue;
@@ -516,7 +516,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Other props
                 props.Add(new SerializablePropertyValue { ID = srcProp.AttributeID, Value = srcProp.FormatPropertyValue() });
 
-                AddMetaData(item, propIntValue, srcProp);
+                AddMetaData(item, propInt64Value, srcProp);
             }
 
             CompleteItemPropertiesAddition(srcItem, props);
@@ -542,18 +542,18 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// Adds the meta data.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <param name="propIntValue">The prop int value.</param>
+        /// <param name="propInt64Value">The prop int value.</param>
         /// <param name="srcProp">The SRC prop.</param>
-        private static void AddMetaData(SerializableItem item, int propIntValue, DgmTypeAttributes srcProp)
+        private static void AddMetaData(SerializableItem item, Int64 propInt64Value, DgmTypeAttributes srcProp)
         {
             // Is metalevel property ?
             if (srcProp.AttributeID == DBConstants.MetaLevelPropertyID)
-                item.MetaLevel = propIntValue;
+                item.MetaLevel = propInt64Value;
 
             // Is techlevel property ?
             if (srcProp.AttributeID == DBConstants.TechLevelPropertyID)
             {
-                switch (propIntValue)
+                switch (propInt64Value)
                 {
                     default:
                         item.MetaGroup = ItemMetaGroup.T1;
@@ -571,7 +571,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             if (srcProp.AttributeID != DBConstants.MetaGroupPropertyID)
                 return;
 
-            switch (propIntValue)
+            switch (propInt64Value)
             {
                 case DBConstants.StorylineMetaGroupID:
                     item.MetaGroup = ItemMetaGroup.Storyline;

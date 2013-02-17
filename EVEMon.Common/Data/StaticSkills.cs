@@ -13,7 +13,7 @@ namespace EVEMon.Common.Data
     {
         private static int s_arrayIndicesCount;
         private static StaticSkill[] s_skills;
-        private static readonly Dictionary<int, StaticSkill> s_skillsByID = new Dictionary<int, StaticSkill>();
+        private static readonly Dictionary<Int64, StaticSkill> s_skillsByID = new Dictionary<Int64, StaticSkill>();
         private static readonly Dictionary<string, StaticSkill> s_skillsByName = new Dictionary<string, StaticSkill>();
         private static readonly Dictionary<int, StaticSkillGroup> s_skillGroupsByID = new Dictionary<int, StaticSkillGroup>();
 
@@ -137,7 +137,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static StaticSkill GetSkillByID(int id)
+        public static StaticSkill GetSkillByID(Int64 id)
         {
             StaticSkill skill;
             s_skillsByID.TryGetValue(id, out skill);

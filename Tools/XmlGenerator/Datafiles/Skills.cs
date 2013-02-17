@@ -74,9 +74,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                     };
 
                 // Export skill atributes
-                Dictionary<int, int> skillAttributes = Database.DgmTypeAttributesTable.Where(
+                Dictionary<int, Int64> skillAttributes = Database.DgmTypeAttributesTable.Where(
                     x => x.ItemID == skill.ID).ToDictionary(
-                        attribute => attribute.AttributeID, attribute => attribute.GetIntValue);
+                        attribute => attribute.AttributeID, attribute => attribute.GetInt64Value);
 
                 singleSkill.Rank = skillAttributes.ContainsKey(DBConstants.SkillTimeConstantPropertyID) &&
                                    skillAttributes[DBConstants.SkillTimeConstantPropertyID] > 0
@@ -133,7 +133,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <summary>
         /// Gets the Eve attribute.
         /// </summary>        
-        private static EveAttribute IntToEveAttribute(int attributeValue)
+        private static EveAttribute IntToEveAttribute(Int64 attributeValue)
         {
             switch (attributeValue)
             {

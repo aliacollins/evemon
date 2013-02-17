@@ -120,9 +120,7 @@ namespace EVEMon.Common
         public static int CompareByName(PlanEntry x, PlanEntry y)
         {
             int nameDiff = String.CompareOrdinal(x.Skill.Name, y.Skill.Name);
-            if (nameDiff != 0)
-                return nameDiff;
-            return x.Level - y.Level;
+            return nameDiff != 0 ? nameDiff : Convert.ToInt32(x.Level - y.Level);
         }
 
         /// <summary>
@@ -271,7 +269,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static int CompareByRank(PlanEntry x, PlanEntry y)
         {
-            return x.Skill.Rank - y.Skill.Rank;
+            return Convert.ToInt32(x.Skill.Rank - y.Skill.Rank);
         }
 
         /// <summary>

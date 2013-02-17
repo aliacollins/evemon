@@ -12,6 +12,7 @@ namespace EVEMon.Common.Data
         public const string GeneralCategoryName = "General";
         public const string PropulsionCategoryName = "Propulsion";
         public const string ConsumptionRatePropertyName = "Consumption Rate";
+        public const string PackagedVolumePropertyName = "Packaged Volume";
 
         #endregion
 

@@ -1,3 +1,4 @@
+using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Exportation
@@ -11,9 +12,9 @@ namespace EVEMon.Common.Serialization.Exportation
         public ImplantSlots Attribute { get; set; }
 
         [XmlAttribute("bonus")]
-        public int Bonus { get; set; }
+        public Int64 Bonus { get; set; }
 
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public String Name { get; set; }
     }
 }

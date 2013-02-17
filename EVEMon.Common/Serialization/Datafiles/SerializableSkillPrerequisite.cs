@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
 {
@@ -26,6 +27,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The level.</value>
         [XmlAttribute("level")]
-        public int Level { get; set; }
+        public Int64 Level { get; set; }
     }
 }

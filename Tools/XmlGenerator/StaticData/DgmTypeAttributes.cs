@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace EVEMon.XmlGenerator.StaticData
 {
@@ -11,20 +12,20 @@ namespace EVEMon.XmlGenerator.StaticData
         public int AttributeID { get; set; }
 
         [XmlElement("valueInt")]
-        public int? ValueInt { get; set; }
+        public Nullable<Int64> ValueInt64 { get; set; }
 
         [XmlElement("valueFloat")]
-        public double? ValueFloat { get; set; }
+        public Nullable<Single> ValueFloat { get; set; }
 
         /// <summary>
         /// Returns the value as an integer. 
-        /// Some int values are actually stored as doubles in the DB, hence this trick.
+        /// Some integer values are actually stored as floats in the DB, hence this trick.
         /// </summary>
         /// <returns></returns>
         [XmlIgnore]
-        public int GetIntValue
+        public Int64 GetInt64Value
         {
-            get { return ValueInt.HasValue ? ValueInt.Value : (int)(ValueFloat.HasValue ? ValueFloat.Value : 0); }
+            get { return ValueInt64.HasValue ? ValueInt64.Value : ValueFloat.HasValue ? Convert.ToInt64(ValueFloat.Value) : 0; }
         }
 
 

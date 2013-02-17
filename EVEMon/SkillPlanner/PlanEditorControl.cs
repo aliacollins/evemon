@@ -1935,7 +1935,7 @@ namespace EVEMon.SkillPlanner
         private ListViewItem CreatePlanItemForSkill(Skill skill)
         {
             // Gets the planned level of the skill.
-            int newLevel = m_plan.GetPlannedLevel(skill) + 1;
+            Int64 newLevel = m_plan.GetPlannedLevel(skill) + 1;
             if (skill.Level >= newLevel)
                 newLevel = skill.Level + 1;
 
@@ -2113,7 +2113,7 @@ namespace EVEMon.SkillPlanner
                     PlanEntry selectedEntry = lvSkills.SelectedItems[0].Tag as PlanEntry;
                     if (currentEntry != null && selectedEntry != null)
                     {
-                        int neededLevel;
+                        Int64 neededLevel;
                         if (currentEntry.Skill.HasAsImmediatePrereq(selectedEntry.Skill, out neededLevel))
                         {
                             if (currentEntry.Level == 1 && neededLevel >= selectedEntry.Level)

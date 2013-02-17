@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common
@@ -9,7 +10,7 @@ namespace EVEMon.Common
         int ArrayIndex { get; }
         string Name { get; }
 
-        int Rank { get; }
+        Int64 Rank { get; }
         long Cost { get; }
         StaticSkillGroup Group { get; }
 

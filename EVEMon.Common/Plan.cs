@@ -285,7 +285,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="skill">The skill we want to plan</param>
         /// <param name="level">The level we want to train to</param>
-        public void PlanTo(StaticSkill skill, int level)
+        public void PlanTo(StaticSkill skill, Int64 level)
         {
             if (skill == null)
                 throw new ArgumentNullException("skill");
@@ -302,7 +302,7 @@ namespace EVEMon.Common
         /// <param name="level">The level we want to train to</param>
         /// <param name="priority">The priority.</param>
         /// <param name="noteForNewEntries">The reason we want to train this skill</param>
-        public void PlanTo(StaticSkill skill, int level, int priority, string noteForNewEntries)
+        public void PlanTo(StaticSkill skill, Int64 level, int priority, string noteForNewEntries)
         {
             int plannedLevel = GetPlannedLevel(skill);
             if (level == plannedLevel)
@@ -343,7 +343,7 @@ namespace EVEMon.Common
         /// <param name="skill">The skill we want to plan</param>
         /// <param name="level">The level we want to train to</param>
         /// <returns></returns>
-        public IPlanOperation TryPlanTo(Skill skill, int level)
+        public IPlanOperation TryPlanTo(Skill skill, Int64 level)
         {
             if (skill == null)
                 throw new ArgumentNullException("skill");
@@ -359,7 +359,7 @@ namespace EVEMon.Common
         /// <param name="level">The level we want to train to</param>
         /// <param name="noteForNewEntries">The reason we want to train this skill</param>
         /// <returns></returns>
-        private IPlanOperation TryPlanTo(Skill skill, int level, string noteForNewEntries)
+        private IPlanOperation TryPlanTo(Skill skill, Int64 level, string noteForNewEntries)
         {
             int plannedLevel = GetPlannedLevel(skill);
             if (level == plannedLevel)

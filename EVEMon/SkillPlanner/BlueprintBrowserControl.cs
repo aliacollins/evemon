@@ -361,7 +361,7 @@ namespace EVEMon.SkillPlanner
             int perfectMELevel = 0;
             bool hasPerfect = false;
             bool hasDamagePerRun = false;
-            int productionEfficiencyLevel = m_character.Skills[DBConstants.ProductionEfficiencySkillID].LastConfirmedLvl;
+            Int64 productionEfficiencyLevel = m_character.Skills[DBConstants.ProductionEfficiencySkillID].LastConfirmedLvl;
             List<ListViewItem> items = new List<ListViewItem>();
 
             foreach (MarketGroup marketGroup in StaticItems.AllGroups)
@@ -579,7 +579,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private string CharacterActivityTime(double activityTime, int skillID, double factor, bool copyActivity)
         {
-            int skillLevel = (m_character.Skills[skillID]).LastConfirmedLvl;
+            Int64 skillLevel = (m_character.Skills[skillID]).LastConfirmedLvl;
             double activityTimeModifier = (1 - (factor * skillLevel));
             TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier);
             bool includeSeconds = (time.Hours == 0 && time.Minutes < 10);
@@ -732,7 +732,7 @@ namespace EVEMon.SkillPlanner
                 return 1.0d;
 
             double bonus = implant.Properties.FirstOrDefault(
-                x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).IntValue;
+                x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).Int64Value;
             double multiplier = 1.0d + (bonus / 100);
 
             return multiplier;

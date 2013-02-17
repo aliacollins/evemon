@@ -133,7 +133,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the metalevel this item belong to.
         /// </summary>
-        public int MetaLevel { get; private set; }
+        public Int64 MetaLevel { get; private set; }
 
         /// <summary>
         /// Gets the category this item belong to.
@@ -205,7 +205,7 @@ namespace EVEMon.Common.Data
                     return StaticSkills.GetSkillByID(DBConstants.ScrapMetalProcessingSkillID);
 
                 // Returns the reprocessing skill specified by the property
-                int id = property.Value.IntValue;
+                Int64 id = property.Value.Int64Value;
                 return StaticSkills.GetSkillByID(id);
             }
         }

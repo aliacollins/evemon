@@ -37,12 +37,12 @@ namespace EVEMon.CharacterMonitoring
         private bool m_init;
 
         // Panel info variables
-        private int m_skillBasedOrders;
+        private Int64 m_skillBasedOrders;
 
         private float m_baseBrokerFee,
                       m_transactionTax;
 
-        private int m_askRange,
+        private Int64 m_askRange,
                     m_bidRange,
                     m_modificationRange,
                     m_remoteBidRange;
@@ -982,9 +982,9 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateHeaderText()
         {
             const int BaseOrders = 5;
-            int maxOrders = BaseOrders + m_skillBasedOrders;
+            Int64 maxOrders = BaseOrders + m_skillBasedOrders;
             int activeOrders = m_activeOrdersIssuedForCharacter + m_activeOrdersIssuedForCorporation;
-            int remainingOrders = maxOrders - activeOrders;
+            Int64 remainingOrders = maxOrders - activeOrders;
             decimal activeSellOrdersTotal = m_sellOrdersIssuedForCharacterTotal + m_sellOrdersIssuedForCorporationTotal;
             decimal activeBuyOrdersTotal = m_buyOrdersIssuedForCharacterTotal + m_buyOrdersIssuedForCorporationTotal;
 

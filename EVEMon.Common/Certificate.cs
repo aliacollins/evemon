@@ -238,7 +238,7 @@ namespace EVEMon.Common
         /// <param name="skill">The skill to test</param>
         /// <param name="neededLevel">When this skill is an immediate prerequisite, this parameter will held the required level</param>
         /// <returns></returns>
-        public bool HasAsImmediatePrerequisite(Skill skill, out int neededLevel)
+        public bool HasAsImmediatePrerequisite(Skill skill, out Int64 neededLevel)
         {
             return m_prereqSkills.Contains(skill, out neededLevel);
         }

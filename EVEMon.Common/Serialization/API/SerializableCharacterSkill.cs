@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -14,10 +15,10 @@ namespace EVEMon.Common.Serialization.API
         public string Name { get; set; }
 
         [XmlAttribute("level")]
-        public int Level { get; set; }
+        public Int64 Level { get; set; }
 
         [XmlAttribute("skillpoints")]
-        public int Skillpoints { get; set; }
+        public Int64 Skillpoints { get; set; }
 
         [XmlAttribute("ownsBook")]
         public bool OwnsBook { get; set; }

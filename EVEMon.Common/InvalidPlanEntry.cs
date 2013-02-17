@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Attributes;
+﻿using System;
+using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common
 {
@@ -24,7 +25,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Planned level.
         /// </summary>
-        public int PlannedLevel { get; set; }
+        public Int64 PlannedLevel { get; set; }
 
         /// <summary>
         /// Has the user been notified that this entry has been marked as invalid.

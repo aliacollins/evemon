@@ -1,10 +1,12 @@
-﻿namespace EVEMon.Common
+﻿using System;
+
+namespace EVEMon.Common
 {
     public interface ICharacterAttribute
     {
-        int Base { get; }
-        int ImplantBonus { get; }
-        int EffectiveValue { get; }
+        Int64 Base { get; }
+        Int64 ImplantBonus { get; }
+        Int64 EffectiveValue { get; }
 
         /// <summary>
         /// Gets a string representation with the provided format. The following parameters are accepted :

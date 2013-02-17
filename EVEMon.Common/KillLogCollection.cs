@@ -50,11 +50,17 @@ namespace EVEMon.Common
             string filename = LocalXmlCache.GetFile(String.Format(CultureConstants.InvariantCulture, "{0}-{1}",
                                                                   m_ccpCharacter.Name, APICharacterMethods.KillLog)).FullName;
 
+            // Abort if the file hasn't been obtained for any reason
             if (!File.Exists(filename))
                 return;
 
             APIResult<SerializableAPIKillLog> result = Util.DeserializeAPIResult<SerializableAPIKillLog>(
                 filename, APIProvider.RowsetsTransform);
+
+            // In case the file has an error we prevent the deserialization
+            if (result.HasError)
+                return;
+
             Import(result.Result.Kills);
         }
 

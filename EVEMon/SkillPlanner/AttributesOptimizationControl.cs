@@ -115,7 +115,7 @@ namespace EVEMon.SkillPlanner
             lbWarning.Visible = remapping.BestDuration < TimeSpan.FromDays(365);
 
             // Spare points
-            int sparePoints = EveConstants.SpareAttributePointsOnRemap;
+            Int64 sparePoints = EveConstants.SpareAttributePointsOnRemap;
             for (int i = 0; i < 5; i++)
             {
                 sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base) - EveConstants.CharacterBaseAttributePoints;
@@ -141,10 +141,10 @@ namespace EVEMon.SkillPlanner
                                              AttributeBarControl pbImplants)
         {
             // Compute base and effective attributes
-            int effectiveAttribute = remapping.BestScratchpad[attrib].EffectiveValue;
-            int oldBaseAttribute = remapping.BaseScratchpad[attrib].Base;
-            int remappableAttribute = remapping.BestScratchpad[attrib].Base;
-            int implantsBonus = remapping.BestScratchpad[attrib].ImplantBonus;
+            Int64 effectiveAttribute = remapping.BestScratchpad[attrib].EffectiveValue;
+            Int64 oldBaseAttribute = remapping.BaseScratchpad[attrib].Base;
+            Int64 remappableAttribute = remapping.BestScratchpad[attrib].Base;
+            Int64 implantsBonus = remapping.BestScratchpad[attrib].ImplantBonus;
 
             // Update the label
             label.Text = String.Format(CultureConstants.DefaultCulture, "{0} (new : {1} ; old : {2})",
@@ -274,7 +274,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Adjust delta
-            int deltaValue = button.ValueChange;
+            Int64 deltaValue = button.ValueChange;
             if (pbUnassigned.Value < deltaValue)
                 deltaValue = pbUnassigned.Value;
 

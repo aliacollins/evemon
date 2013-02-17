@@ -328,7 +328,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// The description of the range.
         /// </summary>
-        public static string GetRange(int range)
+        public static string GetRange(Int64 range)
         {
             switch (range)
             {

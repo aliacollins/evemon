@@ -37,10 +37,10 @@ namespace EVEMon.CharacterMonitoring
         private int m_columnTTCDisplayIndex;
 
         // Panel info variables
-        private int m_skillBasedManufacturingJobs,
+        private Int64 m_skillBasedManufacturingJobs,
                     m_skillBasedResearchingJobs;
 
-        private int m_remoteManufacturingRange,
+        private Int64 m_remoteManufacturingRange,
                     m_remoteResearchingRange;
 
         private int m_activeManufJobsIssuedForCharacterCount,
@@ -1078,11 +1078,11 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateHeaderText()
         {
             const int BaseJobs = 1;
-            int maxManufacturingJobs = BaseJobs + m_skillBasedManufacturingJobs;
-            int maxResearchingJobs = BaseJobs + m_skillBasedResearchingJobs;
-            int remainingManufacturingJobs = maxManufacturingJobs - m_activeManufJobsIssuedForCharacterCount -
+            Int64 maxManufacturingJobs = BaseJobs + m_skillBasedManufacturingJobs;
+            Int64 maxResearchingJobs = BaseJobs + m_skillBasedResearchingJobs;
+            Int64 remainingManufacturingJobs = maxManufacturingJobs - m_activeManufJobsIssuedForCharacterCount -
                                              m_activeManufJobsIssuedForCorporationCount;
-            int remainingResearchingJobs = maxResearchingJobs - m_activeResearchJobsIssuedForCharacterCount -
+            Int64 remainingResearchingJobs = maxResearchingJobs - m_activeResearchJobsIssuedForCharacterCount -
                                            m_activeResearchJobsIssuedForCorporationCount;
 
             string manufJobsRemainingText = String.Format(CultureConstants.DefaultCulture,

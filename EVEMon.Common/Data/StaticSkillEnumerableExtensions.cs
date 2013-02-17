@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EVEMon.Common.Data
@@ -24,7 +25,7 @@ namespace EVEMon.Common.Data
         /// <remarks>Please note they may be redundancies.</remarks>
         public static IEnumerable<StaticSkillLevel> GetAllPrerequisites(this IEnumerable<StaticSkill> src)
         {
-            int[] highestLevels = new int[StaticSkills.ArrayIndicesCount];
+            Int64[] highestLevels = new Int64[StaticSkills.ArrayIndicesCount];
             List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
             // Fill the array
@@ -48,7 +49,7 @@ namespace EVEMon.Common.Data
         /// <param name="list"></param>
         /// <param name="item"></param>
         /// <param name="includeRoots"></param>
-        internal static void FillPrerequisites(int[] highestLevels, List<StaticSkillLevel> list, StaticSkillLevel item,
+        internal static void FillPrerequisites(Int64[] highestLevels, List<StaticSkillLevel> list, StaticSkillLevel item,
                                                bool includeRoots)
         {
             // Prerequisites

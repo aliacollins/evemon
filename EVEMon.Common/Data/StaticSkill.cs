@@ -90,12 +90,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the rank of this skill.
         /// </summary>
-        public int Rank { get; private set; }
+        public Int64 Rank { get; private set; }
 
         /// <summary>
         /// Gets the skill's cost.
         /// </summary>
-        public long Cost { get; private set; }
+        public Int64 Cost { get; private set; }
 
         /// <summary>
         /// Gets the skill group this skill is part of.
@@ -143,7 +143,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                int[] highestLevels = new int[StaticSkills.ArrayIndicesCount];
+                Int64[] highestLevels = new Int64[StaticSkills.ArrayIndicesCount];
                 List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Fill the array
@@ -172,7 +172,7 @@ namespace EVEMon.Common.Data
         /// <param name="level">The level.</param>
         /// <returns>The required nr. of points.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        public int GetPointsRequiredForLevel(int level)
+        public Int64 GetPointsRequiredForLevel(Int64 level)
         {
             // Much faster than the old formula. This one too may have 1pt difference here and there, only on the lv2 skills
             switch (level)
@@ -207,7 +207,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="level">The level.</param>
         /// <returns>The required nr. of points.</returns>
-        public int GetPointsRequiredForLevelOnly(int level)
+        public Int64 GetPointsRequiredForLevelOnly(int level)
         {
             if (level == 0)
                 return 0;

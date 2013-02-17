@@ -21,7 +21,7 @@ namespace EVEMon.CharacterMonitoring
         #region Fields
 
         private Character m_character;
-        private int m_spAtLastRedraw;
+        private Int64 m_spAtLastRedraw;
 
         #endregion
 

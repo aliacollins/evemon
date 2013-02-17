@@ -15,7 +15,7 @@ namespace EVEMon.Common.Data
         /// </returns>
         public static bool HasAsPrerequisite(this IStaticSkill thisSkill, IStaticSkill skill)
         {
-            int neededLevel = 0;
+            Int64 neededLevel = 0;
             return thisSkill.HasAsPrerequisite(skill, ref neededLevel, true);
         }
 
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Data
         /// <returns>
         /// 	<code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.
         /// </returns>
-        public static bool HasAsPrerequisite(this IStaticSkill thisSkill, IStaticSkill skill, out int neededLevel)
+        public static bool HasAsPrerequisite(this IStaticSkill thisSkill, IStaticSkill skill, out Int64 neededLevel)
         {
             neededLevel = 0;
             return thisSkill.HasAsPrerequisite(skill, ref neededLevel, true);
@@ -46,7 +46,7 @@ namespace EVEMon.Common.Data
         /// <returns>
         /// 	<code>true</code> if it is a prerequisite, needed level in <var>neededLevel</var> out parameter.
         /// </returns>
-        private static bool HasAsPrerequisite(this IStaticSkill thisSkill, IStaticSkill skill, ref int neededLevel, bool recurse)
+        private static bool HasAsPrerequisite(this IStaticSkill thisSkill, IStaticSkill skill, ref Int64 neededLevel, bool recurse)
         {
             long thisID = thisSkill.ID;
 
@@ -72,7 +72,7 @@ namespace EVEMon.Common.Data
         /// <returns>
         /// Skill gs is an immediate prereq of this skill
         /// </returns>
-        public static bool HasAsImmediatePrereq(this IStaticSkill thisSkill, IStaticSkill skill, out int neededLevel)
+        public static bool HasAsImmediatePrereq(this IStaticSkill thisSkill, IStaticSkill skill, out Int64 neededLevel)
         {
             neededLevel = 0;
             return thisSkill.HasAsPrerequisite(skill, ref neededLevel, false);

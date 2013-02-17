@@ -15,7 +15,7 @@ namespace EVEMon.ResFileCreator
                                                                          "Program Files",
                                                                          "Program Files (x86)"
                                                                      };
-        private static readonly string[] s_sdkVersions = new [] { "7.1A", "7.1", "7.0A", "7.0" };
+        private static readonly string[] s_sdkVersions = new [] { "8.0A", "8.0", "7.1A", "7.1", "7.0A", "7.0" };
         private static readonly Dictionary<string, object> s_dictionary = new Dictionary<string, object>();
         private static string s_assemblyInfoFileContent;
         private static string s_filePath;
@@ -33,7 +33,7 @@ namespace EVEMon.ResFileCreator
             s_rcexe = FindRcExe();
             if (String.IsNullOrEmpty(s_rcexe))
             {
-                Console.WriteLine("RC : Not Found - Resource file will not be created.");
+                Console.WriteLine("RC.exe : Not Found - Resource file will not be created.");
                 return;
             }
 
@@ -207,7 +207,7 @@ namespace EVEMon.ResFileCreator
             ProcessStartInfo startInfo = new ProcessStartInfo
                                              {
                                                  FileName = s_rcexe,
-                                                 Arguments = String.Format("/r {0}", s_filePath),
+                                                 Arguments = String.Format("/v /nologo /r {0} ", s_filePath),
                                                  UseShellExecute = false,
                                                  RedirectStandardOutput = true
                                              };
@@ -221,7 +221,7 @@ namespace EVEMon.ResFileCreator
                 exitCode = makeResProcess.ExitCode;
             }
 
-            Console.WriteLine(exitCode != 0 ? "RC exited with errors." : "Resource file compiled successfully.");
+            Console.Write(exitCode != 0 ? "Resourse Compiler exited with errors." : "Resource file compiled successfully.");
         }
 
         /// <summary>
@@ -230,15 +230,16 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static string FindRcExe()
         {
-            // Creates all possible folder and sdk version paths
-            IEnumerable<string> locations = Environment.GetLogicalDrives()
+            // Lookup for 'RC.exe' in all possible folders and sdk version paths
+            IEnumerable<string> locations = Directory.GetLogicalDrives()
                 .SelectMany(drive => s_programFilesFolders,
                             (drive, programFilesFolder) => new { drive, programFilesFolder })
                 .SelectMany(programFilesFolder => s_sdkVersions,
                             (programFilesFolder, sdkVersion) =>
-                            String.Format(CultureInfo.InvariantCulture,
-                                          @"{0}{1}\Microsoft SDKs\Windows\v{2}\Bin\RC.exe",
-                                          programFilesFolder.drive, programFilesFolder.programFilesFolder, sdkVersion)).Where(File.Exists);
+                            String.Format(CultureInfo.InvariantCulture, @"{0}{1}\Microsoft SDKs\Windows\v{2}\Bin\RC.exe",
+                                          programFilesFolder.drive, programFilesFolder.programFilesFolder, sdkVersion))
+                .Where(File.Exists);
+
 
             return locations.FirstOrDefault();
         }

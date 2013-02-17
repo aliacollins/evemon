@@ -24,7 +24,7 @@ namespace EVEMon.Common
 
         // Skill Point Caching
         private DateTime m_skillPointTotalUpdated = DateTime.MinValue;
-        private int m_lastSkillPointTotal;
+        private Int64 m_lastSkillPointTotal;
 
 
         #region Initialization
@@ -296,7 +296,7 @@ namespace EVEMon.Common
         /// Gets the total skill points for this character.
         /// </summary>
         /// <returns></returns>
-        protected override int TotalSkillPoints
+        protected override Int64 TotalSkillPoints
         {
             get
             {
@@ -335,7 +335,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
-        public override int GetSkillLevel(StaticSkill skill)
+        public override Int64 GetSkillLevel(StaticSkill skill)
         {
             if (skill == null)
                 throw new ArgumentNullException("skill");
@@ -348,7 +348,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="skill"></param>
         /// <returns></returns>
-        public override int GetSkillPoints(StaticSkill skill)
+        public override Int64 GetSkillPoints(StaticSkill skill)
         {
             if (skill == null)
                 throw new ArgumentNullException("skill");

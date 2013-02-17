@@ -1,3 +1,4 @@
+using System;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common
@@ -7,7 +8,7 @@ namespace EVEMon.Common
     /// </summary>
     public interface ISkillLevel
     {
-        int Level { get; }
+        Int64 Level { get; }
         StaticSkill Skill { get; }
     }
 }

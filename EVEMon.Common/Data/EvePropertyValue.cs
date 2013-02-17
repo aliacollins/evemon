@@ -39,15 +39,15 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the integer value.
         /// </summary>
-        public int IntValue
+        public Int64 Int64Value
         {
-            get { return Int32.Parse(Value, CultureConstants.InvariantCulture); }
+            get { return Int64.Parse(Value, CultureConstants.InvariantCulture); }
         }
 
         /// <summary>
         /// Gets the floating point value.
         /// </summary>
-        public float FloatValue
+        public Single SingleValue
         {
             get { return Single.Parse(Value, CultureConstants.InvariantCulture); }
         }
