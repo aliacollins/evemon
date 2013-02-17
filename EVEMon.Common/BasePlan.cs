@@ -175,7 +175,7 @@ namespace EVEMon.Common
         /// <param name="skill"></param>
         /// <param name="level"></param>
         /// <returns></returns>
-        public PlanEntry GetEntry(StaticSkill skill, int level)
+        public PlanEntry GetEntry(StaticSkill skill, Int64 level)
         {
             if (skill == null)
                 throw new ArgumentNullException("skill");
@@ -243,7 +243,7 @@ namespace EVEMon.Common
         /// <param name="skill"></param>
         /// <param name="level"></param>
         /// <returns>The index of the matching entry when found, -1 otherwise.</returns>
-        protected int IndexOf(StaticSkill skill, int level)
+        protected int IndexOf(StaticSkill skill, Int64 level)
         {
             PlanEntry entry = GetEntry(skill, level);
             if (entry == null)
@@ -272,7 +272,7 @@ namespace EVEMon.Common
         /// <param name="skill"></param>
         /// <param name="level"></param>
         /// <returns></returns>
-        public bool IsPlanned(StaticSkill skill, int level)
+        public bool IsPlanned(StaticSkill skill, Int64 level)
         {
             return GetEntry(skill, level) != null;
         }
@@ -342,7 +342,7 @@ namespace EVEMon.Common
         /// <param name="insertionIndex"></param>
         /// <param name="newEntriesPriority"></param>
         /// <returns>True if the searched entry existed or is already trained; false if an insertion or a move was required.</returns>
-        private bool EnsurePrerequisiteExistBefore(StaticSkill skill, int level, int insertionIndex, int newEntriesPriority)
+        private bool EnsurePrerequisiteExistBefore(StaticSkill skill, Int64 level, int insertionIndex, int newEntriesPriority)
         {
             int skillIndex = IndexOf(skill, level);
 
@@ -461,13 +461,13 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="skill"></param>
         /// <returns>The minimum required level, between 0 and 5.</returns>
-        public int GetMinimumLevel(IStaticSkill skill)
+        public Int64 GetMinimumLevel(IStaticSkill skill)
         {
             // Search the minimum level this skill is required by other entries
-            int minNeeded = 0;
+            Int64 minNeeded = 0;
             foreach (PlanEntry pe in Items)
             {
-                int required;
+                Int64 required;
                 StaticSkill tSkill = pe.Skill;
 
                 if (!tSkill.HasAsPrerequisite(skill, out required) || tSkill == skill)
@@ -668,7 +668,7 @@ namespace EVEMon.Common
         /// <param name="note"></param>
         /// <param name="lowestPrereqPriority"></param>
         /// <returns></returns>
-        private PlanEntry CreateEntryToAdd(StaticSkill skill, int level, PlanEntryType type, string note,
+        private PlanEntry CreateEntryToAdd(StaticSkill skill, Int64 level, PlanEntryType type, string note,
                                            ref int lowestPrereqPriority)
         {
             PlanEntry entry = GetEntry(skill, level);

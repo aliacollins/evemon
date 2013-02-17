@@ -1,3 +1,4 @@
+using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Settings
@@ -11,7 +12,7 @@ namespace EVEMon.Common.Serialization.Settings
         public string SkillName { get; set; }
 
         [XmlAttribute("level")]
-        public int PlannedLevel { get; set; }
+        public Int64 PlannedLevel { get; set; }
 
         [XmlAttribute("acknowledged")]
         public bool Acknowledged { get; set; }

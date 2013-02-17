@@ -396,9 +396,10 @@
           <Property Name="obsolete" Type="bit" Nullable="false" />
           <Property Name="graphicType" Type="varchar" MaxLength="100" />
           <Property Name="collidable" Type="bit" />
-          <Property Name="explosionID" Type="int" />
           <Property Name="directoryID" Type="int" />
           <Property Name="graphicName" Type="nvarchar" Nullable="false" MaxLength="64" />
+          <Property Name="gfxRaceID" Type="varchar" MaxLength="255" />
+          <Property Name="colorScheme" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="eveIcons">
           <Key>
@@ -597,6 +598,10 @@
           <Property Name="published" Type="bit" />
           <Property Name="marketGroupID" Type="int" />
           <Property Name="chanceOfDuplicating" Type="float" />
+          <Property Name="graphicID" Type="int" />
+          <Property Name="radius" Type="float" />
+          <Property Name="soundID" Type="int" />
+          <Property Name="iconID" Type="int" />
         </EntityType>
         <EntityType Name="invUniqueNames">
           <Key>
@@ -1088,7 +1093,6 @@
           <EntitySet Name="dgmEffects" EntityType="EveStaticDataModel.dgmEffects" />
           <EntitySet Name="dgmTypeAttributes" EntityType="EveStaticDataModel.dgmTypeAttributes" />
           <EntitySet Name="dgmTypeEffects" EntityType="EveStaticDataModel.dgmTypeEffects" />
-          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.eveGraphics" />
           <EntitySet Name="eveIcons" EntityType="EveStaticDataModel.eveIcons" />
           <EntitySet Name="eveUnits" EntityType="EveStaticDataModel.eveUnits" />
           <EntitySet Name="invBlueprintTypes" EntityType="EveStaticDataModel.invBlueprintTypes" />
@@ -1143,6 +1147,7 @@
           <EntitySet Name="trnTranslations" EntityType="EveStaticDataModel.trnTranslations" />
           <EntitySet Name="warCombatZones" EntityType="EveStaticDataModel.warCombatZones" />
           <EntitySet Name="warCombatZoneSystems" EntityType="EveStaticDataModel.warCombatZoneSystems" />
+          <EntitySet Name="eveGraphics" EntityType="EveStaticDataModel.eveGraphics" />
         </EntityContainer>
         <EntityType Name="agtAgents">
           <Key>
@@ -1433,7 +1438,7 @@
           <Property Name="typeID" Type="Int32" Nullable="false" />
           <Property Name="attributeID" Type="Int16" Nullable="false" />
           <Property Name="valueInt" Type="Int32" />
-          <Property Name="valueFloat" Type="Double" />
+          <Property Name="valueFloat" Type="Single" />
         </EntityType>
         <EntityType Name="dgmTypeEffects">
           <Key>
@@ -1443,20 +1448,6 @@
           <Property Name="typeID" Type="Int32" Nullable="false" />
           <Property Name="effectID" Type="Int16" Nullable="false" />
           <Property Name="isDefault" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="eveGraphics">
-          <Key>
-            <PropertyRef Name="graphicID" />
-          </Key>
-          <Property Name="graphicID" Type="Int32" Nullable="false" />
-          <Property Name="graphicFile" Type="String" Nullable="false" MaxLength="500" Unicode="false" FixedLength="false" />
-          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="obsolete" Type="Boolean" Nullable="false" />
-          <Property Name="graphicType" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="collidable" Type="Boolean" />
-          <Property Name="explosionID" Type="Int32" />
-          <Property Name="directoryID" Type="Int32" />
-          <Property Name="graphicName" Type="String" Nullable="false" MaxLength="64" Unicode="true" FixedLength="false" />
         </EntityType>
         <EntityType Name="eveIcons">
           <Key>
@@ -1655,6 +1646,10 @@
           <Property Name="published" Type="Boolean" />
           <Property Name="marketGroupID" Type="Int32" />
           <Property Name="chanceOfDuplicating" Type="Double" />
+          <Property Type="Int32" Name="graphicID" />
+          <Property Type="Double" Name="radius" />
+          <Property Type="Int32" Name="soundID" />
+          <Property Type="Int32" Name="iconID" />
         </EntityType>
         <EntityType Name="invUniqueNames">
           <Key>
@@ -2117,6 +2112,21 @@
           <Property Name="solarSystemID" Type="Int32" Nullable="false" />
           <Property Name="combatZoneID" Type="Int32" />
         </EntityType>
+        <EntityType Name="eveGraphics">
+          <Key>
+            <PropertyRef Name="graphicID" />
+          </Key>
+          <Property Type="Int32" Name="graphicID" Nullable="false" />
+          <Property Type="String" Name="graphicFile" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="obsolete" Nullable="false" />
+          <Property Type="String" Name="graphicType" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="collidable" />
+          <Property Type="Int32" Name="directoryID" />
+          <Property Type="String" Name="graphicName" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="gfxRaceID" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="colorScheme" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2345,17 +2355,6 @@
             <ScalarProperty Name="effectID" ColumnName="effectID" />
             <ScalarProperty Name="isDefault" ColumnName="isDefault" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="eveGraphics"><EntityTypeMapping TypeName="EveStaticDataModel.eveGraphics"><MappingFragment StoreEntitySet="eveGraphics">
-            <ScalarProperty Name="graphicID" ColumnName="graphicID" />
-            <ScalarProperty Name="graphicFile" ColumnName="graphicFile" />
-            <ScalarProperty Name="description" ColumnName="description" />
-            <ScalarProperty Name="obsolete" ColumnName="obsolete" />
-            <ScalarProperty Name="graphicType" ColumnName="graphicType" />
-            <ScalarProperty Name="collidable" ColumnName="collidable" />
-            <ScalarProperty Name="explosionID" ColumnName="explosionID" />
-            <ScalarProperty Name="directoryID" ColumnName="directoryID" />
-            <ScalarProperty Name="graphicName" ColumnName="graphicName" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="eveIcons"><EntityTypeMapping TypeName="EveStaticDataModel.eveIcons"><MappingFragment StoreEntitySet="eveIcons">
             <ScalarProperty Name="iconID" ColumnName="iconID" />
             <ScalarProperty Name="iconFile" ColumnName="iconFile" />
@@ -2481,7 +2480,11 @@
             <ScalarProperty Name="quantity" ColumnName="quantity" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="invTypes"><EntityTypeMapping TypeName="EveStaticDataModel.invTypes"><MappingFragment StoreEntitySet="invTypes">
-            <ScalarProperty Name="typeID" ColumnName="typeID" />
+            <ScalarProperty Name="iconID" ColumnName="iconID" />
+                <ScalarProperty Name="soundID" ColumnName="soundID" />
+                <ScalarProperty Name="radius" ColumnName="radius" />
+                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
+                <ScalarProperty Name="typeID" ColumnName="typeID" />
             <ScalarProperty Name="groupID" ColumnName="groupID" />
             <ScalarProperty Name="typeName" ColumnName="typeName" />
             <ScalarProperty Name="description" ColumnName="description" />
@@ -2833,6 +2836,22 @@
             <ScalarProperty Name="solarSystemID" ColumnName="solarSystemID" />
             <ScalarProperty Name="combatZoneID" ColumnName="combatZoneID" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="eveGraphics">
+            <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.eveGraphics)">
+              <MappingFragment StoreEntitySet="eveGraphics">
+                <ScalarProperty Name="colorScheme" ColumnName="colorScheme" />
+                <ScalarProperty Name="gfxRaceID" ColumnName="gfxRaceID" />
+                <ScalarProperty Name="graphicName" ColumnName="graphicName" />
+                <ScalarProperty Name="directoryID" ColumnName="directoryID" />
+                <ScalarProperty Name="collidable" ColumnName="collidable" />
+                <ScalarProperty Name="graphicType" ColumnName="graphicType" />
+                <ScalarProperty Name="obsolete" ColumnName="obsolete" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="graphicFile" ColumnName="graphicFile" />
+                <ScalarProperty Name="graphicID" ColumnName="graphicID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2878,7 +2897,6 @@
         <EntityTypeShape EntityType="EveStaticDataModel.dgmEffects" Width="1.5" PointX="4.75" PointY="12.75" Height="6.2109179687500067" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeAttributes" Width="1.5" PointX="12.75" PointY="7.75" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeEffects" Width="1.5" PointX="12.75" PointY="10.75" Height="1.5956835937500102" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="10.75" PointY="13.75" Height="2.7494921875000102" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.eveIcons" Width="1.5" PointX="12.75" PointY="13.75" Height="1.5956835937500102" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.eveUnits" Width="1.5" PointX="14.75" PointY="0.75" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.invBlueprintTypes" Width="1.5" PointX="14.75" PointY="3.75" Height="3.5186979166666674" IsExpanded="true" />
@@ -2933,6 +2951,7 @@
         <EntityTypeShape EntityType="EveStaticDataModel.trnTranslations" Width="1.5" PointX="6.75" PointY="24.75" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.warCombatZones" Width="1.5" PointX="24.75" PointY="9.75" Height="1.9802864583333246" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.warCombatZoneSystems" Width="1.5" PointX="24.75" PointY="12.75" Height="1.4033821614583246" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.eveGraphics" Width="1.5" PointX="10" PointY="13.75" Height="2.9417936197916674" />
       </Diagram>
     </Diagrams>
   </Designer>

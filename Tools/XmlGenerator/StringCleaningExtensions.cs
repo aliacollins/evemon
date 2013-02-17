@@ -99,8 +99,8 @@ namespace EVEMon.XmlGenerator
             if (property == null)
                 throw new ArgumentNullException("property");
 
-            if (property.ValueInt.HasValue)
-                return property.ValueInt.ToString();
+            if (property.ValueInt64.HasValue)
+                return property.ValueInt64.ToString();
 
             // Is it actually an integer stored as a float?
             if (property.ValueFloat.HasValue &&

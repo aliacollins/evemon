@@ -104,7 +104,7 @@ namespace EVEMon.Common.Data
         {
             get
             {
-                int[] highestLevels = new int[StaticSkills.ArrayIndicesCount];
+                Int64[] highestLevels = new Int64[StaticSkills.ArrayIndicesCount];
                 List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Collect all top prerequisites from certificates

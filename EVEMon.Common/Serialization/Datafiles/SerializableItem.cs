@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -98,7 +99,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// The meta level.
         /// </value>
         [XmlAttribute("metaLevel")]
-        public int MetaLevel { get; set; }
+        public Int64 MetaLevel { get; set; }
 
         /// <summary>
         /// Gets or sets the meta group.

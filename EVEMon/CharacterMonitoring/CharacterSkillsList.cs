@@ -273,7 +273,7 @@ namespace EVEMon.CharacterMonitoring
             DrawBackground(skill, e);
 
             // Measure texts
-            int skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
+            Int64 skillPointsToNextLevel = skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level + 1, 5));
 
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})", skill.Rank);
             string spText = String.Format(CultureConstants.DefaultCulture,
@@ -790,8 +790,8 @@ namespace EVEMon.CharacterMonitoring
                 tempMenuItem = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
 
                 // Build the level options
-                int nextLevel = Math.Min(5, skill.Level + 1);
-                for (int level = nextLevel; level < 6; level++)
+                Int64 nextLevel = Math.Min(5, skill.Level + 1);
+                for (Int64 level = nextLevel; level < 6; level++)
                 {
                     ToolStripMenuItem tempMenuLevel = null;
                     try
@@ -856,10 +856,10 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="skill"></param>
         private static string GetTooltip(Skill skill)
         {
-            int sp = skill.SkillPoints;
-            int nextLevel = Math.Min(5, skill.Level + 1);
-            int nextLevelSP = skill.StaticData.GetPointsRequiredForLevel(nextLevel);
-            int pointsLeft = skill.GetLeftPointsRequiredToLevel(nextLevel);
+            Int64 sp = skill.SkillPoints;
+            Int64 nextLevel = Math.Min(5, skill.Level + 1);
+            Int64 nextLevelSP = skill.StaticData.GetPointsRequiredForLevel(nextLevel);
+            Int64 pointsLeft = skill.GetLeftPointsRequiredToLevel(nextLevel);
             string remainingTimeText = skill.GetLeftTrainingTimeToLevel(nextLevel).ToDescriptiveText(
                 DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);
 
@@ -953,12 +953,12 @@ namespace EVEMon.CharacterMonitoring
         private static string GetTooltip(SkillGroup group)
         {
             // Maximas are computed on public skills only
-            int totalValidSP = group.Where(x => x.IsPublic).Sum(x => x.SkillPoints);
-            int maxSP = group.Where(x => x.IsPublic).Sum(x => x.StaticData.GetPointsRequiredForLevel(5));
+            Int64 totalValidSP = group.Where(x => x.IsPublic).Sum(x => x.SkillPoints);
+            Int64 maxSP = group.Where(x => x.IsPublic).Sum(x => x.StaticData.GetPointsRequiredForLevel(5));
             int maxKnown = group.Count(x => x.IsPublic);
 
             // Current achievements are computed on every skill, including non-public
-            int totalSP = group.Sum(x => x.SkillPoints);
+            Int64 totalSP = group.Sum(x => x.SkillPoints);
             int known = group.Count(x => x.IsKnown);
 
             // If the group is not completed yet

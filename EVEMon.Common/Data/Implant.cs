@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Serialization.Datafiles;
+﻿using System;
+using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
@@ -36,7 +37,7 @@ namespace EVEMon.Common.Data
             if (slotProperty == null)
                 return;
 
-            Slot = (ImplantSlots)(slotProperty.Value.IntValue - 1);
+            Slot = (ImplantSlots)(slotProperty.Value.Int64Value - 1);
 
             // Sets the implant bonus
             SetImplantBonus();
@@ -58,7 +59,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// For attributes implants, gets the amount of bonus points it grants.
         /// </summary>
-        public int Bonus { get; private set; }
+        public Int64 Bonus { get; private set; }
 
         #endregion
 
@@ -91,27 +92,27 @@ namespace EVEMon.Common.Data
                 case ImplantSlots.Charisma:
                     eveProperty = Properties[DBConstants.CharismaModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IntValue;
+                        Bonus = eveProperty.Value.Int64Value;
                     break;
                 case ImplantSlots.Intelligence:
                     eveProperty = Properties[DBConstants.IntelligenceModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IntValue;
+                        Bonus = eveProperty.Value.Int64Value;
                     break;
                 case ImplantSlots.Memory:
                     eveProperty = Properties[DBConstants.MemoryModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IntValue;
+                        Bonus = eveProperty.Value.Int64Value;
                     break;
                 case ImplantSlots.Perception:
                     eveProperty = Properties[DBConstants.PerceptionModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IntValue;
+                        Bonus = eveProperty.Value.Int64Value;
                     break;
                 case ImplantSlots.Willpower:
                     eveProperty = Properties[DBConstants.WillpowerModifierPropertyID];
                     if (eveProperty != null)
-                        Bonus = eveProperty.Value.IntValue;
+                        Bonus = eveProperty.Value.Int64Value;
                     break;
                 default:
                     Bonus = 0;

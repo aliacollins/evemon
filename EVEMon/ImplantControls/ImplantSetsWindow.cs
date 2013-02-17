@@ -17,7 +17,7 @@ namespace EVEMon.ImplantControls
     {
         private const string PhantomSetName = "<New set>";
 
-        private readonly int m_maxJumpClones;
+        private readonly Int64 m_maxJumpClones;
         private readonly Character m_character;
         private readonly SerializableImplantSetCollection m_sets;
 

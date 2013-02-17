@@ -675,7 +675,7 @@ namespace EVEMon.SkillPlanner
             /// Gets or sets the required level.
             /// </summary>
             /// <value>The required level.</value>
-            public int RequiredLevel { get; private set; }
+            public Int64 RequiredLevel { get; private set; }
 
             /// <summary>
             /// Gets or sets the cells.

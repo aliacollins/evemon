@@ -108,8 +108,8 @@ namespace EVEMon.SkillPlanner
         /// <param name="lblEffectiveAttribute"></param>
         private void UpdateAttributeLabels(EveAttribute attrib, int myValue, Control lblAdjust, Control lblEffectiveAttribute)
         {
-            int baseAttr = m_characterScratchpad[attrib].EffectiveValue - m_characterScratchpad[attrib].ImplantBonus;
-            int adjust = myValue - baseAttr;
+            Int64 baseAttr = m_characterScratchpad[attrib].EffectiveValue - m_characterScratchpad[attrib].ImplantBonus;
+            Int64 adjust = myValue - baseAttr;
 
             if (adjust >= 0)
             {

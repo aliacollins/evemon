@@ -9,8 +9,8 @@ namespace EVEMon.Common
     {
         private readonly EveAttribute m_attrib;
 
-        private int m_base;
-        private int m_implantBonus;
+        private Int64 m_base;
+        private Int64 m_implantBonus;
 
         /// <summary>
         /// Constructor from a character attribute.
@@ -26,7 +26,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="baseAttribute"></param>
         /// <param name="implantBonus"></param>
-        internal void Reset(int baseAttribute, int implantBonus)
+        internal void Reset(Int64 baseAttribute, Int64 implantBonus)
         {
             m_base = baseAttribute;
             m_implantBonus = implantBonus;
@@ -55,7 +55,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the base attribute.
         /// </summary>
-        public int Base
+        public Int64 Base
         {
             get { return m_base; }
             set
@@ -68,7 +68,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the bonus granted by the implant
         /// </summary>
-        public int ImplantBonus
+        public Int64 ImplantBonus
         {
             get { return m_implantBonus; }
             set
@@ -81,7 +81,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the effective attribute value.
         /// </summary>
-        public int EffectiveValue { get; private set; }
+        public Int64 EffectiveValue { get; private set; }
 
         /// <summary>
         /// Gets a string representation with the provided format. The following parameters are accepted :

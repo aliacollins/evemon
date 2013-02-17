@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
@@ -45,7 +46,7 @@ namespace EVEMon.Common
         /// <param name="skillArrayIndex"></param>
         /// <param name="level"></param>
         /// <returns></returns>
-        public T this[int skillArrayIndex, int level]
+        public T this[Int64 skillArrayIndex, Int64 level]
         {
             get
             {
@@ -71,7 +72,7 @@ namespace EVEMon.Common
         /// <param name="skill"></param>
         /// <param name="level"></param>
         /// <returns></returns>
-        public T this[StaticSkill skill, int level]
+        public T this[StaticSkill skill, Int64 level]
         {
             get { return this[skill.ArrayIndex, level]; }
             set { this[skill.ArrayIndex, level] = value; }

@@ -769,7 +769,7 @@ namespace EVEMon.XmlGenerator
                                          AttributeID = typeAttribute.attributeID,
                                          ItemID = typeAttribute.typeID,
                                          ValueFloat = typeAttribute.valueFloat,
-                                         ValueInt = typeAttribute.valueInt
+                                         ValueInt64 = typeAttribute.valueInt
                                      });
             return new RelationSet<DgmTypeAttributes>(list);
         }

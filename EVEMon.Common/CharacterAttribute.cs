@@ -25,12 +25,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the base attribute.
         /// </summary>
-        public int Base { get; internal set; }
+        public Int64 Base { get; internal set; }
 
         /// <summary>
         /// Gets the bonus granted by the implant.
         /// </summary>
-        public int ImplantBonus
+        public Int64 ImplantBonus
         {
             get { return m_character.CurrentImplants[m_attrib].Bonus; }
         }
@@ -38,7 +38,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the effective attribute value.
         /// </summary>
-        public int EffectiveValue
+        public Int64 EffectiveValue
         {
             get { return Base + ImplantBonus; }
         }

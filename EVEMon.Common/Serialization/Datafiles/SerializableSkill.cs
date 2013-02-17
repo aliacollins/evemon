@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
@@ -69,7 +70,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The rank.</value>
         [XmlAttribute("rank")]
-        public int Rank { get; set; }
+        public Int64 Rank { get; set; }
 
         /// <summary>
         /// Gets or sets the cost.

@@ -18,7 +18,7 @@ namespace EVEMon.Common
         private readonly Collection<string> m_planGroups = new Collection<string>();
         private readonly StaticSkill m_skill;
         private readonly BasePlan m_owner;
-        private readonly int m_level;
+        private readonly Int64 m_level;
 
         private RemappingPoint m_remapping;
         private PlanEntryType m_entryType;
@@ -31,7 +31,7 @@ namespace EVEMon.Common
         /// <param name="owner">The owner.</param>
         /// <param name="skill">The skill.</param>
         /// <param name="level">The level.</param>
-        public PlanEntry(BasePlan owner, StaticSkill skill, int level)
+        public PlanEntry(BasePlan owner, StaticSkill skill, Int64 level)
         {
             m_owner = owner;
             m_skill = skill;
@@ -49,7 +49,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="skill">The skill.</param>
         /// <param name="level">The level.</param>
-        public PlanEntry(StaticSkill skill, int level)
+        public PlanEntry(StaticSkill skill, Int64 level)
             : this(null, skill, level)
         {
         }
@@ -113,7 +113,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the skill level of this plan entry.
         /// </summary>
-        public int Level
+        public Int64 Level
         {
             get { return m_level; }
         }
@@ -252,7 +252,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the skill points total at the end of the training, as computed the last time <see cref="PlanEntry.UpdateStatistics"/> was called.
         /// </summary>
-        public int EstimatedTotalSkillPoints { get; private set; }
+        public Int64 EstimatedTotalSkillPoints { get; private set; }
 
         /// <summary>
         /// Gets the SP/Hour, as computed the last time <see cref="PlanEntry.UpdateStatistics"/> was called.
@@ -288,7 +288,7 @@ namespace EVEMon.Common
         /// <summary>
         /// How many skill points are required to train this skill.
         /// </summary>
-        public int SkillPointsRequired { get; private set; }
+        public Int64 SkillPointsRequired { get; private set; }
 
         /// <summary>
         /// Updates the column statistics (with the exception of the <see cref="UpdateOldTrainingTime"/>) from the given scratchpad.
@@ -330,7 +330,7 @@ namespace EVEMon.Common
             // warning. GetHashCode can't possibly be unique for every object
             // there is, additionally GetHashCode() should not be used for
             // equality only grouping; or at least Google says so...
-            return (int)m_skill.ID << 3 | m_level;
+            return m_skill.ID << 3 | Convert.ToInt32(m_level);
         }
 
         /// <summary>

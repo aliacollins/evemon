@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
@@ -23,7 +24,7 @@ namespace EVEMon.Common.Serialization.Settings
         public string SkillName { get; set; }
 
         [XmlAttribute("level")]
-        public int Level { get; set; }
+        public Int64 Level { get; set; }
 
         [XmlAttribute("priority")]
         public int Priority { get; set; }

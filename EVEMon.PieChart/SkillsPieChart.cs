@@ -171,7 +171,7 @@ namespace EVEMon.PieChart
             decimal[] targetSkillPoints = new decimal[groupCount];
             foreach (StaticSkill skill in StaticSkills.AllSkills)
             {
-                int sp = scratchpad.GetSkillPoints(skill);
+                Int64 sp = scratchpad.GetSkillPoints(skill);
                 int groupIndex = indices[skill.Group];
 
                 targetSkillPoints[groupIndex] += sp;

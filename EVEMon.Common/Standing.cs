@@ -82,7 +82,7 @@ namespace EVEMon.Common
         {
             get
             {
-                int skillLevel = (StandingValue < 0
+                Int64 skillLevel = (StandingValue < 0
                                       ? m_character.Skills[DBConstants.DiplomacySkillID]
                                       : m_character.Skills[DBConstants.ConnectionsSkillID]).LastConfirmedLvl;
                 return StandingValue + (10 - StandingValue) * (skillLevel * 0.04);

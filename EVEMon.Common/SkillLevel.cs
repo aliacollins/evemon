@@ -14,7 +14,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="level"></param>
-        public SkillLevel(Skill skill, int level)
+        public SkillLevel(Skill skill, Int64 level)
         {
             Skill = skill;
             Level = level;
@@ -36,7 +36,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the skill level.
         /// </summary>
-        public int Level { get; private set; }
+        public Int64 Level { get; private set; }
 
         /// <summary>
         /// Gets true if this skill level is already trained.
@@ -72,7 +72,7 @@ namespace EVEMon.Common
         public override int GetHashCode()
         {
             // 3 bits for level (0 - 5) and the rest are for the skill name
-            return (Skill.Name.GetHashCode() << 3) | Level;
+            return (Skill.Name.GetHashCode() << 3) | Convert.ToInt32(Level);
         }
 
         /// <summary>

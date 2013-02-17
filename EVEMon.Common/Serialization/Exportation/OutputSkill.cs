@@ -1,3 +1,4 @@
+using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Exportation
@@ -11,10 +12,10 @@ namespace EVEMon.Common.Serialization.Exportation
         public string Name { get; set; }
 
         [XmlElement("rank")]
-        public int Rank { get; set; }
+        public Int64 Rank { get; set; }
 
         [XmlElement("level")]
-        public int Level { get; set; }
+        public Int64 Level { get; set; }
 
         [XmlElement("romanLevel")]
         public string RomanLevel { get; set; }

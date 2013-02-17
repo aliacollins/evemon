@@ -10,7 +10,7 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class RemappingPoint
     {
-        private readonly int[] m_attributes = new int[5];
+        private readonly Int64[] m_attributes = new Int64[5];
         private string m_description = String.Empty;
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="attrib"></param>
         /// <returns></returns>
-        public int this[EveAttribute attrib]
+        public Int64 this[EveAttribute attrib]
         {
             get { return m_attributes[(int)attrib]; }
         }
@@ -164,7 +164,7 @@ namespace EVEMon.Common
             if (newScratchpad == null)
                 throw new ArgumentNullException("newScratchpad");
 
-            int bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
+            Int64 bonusDifference = newScratchpad[attrib].Base - oldScratchpad[attrib].Base;
 
             if (bonusDifference == 0)
                 return newScratchpad[attrib].ToString("%N (0) = %e = (%B + %r + %i)");

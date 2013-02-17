@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -13,18 +14,18 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("intelligence")]
-        public int Intelligence { get; set; }
+        public Int64 Intelligence { get; set; }
 
         [XmlElement("memory")]
-        public int Memory { get; set; }
+        public Int64 Memory { get; set; }
 
         [XmlElement("perception")]
-        public int Perception { get; set; }
+        public Int64 Perception { get; set; }
 
         [XmlElement("willpower")]
-        public int Willpower { get; set; }
+        public Int64 Willpower { get; set; }
 
         [XmlElement("charisma")]
-        public int Charisma { get; set; }
+        public Int64 Charisma { get; set; }
     }
 }

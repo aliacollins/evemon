@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
@@ -70,7 +71,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the total number of SP in this group
         /// </summary>
-        public int TotalSP
+        public Int64 TotalSP
         {
             get { return Items.Values.Sum(gs => gs.SkillPoints); }
         }

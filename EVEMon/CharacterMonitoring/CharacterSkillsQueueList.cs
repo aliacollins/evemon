@@ -221,8 +221,8 @@ namespace EVEMon.CharacterMonitoring
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
             double percentCompleted = 0;
-            int skillPoints = (skill.Skill == null ? skill.StartSP : skill.Skill.SkillPoints);
-            int skillPointsToNextLevel = (skill.Skill == null
+            Int64 skillPoints = (skill.Skill == null ? skill.StartSP : skill.Skill.SkillPoints);
+            Int64 skillPointsToNextLevel = (skill.Skill == null
                                               ? skill.EndSP
                                               : skill.Skill.StaticData.GetPointsRequiredForLevel(
                                                   Math.Min(skill.Level, 5)));
@@ -562,8 +562,8 @@ namespace EVEMon.CharacterMonitoring
                 tempMenuItem = new ToolStripMenuItem(String.Format(CultureConstants.DefaultCulture, "Add {0}", skill.Name));
 
                 // Build the level options
-                int nextLevel = Math.Min(5, skill.Level + 1);
-                for (int level = nextLevel; level < 6; level++)
+                Int64 nextLevel = Math.Min(5, skill.Level + 1);
+                for (Int64 level = nextLevel; level < 6; level++)
                 {
                     ToolStripMenuItem tempMenuLevel = null;
                     try
@@ -630,7 +630,7 @@ namespace EVEMon.CharacterMonitoring
             if (skill.Skill == null)
                 return String.Empty;
 
-            int sp = skill.Skill.SkillPoints;
+            Int64 sp = skill.Skill.SkillPoints;
             int nextLevel = Math.Min(5, skill.Level);
             double percentCompleted = 0;
             if (skill.Level == skill.Skill.Level + 1)
@@ -639,8 +639,8 @@ namespace EVEMon.CharacterMonitoring
             if (skill.Level > skill.Skill.Level + 1)
                 sp = skill.CurrentSP;
 
-            int nextLevelSP = skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
-            int pointsLeft = nextLevelSP - sp;
+            Int64 nextLevelSP = skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
+            Int64 pointsLeft = nextLevelSP - sp;
             TimeSpan timeSpanFromPoints = skill.Skill.GetTimeSpanForPoints(pointsLeft);
             string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(
                 DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);

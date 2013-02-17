@@ -8,13 +8,13 @@ namespace EVEMon.Common
     {
         #region Abstract methods and properties
 
-        protected abstract int TotalSkillPoints { get; }
+        protected abstract Int64 TotalSkillPoints { get; }
         protected abstract ICharacterAttribute GetAttribute(EveAttribute attribute);
         
         internal abstract void Dispose();
-        
-        public abstract int GetSkillLevel(StaticSkill skill);
-        public abstract int GetSkillPoints(StaticSkill skill);
+
+        public abstract Int64 GetSkillLevel(StaticSkill skill);
+        public abstract Int64 GetSkillPoints(StaticSkill skill);
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the total skill points for this character.
         /// </summary>
-        public int SkillPoints
+        public Int64 SkillPoints
         {
             get { return TotalSkillPoints; }
         }
@@ -86,7 +86,7 @@ namespace EVEMon.Common
         /// <param name="points">The points to calculate points.</param>
         /// <param name="skill">The skill to train.</param>
         /// <returns></returns>
-        public TimeSpan GetTimeSpanForPoints(StaticSkill skill, int points)
+        public TimeSpan GetTimeSpanForPoints(StaticSkill skill, Int64 points)
         {
             return GetTrainingTime(points, GetBaseSPPerHour(skill));
         }
@@ -101,7 +101,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="skillLevel"></param>
         /// <returns></returns>
-        public int GetSPToTrain(ISkillLevel skillLevel)
+        public Int64 GetSPToTrain(ISkillLevel skillLevel)
         {
             if (skillLevel == null)
                 throw new ArgumentNullException("skillLevel");
@@ -116,14 +116,14 @@ namespace EVEMon.Common
         /// <param name="level"></param>
         /// <param name="origin"></param>
         /// <returns></returns>
-        private int GetSPToTrain(StaticSkill skill, int level, TrainingOrigin origin = TrainingOrigin.FromCurrent)
+        private Int64 GetSPToTrain(StaticSkill skill, Int64 level, TrainingOrigin origin = TrainingOrigin.FromCurrent)
         {
             if (level == 0)
                 return 0;
-            int sp = skill.GetPointsRequiredForLevel(level);
+            Int64 sp = skill.GetPointsRequiredForLevel(level);
 
             // Deals with the origin
-            int result;
+            Int64 result;
             switch (origin)
             {
                     // Include current SP
@@ -175,10 +175,10 @@ namespace EVEMon.Common
         /// <param name="level"></param>
         /// <param name="origin"></param>
         /// <returns></returns>
-        public TimeSpan GetTrainingTime(StaticSkill skill, int level, TrainingOrigin origin = TrainingOrigin.FromCurrent)
+        public TimeSpan GetTrainingTime(StaticSkill skill, Int64 level, TrainingOrigin origin = TrainingOrigin.FromCurrent)
         {
             float spPerHour = GetBaseSPPerHour(skill);
-            int sp = GetSPToTrain(skill, level, origin);
+            Int64 sp = GetSPToTrain(skill, level, origin);
             return GetTrainingTime(sp, spPerHour);
         }
 
@@ -188,7 +188,7 @@ namespace EVEMon.Common
         /// <param name="sp"></param>
         /// <param name="spPerHour"></param>
         /// <returns></returns>
-        private static TimeSpan GetTrainingTime(int sp, float spPerHour)
+        private static TimeSpan GetTrainingTime(Int64 sp, float spPerHour)
         {
             return Math.Abs(spPerHour) < float.Epsilon ? TimeSpan.FromDays(999.0) : TimeSpan.FromHours(sp / spPerHour);
         }

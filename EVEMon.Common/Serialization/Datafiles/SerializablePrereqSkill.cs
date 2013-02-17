@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
 {
@@ -12,14 +13,14 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         /// <value>The ID.</value>
         [XmlAttribute("id")]
-        public int ID { get; set; }
+        public Int64 ID { get; set; }
 
         /// <summary>
         /// Gets or sets the level.
         /// </summary>
         /// <value>The level.</value>
         [XmlAttribute("lv")]
-        public int Level { get; set; }
+        public Int64 Level { get; set; }
 
         /// <summary>
         /// Gets or sets the activity.

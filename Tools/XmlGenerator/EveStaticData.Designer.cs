@@ -8,15 +8,15 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
-
 namespace EVEMon.XmlGenerator
 {
     #region Contexts
@@ -448,22 +448,6 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<dgmTypeEffects> _dgmTypeEffects;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<eveGraphics> eveGraphics
-        {
-            get
-            {
-                if ((_eveGraphics == null))
-                {
-                    _eveGraphics = base.CreateObjectSet<eveGraphics>("eveGraphics");
-                }
-                return _eveGraphics;
-            }
-        }
-        private ObjectSet<eveGraphics> _eveGraphics;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -1328,8 +1312,25 @@ namespace EVEMon.XmlGenerator
             }
         }
         private ObjectSet<warCombatZoneSystems> _warCombatZoneSystems;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<eveGraphics> eveGraphics
+        {
+            get
+            {
+                if ((_eveGraphics == null))
+                {
+                    _eveGraphics = base.CreateObjectSet<eveGraphics>("eveGraphics");
+                }
+                return _eveGraphics;
+            }
+        }
+        private ObjectSet<eveGraphics> _eveGraphics;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -1522,14 +1523,6 @@ namespace EVEMon.XmlGenerator
         public void AddTodgmTypeEffects(dgmTypeEffects dgmTypeEffects)
         {
             base.AddObject("dgmTypeEffects", dgmTypeEffects);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the eveGraphics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToeveGraphics(eveGraphics eveGraphics)
-        {
-            base.AddObject("eveGraphics", eveGraphics);
         }
     
         /// <summary>
@@ -1963,13 +1956,21 @@ namespace EVEMon.XmlGenerator
         {
             base.AddObject("warCombatZoneSystems", warCombatZoneSystems);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the eveGraphics EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToeveGraphics(eveGraphics eveGraphics)
+        {
+            base.AddObject("eveGraphics", eveGraphics);
+        }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -1994,6 +1995,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2192,6 +2194,7 @@ namespace EVEMon.XmlGenerator
         partial void OnisLocatorChanged();
 
         #endregion
+
     
     }
     
@@ -2217,6 +2220,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2271,6 +2275,7 @@ namespace EVEMon.XmlGenerator
         partial void OnagentTypeChanged();
 
         #endregion
+
     
     }
     
@@ -2298,6 +2303,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2355,6 +2361,7 @@ namespace EVEMon.XmlGenerator
         partial void OntypeIDChanged();
 
         #endregion
+
     
     }
     
@@ -2380,6 +2387,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2650,6 +2658,7 @@ namespace EVEMon.XmlGenerator
         partial void OnshortDescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -2675,6 +2684,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2825,6 +2835,7 @@ namespace EVEMon.XmlGenerator
         partial void OnnotesChanged();
 
         #endregion
+
     
     }
     
@@ -2850,6 +2861,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3264,6 +3276,7 @@ namespace EVEMon.XmlGenerator
         partial void OnshortFemaleDescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -3289,6 +3302,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3559,6 +3573,7 @@ namespace EVEMon.XmlGenerator
         partial void OniconIDChanged();
 
         #endregion
+
     
     }
     
@@ -3584,6 +3599,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3710,6 +3726,7 @@ namespace EVEMon.XmlGenerator
         partial void OnshortDescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -3735,6 +3752,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3813,6 +3831,7 @@ namespace EVEMon.XmlGenerator
         partial void OndescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -3840,6 +3859,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3921,6 +3941,7 @@ namespace EVEMon.XmlGenerator
         partial void OnsizeChanged();
 
         #endregion
+
     
     }
     
@@ -3948,6 +3969,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4005,6 +4027,7 @@ namespace EVEMon.XmlGenerator
         partial void OncorporationIDChanged();
 
         #endregion
+
     
     }
     
@@ -4030,6 +4053,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4708,6 +4732,7 @@ namespace EVEMon.XmlGenerator
         partial void OniconIDChanged();
 
         #endregion
+
     
     }
     
@@ -4735,6 +4760,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4792,6 +4818,7 @@ namespace EVEMon.XmlGenerator
         partial void OntypeIDChanged();
 
         #endregion
+
     
     }
     
@@ -4817,6 +4844,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4919,6 +4947,7 @@ namespace EVEMon.XmlGenerator
         partial void OnleaderTypeChanged();
 
         #endregion
+
     
     }
     
@@ -4944,6 +4973,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5022,6 +5052,7 @@ namespace EVEMon.XmlGenerator
         partial void OncategoryNameChanged();
 
         #endregion
+
     
     }
     
@@ -5047,6 +5078,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5221,6 +5253,7 @@ namespace EVEMon.XmlGenerator
         partial void OndescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -5246,6 +5279,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5324,6 +5358,7 @@ namespace EVEMon.XmlGenerator
         partial void OnclassNameChanged();
 
         #endregion
+
     
     }
     
@@ -5351,6 +5386,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5453,6 +5489,7 @@ namespace EVEMon.XmlGenerator
         partial void OnrecommendationLevelChanged();
 
         #endregion
+
     
     }
     
@@ -5478,6 +5515,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5604,6 +5642,7 @@ namespace EVEMon.XmlGenerator
         partial void OnchildIDChanged();
 
         #endregion
+
     
     }
     
@@ -5629,6 +5668,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5707,6 +5747,7 @@ namespace EVEMon.XmlGenerator
         partial void OncategoryDescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -5732,6 +5773,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6002,6 +6044,7 @@ namespace EVEMon.XmlGenerator
         partial void OncategoryIDChanged();
 
         #endregion
+
     
     }
     
@@ -6027,6 +6070,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6681,6 +6725,7 @@ namespace EVEMon.XmlGenerator
         partial void OnfittingUsageChanceAttributeIDChanged();
 
         #endregion
+
     
     }
     
@@ -6708,6 +6753,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6793,7 +6839,7 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Double> valueFloat
+        public Nullable<global::System.Single> valueFloat
         {
             get
             {
@@ -6808,11 +6854,12 @@ namespace EVEMon.XmlGenerator
                 OnvalueFloatChanged();
             }
         }
-        private Nullable<global::System.Double> _valueFloat;
-        partial void OnvalueFloatChanging(Nullable<global::System.Double> value);
+        private Nullable<global::System.Single> _valueFloat;
+        partial void OnvalueFloatChanging(Nullable<global::System.Single> value);
         partial void OnvalueFloatChanged();
 
         #endregion
+
     
     }
     
@@ -6840,6 +6887,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6921,6 +6969,7 @@ namespace EVEMon.XmlGenerator
         partial void OnisDefaultChanged();
 
         #endregion
+
     
     }
     
@@ -6954,6 +7003,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7108,30 +7158,6 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> explosionID
-        {
-            get
-            {
-                return _explosionID;
-            }
-            set
-            {
-                OnexplosionIDChanging(value);
-                ReportPropertyChanging("explosionID");
-                _explosionID = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("explosionID");
-                OnexplosionIDChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _explosionID;
-        partial void OnexplosionIDChanging(Nullable<global::System.Int32> value);
-        partial void OnexplosionIDChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Int32> directoryID
         {
             get
@@ -7174,8 +7200,57 @@ namespace EVEMon.XmlGenerator
         private global::System.String _graphicName;
         partial void OngraphicNameChanging(global::System.String value);
         partial void OngraphicNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String gfxRaceID
+        {
+            get
+            {
+                return _gfxRaceID;
+            }
+            set
+            {
+                OngfxRaceIDChanging(value);
+                ReportPropertyChanging("gfxRaceID");
+                _gfxRaceID = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("gfxRaceID");
+                OngfxRaceIDChanged();
+            }
+        }
+        private global::System.String _gfxRaceID;
+        partial void OngfxRaceIDChanging(global::System.String value);
+        partial void OngfxRaceIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String colorScheme
+        {
+            get
+            {
+                return _colorScheme;
+            }
+            set
+            {
+                OncolorSchemeChanging(value);
+                ReportPropertyChanging("colorScheme");
+                _colorScheme = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("colorScheme");
+                OncolorSchemeChanged();
+            }
+        }
+        private global::System.String _colorScheme;
+        partial void OncolorSchemeChanging(global::System.String value);
+        partial void OncolorSchemeChanged();
 
         #endregion
+
     
     }
     
@@ -7205,6 +7280,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7283,6 +7359,7 @@ namespace EVEMon.XmlGenerator
         partial void OndescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -7308,6 +7385,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7410,6 +7488,7 @@ namespace EVEMon.XmlGenerator
         partial void OndescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -7435,6 +7514,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7753,6 +7833,7 @@ namespace EVEMon.XmlGenerator
         partial void OnmaxProductionLimitChanged();
 
         #endregion
+
     
     }
     
@@ -7778,6 +7859,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7904,6 +7986,7 @@ namespace EVEMon.XmlGenerator
         partial void OnpublishedChanged();
 
         #endregion
+
     
     }
     
@@ -7931,6 +8014,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -8084,6 +8168,7 @@ namespace EVEMon.XmlGenerator
         partial void OnattackMinSecChanged();
 
         #endregion
+
     
     }
     
@@ -8109,6 +8194,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -8163,6 +8249,7 @@ namespace EVEMon.XmlGenerator
         partial void OnpurposeTextChanged();
 
         #endregion
+
     
     }
     
@@ -8190,6 +8277,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -8343,6 +8431,7 @@ namespace EVEMon.XmlGenerator
         partial void OnfactionIDChanged();
 
         #endregion
+
     
     }
     
@@ -8368,6 +8457,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -8470,6 +8560,7 @@ namespace EVEMon.XmlGenerator
         partial void OnorderIDChanged();
 
         #endregion
+
     
     }
     
@@ -8495,6 +8586,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -8789,6 +8881,7 @@ namespace EVEMon.XmlGenerator
         partial void OnpublishedChanged();
 
         #endregion
+
     
     }
     
@@ -8824,6 +8917,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -8974,6 +9068,7 @@ namespace EVEMon.XmlGenerator
         partial void OnquantityChanged();
 
         #endregion
+
     
     }
     
@@ -8999,6 +9094,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9149,6 +9245,7 @@ namespace EVEMon.XmlGenerator
         partial void OnhasTypesChanged();
 
         #endregion
+
     
     }
     
@@ -9174,6 +9271,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9276,6 +9374,7 @@ namespace EVEMon.XmlGenerator
         partial void OniconIDChanged();
 
         #endregion
+
     
     }
     
@@ -9301,6 +9400,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9379,6 +9479,7 @@ namespace EVEMon.XmlGenerator
         partial void OnmetaGroupIDChanged();
 
         #endregion
+
     
     }
     
@@ -9406,6 +9507,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9460,6 +9562,7 @@ namespace EVEMon.XmlGenerator
         partial void OnitemNameChanged();
 
         #endregion
+
     
     }
     
@@ -9491,6 +9594,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9665,6 +9769,7 @@ namespace EVEMon.XmlGenerator
         partial void OnrollChanged();
 
         #endregion
+
     
     }
     
@@ -9694,6 +9799,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9775,6 +9881,7 @@ namespace EVEMon.XmlGenerator
         partial void OnquantityChanged();
 
         #endregion
+
     
     }
     
@@ -9804,6 +9911,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -9912,6 +10020,7 @@ namespace EVEMon.XmlGenerator
         partial void OnquantityChanged();
 
         #endregion
+
     
     }
     
@@ -9937,6 +10046,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -10253,8 +10363,105 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Double> _chanceOfDuplicating;
         partial void OnchanceOfDuplicatingChanging(Nullable<global::System.Double> value);
         partial void OnchanceOfDuplicatingChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> graphicID
+        {
+            get
+            {
+                return _graphicID;
+            }
+            set
+            {
+                OngraphicIDChanging(value);
+                ReportPropertyChanging("graphicID");
+                _graphicID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("graphicID");
+                OngraphicIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _graphicID;
+        partial void OngraphicIDChanging(Nullable<global::System.Int32> value);
+        partial void OngraphicIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Double> radius
+        {
+            get
+            {
+                return _radius;
+            }
+            set
+            {
+                OnradiusChanging(value);
+                ReportPropertyChanging("radius");
+                _radius = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("radius");
+                OnradiusChanged();
+            }
+        }
+        private Nullable<global::System.Double> _radius;
+        partial void OnradiusChanging(Nullable<global::System.Double> value);
+        partial void OnradiusChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> soundID
+        {
+            get
+            {
+                return _soundID;
+            }
+            set
+            {
+                OnsoundIDChanging(value);
+                ReportPropertyChanging("soundID");
+                _soundID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("soundID");
+                OnsoundIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _soundID;
+        partial void OnsoundIDChanging(Nullable<global::System.Int32> value);
+        partial void OnsoundIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> iconID
+        {
+            get
+            {
+                return _iconID;
+            }
+            set
+            {
+                OniconIDChanging(value);
+                ReportPropertyChanging("iconID");
+                _iconID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("iconID");
+                OniconIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _iconID;
+        partial void OniconIDChanging(Nullable<global::System.Int32> value);
+        partial void OniconIDChanged();
 
         #endregion
+
     
     }
     
@@ -10282,6 +10489,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -10360,6 +10568,7 @@ namespace EVEMon.XmlGenerator
         partial void OngroupIDChanged();
 
         #endregion
+
     
     }
     
@@ -10385,6 +10594,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -10871,6 +11081,7 @@ namespace EVEMon.XmlGenerator
         partial void OnmassChanged();
 
         #endregion
+
     
     }
     
@@ -10898,6 +11109,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -11003,6 +11215,7 @@ namespace EVEMon.XmlGenerator
         partial void OntoRegionIDChanged();
 
         #endregion
+
     
     }
     
@@ -11028,6 +11241,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -11370,6 +11584,7 @@ namespace EVEMon.XmlGenerator
         partial void OnradiusChanged();
 
         #endregion
+
     
     }
     
@@ -11395,6 +11610,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -11761,6 +11977,7 @@ namespace EVEMon.XmlGenerator
         partial void OnorbitIndexChanged();
 
         #endregion
+
     
     }
     
@@ -11786,6 +12003,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -11840,6 +12058,7 @@ namespace EVEMon.XmlGenerator
         partial void OncelestialIDChanged();
 
         #endregion
+
     
     }
     
@@ -11865,6 +12084,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12111,6 +12331,7 @@ namespace EVEMon.XmlGenerator
         partial void OnimportanceChanged();
 
         #endregion
+
     
     }
     
@@ -12136,6 +12357,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12190,6 +12412,7 @@ namespace EVEMon.XmlGenerator
         partial void OngraphicIDChanged();
 
         #endregion
+
     
     }
     
@@ -12215,6 +12438,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12269,6 +12493,7 @@ namespace EVEMon.XmlGenerator
         partial void OnwormholeClassIDChanged();
 
         #endregion
+
     
     }
     
@@ -12296,6 +12521,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12353,6 +12579,7 @@ namespace EVEMon.XmlGenerator
         partial void OntoRegionIDChanged();
 
         #endregion
+
     
     }
     
@@ -12378,6 +12605,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12696,6 +12924,7 @@ namespace EVEMon.XmlGenerator
         partial void OnradiusChanged();
 
         #endregion
+
     
     }
     
@@ -12723,6 +12952,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -12876,6 +13106,7 @@ namespace EVEMon.XmlGenerator
         partial void OntoRegionIDChanged();
 
         #endregion
+
     
     }
     
@@ -12901,6 +13132,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -13531,6 +13763,7 @@ namespace EVEMon.XmlGenerator
         partial void OnsecurityClassChanged();
 
         #endregion
+
     
     }
     
@@ -13556,6 +13789,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -13850,6 +14084,7 @@ namespace EVEMon.XmlGenerator
         partial void OnradiusChanged();
 
         #endregion
+
     
     }
     
@@ -13875,6 +14110,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -13953,6 +14189,7 @@ namespace EVEMon.XmlGenerator
         partial void OncycleTimeChanged();
 
         #endregion
+
     
     }
     
@@ -13980,6 +14217,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -14037,6 +14275,7 @@ namespace EVEMon.XmlGenerator
         partial void OnpinTypeIDChanged();
 
         #endregion
+
     
     }
     
@@ -14064,6 +14303,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -14169,6 +14409,7 @@ namespace EVEMon.XmlGenerator
         partial void OnisInputChanged();
 
         #endregion
+
     
     }
     
@@ -14194,6 +14435,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -14320,6 +14562,7 @@ namespace EVEMon.XmlGenerator
         partial void OnpublishedChanged();
 
         #endregion
+
     
     }
     
@@ -14345,6 +14588,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -14759,6 +15003,7 @@ namespace EVEMon.XmlGenerator
         partial void OnactivityIDChanged();
 
         #endregion
+
     
     }
     
@@ -14786,6 +15031,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -14963,6 +15209,7 @@ namespace EVEMon.XmlGenerator
         partial void OnregionIDChanged();
 
         #endregion
+
     
     }
     
@@ -14990,6 +15237,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -15095,6 +15343,7 @@ namespace EVEMon.XmlGenerator
         partial void OnmaterialMultiplierChanged();
 
         #endregion
+
     
     }
     
@@ -15122,6 +15371,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -15227,6 +15477,7 @@ namespace EVEMon.XmlGenerator
         partial void OnmaterialMultiplierChanged();
 
         #endregion
+
     
     }
     
@@ -15252,6 +15503,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -15450,6 +15702,7 @@ namespace EVEMon.XmlGenerator
         partial void OnminCostPerHourChanged();
 
         #endregion
+
     
     }
     
@@ -15477,6 +15730,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -15558,6 +15812,7 @@ namespace EVEMon.XmlGenerator
         partial void OnquantityChanged();
 
         #endregion
+
     
     }
     
@@ -15587,6 +15842,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -15743,6 +15999,7 @@ namespace EVEMon.XmlGenerator
         partial void OnrecycleChanged();
 
         #endregion
+
     
     }
     
@@ -15768,6 +16025,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -16110,6 +16368,7 @@ namespace EVEMon.XmlGenerator
         partial void OnjoveStationTypeIDChanged();
 
         #endregion
+
     
     }
     
@@ -16137,6 +16396,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -16194,6 +16454,7 @@ namespace EVEMon.XmlGenerator
         partial void OnserviceIDChanged();
 
         #endregion
+
     
     }
     
@@ -16219,6 +16480,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -16297,6 +16559,7 @@ namespace EVEMon.XmlGenerator
         partial void OndescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -16322,6 +16585,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -16760,6 +17024,7 @@ namespace EVEMon.XmlGenerator
         partial void OnreprocessingHangarFlagChanged();
 
         #endregion
+
     
     }
     
@@ -16785,6 +17050,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17055,6 +17321,7 @@ namespace EVEMon.XmlGenerator
         partial void OnconquerableChanged();
 
         #endregion
+
     
     }
     
@@ -17082,6 +17349,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17211,6 +17479,7 @@ namespace EVEMon.XmlGenerator
         partial void OntcIDChanged();
 
         #endregion
+
     
     }
     
@@ -17240,6 +17509,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17366,6 +17636,7 @@ namespace EVEMon.XmlGenerator
         partial void OnmasterIDChanged();
 
         #endregion
+
     
     }
     
@@ -17391,6 +17662,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17469,6 +17741,7 @@ namespace EVEMon.XmlGenerator
         partial void OnlanguageNameChanged();
 
         #endregion
+
     
     }
     
@@ -17500,6 +17773,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17608,6 +17882,7 @@ namespace EVEMon.XmlGenerator
         partial void OntextChanged();
 
         #endregion
+
     
     }
     
@@ -17633,6 +17908,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17759,6 +18035,7 @@ namespace EVEMon.XmlGenerator
         partial void OndescriptionChanged();
 
         #endregion
+
     
     }
     
@@ -17784,6 +18061,7 @@ namespace EVEMon.XmlGenerator
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -17838,9 +18116,11 @@ namespace EVEMon.XmlGenerator
         partial void OncombatZoneIDChanged();
 
         #endregion
+
     
     }
 
     #endregion
+
     
 }
