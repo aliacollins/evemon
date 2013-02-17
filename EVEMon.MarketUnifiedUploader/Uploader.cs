@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading;
 using System.Web;
 using EVEMon.Common;
+using EVEMon.Common.Data;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
 using EVEMon.MarketUnifiedUploader.EveCacheParser;
@@ -370,16 +371,28 @@ namespace EVEMon.MarketUnifiedUploader
         private static string GetProgressText(IDictionary<string, object> jsonObj, EndPoint endPoint)
         {
             // Gather info to use in progress message
-            string resultType = jsonObj["resultType"].ToString();
-            string typeID = ((ArrayList)jsonObj["rowsets"]).OfType<Dictionary<string, object>>()
-                .Select(row => row["typeID"]).First().ToString();
-            string regionID = ((ArrayList)jsonObj["rowsets"]).OfType<Dictionary<string, object>>()
-                .Select(row => row["regionID"]).First().ToString();
-            int rowsCount = ((ArrayList)jsonObj["rowsets"]).OfType<Dictionary<string, object>>()
+            String resultType = jsonObj["resultType"].ToString();
+            String typeID = ((ArrayList)jsonObj["rowsets"]).OfType<Dictionary<string, object>>()
+                                                           .Select(row => row["typeID"]).First().ToString();
+            String regionID = ((ArrayList)jsonObj["rowsets"]).OfType<Dictionary<string, object>>()
+                                                              .Select(row => row["regionID"]).First().ToString();
+            Int32 rowsCount = ((ArrayList)jsonObj["rowsets"]).OfType<Dictionary<string, object>>()
                 .Select(rowset => rowset["rows"]).OfType<ArrayList>().First().Count;
 
-            return String.Format(CultureConstants.DefaultCulture, "{5}: Uploading to {0}, {1}: {2}, typeID: {3}, region: {4}{6}",
-                                 endPoint.Name, resultType, rowsCount, typeID, regionID,
+            // Try parse typeID to an EVE item
+            Int32 eveTypeID;
+            Item item = Int32.TryParse(typeID, out eveTypeID) ? StaticItems.GetItemByID(eveTypeID) : null;
+
+            // Try parse regionID to an EVE region
+            Int32 eveRegionID;
+            Region region = Int32.TryParse(regionID, out eveRegionID) ? StaticGeography.GetRegionByID(eveRegionID) : null;
+            
+            String itemName = item == null ? String.Empty : String.Format(CultureConstants.DefaultCulture, " ({0})", item.Name);
+            String regionName = region == null ? String.Empty : String.Format(CultureConstants.DefaultCulture, " ({0})", region.Name);
+
+            return String.Format(CultureConstants.DefaultCulture,
+                                 "{7}: Uploading to {0}, {1}: {2}, typeID: {3}{4}, region: {5}{6}{8}",
+                                 endPoint.Name, resultType, rowsCount, typeID, itemName, regionID, regionName,
                                  DateTime.Now.ToUniversalDateTimeString(), Environment.NewLine);
         }
 
