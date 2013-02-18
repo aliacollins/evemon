@@ -13,3 +13,4 @@ _ReSharper.*
 _UpgradeReport_Files
 bin
 obj
+packages
