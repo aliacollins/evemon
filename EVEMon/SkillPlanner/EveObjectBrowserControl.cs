@@ -716,7 +716,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected void AdjustColumns()
         {
-            foreach (ColumnHeader column in PropertiesList.Columns.Cast<ColumnHeader>())
+            foreach (ColumnHeader column in PropertiesList.Columns)
             {
                 column.Width = -2;
 

@@ -1273,7 +1273,7 @@ namespace EVEMon.DetailsWindow
             /// </summary>
             private void AdjustColumns()
             {
-                foreach (ColumnHeader column in Columns.Cast<ColumnHeader>())
+                foreach (ColumnHeader column in Columns)
                 {
                     column.Width = -2;
 

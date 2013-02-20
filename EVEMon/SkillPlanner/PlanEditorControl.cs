@@ -1363,7 +1363,7 @@ namespace EVEMon.SkillPlanner
             // Find the index of the pluggable column
             int pluggableColumnIndex = lvSkills.Columns.IndexOfKey(PluggableColumn);
 
-            foreach (ColumnHeader column in lvSkills.Columns.Cast<ColumnHeader>())
+            foreach (ColumnHeader column in lvSkills.Columns)
             {
                 // Adjust the column index when we are past the pluggable column
                 // in order to avoid an ArgumentOutOfRangeException

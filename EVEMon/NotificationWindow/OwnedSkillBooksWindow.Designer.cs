@@ -73,6 +73,7 @@
             this.lvOwnedSkillBooks.TabIndex = 6;
             this.lvOwnedSkillBooks.UseCompatibleStateImageBehavior = false;
             this.lvOwnedSkillBooks.View = System.Windows.Forms.View.Details;
+            this.lvOwnedSkillBooks.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.lvOwnedSkillBooks_ColumnWidthChanging);
             // 
             // chSkill
             // 

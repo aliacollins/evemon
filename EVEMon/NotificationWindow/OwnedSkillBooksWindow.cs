@@ -97,7 +97,8 @@ namespace EVEMon.NotificationWindow
             try
             {
                 IEnumerable<Skill> skills = m_character.Skills
-                    .Where(skill => skill.IsOwned || skill.HasBookInAssets).OrderBy(x => x.Name);
+                                                       .Where(skill => skill.IsOwned || skill.HasBookInAssets)
+                                                       .OrderBy(x => x.Name);
 
                 lvOwnedSkillBooks.Items.Clear();
 
@@ -243,5 +244,20 @@ namespace EVEMon.NotificationWindow
 
         #endregion
 
+
+        #region Local Events
+
+        /// <summary>
+        /// Handles the ColumnWidthChanging event of the lvOwnedSkillBooks control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="ColumnWidthChangingEventArgs" /> instance containing the event data.</param>
+        private void lvOwnedSkillBooks_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
+        {
+            e.Cancel = true;
+            e.NewWidth = lvOwnedSkillBooks.Columns[e.ColumnIndex].Width;
+        }
+
+        #endregion
     }
 }

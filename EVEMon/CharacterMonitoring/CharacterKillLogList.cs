@@ -259,11 +259,18 @@ namespace EVEMon.CharacterMonitoring
 
         #region ListView Update Methods
 
+        /// <summary>
+        /// Autoresizes the columns.
+        /// </summary>
+        public void AutoResizeColumns()
+        {
+            AdjustColumns();
+        }
 
         /// <summary>
         /// Updates the columns.
         /// </summary>
-        public void UpdateColumns()
+        private void UpdateColumns()
         {
             // Returns if not visible
             if (!Visible)
