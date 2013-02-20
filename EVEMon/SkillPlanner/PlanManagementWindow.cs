@@ -162,7 +162,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void AdjustColumns()
         {
-            foreach (ColumnHeader column in lbPlanList.Columns.Cast<ColumnHeader>())
+            foreach (ColumnHeader column in lbPlanList.Columns)
             {
                 column.Width = -2;
 

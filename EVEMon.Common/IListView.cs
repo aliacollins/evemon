@@ -26,8 +26,8 @@ namespace EVEMon.Common
         IEnumerable<IColumnSettings> Columns { get; set; }
 
         /// <summary>
-        /// Updates the columns.
+        /// Autoresizes the columns.
         /// </summary>
-        void UpdateColumns();
+        void AutoResizeColumns();
     }
 }

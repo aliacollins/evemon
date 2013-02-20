@@ -1126,8 +1126,7 @@ namespace EVEMon.CharacterMonitoring
             if (list == null)
                 return;
 
-            list.Columns.Where(column => column.Visible).ToList().ForEach(column => column.Width = -2);
-            list.UpdateColumns();
+            list.AutoResizeColumns();
         }
 
         /// <summary>

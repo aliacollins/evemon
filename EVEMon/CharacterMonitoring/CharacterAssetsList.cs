@@ -241,9 +241,23 @@ namespace EVEMon.CharacterMonitoring
         #region Update Methods
 
         /// <summary>
+        /// Autoresizes the columns.
+        /// </summary>
+        public void AutoResizeColumns()
+        {
+            m_columns.ForEach(column =>
+                                  {
+                                      if (column.Visible)
+                                          column.Width = -2;
+                                  });
+
+            UpdateColumns();
+        }
+
+        /// <summary>
         /// Updates the columns.
         /// </summary>
-        public void UpdateColumns()
+        internal void UpdateColumns()
         {
             // Returns if not visible
             if (!Visible)
@@ -526,7 +540,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void AdjustColumns()
         {
-            foreach (ColumnHeader column in lvAssets.Columns.Cast<ColumnHeader>())
+            foreach (ColumnHeader column in lvAssets.Columns)
             {
                 if (m_columns[column.Index].Width == -1)
                     m_columns[column.Index].Width = -2;

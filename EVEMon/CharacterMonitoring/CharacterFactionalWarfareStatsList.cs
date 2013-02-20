@@ -375,7 +375,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void AdjustColumns(ListView listView)
         {
-            foreach (ColumnHeader column in listView.Columns.Cast<ColumnHeader>())
+            foreach (ColumnHeader column in listView.Columns)
             {
                 column.Width = -2;
 

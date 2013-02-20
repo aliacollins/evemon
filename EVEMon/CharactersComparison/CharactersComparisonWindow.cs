@@ -269,7 +269,7 @@ namespace EVEMon.CharactersComparison
         /// </summary>
         private void AdjustColumns()
         {
-            foreach (ColumnHeader column in lvCharacterInfo.Columns.Cast<ColumnHeader>())
+            foreach (ColumnHeader column in lvCharacterInfo.Columns)
             {
                 column.Width = -2;
 

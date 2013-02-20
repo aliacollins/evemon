@@ -383,7 +383,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void AdjustColumns()
         {
-            foreach (ColumnHeader column in lvLoadouts.Columns.Cast<ColumnHeader>())
+            foreach (ColumnHeader column in lvLoadouts.Columns)
             {
                 column.Width = -2;
 
