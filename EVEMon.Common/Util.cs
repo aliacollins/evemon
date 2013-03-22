@@ -388,9 +388,12 @@ namespace EVEMon.Common
                 }
 
                 // Fix times
-                DateTime requestTime = DateTime.UtcNow;
-                double offsetCCP = (result.CurrentTime.Subtract(requestTime)).TotalMilliseconds;
-                result.SynchronizeWithLocalClock(offsetCCP);
+                if (result.Result is ISynchronizableWithLocalClock)
+                {
+                    DateTime requestTime = DateTime.UtcNow;
+                    double offsetCCP = (result.CurrentTime.Subtract(requestTime)).TotalMilliseconds;
+                    result.SynchronizeWithLocalClock(offsetCCP);
+                }
             }
                 // An error occurred during the XSL transform
             catch (XsltException exc)
