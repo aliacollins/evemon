@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Collections;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Controls
@@ -9,18 +10,25 @@ namespace EVEMon.Common.Controls
     /// <summary>
     /// This form allow the user to selected and order the columns he wants to use for plans.
     /// </summary>
-    public abstract partial class ColumnSelectWindow : EVEMonForm
+    public partial class ColumnSelectWindow : EVEMonForm
     {
         private readonly List<IColumnSettings> m_columns = new List<IColumnSettings>();
 
         /// <summary>
-        /// Default constructor.
+        /// Prevents a default instance of the <see cref="ColumnSelectWindow"/> class from being created.
         /// </summary>
-        protected ColumnSelectWindow(IEnumerable<IColumnSettings> columns)
+        private ColumnSelectWindow()
         {
             InitializeComponent();
-            clbColumns.ItemCheck += clbColumns_ItemCheck;
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColumnSelectWindow"/> class.
+        /// </summary>
+        /// <param name="columns">The columns.</param>
+        protected ColumnSelectWindow(IEnumerable<IColumnSettings> columns)
+            :this()
+        {
             // Fill the columns list
             m_columns.AddRange(columns);
         }
@@ -118,8 +126,19 @@ namespace EVEMon.Common.Controls
             UpdateContent();
         }
 
-        protected abstract string GetHeader(int key);
-        protected abstract IEnumerable<int> AllKeys { get; }
-        protected abstract IEnumerable<IColumnSettings> DefaultColumns { get; }
+        protected virtual string GetHeader(int key)
+        {
+            return String.Empty;
+        }
+
+        protected virtual IEnumerable<int> AllKeys
+        {
+            get { return new EmptyEnumerable<int>(); }
+        }
+
+        protected virtual IEnumerable<IColumnSettings> DefaultColumns
+        {
+            get { return new EmptyEnumerable<IColumnSettings>(); }
+        }
     }
 }

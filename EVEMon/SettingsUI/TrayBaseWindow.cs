@@ -7,7 +7,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.SettingsUI
 {
-    public abstract partial class TrayBaseWindow : Form
+    public partial class TrayBaseWindow : Form
     {
         protected readonly FlowLayoutPanel MainFlowLayoutPanel = new FlowLayoutPanel();
         protected readonly Label ToolTipLabel = new Label();
@@ -210,7 +210,7 @@ namespace EVEMon.SettingsUI
         /// <summary>
         /// Updates the content.
         /// </summary>
-        protected abstract void UpdateContent();
+        protected virtual void UpdateContent(){}
 
     }
 }
