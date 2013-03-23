@@ -33,7 +33,11 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlAttribute("title")]
-        public string Title { get; set; }
+        public string TitleXml
+        {
+            get { return Title; }
+            set { Title = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("toCorpOrAllianceID")]
         public string ToCorpOrAllianceID { get; set; }
@@ -41,7 +45,7 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("toCharacterIDs")]
         public string ToCharacterIDsXml
         {
-            get { return string.Join(",", m_toCharacterIDs); }
+            get { return String.Join(",", m_toCharacterIDs); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -52,13 +56,16 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("toListID")]
         public string ToListIDXml
         {
-            get { return string.Join(",", m_toListID); }
+            get { return String.Join(",", m_toListID); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
                     m_toListID.AddRange(value.Split(','));
             }
         }
+
+        [XmlIgnore]
+        public string Title { get; set; }
 
         [XmlIgnore]
         public DateTime SentDate { get; set; }

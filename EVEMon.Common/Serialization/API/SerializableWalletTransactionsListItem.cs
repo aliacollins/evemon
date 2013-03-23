@@ -27,13 +27,21 @@ namespace EVEMon.Common.Serialization.API
         public long ClientID { get; set; }
 
         [XmlAttribute("clientName")]
-        public string ClientName { get; set; }
+        public string ClientNameXml
+        {
+            get { return ClientName; }
+            set { ClientName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("stationID")]
         public int StationID { get; set; }
 
         [XmlAttribute("stationName")]
-        public string StationName { get; set; }
+        public string StationNameXml
+        {
+            get { return StationName; }
+            set { StationName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("transactionType")]
         public string TransactionType { get; set; }
@@ -51,6 +59,12 @@ namespace EVEMon.Common.Serialization.API
                     TransactionDate = value.TimeStringToDateTime();
             }
         }
+
+        [XmlIgnore]
+        public string ClientName { get; set; }
+
+        [XmlIgnore]
+        public string StationName { get; set; }
 
         [XmlIgnore]
         public DateTime TransactionDate { get; set; }

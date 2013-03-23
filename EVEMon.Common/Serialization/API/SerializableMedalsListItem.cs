@@ -9,7 +9,11 @@ namespace EVEMon.Common.Serialization.API
         public long MedalID { get; set; }
 
         [XmlAttribute("reason")]
-        public string Reason { get; set; }
+        public string ReasonXml
+        {
+            get { return Reason; }
+            set { Reason = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("status")]
         public string Status { get; set; }
@@ -66,10 +70,21 @@ namespace EVEMon.Common.Serialization.API
         public long CorporationID { get; set; }
 
         [XmlAttribute("title")]
-        public string Title { get; set; }
+        public string TitleXml
+        {
+            get { return Title; }
+            set { Title = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("description")]
-        public string Description { get; set; }
+        public string DescriptionXml
+        {
+            get { return Description; }
+            set { Description = value == null ? String.Empty : value.HtmlDecode(); }
+        }
+
+        [XmlIgnore]
+        public string Reason { get; set; }
 
         [XmlIgnore]
         public long IssuerID { get; set; }
@@ -79,5 +94,11 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlIgnore]
         public MedalGroup Group { get; set; }
+
+        [XmlIgnore]
+        public string Title { get; set; }
+
+        [XmlIgnore]
+        public string Description { get; set; }
     }
 }

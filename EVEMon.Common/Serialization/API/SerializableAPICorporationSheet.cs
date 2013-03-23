@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -21,7 +22,11 @@ namespace EVEMon.Common.Serialization.API
         public long ID { get; set; }
 
         [XmlElement("corporationName")]
-        public string Name { get; set; }
+        public string NameXml
+        {
+            get { return Name; }
+            set { Name = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("ticker")]
         public string Ticker { get; set; }
@@ -30,16 +35,28 @@ namespace EVEMon.Common.Serialization.API
         public long CeoID { get; set; }
 
         [XmlElement("ceoName")]
-        public string CeoName { get; set; }
+        public string CeoNameXml
+        {
+            get { return CeoName; }
+            set { CeoName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("stationID")]
         public long HQStationID { get; set; }
 
         [XmlElement("stationName")]
-        public string HQStationName { get; set; }
+        public string HQStationNameXml
+        {
+            get { return HQStationName; }
+            set { HQStationName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("description")]
-        public string Description { get; set; }
+        public string DescriptionXml
+        {
+            get { return Description; }
+            set { Description = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("url")]
         public string WebUrl { get; set; }
@@ -48,7 +65,11 @@ namespace EVEMon.Common.Serialization.API
         public long AllianceID { get; set; }
 
         [XmlElement("allianceName")]
-        public string AllianceName { get; set; }
+        public string AllianceNameXml
+        {
+            get { return AllianceName; }
+            set { AllianceName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("taxRate")]
         public float TaxRate { get; set; }
@@ -76,5 +97,19 @@ namespace EVEMon.Common.Serialization.API
             get { return m_walletDivisions; }
         }
 
+        [XmlIgnore]
+        public string Name { get; set; }
+
+        [XmlIgnore]
+        public string CeoName { get; set; }
+
+        [XmlIgnore]
+        public string HQStationName { get; set; }
+
+        [XmlIgnore]
+        public string AllianceName { get; set; }
+
+        [XmlIgnore]
+        public string Description { get; set; }
     }
 }

@@ -10,7 +10,6 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
     /// </remarks>
     public sealed class SerializableLoadout
     {
-        private string m_loadoutName;
         private readonly Collection<SerializableLoadoutSlot> m_slots;
 
         /// <summary>
@@ -22,21 +21,39 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         }
 
         /// <summary>
-        /// Gets or sets the name of the loadout.
+        /// Gets or sets the name of the loadout from the xml.
         /// </summary>
         /// <value>The name of the loadout.</value>
         [XmlAttribute("name")]
-        public string LoadoutName
+        public string LoadoutNameXml
         {
-            get { return m_loadoutName.HtmlDecode(); }
-            set { m_loadoutName = value; }
+            get { return LoadoutName; }
+            set { LoadoutName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the loadout.
+        /// </summary>
+        /// <value>The name of the loadout.</value>
+        [XmlIgnore]
+        public string LoadoutName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the author from the xml.
+        /// </summary>
+        /// <value>The author.</value>
+        [XmlAttribute("Author")]
+        public string AuthorXml
+        {
+            get { return Author; }
+            set { Author = value == null ? String.Empty : value.HtmlDecode(); }
         }
 
         /// <summary>
         /// Gets or sets the author.
         /// </summary>
         /// <value>The author.</value>
-        [XmlAttribute("Author")]
+        [XmlIgnore]
         public string Author { get; set; }
 
         /// <summary>
@@ -58,21 +75,22 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         /// </summary>
         /// <value>The submission date string.</value>
         [XmlAttribute("date")]
-        public string SubmissionDateXml { get; set; }
+        public string SubmissionDateXml
+        {
+            get { return SubmissionDate.DateTimeToTimeString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    SubmissionDate = value.TimeStringToDateTime();
+            }
+        }
 
         /// <summary>
         /// Gets the submission date.
         /// </summary>
         /// <value>The submission date.</value>
         [XmlIgnore]
-        public DateTime SubmissionDate
-        {
-            get
-            {
-                DateTime parsedDate;
-                return DateTime.TryParse(SubmissionDateXml, out parsedDate) ? parsedDate : DateTime.MinValue;
-            }
-        }
+        public DateTime SubmissionDate { get; set; }
 
         /// <summary>
         /// Gets or sets the topic.

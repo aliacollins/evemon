@@ -113,10 +113,8 @@ namespace EVEMon.Common.Serialization.API
             get { return Issued.DateTimeToTimeString(); }
             set
             {
-                if (String.IsNullOrEmpty(value))
-                    return;
-
-                Issued = value.TimeStringToDateTime();
+                if (!String.IsNullOrEmpty(value))
+                    Issued = value.TimeStringToDateTime();
             }
         }
     }

@@ -52,7 +52,7 @@ namespace EVEMon.Common
             m_character = character;
             m_corporationId = src.CorporationID;
             m_corporationName = src.CorporationName;
-            StartDate = src.StartDate.TimeStringToDateTime();
+            StartDate = src.StartDate;
         }
 
         #endregion
@@ -169,7 +169,7 @@ namespace EVEMon.Common
                                                        {
                                                            CorporationID = m_corporationId,
                                                            CorporationName = CorporationName,
-                                                           StartDate = StartDate.DateTimeToTimeString()
+                                                           StartDate = StartDate
                                                        };
             return serial;
         }
