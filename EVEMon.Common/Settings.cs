@@ -373,7 +373,7 @@ namespace EVEMon.Common
 
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = revision == 0
-                                                ? (SerializableSettings)ShowNoSupportMessage()
+                                                ? (SerializableSettings)UIHelper.ShowNoSupportMessage()
                                                 : Util.DeserializeXmlFromString<SerializableSettings>(fileContent,
                                                                                                       SettingsTransform);
 
@@ -443,7 +443,7 @@ namespace EVEMon.Common
             // Get the revision number of the assembly which generated this file
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = Util.GetRevisionNumber(settingsFile) == 0
-                                                ? (SerializableSettings)ShowNoSupportMessage()
+                                                ? (SerializableSettings)UIHelper.ShowNoSupportMessage()
                                                 : Util.DeserializeXmlFromFile<SerializableSettings>(settingsFile,
                                                                                                     SettingsTransform);
 
@@ -511,7 +511,7 @@ namespace EVEMon.Common
             // Get the revision number of the assembly which generated this file
             // Try to load from a file (when no revision found then it's a pre 1.3.0 version file)
             SerializableSettings settings = Util.GetRevisionNumber(backupFile) == 0
-                                                ? (SerializableSettings)ShowNoSupportMessage()
+                                                ? (SerializableSettings)UIHelper.ShowNoSupportMessage()
                                                 : Util.DeserializeXmlFromFile<SerializableSettings>(backupFile,
                                                                                                     SettingsTransform);
 
@@ -542,20 +542,6 @@ namespace EVEMon.Common
                                               "Restoring settings from {0} failed, the file is corrupted.", backupFile),
                                 Caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Shows a no support message.
-        /// </summary>
-        /// <returns></returns>
-        internal static object ShowNoSupportMessage()
-        {
-            MessageBox.Show(
-                "The settings file is probably from an EVEMon version prior to 1.3.0.\n" +
-                "This type of file is no longer supported.",
-                "File type not supported", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             return null;
         }

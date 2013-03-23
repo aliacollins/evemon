@@ -321,7 +321,8 @@ namespace EVEMon.Common
         {
             if (filename == null)
                 throw new ArgumentNullException("filename");
-
+            
+            int revision = -1;
             SerializablePlan result = null;
             try
             {
@@ -355,11 +356,11 @@ namespace EVEMon.Common
                 }
 
                 // Reads the revision number from the file
-                int revision = Util.GetRevisionNumber(filename);
+                revision = Util.GetRevisionNumber(filename);
 
                 // Old format
                 result = revision == 0
-                             ? (SerializablePlan)Settings.ShowNoSupportMessage()
+                             ? (SerializablePlan)UIHelper.ShowNoSupportMessage()
                              : Util.DeserializeXmlFromFile<OutputPlan>(filename);
             }
             catch (UnauthorizedAccessException exc)
@@ -373,7 +374,7 @@ namespace EVEMon.Common
                 ExceptionHandler.LogException(exc, true);
             }
 
-            if (result == null)
+            if (result == null && revision > 0)
                 MessageBox.Show("There was a problem with the format of the document.");
 
             return result;

@@ -369,5 +369,18 @@ namespace EVEMon.Common
                 list.Add(item);
             }
         }
+
+        /// <summary>
+        /// Shows a no support message.
+        /// </summary>
+        /// <returns></returns>
+        internal static object ShowNoSupportMessage()
+        {
+            MessageBox.Show("The file is probably from an EVEMon version prior to 1.3.0.\n" +
+                            "This type of file is no longer supported.",
+                            "File type not supported", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            return null;
+        }
     }
 }
