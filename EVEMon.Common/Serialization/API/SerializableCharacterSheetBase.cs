@@ -25,7 +25,11 @@ namespace EVEMon.Common.Serialization.API
         public long ID { get; set; }
 
         [XmlElement("name")]
-        public string Name { get; set; }
+        public string NameXml
+        {
+            get { return Name; }
+            set { Name = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("DoB")]
         public string BirthdayXml
@@ -51,13 +55,21 @@ namespace EVEMon.Common.Serialization.API
         public string Gender { get; set; }
 
         [XmlElement("corporationName")]
-        public string CorporationName { get; set; }
+        public string CorporationNameXml
+        {
+            get { return CorporationName; }
+            set { CorporationName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("corporationID")]
         public long CorporationID { get; set; }
 
         [XmlElement("allianceName")]
-        public string AllianceName { get; set; }
+        public string AllianceNameXml
+        {
+            get { return AllianceName; }
+            set { AllianceName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("allianceID")]
         public int AllianceID { get; set; }
@@ -106,6 +118,15 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return m_certificates; }
         }
+
+        [XmlIgnore]
+        public string Name { get; set; }
+
+        [XmlIgnore]
+        public string CorporationName { get; set; }
+
+        [XmlIgnore]
+        public string AllianceName { get; set; }
 
         /// <summary>
         /// The date and time the character was created.

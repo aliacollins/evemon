@@ -33,8 +33,12 @@ namespace EVEMon.Common.Serialization.API
         public string Status { get; set; }
 
         [XmlAttribute("title")]
-        public string Title { get; set; }
-   
+        public string TitleXml
+        {
+            get { return Title; }
+            set { Title = value == null ? String.Empty : value.HtmlDecode(); }
+        }
+
         [XmlAttribute("forCorp")]
         public bool ForCorp { get; set; }
 
@@ -102,6 +106,9 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlAttribute("volume")]
         public decimal Volume { get; set; }
+
+        [XmlIgnore]
+        public string Title { get; set; }
 
         [XmlIgnore]
         public DateTime DateIssued { get; set; }

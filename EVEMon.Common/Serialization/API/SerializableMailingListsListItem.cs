@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -8,6 +9,13 @@ namespace EVEMon.Common.Serialization.API
         public long ID { get; set; }
 
         [XmlAttribute("displayName")]
-        public string Name { get; set; }
+        public string DisplayNameXml
+        {
+            get { return DisplayName; }
+            set { DisplayName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
+
+        [XmlIgnore]
+        public string DisplayName { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -8,9 +9,27 @@ namespace EVEMon.Common.Serialization.API
         public long CorporationID { get; set; }
 
         [XmlAttribute("corporationName")]
-        public string CorporationName { get; set; }
+        public string CorporationNameXml
+        {
+            get { return CorporationName; }
+            set { CorporationName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("startDate")]
-        public string StartDate { get; set; }
+        public string StartDateXml
+        {
+            get { return StartDate.DateTimeToTimeString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    StartDate = value.TimeStringToDateTime();
+            }
+        }
+
+        [XmlIgnore]
+        public string CorporationName { get; set; }
+
+        [XmlIgnore]
+        public DateTime StartDate { get; set; }
     }
 }

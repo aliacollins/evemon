@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
@@ -16,7 +17,11 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("shipName")]
-        public string ShipName { get; set; }
+        public string ShipNameXml
+        {
+            get { return ShipName; }
+            set { ShipName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlElement("shipTypeName")]
         public string ShipTypeName { get; set; }
@@ -33,5 +38,8 @@ namespace EVEMon.Common.Serialization.API
         {
             get { return m_employmentHistory; }
         }
+
+        [XmlIgnore]
+        public string ShipName { get; set; }
     }
 }

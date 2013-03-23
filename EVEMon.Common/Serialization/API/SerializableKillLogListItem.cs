@@ -52,7 +52,6 @@ namespace EVEMon.Common.Serialization.API
             get { return m_items; }
         }
 
-
         [XmlIgnore]
         public DateTime KillTime { get; set; }
     }

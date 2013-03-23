@@ -15,20 +15,28 @@ namespace EVEMon.Common.Serialization.API
         public long OwnerID1 { get; set; }
 
         [XmlAttribute("ownerName1")]
-        public string OwnerName1 { get; set; }
+        public string OwnerName1Xml
+        {
+            get { return OwnerName1; }
+            set { OwnerName1 = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("ownerID2")]
         public long OwnerID2 { get; set; }
 
         [XmlAttribute("ownerName2")]
-        public string OwnerName2 { get; set; }
- 
+        public string OwnerName2Xml
+        {
+            get { return OwnerName2; }
+            set { OwnerName2 = value == null ? String.Empty : value.HtmlDecode(); }
+        }
+
         [XmlAttribute("argID1")]
         public int ArgID1 { get; set; }
-       
+
         [XmlAttribute("argName1")]
         public string ArgName1 { get; set; }
-        
+
         [XmlAttribute("amount")]
         public decimal Amount { get; set; }
 
@@ -70,6 +78,12 @@ namespace EVEMon.Common.Serialization.API
                     Date = value.TimeStringToDateTime();
             }
         }
+
+        [XmlIgnore]
+        public string OwnerName1 { get; set; }
+
+        [XmlIgnore]
+        public string OwnerName2 { get; set; }
 
         [XmlIgnore]
         public DateTime Date { get; set; }

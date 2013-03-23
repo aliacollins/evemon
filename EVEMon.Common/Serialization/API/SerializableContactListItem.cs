@@ -9,7 +9,11 @@ namespace EVEMon.Common.Serialization.API
         public long ContactID { get; set; }
 
         [XmlAttribute("contactName")]
-        public string ContactName { get; set; }
+        public string ContactNameXml
+        {
+            get { return ContactName; }
+            set { ContactName = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("inWatchlist")]
         public string InWatchlistXml
@@ -30,5 +34,8 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlIgnore]
         public bool InWatchlist { get; set; }
+
+        [XmlIgnore]
+        public string ContactName { get; set; }
     }
 }

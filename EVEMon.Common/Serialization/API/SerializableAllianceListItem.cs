@@ -14,7 +14,11 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string NameXml
+        {
+            get { return Name; }
+            set { Name = value == null ? String.Empty : value.HtmlDecode(); }
+        }
 
         [XmlAttribute("shortName")]
         public string Ticker { get; set; }
@@ -48,5 +52,8 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlIgnore]
         public DateTime StartDate { get; set; }
+
+        [XmlIgnore]
+        public string Name { get; set; }
     }
 }
