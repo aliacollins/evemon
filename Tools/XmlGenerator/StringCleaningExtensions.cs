@@ -37,8 +37,7 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         private static string CollapseSpaces(this string input)
         {
-            Regex collapseSpace = new Regex(@"[ ]{2,}", RegexOptions.Compiled);
-            return collapseSpace.Replace(input, @" ");
+            return Regex.Replace(input, @"[ ]{2,}", m => @" ", RegexOptions.Compiled);
         }
 
         /// <summary>
@@ -49,7 +48,7 @@ namespace EVEMon.XmlGenerator
         private static string ReplaceHtmlLineBreaks(this string input)
         {
             return Regex.Replace(input, @"<br+?>|<br\s?/+?>",
-                                 m => (Environment.NewLine), RegexOptions.Singleline | RegexOptions.Compiled);
+                                 m => Environment.NewLine, RegexOptions.Singleline | RegexOptions.Compiled);
         }
 
         /// <summary>
@@ -60,8 +59,8 @@ namespace EVEMon.XmlGenerator
         private static string CleanXmlTags(this string input)
         {
             // Remove markup
-            Regex htmlClean = new Regex("<.+?>", RegexOptions.Singleline | RegexOptions.Compiled);
-            return htmlClean.Replace(input, String.Empty);
+            return Regex.Replace(input, "<.+?>",
+                                 m => String.Empty, RegexOptions.Singleline | RegexOptions.Compiled);
         }
 
         /// <summary>
