@@ -794,12 +794,23 @@ namespace EVEMon.Common
                         // Are we updating an existing entry ? Then just change the note
                         if (existingEntry != null)
                         {
-                            // If existing entry's notes is null, we replace it 
-                            if (String.IsNullOrEmpty(existingEntry.Notes))
-                                existingEntry.Notes = entry.Notes;
-                                // Else, we concatenate the notes
-                            else if (entry.Notes.Contains(entry.Notes))
-                                existingEntry.Notes += (", " + entry.Notes);
+                            // If existing entry's notes is null, we replace it
+                            // else we catch the distinct notes                           
+                            existingEntry.Notes = existingEntry.Notes != null
+                                                      ? String.Join(", ", existingEntry.Notes.Split(',')
+                                                                                      .Select(note => note.Trim())
+                                                                                      .Distinct())
+                                                      : String.Empty;
+
+                            // If entry's notes is null, we replace it
+                            entry.Notes = entry.Notes ?? String.Empty;
+
+                            // We concatenate the notes
+                            foreach (String note in entry.Notes.Split(',').Select(note => note.Trim()).Distinct()
+                                                                   .Where(note => !existingEntry.Notes.Contains(note)))
+                            {
+                                existingEntry.Notes = String.Join(", ", existingEntry.Notes, note);
+                            }
 
                             // Update the priority
                             if (existingEntry.Priority > priority)
