@@ -355,7 +355,10 @@ namespace EVEMon.Common.Serialization.BattleClinic
                                                      DataCompression dataCompression = DataCompression.None)
         {
             Uri url = GetMethodUrl(method);
-            return Util.DownloadBCAPIResult<T>(url, SupportsCompressedResponse, postData, dataCompression);
+            var result = Util.DownloadBCAPIResult<T>(url, SupportsCompressedResponse, postData, dataCompression);
+            return result.HasError && dataCompression != DataCompression.None
+                       ? Util.DownloadBCAPIResult<T>(url, SupportsCompressedResponse, postData)
+                       : result;
         }
 
         /// <summary>
@@ -374,7 +377,17 @@ namespace EVEMon.Common.Serialization.BattleClinic
                 throw new ArgumentNullException("callback", "The callback cannot be null.");
 
             Uri url = GetMethodUrl(method);
-            Util.DownloadBCAPIResultAsync(url, callback, SupportsCompressedResponse, postData, dataCompression);
+            Util.DownloadBCAPIResultAsync<T>(
+                url,
+                (result, errorMessage) =>
+                    {
+                        if ((!String.IsNullOrEmpty(errorMessage) || result.HasError) && dataCompression != DataCompression.None)
+                        {
+                            QueryMethodAsync(method, callback, postData);
+                            return;
+                        }
+                        callback(result, errorMessage);
+                    }, SupportsCompressedResponse, postData, dataCompression);
         }
 
         /// <summary>
