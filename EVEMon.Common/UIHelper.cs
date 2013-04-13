@@ -222,75 +222,39 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Displays the character exportation window and then exports it as it would be after the plan finish.
+        /// Displays the character exportation window and then exports it.
+        /// Optionally it exports it as it would be after the plan finish.
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="plan">The plan.</param>
-        public static void ExportAfterPlanCharacter(Character character, Plan plan)
+        public static void ExportCharacter(Character character, Plan plan = null)
         {
             if (character == null)
                 throw new ArgumentNullException("character");
 
-            if (plan == null)
-                throw new ArgumentNullException("plan");
+            bool isAfterPlanExport = plan != null;
 
             // Open the dialog box
             using (SaveFileDialog characterSaveDialog = new SaveFileDialog())
             {
-                characterSaveDialog.Title = "Save After Plan Character Info";
+                characterSaveDialog.Title = String.Format(CultureConstants.InvariantCulture, "Save {0}Character Info",
+                                                          isAfterPlanExport ? "After Plan " : String.Empty);
                 characterSaveDialog.Filter =
                     "Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml";
-                characterSaveDialog.FileName = String.Format(CultureConstants.DefaultCulture, " {0} (after plan {1})",
-                                                             character.Name, plan.Name);
-                characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.EVEMonXML;
 
-                if (characterSaveDialog.ShowDialog() == DialogResult.Cancel)
-                    return;
+                if (!isAfterPlanExport)
+                    characterSaveDialog.Filter += "|XML Format (CCP API)|*.xml|PNG Image|*.png";
 
-                // Serialize
-                try
-                {
-                    // Save character to string with the chosen format
-                    CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
-                    string content = CharacterExporter.Export(format, character, plan);
+                characterSaveDialog.FileName = String.Format(CultureConstants.InvariantCulture, "{0}{1}",
+                                                             character.Name,
+                                                             isAfterPlanExport
+                                                                 ? String.Format(CultureConstants.InvariantCulture,
+                                                                                 " (after plan {0})", plan.Name)
+                                                                 : String.Empty);
 
-                    // Save character with the chosen format to our file
-                    FileHelper.OverwriteOrWarnTheUser(
-                        characterSaveDialog.FileName,
-                        fs =>
-                            {
-                                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
-                                {
-                                    sw.Write(content);
-                                    sw.Flush();
-                                    fs.Flush();
-                                }
-                                return true;
-                            });
-                }
-                    // Handle exception
-                catch (IOException ex)
-                {
-                    ExceptionHandler.LogException(ex, true);
-                    MessageBox.Show("A problem occurred during exportation. The operation has not been completed.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Displays the character exportation window and then exports it.
-        /// </summary>
-        /// <param name="character"></param>
-        public static void ExportCharacter(Character character)
-        {
-            // Open the dialog box
-            using (SaveFileDialog characterSaveDialog = new SaveFileDialog())
-            {
-                characterSaveDialog.Title = "Save Character Info";
-                characterSaveDialog.Filter =
-                    "Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml|XML Format (CCP API)|*.xml|PNG Image|*.png";
-                characterSaveDialog.FileName = character.Name;
-                characterSaveDialog.FilterIndex = (int)CharacterSaveFormat.CCPXML;
+                characterSaveDialog.FilterIndex = isAfterPlanExport
+                                                      ? (int)CharacterSaveFormat.EVEMonXML
+                                                      : (int)CharacterSaveFormat.CCPXML;
 
                 if (characterSaveDialog.ShowDialog() == DialogResult.Cancel)
                     return;
@@ -304,33 +268,33 @@ namespace EVEMon.Common
                     FileHelper.OverwriteOrWarnTheUser(
                         characterSaveDialog.FileName,
                         fs =>
+                        {
+                            if (format == CharacterSaveFormat.PNG)
                             {
-                                if (format == CharacterSaveFormat.PNG)
-                                {
-                                    Bitmap bmp = CharacterMonitorScreenshot;// monitor.GetCharacterScreenshot();
-                                    bmp.Save(fs, ImageFormat.Png);
-                                    return true;
-                                }
-
-                                string content = CharacterExporter.Export(format, character, null);
-                                if ((format == CharacterSaveFormat.CCPXML) && string.IsNullOrEmpty(content))
-                                {
-                                    MessageBox.Show(
-                                        "This character has never been downloaded from CCP, cannot find it in the XML cache.",
-                                        "Cannot export the character", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                    return false;
-                                }
-
-                                using(StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
-                                {
-                                    sw.Write(content);
-                                    sw.Flush();
-                                    fs.Flush();
-                                }
+                                Bitmap bmp = CharacterMonitorScreenshot;// monitor.GetCharacterScreenshot();
+                                bmp.Save(fs, ImageFormat.Png);
                                 return true;
-                            });
+                            }
+
+                            string content = CharacterExporter.Export(format, character);
+                            if ((format == CharacterSaveFormat.CCPXML) && string.IsNullOrEmpty(content))
+                            {
+                                MessageBox.Show(
+                                    "This character has never been downloaded from CCP, cannot find it in the XML cache.",
+                                    "Cannot export the character", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                return false;
+                            }
+
+                            using (StreamWriter sw = new StreamWriter(fs))
+                            {
+                                sw.Write(content);
+                                sw.Flush();
+                                fs.Flush();
+                            }
+                            return true;
+                        });
                 }
-                    // Handle exception
+                // Handle exception
                 catch (IOException exc)
                 {
                     ExceptionHandler.LogException(exc, true);
