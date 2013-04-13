@@ -711,7 +711,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmiAfterPlanCharacter_Click(object sender, EventArgs e)
         {
-            UIHelper.ExportAfterPlanCharacter(Character, m_plan);
+            UIHelper.ExportCharacter(Character, m_plan);
         }
 
         /// <summary>
