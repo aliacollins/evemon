@@ -39,7 +39,7 @@ namespace EVEMon.MarketUnifiedUploader
                 // Any endpoints not included in online list will be discarded
                 // thus assuring that only approved endpoints will be used
                 EndPoint settingsEndpoint = settingsEndPoints.FirstOrDefault(
-                    endpointSettings => endpointSettings.Name == onlineEndPoint.Name);
+                    settingEndpoint => settingEndpoint.Name == onlineEndPoint.Name);
 
                 // Apply user settings
                 if (settingsEndpoint != null)
@@ -49,7 +49,9 @@ namespace EVEMon.MarketUnifiedUploader
             // If a valid localhost endpoint is specified insert it on top of the list
             List<SerializableLocalhostEndPoint> localhosts =
                 Settings.MarketUnifiedUploader.EndPoints.OfType<SerializableLocalhostEndPoint>().Where(
-                    endPoint => endPoint.Url != null && (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1")).Reverse().ToList();
+                    endPoint => endPoint.Url != null && (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1"))
+                        .Reverse()
+                        .ToList();
 
             foreach (SerializableLocalhostEndPoint localhost in localhosts)
             {

@@ -22,23 +22,17 @@ namespace EVEMon.MarketUnifiedUploader
         public static event EventHandler StatusChanged;
         public static event EventHandler EndPointsUpdated;
 
-        private static readonly EndPointCollection s_endPoints = new EndPointCollection();
+        private static readonly EndPointCollection s_endPointCollection = new EndPointCollection();
+        private static List<EndPoint> s_endPoints = new List<EndPoint>();
 
         private static UploaderStatus s_status;
         private static string s_progressText;
+        private static bool s_isRunning;
 
         #endregion
 
 
         #region Public Properties
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the Uploader is running.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if the Uploader is running; otherwise, <c>false</c>.
-        /// </value>
-        public static bool IsRunning { get; private set; }
 
         /// <summary>
         /// Gets the progress text.
@@ -74,7 +68,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         public static EndPointCollection EndPoints
         {
-            get { return s_endPoints; }
+            get { return s_endPointCollection; }
         }
 
         #endregion
@@ -88,7 +82,7 @@ namespace EVEMon.MarketUnifiedUploader
         public static void Start()
         {
             // Already started
-            if (IsRunning)
+            if (s_isRunning)
                 return;
 
             // When there is no network connection retry
@@ -107,7 +101,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         public static void Stop()
         {
-            IsRunning = false;
+            s_isRunning = false;
             Status = UploaderStatus.Disabled;
             EveMonClient.Trace("MarketUnifiedUploader.Stop()");
         }
@@ -141,7 +135,7 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         public static void OnEndPointsUpdated()
         {
-            EveMonClient.Trace("MarketUnifiedUploader.OnEndPointsUpdated - {0}", s_endPoints.ToString());
+            EveMonClient.Trace("MarketUnifiedUploader.OnEndPointsUpdated - {0}", s_endPointCollection.ToString());
             if (EndPointsUpdated != null)
                 EndPointsUpdated(null, EventArgs.Empty);
         }
@@ -156,20 +150,46 @@ namespace EVEMon.MarketUnifiedUploader
         /// </summary>
         private static void Initialize()
         {
-            IsRunning = true;
-            Status = UploaderStatus.Initializing;
-            s_endPoints.InitializeEndPoints();
+            s_isRunning = true;
 
-            // If there are no available endpoints disable the uploader
-            if (!s_endPoints.Any())
+            Status = UploaderStatus.Initializing;
+
+            CheckEndPointsSynchronization();
+
+            Status = UploaderStatus.Idle;
+
+            Parser.SetIncludeMethodsFilter("GetOrders", "GetOldPriceHistory", "GetNewPriceHistory");
+
+            Upload();
+        }
+
+        /// <summary>
+        /// Checks the end points synchronization.
+        /// </summary>
+        private static void CheckEndPointsSynchronization()
+        {
+            if (!Settings.MarketUnifiedUploader.Enabled)
+                return;
+
+            // Do it now if network available
+            if (NetworkMonitor.IsNetworkAvailable)
             {
-                Stop();
+                EveMonClient.Trace("MarketUnifiedUploader.EndPointsUpdating()");
+
+                s_endPointCollection.InitializeEndPoints();
+                s_endPoints = s_endPointCollection.ToList();
+
+                Dispatcher.Schedule(TimeSpan.FromHours(1), CheckEndPointsSynchronization);
+
+                // If there are no available endpoints disable the uploader
+                if (!s_endPoints.Any())
+                    Stop();
+
                 return;
             }
 
-            Parser.SetIncludeMethodsFilter("GetOrders", "GetOldPriceHistory", "GetNewPriceHistory");
-            Status = UploaderStatus.Idle;
-            Upload();
+            // Reschedule later otherwise
+            Dispatcher.Schedule(TimeSpan.FromSeconds(1), CheckEndPointsSynchronization);
         }
 
         /// <summary>
@@ -181,7 +201,7 @@ namespace EVEMon.MarketUnifiedUploader
 
             try
             {
-                while (IsRunning)
+                while (s_isRunning)
                 {
                     // Is it time to scan?
                     if (nextRun >= DateTime.UtcNow)
@@ -322,7 +342,7 @@ namespace EVEMon.MarketUnifiedUploader
             string data = Util.SerializeObjectToJson(jsonObj);
 
             // Inform about suspended endpoints
-            foreach (EndPoint endPoint in s_endPoints.Where(endPoint => endPoint.Enabled &&
+            foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
                                                                         endPoint.NextUploadTimeUtc != DateTime.MinValue &&
                                                                         endPoint.NextUploadTimeUtc >= DateTime.UtcNow))
             {
