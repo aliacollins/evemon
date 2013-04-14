@@ -205,39 +205,7 @@ namespace EVEMon.MarketUnifiedUploader
                         continue;
                     }
 
-                    // Get the cache files according to eve clients installations
-                    FileInfo[] cachedFiles = EveMonClient.EveAppDataFoldersExistInDefaultLocation
-                                                 ? Parser.GetMachoNetCachedFiles()
-                                                 : Settings.PortableEveInstallations.EVEClients.SelectMany(
-                                                     eveClient => Parser.GetMachoNetCachedFiles(eveClient.Path)).ToArray();
-
-                    // Parse the cached files and upload the data to the selected endpoints
-                    foreach (FileInfo cachedFile in cachedFiles.Where(file => file.Exists))
-                    {
-                        // Delete older than 90 days cached files
-                        if (cachedFile.LastWriteTimeUtc.AddDays(90) < DateTime.UtcNow)
-                        {
-                            DeleteCachedFile(cachedFile);
-                            continue;
-                        }
-
-                        // Parse the cached file
-                        KeyValuePair<object, object> result = ParseCacheFile(cachedFile);
-
-                        // Skip if there is no result
-                        if (result.Key == null || result.Value == null)
-                            continue;
-
-                        // Create the JSON object
-                        Dictionary<string, object> jsonObj = UnifiedFormat.GetJSONObject(result);
-
-                        // Skip if for some reason there is no JSON object or it's empty
-                        if (jsonObj == null || !jsonObj.Any())
-                            continue;
-
-                        // Uploads to the selected endpoints
-                        UploadToEndPoints(cachedFile, jsonObj);
-                    }
+                    ParseFilesAndUpload();
 
                     Status = UploaderStatus.Idle;
                     nextRun = GetNextRun(TimeSpan.FromMinutes(1));
@@ -259,6 +227,46 @@ namespace EVEMon.MarketUnifiedUploader
                                              Environment.NewLine);
 
                 Stop();
+            }
+        }
+
+        /// <summary>
+        /// Parses the files and upload.
+        /// </summary>
+        private static void ParseFilesAndUpload()
+        {
+            // Get the cache files according to eve clients installations
+            FileInfo[] cachedFiles = EveMonClient.EveAppDataFoldersExistInDefaultLocation
+                                         ? Parser.GetMachoNetCachedFiles()
+                                         : Settings.PortableEveInstallations.EVEClients.SelectMany(
+                                             eveClient => Parser.GetMachoNetCachedFiles(eveClient.Path)).ToArray();
+
+            // Parse the cached files and upload the data to the selected endpoints
+            foreach (FileInfo cachedFile in cachedFiles.Where(file => file.Exists))
+            {
+                // Delete older than 90 days cached files
+                if (cachedFile.LastWriteTimeUtc.AddDays(90) < DateTime.UtcNow)
+                {
+                    DeleteCachedFile(cachedFile);
+                    continue;
+                }
+
+                // Parse the cached file
+                KeyValuePair<object, object> result = ParseCacheFile(cachedFile);
+
+                // Skip if there is no result
+                if (result.Key == null || result.Value == null)
+                    continue;
+
+                // Create the JSON object
+                Dictionary<string, object> jsonObj = UnifiedFormat.GetJSONObject(result);
+
+                // Skip if for some reason there is no JSON object or it's empty
+                if (jsonObj == null || !jsonObj.Any())
+                    continue;
+
+                // Uploads to the selected endpoints
+                UploadToEndPoints(cachedFile, jsonObj);
             }
         }
 
@@ -407,16 +415,20 @@ namespace EVEMon.MarketUnifiedUploader
             // Special cleaning to prevent issues with responses from different platform servers
             response = response.Replace(Environment.NewLine, String.Empty).Trim();
 
-            // Suspend next upload try for 10 minutes accumulatively; up to 1 day if uploading fails repeatedly
+            // Suspend next upload try for 5 minutes accumulatively; up to 15 minutes if uploading fails repeatedly
             if (response != "1")
             {
                 // Suspend uploading according to error type
-                if (endPoint.UploadInterval < TimeSpan.FromDays(1))
+                if (endPoint.UploadInterval < TimeSpan.FromMinutes(15))
                 {
                     endPoint.UploadInterval = !response.Contains(WebExceptionStatus.KeepAliveFailure.ToString()) &&
                                               !response.Contains(WebExceptionStatus.ReceiveFailure.ToString())
-                                                  ? endPoint.UploadInterval.Add(TimeSpan.FromMinutes(10))
+                                                  ? endPoint.UploadInterval.Add(TimeSpan.FromMinutes(5))
                                                   : endPoint.UploadInterval.Add(TimeSpan.FromMinutes(1));
+                }
+                else if (endPoint.UploadInterval > TimeSpan.FromMinutes(15))
+                {
+                    endPoint.UploadInterval = TimeSpan.FromMinutes(15);
                 }
 
                 endPoint.NextUploadTimeUtc = DateTime.UtcNow.Add(endPoint.UploadInterval);
