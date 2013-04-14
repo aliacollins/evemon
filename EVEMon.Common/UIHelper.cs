@@ -268,33 +268,33 @@ namespace EVEMon.Common
                     FileHelper.OverwriteOrWarnTheUser(
                         characterSaveDialog.FileName,
                         fs =>
-                        {
-                            if (format == CharacterSaveFormat.PNG)
                             {
-                                Bitmap bmp = CharacterMonitorScreenshot;// monitor.GetCharacterScreenshot();
-                                bmp.Save(fs, ImageFormat.Png);
+                                if (format == CharacterSaveFormat.PNG)
+                                {
+                                    Bitmap bmp = CharacterMonitorScreenshot; // monitor.GetCharacterScreenshot();
+                                    bmp.Save(fs, ImageFormat.Png);
+                                    return true;
+                                }
+
+                                string content = CharacterExporter.Export(format, character);
+                                if ((format == CharacterSaveFormat.CCPXML) && string.IsNullOrEmpty(content))
+                                {
+                                    MessageBox.Show(
+                                        "This character has never been downloaded from CCP, cannot find it in the XML cache.",
+                                        "Cannot export the character", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    return false;
+                                }
+
+                                using (StreamWriter sw = new StreamWriter(fs))
+                                {
+                                    sw.Write(content);
+                                    sw.Flush();
+                                    fs.Flush();
+                                }
                                 return true;
-                            }
-
-                            string content = CharacterExporter.Export(format, character);
-                            if ((format == CharacterSaveFormat.CCPXML) && string.IsNullOrEmpty(content))
-                            {
-                                MessageBox.Show(
-                                    "This character has never been downloaded from CCP, cannot find it in the XML cache.",
-                                    "Cannot export the character", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                return false;
-                            }
-
-                            using (StreamWriter sw = new StreamWriter(fs))
-                            {
-                                sw.Write(content);
-                                sw.Flush();
-                                fs.Flush();
-                            }
-                            return true;
-                        });
+                            });
                 }
-                // Handle exception
+                    // Handle exception
                 catch (IOException exc)
                 {
                     ExceptionHandler.LogException(exc, true);

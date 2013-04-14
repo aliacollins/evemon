@@ -27,19 +27,19 @@ namespace EVEMon.MarketUnifiedUploader
         internal void InitializeEndPoints()
         {
             // Online EndPoints
-            List<EndPoint> endpointsOnline = GetOnlineEndPoints();
+            List<EndPoint> onlineEndPoints = GetOnlineEndPoints();
 
             // Settings EndPoints
-            List<EndPoint> endpointsSettings = GetSettingsEndPoints();
+            List<EndPoint> settingsEndPoints = GetSettingsEndPoints();
 
             // Merge online and user configuration
-            foreach (EndPoint onlineEndPoint in endpointsOnline)
+            foreach (EndPoint onlineEndPoint in onlineEndPoints)
             {
                 // Find the endpoint in settings that match the online one
                 // Any endpoints not included in online list will be discarded
                 // thus assuring that only approved endpoints will be used
-                EndPoint settingsEndpoint = endpointsSettings.FirstOrDefault(
-                    endpointSettings => endpointSettings.Name == onlineEndPoint.Name);
+                EndPoint settingsEndpoint = settingsEndPoints.FirstOrDefault(
+                    settingEndpoint => settingEndpoint.Name == onlineEndPoint.Name);
 
                 // Apply user settings
                 if (settingsEndpoint != null)
@@ -49,15 +49,16 @@ namespace EVEMon.MarketUnifiedUploader
             // If a valid localhost endpoint is specified insert it on top of the list
             List<SerializableLocalhostEndPoint> localhosts =
                 Settings.MarketUnifiedUploader.EndPoints.OfType<SerializableLocalhostEndPoint>().Where(
-                    endPoint => endPoint.Url != null && (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1")).Reverse().ToList();
+                    endPoint => endPoint.Url != null && (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1"))
+                        .Reverse().ToList();
 
             foreach (SerializableLocalhostEndPoint localhost in localhosts)
             {
-                endpointsOnline.Insert(0, new EndPoint(localhost));
+                onlineEndPoints.Insert(0, new EndPoint(localhost));
             }
 
             // Import the merged endpoints
-            Import(endpointsOnline);
+            Import(onlineEndPoints);
 
             // Update the settings
             UpdateSettings();
