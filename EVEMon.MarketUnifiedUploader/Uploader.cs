@@ -342,7 +342,7 @@ namespace EVEMon.MarketUnifiedUploader
             string data = Util.SerializeObjectToJson(jsonObj);
 
             // Inform about suspended endpoints
-            foreach (EndPoint endPoint in endPoints.Where(endPoint => endPoint.Enabled &&
+            foreach (EndPoint endPoint in s_endPoints.Where(endPoint => endPoint.Enabled &&
                                                                         endPoint.NextUploadTimeUtc != DateTime.MinValue &&
                                                                         endPoint.NextUploadTimeUtc >= DateTime.UtcNow))
             {

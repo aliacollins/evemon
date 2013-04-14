@@ -50,8 +50,7 @@ namespace EVEMon.MarketUnifiedUploader
             List<SerializableLocalhostEndPoint> localhosts =
                 Settings.MarketUnifiedUploader.EndPoints.OfType<SerializableLocalhostEndPoint>().Where(
                     endPoint => endPoint.Url != null && (endPoint.Url.Host == "localhost" || endPoint.Url.Host == "127.0.0.1"))
-                        .Reverse()
-                        .ToList();
+                        .Reverse().ToList();
 
             foreach (SerializableLocalhostEndPoint localhost in localhosts)
             {
