@@ -318,10 +318,13 @@ namespace EVEMon.SkillPlanner
                 PropertiesList.Columns.Clear();
 
                 // Create the columns
-                PropertiesList.Columns.Add("Item");
-                PropertiesList.Columns.Add("Quantity (You)");
-                PropertiesList.Columns.Add("Quantity (Perfect)");
-                PropertiesList.Columns.Add("Damage Per Run");
+                PropertiesList.Columns.Add("item","Item");
+                PropertiesList.Columns.Add("qBase","Quantity (Base)");
+                PropertiesList.Columns.Add("qYou","Quantity (You)");
+                PropertiesList.Columns.Add("qPerfect","Quantity (Perfect)");
+                PropertiesList.Columns.Add("dpr","Damage Per Run");
+                PropertiesList.Columns.Add("pMEl","Perfect ME Level");
+
 
                 IEnumerable<ListViewItem> items = AddGroups();
 
@@ -357,8 +360,8 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private IEnumerable<ListViewItem> AddGroups()
         {
-            int perfectME = 0;
             int perfectMELevel = 0;
+            int perfectMELevelPerMaterial = 0;
             bool hasPerfect = false;
             bool hasDamagePerRun = false;
             Int64 productionEfficiencyLevel = m_character.Skills[DBConstants.ProductionEfficiencySkillID].LastConfirmedLvl;
@@ -392,11 +395,11 @@ namespace EVEMon.SkillPlanner
 
                     // Calculate the perfect material efficiency level if it's a raw material
                     if (isRawMaterial)
-                        perfectMELevel = (int)Math.Floor(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity);
-
+                        perfectMELevelPerMaterial = (int)Math.Floor(0.02 * m_blueprint.WasteFactor * baseMaterialQuantity);
+                    
                     // Store the highest perfect material efficiency level
-                    if (perfectMELevel > perfectME)
-                        perfectME = perfectMELevel;
+                    if (perfectMELevelPerMaterial > perfectMELevel)
+                        perfectMELevel = perfectMELevelPerMaterial;
 
                     // Calculate the needed quantity by the character skills
                     int youQuantity = (m_activity == BlueprintActivity.Manufacturing && isRawMaterial
@@ -410,29 +413,40 @@ namespace EVEMon.SkillPlanner
                                                                  0, MidpointRounding.AwayFromZero)
                                                : baseMaterialQuantity);
 
-                    // Add the quantity for every item
+                    // Has perfect values ?
+                    hasPerfect |= (youQuantity != perfectQuantity);
+
+                    // Has damage per run ?
+                    hasDamagePerRun |= (material.DamagePerJob > 0 && material.DamagePerJob < 1);
+
+                    // Add the base quantity for every item
+                    ListViewItem.ListViewSubItem subItemBase =
+                        new ListViewItem.ListViewSubItem(item, baseMaterialQuantity.ToString(CultureConstants.DefaultCulture));
+                    item.SubItems.Add(subItemBase);
+
+                    // Add the quantity needed by according to the charater's skiils for every item
                     ListViewItem.ListViewSubItem subItemYou =
                         new ListViewItem.ListViewSubItem(item, youQuantity.ToString(CultureConstants.DefaultCulture));
                     item.SubItems.Add(subItemYou);
-
-                    // Has perfect values ?
-                    hasPerfect |= (youQuantity != perfectQuantity);
 
                     // Add the perfect quantity for every item
                     ListViewItem.ListViewSubItem subItemPerfect =
                         new ListViewItem.ListViewSubItem(item, perfectQuantity.ToString(CultureConstants.DefaultCulture));
                     item.SubItems.Add(subItemPerfect);
 
-                    // Has damage per run ?
-                    hasDamagePerRun |= (material.DamagePerJob > 0 && material.DamagePerJob < 1);
-
                     // Add the damage per run for every item (empty string if it's 1)
                     string damagePerRun = (material.DamagePerJob > 0 && material.DamagePerJob < 1
                                                ? String.Format(CultureConstants.DefaultCulture, "{0:P1}", material.DamagePerJob)
                                                : String.Empty);
+
                     ListViewItem.ListViewSubItem subItemDamagePerRun =
                         new ListViewItem.ListViewSubItem(item, damagePerRun);
                     item.SubItems.Add(subItemDamagePerRun);
+
+                    // Add the perfect ME for every item
+                    ListViewItem.ListViewSubItem subItemPerfectMELevel =
+                        new ListViewItem.ListViewSubItem(item, perfectMELevelPerMaterial.ToString(CultureConstants.DefaultCulture));
+                    item.SubItems.Add(subItemPerfectMELevel);
                 }
 
                 // Add the group that has an item
@@ -442,15 +456,15 @@ namespace EVEMon.SkillPlanner
 
             // Remove the "Perfect" column if all values are empty
             if (!hasPerfect)
-                RemoveColumn(items, 2);
+                RemoveColumn(items, PropertiesList.Columns.IndexOfKey("qPerfect"));
 
             // Remove the "Damage Per Run" column if all values are empty
             if (!hasDamagePerRun)
-                RemoveColumn(items, PropertiesList.Columns.Count - 1);
+                RemoveColumn(items, PropertiesList.Columns.IndexOfKey("dpr"));
 
             // Display the Perfect ME
             if (tabControl.SelectedTab == tpManufacturing)
-                lblPerfectMEValue.Text = perfectME.ToString("N0", CultureConstants.DefaultCulture);
+                lblPerfectMELevelValue.Text = perfectMELevel.ToString("N0", CultureConstants.DefaultCulture);
 
             return items;
         }
