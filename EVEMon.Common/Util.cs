@@ -993,6 +993,9 @@ namespace EVEMon.Common
             if (inputData == null)
                 throw new ArgumentNullException("inputData");
 
+            if (!inputData.Any())
+                return null;
+
             if (inputData[0] == 31 && inputData[1] == 139)
                 return GZipUncompress(inputData);
 
