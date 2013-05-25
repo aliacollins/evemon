@@ -219,6 +219,11 @@ namespace EVEMon.SkillPlanner
             return node;
         }
 
+        #endregion
+
+
+        #region Event Handlers
+
         /// <summary>
         /// When the treeview is clicked, we manually select nodes since the bounding boxes are incorrect.
         /// </summary>
@@ -247,11 +252,6 @@ namespace EVEMon.SkillPlanner
 
             tvSkillList.SelectedNode = selection;
         }
-
-        #endregion
-
-
-        #region Event Handlers
 
         /// <summary>
         /// Event handler method for Add Skills button

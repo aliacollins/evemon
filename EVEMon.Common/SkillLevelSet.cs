@@ -50,12 +50,12 @@ namespace EVEMon.Common
         {
             get
             {
-                Enforce.Argument(level > 0 && level <= 5, "level", "Level mut be greater than 0 and lesser or equal than 5.");
+                Enforce.Argument(level > 0 && level <= 5, "level", "Level must be greater than 0 and lesser or equal than 5.");
                 return m_items[skillArrayIndex * 5 + level - 1];
             }
             set
             {
-                Enforce.Argument(level > 0 && level <= 5, "level", "Level mut be greater than 0 and lesser or equal than 5.");
+                Enforce.Argument(level > 0 && level <= 5, "level", "Level must be greater than 0 and lesser or equal than 5.");
                 T oldValue = m_items[skillArrayIndex * 5 + level - 1];
 
                 if (value.Skill == null)
@@ -91,6 +91,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(int skillArrayindex, int level)
         {
+            if (skillArrayindex > m_items.Length)
+                return true;
+
             T result = this[skillArrayindex, level];
             return result != null && result.Skill != null;
         }
@@ -103,6 +106,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(StaticSkill skill, int level)
         {
+            if (skill.ArrayIndex > m_items.Length)
+                return true;
+            
             T result = this[skill.ArrayIndex, level];
             return result != null && result.Skill != null;
         }
@@ -115,6 +121,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(Skill skill, int level)
         {
+            if (skill.ArrayIndex > m_items.Length)
+                return true;
+
             T result = this[skill.ArrayIndex, level];
             return result != null && result.Skill != null;
         }
@@ -127,6 +136,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public bool Contains(ISkillLevel item)
         {
+            if (item.Skill.ArrayIndex > m_items.Length)
+                return true;
+
             T result = this[item.Skill.ArrayIndex, item.Level];
             return result != null && result.Skill != null;
         }
