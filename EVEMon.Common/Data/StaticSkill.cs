@@ -11,7 +11,23 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticSkill : IStaticSkill
     {
+        private static StaticSkill s_unknownStaticSkill;
+
         #region Constructors
+
+        /// <summary>
+        /// Constructor for an unknown static skill.
+        /// </summary>
+        private StaticSkill()
+        {
+            ID = Int32.MaxValue;
+            Name = "Unknown";
+            ArrayIndex = Int16.MaxValue;
+            Prerequisites = new Collection<StaticSkillLevel>();
+            PrimaryAttribute = EveAttribute.None;
+            SecondaryAttribute = EveAttribute.None;
+            Group = StaticSkillGroup.UnknownStaticSkillGroup;
+        }
 
         /// <summary>
         /// Deserialization constructor from datafiles.
@@ -159,6 +175,17 @@ namespace EVEMon.Common.Data
                     highestLevels[newItem.Skill.ArrayIndex] = 0;
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the unknown static skill.
+        /// </summary>
+        /// <value>
+        /// The unknown static skill.
+        /// </value>
+        public static StaticSkill UnknownStaticSkill
+        {
+            get { return s_unknownStaticSkill ?? (s_unknownStaticSkill = new StaticSkill()); }
         }
 
         #endregion

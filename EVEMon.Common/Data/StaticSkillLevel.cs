@@ -17,7 +17,7 @@ namespace EVEMon.Common.Data
         /// <param name="level"></param>
         public StaticSkillLevel(Int64 id, Int64 level)
         {
-            Skill = StaticSkills.GetSkillByID(id);
+            Skill = StaticSkills.GetSkillByID(id) ?? StaticSkill.UnknownStaticSkill;
             Level = level;
         }
 
@@ -28,7 +28,7 @@ namespace EVEMon.Common.Data
         /// <param name="level"></param>
         public StaticSkillLevel(string name, Int64 level)
         {
-            Skill = StaticSkills.GetSkillByName(name);
+            Skill = StaticSkills.GetSkillByName(name) ?? StaticSkill.UnknownStaticSkill;
             Level = level;
         }
 
@@ -64,7 +64,7 @@ namespace EVEMon.Common.Data
         /// <param name="activityId"></param>
         public StaticSkillLevel(Int64 id, Int64 level, int activityId)
         {
-            Skill = StaticSkills.GetSkillByID(id);
+            Skill = StaticSkills.GetSkillByID(id) ?? StaticSkill.UnknownStaticSkill;
             Level = level;
             Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), activityId);
         }

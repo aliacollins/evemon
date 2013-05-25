@@ -12,8 +12,21 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public sealed class SkillGroup : ReadonlyKeyedCollection<string, Skill>
     {
+        private static SkillGroup s_unknownSkillGroup;
+
+
+        #region Constructors
+
         /// <summary>
-        /// Constructor, only used by SkillCollection
+        /// Constructor for an unknown skill group.
+        /// </summary>
+        private SkillGroup()
+        {
+            StaticData = StaticSkillGroup.UnknownStaticSkillGroup;
+        }
+
+        /// <summary>
+        /// Constructor, only used by SkillCollection.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="src"></param>
@@ -25,6 +38,22 @@ namespace EVEMon.Common
             {
                 Items[srcSkill.Name] = new Skill(character, this, srcSkill);
             }
+        }
+
+        #endregion
+
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets the unknown skill group.
+        /// </summary>
+        /// <value>
+        /// The unknown skill group.
+        /// </value>
+        public static SkillGroup UnknownSkillGroup
+        {
+            get { return s_unknownSkillGroup ?? (s_unknownSkillGroup = new SkillGroup()); }
         }
 
         /// <summary>
@@ -75,5 +104,7 @@ namespace EVEMon.Common
         {
             get { return Items.Values.Sum(gs => gs.SkillPoints); }
         }
+
+        #endregion
     }
 }

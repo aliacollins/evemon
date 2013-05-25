@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
@@ -9,7 +10,19 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticSkillGroup : ReadonlyKeyedCollection<int, StaticSkill>
     {
+        private static StaticSkillGroup s_unknownStaticSkillGroup;
+
+
         #region Constructors
+
+        /// <summary>
+        /// Constructor for an unknown static skill group.
+        /// </summary>
+        private StaticSkillGroup()
+        {
+            ID = Int32.MaxValue;
+            Name = "Unknown";
+        }
 
         /// <summary>
         /// Deserialization constructor from datafiles.
@@ -41,6 +54,17 @@ namespace EVEMon.Common.Data
         /// Gets the group's name.
         /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// Gets the unknown static skill group.
+        /// </summary>
+        /// <value>
+        /// The unknown static skill group.
+        /// </value>
+        public static StaticSkillGroup UnknownStaticSkillGroup
+        {
+            get { return s_unknownStaticSkillGroup ?? (s_unknownStaticSkillGroup = new StaticSkillGroup()); }
+        }
 
         #endregion
 
