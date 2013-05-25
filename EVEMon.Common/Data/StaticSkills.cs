@@ -103,7 +103,7 @@ namespace EVEMon.Common.Data
             if (src == null)
                 throw new ArgumentNullException("src");
 
-            return GetSkillByID(src.ID) ?? GetSkillByName(src.Name);
+            return GetSkillByID(src.ID) ?? GetSkillByName(src.Name) ?? StaticSkill.UnknownStaticSkill;
         }
 
         /// <summary>

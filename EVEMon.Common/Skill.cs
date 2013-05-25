@@ -9,7 +9,8 @@ using EVEMon.Common.Serialization.API;
 namespace EVEMon.Common
 {
     /// <summary>
-    /// Represents a skill bound to a character, not only including the skill static data (represented by <see cref="StaticSkill" />) but also the number of SP and level the character has. 
+    /// Represents a skill bound to a character, not only including the skill static data (represented by <see cref="StaticSkill" />)
+    /// but also the number of SP and level the character has. 
     /// </summary>
     [EnforceUIThreadAffinity]
     public sealed class Skill : IStaticSkill
@@ -21,8 +22,18 @@ namespace EVEMon.Common
         private bool m_owned;
         private bool m_known;
 
+        private static Skill s_unknownSkill;
 
         #region Construction, initialization, exportation, updates
+
+        /// <summary>
+        /// Constructor for an unknown skill.
+        /// </summary>
+        private Skill()
+        {
+            StaticData = StaticSkill.UnknownStaticSkill;
+            Group = SkillGroup.UnknownSkillGroup;
+        }
 
         /// <summary>
         /// Internal constructor, only used for character creation and updates
@@ -262,7 +273,7 @@ namespace EVEMon.Common
                 m_skillLevel = LastConfirmedLvl;
                 Int64 skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(LastConfirmedLvl + 1, 5));
 
-                for (Int64 i = 0; m_currentSkillPoints >= skillPointsToNextLevel && m_skillLevel < 5; i++)
+                while(skillPointsToNextLevel > 0 && m_currentSkillPoints >= skillPointsToNextLevel && m_skillLevel < 5)
                 {
                     m_skillLevel++;
                     skillPointsToNextLevel = StaticData.GetPointsRequiredForLevel(Math.Min(m_skillLevel + 1, 5));
@@ -311,6 +322,17 @@ namespace EVEMon.Common
 
 
         #region Helper properties and methods
+
+        /// <summary>
+        /// Gets the unknown skill.
+        /// </summary>
+        /// <value>
+        /// The unknown skill.
+        /// </value>
+        public static Skill UnknownSkill
+        {
+            get { return s_unknownSkill ?? (s_unknownSkill = new Skill()); }
+        }
 
         /// <summary>
         /// Return current Level in Roman.

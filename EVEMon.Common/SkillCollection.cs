@@ -41,7 +41,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public Skill this[int id]
         {
-            get { return GetByKey(id); }
+            get { return GetByKey(id) ?? Skill.UnknownSkill; }
         }
 
         /// <summary>

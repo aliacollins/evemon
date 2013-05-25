@@ -180,7 +180,9 @@ namespace EVEMon.Common
             if (skill == null)
                 throw new ArgumentNullException("skill");
 
-            return level == 0 ? null : m_lookup[skill.ArrayIndex * 5 + level - 1];
+            long index = skill.ArrayIndex * 5 + level - 1;
+
+            return level == 0 || index > m_lookup.LongLength ? null : m_lookup[index];
         }
 
         /// <summary>

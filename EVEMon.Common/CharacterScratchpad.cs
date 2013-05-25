@@ -271,6 +271,9 @@ namespace EVEMon.Common
         {
             int index = skill.ArrayIndex;
 
+            if (index > m_skillLevels.Length)
+                return;
+
             // May quit for if this level is alread equal (or greater, depending on the options)
             if ((options & LearningOptions.UpgradeOnly) != LearningOptions.None)
             {
