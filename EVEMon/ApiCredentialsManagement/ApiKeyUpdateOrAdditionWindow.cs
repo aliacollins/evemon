@@ -342,16 +342,6 @@ namespace EVEMon.ApiCredentialsManagement
         }
 
         /// <summary>
-        /// Handles the LinkClicked event of the ActiveLinksLabel control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void ActiveLinksLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Util.OpenURL(new Uri(NetworkConstants.APICredentialsInstallLinks));
-        }
-
-        /// <summary>
         /// Handles the LinkClicked event of the LoginDeniedLinkLabel control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
