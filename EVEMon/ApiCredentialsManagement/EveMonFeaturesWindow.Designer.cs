@@ -41,6 +41,7 @@
             this.ContactsLabel = new System.Windows.Forms.Label();
             this.FactionalWarfareLabel = new System.Windows.Forms.Label();
             this.MedalsLabel = new System.Windows.Forms.Label();
+            this.CombatLogLabel = new System.Windows.Forms.Label();
             this.AssetsLabel = new System.Windows.Forms.Label();
             this.MarketOrdersLabel = new System.Windows.Forms.Label();
             this.ContractsLabel = new System.Windows.Forms.Label();
@@ -51,7 +52,6 @@
             this.EVEMailMessagesLabel = new System.Windows.Forms.Label();
             this.EVENotificationsLabel = new System.Windows.Forms.Label();
             this.CreateAdvancedAPIKeyLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.CombatLogLabel = new System.Windows.Forms.Label();
             this.MainFlowLayoutPanel.SuspendLayout();
             this.basicFeaturesflowLayoutPanel.SuspendLayout();
             this.advanceFeaturesFlowLayoutPanel.SuspendLayout();
@@ -118,14 +118,13 @@
             // CreateBasicAPIKeyLinkLabel
             // 
             this.CreateBasicAPIKeyLinkLabel.AutoSize = true;
-            this.CreateBasicAPIKeyLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(43, 56);
+            this.CreateBasicAPIKeyLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(57, 4);
             this.CreateBasicAPIKeyLinkLabel.Location = new System.Drawing.Point(3, 79);
             this.CreateBasicAPIKeyLinkLabel.Name = "CreateBasicAPIKeyLinkLabel";
-            this.CreateBasicAPIKeyLinkLabel.Size = new System.Drawing.Size(283, 30);
+            this.CreateBasicAPIKeyLinkLabel.Size = new System.Drawing.Size(300, 17);
             this.CreateBasicAPIKeyLinkLabel.TabIndex = 11;
             this.CreateBasicAPIKeyLinkLabel.TabStop = true;
-            this.CreateBasicAPIKeyLinkLabel.Text = "To create a basic features API key visit :\r\nhttps://support.eveonline.com /api/ke" +
-    "y/createpredefined";
+            this.CreateBasicAPIKeyLinkLabel.Text = "To create a basic features predefined API key visit this link.";
             this.CreateBasicAPIKeyLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CreateBasicAPIKeyLinkLabel.UseCompatibleTextRendering = true;
             this.CreateBasicAPIKeyLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CreateBasicAPIKeyLinkLabel_LinkClicked);
@@ -134,7 +133,7 @@
             // 
             this.AdvancedFeaturesLabel.AutoSize = true;
             this.AdvancedFeaturesLabel.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.AdvancedFeaturesLabel.Location = new System.Drawing.Point(3, 109);
+            this.AdvancedFeaturesLabel.Location = new System.Drawing.Point(3, 96);
             this.AdvancedFeaturesLabel.Name = "AdvancedFeaturesLabel";
             this.AdvancedFeaturesLabel.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.AdvancedFeaturesLabel.Size = new System.Drawing.Size(100, 23);
@@ -159,7 +158,7 @@
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.EVEMailMessagesLabel);
             this.advanceFeaturesFlowLayoutPanel.Controls.Add(this.EVENotificationsLabel);
             this.advanceFeaturesFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.advanceFeaturesFlowLayoutPanel.Location = new System.Drawing.Point(3, 135);
+            this.advanceFeaturesFlowLayoutPanel.Location = new System.Drawing.Point(3, 122);
             this.advanceFeaturesFlowLayoutPanel.Name = "advanceFeaturesFlowLayoutPanel";
             this.advanceFeaturesFlowLayoutPanel.Size = new System.Drawing.Size(373, 256);
             this.advanceFeaturesFlowLayoutPanel.TabIndex = 10;
@@ -213,6 +212,16 @@
             this.MedalsLabel.Size = new System.Drawing.Size(118, 31);
             this.MedalsLabel.TabIndex = 18;
             this.MedalsLabel.Text = "For Medals monitoring:\r\n- Medals";
+            // 
+            // CombatLogLabel
+            // 
+            this.CombatLogLabel.AutoSize = true;
+            this.CombatLogLabel.Location = new System.Drawing.Point(3, 155);
+            this.CombatLogLabel.Name = "CombatLogLabel";
+            this.CombatLogLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
+            this.CombatLogLabel.Size = new System.Drawing.Size(141, 31);
+            this.CombatLogLabel.TabIndex = 19;
+            this.CombatLogLabel.Text = "For Combat Log monitoring:\r\n- KillLog";
             // 
             // AssetsLabel
             // 
@@ -307,27 +316,16 @@
             // CreateAdvancedAPIKeyLinkLabel
             // 
             this.CreateAdvancedAPIKeyLinkLabel.AutoSize = true;
-            this.CreateAdvancedAPIKeyLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(56, 56);
-            this.CreateAdvancedAPIKeyLinkLabel.Location = new System.Drawing.Point(3, 394);
+            this.CreateAdvancedAPIKeyLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(70, 4);
+            this.CreateAdvancedAPIKeyLinkLabel.Location = new System.Drawing.Point(3, 381);
             this.CreateAdvancedAPIKeyLinkLabel.Name = "CreateAdvancedAPIKeyLinkLabel";
-            this.CreateAdvancedAPIKeyLinkLabel.Size = new System.Drawing.Size(286, 30);
+            this.CreateAdvancedAPIKeyLinkLabel.Size = new System.Drawing.Size(354, 30);
             this.CreateAdvancedAPIKeyLinkLabel.TabIndex = 12;
             this.CreateAdvancedAPIKeyLinkLabel.TabStop = true;
-            this.CreateAdvancedAPIKeyLinkLabel.Text = "To create a basic and advanced features API key visit :\r\nhttps://support.eveonlin" +
-    "e.com /api/key/createpredefined";
+            this.CreateAdvancedAPIKeyLinkLabel.Text = "To create a basic and advanced features predefined API key visit this link.";
             this.CreateAdvancedAPIKeyLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CreateAdvancedAPIKeyLinkLabel.UseCompatibleTextRendering = true;
             this.CreateAdvancedAPIKeyLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CreateAllFeaturesAPIKeyLinkLabel_LinkClicked);
-            // 
-            // CombatLogLabel
-            // 
-            this.CombatLogLabel.AutoSize = true;
-            this.CombatLogLabel.Location = new System.Drawing.Point(3, 155);
-            this.CombatLogLabel.Name = "CombatLogLabel";
-            this.CombatLogLabel.Padding = new System.Windows.Forms.Padding(5, 5, 0, 0);
-            this.CombatLogLabel.Size = new System.Drawing.Size(141, 31);
-            this.CombatLogLabel.TabIndex = 19;
-            this.CombatLogLabel.Text = "For Combat Log monitoring:\r\n- KillLog";
             // 
             // EVEMonFeaturesWindow
             // 
