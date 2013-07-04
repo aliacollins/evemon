@@ -37,7 +37,7 @@ namespace EVEMon.InstallBuilder
             CheckIsSnapshot();
 
             if (!HasVersion())
-                return 0;
+                return 1;
 
             if (args.Any())
             {
@@ -66,7 +66,8 @@ namespace EVEMon.InstallBuilder
 
                     // Create an installer in the appropriate folder
                     Console.WriteLine("Starting Installer creation.");
-                    BuildInstaller();
+                    if (BuildInstaller() != 0)
+                        return 1;
                     Console.WriteLine("Installer creation finished.");
                     Console.WriteLine();
                 }
@@ -79,7 +80,8 @@ namespace EVEMon.InstallBuilder
                 // Create a zip file in the appropriate folder
                 string description = s_isSnapshot ? "Snapshot" : "Binaries";
                 Console.WriteLine("Starting {0} Zip creation.", description);
-                BuildZip();
+                if (BuildZip() != 0)
+                    return 1;
                 Console.WriteLine("{0} Zip creation finished.", description);
                 Console.WriteLine("Done");
 
@@ -188,7 +190,7 @@ namespace EVEMon.InstallBuilder
         /// <summary>
         /// Builds the zip.
         /// </summary>
-        private static void BuildZip()
+        private static int BuildZip()
         {
             string directory = s_isSnapshot ? s_snapshotDir : s_binariesDir;
 
@@ -239,21 +241,29 @@ namespace EVEMon.InstallBuilder
                     zipStream.Finish();
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 1;
+            }
             finally
             {
                 if (stream != null)
                     stream.Dispose();
             }
+
+            return 0;
         }
 
         /// <summary>
         /// Builds the installer.
         /// </summary>
-        private static void BuildInstaller()
+        private static int BuildInstaller()
         {
             // Delete any existing files in directory
             DeleteFiles(s_installerDir);
 
+            int exitCode;
             try
             {
                 string nsisScript = Path.Combine(s_projectDir,
@@ -274,7 +284,6 @@ namespace EVEMon.InstallBuilder
                                                RedirectStandardOutput = true
                                            };
 
-                int exitCode;
                 using (Process makensisProcess = new Process())
                 {
                     makensisProcess.StartInfo = psi;
@@ -285,13 +294,16 @@ namespace EVEMon.InstallBuilder
                     exitCode = makensisProcess.ExitCode;
                 }
 
-                if (exitCode == 1)
+                if (exitCode != 0)
                     Console.WriteLine("MakeNSIS exited with errors.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return 1;
             }
+
+            return exitCode;
         }
 
         /// <summary>
