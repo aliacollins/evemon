@@ -37,9 +37,10 @@ namespace EVEMon.Common.Data
             if (src.Recommendations == null || StaticItems.ShipsMarketGroup == null)
                 return;
 
-            foreach (Ship ship in src.Recommendations.Select(
-                recommendation => StaticItems.ShipsMarketGroup.AllItems.OfType<Ship>().FirstOrDefault(
-                    ship => ship != null && ship.Name == recommendation.Ship)))
+            foreach (Ship ship in src.Recommendations
+                                     .Select(recommendation => StaticItems.ShipsMarketGroup.AllItems.OfType<Ship>()
+                                                                          .FirstOrDefault(item => item.Name == recommendation.Ship))
+                                     .Where(ship => ship != null))
             {
                 ship.Recommendations.Add(this);
                 Recommendations.Add(ship);
