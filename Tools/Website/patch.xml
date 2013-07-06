@@ -37,58 +37,58 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>03 June 2013</date>
-      <md5>14568688fe89d70a7563995831631425</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/548234</url>
-      <message><![CDATA[Odyssey 1.0 (548234) blueprints data file by the EVEMon Development Team
+      <date>06 July 2013</date>
+      <md5>a8a8ebc5faafa22dc4c45893ae15d6dc</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/561078</url>
+      <message><![CDATA[Odyssey 1.0.12 (561078) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-certificates-en-US.xml.gz</name>
-      <date>03 June 2013</date>
+      <date>06 July 2013</date>
       <md5>55900bb3330eb22657815125f1b1dee3</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/548234</url>
-      <message><![CDATA[Odyssey 1.0 (548234) certificates data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/561078</url>
+      <message><![CDATA[Odyssey 1.0.12 (561078) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>03 June 2013</date>
-      <md5>5df13eb4cf51ff0cf7ae3621f0018a86</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/548234</url>
-      <message><![CDATA[Odyssey 1.0 (548234) geography data file by the EVEMon Development Team
+      <date>06 July 2013</date>
+      <md5>a1278f394aa8f1833d2eb6ab8f391fb5</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/561078</url>
+      <message><![CDATA[Odyssey 1.0.12 (561078) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>03 June 2013</date>
-      <md5>664061828e408f5ad38d2713e244d837</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/548234</url>
-      <message><![CDATA[Odyssey 1.0 (548234) items data file by the EVEMon Development Team
+      <date>06 July 2013</date>
+      <md5>2baa4fe6a9d52dc851a424fbf9443602</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/561078</url>
+      <message><![CDATA[Odyssey 1.0.12 (561078) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>03 June 2013</date>
+      <date>06 July 2013</date>
       <md5>69d8786a355e6f831f41c38ffeec96c1</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/548234</url>
-      <message><![CDATA[Odyssey 1.0 (548234) properties data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/561078</url>
+      <message><![CDATA[Odyssey 1.0.12 (561078) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>03 June 2013</date>
+      <date>06 July 2013</date>
       <md5>363023a34678446ffe33b43f76f618c6</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/548234</url>
-      <message><![CDATA[Odyssey 1.0 (548234) reprocessing data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/561078</url>
+      <message><![CDATA[Odyssey 1.0.12 (561078) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>03 June 2013</date>
-      <md5>b8688217dd44395e2cb7adb04b47094c</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/548234</url>
-      <message><![CDATA[Odyssey 1.0 (548234) skills data file by the EVEMon Development Team
+      <date>06 July 2013</date>
+      <md5>d8e4bb37d3edef4b3114d2f2a58d690f</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/561078</url>
+      <message><![CDATA[Odyssey 1.0.12 (561078) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
   </datafiles>
