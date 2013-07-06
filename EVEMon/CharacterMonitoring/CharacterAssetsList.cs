@@ -630,7 +630,7 @@ namespace EVEMon.CharacterMonitoring
                                      : asset.TotalVolume.ToNumericString(2));
                     break;
                 case AssetColumn.BlueprintType:
-                    item.Text = asset.BlueprintType;
+                    item.Text = asset.TypeOfBlueprint;
                     break;
                 case AssetColumn.Group:
                     item.Text = asset.Item.GroupName;
@@ -685,7 +685,7 @@ namespace EVEMon.CharacterMonitoring
                    || x.Item.Name.ToLowerInvariant().Contains(text)
                    || x.Item.GroupName.ToLowerInvariant().Contains(text)
                    || x.Item.CategoryName.ToLowerInvariant().Contains(text)
-                   || x.BlueprintType.ToLowerInvariant().Contains(text)
+                   || x.TypeOfBlueprint.ToLowerInvariant().Contains(text)
                    || x.Container.ToLowerInvariant().Contains(text)
                    || x.Flag.ToLowerInvariant().Contains(text)
                    || x.Location.ToLowerInvariant().Contains(text)

@@ -8,6 +8,7 @@ namespace EVEMon.Common
     public sealed class Asset
     {
         private long m_locationID;
+        private readonly EveProperty m_prop = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
 
 
         #region Constructor
@@ -25,7 +26,7 @@ namespace EVEMon.Common
             Quantity = src.Quantity;
             Item = StaticItems.GetItemByID(src.TypeID);
             Flag = EveFlag.GetFlagText(src.EVEFlag);
-            BlueprintType = GetBlueprintType(src.RawQuantity);
+            TypeOfBlueprint = GetTypeOfBlueprint(src.RawQuantity);
             Container = String.Empty;
             Volume = GetVolume();
             TotalVolume = Quantity * Volume;
@@ -82,7 +83,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the type of the blueprint.
         /// </summary>
-        public string BlueprintType { get; private set; }
+        public string TypeOfBlueprint { get; private set; }
 
         /// <summary>
         /// Gets the location.
@@ -123,7 +124,12 @@ namespace EVEMon.Common
         /// </summary>
         public double Price
         {
-            get { return BCItemPrices.GetPriceByTypeID(Item.ID); }
+            get
+            {
+                return TypeOfBlueprint != BlueprintType.Copy.ToString()
+                           ? BCItemPrices.GetPriceByTypeID(Item.ID)
+                           : 0;
+            }
         }
 
         /// <summary>
@@ -144,10 +150,10 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="rawQuantity">The raw quantity.</param>
         /// <returns></returns>
-        private string GetBlueprintType(int rawQuantity)
+        private string GetTypeOfBlueprint(int rawQuantity)
         {
             return Item != null && Item.Family == ItemFamily.Blueprint
-                       ? rawQuantity == -2 ? Common.BlueprintType.Copy.ToString() : Common.BlueprintType.Original.ToString()
+                       ? rawQuantity == -2 ? BlueprintType.Copy.ToString() : BlueprintType.Original.ToString()
                        : String.Empty;
         }
 
@@ -157,14 +163,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         private decimal GetVolume()
         {
-            if (Item != null)
-            {
-                EveProperty prop = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
-                if (prop != null)
-                    return Convert.ToDecimal(prop.GetNumericValue(Item));
-            }
-
-            return 0M;
+            return Item != null && m_prop != null
+                       ? Convert.ToDecimal(m_prop.GetNumericValue(Item))
+                       : 0M;
         }
 
         /// <summary>

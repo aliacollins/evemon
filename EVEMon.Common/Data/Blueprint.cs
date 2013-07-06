@@ -122,7 +122,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public IEnumerable<Blueprint> InventsBlueprint
         {
-            get { return m_inventBlueprint.Select(itemID => (StaticBlueprints.GetBlueprintByID(itemID))); }
+            get { return m_inventBlueprint.Select(StaticBlueprints.GetBlueprintByID); }
         }
 
         #endregion

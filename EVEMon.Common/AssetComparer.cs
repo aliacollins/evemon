@@ -71,7 +71,7 @@ namespace EVEMon.Common
                 case AssetColumn.Volume:
                     return x.Volume.CompareTo(y.Volume);
                 case AssetColumn.BlueprintType:
-                    return String.Compare(x.BlueprintType, y.BlueprintType, StringComparison.CurrentCulture);
+                    return String.Compare(x.TypeOfBlueprint, y.TypeOfBlueprint, StringComparison.CurrentCulture);
                 case AssetColumn.Group:
                     return String.Compare(x.Item.GroupName, y.Item.GroupName, StringComparison.CurrentCulture);
                 case AssetColumn.Category:
