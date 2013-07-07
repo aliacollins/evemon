@@ -152,7 +152,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         private string GetTypeOfBlueprint(int rawQuantity)
         {
-            return Item != null && Item.Family == ItemFamily.Blueprint
+            return Item != null && Item.CategoryName.ToUpperInvariant() == "BLUEPRINT"
                        ? rawQuantity == -2 ? BlueprintType.Copy.ToString() : BlueprintType.Original.ToString()
                        : String.Empty;
         }
