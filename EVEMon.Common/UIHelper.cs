@@ -276,7 +276,7 @@ namespace EVEMon.Common
                                     return true;
                                 }
 
-                                string content = CharacterExporter.Export(format, character);
+                                string content = CharacterExporter.Export(format, character, plan);
                                 if ((format == CharacterSaveFormat.CCPXML) && string.IsNullOrEmpty(content))
                                 {
                                     MessageBox.Show(

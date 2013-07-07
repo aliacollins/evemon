@@ -307,8 +307,9 @@ namespace EVEMon.Common
 
             if (plan != null)
             {
-                serial.Skills.AddRange(character.Skills.Where(x => x.IsKnown || (plan.IsPlanned(x))).Select(
-                    x => GetMergedSkill(plan, x)));
+                serial.Skills.Clear();
+                serial.Skills.AddRange(character.Skills.Where(skill => skill.IsKnown || (plan.IsPlanned(skill))).Select(
+                    skill => GetMergedSkill(plan, skill)));
             }
 
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial.GetType(), serial);
