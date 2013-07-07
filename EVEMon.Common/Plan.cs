@@ -572,6 +572,7 @@ namespace EVEMon.Common
             {
                 skill.Level = entry.Level;
                 skill.Skillpoints = entry.Skill.GetPointsRequiredForLevel(entry.Level);
+                skill.IsKnown = true;
             }
         }
 
