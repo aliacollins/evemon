@@ -143,17 +143,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                         srcItem.MarketGroupID = DBConstants.UniqueDesignsRootNonMarketGroupID;
                         srcItem.RaceID = (int)Race.All;
                         break;
-                    case DBConstants.GorusShuttleID:
-                    case DBConstants.GuristasShuttleID:
-                    case DBConstants.InterbusShuttleID:
-                        srcItem.MarketGroupID = DBConstants.UniqueDesignShuttlesNonMarketGroupID;
-                        srcItem.RaceID = (int)Race.Faction;
-                        break;
-                    case DBConstants.RavenStateIssueID:
-                    case DBConstants.MegathronFederateIssueID:
-                    case DBConstants.TempestTribalIssueID:
-                        srcItem.MarketGroupID = DBConstants.NavyFactionMarketGroupID;
-                        break;
                 }
             }
         }
