@@ -135,6 +135,7 @@ namespace EVEMon.About
                                    { "skolima", 6 },
                                    { "Spiff Nutter", 6 },
                                    { "Subkahnshus", 6 },
+                                   { "SyndicateAexeron", 6 },
                                    { "The_Assimilator", 6 },
                                    { "TheConstructor", 6 },
                                    { "Trin", 6 },
