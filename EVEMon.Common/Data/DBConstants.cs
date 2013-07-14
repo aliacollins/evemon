@@ -192,6 +192,14 @@ namespace EVEMon.Common.Data
                                                 MordusLegionCommandFactionID, SanshasNationFactionID, SerpentisFactionID
                                             });
 
+        // Group of Faction Market Group IDs
+        public static readonly ReadOnlyCollection<int> FactionMarketGroupIDs =
+            new ReadOnlyCollection<int>(new[]
+                                            {
+                                                FactionFrigatesMarketGroupID, FactionCruisersMarketGroupID,
+                                                FactionBattleshipsMarketGroupID, FactionCarrierMarketGroupID
+                                            });
+
         #endregion
 
 
@@ -494,9 +502,6 @@ namespace EVEMon.Common.Data
         public const int ComponentsMarketGroupID = 475;
         public const int StarbaseStructuresMarketGroupID = 477;
         public const int MiningBargesMarketGroupID = 494;
-        public const int OREMiningBargesMarketGroupID = 495;
-        public const int SkillHardwiringImplantsMarketGroupID = 531;
-        public const int AttributeEnhancersImplantsMarketGroupID = 532;
         public const int TransportShipsMarketGroupID = 629;
         public const int DreadnoughtsMarketGroupID = 761;
         public const int FreightersMarketGroupID = 766;
@@ -507,10 +512,8 @@ namespace EVEMon.Common.Data
         public const int ReconShipsMarketGroupID = 824;
         public const int FightersMarketGroupID = 840;
         public const int ExhumersMarketGroupID = 874;
-        public const int OREExhumersMarketGroupID = 875;
         public const int ShipModificationsMarketGroupID = 955;
         public const int CapitalIndustrialShipsMarketGroupID = 1047;
-        public const int ORECapitalIndustrialsMarketGroupID = 1048;
         public const int ElectronicAttackFrigatesMarketGroupID = 1065;
         public const int HeavyInterdictorsMarketGroupID = 1070;
         public const int BlackOpsMarketGroupID = 1075;
@@ -519,8 +522,10 @@ namespace EVEMon.Common.Data
         public const int SubsystemsMarketGroupID = 1112;
         public const int StrategicCruisersMarketGroupID = 1138;
         public const int FighterBombersMarketGroupID = 1310;
-        public const int NavyFactionMarketGroupID = 1379;
-        public const int OREIndustrialsMarketGroupID = 1390;
+        public const int FactionFrigatesMarketGroupID = 1362;
+        public const int FactionCruisersMarketGroupID = 1369;
+        public const int FactionBattleshipsMarketGroupID = 1378;
+        public const int FactionCarrierMarketGroupID = 1392;
 
         #endregion
 
@@ -530,7 +535,6 @@ namespace EVEMon.Common.Data
         public const int RootNonMarketGroupID = 11000;
 
         public const int UniqueDesignsRootNonMarketGroupID = 10000;
-        public const int UniqueDesignShuttlesNonMarketGroupID = 10900;
 
         public const int BlueprintRootNonMarketGroupID = 21000;
         public const int BlueprintTechINonMarketGroupID = 21001;

@@ -7,14 +7,14 @@ namespace EVEMon.Common
     public static class TimeExtensions
     {
         /// <summary>
-        /// Converts a UTC DateTime to the API date/time string.
+        /// Converts a DateTime to the API date/time string.
         /// </summary>
-        /// <param name="timeUTC"></param>
+        /// <param name="time"></param>
         /// <returns></returns>
-        public static string DateTimeToTimeString(this DateTime timeUTC)
+        public static string DateTimeToTimeString(this DateTime time)
         {
-            // timeUTC = yyyy-MM-dd HH:mm:ss
-            return timeUTC.ToString("yyyy-MM-dd HH:mm:ss", CultureConstants.DefaultCulture);
+            // 'time' can be any predefined or custom format
+            return time.ToString("u", CultureConstants.DefaultCulture.DateTimeFormat).TrimEnd('Z');
         }
 
         /// <summary>
@@ -26,21 +26,23 @@ namespace EVEMon.Common
         {
             // timeUTC = yyyy-MM-dd HH:mm:ss
             DateTime dt;
-            return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture, DateTimeStyles.AdjustToUniversal, out dt)
+            return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture.DateTimeFormat, DateTimeStyles.AdjustToUniversal, out dt)
                        ? dt
                        : default(DateTime);
         }
 
         /// <summary>
-        /// Converts a DateTime to  a dot formatted date/time string.
+        /// Converts a DateTime to a dot formatted date/time string.
         /// </summary>
-        /// <param name="time"></param>
-        /// <remarks>String Format: yyyy.MM.dd HH:mm:ss</remarks>
+        /// <param name="time">The time.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// String Format: yyyy.MM.dd HH:mm:ss
+        /// </remarks>
         public static string DateTimeToDotFormattedString(this DateTime time)
         {
-            // time = yyyy-MM-dd HH:mm:ss
-            return time.ToString("yyyy.MM.dd HH:mm:ss", CultureConstants.DefaultCulture);
+            // time can be any predefined or custom format
+            return time.DateTimeToTimeString().Replace("-", ".");
         }
 
         /// <summary>
@@ -172,7 +174,7 @@ namespace EVEMon.Common
         public static string ToAbsoluteDateTimeDescription(this DateTime absoluteDateTime, DateTimeKind dateTimeKind)
         {
             DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
-            string shortTime = absoluteDateTime.ToCustomShortTimeString();
+            string shortTime = absoluteDateTime.ToShortTimeString();
 
             // Yesterday (i.e. before 00:00 today)
             if (absoluteDateTime.Date == now.Date.AddDays(-1))
@@ -202,27 +204,6 @@ namespace EVEMon.Common
             // More than seven days away or more than one day ago
             string shortDate = absoluteDateTime.ToString("d", CultureConstants.DefaultCulture);
             return String.Format(CultureConstants.DefaultCulture, "{0} {1}", shortTime, shortDate);
-        }
-
-        /// <summary>
-        /// Formats a DateTime object as a short string (HH:mm or hh:mm tt).
-        /// </summary>
-        /// <remarks>
-        /// Due to a reason that escapes me, the ShortTimePattern
-        /// function doesn't respect system settings, so we have to
-        /// mangle LongTimePattern to track users preference.
-        /// </remarks>
-        /// <param name="shortTimeString">DateTime to be formatted</param>
-        /// <returns>String containing formatted text</returns>
-        public static string ToCustomShortTimeString(this DateTime shortTimeString)
-        {
-            DateTimeFormatInfo dateTimeFormat = CultureConstants.DefaultCulture.DateTimeFormat;
-
-            // Get the LongTimePattern and remove :ss and :s
-            string shortTimePattern = dateTimeFormat.LongTimePattern.Replace(":ss", String.Empty);
-            shortTimePattern = shortTimePattern.Replace(":s", String.Empty);
-
-            return shortTimeString.ToString(shortTimePattern, CultureConstants.DefaultCulture);
         }
 
         /// <summary>

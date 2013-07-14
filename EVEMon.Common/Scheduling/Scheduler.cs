@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Serialization.Settings;
@@ -137,6 +138,28 @@ namespace EVEMon.Common.Scheduling
 
             // Notify to subscribers
             EveMonClient.OnSchedulerChanged();
+        }
+
+        /// <summary>
+        /// Tries the parse time.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="seconds">The seconds.</param>
+        /// <returns></returns>
+        public static bool TryParseTime(string text, out int seconds)
+        {
+            try
+            {
+                DateTimeFormatInfo dtfi = CultureConstants.DefaultCulture.DateTimeFormat;
+                DateTime res = DateTime.ParseExact(text, dtfi.ShortTimePattern, dtfi);
+                seconds = Convert.ToInt32(Math.Round(res.Subtract(DateTime.Today).TotalSeconds));
+                return true;
+            }
+            catch (FormatException)
+            {
+                seconds = 0;
+                return false;
+            }
         }
     }
 }

@@ -458,7 +458,7 @@ namespace EVEMon.LogitechG15
             DateTime completionDateTime = CurrentCharacter.CurrentlyTrainingSkill.EndTime.ToLocalTime();
             string completionDateTimeText = String.Format(CultureConstants.DefaultCulture, "{0}  {1}",
                                                           completionDateTime.ToShortDateString(),
-                                                          completionDateTime.ToCustomShortTimeString());
+                                                          completionDateTime.ToShortTimeString());
             SizeF size = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);
             RectangleF timeLine = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
             timeLine.Offset(0f, 22f);
@@ -494,7 +494,7 @@ namespace EVEMon.LogitechG15
             if (!ShowSystemTime)
                 return;
 
-            string curTime = DateTime.Now.ToCustomShortTimeString();
+            string curTime = DateTime.Now.ToShortTimeString();
             SizeF size = m_lcdCanvas.MeasureString(curTime, m_defaultFont);
             RectangleF timeLine = new RectangleF(new PointF(G15Width - size.Width, 0f), size);
             timeLine.Offset(0f, 32f);
