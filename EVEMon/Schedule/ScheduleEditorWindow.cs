@@ -272,14 +272,7 @@ namespace EVEMon.Schedule
         /// <param name="e">The <see cref="DaySelectedEventArgs"/> instance containing the event data.</param>
         private void calControl_DayDoubleClicked(object sender, DaySelectedEventArgs e)
         {
-            using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(e.DateTime))
-            {
-                DialogResult dr = f.ShowDialog();
-                if (dr == DialogResult.Cancel)
-                    return;
-
-                Scheduler.Add(f.ScheduleEntry);
-            }
+            AddScheduleEntry(e.DateTime);
         }
 
         /// <summary>
@@ -455,7 +448,15 @@ namespace EVEMon.Schedule
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
             DateTime datetime = (DateTime)menu.Tag;
+            AddScheduleEntry(datetime);
+        }
 
+        /// <summary>
+        /// Adds the schedule entry.
+        /// </summary>
+        /// <param name="datetime">The datetime.</param>
+        private static void AddScheduleEntry(DateTime datetime)
+        {
             // Allow the user to define the new entry
             using (EditScheduleEntryWindow f = new EditScheduleEntryWindow(datetime))
             {

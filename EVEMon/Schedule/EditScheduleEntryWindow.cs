@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Scheduling;
 
@@ -36,8 +35,8 @@ namespace EVEMon.Schedule
         public EditScheduleEntryWindow(DateTime defaultTime)
             : this()
         {
-            DateTime start = new DateTime(defaultTime.Year, defaultTime.Month, defaultTime.Day, 0, 0, 0);
-            DateTime end = new DateTime(defaultTime.Year, defaultTime.Month, defaultTime.Day, 23, 59, 59);
+            DateTime start = defaultTime;
+            DateTime end = defaultTime.AddDays(1).AddMinutes(-1);
 
             SetOneTimeStartDate(start);
             SetOneTimeEndDate(end);
@@ -70,18 +69,18 @@ namespace EVEMon.Schedule
             rbOneTime.Checked = true;
             rbRecurring.Checked = false;
             SetOneTimeStartDate(DateTime.Today);
-            tbOneTimeStartTime.Text = DateTime.Today.ToCustomShortTimeString();
-            DateTime dtto = DateTime.Today + TimeSpan.FromDays(1) - TimeSpan.FromMinutes(1);
+            tbOneTimeStartTime.Text = DateTime.Today.ToShortTimeString();
+            DateTime dtto = DateTime.Today.AddDays(1).AddMinutes(-1);
             SetOneTimeEndDate(dtto);
-            tbOneTimeEndTime.Text = dtto.ToCustomShortTimeString();
+            tbOneTimeEndTime.Text = dtto.ToShortTimeString();
             SetRecurringDateFrom(DateTime.MinValue);
             SetRecurringDateTo(DateTime.MaxValue);
             cbRecurringFrequency.SelectedIndex = 0;
             nudWeeklyFrequency.Value = 1;
             nudRecurDayOfMonth.Value = 1;
             cbRecurOnOverflow.SelectedIndex = 0;
-            tbRecurringTimeFrom.Text = DateTime.Today.ToCustomShortTimeString();
-            tbRecurringTimeTo.Text = dtto.ToCustomShortTimeString();
+            tbRecurringTimeFrom.Text = DateTime.Today.ToShortTimeString();
+            tbRecurringTimeTo.Text = dtto.ToShortTimeString();
         }
 
         /// <summary>
@@ -94,19 +93,21 @@ namespace EVEMon.Schedule
 
             tbTitle.Text = m_scheduleEntry.Title;
             SetTypeFlags(m_scheduleEntry.Options);
-            if (m_scheduleEntry is SimpleScheduleEntry)
+
+            SimpleScheduleEntry sse = m_scheduleEntry as SimpleScheduleEntry;
+            RecurringScheduleEntry rse = m_scheduleEntry as RecurringScheduleEntry;
+
+            if (sse != null)
             {
-                SimpleScheduleEntry sse = (SimpleScheduleEntry)m_scheduleEntry;
                 rbOneTime.Checked = true;
                 rbRecurring.Checked = false;
                 SetOneTimeStartDate(sse.StartDate);
-                tbOneTimeStartTime.Text = sse.StartDate.ToCustomShortTimeString();
+                tbOneTimeStartTime.Text = sse.StartDate.ToShortTimeString();
                 SetOneTimeEndDate(sse.EndDate);
-                tbOneTimeEndTime.Text = sse.EndDate.ToCustomShortTimeString();
+                tbOneTimeEndTime.Text = sse.EndDate.ToShortTimeString();
             }
-            else if (m_scheduleEntry is RecurringScheduleEntry)
+            else if (rse != null)
             {
-                RecurringScheduleEntry rse = (RecurringScheduleEntry)m_scheduleEntry;
                 rbOneTime.Checked = false;
                 rbRecurring.Checked = true;
                 SetRecurringDateFrom(rse.StartDate);
@@ -114,10 +115,10 @@ namespace EVEMon.Schedule
                 SetRecurringFrequencyDropdown(rse.Frequency, rse.DayOfWeek, rse.WeeksPeriod);
                 nudRecurDayOfMonth.Value = rse.DayOfMonth;
                 SetRecurringOverflowDropdown(rse.OverflowResolution);
-                DateTime tstart = DateTime.Today + TimeSpan.FromSeconds(rse.StartTimeInSeconds);
-                DateTime tend = DateTime.Today + TimeSpan.FromSeconds(rse.EndTimeInSeconds);
-                tbRecurringTimeFrom.Text = tstart.ToCustomShortTimeString();
-                tbRecurringTimeTo.Text = tend.ToCustomShortTimeString();
+                DateTime tstart = DateTime.Today.AddSeconds(rse.StartTimeInSeconds);
+                DateTime tend = DateTime.Today.AddSeconds(rse.EndTimeInSeconds);
+                tbRecurringTimeFrom.Text = tstart.ToShortTimeString();
+                tbRecurringTimeTo.Text = tend.ToShortTimeString();
             }
 
             ValidateData();
@@ -223,9 +224,9 @@ namespace EVEMon.Schedule
         /// <summary>
         /// Gets the recurring frequency dropdown.
         /// </summary>
-        /// <param name="dow">The dow.</param>
         /// <returns></returns>
-        private RecurringFrequency GetRecurringFrequencyDropdown(ref DayOfWeek dow)
+        /// <exception cref="System.NotImplementedException"></exception>
+        private RecurringFrequency GetRecurringFrequencyDropdown()
         {
             switch (cbRecurringFrequency.SelectedIndex)
             {
@@ -236,30 +237,42 @@ namespace EVEMon.Schedule
                 case 2:
                     return RecurringFrequency.Weekends;
                 case 3:
-                    dow = DayOfWeek.Monday;
-                    return RecurringFrequency.Weekly;
                 case 4:
-                    dow = DayOfWeek.Tuesday;
-                    return RecurringFrequency.Weekly;
                 case 5:
-                    dow = DayOfWeek.Wednesday;
-                    return RecurringFrequency.Weekly;
                 case 6:
-                    dow = DayOfWeek.Thursday;
-                    return RecurringFrequency.Weekly;
                 case 7:
-                    dow = DayOfWeek.Friday;
-                    return RecurringFrequency.Weekly;
                 case 8:
-                    dow = DayOfWeek.Saturday;
-                    return RecurringFrequency.Weekly;
                 case 9:
-                    dow = DayOfWeek.Sunday;
                     return RecurringFrequency.Weekly;
                 case 10:
                     return RecurringFrequency.Monthly;
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Gets the recurring frequency dropdown.
+        /// </summary>
+        /// <returns></returns>
+        private DayOfWeek GetRecurringFrequencyDayOfWeek()
+        {
+            switch (cbRecurringFrequency.SelectedIndex)
+            {
+                case 4:
+                    return DayOfWeek.Tuesday;
+                case 5:
+                    return DayOfWeek.Wednesday;
+                case 6:
+                    return DayOfWeek.Thursday;
+                case 7:
+                    return DayOfWeek.Friday;
+                case 8:
+                    return DayOfWeek.Saturday;
+                case 9:
+                    return DayOfWeek.Sunday;
+                default:
+                    return DayOfWeek.Monday;
             }
         }
 
@@ -307,7 +320,7 @@ namespace EVEMon.Schedule
             }
 
             tbRecurringEndDate.Text = dateTime.ToLongDateString();
-            m_recurringDateTo = StripToDate(dateTime);
+            m_recurringDateTo = dateTime.Date;
         }
 
         /// <summary>
@@ -324,21 +337,7 @@ namespace EVEMon.Schedule
             }
 
             tbRecurringStartDate.Text = dateTime.ToLongDateString();
-            m_recurringDateFrom = StripToDate(dateTime);
-        }
-
-        /// <summary>
-        /// Strips to date.
-        /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <returns></returns>
-        private static DateTime StripToDate(DateTime dateTime)
-        {
-            return dateTime -
-                   TimeSpan.FromHours(dateTime.Hour) -
-                   TimeSpan.FromMinutes(dateTime.Minute) -
-                   TimeSpan.FromSeconds(dateTime.Second) -
-                   TimeSpan.FromMilliseconds(dateTime.Millisecond);
+            m_recurringDateFrom = dateTime.Date;
         }
 
         /// <summary>
@@ -348,7 +347,7 @@ namespace EVEMon.Schedule
         private void SetOneTimeStartDate(DateTime dateTime)
         {
             tbOneTimeStartDate.Text = dateTime.ToLongDateString();
-            m_oneTimeStartDate = StripToDate(dateTime);
+            m_oneTimeStartDate = dateTime.Date;
         }
 
         /// <summary>
@@ -358,7 +357,7 @@ namespace EVEMon.Schedule
         private void SetOneTimeEndDate(DateTime dateTime)
         {
             tbOneTimeEndDate.Text = dateTime.ToLongDateString();
-            m_oneTimeEndDate = StripToDate(dateTime);
+            m_oneTimeEndDate = dateTime.Date;
         }
 
         /// <summary>
@@ -417,27 +416,6 @@ namespace EVEMon.Schedule
         }
 
         /// <summary>
-        /// Tries the parse time.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="seconds">The seconds.</param>
-        /// <returns></returns>
-        private static bool TryParseTime(string text, out int seconds)
-        {
-            DateTime res;
-            if (!DateTime.TryParse("2000/01/01 " + text, out res))
-            {
-                seconds = 0;
-                return false;
-            }
-
-            DateTime b = new DateTime(2000, 1, 1);
-            TimeSpan diff = res - b;
-            seconds = Convert.ToInt32(diff.TotalSeconds);
-            return true;
-        }
-
-        /// <summary>
         /// Validates the data.
         /// </summary>
         private void ValidateData()
@@ -451,13 +429,13 @@ namespace EVEMon.Schedule
                 {
                     int startSec;
                     int endSec;
-                    if (!TryParseTime(tbOneTimeStartTime.Text, out startSec) ||
-                        !TryParseTime(tbOneTimeEndTime.Text, out endSec))
+                    if (!Scheduler.TryParseTime(tbOneTimeStartTime.Text, out startSec) ||
+                        !Scheduler.TryParseTime(tbOneTimeEndTime.Text, out endSec))
                         valid = false;
                     else
                     {
-                        DateTime startDate = m_oneTimeStartDate + TimeSpan.FromSeconds(startSec);
-                        DateTime endDate = m_oneTimeEndDate + TimeSpan.FromSeconds(endSec);
+                        DateTime startDate = m_oneTimeStartDate.AddSeconds(startSec);
+                        DateTime endDate = m_oneTimeEndDate.AddSeconds(endSec);
                         if (startDate >= endDate)
                             valid = false;
                         else
@@ -475,8 +453,8 @@ namespace EVEMon.Schedule
                     {
                         int startSec;
                         int endSec;
-                        if (!TryParseTime(tbRecurringTimeFrom.Text, out startSec) ||
-                            !TryParseTime(tbRecurringTimeTo.Text, out endSec))
+                        if (!Scheduler.TryParseTime(tbRecurringTimeFrom.Text, out startSec) ||
+                            !Scheduler.TryParseTime(tbRecurringTimeTo.Text, out endSec))
                             valid = false;
                         else
                         {
@@ -530,10 +508,10 @@ namespace EVEMon.Schedule
                 SimpleScheduleEntry sse = new SimpleScheduleEntry
                                               {
                                                   StartDate = new DateTime(
-                                                      (m_oneTimeStartDate + TimeSpan.FromSeconds(m_oneTimeStartTime)).Ticks,
+                                                      (m_oneTimeStartDate.AddSeconds(m_oneTimeStartTime)).Ticks,
                                                       DateTimeKind.Unspecified),
                                                   EndDate = new DateTime(
-                                                      (m_oneTimeEndDate + TimeSpan.FromSeconds(m_oneTimeEndTime)).Ticks,
+                                                      (m_oneTimeEndDate.AddSeconds(m_oneTimeEndTime)).Ticks,
                                                       DateTimeKind.Unspecified)
                                               };
 
@@ -542,17 +520,20 @@ namespace EVEMon.Schedule
             else if (rbRecurring.Checked)
             {
                 RecurringScheduleEntry rse = new RecurringScheduleEntry
-                                                 { StartDate = m_recurringDateFrom, EndDate = m_recurringDateTo };
-                DayOfWeek dow = DayOfWeek.Monday;
-                rse.Frequency = GetRecurringFrequencyDropdown(ref dow);
-                rse.DayOfWeek = dow;
+                                                 {
+                                                     StartDate = m_recurringDateFrom,
+                                                     EndDate = m_recurringDateTo,
+                                                     StartTimeInSeconds = m_recurringStartTime,
+                                                     EndTimeInSeconds = m_recurringEndTime,
+                                                     DayOfMonth = Convert.ToInt32(nudRecurDayOfMonth.Value),
+                                                     OverflowResolution = GetRecurringOverflowDropdown(),
+                                                     Frequency = GetRecurringFrequencyDropdown(),
+                                                     DayOfWeek = GetRecurringFrequencyDayOfWeek()
+                                                 };
+
                 if (rse.Frequency == RecurringFrequency.Weekly)
                     rse.WeeksPeriod = Convert.ToInt32(nudWeeklyFrequency.Value);
 
-                rse.DayOfMonth = Convert.ToInt32(nudRecurDayOfMonth.Value);
-                rse.OverflowResolution = GetRecurringOverflowDropdown();
-                rse.StartTimeInSeconds = m_recurringStartTime;
-                rse.EndTimeInSeconds = m_recurringEndTime;
                 result = rse;
             }
 
@@ -630,42 +611,14 @@ namespace EVEMon.Schedule
         }
 
         /// <summary>
-        /// Gets the date.
-        /// </summary>
-        /// <param name="res">The res.</param>
-        /// <returns></returns>
-        private static bool GetDate(ref DateTime res)
-        {
-            using (DateSelectWindow f = new DateSelectWindow())
-            {
-                if (res == DateTime.MinValue || res == DateTime.MaxValue)
-                    f.SelectedDate = DateTime.Today;
-                else
-                    f.SelectedDate = res;
-
-                DialogResult dr = f.ShowDialog();
-
-                if (dr == DialogResult.Cancel)
-                    return false;
-
-                res = f.SelectedDate;
-                return true;
-            }
-        }
-
-        /// <summary>
         /// Handles the Click event of the btnOneTimeStartDateChoose control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnOneTimeStartDateChoose_Click(object sender, EventArgs e)
         {
-            DateTime oneTimeStartDate = m_oneTimeStartDate;
-            if (GetDate(ref oneTimeStartDate))
-            {
-                m_oneTimeStartDate = oneTimeStartDate;
-                SetOneTimeStartDate(m_oneTimeStartDate);
-            }
+            m_oneTimeStartDate = GetDate(m_oneTimeStartDate);
+            SetOneTimeStartDate(m_oneTimeStartDate);
             ValidateData();
         }
 
@@ -676,13 +629,8 @@ namespace EVEMon.Schedule
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnOneTimeEndDateChoose_Click(object sender, EventArgs e)
         {
-            DateTime oneTimeEndDate = m_oneTimeEndDate;
-            if (GetDate(ref oneTimeEndDate))
-            {
-                m_oneTimeEndDate = oneTimeEndDate;
-                SetOneTimeEndDate(m_oneTimeEndDate);
-            }
-
+            m_oneTimeEndDate = GetDate(m_oneTimeEndDate);
+            SetOneTimeEndDate(m_oneTimeEndDate);
             ValidateData();
         }
 
@@ -693,13 +641,8 @@ namespace EVEMon.Schedule
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnRecurringStartDateChoose_Click(object sender, EventArgs e)
         {
-            DateTime recurringDateFrom = m_recurringDateFrom;
-            if (GetDate(ref recurringDateFrom))
-            {
-                m_recurringDateFrom = recurringDateFrom;
-                SetRecurringDateFrom(m_recurringDateFrom);
-            }
-
+            m_recurringDateFrom = GetDate(m_recurringDateFrom);
+            SetRecurringDateFrom(m_recurringDateFrom);
             ValidateData();
         }
 
@@ -710,14 +653,29 @@ namespace EVEMon.Schedule
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnRecurringEndDateChoose_Click(object sender, EventArgs e)
         {
-            DateTime recurringDateTo = m_recurringDateTo;
-            if (GetDate(ref recurringDateTo))
-            {
-                m_recurringDateTo = recurringDateTo;
-                SetRecurringDateTo(m_recurringDateTo);
-            }
-
+            m_recurringDateTo = GetDate(m_recurringDateTo);
+            SetRecurringDateTo(m_recurringDateTo);
             ValidateData();
+        }
+
+        /// <summary>
+        /// Gets the date.
+        /// </summary>
+        /// <param name="res">The res.</param>
+        /// <returns></returns>
+        private static DateTime GetDate(DateTime res)
+        {
+            using (DateSelectWindow f = new DateSelectWindow())
+            {
+                if (res == DateTime.MinValue || res == DateTime.MaxValue)
+                    f.SelectedDate = DateTime.Today;
+                else
+                    f.SelectedDate = res;
+
+                DialogResult dr = f.ShowDialog();
+
+                return dr == DialogResult.Cancel ? res : f.SelectedDate;
+            }
         }
     }
 }
