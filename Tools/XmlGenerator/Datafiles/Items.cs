@@ -111,14 +111,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                  },
                                              new InvMarketGroups
                                                  {
-                                                     Name = "Unique Shuttles",
-                                                     Description = "Fast ships of a unique design",
-                                                     ID = DBConstants.UniqueDesignShuttlesNonMarketGroupID,
-                                                     ParentID = DBConstants.UniqueDesignsRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownShipIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
                                                      Name = "Various Non-Market",
                                                      Description = "Non-Market Items",
                                                      ID = DBConstants.RootNonMarketGroupID,
@@ -173,21 +165,24 @@ namespace EVEMon.XmlGenerator.Datafiles
                                             PortionSize = srcItem.PortionSize,
                                             MetaGroup = ItemMetaGroup.None,
                                             Group = itemGroup.Name,
-                                            Category = Database.InvCategoriesTable[itemGroup.CategoryID].Name
+                                            Category = Database.InvCategoriesTable[itemGroup.CategoryID].Name,
+                                            Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0))
                                         };
 
+            // Set race to Faction if item race is Jovian or belongs to a Faction market group
+            if (item.Race == Race.Jove ||
+                Database.InvMarketGroupsTable.Any(group => srcItem.MarketGroupID == group.ID
+                                                           && (DBConstants.FactionMarketGroupIDs.Any(id => id == group.ID) ||
+                                                               DBConstants.FactionMarketGroupIDs.Any(id => id == group.ParentID))))
+            {
+                item.Race = Race.Faction;
+            }
+
             // Add the properties and prereqs
-            IEnumerable<SerializablePropertyValue> props = AddItemPropsAndPrereq(srcItem, item);
+            AddItemPropsAndPrereq(srcItem, item);
 
             // Metagroup
             AddMetaGroup(srcItem, item);
-
-            // Race ID
-            AddRace(srcItem, item);
-
-            // Set race to Faction if ship has Pirate Faction property
-            if (props.Any(prop => prop.ID == DBConstants.ShipBonusPirateFactionPropertyID))
-                item.Race = Race.Faction;
 
             // Look for slots
             if (Database.DgmTypeEffectsTable.Contains(srcItem.ID, DBConstants.LowSlotEffectID))
@@ -329,34 +324,12 @@ namespace EVEMon.XmlGenerator.Datafiles
         }
 
         /// <summary>
-        /// Adds the race.
-        /// </summary>
-        /// <param name="srcItem">The source item.</param>
-        /// <param name="item">The serializable item.</param>
-        private static void AddRace(InvTypes srcItem, SerializableItem item)
-        {
-            item.Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0));
-
-            // Set race to Faction if item race is Jovian
-            if (item.Race == Race.Jove)
-                item.Race = Race.Faction;
-
-            // Set race to ORE if it is in the ORE market groups
-            // within mining barges, exhumers, industrial or capital industrial ships
-            if (srcItem.MarketGroupID == DBConstants.OREMiningBargesMarketGroupID
-                || srcItem.MarketGroupID == DBConstants.OREExhumersMarketGroupID
-                || srcItem.MarketGroupID == DBConstants.OREIndustrialsMarketGroupID
-                || srcItem.MarketGroupID == DBConstants.ORECapitalIndustrialsMarketGroupID)
-                item.Race = Race.Ore;
-        }
-
-        /// <summary>
         /// Adds the item properties and prerequisites.
         /// </summary>
         /// <param name="srcItem">The source item.</param>
         /// <param name="item">The serializable item.</param>
         /// <returns></returns>
-        private static IEnumerable<SerializablePropertyValue> AddItemPropsAndPrereq(InvTypes srcItem, SerializableItem item)
+        private static void AddItemPropsAndPrereq(InvTypes srcItem, SerializableItem item)
         {
             Int64[] prereqSkills = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
             Int64[] prereqLevels = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
@@ -523,8 +496,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Add prerequisite skills info to item
             item.PrerequisiteSkills.AddRange(prereqs);
-
-            return props;
         }
 
         /// <summary>
