@@ -74,7 +74,7 @@ namespace EVEMon.Schedule
             this.label11 = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonDebug = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.pnlRecurring.SuspendLayout();
             this.pnlRecurWeekly.SuspendLayout();
@@ -139,7 +139,7 @@ namespace EVEMon.Schedule
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(3, 5);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(39, 13);
+            this.label13.Size = new System.Drawing.Size(36, 13);
             this.label13.TabIndex = 18;
             this.label13.Text = "every:";
             // 
@@ -148,7 +148,7 @@ namespace EVEMon.Schedule
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(89, 6);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(37, 13);
+            this.label14.Size = new System.Drawing.Size(38, 13);
             this.label14.TabIndex = 20;
             this.label14.Text = "weeks";
             // 
@@ -166,7 +166,7 @@ namespace EVEMon.Schedule
             0,
             0});
             this.nudWeeklyFrequency.Name = "nudWeeklyFrequency";
-            this.nudWeeklyFrequency.Size = new System.Drawing.Size(35, 21);
+            this.nudWeeklyFrequency.Size = new System.Drawing.Size(35, 20);
             this.nudWeeklyFrequency.TabIndex = 19;
             this.nudWeeklyFrequency.Value = new decimal(new int[] {
             1,
@@ -200,7 +200,7 @@ namespace EVEMon.Schedule
             // 
             this.tbRecurringTimeTo.Location = new System.Drawing.Point(162, 144);
             this.tbRecurringTimeTo.Name = "tbRecurringTimeTo";
-            this.tbRecurringTimeTo.Size = new System.Drawing.Size(64, 21);
+            this.tbRecurringTimeTo.Size = new System.Drawing.Size(64, 20);
             this.tbRecurringTimeTo.TabIndex = 8;
             this.tbRecurringTimeTo.TextChanged += new System.EventHandler(this.tbRecurringTimeTo_TextChanged);
             // 
@@ -218,7 +218,7 @@ namespace EVEMon.Schedule
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(-3, 147);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(60, 13);
+            this.label10.Size = new System.Drawing.Size(59, 13);
             this.label10.TabIndex = 16;
             this.label10.Text = "Time From:";
             // 
@@ -226,7 +226,7 @@ namespace EVEMon.Schedule
             // 
             this.tbRecurringTimeFrom.Location = new System.Drawing.Point(63, 144);
             this.tbRecurringTimeFrom.Name = "tbRecurringTimeFrom";
-            this.tbRecurringTimeFrom.Size = new System.Drawing.Size(64, 21);
+            this.tbRecurringTimeFrom.Size = new System.Drawing.Size(64, 20);
             this.tbRecurringTimeFrom.TabIndex = 7;
             this.tbRecurringTimeFrom.TextChanged += new System.EventHandler(this.tbRecurringTimeFrom_TextChanged);
             // 
@@ -249,14 +249,14 @@ namespace EVEMon.Schedule
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(-3, 30);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(70, 13);
+            this.label8.Size = new System.Drawing.Size(67, 13);
             this.label8.TabIndex = 3;
             this.label8.Text = "On overflow:";
             // 
             // cbRecurOnOverflow
             // 
-            this.cbRecurOnOverflow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbRecurOnOverflow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbRecurOnOverflow.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbRecurOnOverflow.FormattingEnabled = true;
             this.cbRecurOnOverflow.Items.AddRange(new object[] {
@@ -273,7 +273,7 @@ namespace EVEMon.Schedule
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(-3, 2);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(76, 13);
+            this.label7.Size = new System.Drawing.Size(74, 13);
             this.label7.TabIndex = 1;
             this.label7.Text = "Day of Month:";
             // 
@@ -291,7 +291,7 @@ namespace EVEMon.Schedule
             0,
             0});
             this.nudRecurDayOfMonth.Name = "nudRecurDayOfMonth";
-            this.nudRecurDayOfMonth.Size = new System.Drawing.Size(49, 21);
+            this.nudRecurDayOfMonth.Size = new System.Drawing.Size(49, 20);
             this.nudRecurDayOfMonth.TabIndex = 0;
             this.nudRecurDayOfMonth.Value = new decimal(new int[] {
             1,
@@ -304,7 +304,7 @@ namespace EVEMon.Schedule
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(-3, 57);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(62, 13);
+            this.label6.Size = new System.Drawing.Size(60, 13);
             this.label6.TabIndex = 13;
             this.label6.Text = "Frequency:";
             // 
@@ -352,12 +352,12 @@ namespace EVEMon.Schedule
             // 
             // tbRecurringEndDate
             // 
-            this.tbRecurringEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbRecurringEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbRecurringEndDate.Location = new System.Drawing.Point(63, 27);
             this.tbRecurringEndDate.Name = "tbRecurringEndDate";
             this.tbRecurringEndDate.ReadOnly = true;
-            this.tbRecurringEndDate.Size = new System.Drawing.Size(183, 21);
+            this.tbRecurringEndDate.Size = new System.Drawing.Size(183, 20);
             this.tbRecurringEndDate.TabIndex = 3;
             // 
             // btnRecurringStartDateChoose
@@ -376,18 +376,18 @@ namespace EVEMon.Schedule
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(-3, 3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(61, 13);
+            this.label4.Size = new System.Drawing.Size(58, 13);
             this.label4.TabIndex = 3;
             this.label4.Text = "Start Date:";
             // 
             // tbRecurringStartDate
             // 
-            this.tbRecurringStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbRecurringStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbRecurringStartDate.Location = new System.Drawing.Point(63, 0);
             this.tbRecurringStartDate.Name = "tbRecurringStartDate";
             this.tbRecurringStartDate.ReadOnly = true;
-            this.tbRecurringStartDate.Size = new System.Drawing.Size(183, 21);
+            this.tbRecurringStartDate.Size = new System.Drawing.Size(183, 20);
             this.tbRecurringStartDate.TabIndex = 0;
             // 
             // rbRecurring
@@ -431,12 +431,12 @@ namespace EVEMon.Schedule
             // 
             // tbOneTimeEndDate
             // 
-            this.tbOneTimeEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbOneTimeEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbOneTimeEndDate.Location = new System.Drawing.Point(64, 54);
             this.tbOneTimeEndDate.Name = "tbOneTimeEndDate";
             this.tbOneTimeEndDate.ReadOnly = true;
-            this.tbOneTimeEndDate.Size = new System.Drawing.Size(189, 21);
+            this.tbOneTimeEndDate.Size = new System.Drawing.Size(189, 20);
             this.tbOneTimeEndDate.TabIndex = 3;
             // 
             // btnOneTimeEndDateChoose
@@ -455,7 +455,7 @@ namespace EVEMon.Schedule
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(-3, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 13);
+            this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Start Date:";
             // 
@@ -463,18 +463,18 @@ namespace EVEMon.Schedule
             // 
             this.tbOneTimeEndTime.Location = new System.Drawing.Point(63, 81);
             this.tbOneTimeEndTime.Name = "tbOneTimeEndTime";
-            this.tbOneTimeEndTime.Size = new System.Drawing.Size(64, 21);
+            this.tbOneTimeEndTime.Size = new System.Drawing.Size(64, 20);
             this.tbOneTimeEndTime.TabIndex = 5;
             this.tbOneTimeEndTime.TextChanged += new System.EventHandler(this.tbOneTimeEndTime_TextChanged);
             // 
             // tbOneTimeStartDate
             // 
-            this.tbOneTimeStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbOneTimeStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbOneTimeStartDate.Location = new System.Drawing.Point(63, 0);
             this.tbOneTimeStartDate.Name = "tbOneTimeStartDate";
             this.tbOneTimeStartDate.ReadOnly = true;
-            this.tbOneTimeStartDate.Size = new System.Drawing.Size(190, 21);
+            this.tbOneTimeStartDate.Size = new System.Drawing.Size(190, 20);
             this.tbOneTimeStartDate.TabIndex = 0;
             // 
             // label3
@@ -482,7 +482,7 @@ namespace EVEMon.Schedule
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(-2, 84);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 13);
+            this.label3.Size = new System.Drawing.Size(55, 13);
             this.label3.TabIndex = 6;
             this.label3.Text = "End Time:";
             // 
@@ -502,7 +502,7 @@ namespace EVEMon.Schedule
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(-3, 30);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
+            this.label2.Size = new System.Drawing.Size(58, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Start Time:";
             // 
@@ -510,7 +510,7 @@ namespace EVEMon.Schedule
             // 
             this.tbOneTimeStartTime.Location = new System.Drawing.Point(63, 27);
             this.tbOneTimeStartTime.Name = "tbOneTimeStartTime";
-            this.tbOneTimeStartTime.Size = new System.Drawing.Size(64, 21);
+            this.tbOneTimeStartTime.Size = new System.Drawing.Size(64, 20);
             this.tbOneTimeStartTime.TabIndex = 2;
             this.tbOneTimeStartTime.TextChanged += new System.EventHandler(this.tbOneTimeStartTime_TextChanged);
             // 
@@ -571,11 +571,11 @@ namespace EVEMon.Schedule
             // 
             // tbTitle
             // 
-            this.tbTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbTitle.Location = new System.Drawing.Point(49, 9);
             this.tbTitle.Name = "tbTitle";
-            this.tbTitle.Size = new System.Drawing.Size(226, 21);
+            this.tbTitle.Size = new System.Drawing.Size(226, 20);
             this.tbTitle.TabIndex = 0;
             this.tbTitle.TextChanged += new System.EventHandler(this.tbTitle_TextChanged);
             // 
@@ -584,7 +584,7 @@ namespace EVEMon.Schedule
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(12, 12);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(31, 13);
+            this.label11.Size = new System.Drawing.Size(30, 13);
             this.label11.TabIndex = 1;
             this.label11.Text = "Title:";
             // 
@@ -612,16 +612,16 @@ namespace EVEMon.Schedule
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // button1
+            // buttonDebug
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(12, 514);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(114, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "debug: roundtrip";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonDebug.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonDebug.Location = new System.Drawing.Point(12, 514);
+            this.buttonDebug.Name = "buttonDebug";
+            this.buttonDebug.Size = new System.Drawing.Size(114, 23);
+            this.buttonDebug.TabIndex = 5;
+            this.buttonDebug.Text = "debug: roundtrip";
+            this.buttonDebug.UseVisualStyleBackColor = true;
+            this.buttonDebug.Click += new System.EventHandler(this.buttonDebug_Click);
             // 
             // EditScheduleEntryWindow
             // 
@@ -629,7 +629,7 @@ namespace EVEMon.Schedule
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(401, 550);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonDebug);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.groupBox2);
@@ -705,7 +705,7 @@ namespace EVEMon.Schedule
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox tbOneTimeEndDate;
         private System.Windows.Forms.Button btnOneTimeEndDateChoose;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonDebug;
         private System.Windows.Forms.CheckBox cbUseEVETime;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.NumericUpDown nudWeeklyFrequency;

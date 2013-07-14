@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Scheduling;
 
@@ -24,6 +25,9 @@ namespace EVEMon.Schedule
         public EditScheduleEntryWindow()
         {
             InitializeComponent();
+
+            if (!EveMonClient.IsDebugBuild)
+                buttonDebug.Visible = false;
 
             InitialEntry();
         }
@@ -551,7 +555,7 @@ namespace EVEMon.Schedule
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonDebug_Click(object sender, EventArgs e)
         {
             if (!btnOk.Enabled)
                 return;

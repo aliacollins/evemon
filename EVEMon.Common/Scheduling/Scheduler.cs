@@ -150,7 +150,7 @@ namespace EVEMon.Common.Scheduling
         {
             try
             {
-                DateTimeFormatInfo dtfi = CultureInfo.CurrentCulture.DateTimeFormat;
+                DateTimeFormatInfo dtfi = CultureConstants.DefaultCulture.DateTimeFormat;
                 DateTime res = DateTime.ParseExact(text, dtfi.ShortTimePattern, dtfi);
                 seconds = Convert.ToInt32(Math.Round(res.Subtract(DateTime.Today).TotalSeconds));
                 return true;
