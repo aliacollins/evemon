@@ -488,7 +488,7 @@ namespace EVEMon.Common
                 // Prompts the user to use the backup
                 string fileDate = String.Format(CultureConstants.DefaultCulture, "{0} at {1}",
                                                 backupInfo.LastWriteTime.ToLocalTime().ToShortDateString(),
-                                                backupInfo.LastWriteTime.ToLocalTime().ToCustomShortTimeString());
+                                                backupInfo.LastWriteTime.ToLocalTime().ToShortTimeString());
                 DialogResult dialogResult = MessageBox.Show(
                     String.Format(CultureConstants.DefaultCulture,
                                   "The settings file is missing or corrupt. There is a backup available from {0}.\n" +
