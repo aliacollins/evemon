@@ -1898,7 +1898,7 @@
           <Property Name="assemblyLineID" Type="Int32" Nullable="false" />
           <Property Name="assemblyLineTypeID" Type="Byte" />
           <Property Name="containerID" Type="Int32" />
-          <Property Name="nextFreeTime" Type="DateTime" />
+          <Property Name="nextFreeTime" Type="DateTime" Precision="0" />
           <Property Name="UIGroupingID" Type="Byte" />
           <Property Name="costInstall" Type="Double" />
           <Property Name="costPerHour" Type="Double" />
