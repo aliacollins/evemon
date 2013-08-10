@@ -55,8 +55,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             PropertiesDatafile datafile = new PropertiesDatafile();
             datafile.Categories.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(x.Name)));
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            Util.DisplayEndTime(startTime);
 
             Util.SerializeXML(datafile, DatafileConstants.PropertiesDatafile);
         }

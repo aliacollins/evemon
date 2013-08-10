@@ -45,8 +45,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             SkillsDatafile datafile = new SkillsDatafile();
             datafile.SkillGroups.AddRange(listOfSkillGroups);
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            Util.DisplayEndTime(startTime);
 
             Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
         }

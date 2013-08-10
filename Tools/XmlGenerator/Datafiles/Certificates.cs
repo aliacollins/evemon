@@ -52,8 +52,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             CertificatesDatafile datafile = new CertificatesDatafile();
             datafile.Categories.AddRange(listOfCertCategories);
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            Util.DisplayEndTime(startTime);
 
             Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
         }
