@@ -116,7 +116,7 @@ namespace EVEMon.LogitechG15
             }
 
 
-            RectangleF barRect = new RectangleF(new PointF(left, offset + 1), new SizeF(size - 1, textSize.Height - 2));
+            RectangleF barRect = new RectangleF(new PointF(left, offset - 1), new SizeF(size - 1, textSize.Height - 2));
             float textLeft = (barRect.Width / 2) - (textSize.Width / 2);
             RectangleF textRect = new RectangleF(new PointF(left + textLeft, offset), canvas.MeasureString(text, m_font));
 
