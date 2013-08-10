@@ -53,6 +53,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
@@ -135,7 +136,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EveStaticData.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="app.config" />
+    <Content Include="app.config" />
     <None Include="Properties\DataSources\EveStaticDataEntities.datasource" />
   </ItemGroup>
   <ItemGroup />
