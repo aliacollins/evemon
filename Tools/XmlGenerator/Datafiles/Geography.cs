@@ -46,8 +46,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             datafile.Regions.AddRange(regions.OrderBy(x => x.Name));
             datafile.Jumps.AddRange(jumps);
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            Util.DisplayEndTime(startTime);
 
             Util.SerializeXML(datafile, DatafileConstants.GeographyDatafile);
         }

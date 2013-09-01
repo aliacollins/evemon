@@ -96,31 +96,40 @@ namespace EVEMon.LogitechG15
             string text = m_percentage.ToString("P2", CultureConstants.DefaultCulture);
             SizeF textSize = canvas.MeasureString(text, m_font);
             int left = 0;
-            int size = LcdDisplay.G15Width;
+            int width = LcdDisplay.G15Width - 1;
             const int Pad = 2;
 
             if (Settings.G15.ShowEVETime)
             {
-                string eveTime = DateTime.UtcNow.ToString("HH:mm", CultureConstants.DefaultCulture);
+                string eveTime = EveMonClient.EVEServer.ServerDateTime.ToShortTimeString();
                 SizeF eveTimeSize = canvas.MeasureString(eveTime, m_font);
+                RectangleF eveTimeRect = new RectangleF(new PointF(left, offset), eveTimeSize);
                 left = (int)eveTimeSize.Width + Pad;
-                size = LcdDisplay.G15Width - left - Pad;
+                width -= left;
+                using (Brush brush = new SolidBrush(Color.Black))
+                {
+                    canvas.DrawString(eveTime, m_font, brush, eveTimeRect);
+                }
             }
 
             if (Settings.G15.ShowSystemTime)
             {
                 string systemTime = DateTime.Now.ToShortTimeString();
                 SizeF systemTimeSize = canvas.MeasureString(systemTime, m_font);
-
-                size = size - (int)systemTimeSize.Width;
+                RectangleF systemTimeRect = new RectangleF(new PointF(LcdDisplay.G15Width + 1 - systemTimeSize.Width, offset),
+                                                                      systemTimeSize);
+                width -= (int)systemTimeSize.Width + Pad;
+                using (Brush brush = new SolidBrush(Color.Black))
+                {
+                    canvas.DrawString(systemTime, m_font, brush, systemTimeRect);
+                }
             }
+            
+            RectangleF barRect = new RectangleF(new PointF(left, offset - 1), new SizeF(width, textSize.Height - 1));
+            float textLeft = (barRect.Width - textSize.Width) / 2;
+            RectangleF textRect = new RectangleF(new PointF(left + textLeft, offset), textSize);
 
-
-            RectangleF barRect = new RectangleF(new PointF(left, offset + 1), new SizeF(size - 1, textSize.Height - 2));
-            float textLeft = (barRect.Width / 2) - (textSize.Width / 2);
-            RectangleF textRect = new RectangleF(new PointF(left + textLeft, offset), canvas.MeasureString(text, m_font));
-
-            int barFill = Convert.ToInt16(m_percentage * size - 2);
+            int barFill = Convert.ToInt16(m_percentage * width - Pad);
 
             using (Pen pen = new Pen(Color.Black))
             {
@@ -129,8 +138,9 @@ namespace EVEMon.LogitechG15
 
             using (Brush brush = new SolidBrush(Color.Black))
             {
-                canvas.FillRectangle(brush, barRect.Left + 1, barRect.Top + 1, barFill, barRect.Height - 2);
-                overlay.DrawString(text, m_font, brush, textRect);
+                var progressFont = FontFactory.GetFont(m_font.FontFamily, m_font.Size);
+                canvas.FillRectangle(brush, barRect.Left + 1, barRect.Top + 1, barFill, barRect.Height - Pad);
+                overlay.DrawString(text, progressFont, brush, textRect);
             }
 
             Height = barRect.Height + 1;

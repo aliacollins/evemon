@@ -61,8 +61,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             ItemsDatafile datafile = new ItemsDatafile();
             datafile.MarketGroups.AddRange(rootGroups);
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            Util.DisplayEndTime(startTime);
 
             Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }

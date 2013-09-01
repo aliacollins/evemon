@@ -78,9 +78,9 @@ namespace EVEMon.Common
 
             // Free room in skill queue
             DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
-            if (skillQueueEndTime < DateTime.UtcNow.AddHours(24))
+            if (skillQueueEndTime < DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration))
             {
-                TimeSpan timeLeft = DateTime.UtcNow.AddHours(24).Subtract(skillQueueEndTime);
+                TimeSpan timeLeft = DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration).Subtract(skillQueueEndTime);
                 string timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
                 body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText,
                                   Environment.NewLine);

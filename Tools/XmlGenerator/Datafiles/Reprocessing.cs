@@ -46,8 +46,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             ReprocessingDatafile datafile = new ReprocessingDatafile();
             datafile.Items.AddRange(types);
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            Util.DisplayEndTime(startTime);
 
             Util.SerializeXML(datafile, DatafileConstants.ReprocessingDatafile);
         }

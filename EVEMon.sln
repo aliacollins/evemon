@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon", "EVEMon\EVEMon.csproj", "{A2E5EFE0-614A-4567-95E5-92A4D94169AC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{696E929A-6A4A-4C6D-A8B2-C4F25F781940} = {696E929A-6A4A-4C6D-A8B2-C4F25F781940}
@@ -169,6 +169,7 @@ Global
 		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|x86.ActiveCfg = Snapshot|x86
 		{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}.Snapshot|x86.Build.0 = Snapshot|x86
 		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|Any CPU.Build.0 = Debug|x86
 		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|x86.ActiveCfg = Debug|x86
 		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Debug|x86.Build.0 = Debug|x86
 		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Release|Any CPU.ActiveCfg = Release|x86

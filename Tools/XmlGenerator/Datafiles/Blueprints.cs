@@ -55,8 +55,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             BlueprintsDatafile datafile = new BlueprintsDatafile();
             datafile.MarketGroups.AddRange(blueprintGroups);
 
-            Console.WriteLine(String.Format(CultureConstants.DefaultCulture, " in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            Util.DisplayEndTime(startTime);
 
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }

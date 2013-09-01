@@ -304,6 +304,15 @@ namespace EVEMon.XmlGenerator
         {
             return Assembly.GetExecutingAssembly().GetTypes().Count(type => type.Namespace == nameSpace);
         }
+
+        /// <summary>
+        /// Displays the end time.
+        /// </summary>
+        /// <param name="startTime">The start time.</param>
+        internal static void DisplayEndTime(DateTime startTime)
+        {
+            Console.WriteLine(" in {0}", DateTime.Now.Subtract(startTime).ToString("g"));
+        }
         #endregion
     }
 }
