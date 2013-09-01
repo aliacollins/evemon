@@ -204,7 +204,7 @@ namespace EVEMon.Common.Controls
                 PaintQueue(g, width, height);
 
             // We need to update the painting only every (24h / width in pixels)
-            m_nextRepainting = DateTime.Now.AddSeconds((double)(24 * 3600) / width);
+            m_nextRepainting = DateTime.Now.AddHours((double)(EveConstants.SkillQueueDuration) / width);
         }
 
         #endregion
@@ -337,7 +337,7 @@ namespace EVEMon.Common.Controls
                 }
 
                 // If there are more than 24 hours in the queue show the point
-                if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(24))
+                if (m_skillQueue.EndTime > DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration))
                     PaintPoint(g, width, height);
                     // Else, draw a dark region at the end and the border
                 else
@@ -394,7 +394,7 @@ namespace EVEMon.Common.Controls
                 relativeFinish = skill.EndTime.Subtract(s_paintTime);
             }
 
-            int totalSeconds = (int)TimeSpan.FromHours(24).TotalSeconds;
+            int totalSeconds = (int)TimeSpan.FromHours(EveConstants.SkillQueueDuration).TotalSeconds;
 
             double start = Math.Floor((relativeStart.TotalSeconds / totalSeconds) * width);
             double finish = Math.Floor((relativeFinish.TotalSeconds / totalSeconds) * width);
@@ -438,12 +438,14 @@ namespace EVEMon.Common.Controls
         /// <param name="emptyRect">The empty rect.</param>
         private void DisplayFreeRoomToolTip(Rectangle emptyRect)
         {
-            TimeSpan leftTime = (m_skillQueue.IsPaused ? s_paintTime : DateTime.UtcNow).AddHours(24) - m_skillQueue.EndTime;
+            TimeSpan leftTime = (m_skillQueue.IsPaused
+                                     ? s_paintTime
+                                     : DateTime.UtcNow).AddHours(EveConstants.SkillQueueDuration) - m_skillQueue.EndTime;
             string text = String.Format(CultureConstants.DefaultCulture, "Free room: {0}",
                                         leftTime.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false));
             Size textSize = TextRenderer.MeasureText(text, Font);
             Size toolTipSize = new Size(textSize.Width + 13, textSize.Height + 11);
-            Point tipPoint = new Point(((emptyRect.Right + emptyRect.Left) / 2) - toolTipSize.Width / 2, - toolTipSize.Height);
+            Point tipPoint = new Point(((emptyRect.Right + emptyRect.Left) / 2) - toolTipSize.Width / 2, -toolTipSize.Height);
             tipPoint.Offset(0, -21);
             m_toolTip.Show(text, tipPoint);
         }
