@@ -124,6 +124,7 @@ namespace EVEMon.About
                                    { "Phoenix Flames", 6 },
                                    { "phorge", 6 },
                                    { "Optica", 6 },
+                                   { "Quantix Blackstar", 6 },
                                    { "Risako", 6 },
                                    { "Ruldar", 6 },
                                    { "Safarian Lanar", 6 },
@@ -138,12 +139,14 @@ namespace EVEMon.About
                                    { "SyndicateAexeron", 6 },
                                    { "The_Assimilator", 6 },
                                    { "TheConstructor", 6 },
+                                   { "Travis Puderbaugh", 6 },
                                    { "Trin", 6 },
                                    { "vardoj", 6 },
                                    { "Waste Land", 6 },
                                    { "wrok", 6 },
                                    { "xNomeda", 6 },
                                    { "ykoehler", 6 },
+                                   { "Zackary Geers", 6 },
                                    { "Zarra Kri", 6 },
                                    { "Zofu", 6 }
                                };
