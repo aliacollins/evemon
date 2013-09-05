@@ -58,7 +58,7 @@ namespace EVEMon.InstallBuilder
 
             try
             {
-                if (CheckNsisInstalled(args) && !s_isSnapshot)
+                if (CheckNsisPresent(args) && !s_isSnapshot)
                 {
                     // Create the appropriate folder if it doesn't exist
                     if (!Directory.Exists(s_installerDir))
@@ -120,31 +120,10 @@ namespace EVEMon.InstallBuilder
         }
 
         /// <summary>
-        /// Finds the 'makensis' executable.
-        /// </summary>
-        /// <returns></returns>
-        private static string FindMakeNsisExe()
-        {
-            string[] locations = new string[4];
-
-            locations[0] = String.Format(CultureInfo.InvariantCulture, "{0}\\NSIS\\makensis.exe", s_programFilesDir);
-            locations[1] = String.Format(CultureInfo.InvariantCulture, "{0}\\NSIS\\makensis.exe", s_programFilesX86Dir);
-            locations[2] = @"D:\Program Files\NSIS\makensis.exe"; // Possible location in TeamCity server
-            locations[3] = @"D:\Program Files (x86)\NSIS\makensis.exe"; // Possible location in TeamCity server
-
-            foreach (string path in locations.Where(File.Exists))
-            {
-                return path;
-            }
-
-            return String.Empty;
-        }
-
-        /// <summary>
-        /// Checks that NSIS is installed.
+        /// Checks that NSIS is present.
         /// </summary>
         /// <param name="args">The args.</param>
-        private static bool CheckNsisInstalled(string[] args)
+        private static bool CheckNsisPresent(string[] args)
         {
             s_nsisExe = FindMakeNsisExe();
             Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe)
@@ -166,6 +145,16 @@ namespace EVEMon.InstallBuilder
             Console.WriteLine();
 
             return !String.IsNullOrEmpty(s_nsisExe);
+        }
+
+        /// <summary>
+        /// Finds the 'makensis' executable.
+        /// </summary>
+        /// <returns></returns>
+        private static string FindMakeNsisExe()
+        {
+            string path = Path.GetFullPath(@"..\..\..\NSIS\makensis.exe");
+            return File.Exists(path) ? path : String.Empty;
         }
 
         /// <summary>
@@ -266,10 +255,8 @@ namespace EVEMon.InstallBuilder
             int exitCode;
             try
             {
-                string nsisScript = Path.Combine(s_projectDir,
-                                                 s_isDebug
-                                                     ? "bin\\x86\\Debug\\EVEMonInstallerScript.nsi"
-                                                     : "bin\\x86\\Release\\EVEMonInstallerScript.nsi");
+                string nsisScript = Path.Combine(s_projectDir, String.Format(@"bin\x86\{0}\EVEMonInstallerScript.nsi", 
+                                                                             s_isDebug? "Debug": "Release"));
 
                 string param = String.Format(CultureInfo.InvariantCulture, "/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"",
                                              s_version, s_installerDir, nsisScript);
