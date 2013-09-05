@@ -1,38 +1,33 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>04 June 2013</date>
-    <version>1.8.2.4081</version>
-    <md5>90eb8be23507fd61ac3ea913c47e5e94</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,176760.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.2.4081.exe</autopatchurl>
+    <date>05 September 2013</date>
+    <version>1.8.3.4116</version>
+    <md5>8051ec531c3ceced735868725d00b787</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,179068.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.3.4116.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
-
-* Jimi
-
+ 
+ * Jimi
+ * SyndicateAexeron
+ * Quantix Blackstar
+ * Travis Puderbaugh
+ * Kunnis Niam
+ 
 == Bug Fixes ==
-
-* Fixes a crash bug when selecting to auto-resize the columns of the combat log monitoring list.
-* Fixed a crash bug when selecting 'Show all groups' in the Item browser of the skill planner.
-* Fixes a visual bug when special characters (like '<' and '>') are used in user input text in EVE client.
-* Fixed a crash bug when merging plans that don't contain notes on an entry.
-* Fixes an issue where the exported file for EFT was causing parsing errors in EFT.
-* Fixes a crash bug when trying to uncompress an empty response stream.
-* Fixes a crash bug in item browser when prerequesites are not found in our data.
-
+ * Fixed possible crash bug when EVEMon loads the Certificates data file.
+ * Fixed Character After Plan Export.
+ * Fixed a bug where the Naglfar, Talwar, Corax, Algos and Dragoon race were set as "Faction".
+ * Fixed date and time parsing in Scheduler when using custom date and time formatting.
+ 
 == Enhancements ==
-
-* Added a fallback logic to none compression uploading for the BattleClinic Service uploading.
-* Reduced max upload interval time span from 1 day to 15 minutes for the EMUU.
-* Added ability to check, on an hourly bases, for available endpoints.
-* Added 2 extra columns in the Manufactouring tab of the Blueprint browser showing the base quantity and perfect ME level for each material.
+ * EVEMon now supports any date time format.
 
 == Misc ==
-
-* Updated the links to the API key support page.
-* Several improvements have been done to the code base to make EVEMon a better, faster and more stable application.]]></message>
+ *  Blueprint copies will no longer be included in assets total estimated value.
+  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
