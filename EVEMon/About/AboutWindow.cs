@@ -102,6 +102,7 @@ namespace EVEMon.About
                                    { "Kelos Pelmand", 6 },
                                    { "Kingdud", 6 },
                                    { "Kw4h", 6 },
+                                   { "Kunnis Niam", 6 },
                                    { "lerthe61", 6 },
                                    { "Lexiica", 6 },
                                    { "Master of Dice", 6 },
@@ -146,7 +147,6 @@ namespace EVEMon.About
                                    { "wrok", 6 },
                                    { "xNomeda", 6 },
                                    { "ykoehler", 6 },
-                                   { "Zackary Geers", 6 },
                                    { "Zarra Kri", 6 },
                                    { "Zofu", 6 }
                                };
