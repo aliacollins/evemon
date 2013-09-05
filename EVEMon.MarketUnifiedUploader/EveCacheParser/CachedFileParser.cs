@@ -498,18 +498,17 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
                     throw new ParserException("Marker was expected but not found");
             }
 
-            if (obj.IsCFilterRowset || obj.IsRowDict || obj.IsCIndexedRowset)
+            if (!obj.IsCFilterRowset && !obj.IsRowDict && !obj.IsCIndexedRowset)
+                return obj;
+
+            // Check for single marker
+            if (GetObject() != null)
+                return obj;
+            do
             {
-                // Check for single marker
-                if (GetObject() == null)
-                {
-                    do
-                    {
-                        row = GetObject();
-                        obj.AddMember(row);
-                    } while (row != null); // Null object is marker
-                }
-            }
+                row = GetObject();
+                obj.AddMember(row);
+            } while (row != null); // Null object is marker
 
             return obj;
         }
@@ -553,8 +552,8 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
             if (!header.IsDBRowDescriptor)
                 throw new ParserException("Bad DBRow descriptor name");
 
-            IEnumerable<STupleType> fields = header.Members.First().Members.First(
-                member => member is STupleType).Members.First().Members.Cast<STupleType>();
+            List<STupleType> fields = header.Members.First().Members.First(
+                member => member is STupleType).Members.First().Members.Cast<STupleType>().ToList();
 
             if (!fields.Any())
                 return new SNoneType();
