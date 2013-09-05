@@ -65,7 +65,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsDBRowDescriptor
         {
-            get { return Name == "blue.DBRowDescriptor"; }
+            get { return Name.EndsWith(".DBRowDescriptor"); }
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsRowList
         {
-            get { return Name == "dbutil.RowList"; }
+            get { return Name.EndsWith(".RowList"); }
         }
 
         /// <summary>
@@ -87,7 +87,18 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsRowDict
         {
-            get { return Name == "dbutil.RowDict"; }
+            get { return Name.EndsWith(".RowDict"); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this object is a 'Rowset'.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this object is a 'Rowset'; otherwise, <c>false</c>.
+        /// </value>
+        internal bool IsRowset
+        {
+            get { return Name.EndsWith(".Rowset"); }
         }
 
         /// <summary>
@@ -98,7 +109,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsCRowset
         {
-            get { return Name == "dbutil.CRowset"; }
+            get { return Name.EndsWith(".CRowset"); }
         }
 
         /// <summary>
@@ -109,7 +120,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsCFilterRowset
         {
-            get { return Name == "dbutil.CFilterRowset"; }
+            get { return Name.EndsWith(".CFilterRowset"); }
         }
 
         /// <summary>
@@ -120,7 +131,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsCIndexedRowset
         {
-            get { return Name == "dbutil.CIndexedRowset"; }
+            get { return Name.EndsWith(".CIndexedRowset"); }
         }
 
         /// <summary>
@@ -131,7 +142,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsKeyVal
         {
-            get { return Name == "util.KeyVal"; }
+            get { return Name.EndsWith(".KeyVal"); }
         }
 
         /// <summary>
@@ -142,7 +153,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsCachedMethodCallResult
         {
-            get { return Name == "objectCaching.CachedMethodCallResult"; }
+            get { return Name.EndsWith(".CachedMethodCallResult"); }
         }
 
         /// <summary>
@@ -153,7 +164,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsCachedObject
         {
-            get { return Name == "util.CachedObject"; }
+            get { return Name.EndsWith(".CachedObject"); }
         }
 
         /// <summary>
@@ -164,7 +175,7 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// </value>
         internal bool IsObjectCachingCachedObject
         {
-            get { return Name == "objectCaching.CachedObject"; }
+            get { return Name.EndsWith(".objectCaching.CachedObject"); }
         }
 
         #endregion
