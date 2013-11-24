@@ -226,16 +226,6 @@ namespace EVEMon.Common
                                                   { Attribute = implant.Slot, Bonus = implant.Bonus, Name = implant.Name });
             }
 
-            // Certificates
-            foreach (CertificateClass certClass in character.CertificateClasses)
-            {
-                Certificate cert = certClass.HighestClaimedGrade;
-                if (cert == null)
-                    continue;
-
-                serial.Certificates.Add(new OutputCertificate { Name = certClass.Name, Grade = cert.Grade.ToString() });
-            }
-
             // Skills (grouped by skill groups)
             foreach (SkillGroup skillGroup in character.SkillGroups)
             {

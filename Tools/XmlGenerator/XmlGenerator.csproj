@@ -63,7 +63,6 @@
     <Compile Include="Bag.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Datafiles\Blueprints.cs" />
-    <Compile Include="Datafiles\Certificates.cs" />
     <Compile Include="Datafiles\Geography.cs" />
     <Compile Include="Datafiles\Items.cs" />
     <Compile Include="Datafiles\Properties.cs" />
@@ -97,11 +96,6 @@
     <Compile Include="StaticData\RamTypeRequirements.cs" />
     <Compile Include="StringCleaningExtensions.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="StaticData\CrtCategories.cs" />
-    <Compile Include="StaticData\CrtCertificates.cs" />
-    <Compile Include="StaticData\CrtClasses.cs" />
-    <Compile Include="StaticData\CrtRecommendations.cs" />
-    <Compile Include="StaticData\CrtRelationships.cs" />
     <Compile Include="StaticData\DgmAttributeTypes.cs" />
     <Compile Include="StaticData\DgmAttributeCategories.cs" />
     <Compile Include="StaticData\DgmTypeAttributes.cs" />

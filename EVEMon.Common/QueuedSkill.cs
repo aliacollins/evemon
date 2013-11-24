@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Serialization.API;
 
@@ -91,7 +92,31 @@ namespace EVEMon.Common
         /// </summary>
         public float FractionCompleted
         {
-            get { return (Skill == null ? 0 : Skill.FractionCompleted); }
+            get
+            {
+                return Skill == null
+                    ? 0
+                    : Skill == Skill.UnknownSkill
+                        ? (float)
+                            (1 -
+                             EndTime.Subtract(DateTime.UtcNow).TotalMilliseconds / EndTime.Subtract(StartTime).TotalMilliseconds)
+                        : Skill.FractionCompleted;
+            }
+        }
+
+        /// <summary>
+        /// Gets the percent completed.
+        /// </summary>
+        /// <returns></returns>
+        public double PercentCompleted
+        {
+            get
+            {
+                if (Skill == null || Skill == Skill.UnknownSkill)
+                    return FractionCompleted * 100;
+
+                return Level == Skill.Level + 1 ? Skill.PercentCompleted : 0;
+            }
         }
 
         /// <summary>
@@ -101,9 +126,54 @@ namespace EVEMon.Common
         {
             get
             {
-                float spPerHour = Owner.GetBaseSPPerHour(Skill);
-                double estimatedSP = EndSP - (EndTime.Subtract(DateTime.UtcNow)).TotalHours * spPerHour;
-                return (Skill.IsTraining ? Math.Max((int)estimatedSP, StartSP) : StartSP);
+                double estimatedSP = EndSP - (EndTime.Subtract(DateTime.UtcNow)).TotalHours * SkillPointsPerHour;
+                return (IsTraining ? Math.Max((int)estimatedSP, StartSP) : StartSP);
+            }
+        }
+
+        /// <summary>
+        /// Gets the rank.
+        /// </summary>
+        /// <value>
+        /// The rank.
+        /// </value>
+        public long Rank
+        {
+            get
+            {
+                if (Skill != Skill.UnknownSkill)
+                    return Skill.Rank;
+
+                switch (Level)
+                {
+                    case 0:
+                        return 0;
+                    case 1:
+                        return EndSP / 250;
+                    case 2:
+                        return EndSP / 1414;
+                    case 3:
+                        return EndSP / 8000;
+                    case 4:
+                        return EndSP / Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * Level) - 2.5) * 250));
+                    case 5:
+                        return EndSP / 256000;
+                }
+                return Skill.Rank;
+            }
+        }
+
+        /// <summary>
+        /// Gets the training speed.
+        /// </summary>
+        /// <returns></returns>
+        public double SkillPointsPerHour
+        {
+            get
+            {
+                return Skill == Skill.UnknownSkill
+                    ? Math.Ceiling((EndSP - StartSP) / EndTime.Subtract(StartTime).TotalHours)
+                    : Skill.SkillPointsPerHour;
             }
         }
 
@@ -118,6 +188,22 @@ namespace EVEMon.Common
             {
                 TimeSpan left = EndTime.Subtract(DateTime.UtcNow);
                 return left < TimeSpan.Zero ? TimeSpan.Zero : left;
+            }
+        }
+
+        /// <summary>
+        /// Gets true if the skill is currently in training.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the skill is training; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsTraining
+        {
+            get
+            {
+                var ccpCharacter = Owner as CCPCharacter;
+                return Skill.IsTraining ||
+                       (ccpCharacter != null && ccpCharacter.SkillQueue.IsTraining && ccpCharacter.SkillQueue.First() == this);
             }
         }
 

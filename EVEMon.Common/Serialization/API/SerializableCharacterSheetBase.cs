@@ -10,14 +10,12 @@ namespace EVEMon.Common.Serialization.API
     public class SerializableCharacterSheetBase : ISerializableCharacterIdentity
     {
         private readonly Collection<SerializableCharacterSkill> m_skills;
-        private readonly Collection<SerializableCharacterCertificate> m_certificates;
         private readonly Collection<SerializableEmploymentHistory> m_employmentHistory;
 
         protected SerializableCharacterSheetBase()
         {
             Attributes = new SerializableCharacterAttributes();
             m_skills = new Collection<SerializableCharacterSkill>();
-            m_certificates = new Collection<SerializableCharacterCertificate>();
             m_employmentHistory = new Collection<SerializableEmploymentHistory>();
         }
 
@@ -110,13 +108,6 @@ namespace EVEMon.Common.Serialization.API
         public Collection<SerializableCharacterSkill> Skills
         {
             get { return m_skills; }
-        }
-
-        [XmlArray("certificates")]
-        [XmlArrayItem("certificate")]
-        public Collection<SerializableCharacterCertificate> Certificates
-        {
-            get { return m_certificates; }
         }
 
         [XmlIgnore]

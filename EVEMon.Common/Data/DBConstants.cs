@@ -401,25 +401,6 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        #region Certificate Classes IDs
-
-        public const int IndustrialHarvestingID = 104;
-        public const int AutomatedMiningID = 106;
-        public const int ProductionInternID = 111;
-
-        #endregion
-
-
-        #region Certificate Grade IDs
-
-        public const int BasicID = 1;
-        public const int StandardID = 2;
-        public const int ImprovedID = 3;
-        public const int EliteID = 5;
-
-        #endregion
-
-
         #region Category IDs
 
         public const int BlueprintCategoryID = 9;

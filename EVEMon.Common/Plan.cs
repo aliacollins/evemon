@@ -443,24 +443,6 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Certificates
-
-        /// <summary>
-        /// Adds the provided certificate's prerequisites to the plan.
-        /// </summary>
-        /// <param name="certificate">The certificate.</param>
-        /// <returns></returns>
-        public IPlanOperation TryPlanTo(StaticCertificate certificate)
-        {
-            if (certificate == null)
-                throw new ArgumentNullException("certificate");
-
-            return TryAddSet(certificate.AllTopPrerequisiteSkills, certificate.ToString());
-        }
-
-        #endregion
-
-
         #region Priorities changes
 
         /// <summary>

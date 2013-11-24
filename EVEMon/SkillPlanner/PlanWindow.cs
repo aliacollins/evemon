@@ -211,7 +211,6 @@ namespace EVEMon.SkillPlanner
                 planEditor.Plan = m_plan;
                 shipBrowser.Plan = m_plan;
                 itemBrowser.Plan = m_plan;
-                certBrowser.Plan = m_plan;
                 skillBrowser.Plan = m_plan;
                 blueprintBrowser.Plan = m_plan;
 
@@ -298,16 +297,6 @@ namespace EVEMon.SkillPlanner
         {
             tabControl.SelectedTab = tpItemBrowser;
             itemBrowser.SelectedObject = item;
-        }
-
-        /// <summary>
-        /// Opens this certificate in the certificate browser and switches to this tab.
-        /// </summary>
-        /// <param name="certificate"></param>
-        public void ShowCertInBrowser(Certificate certificate)
-        {
-            tabControl.SelectedTab = tpCertificateBrowser;
-            certBrowser.SelectedCertificate(certificate);
         }
 
         /// <summary>

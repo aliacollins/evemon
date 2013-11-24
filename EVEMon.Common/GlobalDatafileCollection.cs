@@ -28,7 +28,6 @@ namespace EVEMon.Common
                 Items.Add(new Datafile(DatafileConstants.PropertiesDatafile));
                 Items.Add(new Datafile(DatafileConstants.ItemsDatafile));
                 Items.Add(new Datafile(DatafileConstants.SkillsDatafile));
-                Items.Add(new Datafile(DatafileConstants.CertificatesDatafile));
                 Items.Add(new Datafile(DatafileConstants.BlueprintsDatafile));
                 Items.Add(new Datafile(DatafileConstants.GeographyDatafile));
                 Items.Add(new Datafile(DatafileConstants.ReprocessingDatafile));

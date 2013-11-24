@@ -426,18 +426,6 @@ namespace EVEMon.Controls
                 return;
             }
 
-            // Claimable certificate ?
-            ClaimableCertificateNotificationEventArgs certNotifications =
-                notification as ClaimableCertificateNotificationEventArgs;
-            if (certNotifications != null)
-            {
-                ClaimableCertificateWindow window =
-                    WindowsFactory.ShowByTag<ClaimableCertificateWindow, ClaimableCertificateNotificationEventArgs>(
-                        certNotifications);
-                window.Notification = certNotifications;
-                return;
-            }
-
             // Market orders ?
             MarketOrdersNotificationEventArgs ordersNotification = notification as MarketOrdersNotificationEventArgs;
             if (ordersNotification != null)
@@ -503,15 +491,6 @@ namespace EVEMon.Controls
             if (skillNotifications != null)
             {
                 SetToolTip(true, SkillCompletionMessage(skillNotifications));
-                return;
-            }
-
-            // Claimable certificate ?
-            ClaimableCertificateNotificationEventArgs certNotifications =
-                notification as ClaimableCertificateNotificationEventArgs;
-            if (certNotifications != null)
-            {
-                SetToolTip(true, CertificateClaimableMessage(certNotifications));
                 return;
             }
 
@@ -601,22 +580,6 @@ namespace EVEMon.Controls
             {
                 builder.AppendFormat(CultureConstants.DefaultCulture, "{0} {1} completed.", skill.SkillName,
                                      Skill.GetRomanFromInt(skill.Level)).AppendLine();
-            }
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// Builds the claimable certificates message.
-        /// </summary>
-        /// <param name="certNotifications">The <see cref="EVEMon.Common.Notifications.ClaimableCertificateNotificationEventArgs"/> instance containing the event data.</param>
-        /// <returns></returns>
-        private static String CertificateClaimableMessage(ClaimableCertificateNotificationEventArgs certNotifications)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach (Certificate cert in certNotifications.Certificates)
-            {
-                builder.AppendFormat(CultureConstants.DefaultCulture,
-                                     "{0} {1} is claimable.", cert.Name, cert.Grade).AppendLine();
             }
             return builder.ToString();
         }

@@ -288,12 +288,6 @@
     <Compile Include="Controls\KillReportInvolvedParties.Designer.cs">
       <DependentUpon>KillReportInvolvedParties.cs</DependentUpon>
     </Compile>
-    <Compile Include="NotificationWindow\ClaimableCertificateWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NotificationWindow\ClaimableCertificateWindow.Designer.cs">
-      <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="DetailsWindow\ContractDetailsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -609,9 +603,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="NotificationWindow\ClaimableCertificateWindow.resx">
-      <DependentUpon>ClaimableCertificateWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterStandingsList.resx">
       <DependentUpon>CharacterStandingsList.cs</DependentUpon>
     </EmbeddedResource>
@@ -762,24 +753,6 @@
     <Compile Include="SkillPlanner\BlueprintSelectControl.Designer.cs">
       <DependentUpon>BlueprintSelectControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SkillPlanner\CertificateBrowserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\CertificateBrowserControl.Designer.cs">
-      <DependentUpon>CertificateBrowserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SkillPlanner\CertificateSelectControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\CertificateSelectControl.Designer.cs">
-      <DependentUpon>CertificateSelectControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SkillPlanner\CertificateTreeDisplayControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\CertificateTreeDisplayControl.Designer.cs">
-      <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="SkillPlanner\ObsoleteEntriesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -822,12 +795,6 @@
     </Compile>
     <Compile Include="SkillPlanner\PlanToOperationForm.Designer.cs">
       <DependentUpon>PlanToOperationForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SkillPlanner\RecommendedCertificatesControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SkillPlanner\RecommendedCertificatesControl.Designer.cs">
-      <DependentUpon>RecommendedCertificatesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SkillPlanner\ShipLoadoutSelectWindow.cs">
       <SubType>Form</SubType>
@@ -1021,18 +988,6 @@
       <DependentUpon>AttributesOptimizationSettingsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\CertificateBrowserControl.resx">
-      <DependentUpon>CertificateBrowserControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\CertificateSelectControl.resx">
-      <DependentUpon>CertificateSelectControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\CertificateTreeDisplayControl.resx">
-      <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\PlanPrioritiesEditorForm.resx">
       <DependentUpon>PlanPrioritiesEditorForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1203,9 +1158,6 @@
     <EmbeddedResource Include="SkillPlanner\PlanToOperationForm.resx">
       <DependentUpon>PlanToOperationForm.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SkillPlanner\RecommendedCertificatesControl.resx">
-      <DependentUpon>RecommendedCertificatesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SkillPlanner\ShipSelectControl.resx">
       <DependentUpon>ShipSelectControl.cs</DependentUpon>

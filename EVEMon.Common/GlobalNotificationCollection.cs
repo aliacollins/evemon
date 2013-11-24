@@ -1020,36 +1020,6 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Claimable certificate
-
-        /// <summary>
-        /// Invalidates the notification for claimable certificates.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        internal void InvalidateClaimableCertificate(CCPCharacter character)
-        {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.ClaimableCertificate));
-        }
-
-        /// <summary>
-        /// Notifies a character has a claimable certificate.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <param name="claimableCertificates">The claimable certificates.</param>
-        internal void NotifyClaimableCertificate(CCPCharacter character, IEnumerable<Certificate> claimableCertificates)
-        {
-            ClaimableCertificateNotificationEventArgs notification =
-                new ClaimableCertificateNotificationEventArgs(character, claimableCertificates)
-                    {
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Information
-                    };
-            Notify(notification);
-        }
-
-        #endregion
-
-
         #region Server status
 
         /// <summary>

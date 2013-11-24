@@ -286,7 +286,6 @@
     <Compile Include="MedalComparer.cs" />
     <Compile Include="Net\INetworkChangeSubscriber.cs" />
     <Compile Include="Notifications\APIErrorNotificationEventArgs.cs" />
-    <Compile Include="Notifications\ClaimableCertificateNotificationEventArgs.cs" />
     <Compile Include="Notifications\ContractsNotificationEventArgs.cs" />
     <Compile Include="Notifications\IndustryJobsNotificationEventArgs.cs" />
     <Compile Include="Notifications\MarketOrdersNotificationEventArgs.cs" />
@@ -374,12 +373,6 @@
     <Compile Include="Serialization\Datafiles\SerializableAgent.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprint.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprintMarketGroup.cs" />
-    <Compile Include="Serialization\Datafiles\SerializableCertificate.cs" />
-    <Compile Include="Serialization\Datafiles\SerializableCertificateCategory.cs" />
-    <Compile Include="Serialization\Datafiles\SerializableCertificateClass.cs" />
-    <Compile Include="Serialization\Datafiles\SerializableCertificatePrerequisite.cs" />
-    <Compile Include="Serialization\Datafiles\SerializableCertificatePrerequisiteKind.cs" />
-    <Compile Include="Serialization\Datafiles\SerializableCertificateRecommendation.cs" />
     <Compile Include="Serialization\Datafiles\SerializableConstellation.cs" />
     <Compile Include="Serialization\Datafiles\SerializableControlTowerFuel.cs" />
     <Compile Include="Serialization\Datafiles\SerializableItem.cs" />
@@ -401,7 +394,6 @@
     <Compile Include="Serialization\Datafiles\SerializableSolarSystem.cs" />
     <Compile Include="Serialization\Datafiles\SerializableStation.cs" />
     <Compile Include="Serialization\Exportation\OutputAttributeEnhancer.cs" />
-    <Compile Include="Serialization\Exportation\OutputCertificate.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />
     <Compile Include="Serialization\FittingXml\SerializableFitting.cs" />
@@ -647,12 +639,6 @@
     <Compile Include="Attributes\NotifyPropertyChanged.cs" />
     <Compile Include="BaseCharacter.cs" />
     <Compile Include="BasePlan.cs" />
-    <Compile Include="Certificate.cs" />
-    <Compile Include="CertificateCategory.cs" />
-    <Compile Include="CertificateCategoryCollection.cs" />
-    <Compile Include="CertificateClass.cs" />
-    <Compile Include="CertificateClassCollection.cs" />
-    <Compile Include="CertificateCollection.cs" />
     <Compile Include="CharacterAttribute.cs" />
     <Compile Include="CharacterAttributeScratchpad.cs" />
     <Compile Include="CharacterComparer.cs" />
@@ -697,13 +683,8 @@
     <Compile Include="Data\Ship.cs" />
     <Compile Include="Data\SolarSystem.cs" />
     <Compile Include="Data\SolarSystemRange.cs" />
-    <Compile Include="Data\StaticCertificate.cs" />
-    <Compile Include="Data\StaticCertificateCategory.cs" />
-    <Compile Include="Data\StaticCertificateClass.cs" />
-    <Compile Include="Data\StaticCertificates.cs" />
     <Compile Include="Data\StaticItems.cs" />
     <Compile Include="Data\StaticProperties.cs" />
-    <Compile Include="Data\StaticRecommendations.cs" />
     <Compile Include="Data\StaticRequiredMaterial.cs" />
     <Compile Include="Data\StaticSkill.cs" />
     <Compile Include="Data\StaticSkillEnumerableExtensions.cs" />
@@ -812,15 +793,12 @@
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutFeed.cs" />
-    <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacterSheet.cs" />
     <Compile Include="Serialization\API\SerializableCharacterAttributes.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterCertificate.cs" />
     <Compile Include="Serialization\API\SerializableImplantSet.cs" />
     <Compile Include="Serialization\Settings\SerializableRecurringScheduleEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableScheduleEntry.cs" />
     <Compile Include="SettingsObjects\CalendarSettings.cs" />
-    <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
     <Compile Include="SettingsObjects\ItemBrowserSettings.cs" />
     <Compile Include="SettingsObjects\MonitoredCharacterSettings.cs" />
     <Compile Include="SettingsObjects\PlanColumnSettings.cs" />
@@ -871,7 +849,6 @@
     <Compile Include="Serialization\API\SerializableAPICharacters.cs" />
     <Compile Include="Serialization\API\SerializableAPIServerStatus.cs" />
     <Compile Include="QueuedSkill.cs" />
-    <None Include="Diagrams\Certificates.cd" />
     <None Include="Diagrams\Characters - accounting.cd" />
     <None Include="Diagrams\Settings.cd" />
     <None Include="Diagrams\Implants.cd" />
@@ -979,9 +956,6 @@
     <EmbeddedResource Include="Serialization\Settings\settings-transform.xslt" />
     <EmbeddedResource Include="Serialization\NotificationRefTypeIDs.xml" />
     <None Include="Resources\eve-blueprints-en-US.xml.gz">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\eve-certificates-en-US.xml.gz">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\eve-geography-en-US.xml.gz">

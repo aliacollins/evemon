@@ -345,9 +345,6 @@
   <data name="APICallList" xml:space="preserve">
     <value>/api/CallList.xml.aspx</value>
   </data>
-  <data name="APICertificateTree" xml:space="preserve">
-    <value>/eve/CertificateTree.xml.aspx</value>
-  </data>
   <data name="APICharacterID" xml:space="preserve">
     <value>/eve/CharacterID.xml.aspx</value>
   </data>
