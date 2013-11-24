@@ -220,21 +220,19 @@ namespace EVEMon.CharacterMonitoring
             // Measure texts
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            double percentCompleted = 0;
-            Int64 skillPoints = (skill.Skill == null ? skill.StartSP : skill.Skill.SkillPoints);
-            Int64 skillPointsToNextLevel = (skill.Skill == null
+            Int64 skillPoints = (skill.Skill == null || skill.Skill == Skill.UnknownSkill ? skill.StartSP : skill.Skill.SkillPoints);
+            Int64 skillPointsToNextLevel = (skill.Skill == null || skill.Skill == Skill.UnknownSkill
                                               ? skill.EndSP
                                               : skill.Skill.StaticData.GetPointsRequiredForLevel(
                                                   Math.Min(skill.Level, 5)));
 
-            if (skill.Skill != null && skill.Level == skill.Skill.Level + 1)
-                percentCompleted = skill.Skill.PercentCompleted;
+            double percentCompleted = skill.PercentCompleted;
 
             if (skill.Skill != null && skill.Level > skill.Skill.Level + 1)
                 skillPoints = skill.CurrentSP;
 
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})",
-                                            (skill.Skill == null ? 0 : skill.Skill.Rank));
+                                            (skill.Skill == null ? 0 : skill.Rank));
             string spText = String.Format(CultureConstants.DefaultCulture, "SP: {0:N0}/{1:N0}", skillPoints,
                                           skillPointsToNextLevel);
             string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
@@ -338,7 +336,7 @@ namespace EVEMon.CharacterMonitoring
                                   e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
 
                 // Box color
-                g.FillRectangle(skill.Skill != null && level <= skill.Skill.Level ? Brushes.Black : Brushes.DarkGray, brect);
+                g.FillRectangle(skill.Skill != null && level < skill.Level ? Brushes.Black : Brushes.DarkGray, brect);
 
                 // Color indicator for a queued level
                 if (skill.Skill == null)
@@ -348,13 +346,13 @@ namespace EVEMon.CharacterMonitoring
 
                 foreach (QueuedSkill qskill in Character.SkillQueue)
                 {
-                    if ((!skill.Skill.IsTraining && skill == qskill && level == qskill.Level)
+                    if ((!qskill.IsTraining && skill == qskill && level == qskill.Level)
                         || (skill == qskill && level <= qskill.Level && level > skill.Skill.Level
                             && Math.Abs(percentCompleted) < double.Epsilon))
                         g.FillRectangle(brush, brect);
 
                     // Blinking indicator of skill level in training
-                    if (!skill.Skill.IsTraining || skill != qskill || level != skill.Level ||
+                    if (!qskill.IsTraining || skill != qskill || level != skill.Level ||
                         Math.Abs(percentCompleted) < double.Epsilon)
                         continue;
 
@@ -632,16 +630,18 @@ namespace EVEMon.CharacterMonitoring
 
             Int64 sp = skill.Skill.SkillPoints;
             int nextLevel = Math.Min(5, skill.Level);
-            double percentCompleted = 0;
-            if (skill.Level == skill.Skill.Level + 1)
-                percentCompleted = skill.Skill.PercentCompleted;
+            double percentCompleted = skill.PercentCompleted;
 
             if (skill.Level > skill.Skill.Level + 1)
                 sp = skill.CurrentSP;
 
-            Int64 nextLevelSP = skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
+            Int64 nextLevelSP = skill.Skill == Skill.UnknownSkill
+                ? skill.EndSP
+                : skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
             Int64 pointsLeft = nextLevelSP - sp;
-            TimeSpan timeSpanFromPoints = skill.Skill.GetTimeSpanForPoints(pointsLeft);
+            TimeSpan timeSpanFromPoints = skill.Skill == Skill.UnknownSkill
+                ? skill.EndTime.Subtract(DateTime.UtcNow)
+                : skill.Skill.GetTimeSpanForPoints(pointsLeft);
             string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(
                 DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.UppercaseText);
 
@@ -655,13 +655,13 @@ namespace EVEMon.CharacterMonitoring
                                               "Next level I: {0:N0} skill points remaining\n", pointsLeft);
                 untrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time remaining: {0}\n",
                                               remainingTimeText);
-                AddSkillBoilerPlate(untrainedToolTip, skill.Skill);
+                AddSkillBoilerPlate(untrainedToolTip, skill);
                 return untrainedToolTip.ToString();
             }
 
             // So, it's a left click on a skill, we display the tool tip
             // Currently training skill?
-            if (skill.Skill.IsTraining && percentCompleted > 0)
+            if (skill.IsTraining && percentCompleted > 0)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Partially Completed ({0}%)\n",
@@ -671,12 +671,12 @@ namespace EVEMon.CharacterMonitoring
                                                      Skill.GetRomanFromInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time remaining: {0}\n",
                                                      remainingTimeText);
-                AddSkillBoilerPlate(partiallyTrainedToolTip, skill.Skill);
+                AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
                 return partiallyTrainedToolTip.ToString();
             }
 
             // Currently training skill but next queued level?
-            if (skill.Skill.IsTraining && Math.Abs(percentCompleted) < double.Epsilon)
+            if (skill.IsTraining && Math.Abs(percentCompleted) < double.Epsilon)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture,
@@ -686,12 +686,12 @@ namespace EVEMon.CharacterMonitoring
                                                      Skill.GetRomanFromInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time to next level: {0}\n",
                                                      remainingTimeText);
-                AddSkillBoilerPlate(partiallyTrainedToolTip, skill.Skill);
+                AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
                 return partiallyTrainedToolTip.ToString();
             }
 
             // Partially trained skill and not in training?
-            if (skill.Skill.IsPartiallyTrained && !skill.Skill.IsTraining)
+            if (skill.Skill.IsPartiallyTrained && !skill.IsTraining)
             {
                 StringBuilder partiallyTrainedToolTip = new StringBuilder();
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Partially Completed ({0}%)\n",
@@ -701,7 +701,7 @@ namespace EVEMon.CharacterMonitoring
                                                      Skill.GetRomanFromInt(nextLevel), pointsLeft);
                 partiallyTrainedToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time remaining: {0}\n",
                                                      remainingTimeText);
-                AddSkillBoilerPlate(partiallyTrainedToolTip, skill.Skill);
+                AddSkillBoilerPlate(partiallyTrainedToolTip, skill);
                 return partiallyTrainedToolTip.ToString();
             }
 
@@ -717,7 +717,7 @@ namespace EVEMon.CharacterMonitoring
                                                   Skill.GetRomanFromInt(nextLevel), pointsLeft);
                 levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time to next level: {0}\n",
                                                   remainingTimeText);
-                AddSkillBoilerPlate(levelCompleteToolTip, skill.Skill);
+                AddSkillBoilerPlate(levelCompleteToolTip, skill);
                 return levelCompleteToolTip.ToString();
             }
 
@@ -729,7 +729,7 @@ namespace EVEMon.CharacterMonitoring
                                                  pointsLeft);
             calculationErrorToolTip.AppendFormat(CultureConstants.DefaultCulture, "Training time remaining: {0}\n",
                                                  remainingTimeText);
-            AddSkillBoilerPlate(calculationErrorToolTip, skill.Skill);
+            AddSkillBoilerPlate(calculationErrorToolTip, skill);
             return calculationErrorToolTip.ToString();
         }
 
@@ -738,12 +738,12 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="toolTip">The tool tip.</param>
         /// <param name="skill">The skill.</param>
-        private static void AddSkillBoilerPlate(StringBuilder toolTip, Skill skill)
+        private static void AddSkillBoilerPlate(StringBuilder toolTip, QueuedSkill skill)
         {
             toolTip.AppendLine();
-            toolTip.AppendLine(skill.Description.WordWrap(100));
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Primary: {0}, ", skill.PrimaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", skill.SecondaryAttribute);
+            toolTip.AppendLine(skill.Skill.Description.WordWrap(100));
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Primary: {0}, ", skill.Skill.PrimaryAttribute);
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", skill.Skill.SecondaryAttribute);
             toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0:N0} SP/hour)", skill.SkillPointsPerHour);
         }
 

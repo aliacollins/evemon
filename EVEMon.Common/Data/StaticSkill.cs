@@ -22,11 +22,13 @@ namespace EVEMon.Common.Data
         {
             ID = Int32.MaxValue;
             Name = "Unknown";
+            Description = "An unknown skill.";
             ArrayIndex = Int16.MaxValue;
             Prerequisites = new Collection<StaticSkillLevel>();
             PrimaryAttribute = EveAttribute.None;
             SecondaryAttribute = EveAttribute.None;
             Group = StaticSkillGroup.UnknownStaticSkillGroup;
+            FormattedCost = Cost.ToNumericString(0);
         }
 
         /// <summary>

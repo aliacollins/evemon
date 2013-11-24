@@ -154,7 +154,7 @@ namespace EVEMon.CharacterMonitoring
             lblSPPerHour.Text = (training.Skill == null
                                      ? "???"
                                      : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
-                                                     training.Skill.SkillPointsPerHour));
+                                                     training.SkillPointsPerHour));
             lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0:ddd} {1:G}", completionTime, completionTime);
 
             // Dipslay a warning if anything scheduled is blocking us

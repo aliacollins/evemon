@@ -313,8 +313,7 @@ namespace EVEMon.Common
         {
             get
             {
-                float spPerHour = Character.GetBaseSPPerHour(this);
-                return (int)Math.Round(spPerHour);
+                return Character == null ? 0 : (int)Math.Round(Character.GetBaseSPPerHour(this));
             }
         }
 
@@ -368,10 +367,8 @@ namespace EVEMon.Common
             get
             {
                 CCPCharacter ccpCharacter = Character as CCPCharacter;
-                if (ccpCharacter == null)
-                    return false;
-
-                return (ccpCharacter.IsTraining && ccpCharacter.CurrentlyTrainingSkill.Skill == this);
+                return ccpCharacter != null && ccpCharacter.IsTraining && ccpCharacter.CurrentlyTrainingSkill != null &&
+                       ccpCharacter.CurrentlyTrainingSkill.Skill == this;
             }
         }
 
@@ -383,15 +380,11 @@ namespace EVEMon.Common
             get
             {
                 // Is it in training ? Then we estimate the current SP
-                if (IsTraining)
-                {
-                    CCPCharacter ccpCharacter = Character as CCPCharacter;
-                    if (ccpCharacter != null)
-                        return ccpCharacter.CurrentlyTrainingSkill.CurrentSP;
-                }
+                if (!IsTraining)
+                    return m_currentSkillPoints;
 
-                // Not in training
-                return m_currentSkillPoints;
+                CCPCharacter ccpCharacter = Character as CCPCharacter;
+                return ccpCharacter != null ? ccpCharacter.CurrentlyTrainingSkill.CurrentSP : m_currentSkillPoints;
             }
         }
 
@@ -543,7 +536,7 @@ namespace EVEMon.Common
         /// <returns>Time it will take.</returns>
         public TimeSpan GetTimeSpanForPoints(Int64 points)
         {
-            return Character.GetTimeSpanForPoints(this, points);
+            return Character == null ? TimeSpan.Zero : Character.GetTimeSpanForPoints(this, points);
         }
 
         /// <summary>

@@ -117,15 +117,35 @@ namespace EVEMon.CharacterMonitoring
                 RefreshThrobber();
 
                 // Only update the skill summary when the skill points change
-                if (m_spAtLastRedraw != m_character.SkillPoints)
+                var totalSkillPoints = GetTotalSkillPoints();
+
+                if (m_spAtLastRedraw != totalSkillPoints)
                     SkillSummaryLabel.Text = FormatSkillSummary();
 
-                m_spAtLastRedraw = m_character.SkillPoints;
+                m_spAtLastRedraw = totalSkillPoints;
             }
             finally
             {
                 ResumeLayout();
             }
+        }
+
+        /// <summary>
+        /// Gets the total skill points.
+        /// </summary>
+        /// <returns></returns>
+        private long GetTotalSkillPoints()
+        {
+            var totalSkillPoints = m_character.SkillPoints;
+
+            var ccpCharacter = m_character as CCPCharacter;
+            var queuedSkill = ccpCharacter == null ? null : ccpCharacter.SkillQueue.FirstOrDefault();
+            if (ccpCharacter != null && ccpCharacter.IsTraining &&
+                queuedSkill != null && queuedSkill.SkillName == Skill.UnknownSkill.Name)
+            {
+                totalSkillPoints += queuedSkill.CurrentSP - queuedSkill.StartSP;
+            }
+            return totalSkillPoints;
         }
 
         /// <summary>
@@ -246,9 +266,6 @@ namespace EVEMon.CharacterMonitoring
         /// <value>The character.</value>
         public void SetCharacter(Character character)
         {
-            if (m_character == character)
-                return;
-
             m_character = character;
         }
 
@@ -553,7 +570,7 @@ namespace EVEMon.CharacterMonitoring
             output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}",
                                 m_character.GetSkillCountAtLevel(5)).AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:N0}",
-                                m_character.SkillPoints).AppendLine();
+                                GetTotalSkillPoints()).AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:N0}",
                                 m_character.CloneSkillPoints).AppendLine();
             output.Append(m_character.CloneName);
