@@ -17,18 +17,7 @@ namespace EVEMon.Common.Data
         internal Ship(MarketGroup group, SerializableItem src)
             : base(group, src)
         {
-            Recommendations = new StaticRecommendations<StaticCertificate>();
         }
-
-        #endregion
-
-
-        # region Public Properties
-
-        /// <summary>
-        /// Gets the recommended certificates.
-        /// </summary>
-        public StaticRecommendations<StaticCertificate> Recommendations { get; private set; }
 
         #endregion
     }

@@ -16,9 +16,6 @@
       <Property Name="BasePerception" Hidden="true" />
       <Property Name="BaseWillpower" Hidden="true" />
       <Property Name="Bloodline" Hidden="true" />
-      <Property Name="CertificateCategories" Hidden="true" />
-      <Property Name="CertificateClasses" Hidden="true" />
-      <Property Name="Certificates" Hidden="true" />
       <Method Name="Character" Hidden="true" />
       <Property Name="CharacterSheetQueryResult" Hidden="true" />
       <Property Name="CloneName" Hidden="true" />
@@ -57,9 +54,6 @@
       <Field Name="m_attributes" Hidden="true" />
       <Field Name="m_balance" Hidden="true" />
       <Field Name="m_bloodLine" Hidden="true" />
-      <Field Name="m_certificateCategories" Hidden="true" />
-      <Field Name="m_certificateClasses" Hidden="true" />
-      <Field Name="m_certificates" Hidden="true" />
       <Field Name="m_characterId" Hidden="true" />
       <Field Name="m_characterSheetQueryResult" Hidden="true" />
       <Field Name="m_cloneName" Hidden="true" />

@@ -21,7 +21,6 @@ namespace EVEMon.Common.SettingsObjects
             Splitters = new ModifiedSerializableDictionary<string, int>();
             m_confirmedTips = new Collection<string>();
 
-            CertificateBrowser = new CertificateBrowserSettings();
             BlueprintBrowser = new BlueprintBrowserSettings();
             SystemTrayTooltip = new TrayTooltipSettings();
             SkillPieChart = new SkillPieChartSettings();
@@ -71,13 +70,6 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The plan window.</value>
         [XmlElement("planWindow")]
         public PlanWindowSettings PlanWindow { get; set; }
-
-        /// <summary>
-        /// Gets or sets the certificate browser.
-        /// </summary>
-        /// <value>The certificate browser.</value>
-        [XmlElement("certificateBrowser")]
-        public CertificateBrowserSettings CertificateBrowser { get; set; }
 
         /// <summary>
         /// Gets or sets the ship browser.

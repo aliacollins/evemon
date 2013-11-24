@@ -11,13 +11,11 @@ namespace EVEMon.Common.Serialization.Exportation
     {
         private readonly Collection<OutputAttributeEnhancer> m_attributeEnhancers;
         private readonly Collection<OutputSkillGroup> m_skillGroups;
-        private readonly Collection<OutputCertificate> m_certificates;
 
         public OutputCharacter()
         {
             m_attributeEnhancers = new Collection<OutputAttributeEnhancer>();
             m_skillGroups = new Collection<OutputSkillGroup>();
-            m_certificates = new Collection<OutputCertificate>();
         }
 
         [XmlAttribute("name")]
@@ -74,13 +72,6 @@ namespace EVEMon.Common.Serialization.Exportation
         public Collection<OutputSkillGroup> SkillGroups
         {
             get { return m_skillGroups; }
-        }
-
-        [XmlArray("certificates")]
-        [XmlArrayItem("certificate")]
-        public Collection<OutputCertificate> Certificates
-        {
-            get { return m_certificates; }
         }
     }
 }

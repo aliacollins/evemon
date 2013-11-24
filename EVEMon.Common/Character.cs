@@ -53,9 +53,6 @@ namespace EVEMon.Common
             Skills = new SkillCollection(this);
 
             EmploymentHistory = new EmploymentRecordCollection(this);
-            CertificateCategories = new CertificateCategoryCollection(this);
-            CertificateClasses = new CertificateClassCollection(this);
-            Certificates = new CertificateCollection(this);
             ImplantSets = new ImplantSetCollection(this);
             Plans = new PlanCollection(this);
 
@@ -359,26 +356,6 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Certificates
-
-        /// <summary>
-        /// Gets the collection of certificate categories.
-        /// </summary>
-        public CertificateCategoryCollection CertificateCategories { get; private set; }
-
-        /// <summary>
-        /// Gets the collection of certificate classes.
-        /// </summary>
-        public CertificateClassCollection CertificateClasses { get; private set; }
-
-        /// <summary>
-        /// Gets the collection of certificates.
-        /// </summary>
-        public CertificateCollection Certificates { get; private set; }
-
-        #endregion
-
-
         #region Plans
 
         /// <summary>
@@ -465,8 +442,6 @@ namespace EVEMon.Common
             // Skills
             serial.Skills.AddRange(Skills.Export());
 
-            // Certificates
-            serial.Certificates.AddRange(Certificates.Export());
         }
 
         /// <summary>
@@ -564,9 +539,6 @@ namespace EVEMon.Common
 
             // Skills
             Skills.Import(serial.Skills, serial is SerializableAPICharacterSheet);
-
-            // Certificates
-            Certificates.Import(serial.Certificates);
         }
 
         /// <summary>

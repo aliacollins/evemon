@@ -753,32 +753,6 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Certificates
-
-        /// <summary>
-        /// Checks whether, after this plan, the owner will be eligible to the provided certificate
-        /// </summary>
-        /// <param name="cert"></param>
-        /// <returns></returns>
-        public bool WillGrantEligibilityFor(Certificate cert)
-        {
-            if (cert == null)
-                throw new ArgumentNullException("cert");
-
-            if (cert.Status == CertificateStatus.Claimable || cert.Status == CertificateStatus.Granted)
-                return true;
-
-            // We check every prerequisite is trained
-            return !(cert.AllTopPrerequisiteSkills.Select(
-                skillToTrain => new { skillToTrain, skill = skillToTrain.Skill }).Where(
-                    skillToTrain => skillToTrain.skill.Level < skillToTrain.skillToTrain.Level).Where(
-                        skillToTrain => !IsPlanned(skillToTrain.skill, skillToTrain.skillToTrain.Level)).Select(
-                            skill => skill.skillToTrain)).Any();
-        }
-
-        #endregion
-
-
         #region Sort
 
         /// <summary>

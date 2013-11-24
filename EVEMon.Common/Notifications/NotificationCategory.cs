@@ -1,4 +1,5 @@
-﻿using EVEMon.Common.Attributes;
+﻿using System;
+using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common.Notifications
 {
@@ -40,7 +41,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// A certificate is claimable.
         /// </summary>
-        [Header("Claimable certificate")]
+        [Obsolete]
         ClaimableCertificate,
 
         /// <summary>

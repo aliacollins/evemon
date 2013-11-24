@@ -163,22 +163,6 @@ namespace EVEMon.Common.SettingsObjects
         Unspecified = 5
     }
 
-    public enum CertificateFilter
-    {
-        All = 0,
-        Claimable = 1,
-        HideElite = 2,
-        NextGradeTrainable = 3,
-        NextGradeUntrainable = 4
-    }
-
-    public enum CertificateSort
-    {
-        Name = 0,
-        TimeToNextGrade = 1,
-        TimeToEliteGrade = 2
-    }
-
     #endregion
 
 

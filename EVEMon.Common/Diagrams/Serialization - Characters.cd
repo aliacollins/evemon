@@ -13,7 +13,6 @@
       <Property Name="Attributes" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="Certificates" />
       <Property Name="Skills" />
     </ShowAsCollectionAssociation>
   </Class>
@@ -65,13 +64,6 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAgEAAAAAACQ=</HashCode>
       <FileName>Serialization\SerializableAttributes.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="EVEMon.Common.Serialization.SerializableCertificate" Collapsed="true">
-    <Position X="8.75" Y="1.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
-      <FileName>Serialization\SerializableCertificate.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="EVEMon.Common.Serialization.SerializableSkill" Collapsed="true">

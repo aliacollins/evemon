@@ -93,43 +93,6 @@ namespace EVEMon.Common
     }
 
     /// <summary>
-    /// Represents a certificate's status from a character's point of view.
-    /// </summary>
-    public enum CertificateStatus
-    {
-        /// <summary>
-        /// The certificate has been granted to this character
-        /// </summary>
-        Granted,
-
-        /// <summary>
-        /// The certificate can be claimed by the char, all prerequisites are met.
-        /// </summary>
-        Claimable,
-
-        /// <summary>
-        /// The certificate is not claimable yet but at least one prerequisite is satisfied
-        /// </summary>
-        PartiallyTrained,
-
-        /// <summary>
-        /// The certificate is not claimable and none of its prerequisites are satisfied
-        /// </summary>
-        Untrained
-    }
-
-    /// <summary>
-    /// Represents a certificate grade.
-    /// </summary>
-    public enum CertificateGrade
-    {
-        Basic = 0,
-        Standard = 1,
-        Improved = 2,
-        Elite = 3
-    }
-
-    /// <summary>
     /// Represents a plan entry sort.
     /// </summary>
     public enum PlanEntrySort
@@ -1187,11 +1150,6 @@ namespace EVEMon.Common
         /// List of alliances in EVE.
         /// </summary>
         AllianceList,
-
-        /// <summary>
-        /// List of certificates in EVE.
-        /// </summary>
-        CertificateTree,
 
         /// <summary>
         /// List of API errors.

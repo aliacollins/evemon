@@ -9,12 +9,6 @@
       <Field Name="m_type" Hidden="true" />
       <Method Name="Ship" Hidden="true" />
     </Members>
-    <AssociationLine Name="Recommendations" Type="EVEMon.Common.StaticCertificate" FixedToPoint="true">
-      <Path>
-        <Point X="5.75" Y="3.438" />
-        <Point X="2.5" Y="3.438" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
       <HashCode>QAAAIAAAAAAAAAAAAAAAAEBAAAAAAAAAQQAAAAAAAQA=</HashCode>
       <FileName>Ship.cs</FileName>
@@ -56,25 +50,6 @@
     <ShowAsCollectionAssociation>
       <Property Name="AllTypes" />
       <Property Name="AllShips" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="EVEMon.Common.StaticCertificate" Collapsed="true">
-    <Position X="1" Y="3.25" Width="1.5" />
-    <AssociationLine Name="Recommendations" Type="EVEMon.Common.Ship" FixedFromPoint="true">
-      <Path>
-        <Point X="2.5" Y="3.562" />
-        <Point X="5.75" Y="3.562" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.089" Y="-0.263" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>BAACAAAAQEAgAAAEAAAAAEQAAAAAAAQAAIAAAAFQEQA=</HashCode>
-      <FileName>StaticCertificate.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Recommendations" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="EVEMon.Common.EveObject">
