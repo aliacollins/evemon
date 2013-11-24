@@ -2,10 +2,10 @@
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
     <date>24 November 2013</date>
-    <version>1.8.4.4123</version>
-    <md5>8b4b9865118769725a03333a23057536</md5>
+    <version>1.8.4.4125</version>
+    <md5>915b40b56c615c3db6eddbb100065bb9</md5>
     <url>http://forum.battleclinic.com/index.php/topic,180665.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.4.4123.exe</autopatchurl>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.4.4125.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
