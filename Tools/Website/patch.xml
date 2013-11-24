@@ -1,89 +1,73 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>05 September 2013</date>
-    <version>1.8.3.4116</version>
-    <md5>8051ec531c3ceced735868725d00b787</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,179068.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.3.4116.exe</autopatchurl>
+    <date>24 November 2013</date>
+    <version>1.8.4.4123</version>
+    <md5>8b4b9865118769725a03333a23057536</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,180665.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.4.4123.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
  
  * Jimi
- * SyndicateAexeron
- * Quantix Blackstar
- * Travis Puderbaugh
- * Kunnis Niam
  
 == Bug Fixes ==
- * Fixed possible crash bug when EVEMon loads the Certificates data file.
- * Fixed Character After Plan Export.
- * Fixed a bug where the Naglfar, Talwar, Corax, Algos and Dragoon race were set as "Faction".
- * Fixed date and time parsing in Scheduler when using custom date and time formatting.
- 
-== Enhancements ==
- * EVEMon now supports any date time format.
 
+ * Fixed a crash when an unknown skill is present in the skill queue.
+ 
 == Misc ==
- *  Blueprint copies will no longer be included in assets total estimated value.
-  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
+
+ * Certificates Browser and  notifications have been deprecated due to their removal in Rubicon expansion. 
+ * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>03 September 2013</date>
-      <md5>868bf5c583e0a85cba964c3783b3cd07</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/598940</url>
-      <message><![CDATA[Odyssey 1.1 (598940) blueprints data file by the EVEMon Development Team
-NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
-    </datafile>
-    <datafile>
-      <name>eve-certificates-en-US.xml.gz</name>
-      <date>03 September 2013</date>
-      <md5>0c0150f50ce1051a658ba80da0cb68b8</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/598940</url>
-      <message><![CDATA[Odyssey 1.1 (598940) certificates data file by the EVEMon Development Team
+      <date>24 November 2013</date>
+      <md5>637ba612927a84a18a1af7409c424892</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
+      <message><![CDATA[Rubicon 1.0 (653401) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>03 September 2013</date>
-      <md5>a1278f394aa8f1833d2eb6ab8f391fb5</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/598940</url>
-      <message><![CDATA[Odyssey 1.1 (598940) geography data file by the EVEMon Development Team
+      <date>24 November 2013</date>
+      <md5>886a36e599134e54d7895d3038d31fe8</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
+      <message><![CDATA[Rubicon 1.0 (653401) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>03 September 2013</date>
-      <md5>bec200366ebeaecf7af0bdde9d0c99b4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/598940</url>
-      <message><![CDATA[Odyssey 1.1 (598940) items data file by the EVEMon Development Team
+      <date>24 November 2013</date>
+      <md5>20d702027e9b4723fa51f08260f3de42</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
+      <message><![CDATA[Rubicon 1.0 (653401) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>03 September 2013</date>
-      <md5>ce715f7bc7c2953760ef8b07355cdf57</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/598940</url>
-      <message><![CDATA[Odyssey 1.1 (598940) properties data file by the EVEMon Development Team
+      <date>24 November 2013</date>
+      <md5>bee4a3983e5de5ff6375d0484dcc1a8e</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
+      <message><![CDATA[Rubicon 1.0 (653401) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>03 September 2013</date>
-      <md5>ba9ed81e9e44a65354ac5ea59d33e604</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/598940</url>
-      <message><![CDATA[Odyssey 1.1 (598940) reprocessing data file by the EVEMon Development Team
+      <date>24 November 2013</date>
+      <md5>0592b2e35a602dad241b061c2e374b9e</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
+      <message><![CDATA[Rubicon 1.0 (653401) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>03 September 2013</date>
-      <md5>724c65ef92626bb01c6bcc8979a8e5ae</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Odyssey/598940</url>
-      <message><![CDATA[Odyssey 1.1 (598940) skills data file by the EVEMon Development Team
+      <date>24 November 2013</date>
+      <md5>e5fcf5b00ee16e93658ac2f27bc79bea</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
+      <message><![CDATA[Rubicon 1.0 (653401) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
   </datafiles>
