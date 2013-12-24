@@ -1130,6 +1130,10 @@ namespace EVEMon
             // Save the settings to make sure we don't loose anything
             Settings.SaveImmediate();
 
+            // Save settings to BC storage
+            if (!BCAPI.UploadSettingsFile())
+                return;
+
             // Stop IGB
             if (m_igbServer != null)
                 m_igbServer.Stop();
@@ -1365,6 +1369,7 @@ namespace EVEMon
         /// <param name="e"></param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Save settings to BC storage
             if (!BCAPI.UploadSettingsFile())
                 return;
 
@@ -1963,6 +1968,10 @@ namespace EVEMon
         /// <param name="e"></param>
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Save settings to BC storage
+            if (!BCAPI.UploadSettingsFile())
+                return;
+
             Application.Exit();
         }
 
