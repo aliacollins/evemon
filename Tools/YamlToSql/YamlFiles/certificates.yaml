@@ -1,0 +1,6912 @@
+50:
+    description: This certificate represents a level of competence in handling small
+        energy turrets. The holder has learned that pulse lasers are short range weapons,
+        beam lasers are long range, and both use crystal ammunition which can be swapped
+        with no reload time. This is a good skillset for capsuleers specializing in
+        small Amarr vessels based on Frigate and Destroyer hulls.
+    groupID: 255
+    name: Small Energy Turret
+    recommendedFor:
+    - 589
+    - 591
+    - 596
+    - 597
+    - 615
+    - 3516
+    - 11184
+    - 11393
+    - 11940
+    - 11942
+    - 16236
+    - 17703
+    - 17924
+    - 17926
+    - 33079
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 4
+        3303:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3316:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        11083:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12213:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+64:
+    description: This certificate represents a level of competence in handling medium
+        energy turrets. The holder has learned that pulse lasers are short range weapons,
+        beam lasers are long range, and both use crystal ammunition which can be swapped
+        with no reload time. This is a good skillset for capsuleers specializing in
+        medium Amarr vessels based on Cruiser and Battlecruiser hulls.
+    groupID: 255
+    name: Medium Energy Turret
+    recommendedFor:
+    - 624
+    - 2006
+    - 3518
+    - 3756
+    - 12003
+    - 12017
+    - 17709
+    - 17718
+    - 17922
+    - 22448
+    - 24696
+    - 29337
+    - 29986
+    - 33155
+    - 33470
+    - 33553
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3303:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3306:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3316:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        12204:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12214:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+65:
+    description: This certificate represents a level of competence in handling large
+        energy turrets. The holder has learned that pulse lasers are short-range weapons,
+        beam lasers are long range, and that both use crystal ammunition which can
+        be swapped with no reload time. This is a good skillset for capsuleers specializing
+        in medium to large Amarr vessels based on the Battlecruiser and Battleship
+        hulls.
+    groupID: 255
+    name: Large Energy Turret
+    recommendedFor:
+    - 642
+    - 4302
+    - 11936
+    - 11938
+    - 17726
+    - 17736
+    - 17920
+    - 22428
+    - 24692
+    - 28659
+    - 32305
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3303:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3306:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3309:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3316:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12205:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12215:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+66:
+    description: This certificate represents a level of competence in handling capital
+        energy turrets. The holder has learned that pulse lasers are short-range weapons,
+        beam lasers are long range, and that both use crystal ammunition which can
+        be swapped with no reload time. This is a good skillset for capsuleers specializing
+        in capital Amarr vessels based on Dreadnought and Titan hulls.
+    groupID: 255
+    name: Capital Energy Turret
+    recommendedFor:
+    - 11567
+    - 19720
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3303:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3306:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3309:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3310:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3316:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20327:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+67:
+    description: This certificate represents a level of competence in handling small
+        hybrid turrets. The holder has learned that blasters are extremely close range
+        weapons, while railguns are their counterpart at very long range, and that
+        both use hybrid charges as ammunition. This is a good skillset for capsuleers
+        specializing in small Caldari or Gallente vessels based on Frigate and Destroyer
+        hulls.
+    groupID: 255
+    name: Small Hybrid Turret
+    recommendedFor:
+    - 593
+    - 594
+    - 601
+    - 603
+    - 606
+    - 608
+    - 2834
+    - 11178
+    - 11200
+    - 11202
+    - 11381
+    - 12042
+    - 12044
+    - 16238
+    - 16240
+    - 17841
+    - 17928
+    - 22460
+    - 32840
+    - 32842
+    - 32844
+    - 32846
+    - 32848
+    - 32872
+    - 33083
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 4
+        3301:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3316:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        11082:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12210:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+68:
+    description: This certificate represents a level of competence in handling medium
+        hybrid turrets. The holder has learned that blasters are extremely close range
+        weapons, while railguns are their counterpart at very long range, and that
+        both use hybrid charges as ammunition. This is a good skillset for capsuleers
+        specializing in medium Caldari or Gallente vessels based on Cruiser and Battlecruiser
+        hulls.
+    groupID: 255
+    name: Medium Hybrid Turret
+    recommendedFor:
+    - 623
+    - 626
+    - 627
+    - 2836
+    - 3756
+    - 11011
+    - 11969
+    - 11971
+    - 12011
+    - 12021
+    - 12023
+    - 16227
+    - 16229
+    - 17722
+    - 22442
+    - 22446
+    - 22466
+    - 29344
+    - 29984
+    - 29988
+    - 33151
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3301:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3304:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3316:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        12206:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12211:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+69:
+    description: This certificate represents a level of competence in handling large
+        hybrid turrets. The holder has learned that blasters are extreme close range
+        weapons, while railguns are their counterpart at very long range, and that
+        both use hybrid charges as ammunition. This is a good skillset for capsuleers
+        specializing in medium to large Caldari or Gallente vessels based on the Battlecruiser
+        and Battleship hulls.
+    groupID: 255
+    name: Large Hybrid Turret
+    recommendedFor:
+    - 641
+    - 4306
+    - 4308
+    - 13202
+    - 17728
+    - 17740
+    - 22430
+    - 24688
+    - 24690
+    - 28661
+    - 32307
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3301:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3304:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3307:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3316:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12207:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12212:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+70:
+    description: This certificate represents a level of competence in handling capital
+        hybrid turrets. The holder has learned that blasters are extreme close range
+        weapons, while railguns are their counterpart at very long range, and that
+        both use hybrid charges as ammunition. This is a good skillset for capsuleers
+        specializing in capital Gallente vessels based on Dreadnought and Titan hulls.
+    groupID: 255
+    name: Capital Hybrid Turret
+    recommendedFor:
+    - 671
+    - 19724
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3301:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3304:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3307:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3310:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3316:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        21666:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+71:
+    description: This certificate represents a level of competence in handling small
+        projectile turrets. The holder has learned that autocannons are close range
+        weapons, while artillery cannons are medium to long range turrets with good
+        alpha damage. This is a good skillset for capsuleers specializing in small
+        Minmatar vessels based on Frigate and Destroyer hulls.
+    groupID: 255
+    name: Small Projectile Turret
+    recommendedFor:
+    - 585
+    - 587
+    - 588
+    - 617
+    - 11196
+    - 11198
+    - 11371
+    - 11400
+    - 16242
+    - 17812
+    - 17932
+    - 22456
+    - 32207
+    - 33099
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 4
+        3302:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        11084:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12201:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+72:
+    description: This certificate represents a level of competence in handling medium
+        projectile turrets. The holder has learned that autocannons are close range
+        weapons, while artillery cannons are medium to long range turrets with good
+        alpha damage. This is a good skillset for capsuleers specializing in medium
+        Minmatar vessels based on Cruiser and Battlecruiser hulls.
+    groupID: 255
+    name: Medium Projectile Turret
+    recommendedFor:
+    - 622
+    - 629
+    - 3756
+    - 11961
+    - 11963
+    - 11999
+    - 12013
+    - 12015
+    - 17713
+    - 17720
+    - 22444
+    - 24702
+    - 29336
+    - 29990
+    - 32209
+    - 33157
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3302:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3305:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        12202:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12208:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+73:
+    description: This certificate represents a level of competence in handling large
+        projectile turrets. The holder has learned that autocannons are close range
+        weapons, while artillery cannons are medium to long range turrets with good
+        alpha damage. This is a good skillset for capsuleers specializing in medium
+        to large Minmatar vessels based on the Battlecruiser and Battleship hulls.
+    groupID: 255
+    name: Large Projectile Turret
+    recommendedFor:
+    - 639
+    - 4310
+    - 17732
+    - 17738
+    - 22440
+    - 24694
+    - 26842
+    - 28665
+    - 32311
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3302:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3305:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3308:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3310:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12203:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12209:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+74:
+    description: This certificate represents a level of competence in handling capital
+        projectile turrets. The holder has learned that autocannons are close range
+        weapons, while artillery cannons are medium to long range turrets with good
+        alpha damage. This is a good skillset for capsuleers specializing in capital
+        Minmatar vessels based on Dreadnought and Titan hulls.
+    groupID: 255
+    name: Capital Projectile Turret
+    recommendedFor:
+    - 19722
+    - 23773
+    skillTypes:
+        3300:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3302:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3305:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3308:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3310:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3311:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3312:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3315:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3317:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        21667:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+75:
+    description: This certificate represents a level of competence in operating small
+        missile launchers. The holder has learned rocket and light missile launchers
+        are short range weapons with a delayed time to impact. This is a good skillset
+        for capsuleers specializing in small Caldari or Minmatar vessels based on
+        Frigate and Destroyer hulls.
+    groupID: 256
+    name: Small Missiles
+    recommendedFor:
+    - 583
+    - 598
+    - 601
+    - 602
+    - 11176
+    - 11186
+    - 11365
+    - 11379
+    - 17619
+    - 17930
+    - 22452
+    - 22464
+    - 32788
+    - 32876
+    - 32878
+    - 33081
+    skillTypes:
+        3319:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3320:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3321:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12441:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12442:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20209:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        20210:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        20312:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 0
+        20314:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        21071:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+76:
+    description: This certificate represents a level of competence in operating medium
+        missile launchers. The holder has learned that rapid light missile, heavy
+        assault missiles and heavy  missile launchers are short to medium range weapons
+        with a delayed time to impact. This is a good skillset for capsuleers specializing
+        in medium Caldari or Minmatar vessels based on Cruiser and Battlecruiser hulls.
+    groupID: 256
+    name: Medium Missiles
+    recommendedFor:
+    - 621
+    - 630
+    - 3756
+    - 11959
+    - 11961
+    - 11971
+    - 11993
+    - 11995
+    - 12019
+    - 16231
+    - 17634
+    - 17715
+    - 22468
+    - 22470
+    - 22474
+    - 24698
+    - 29336
+    - 29340
+    - 29984
+    - 29986
+    - 29990
+    - 33153
+    skillTypes:
+        3319:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3321:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3324:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12441:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12442:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20211:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        20312:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 0
+        20314:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        21071:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        25718:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        25719:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+77:
+    description: This certificate represents a level of competence in operating large
+        missile launchers. The holder has learned that rapid heavy missile,  torpedoes
+        and cruise missile launchers are medium to long range weapons with a delayed
+        time to impact. This is a good skillset for capsuleers specializing in large
+        Caldari or Minmatar vessels based on the Battleship hulls.
+    groupID: 256
+    name: Large Missiles
+    recommendedFor:
+    - 638
+    - 644
+    - 17636
+    - 17918
+    - 22436
+    - 26840
+    - 28710
+    - 32309
+    - 32311
+    skillTypes:
+        3319:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3321:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3324:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3325:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3326:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12441:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12442:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20212:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        20213:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        20312:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 0
+        20314:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        21071:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+78:
+    description: This certificate represents a level of competence in operating capital
+        missile launchers. The holder has learned that citadel torpedoes and cruise
+        missiles are medium to long range weapons with a delayed time to impact. This
+        is a good skillset for capsuleers specializing in capital Caldari vessels
+        based on Dreadnought and Titan hulls.
+    groupID: 256
+    name: Capital Missiles
+    recommendedFor:
+    - 3764
+    - 19726
+    skillTypes:
+        3300:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3319:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3321:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3324:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3325:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3326:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        12441:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12442:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20312:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20314:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20315:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        21071:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        21668:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        32435:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+79:
+    description: This certificate represents a  level of competence in the deployment
+        of timed munitions. The holder has learned that bombs are launched straight
+        ahead and travel for a period of time before detonating. This is a good skillset
+        for capsuleers specializing in Stealth Bombers Tech II Covert Ops Frigates.
+    groupID: 256
+    name: Stealth Bomber Missiles
+    recommendedFor:
+    - 11377
+    - 12032
+    - 12034
+    - 12038
+    skillTypes:
+        3319:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3321:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3324:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3325:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12441:
+            advanced: 4
+            basic: 4
+            elite: 5
+            improved: 4
+            standard: 4
+        12442:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20213:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        20312:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 0
+        20314:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20315:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        21071:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        28073:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+80:
+    description: This certificate represents level of competence in the control of
+        light and medium combat drones. The holder has learned that drones may be
+        targeted and destroyed in combat. This is a good skillset for any combat-oriented
+        capsuleer as many ships from all factions augment their capabilities through
+        the use of drones.
+    groupID: 273
+    name: Scout Drones
+    recommendedFor:
+    - 593
+    - 626
+    - 627
+    - 628
+    - 629
+    - 630
+    - 633
+    - 638
+    - 639
+    - 640
+    - 641
+    - 642
+    - 2006
+    - 2834
+    - 2836
+    - 3756
+    - 4308
+    - 11959
+    - 11961
+    - 11963
+    - 11965
+    - 11969
+    - 11971
+    - 11999
+    - 12015
+    - 12019
+    - 12023
+    - 12042
+    - 16227
+    - 16229
+    - 16231
+    - 16233
+    - 17476
+    - 17478
+    - 17480
+    - 17636
+    - 17709
+    - 17713
+    - 17720
+    - 17722
+    - 17726
+    - 17732
+    - 17736
+    - 17920
+    - 17930
+    - 20125
+    - 22436
+    - 22444
+    - 22446
+    - 22448
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 22544
+    - 22546
+    - 22548
+    - 24688
+    - 24692
+    - 24696
+    - 24698
+    - 24702
+    - 28606
+    - 28659
+    - 28661
+    - 28665
+    - 28710
+    - 29336
+    - 29344
+    - 29984
+    - 29986
+    - 29990
+    - 32209
+    - 32309
+    - 32872
+    - 32874
+    - 33081
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    - 33468
+    skillTypes:
+        3426:
+            advanced: 1
+            basic: 0
+            elite: 1
+            improved: 1
+            standard: 1
+        3427:
+            advanced: 4
+            basic: 0
+            elite: 4
+            improved: 4
+            standard: 4
+        3436:
+            advanced: 5
+            basic: 4
+            elite: 5
+            improved: 5
+            standard: 5
+        3437:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3442:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        12305:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12484:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12485:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12486:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12487:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        23566:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        23606:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        23618:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        24241:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+81:
+    description: This certificate represents a level of competence in the control
+        of all fighters. The holder has learned that fighters are advanced drones
+        with warp capabilities and that they may be destroyed in combat . This is
+        a good skillset for capsuleers specializing in capital vessels of all factions
+        based on the Carrier hulls.
+    groupID: 273
+    name: Fighters
+    recommendedFor:
+    - 23757
+    - 23911
+    - 23915
+    - 24483
+    skillTypes:
+        3348:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3436:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3442:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        23069:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        24613:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+82:
+    description: This certificate represents a level of competence in the control
+        of all fighter-bombers. The holder has learned that fighter-bombers are advanced
+        drones that may be destroyed in combat, can warp around and are specifically
+        designed to attack capital ships. This is a good skillset for capsuleers specializing
+        in capital vessels of all factions based on the Carrier hulls.
+    groupID: 273
+    name: Fighter Bombers
+    recommendedFor:
+    - 3514
+    - 22852
+    - 23913
+    - 23917
+    - 23919
+    skillTypes:
+        3348:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3436:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3442:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        23069:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        24613:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        32339:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+83:
+    description: This certificate represents a level of competence in the control
+        of all industry-related drones, including mining and salvaging variations.
+        The holder has learned that drones may be targeted and destroyed in combat.
+        This is a good skillset for capsuleers dedicated to resource retrieval operations
+        and fit well with ORE vessels.
+    groupID: 273
+    name: Industrial Drones
+    recommendedFor:
+    - 2998
+    skillTypes:
+        3386:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3392:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3426:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+        3436:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3438:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3440:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3551:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        25863:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+84:
+    description: This certificate represents a level of competence in the control
+        of all logistics drones, including armor and shield maintenance variations.
+        The holder has learned that drones may be destroyed in combat and that maintenance
+        drones cannot be used on their owner's own vessel. This is a good skillset
+        for capsuleers specializing in Logistic ships.
+    groupID: 273
+    name: Support Drones
+    recommendedFor:
+    - 620
+    - 625
+    - 631
+    - 634
+    - 11978
+    - 11985
+    - 11987
+    - 11989
+    - 32790
+    skillTypes:
+        3392:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3393:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3402:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3413:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3422:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3436:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3439:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        16069:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        23618:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+85:
+    description: This certificate represents a level of competence in active and passive
+        shield-based defense. The holder has learned that it's generally wise to concentrate
+        on one particular area of defense, such as armor or shields, on a given ship.
+        This is a good skillset for capsuleers specializing in Caldari, Minmatar vessels
+        or any kind of ship boasting plenty of med slots to spare.
+    groupID: 1209
+    name: Shield Tanking
+    recommendedFor:
+    - 582
+    - 583
+    - 584
+    - 585
+    - 586
+    - 588
+    - 598
+    - 599
+    - 601
+    - 602
+    - 603
+    - 605
+    - 615
+    - 617
+    - 620
+    - 621
+    - 622
+    - 623
+    - 630
+    - 631
+    - 632
+    - 638
+    - 640
+    - 3756
+    - 3766
+    - 4306
+    - 4310
+    - 11176
+    - 11178
+    - 11192
+    - 11194
+    - 11379
+    - 11381
+    - 11400
+    - 11957
+    - 11959
+    - 11961
+    - 11963
+    - 11978
+    - 11985
+    - 11993
+    - 11995
+    - 11999
+    - 12011
+    - 12013
+    - 12015
+    - 12032
+    - 12034
+    - 16227
+    - 16231
+    - 16238
+    - 16242
+    - 17476
+    - 17478
+    - 17480
+    - 17619
+    - 17634
+    - 17636
+    - 17715
+    - 17718
+    - 17720
+    - 17736
+    - 17738
+    - 17812
+    - 17918
+    - 17924
+    - 17930
+    - 17932
+    - 22436
+    - 22444
+    - 22446
+    - 22456
+    - 22464
+    - 22468
+    - 22470
+    - 22544
+    - 22546
+    - 22548
+    - 24688
+    - 24694
+    - 24698
+    - 26840
+    - 26842
+    - 28606
+    - 28665
+    - 28710
+    - 29336
+    - 29340
+    - 29984
+    - 29990
+    - 32309
+    - 32788
+    - 32790
+    - 32876
+    - 32878
+    - 32880
+    - 32983
+    - 32989
+    - 33081
+    - 33099
+    - 33153
+    skillTypes:
+        3402:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+        3413:
+            advanced: 3
+            basic: 1
+            elite: 3
+            improved: 3
+            standard: 3
+        3416:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3419:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3420:
+            advanced: 4
+            basic: 0
+            elite: 4
+            improved: 3
+            standard: 1
+        3424:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3425:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        11566:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        12365:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        12366:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        12367:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        21059:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+86:
+    description: This certificate represents a level of competence in capital shield-based
+        defense. The holder has learned that it's generally wise to concentrate on
+        one particular area of defense, such as armor or shields, on a given ship.
+        This is a good skillset for capsuleers specializing in Caldari and Minmatar
+        capital ships.
+    groupID: 1209
+    name: Capital Shield Tanking
+    recommendedFor:
+    - 3514
+    - 3764
+    - 19722
+    - 19726
+    - 22852
+    - 23773
+    - 23915
+    - 23917
+    - 24483
+    - 28352
+    skillTypes:
+        3413:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3416:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3419:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3420:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        11566:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        12365:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        12366:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        12367:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        21802:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+87:
+    description: This certificate represents a level of competence in remote shield
+        support. The holder has learned that assistance rendered to other vessels
+        involved in combat may make the vessel providing assistance a legal target.
+        This is a good skillset for any kind of dedicated Support Frigate, Cruiser
+        or Logistics vessel.
+    groupID: 1209
+    name: Remote Shield Booster
+    recommendedFor:
+    - 582
+    - 599
+    - 620
+    - 631
+    - 11978
+    - 11985
+    - 29984
+    - 29990
+    - 32790
+    skillTypes:
+        3402:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3413:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3422:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+88:
+    description: This certificate represents a level of competence in remote capital
+        shield support. The holder has learned that assistance rendered to other vessels
+        involved in combat may make the vessel providing assistance a legal target.
+        This is a good skillset for Caldari,  Gallente and Minmatar Carriers and Supercarriers.
+    groupID: 1209
+    name: Capital Remote Shield Booster
+    recommendedFor:
+    - 3514
+    - 22852
+    - 23911
+    - 23913
+    - 23915
+    - 23917
+    - 24483
+    - 28352
+    skillTypes:
+        3402:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3413:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3422:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        24571:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+89:
+    description: This certificate represents a level of competence in active and passive
+        armor-based defense. The holder has learned that it's generally wise to concentrate
+        on one particular area of defense, such as armor or shields, on a given ship.
+        This is a good skillset for capsuleers specializing in Amarr or Gallente vessels
+        or any kind of ship boasting plenty of low slots to spare.
+    groupID: 1210
+    name: Armor Tanking
+    recommendedFor:
+    - 587
+    - 589
+    - 590
+    - 591
+    - 592
+    - 593
+    - 594
+    - 596
+    - 597
+    - 606
+    - 607
+    - 608
+    - 609
+    - 624
+    - 625
+    - 626
+    - 627
+    - 628
+    - 629
+    - 633
+    - 634
+    - 639
+    - 641
+    - 642
+    - 643
+    - 644
+    - 645
+    - 2006
+    - 2161
+    - 2834
+    - 2836
+    - 2863
+    - 2998
+    - 3516
+    - 3518
+    - 3756
+    - 4302
+    - 4308
+    - 11011
+    - 11172
+    - 11174
+    - 11182
+    - 11184
+    - 11186
+    - 11188
+    - 11190
+    - 11196
+    - 11198
+    - 11200
+    - 11202
+    - 11365
+    - 11371
+    - 11377
+    - 11387
+    - 11393
+    - 11936
+    - 11938
+    - 11940
+    - 11942
+    - 11965
+    - 11969
+    - 11971
+    - 11987
+    - 11989
+    - 12003
+    - 12005
+    - 12017
+    - 12019
+    - 12021
+    - 12023
+    - 12038
+    - 12042
+    - 12044
+    - 13202
+    - 16229
+    - 16233
+    - 16236
+    - 16240
+    - 17703
+    - 17709
+    - 17713
+    - 17722
+    - 17726
+    - 17728
+    - 17732
+    - 17740
+    - 17841
+    - 17843
+    - 17920
+    - 17922
+    - 17926
+    - 17928
+    - 20125
+    - 22428
+    - 22430
+    - 22440
+    - 22442
+    - 22448
+    - 22452
+    - 22460
+    - 22466
+    - 22474
+    - 24690
+    - 24692
+    - 24696
+    - 24700
+    - 24702
+    - 28659
+    - 28661
+    - 29248
+    - 29337
+    - 29344
+    - 29986
+    - 29988
+    - 29990
+    - 32207
+    - 32209
+    - 32305
+    - 32307
+    - 32311
+    - 32840
+    - 32842
+    - 32844
+    - 32846
+    - 32848
+    - 32872
+    - 32874
+    - 32985
+    - 32987
+    - 33079
+    - 33083
+    - 33151
+    - 33155
+    - 33157
+    - 33190
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3392:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3393:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3394:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        22806:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        22807:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        22808:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        22809:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        33078:
+            advanced: 3
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+90:
+    description: This certificate represents a level of competence in capital armor-based
+        defense. The holder has learned that it's generally wise to concentrate on
+        one particular area of defense, such as armor or shields, on a given ship.
+        This is a good skillset for capsuleers specializing in Amarr or Gallente capital
+        ships.
+    groupID: 1210
+    name: Capital Armor Tanking
+    recommendedFor:
+    - 671
+    - 11567
+    - 19720
+    - 19724
+    - 23757
+    - 23911
+    - 23913
+    - 23919
+    skillTypes:
+        3392:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3393:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3394:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        21803:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        22806:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        22807:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        22808:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        22809:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+91:
+    description: This certificate represents a level of competence in remote armor
+        support. The holder has learned that assistance rendered to other vessels
+        involved in combat may make the vessel providing assistance a legal target.
+        This is a good skillset for any kind of dedicated Support Frigate, Cruiser
+        or Logistics vessel.
+    groupID: 1210
+    name: Remote Armor Repairer
+    recommendedFor:
+    - 590
+    - 592
+    - 625
+    - 634
+    - 11987
+    - 11989
+    - 29986
+    - 29988
+    skillTypes:
+        3392:
+            advanced: 4
+            basic: 3
+            elite: 5
+            improved: 3
+            standard: 3
+        3393:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        16069:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+92:
+    description: This certificate represents a level of competence in remote capital
+        armor support. The holder has learned that assistance rendered to other vessels
+        involved in combat may make the vessel providing assistance a legal target.
+        This is a good skillset for Amarr, Gallente, Minmatar Carriers and Supercarriers.
+    groupID: 1210
+    name: Capital Remote Armor Repairer
+    recommendedFor:
+    - 22852
+    - 23757
+    - 23911
+    - 23913
+    - 23919
+    - 24483
+    skillTypes:
+        3392:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3393:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        16069:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        24568:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+93:
+    description: This certificate represents a level of competence with Amarr targeting
+        systems. It certifies that the holder has some skill in target acquisition
+        and management and can make use of a range of targeting-related modules. This
+        is a critcal skillset for any capsuleer facing combat.
+    groupID: 1213
+    name: Amarr Target Management
+    recommendedFor:
+    - 589
+    - 590
+    - 591
+    - 596
+    - 597
+    - 615
+    - 624
+    - 625
+    - 628
+    - 642
+    - 643
+    - 2006
+    - 2161
+    - 3516
+    - 3518
+    - 4302
+    - 11184
+    - 11186
+    - 11188
+    - 11190
+    - 11365
+    - 11393
+    - 11936
+    - 11938
+    - 11940
+    - 11942
+    - 11965
+    - 11987
+    - 12003
+    - 12017
+    - 12019
+    - 12038
+    - 16233
+    - 16236
+    - 17703
+    - 17709
+    - 17718
+    - 17726
+    - 17736
+    - 17920
+    - 17922
+    - 17924
+    - 17926
+    - 19720
+    - 20125
+    - 22428
+    - 22448
+    - 22452
+    - 22474
+    - 23757
+    - 24692
+    - 24696
+    - 28659
+    - 29248
+    - 29337
+    - 29986
+    - 32305
+    - 32874
+    - 32987
+    - 33079
+    - 33155
+    - 33190
+    skillTypes:
+        3426:
+            advanced: 4
+            basic: 1
+            elite: 4
+            improved: 4
+            standard: 2
+        3428:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3429:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3431:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        33002:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+94:
+    description: This certificate represents a level of competence with ship propulsion
+        and speed enhancing modules like Afterburners and Microwarpdrives. The holder
+        has learned that those modules consume a fair amount of capacitor while active.
+        This is a critical skillset for any kind of operation in hazardous space.
+    groupID: 275
+    name: Navigation
+    recommendedFor:
+    - 582
+    - 583
+    - 584
+    - 585
+    - 586
+    - 587
+    - 588
+    - 589
+    - 590
+    - 591
+    - 592
+    - 593
+    - 594
+    - 596
+    - 597
+    - 598
+    - 599
+    - 601
+    - 602
+    - 603
+    - 605
+    - 606
+    - 607
+    - 608
+    - 609
+    - 615
+    - 617
+    - 620
+    - 621
+    - 622
+    - 623
+    - 624
+    - 625
+    - 626
+    - 627
+    - 628
+    - 629
+    - 630
+    - 631
+    - 632
+    - 633
+    - 634
+    - 648
+    - 649
+    - 650
+    - 651
+    - 652
+    - 653
+    - 654
+    - 655
+    - 656
+    - 657
+    - 1944
+    - 2006
+    - 2161
+    - 2834
+    - 2836
+    - 2998
+    - 3516
+    - 3518
+    - 3756
+    - 3766
+    - 4302
+    - 4306
+    - 4308
+    - 4310
+    - 4363
+    - 4388
+    - 11011
+    - 11172
+    - 11174
+    - 11176
+    - 11178
+    - 11182
+    - 11184
+    - 11186
+    - 11188
+    - 11190
+    - 11192
+    - 11194
+    - 11196
+    - 11198
+    - 11200
+    - 11202
+    - 11365
+    - 11371
+    - 11377
+    - 11379
+    - 11381
+    - 11387
+    - 11393
+    - 11400
+    - 11940
+    - 11942
+    - 11957
+    - 11959
+    - 11961
+    - 11963
+    - 11965
+    - 11969
+    - 11971
+    - 11978
+    - 11985
+    - 11987
+    - 11989
+    - 11993
+    - 11995
+    - 11999
+    - 12003
+    - 12005
+    - 12011
+    - 12013
+    - 12015
+    - 12017
+    - 12019
+    - 12021
+    - 12023
+    - 12032
+    - 12034
+    - 12038
+    - 12042
+    - 12044
+    - 12729
+    - 12731
+    - 12733
+    - 12735
+    - 12743
+    - 12745
+    - 12747
+    - 12753
+    - 16227
+    - 16229
+    - 16231
+    - 16233
+    - 16236
+    - 16238
+    - 16240
+    - 16242
+    - 17476
+    - 17478
+    - 17480
+    - 17619
+    - 17634
+    - 17703
+    - 17709
+    - 17713
+    - 17715
+    - 17718
+    - 17720
+    - 17722
+    - 17812
+    - 17841
+    - 17843
+    - 17922
+    - 17924
+    - 17926
+    - 17928
+    - 17930
+    - 17932
+    - 19744
+    - 20125
+    - 22442
+    - 22444
+    - 22446
+    - 22448
+    - 22452
+    - 22456
+    - 22460
+    - 22464
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 22544
+    - 22546
+    - 22548
+    - 24696
+    - 24698
+    - 24700
+    - 24702
+    - 28606
+    - 29248
+    - 29336
+    - 29337
+    - 29340
+    - 29344
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 32207
+    - 32209
+    - 32788
+    - 32790
+    - 32811
+    - 32840
+    - 32842
+    - 32844
+    - 32846
+    - 32848
+    - 32872
+    - 32874
+    - 32876
+    - 32878
+    - 32880
+    - 32983
+    - 32985
+    - 32987
+    - 32989
+    - 33079
+    - 33081
+    - 33083
+    - 33099
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    - 33190
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3327:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3449:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3450:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3451:
+            advanced: 3
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        3452:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3453:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3454:
+            advanced: 3
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        3455:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+95:
+    description: This certificate represents a level of competence with capital ships.
+        The holder has learned that capital ships cannot use Stargates and instead
+        rely on Jump Drives to travel through space. This is a critical skillset for
+        any kind of capital ship movement.
+    groupID: 275
+    name: Capital Navigation
+    recommendedFor:
+    - 671
+    - 3514
+    - 3764
+    - 11567
+    - 19720
+    - 19722
+    - 19724
+    - 19726
+    - 22852
+    - 23757
+    - 23773
+    - 23911
+    - 23913
+    - 23915
+    - 23917
+    - 23919
+    - 24483
+    - 28352
+    skillTypes:
+        3327:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3449:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3453:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 1
+        3455:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 5
+            standard: 3
+        20342:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 5
+            standard: 3
+        20533:
+            advanced: 3
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+96:
+    description: This certificate represents a level of competence in ship CPU, power
+        grid and capacitor usage. This is a critical skillset for any capsuleer wishing
+        to increase their tactical options in combat.
+    groupID: 1216
+    name: Core Ship Operation
+    recommendedFor:
+    - 582
+    - 583
+    - 584
+    - 585
+    - 586
+    - 587
+    - 588
+    - 589
+    - 590
+    - 591
+    - 592
+    - 593
+    - 594
+    - 596
+    - 597
+    - 598
+    - 599
+    - 601
+    - 602
+    - 603
+    - 605
+    - 606
+    - 607
+    - 608
+    - 609
+    - 615
+    - 617
+    - 620
+    - 621
+    - 622
+    - 623
+    - 624
+    - 625
+    - 626
+    - 627
+    - 628
+    - 629
+    - 630
+    - 631
+    - 632
+    - 633
+    - 634
+    - 638
+    - 639
+    - 640
+    - 641
+    - 642
+    - 643
+    - 644
+    - 645
+    - 648
+    - 649
+    - 650
+    - 651
+    - 652
+    - 653
+    - 654
+    - 655
+    - 656
+    - 657
+    - 671
+    - 1944
+    - 2006
+    - 2161
+    - 2834
+    - 2836
+    - 2998
+    - 3514
+    - 3516
+    - 3518
+    - 3756
+    - 3764
+    - 3766
+    - 4302
+    - 4306
+    - 4308
+    - 4310
+    - 4363
+    - 4388
+    - 11011
+    - 11172
+    - 11174
+    - 11176
+    - 11178
+    - 11182
+    - 11184
+    - 11186
+    - 11188
+    - 11190
+    - 11192
+    - 11194
+    - 11196
+    - 11198
+    - 11200
+    - 11202
+    - 11365
+    - 11371
+    - 11377
+    - 11379
+    - 11381
+    - 11387
+    - 11393
+    - 11400
+    - 11567
+    - 11936
+    - 11938
+    - 11940
+    - 11942
+    - 11957
+    - 11959
+    - 11961
+    - 11963
+    - 11965
+    - 11969
+    - 11971
+    - 11978
+    - 11985
+    - 11987
+    - 11989
+    - 11993
+    - 11995
+    - 11999
+    - 12003
+    - 12005
+    - 12011
+    - 12013
+    - 12015
+    - 12017
+    - 12019
+    - 12021
+    - 12023
+    - 12032
+    - 12034
+    - 12038
+    - 12042
+    - 12044
+    - 12729
+    - 12731
+    - 12733
+    - 12735
+    - 12743
+    - 12745
+    - 12747
+    - 12753
+    - 13202
+    - 16227
+    - 16229
+    - 16231
+    - 16233
+    - 16236
+    - 16238
+    - 16240
+    - 16242
+    - 17476
+    - 17478
+    - 17480
+    - 17619
+    - 17634
+    - 17636
+    - 17703
+    - 17709
+    - 17713
+    - 17715
+    - 17718
+    - 17720
+    - 17722
+    - 17726
+    - 17728
+    - 17732
+    - 17736
+    - 17738
+    - 17740
+    - 17812
+    - 17841
+    - 17843
+    - 17918
+    - 17920
+    - 17922
+    - 17924
+    - 17926
+    - 17928
+    - 17930
+    - 17932
+    - 19720
+    - 19722
+    - 19724
+    - 19726
+    - 19744
+    - 20125
+    - 22428
+    - 22430
+    - 22436
+    - 22440
+    - 22442
+    - 22444
+    - 22446
+    - 22448
+    - 22452
+    - 22456
+    - 22460
+    - 22464
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 22544
+    - 22546
+    - 22548
+    - 22852
+    - 23757
+    - 23773
+    - 23911
+    - 23913
+    - 23915
+    - 23917
+    - 23919
+    - 24483
+    - 24688
+    - 24690
+    - 24692
+    - 24694
+    - 24696
+    - 24698
+    - 24700
+    - 24702
+    - 26840
+    - 26842
+    - 28352
+    - 28606
+    - 28659
+    - 28661
+    - 28665
+    - 28710
+    - 29248
+    - 29336
+    - 29337
+    - 29340
+    - 29344
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 32207
+    - 32209
+    - 32305
+    - 32307
+    - 32309
+    - 32311
+    - 32788
+    - 32790
+    - 32811
+    - 32840
+    - 32842
+    - 32844
+    - 32846
+    - 32848
+    - 32872
+    - 32874
+    - 32876
+    - 32878
+    - 32880
+    - 32983
+    - 32985
+    - 32987
+    - 32989
+    - 33079
+    - 33081
+    - 33083
+    - 33099
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    - 33190
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3402:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+        3413:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3417:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3418:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3424:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3426:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3432:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+97:
+    description: This certificate represents a level of competence in remote capacitor
+        support. This is a good skillset for any kind of dedicated Support Frigate,
+        Cruiser or Logistics vessel.
+    groupID: 1216
+    name: Capacitor Emission
+    recommendedFor:
+    - 620
+    - 625
+    - 643
+    - 3516
+    - 3518
+    - 11190
+    - 11965
+    - 11985
+    - 11987
+    - 17920
+    - 17922
+    - 17926
+    - 20125
+    - 29984
+    - 29986
+    - 29990
+    - 32790
+    - 32874
+    - 33079
+    skillTypes:
+        3402:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3413:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3423:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+98:
+    description: This certificate represents a level of competence in remote capital
+        capacitor support. This is a good skillset for Amarr and Caldari Carriers
+        and Supercarriers.
+    groupID: 1216
+    name: Capital Capacitor Emission
+    recommendedFor:
+    - 3514
+    - 23757
+    - 23915
+    - 23917
+    - 23919
+    skillTypes:
+        3402:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3413:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3423:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        24572:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+99:
+    description: This certificate represents a level of competence in the operation
+        of propulsion jamming modules, Stasis Webifiers, Warp Scramblers and Warp
+        Disruptors. The holder has learned that webbers decrease the target's speed,
+        while scramblers and disruptors prevent them from warping. This is a critical
+        skillset for any capsuleer wishing to dictate the terms of a fight.
+    groupID: 272
+    name: Tackling
+    recommendedFor:
+    - 583
+    - 585
+    - 587
+    - 588
+    - 589
+    - 591
+    - 593
+    - 594
+    - 596
+    - 597
+    - 598
+    - 601
+    - 602
+    - 603
+    - 606
+    - 608
+    - 615
+    - 617
+    - 621
+    - 622
+    - 623
+    - 624
+    - 626
+    - 627
+    - 629
+    - 638
+    - 639
+    - 641
+    - 642
+    - 643
+    - 644
+    - 645
+    - 2006
+    - 2834
+    - 2836
+    - 3516
+    - 3518
+    - 3756
+    - 4308
+    - 4310
+    - 11011
+    - 11176
+    - 11178
+    - 11184
+    - 11186
+    - 11196
+    - 11198
+    - 11200
+    - 11202
+    - 11365
+    - 11371
+    - 11379
+    - 11381
+    - 11387
+    - 11393
+    - 11400
+    - 11936
+    - 11938
+    - 11940
+    - 11942
+    - 11959
+    - 11961
+    - 11963
+    - 11969
+    - 11971
+    - 11993
+    - 11995
+    - 11999
+    - 12003
+    - 12005
+    - 12011
+    - 12013
+    - 12015
+    - 12017
+    - 12019
+    - 12021
+    - 12023
+    - 12042
+    - 12044
+    - 13202
+    - 16227
+    - 16229
+    - 16231
+    - 16236
+    - 16238
+    - 16240
+    - 16242
+    - 17619
+    - 17634
+    - 17636
+    - 17703
+    - 17709
+    - 17713
+    - 17715
+    - 17718
+    - 17720
+    - 17722
+    - 17726
+    - 17728
+    - 17732
+    - 17736
+    - 17738
+    - 17740
+    - 17812
+    - 17841
+    - 17843
+    - 17918
+    - 17920
+    - 17922
+    - 17924
+    - 17926
+    - 17928
+    - 17930
+    - 17932
+    - 22428
+    - 22430
+    - 22440
+    - 22442
+    - 22444
+    - 22446
+    - 22448
+    - 22452
+    - 22456
+    - 22460
+    - 22464
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 24688
+    - 24690
+    - 24692
+    - 24694
+    - 24696
+    - 24698
+    - 24700
+    - 24702
+    - 26840
+    - 26842
+    - 28659
+    - 28661
+    - 28665
+    - 29336
+    - 29337
+    - 29340
+    - 29344
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 32207
+    - 32209
+    - 32305
+    - 32307
+    - 32309
+    - 32311
+    - 32788
+    - 32840
+    - 32842
+    - 32844
+    - 32846
+    - 32848
+    - 32872
+    - 32874
+    - 32876
+    - 32878
+    - 32880
+    - 33079
+    - 33081
+    - 33083
+    - 33099
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3426:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3435:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3449:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+100:
+    description: This certificate represents a level of competence in the operation
+        of Electronic Counter Measures (ECM) modules. The holder has learned ECM is
+        a chance-based tool that, when successful, prevents the target from holding
+        target locks. This is a good skillset for capsuleers specializing in small,
+        medium or large Caldari Disruption vessels based on Frigate, Cruiser and Battleship
+        hulls.
+    groupID: 272
+    name: Electronic Counter Measures
+    recommendedFor:
+    - 584
+    - 601
+    - 632
+    - 640
+    - 11194
+    - 11957
+    - 11959
+    - 22436
+    - 29984
+    skillTypes:
+        3426:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3427:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        19759:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        19760:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        19761:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+101:
+    description: This certificate represents a level of competence in the operation
+        of Remote Sensor Dampener (RSD) modules. The holder has learned that RSDs
+        reduce the target's locking speed and locking range, making it difficult for
+        them to acquire a target lock. This is a good skillset for capsuleers specializing
+        in small or medium Gallente Disruption vessels based on Frigate and Cruiser
+        hulls.
+    groupID: 272
+    name: Sensor Dampening
+    recommendedFor:
+    - 606
+    - 609
+    - 633
+    - 11174
+    - 11969
+    - 11971
+    skillTypes:
+        3426:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 3
+        3427:
+            advanced: 3
+            basic: 1
+            elite: 3
+            improved: 3
+            standard: 2
+        3433:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        19759:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        19760:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        19766:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+102:
+    description: This certificate represents a level of competence in the operation
+        of Tracking Disruptor (TD) modules. The holder has learned that TDs decrease
+        the Optimal Range, Falloff and Tracking on the target's turrets, making it
+        harder for their turret weapons to hit. This is a good skillset for capsuleers
+        specializing in small or medium Amarr Disruption vessels based on Frigate
+        and Cruiser hulls.
+    groupID: 272
+    name: Tracking Disruption
+    recommendedFor:
+    - 596
+    - 628
+    - 2161
+    - 11190
+    - 11965
+    - 20125
+    skillTypes:
+        3426:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 3
+        3427:
+            advanced: 3
+            basic: 1
+            elite: 3
+            improved: 3
+            standard: 2
+        3434:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        19759:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        19760:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        19767:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+103:
+    description: This certificate represents a level of competence in the operation
+        of Target Painter modules. The holder has learned that Target Painters increase
+        the target's signature radius, allowing it to be locked onto faster and causing
+        most weapons systems to inflict additional damage on it. This  is a good skillset
+        for capsuleers specializing in small or medium Minmatar Disruption vessels
+        based on the Frigate and Cruiser hulls.
+    groupID: 272
+    name: Target Painting
+    recommendedFor:
+    - 588
+    - 630
+    - 3766
+    - 11387
+    - 11961
+    - 11963
+    - 28710
+    skillTypes:
+        3426:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 3
+        3427:
+            advanced: 3
+            basic: 1
+            elite: 3
+            improved: 3
+            standard: 2
+        19759:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        19760:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        19921:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        19922:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+104:
+    description: This certificate represents a level of competence in scanning. The
+        holder has learned that scan probes are a specialized tool that may be used
+        to find hidden content or to track down capsuleers inside a solar system.
+        This is a good skillset for capsuleers specializing in Exploration vessels
+        as a whole.
+    groupID: 1217
+    name: Scanning
+    recommendedFor:
+    - 586
+    - 605
+    - 607
+    - 2078
+    - 3532
+    - 3756
+    - 11172
+    - 11182
+    - 11188
+    - 11192
+    - 29248
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 32983
+    - 32985
+    - 32987
+    - 32989
+    - 33190
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3402:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3412:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3426:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+        3551:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        25739:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        25810:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        25811:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+105:
+    description: This certificate represents a level of competence in the operation
+        of analyzer modules, like Data and Relic Analyzers. The holder has learned
+        that those modules are used in various sites related to exploration. This
+        is a good skillset for capsuleers specializing in Exploration vessels as a
+        whole.
+    groupID: 1217
+    name: Data and Relic Analyzers
+    recommendedFor:
+    - 586
+    - 605
+    - 607
+    - 29248
+    - 32983
+    - 32985
+    - 32987
+    - 32989
+    - 33190
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3402:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3413:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3426:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3432:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3551:
+            advanced: 3
+            basic: 1
+            elite: 3
+            improved: 3
+            standard: 2
+        13278:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        21718:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+106:
+    description: This certificate represents a level of competence in mining, ice
+        harvesting and gas cloud harvesting. This is a good skillset for capsuleers
+        specializing in ORE vessels.
+    groupID: 1218
+    name: Resource Harvesting
+    recommendedFor:
+    - 17476
+    - 17478
+    - 17480
+    - 22544
+    - 22546
+    - 22548
+    - 32880
+    skillTypes:
+        3386:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3402:
+            advanced: 4
+            basic: 0
+            elite: 4
+            improved: 4
+            standard: 0
+        3410:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        11395:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        16281:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        22578:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        25544:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+107:
+    description: This certificate represents a level of competence in the operation
+        of salvaging modules. The holder has learned that salvager modules allow the
+        extraction of components from ship wrecks. This is  good skillset for capsuleers
+        specializing in ORE Industrials.
+    groupID: 1218
+    name: Salvaging
+    recommendedFor:
+    - 586
+    - 605
+    - 607
+    - 2998
+    - 29248
+    - 32983
+    - 32985
+    - 32987
+    - 32989
+    - 33190
+    skillTypes:
+        3392:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3426:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+        3551:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        25863:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+108:
+    description: This certificate represents a level of competence in the operation
+        of cloaking devices. The holder has learned that cloaks cannot be activated
+        within 2000m of most objects and spatial phenomena. This is a good skillset
+        for capsuleers specializing in Exploration or Disruption vessels.
+    groupID: 272
+    name: Cloaking
+    recommendedFor:
+    - 11172
+    - 11182
+    - 11188
+    - 11192
+    - 11377
+    - 11957
+    - 11963
+    - 11965
+    - 11969
+    - 12032
+    - 12034
+    - 12038
+    - 12729
+    - 12733
+    - 12735
+    - 12743
+    - 22428
+    - 22430
+    - 22436
+    - 22440
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 32790
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3392:
+            advanced: 3
+            basic: 0
+            elite: 3
+            improved: 3
+            standard: 0
+        3426:
+            advanced: 4
+            basic: 4
+            elite: 4
+            improved: 4
+            standard: 4
+        11579:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+109:
+    description: This certificate represents a level of competence in leadership fleet
+        support through Armored Warfare Links. The holder has learned that Armored
+        Warfare Links do not work inside a Starbase Forcefield. This is a good skillset
+        for capsuleers specializing in Battlecruisers or Command Ships.
+    groupID: 258
+    name: Armored Warfare Links
+    recommendedFor:
+    - 671
+    - 3514
+    - 3756
+    - 3764
+    - 11567
+    - 16227
+    - 16229
+    - 16231
+    - 16233
+    - 22442
+    - 22444
+    - 22446
+    - 22448
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 22852
+    - 23757
+    - 23773
+    - 23911
+    - 23913
+    - 23915
+    - 23917
+    - 23919
+    - 24483
+    - 24696
+    - 24698
+    - 24700
+    - 24702
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    skillTypes:
+        3348:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3354:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11569:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        20494:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+110:
+    description: This certificate represents a level of competence in mining operation
+        leadership through Foreman Links. This is a good skillset for capsuleers specializing
+        in Industrial Command Ships or Capital Industrial Command Ships.
+    groupID: 258
+    name: Foreman Links
+    recommendedFor:
+    - 28352
+    - 28606
+    skillTypes:
+        3348:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3354:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        22536:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        22552:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+111:
+    description: This certificate represents a level of competence with Trade skills,
+        making market activity more profitable. This is a good skillset for any capsuleer
+        wishing to lower expenses in the marketplace.
+    groupID: 274
+    name: Trade
+    skillTypes:
+        3355:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+        3443:
+            advanced: 5
+            basic: 2
+            elite: 5
+            improved: 5
+            standard: 4
+        3444:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 5
+            standard: 3
+        3446:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3447:
+            advanced: 4
+            basic: 0
+            elite: 4
+            improved: 1
+            standard: 0
+        16594:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        16595:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        16596:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        16597:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        16598:
+            advanced: 5
+            basic: 2
+            elite: 5
+            improved: 4
+            standard: 3
+        16622:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 4
+        18580:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        25233:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        25235:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+112:
+    description: This certificate represents a level of competence in social connections
+        and standings. This is a good skillset for capsuleers wishing to improve their
+        relations with various factions and their agents.
+    groupID: 278
+    name: Social
+    skillTypes:
+        3348:
+            advanced: 3
+            basic: 0
+            elite: 3
+            improved: 3
+            standard: 0
+        3355:
+            advanced: 5
+            basic: 2
+            elite: 5
+            improved: 4
+            standard: 3
+        3356:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3357:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3358:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        3359:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3361:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3380:
+            advanced: 3
+            basic: 0
+            elite: 3
+            improved: 3
+            standard: 0
+        3443:
+            advanced: 3
+            basic: 0
+            elite: 3
+            improved: 3
+            standard: 0
+        3893:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        3894:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        3895:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+113:
+    description: This certificate represents a level of competence in manufacturing.
+        This is a good skillset for players wishing to build their own products for
+        their own use or to resell them on the market.
+    groupID: 268
+    name: Manufacturing
+    skillTypes:
+        3380:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3387:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 5
+            standard: 4
+        3388:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3392:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3395:
+            advanced: 4
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 4
+        3397:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3398:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        3400:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        3402:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3403:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        3413:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        3426:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        11433:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        11442:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        11444:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        11445:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        11446:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        11450:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        11453:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        11454:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        11584:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        24268:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        24625:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        30324:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        30325:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        30326:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        30327:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        30788:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+114:
+    description: This certificate represents a level of competence in various kinds
+        of resource refining.  This is a good skillset for resource-harvesting capsuleers
+        that wish to sell their materials or use them for production.
+    groupID: 1218
+    name: Refining
+    skillTypes:
+        3380:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+        3385:
+            advanced: 5
+            basic: 4
+            elite: 5
+            improved: 5
+            standard: 5
+        3389:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 0
+        3402:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 3
+        3409:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        3413:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 4
+            standard: 3
+        11443:
+            advanced: 4
+            basic: 0
+            elite: 4
+            improved: 0
+            standard: 0
+        12180:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12181:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12182:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12183:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        12184:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        12185:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        12186:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 2
+        12187:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 2
+        12188:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 2
+        12189:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12190:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 2
+        12191:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        12192:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        12193:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        12194:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        12195:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        12196:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        18025:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+115:
+    description: This certificate represents a level of competence in blueprint research.
+        This is a good skillset to improve manufacturing efficiency or as an extra
+        source of income when selling blueprint copies.
+    groupID: 270
+    name: Research
+    skillTypes:
+        3402:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3403:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3406:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3408:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        3409:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3413:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3426:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3432:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3551:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        12179:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        13278:
+            advanced: 0
+            basic: 0
+            elite: 2
+            improved: 0
+            standard: 0
+        20433:
+            advanced: 0
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        21718:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        21789:
+            advanced: 0
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        21790:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        21791:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        23087:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        23121:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        23123:
+            advanced: 0
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        23124:
+            advanced: 0
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        24270:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        24624:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+116:
+    description: This certificate represents a level of competence in invention and
+        reverse engineering. It is a good skillset to research Tech II or Tech III
+        items.
+    groupID: 270
+    name: Datacore
+    skillTypes:
+        3392:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3402:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3403:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3413:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3426:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        11433:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11441:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11442:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11443:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11444:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11445:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11446:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11447:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11448:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11449:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11450:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11451:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11452:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11453:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11454:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11455:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11529:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        30324:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        30325:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        30326:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        30327:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        30788:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+117:
+    description: This certificate represents a level of competence in passive shield
+        buffers. It is mainly used to maximize Effective Hitpoints (EHP) on highly
+        competitive ship fittings. This is a good skillset for capsuleers looking
+        to get the most shield buffer possible on their vessel.
+    groupID: 1209
+    name: Shield Reinforcement
+    recommendedFor:
+    - 587
+    - 589
+    - 590
+    - 591
+    - 592
+    - 593
+    - 594
+    - 596
+    - 597
+    - 606
+    - 607
+    - 608
+    - 609
+    - 624
+    - 625
+    - 626
+    - 627
+    - 628
+    - 629
+    - 633
+    - 634
+    - 639
+    - 641
+    - 642
+    - 643
+    - 644
+    - 645
+    - 648
+    - 649
+    - 650
+    - 651
+    - 652
+    - 653
+    - 654
+    - 655
+    - 656
+    - 657
+    - 671
+    - 672
+    - 1944
+    - 2006
+    - 2078
+    - 2161
+    - 2834
+    - 2836
+    - 2863
+    - 2998
+    - 3516
+    - 3518
+    - 3532
+    - 4302
+    - 4308
+    - 4363
+    - 4388
+    - 11011
+    - 11129
+    - 11132
+    - 11134
+    - 11172
+    - 11174
+    - 11182
+    - 11184
+    - 11186
+    - 11188
+    - 11190
+    - 11196
+    - 11198
+    - 11200
+    - 11202
+    - 11365
+    - 11371
+    - 11377
+    - 11387
+    - 11393
+    - 11567
+    - 11936
+    - 11938
+    - 11940
+    - 11942
+    - 11965
+    - 11969
+    - 11971
+    - 11987
+    - 11989
+    - 12003
+    - 12005
+    - 12017
+    - 12019
+    - 12021
+    - 12023
+    - 12038
+    - 12042
+    - 12044
+    - 12729
+    - 12731
+    - 12733
+    - 12735
+    - 12743
+    - 12745
+    - 12747
+    - 12753
+    - 13202
+    - 16229
+    - 16233
+    - 16236
+    - 16240
+    - 17703
+    - 17709
+    - 17713
+    - 17722
+    - 17726
+    - 17728
+    - 17732
+    - 17740
+    - 17841
+    - 17843
+    - 17920
+    - 17922
+    - 17926
+    - 17928
+    - 19720
+    - 19724
+    - 19744
+    - 20125
+    - 20183
+    - 20185
+    - 20187
+    - 20189
+    - 22428
+    - 22430
+    - 22440
+    - 22442
+    - 22448
+    - 22452
+    - 22460
+    - 22466
+    - 22474
+    - 23757
+    - 23911
+    - 23913
+    - 23919
+    - 24690
+    - 24692
+    - 24696
+    - 24700
+    - 24702
+    - 28659
+    - 28661
+    - 28844
+    - 28846
+    - 28848
+    - 28850
+    - 29248
+    - 29266
+    - 29337
+    - 29344
+    - 29986
+    - 29988
+    - 30842
+    - 32207
+    - 32209
+    - 32305
+    - 32307
+    - 32311
+    - 32811
+    - 32840
+    - 32842
+    - 32844
+    - 32846
+    - 32848
+    - 32872
+    - 32874
+    - 32985
+    - 32987
+    - 33079
+    - 33083
+    - 33151
+    - 33155
+    - 33157
+    - 33190
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3413:
+            advanced: 3
+            basic: 1
+            elite: 3
+            improved: 3
+            standard: 2
+        3416:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3419:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+118:
+    description: This certificate represents a level of competence in passive armor
+        buffers. It is mainly used to maximize Effective Hitpoints (EHP) on highly
+        competitive ship fittings. This is a good skillset for capsuleers looking
+        of getting the most armor buffer possible on their vessel.
+    groupID: 1210
+    name: Armor Reinforcement
+    recommendedFor:
+    - 582
+    - 583
+    - 584
+    - 585
+    - 586
+    - 588
+    - 598
+    - 599
+    - 601
+    - 602
+    - 603
+    - 605
+    - 615
+    - 617
+    - 620
+    - 621
+    - 622
+    - 623
+    - 630
+    - 631
+    - 632
+    - 638
+    - 640
+    - 648
+    - 649
+    - 650
+    - 651
+    - 652
+    - 653
+    - 654
+    - 655
+    - 656
+    - 657
+    - 672
+    - 1944
+    - 2078
+    - 3514
+    - 3532
+    - 3764
+    - 3766
+    - 4306
+    - 4310
+    - 4363
+    - 4388
+    - 11129
+    - 11132
+    - 11134
+    - 11176
+    - 11178
+    - 11192
+    - 11194
+    - 11379
+    - 11381
+    - 11400
+    - 11957
+    - 11959
+    - 11961
+    - 11963
+    - 11978
+    - 11985
+    - 11993
+    - 11995
+    - 11999
+    - 12011
+    - 12013
+    - 12015
+    - 12032
+    - 12034
+    - 12729
+    - 12731
+    - 12733
+    - 12735
+    - 12743
+    - 12745
+    - 12747
+    - 12753
+    - 16227
+    - 16231
+    - 16238
+    - 16242
+    - 17476
+    - 17478
+    - 17480
+    - 17619
+    - 17634
+    - 17636
+    - 17715
+    - 17718
+    - 17720
+    - 17736
+    - 17738
+    - 17812
+    - 17918
+    - 17924
+    - 17930
+    - 17932
+    - 19722
+    - 19726
+    - 19744
+    - 20183
+    - 20185
+    - 20187
+    - 20189
+    - 22436
+    - 22444
+    - 22446
+    - 22456
+    - 22464
+    - 22468
+    - 22470
+    - 22544
+    - 22546
+    - 22548
+    - 22852
+    - 23773
+    - 23915
+    - 23917
+    - 24483
+    - 24688
+    - 24694
+    - 24698
+    - 26840
+    - 26842
+    - 28352
+    - 28606
+    - 28665
+    - 28710
+    - 28844
+    - 28846
+    - 28848
+    - 28850
+    - 29266
+    - 29336
+    - 29340
+    - 29984
+    - 30842
+    - 32309
+    - 32788
+    - 32790
+    - 32811
+    - 32876
+    - 32878
+    - 32880
+    - 32983
+    - 32989
+    - 33081
+    - 33099
+    - 33153
+    skillTypes:
+        3392:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3394:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+119:
+    description: This certificate represents the ability to survey and manage planet
+        colonies in order to mamiximize resource extraction from their soil. The holder
+        has learned that Command Centers have to be manually launched into Temperate
+        planets before a colony may be founded. This is a good skillset for capsuleers
+        wishing to develop an additional source of income.
+    groupID: 1241
+    name: Planetary Interaction
+    recommendedFor:
+    - 2863
+    skillTypes:
+        2403:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        2406:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        2495:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        2505:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3402:
+            advanced: 4
+            basic: 3
+            elite: 4
+            improved: 4
+            standard: 4
+        13279:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+120:
+    description: This certificate represents a level of competence in the operation
+        of Remote Sensor Booster (RSB) modules. The holder has learned that RSBs improve
+        the target max targeting range and scan resolution. This is a good skillset
+        for capsuleers specializing in Gallente or Minmatar Logistics vessels.
+    groupID: 272
+    name: Sensor Linking
+    recommendedFor:
+    - 11978
+    - 11989
+    skillTypes:
+        3426:
+            advanced: 4
+            basic: 3
+            elite: 4
+            improved: 4
+            standard: 3
+        3427:
+            advanced: 3
+            basic: 1
+            elite: 3
+            improved: 3
+            standard: 2
+        3433:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        19759:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+        19760:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+132:
+    description: This certificate represents a level of competence in corporation
+        holding. It is a good skill set for a CEO to increase the maximum number of
+        corporation members and races.
+    groupID: 266
+    name: Corporation Management
+    skillTypes:
+        3355:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3363:
+            advanced: 5
+            basic: 2
+            elite: 5
+            improved: 5
+            standard: 4
+        3368:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3373:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 0
+        3731:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 0
+        3732:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        11584:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        12241:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+133:
+    description: This certificate represents a level of competence in the control
+        of all combat-related drones, including light, medium, heavy and sentry variations.
+        The holder has learned that drones may be targeted and destroyed in combat.
+        This is a good skillset for any combat-oriented capsuleer as many ships from
+        all factions augment their capabilities through the use of drones.
+    groupID: 273
+    name: All Combat Drones
+    recommendedFor:
+    - 643
+    - 644
+    - 645
+    - 11011
+    - 11936
+    - 11938
+    - 12005
+    - 13202
+    - 17715
+    - 17728
+    - 17738
+    - 17740
+    - 17843
+    - 17918
+    - 22428
+    - 22430
+    - 22440
+    - 22442
+    - 24690
+    - 24694
+    - 24700
+    - 26840
+    - 26842
+    - 28352
+    - 29988
+    - 32305
+    - 32307
+    - 32311
+    - 33470
+    - 33553
+    skillTypes:
+        3426:
+            advanced: 1
+            basic: 0
+            elite: 1
+            improved: 1
+            standard: 1
+        3427:
+            advanced: 4
+            basic: 0
+            elite: 4
+            improved: 4
+            standard: 4
+        3436:
+            advanced: 5
+            basic: 4
+            elite: 5
+            improved: 5
+            standard: 5
+        3437:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3441:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        3442:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        12305:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        12484:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12485:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12486:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        12487:
+            advanced: 1
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        23566:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        23594:
+            advanced: 5
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        23606:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        23618:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        24241:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+138:
+    description: This certificate represents level of competence which ship propulsion
+        and speed enhancing modules like Afterburners, Microwarpdrives and Micro Jump
+        Drives. The holder is aware that those modules consume a fair amount of capacitor
+        while active. This is a critical skill set to have for any kind of operation
+        in hazardous space.
+    groupID: 275
+    name: Battleship Navigation
+    recommendedFor:
+    - 638
+    - 639
+    - 640
+    - 641
+    - 642
+    - 643
+    - 644
+    - 645
+    - 11936
+    - 11938
+    - 13202
+    - 17636
+    - 17726
+    - 17728
+    - 17732
+    - 17736
+    - 17738
+    - 17740
+    - 17918
+    - 17920
+    - 22428
+    - 22430
+    - 22436
+    - 22440
+    - 24688
+    - 24690
+    - 24692
+    - 24694
+    - 26840
+    - 26842
+    - 28659
+    - 28661
+    - 28665
+    - 28710
+    - 32305
+    - 32307
+    - 32309
+    - 32311
+    skillTypes:
+        3327:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3449:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3450:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3451:
+            advanced: 3
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+        3452:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3453:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3454:
+            advanced: 3
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+        3455:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        4385:
+            advanced: 3
+            basic: 0
+            elite: 5
+            improved: 0
+            standard: 0
+139:
+    description: This certificate represents a level of competence with Caldari targeting
+        systems. It certifies that the holder has some skill in target acquisition
+        and management and can make use of a range of targeting-related modules. This
+        is a critcal skillset for any capsuleer facing combat.
+    groupID: 1213
+    name: Caldari Target Management
+    recommendedFor:
+    - 582
+    - 583
+    - 584
+    - 601
+    - 602
+    - 603
+    - 605
+    - 620
+    - 621
+    - 623
+    - 632
+    - 638
+    - 640
+    - 3756
+    - 4306
+    - 11176
+    - 11178
+    - 11192
+    - 11194
+    - 11379
+    - 11381
+    - 11957
+    - 11959
+    - 11985
+    - 11993
+    - 11995
+    - 12011
+    - 12032
+    - 16227
+    - 16238
+    - 17619
+    - 17634
+    - 17636
+    - 17715
+    - 17918
+    - 17930
+    - 19726
+    - 22436
+    - 22446
+    - 22464
+    - 22470
+    - 23915
+    - 24688
+    - 24698
+    - 26840
+    - 28710
+    - 29340
+    - 29984
+    - 32309
+    - 32788
+    - 32790
+    - 32876
+    - 32983
+    - 33081
+    - 33153
+    skillTypes:
+        3426:
+            advanced: 4
+            basic: 1
+            elite: 4
+            improved: 4
+            standard: 2
+        3428:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3429:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3431:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        33000:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+140:
+    description: This certificate represents a level of competence with Gallente targeting
+        systems. It certifies that the holder has some skill in target acquisition
+        and management and can make use of a range of targeting-related modules. This
+        is a critcal skillset for any capsuleer facing combat.
+    groupID: 1213
+    name: Gallente Target Management
+    recommendedFor:
+    - 592
+    - 593
+    - 594
+    - 606
+    - 607
+    - 608
+    - 609
+    - 626
+    - 627
+    - 633
+    - 634
+    - 641
+    - 645
+    - 2834
+    - 2836
+    - 2998
+    - 4308
+    - 11011
+    - 11172
+    - 11174
+    - 11200
+    - 11202
+    - 11377
+    - 11969
+    - 11971
+    - 11989
+    - 12005
+    - 12021
+    - 12023
+    - 12042
+    - 12044
+    - 13202
+    - 16229
+    - 16240
+    - 17476
+    - 17478
+    - 17480
+    - 17722
+    - 17728
+    - 17740
+    - 17841
+    - 17843
+    - 17928
+    - 19724
+    - 22430
+    - 22442
+    - 22460
+    - 22466
+    - 22544
+    - 22546
+    - 22548
+    - 23911
+    - 24690
+    - 24700
+    - 28352
+    - 28606
+    - 28661
+    - 29344
+    - 29988
+    - 32307
+    - 32840
+    - 32842
+    - 32844
+    - 32846
+    - 32848
+    - 32872
+    - 32880
+    - 32985
+    - 33083
+    - 33151
+    - 33468
+    - 33470
+    - 33553
+    skillTypes:
+        3426:
+            advanced: 4
+            basic: 1
+            elite: 4
+            improved: 4
+            standard: 2
+        3428:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3429:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3431:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        32999:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+141:
+    description: This certificate represents a level of competence with Minmatar targeting
+        systems. It certifies that the holder has some skill in target acquisition
+        and management and can make use of a range of targeting-related modules. This
+        is a critcal skillset for any capsuleer facing combat.
+    groupID: 1213
+    name: Minmatar Target Management
+    recommendedFor:
+    - 585
+    - 586
+    - 587
+    - 588
+    - 598
+    - 599
+    - 617
+    - 622
+    - 629
+    - 630
+    - 631
+    - 639
+    - 644
+    - 3766
+    - 4310
+    - 11182
+    - 11196
+    - 11198
+    - 11371
+    - 11387
+    - 11400
+    - 11961
+    - 11963
+    - 11978
+    - 11999
+    - 12013
+    - 12015
+    - 12034
+    - 16231
+    - 16242
+    - 17713
+    - 17720
+    - 17732
+    - 17738
+    - 17812
+    - 17932
+    - 19722
+    - 22440
+    - 22444
+    - 22456
+    - 22468
+    - 24483
+    - 24694
+    - 24702
+    - 26842
+    - 28665
+    - 29336
+    - 29990
+    - 32207
+    - 32209
+    - 32311
+    - 32878
+    - 32989
+    - 33099
+    - 33157
+    skillTypes:
+        3426:
+            advanced: 4
+            basic: 1
+            elite: 4
+            improved: 4
+            standard: 2
+        3428:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3429:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3431:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        33001:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 0
+142:
+    description: This certificate represents level of competence with advanced targeting
+        systems. It certifies that the holder has can lock more than seven targets
+        at the same time. This is a good skillset to have for any capsuleer training
+        for specialized ships, like Logistics or Marauders.
+    groupID: 1213
+    name: Advanced Target Management
+    recommendedFor:
+    - 11959
+    - 11961
+    - 11971
+    - 11978
+    - 11985
+    - 11987
+    - 11989
+    - 20125
+    - 23757
+    - 23911
+    - 23915
+    - 24483
+    - 28659
+    - 28661
+    - 28665
+    - 28710
+    skillTypes:
+        3426:
+            advanced: 1
+            basic: 1
+            elite: 1
+            improved: 1
+            standard: 1
+        3429:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3430:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+144:
+    description: This certificate represents a level of competence with ship propulsion.
+        It is mainly used to minimize travel time on vessels without module slots.
+        This is a good skillset for capsuleers looking to maximize general navigation
+        performance.
+    groupID: 275
+    name: Navigation Support
+    recommendedFor:
+    - 672
+    - 2078
+    - 2863
+    - 3532
+    - 11129
+    - 11132
+    - 11134
+    - 29266
+    - 30842
+    skillTypes:
+        3327:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3449:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3453:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3455:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+145:
+    description: This certificate represents a level of competence with ship jump
+        drives. The holder has learned that jump drives consume fuel based on distance
+        and allow the user to navigate without the use of Stargates. This is a critical
+        skillset for any kind of capital or Black Ops movement.
+    groupID: 275
+    name: Jump Drive
+    recommendedFor:
+    - 671
+    - 3514
+    - 3764
+    - 11567
+    - 19720
+    - 19722
+    - 19724
+    - 19726
+    - 22428
+    - 22430
+    - 22436
+    - 22440
+    - 22852
+    - 23757
+    - 23773
+    - 23911
+    - 23913
+    - 23915
+    - 23917
+    - 23919
+    - 24483
+    - 28352
+    - 28844
+    - 28846
+    - 28848
+    - 28850
+    skillTypes:
+        3402:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3449:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3455:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3456:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 5
+            standard: 3
+        21610:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 4
+            standard: 3
+        21611:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+146:
+    description: This certificate represents a level of competence with supercapital
+        targeting systems. It certifies that the holder has some skill in target acquisition
+        and management and can make use of a range of targeting-related modules. This
+        is a critcal skillset for any capsuleer facing combat.
+    groupID: 1213
+    name: Supercapital Target Management
+    recommendedFor:
+    - 671
+    - 3514
+    - 3764
+    - 11567
+    - 22852
+    - 23773
+    - 23913
+    - 23917
+    - 23919
+    skillTypes:
+        3426:
+            advanced: 4
+            basic: 1
+            elite: 4
+            improved: 4
+            standard: 2
+        3428:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3429:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        3431:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+147:
+    description: This certificate represents a level of competence in handling Siege
+        Modules. The holder has learned that Siege Modules may only be used on Dreadnoughts,
+        improving their offensive and defensive capabilities at the expense of mobility.
+        This is a critical skillset for capsuleers specializing in Dreadnought hulls.
+    groupID: 255
+    name: Tactical Weapon Reconfiguration
+    recommendedFor:
+    - 19720
+    - 19722
+    - 19724
+    - 19726
+    skillTypes:
+        3300:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3318:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        11207:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        22043:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+148:
+    description: This certificate represents a level of competence in handling Triage
+        Modules. The holder has learned that Triage Modules may only be used on Carriers,
+        improving their remote assisting capabilities at the expense of mobility.
+        This is a critical skillset for capsuleers specializing in Carrier hulls.
+    groupID: 272
+    name: Tactical Logistics Reconfiguration
+    recommendedFor:
+    - 23757
+    - 23911
+    - 23915
+    - 24483
+    skillTypes:
+        3327:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3426:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3428:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3431:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        12096:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        27906:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+149:
+    description: This certificate represents a level of competence in handling Industrial
+        Core modules. The holder has learned that Industrial Cores may only be used
+        on Capital Industrial Ships, improving their resource processing abilities
+        at the expense of mobility. This is a good skillset for capsuleers specializing
+        in Industrial Capital Industrial Ship hulls.
+    groupID: 1218
+    name: Industrial Reconfiguration
+    recommendedFor:
+    - 28352
+    skillTypes:
+        3380:
+            advanced: 3
+            basic: 3
+            elite: 3
+            improved: 3
+            standard: 3
+        3387:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        24625:
+            advanced: 4
+            basic: 4
+            elite: 4
+            improved: 4
+            standard: 4
+        28585:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+150:
+    description: This certificate represents a level of competence in weapons CPU
+        and power grid usage. This is a critical skillset for any capsuleer wishing
+        to increase their tactical options in combat.
+    groupID: 1216
+    name: Core Weapon Fitting
+    recommendedFor:
+    - 583
+    - 585
+    - 587
+    - 588
+    - 589
+    - 591
+    - 593
+    - 594
+    - 596
+    - 597
+    - 598
+    - 601
+    - 602
+    - 603
+    - 606
+    - 608
+    - 615
+    - 617
+    - 621
+    - 622
+    - 623
+    - 624
+    - 626
+    - 627
+    - 629
+    - 630
+    - 638
+    - 639
+    - 641
+    - 642
+    - 644
+    - 671
+    - 2006
+    - 2834
+    - 2836
+    - 3516
+    - 3518
+    - 3756
+    - 3764
+    - 4302
+    - 4306
+    - 4308
+    - 4310
+    - 11011
+    - 11176
+    - 11178
+    - 11184
+    - 11186
+    - 11196
+    - 11198
+    - 11200
+    - 11202
+    - 11365
+    - 11371
+    - 11377
+    - 11379
+    - 11381
+    - 11393
+    - 11400
+    - 11567
+    - 11936
+    - 11938
+    - 11940
+    - 11942
+    - 11959
+    - 11961
+    - 11963
+    - 11969
+    - 11971
+    - 11993
+    - 11995
+    - 11999
+    - 12003
+    - 12011
+    - 12013
+    - 12015
+    - 12017
+    - 12019
+    - 12021
+    - 12023
+    - 12032
+    - 12034
+    - 12038
+    - 12042
+    - 12044
+    - 13202
+    - 16227
+    - 16229
+    - 16231
+    - 16236
+    - 16238
+    - 16240
+    - 16242
+    - 17619
+    - 17634
+    - 17636
+    - 17703
+    - 17709
+    - 17713
+    - 17715
+    - 17718
+    - 17720
+    - 17722
+    - 17726
+    - 17728
+    - 17732
+    - 17736
+    - 17738
+    - 17740
+    - 17812
+    - 17841
+    - 17918
+    - 17920
+    - 17922
+    - 17924
+    - 17926
+    - 17928
+    - 17930
+    - 17932
+    - 19720
+    - 19722
+    - 19724
+    - 19726
+    - 22428
+    - 22430
+    - 22436
+    - 22440
+    - 22442
+    - 22444
+    - 22446
+    - 22448
+    - 22452
+    - 22456
+    - 22460
+    - 22464
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 23773
+    - 24688
+    - 24690
+    - 24692
+    - 24694
+    - 24696
+    - 24698
+    - 24702
+    - 26840
+    - 26842
+    - 28659
+    - 28661
+    - 28665
+    - 28710
+    - 29336
+    - 29337
+    - 29340
+    - 29344
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 32207
+    - 32209
+    - 32305
+    - 32307
+    - 32309
+    - 32311
+    - 32788
+    - 32840
+    - 32842
+    - 32844
+    - 32846
+    - 32848
+    - 32872
+    - 32876
+    - 32878
+    - 33079
+    - 33081
+    - 33083
+    - 33099
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    - 33470
+    - 33553
+    skillTypes:
+        3300:
+            advanced: 2
+            basic: 2
+            elite: 2
+            improved: 2
+            standard: 2
+        3318:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 5
+            standard: 3
+        11207:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 1
+            standard: 0
+151:
+    description: This certificate represents a level of competence with Freighter
+        ship propulsion. The holder has learned that those ships are slow and vulnerable
+        when aligning to celestial objects. This is a good skillset for any capsuleer
+        specializing in Freighter hulls.
+    groupID: 275
+    name: Freighter Navigation
+    recommendedFor:
+    - 20183
+    - 20185
+    - 20187
+    - 20189
+    - 28844
+    - 28846
+    - 28848
+    - 28850
+    skillTypes:
+        3327:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3449:
+            advanced: 5
+            basic: 3
+            elite: 5
+            improved: 5
+            standard: 4
+        3453:
+            advanced: 4
+            basic: 0
+            elite: 5
+            improved: 3
+            standard: 1
+        3455:
+            advanced: 5
+            basic: 1
+            elite: 5
+            improved: 4
+            standard: 3
+        20342:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+152:
+    description: This certificate represents a level of competence in leadership fleet
+        support through Information Warfare Links. The holder has learned that Information
+        Warfare Links do not work inside a Starbase Forcefield. This is a good skillset
+        for capsuleers specializing in Battlecruisers or Command Ships.
+    groupID: 258
+    name: Information Warfare Links
+    recommendedFor:
+    - 671
+    - 3514
+    - 3756
+    - 3764
+    - 11567
+    - 16227
+    - 16229
+    - 16231
+    - 16233
+    - 22442
+    - 22444
+    - 22446
+    - 22448
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 22852
+    - 23757
+    - 23773
+    - 23911
+    - 23913
+    - 23915
+    - 23917
+    - 23919
+    - 24483
+    - 24696
+    - 24698
+    - 24700
+    - 24702
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    skillTypes:
+        3348:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3352:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3354:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        20495:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+153:
+    description: This certificate represents a level of competence in leadership fleet
+        support through Skirmish Warfare Links. The holder has learned that Skirmish
+        Warfare Links do not work inside a Starbase Forcefield. This is a good skillset
+        for capsuleers specializing in Battlecruisers or Command Ships.
+    groupID: 258
+    name: Skirmish Warfare Links
+    recommendedFor:
+    - 671
+    - 3514
+    - 3756
+    - 3764
+    - 11567
+    - 16227
+    - 16229
+    - 16231
+    - 16233
+    - 22442
+    - 22444
+    - 22446
+    - 22448
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 22852
+    - 23757
+    - 23773
+    - 23911
+    - 23913
+    - 23915
+    - 23917
+    - 23919
+    - 24483
+    - 24696
+    - 24698
+    - 24700
+    - 24702
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    skillTypes:
+        3348:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3349:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3354:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        11572:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+154:
+    description: This certificate represents a level of competence in leadership fleet
+        support through Siege Warfare Links. The holder has learned that Siege Warfare
+        Links do not work inside a Starbase Forcefield. This is a good skillset for
+        capsuleers specializing in Battlecruisers or Command Ships.
+    groupID: 258
+    name: Siege Warfare Links
+    recommendedFor:
+    - 671
+    - 3514
+    - 3756
+    - 3764
+    - 11567
+    - 16227
+    - 16229
+    - 16231
+    - 16233
+    - 22442
+    - 22444
+    - 22446
+    - 22448
+    - 22466
+    - 22468
+    - 22470
+    - 22474
+    - 22852
+    - 23757
+    - 23773
+    - 23911
+    - 23913
+    - 23915
+    - 23917
+    - 23919
+    - 24483
+    - 24696
+    - 24698
+    - 24700
+    - 24702
+    - 29984
+    - 29986
+    - 29988
+    - 29990
+    - 33151
+    - 33153
+    - 33155
+    - 33157
+    skillTypes:
+        3348:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3350:
+            advanced: 5
+            basic: 5
+            elite: 5
+            improved: 5
+            standard: 5
+        3351:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2
+        3354:
+            advanced: 4
+            basic: 1
+            elite: 5
+            improved: 3
+            standard: 2

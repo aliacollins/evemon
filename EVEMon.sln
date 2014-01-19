@@ -44,6 +44,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E274AE
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlToSql", "Tools\YamlToSql\YamlToSql.csproj", "{A15EB77F-31DB-4A63-AD47-44E44B82E370}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,18 @@ Global
 		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|Any CPU.ActiveCfg = Snapshot|x86
 		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|x86.ActiveCfg = Snapshot|x86
 		{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}.Snapshot|x86.Build.0 = Snapshot|x86
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Debug|x86.ActiveCfg = Debug|x86
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Debug|x86.Build.0 = Debug|x86
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Release|x86.ActiveCfg = Release|x86
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Release|x86.Build.0 = Release|x86
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Snapshot|Any CPU.ActiveCfg = Release|Any CPU
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Snapshot|Any CPU.Build.0 = Release|Any CPU
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Snapshot|x86.ActiveCfg = Release|x86
+		{A15EB77F-31DB-4A63-AD47-44E44B82E370}.Snapshot|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
