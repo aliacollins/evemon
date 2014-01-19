@@ -61,6 +61,15 @@ namespace EVEMon.YamlToSql {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to certificates.yaml.
+        /// </summary>
+        internal static string certificates {
+            get {
+                return ResourceManager.GetString("certificates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to graphicIDs.yaml.
         /// </summary>
         internal static string graphicsIDs {
