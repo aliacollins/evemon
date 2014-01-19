@@ -140,6 +140,33 @@ namespace EVEMon.YamlToSql
         }
 
         /// <summary>
+        /// Drops the table.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="tableName">Name of the table.</param>
+        public static void DropTable(SqlCommand command, string tableName)
+        {
+            using (var tx = s_connection.BeginTransaction())
+            {
+                command.Transaction = tx;
+                command.CommandText = String.Format("DROP TABLE {0}", tableName);
+
+                try
+                {
+                    command.ExecuteNonQuery();
+                    tx.Commit();
+                }
+                catch (SqlException e)
+                {
+                    tx.Rollback();
+                    Console.WriteLine();
+                    Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates the table.
         /// </summary>
         /// <param name="command">The command.</param>

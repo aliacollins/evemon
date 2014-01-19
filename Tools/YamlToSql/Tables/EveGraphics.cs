@@ -31,14 +31,15 @@ namespace EVEMon.YamlToSql.Tables
             if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", TableName)).Length == 0)
                 Database.CreateTable(command, TableName);
             else
-                return;
+            {
+                Database.DropTable(command, TableName);
+                Database.CreateTable(command, TableName);
+            }
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            YamlStream yStream = new YamlStream();
-            yStream.Load(new StreamReader(filePath));
-            YamlMappingNode rNode = yStream.Documents.First().RootNode as YamlMappingNode;
+            YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
             if (rNode == null)
             {

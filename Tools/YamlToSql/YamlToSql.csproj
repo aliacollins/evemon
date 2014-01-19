@@ -73,6 +73,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tables\Certificates.cs" />
     <Compile Include="Tables\EveGraphics.cs" />
     <Compile Include="Tables\EveIcon.cs" />
     <Compile Include="Tables\InvTypes.cs" />

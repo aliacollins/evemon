@@ -37,9 +37,7 @@ namespace EVEMon.YamlToSql.Tables
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            YamlStream yStream = new YamlStream();
-            yStream.Load(new StreamReader(filePath));
-            YamlMappingNode rNode = yStream.Documents.First().RootNode as YamlMappingNode;
+            YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
             if (rNode == null)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.YamlToSql
 {
@@ -80,6 +81,23 @@ namespace EVEMon.YamlToSql
 
             Console.WriteLine(@"{0} file does not exists!", filename);
             return String.Empty;
+        }
+
+        /// <summary>
+        /// Parses the yaml file.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <returns></returns>
+        internal static YamlMappingNode ParseYamlFile(string filePath)
+        {
+            YamlMappingNode rNode;
+            using (TextReader tReader = new StreamReader(filePath))
+            {
+                YamlStream yStream = new YamlStream();
+                yStream.Load(tReader);
+                rNode = yStream.Documents.First().RootNode as YamlMappingNode;
+            }
+            return rNode;
         }
     }
 }
