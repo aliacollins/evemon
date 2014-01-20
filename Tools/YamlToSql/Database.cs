@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -173,13 +172,7 @@ namespace EVEMon.YamlToSql
         /// <param name="tableName">Name of the table.</param>
         internal static void CreateTable(IDbCommand command, string tableName)
         {
-            var filePath = Util.CheckScriptFileExists(tableName);
-
-            string query;
-            using (StreamReader sReader = new StreamReader(filePath))
-            {
-                query = sReader.ReadToEnd();
-            }
+            var query = Util.GetScriptFor(tableName);
 
             using (var tx = s_connection.BeginTransaction())
             {

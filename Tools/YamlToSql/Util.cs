@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.YamlToSql
@@ -51,19 +52,30 @@ namespace EVEMon.YamlToSql
         }
 
         /// <summary>
-        /// Checks the script file exixts.
+        /// Gets the script for the table.
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
         /// <returns></returns>
-        internal static string CheckScriptFileExists(string tableName)
+        internal static string GetScriptFor(string tableName)
         {
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                String.Format(@"..{0}..{0}..{0}Scripts{0}{1}.table.sql", Path.DirectorySeparatorChar, tableName));
+            var resourceName = String.Format(@"EVEMon.YamlToSql.Scripts.{0}.table.sql", tableName);
 
-            if (File.Exists(filePath))
-                return filePath;
+            string result = null;
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+                    }
+                }
+            }
 
-            Console.WriteLine(@"{0}.table.sql file does not exists!", tableName);
+            if (!String.IsNullOrWhiteSpace(result))
+                return result;
+
+            Console.WriteLine(@"{0}.table.sql resource file does not exists!", tableName);
             return String.Empty;
         }
 
@@ -75,7 +87,7 @@ namespace EVEMon.YamlToSql
         internal static string CheckYamlFileExists(string filename)
         {
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                String.Format(@"..{0}..{0}..{0}YamlFiles{0}{1}", Path.DirectorySeparatorChar, filename));
+                String.Format(@"YamlFiles{0}{1}", Path.DirectorySeparatorChar, filename));
 
             if (File.Exists(filePath))
                 return filePath;
