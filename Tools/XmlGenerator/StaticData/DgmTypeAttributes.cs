@@ -15,7 +15,7 @@ namespace EVEMon.XmlGenerator.StaticData
         public Nullable<Int64> ValueInt64 { get; set; }
 
         [XmlElement("valueFloat")]
-        public Nullable<Single> ValueFloat { get; set; }
+        public Nullable<Double> ValueFloat { get; set; }
 
         /// <summary>
         /// Returns the value as an integer. 
