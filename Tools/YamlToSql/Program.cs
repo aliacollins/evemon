@@ -14,7 +14,7 @@ namespace EVEMon.YamlToSql
             SqlConnection connection = Database.Connect();
             InvTypes.ImportTypeIds(connection);
             EveGraphics.ImportGraphicIds(connection);
-            EveIcon.ImportIconIds(connection);
+            EveIcons.ImportIconIds(connection);
             Certificates.ImportCertificates(connection);
             Database.Disconnect();
         }

@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.YamlToSql.Tables
 {
-    internal static class EveIcon
+    internal static class EveIcons
     {
+        private const string EveIconsTableName = "eveIcons";
+        
+        private const string IconFileText = "iconFile";
+        private const string DescriptionText = "description";
+
         /// <summary>
         /// Imports the icon ids.
         /// </summary>
@@ -24,17 +28,7 @@ namespace EVEMon.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            const string TableName = "eveIcons";
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", TableName)).Length == 0)
-                Database.CreateTable(command, TableName);
-            else
-            {
-                Database.DropTable(command, TableName);
-                Database.CreateTable(command, TableName);
-            }
+            CreateEveIconsTable(connection);
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
@@ -46,8 +40,22 @@ namespace EVEMon.YamlToSql.Tables
                 Console.WriteLine(@"Unable to parse {0}.", yamlFile);
                 return;
             }
-            const string IconFileText = "iconFile";
-            const string DescriptionText = "description";
+
+            ImportEveIconsData(connection, rNode);
+
+            Util.DisplayEndTime(startTime);
+
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Imports the eve icons data.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="rNode">The r node.</param>
+        private static void ImportEveIconsData(SqlConnection connection, YamlMappingNode rNode)
+        {
+            var command = new SqlCommand { Connection = connection };
 
             using (var tx = connection.BeginTransaction())
             {
@@ -85,12 +93,11 @@ namespace EVEMon.YamlToSql.Tables
                         parameters[IconFileText] = iconFile;
                         parameters[DescriptionText] = description;
 
-                        command.CommandText = Database.SqlInsertCommandText(TableName, parameters);
+                        command.CommandText = Database.SqlInsertCommandText(EveIconsTableName, parameters);
                         command.ExecuteNonQuery();
                     }
 
                     tx.Commit();
-                    Util.DisplayEndTime(startTime);
                 }
                 catch (SqlException e)
                 {
@@ -98,10 +105,27 @@ namespace EVEMon.YamlToSql.Tables
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
+                    Environment.Exit(-1);
                 }
             }
+        }
 
-            Console.WriteLine();
+        /// <summary>
+        /// Creates the eve icons table.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        private static void CreateEveIconsTable(SqlConnection connection)
+        {
+            var command = new SqlCommand { Connection = connection };
+            DataTable dataTable = connection.GetSchema("columns");
+
+            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", EveIconsTableName)).Length == 0)
+                Database.CreateTable(command, EveIconsTableName);
+            else
+            {
+                Database.DropTable(command, EveIconsTableName);
+                Database.CreateTable(command, EveIconsTableName);
+            }
         }
     }
 }

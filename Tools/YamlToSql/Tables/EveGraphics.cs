@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
@@ -10,6 +9,18 @@ namespace EVEMon.YamlToSql.Tables
 {
     internal static class EveGraphics
     {
+        private const string EveGraphicsTableName = "eveGraphics";
+        
+        private const string GraphicFileText = "graphicFile";
+        private const string DescriptionText = "description";
+        private const string ObsoleteText = "obsolete";
+        private const string GraphicTypeText = "graphicType";
+        private const string CollidableText = "collidable";
+        private const string DirectoryIDText = "directoryID";
+        private const string GraphicNameText = "graphicName";
+        private const string GfxRaceIDText = "gfxRaceID";
+        private const string ColorSchemeText = "colorScheme";
+
         /// <summary>
         /// Imports the graphic ids.
         /// </summary>
@@ -24,17 +35,7 @@ namespace EVEMon.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            const string TableName = "eveGraphics";
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", TableName)).Length == 0)
-                Database.CreateTable(command, TableName);
-            else
-            {
-                Database.DropTable(command, TableName);
-                Database.CreateTable(command, TableName);
-            }
+            CreateEveGraphicsTable(connection);
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
@@ -47,15 +48,39 @@ namespace EVEMon.YamlToSql.Tables
                 return;
             }
 
-            const string GraphicFileText = "graphicFile";
-            const string DescriptionText = "description";
-            const string ObsoleteText = "obsolete";
-            const string GraphicTypeText = "graphicType";
-            const string CollidableText = "collidable";
-            const string DirectoryIDText = "directoryID";
-            const string GraphicNameText = "graphicName";
-            const string GfxRaceIDText = "gfxRaceID";
-            const string ColorSchemeText = "colorScheme";
+            ImportEveGraphicsData(connection, rNode);
+
+            Util.DisplayEndTime(startTime);
+
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Creates the eve graphics table.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        private static void CreateEveGraphicsTable(SqlConnection connection)
+        {
+            var command = new SqlCommand { Connection = connection };
+            DataTable dataTable = connection.GetSchema("columns");
+
+            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", EveGraphicsTableName)).Length == 0)
+                Database.CreateTable(command, EveGraphicsTableName);
+            else
+            {
+                Database.DropTable(command, EveGraphicsTableName);
+                Database.CreateTable(command, EveGraphicsTableName);
+            }
+        }
+
+        /// <summary>
+        /// Imports the eve graphics data.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="rNode">The r node.</param>
+        private static void ImportEveGraphicsData(SqlConnection connection, YamlMappingNode rNode)
+        {
+            var command = new SqlCommand { Connection = connection };
 
             using (var tx = connection.BeginTransaction())
             {
@@ -155,12 +180,11 @@ namespace EVEMon.YamlToSql.Tables
                         parameters[GfxRaceIDText] = gfxRaceID;
                         parameters[ColorSchemeText] = colorScheme;
 
-                        command.CommandText = Database.SqlInsertCommandText(TableName, parameters);
+                        command.CommandText = Database.SqlInsertCommandText(EveGraphicsTableName, parameters);
                         command.ExecuteNonQuery();
                     }
 
                     tx.Commit();
-                    Util.DisplayEndTime(startTime);
                 }
                 catch (SqlException e)
                 {
@@ -168,10 +192,9 @@ namespace EVEMon.YamlToSql.Tables
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
+                    Environment.Exit(-1);
                 }
             }
-
-            Console.WriteLine();
         }
     }
 }
