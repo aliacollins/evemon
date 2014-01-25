@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using EVEMon.Common;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.XmlGenerator.Datafiles
@@ -18,7 +17,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             Util.ResetCounters();
 
             Console.WriteLine();
-            Console.Write("Generating geography datafile... ");
+            Console.Write(@"Generating geography datafile... ");
 
             // Regions
             IEnumerable<SerializableRegion> regions = Database.MapRegionsTable.Select(

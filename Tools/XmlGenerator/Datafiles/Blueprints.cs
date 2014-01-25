@@ -23,7 +23,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             Util.ResetCounters();
 
             Console.WriteLine();
-            Console.Write("Generating blueprints datafile... ");
+            Console.Write(@"Generating blueprints datafile... ");
 
             // Configure blueprints with Null market group
             ConfigureNullMarketBlueprint();

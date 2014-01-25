@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using EVEMon.Common;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.XmlGenerator.StaticData;
@@ -38,18 +37,17 @@ namespace EVEMon.XmlGenerator.Datafiles
             Util.ResetCounters();
 
             Console.WriteLine();
-            Console.Write("Generating properties datafile... ");
+            Console.Write(@"Generating properties datafile... ");
 
             ConfigureNullCategoryProperties();
 
             IEnumerable<SerializablePropertyCategory> categories = ExportAttributeCategories();
 
             // Sort groups
-            string[] orderedGroupNames = new[]
-                                             {
-                                                 "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
-                                                 "Targeting", "Propulsion", "Miscellaneous", "NULL", "AI"
-                                             };
+            string[] orderedGroupNames = {
+                                             "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
+                                             "Targeting", "Propulsion", "Miscellaneous", "NULL", "AI"
+                                         };
 
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();

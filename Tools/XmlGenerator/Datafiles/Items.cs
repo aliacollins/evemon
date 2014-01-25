@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Data;
@@ -23,7 +24,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             Util.ResetCounters();
 
             Console.WriteLine();
-            Console.Write("Generating items datafile... ");
+            Console.Write(@"Generating items datafile... ");
 
             // Create custom market groups that don't exist in EVE
             ConfigureNullMarketItems();
@@ -236,10 +237,10 @@ namespace EVEMon.XmlGenerator.Datafiles
                                             Purpose = resource.ctrp.PurposeName,
                                             Quantity = resource.ctr.Quantity,
                                             MinSecurityLevel = resource.ctr.MinSecurityLevel.HasValue
-                                                                   ? resource.ctr.MinSecurityLevel.Value.ToString()
+                                                                   ? resource.ctr.MinSecurityLevel.Value.ToString(CultureInfo.InvariantCulture)
                                                                    : String.Empty,
                                             FactionID = resource.ctr.FactionID.HasValue
-                                                            ? resource.ctr.FactionID.Value.ToString()
+                                                            ? resource.ctr.FactionID.Value.ToString(CultureInfo.InvariantCulture)
                                                             : String.Empty,
                                             FactionName = resource.ctr.FactionID.HasValue
                                                               ? Database.ChrFactionsTable[resource.ctr.FactionID.Value].
@@ -592,7 +593,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 props.Add(new SerializablePropertyValue
                               {
                                   ID = Properties.UnitsToRefinePropertyID,
-                                  Value = srcItem.PortionSize.ToString()
+                                  Value = srcItem.PortionSize.ToString(CultureInfo.InvariantCulture)
                               });
             }
 

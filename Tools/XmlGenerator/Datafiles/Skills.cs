@@ -20,7 +20,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             Util.ResetCounters();
 
             Console.WriteLine();
-            Console.Write("Generating skills datafile... ");
+            Console.Write(@"Generating skills datafile... ");
 
             // Export skill groups
             List<SerializableSkillGroup> listOfSkillGroups = new List<SerializableSkillGroup>();

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using EVEMon.Common;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.XmlGenerator.Datafiles
@@ -18,7 +17,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             Util.ResetCounters();
 
             Console.WriteLine();
-            Console.Write("Generating reprocessing datafile... ");
+            Console.Write(@"Generating reprocessing datafile... ");
 
             List<SerializableItemMaterials> types = new List<SerializableItemMaterials>();
 
@@ -26,13 +25,13 @@ namespace EVEMon.XmlGenerator.Datafiles
             {
                 Util.UpdatePercentDone(Database.ReprocessingTotalCount);
 
-                IEnumerable<SerializableMaterialQuantity> materials = Database.InvTypeMaterialsTable.Where(
+                List<SerializableMaterialQuantity> materials = Database.InvTypeMaterialsTable.Where(
                     x => x.TypeID == typeID).Select(
                         srcMaterial => new SerializableMaterialQuantity
                                            {
                                                ID = srcMaterial.MaterialTypeID,
                                                Quantity = srcMaterial.Quantity
-                                           });
+                                           }).ToList();
 
                 if (!materials.Any())
                     continue;
