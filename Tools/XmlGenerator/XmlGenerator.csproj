@@ -17,6 +17,8 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -52,15 +54,79 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="agtAgents.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="agtAgentTypes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="agtResearchAgents.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Bag.cs" />
+    <Compile Include="chrAncestries.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="chrAttributes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="chrBloodlines.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="chrFactions.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="chrRaces.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crpActivities.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crpNPCCorporationDivisions.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crpNPCCorporationResearchFields.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crpNPCCorporations.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crpNPCCorporationTrades.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crpNPCDivisions.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crtCategories.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crtCertificates.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crtClasses.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crtRecommendations.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="crtRelationships.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database.cs" />
     <Compile Include="Datafiles\Blueprints.cs" />
     <Compile Include="Datafiles\Geography.cs" />
@@ -68,16 +134,206 @@
     <Compile Include="Datafiles\Properties.cs" />
     <Compile Include="Datafiles\Reprocessing.cs" />
     <Compile Include="Datafiles\Skills.cs" />
+    <Compile Include="dgmAttributeCategories.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dgmAttributeTypes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dgmEffects.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dgmTypeAttributes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dgmTypeEffects.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="eveGraphics.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="eveIcons.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EveStaticData.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EveStaticData.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EveStaticData.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
     <Compile Include="EveStaticData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EveStaticData.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="eveUnits.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invBlueprintTypes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invCategories.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invContrabandTypes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invControlTowerResourcePurposes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invControlTowerResources.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invFlags.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invGroups.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invItems.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invMarketGroups.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invMetaGroups.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invMetaTypes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invNames.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invPositions.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invTypeMaterials.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invTypeReactions.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invTypes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="invUniqueNames.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapCelestialStatistics.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapConstellationJumps.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapConstellations.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapDenormalize.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapJumps.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapLandmarks.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapLocationScenes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapLocationWormholeClasses.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapRegionJumps.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapRegions.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapSolarSystemJumps.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapSolarSystems.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="mapUniverse.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="planetSchematics.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="planetSchematicsPinMap.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="planetSchematicsTypeMap.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ramActivities.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ramAssemblyLines.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ramAssemblyLineStations.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ramAssemblyLineTypeDetailPerCategory.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ramAssemblyLineTypeDetailPerGroup.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ramAssemblyLineTypes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ramInstallationTypeContents.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ramTypeRequirements.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="staOperations.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="staOperationServices.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="staServices.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="staStations.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="staStationTypes.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
     <Compile Include="StaticData\ChrFactions.cs" />
     <Compile Include="StaticData\InvControlTowerResources.cs" />
     <Compile Include="StaticData\InvControlTowerResourcePurposes.cs" />
     <Compile Include="StaticData\InvFlags.cs" />
     <Compile Include="StaticData\InvTypeReactions.cs" />
+    <Compile Include="translationTables.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="trnTranslationColumns.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="trnTranslationLanguages.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="trnTranslations.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="warCombatZones.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="warCombatZoneSystems.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Xmlfiles\Flags.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IHasId.cs" />
@@ -126,14 +382,30 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app.config" />
     <EntityDeploy Include="EveStaticData.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EveStaticData.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="app.config" />
+    <None Include="EveStaticData.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EveStaticData.edmx</DependentUpon>
+      <LastGenOutput>EveStaticData.Context.cs</LastGenOutput>
+    </None>
+    <None Include="EveStaticData.edmx.diagram">
+      <DependentUpon>EveStaticData.edmx</DependentUpon>
+    </None>
+    <None Include="EveStaticData.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EveStaticData.edmx</DependentUpon>
+      <LastGenOutput>EveStaticData.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
     <None Include="Properties\DataSources\EveStaticDataEntities.datasource" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rd /s /q $(TargetDir)\Resources
@@ -141,6 +413,7 @@ del $(TargetDir)Google*.dll
 del $(TargetDir)*office*.dll
 del $(TargetDir)*SharpZipLib*.dll</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
