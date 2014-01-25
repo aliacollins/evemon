@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
@@ -10,6 +9,13 @@ namespace EVEMon.YamlToSql.Tables
 {
     internal static class InvTypes
     {
+        private const string InvTypesTableName = "invTypes";
+        
+        private const string GraphicIDText = "graphicID";
+        private const string IconIDText = "iconID";
+        private const string RadiusText = "radius";
+        private const string SoundIDText = "soundID";
+
         /// <summary>
         /// Imports the type ids.
         /// </summary>
@@ -24,15 +30,7 @@ namespace EVEMon.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            const string TableName = "invTypes";
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", TableName)).Length == 0)
-            {
-                Console.WriteLine(@"Can't find table '{0}'.", TableName);
-                return;
-            }
+            CreateInvTypesColumns(connection);
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
@@ -45,15 +43,42 @@ namespace EVEMon.YamlToSql.Tables
                 return;
             }
 
-            const string GraphicIDText = "graphicID";
-            const string IconIDText = "iconID";
-            const string RadiusText = "radius";
-            const string SoundIDText = "soundID";
+            ImportInvTypesData(connection, rNode);
 
-            Database.CreateColumn(dataTable, command, TableName, GraphicIDText, "int");
-            Database.CreateColumn(dataTable, command, TableName, IconIDText, "int");
-            Database.CreateColumn(dataTable, command, TableName, RadiusText, "float");
-            Database.CreateColumn(dataTable, command, TableName, SoundIDText, "int");
+            Util.DisplayEndTime(startTime);
+
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Creates the inv types columns.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        private static void CreateInvTypesColumns(SqlConnection connection)
+        {
+            var command = new SqlCommand { Connection = connection };
+            DataTable dataTable = connection.GetSchema("columns");
+
+            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", InvTypesTableName)).Length == 0)
+            {
+                Console.WriteLine(@"Can't find table '{0}'.", InvTypesTableName);
+                Environment.Exit(-1);
+            }
+
+            Database.CreateColumn(dataTable, command, InvTypesTableName, GraphicIDText, "int");
+            Database.CreateColumn(dataTable, command, InvTypesTableName, IconIDText, "int");
+            Database.CreateColumn(dataTable, command, InvTypesTableName, RadiusText, "float");
+            Database.CreateColumn(dataTable, command, InvTypesTableName, SoundIDText, "int");
+        }
+
+        /// <summary>
+        /// Imports the inv types data.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="rNode">The r node.</param>
+        private static void ImportInvTypesData(SqlConnection connection,YamlMappingNode rNode)
+        {
+            var command = new SqlCommand { Connection = connection };
 
             using (var tx = connection.BeginTransaction())
             {
@@ -99,12 +124,11 @@ namespace EVEMon.YamlToSql.Tables
                         parameters[SoundIDText] = soundID;
                         parameters["columnFilter"] = "typeID";
 
-                        command.CommandText = Database.SqlUpdateCommandText(TableName, parameters);
+                        command.CommandText = Database.SqlUpdateCommandText(InvTypesTableName, parameters);
                         command.ExecuteNonQuery();
                     }
 
                     tx.Commit();
-                    Util.DisplayEndTime(startTime);
                 }
                 catch (SqlException e)
                 {
@@ -112,10 +136,9 @@ namespace EVEMon.YamlToSql.Tables
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
+                    Environment.Exit(-1);
                 }
             }
-
-            Console.WriteLine();
         }
     }
 }

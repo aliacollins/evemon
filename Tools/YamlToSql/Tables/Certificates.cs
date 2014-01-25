@@ -28,6 +28,32 @@ namespace EVEMon.YamlToSql.Tables
         private const string CrtRecommendationsTableName = "crtRecommendations";
         private const string CrtRelationshipsTableName = "crtRelationships";
 
+        // certificates.yaml
+        private const string DescriptionText = "description";
+        private const string GroupIDText = "groupID";
+        private const string NameText = "name";
+        private const string RecommendedForText = "recommendedFor";
+        private const string SkillTypesText = "skillTypes";
+
+        // crtCertificates
+        private const string CertificateIDText = "certificateID";
+        private const string CategoryIDText = "categoryID";
+
+        // crtClasses
+        private const string ClassIDText = "classID";
+        private const string ClassNameText = "className";
+
+        // crtRecommendations
+        private const string RecommendationIDText = "recommendationID";
+        private const string ShipTypeIDText = "shipTypeID";
+
+        // crtRecommendations
+        private const string RelationshipIDText = "relationshipID";
+        private const string ParentTypeIDText = "parentTypeID";
+        private const string ParentLevelText = "parentLevel";
+        private const string ChildIDText = "childID";
+        private const string GradeText = "grade";
+
         /// <summary>
         /// Imports the certificates.
         /// </summary>
@@ -43,10 +69,7 @@ namespace EVEMon.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-
-            var command = new SqlCommand { Connection = connection };
-
-            CreateCertTables(connection, command);
+            CreateCertTables(connection);
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
@@ -59,7 +82,9 @@ namespace EVEMon.YamlToSql.Tables
                 return;
             }
 
-            ImportCertificatesData(connection, command, rNode, startTime);
+            ImportCertificatesData(connection, rNode);
+
+            Util.DisplayEndTime(startTime);
 
             Console.WriteLine();
         }
@@ -68,40 +93,13 @@ namespace EVEMon.YamlToSql.Tables
         /// Imports the certificates data.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        /// <param name="command">The command.</param>
         /// <param name="rNode">The r node.</param>
-        /// <param name="startTime">The start time.</param>
-        private static void ImportCertificatesData(SqlConnection connection, SqlCommand command, YamlMappingNode rNode,
-            DateTime startTime)
+        private static void ImportCertificatesData(SqlConnection connection, YamlMappingNode rNode)
         {
-            // certificates.yaml
-            const string DescriptionText = "description";
-            const string GroupIDText = "groupID";
-            const string NameText = "name";
-            const string RecommendedForText = "recommendedFor";
-            const string SkillTypesText = "skillTypes";
-
-            // crtCertificates
-            const string CertificateIDText = "certificateID";
-            const string CategoryIDText = "categoryID";
-
-            // crtClasses
+            var command = new SqlCommand { Connection = connection };
             int classId = 0;
-            const string ClassIDText = "classID";
-            const string ClassNameText = "className";
-
-            // crtRecommendations
             int recommendationId = 0;
-            const string RecommendationIDText = "recommendationID";
-            const string ShipTypeIDText = "shipTypeID";
-
-            // crtRecommendations
             int relationshipId = 0;
-            const string RelationshipIDText = "relationshipID";
-            const string ParentTypeIDText = "parentTypeID";
-            const string ParentLevelText = "parentLevel";
-            const string ChildIDText = "childID";
-            const string GradeText = "grade";
 
             using (var tx = connection.BeginTransaction())
             {
@@ -215,7 +213,6 @@ namespace EVEMon.YamlToSql.Tables
                     }
 
                     tx.Commit();
-                    Util.DisplayEndTime(startTime);
                 }
                 catch (SqlException e)
                 {
@@ -223,6 +220,7 @@ namespace EVEMon.YamlToSql.Tables
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
+                    Environment.Exit(-1);
                 }
             }
         }
@@ -231,9 +229,9 @@ namespace EVEMon.YamlToSql.Tables
         /// Creates the cert tables.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        /// <param name="command">The command.</param>
-        private static void CreateCertTables(SqlConnection connection, SqlCommand command)
+        private static void CreateCertTables(SqlConnection connection)
         {
+            var command = new SqlCommand { Connection = connection };
             DataTable dataTable = connection.GetSchema("columns");
 
             if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", CrtClassesTableName)).Length == 0)
