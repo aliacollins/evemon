@@ -47,9 +47,9 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the floating point value.
         /// </summary>
-        public Single SingleValue
+        public Double DoubleValue
         {
-            get { return Single.Parse(Value, CultureConstants.InvariantCulture); }
+            get { return Double.Parse(Value, CultureConstants.InvariantCulture); }
         }
 
         #endregion
