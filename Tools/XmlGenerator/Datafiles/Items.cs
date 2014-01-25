@@ -333,7 +333,6 @@ namespace EVEMon.XmlGenerator.Datafiles
             Int64[] prereqSkills = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
             Int64[] prereqLevels = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
             List<SerializablePropertyValue> props = new List<SerializablePropertyValue>();
-            const int BaseWarpSpeed = 3;
             double warpSpeedMultiplier = 1;
             foreach (DgmTypeAttributes srcProp in Database.DgmTypeAttributesTable.Where(x => x.ItemID == srcItem.ID))
             {
@@ -463,7 +462,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     props.Add(new SerializablePropertyValue
                                   {
                                       ID = srcProp.AttributeID,
-                                      Value = (BaseWarpSpeed * warpSpeedMultiplier).ToString(CultureConstants.InvariantCulture)
+                                      Value = warpSpeedMultiplier.ToString(CultureConstants.InvariantCulture)
                                   });
 
                     // Also add packaged volume as a prop as only ships have 'ship warp speed' attribute

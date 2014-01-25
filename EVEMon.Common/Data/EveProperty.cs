@@ -178,7 +178,7 @@ namespace EVEMon.Common.Data
 
                     // Format a value of Ships Warp Speed
                     if (ID == DBConstants.ShipWarpSpeedPropertyID)
-                        return String.Format(CultureConstants.DefaultCulture, "{0:0.0#} {1}", numericValue, Unit);
+                        return String.Format(CultureConstants.DefaultCulture, "{0:N2} {1}", numericValue, Unit);
 
                     switch (UnitID)
                     {
