@@ -196,7 +196,7 @@
             <PropertyRef Name="certificateID" />
           </Key>
           <Property Name="certificateID" Type="int" Nullable="false" />
-          <Property Name="categoryID" Type="tinyint" />
+          <Property Name="categoryID" Type="smallint" />
           <Property Name="classID" Type="int" />
           <Property Name="grade" Type="tinyint" />
           <Property Name="corpID" Type="int" />
@@ -229,6 +229,7 @@
           <Property Name="parentTypeID" Type="int" />
           <Property Name="parentLevel" Type="tinyint" />
           <Property Name="childID" Type="int" />
+          <Property Name="grade" Type="tinyint" />
         </EntityType>
         <EntityType Name="dgmAttributeCategories">
           <Key>
@@ -319,6 +320,7 @@
           <Property Name="graphicName" Type="nvarchar" MaxLength="64" Nullable="false" />
           <Property Name="gfxRaceID" Type="varchar" MaxLength="255" />
           <Property Name="colorScheme" Type="varchar" MaxLength="255" />
+          <Property Name="sofHullName" Type="varchar" MaxLength="64" />
         </EntityType>
         <EntityType Name="eveIcons">
           <Key>
@@ -518,9 +520,9 @@
           <Property Name="marketGroupID" Type="int" />
           <Property Name="chanceOfDuplicating" Type="float" />
           <Property Name="graphicID" Type="int" />
+          <Property Name="iconID" Type="int" />
           <Property Name="radius" Type="float" />
           <Property Name="soundID" Type="int" />
-          <Property Name="iconID" Type="int" />
         </EntityType>
         <EntityType Name="invUniqueNames">
           <Key>
@@ -1373,6 +1375,7 @@
           <Property Name="parentTypeID" Type="Int32" />
           <Property Name="parentLevel" Type="Byte" />
           <Property Name="childID" Type="Int32" />
+          <Property Name="grade" Type="Byte" />
         </EntityType>
         <EntityType Name="dgmAttributeCategories">
           <Key>
@@ -2126,6 +2129,7 @@
           <Property Type="String" Name="graphicName" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="gfxRaceID" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="colorScheme" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="sofHullName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2291,7 +2295,8 @@
             <ScalarProperty Name="recommendationLevel" ColumnName="recommendationLevel" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="crtRelationships"><EntityTypeMapping TypeName="EveStaticDataModel.crtRelationships"><MappingFragment StoreEntitySet="crtRelationships">
-            <ScalarProperty Name="relationshipID" ColumnName="relationshipID" />
+            <ScalarProperty Name="grade" ColumnName="grade" />
+                <ScalarProperty Name="relationshipID" ColumnName="relationshipID" />
             <ScalarProperty Name="parentID" ColumnName="parentID" />
             <ScalarProperty Name="parentTypeID" ColumnName="parentTypeID" />
             <ScalarProperty Name="parentLevel" ColumnName="parentLevel" />
@@ -2839,6 +2844,7 @@
           <EntitySetMapping Name="eveGraphics">
             <EntityTypeMapping TypeName="IsTypeOf(EveStaticDataModel.eveGraphics)">
               <MappingFragment StoreEntitySet="eveGraphics">
+                <ScalarProperty Name="sofHullName" ColumnName="sofHullName" />
                 <ScalarProperty Name="colorScheme" ColumnName="colorScheme" />
                 <ScalarProperty Name="gfxRaceID" ColumnName="gfxRaceID" />
                 <ScalarProperty Name="graphicName" ColumnName="graphicName" />

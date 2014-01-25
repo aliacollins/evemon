@@ -5640,6 +5640,30 @@ namespace EVEMon.XmlGenerator
         private Nullable<global::System.Int32> _childID;
         partial void OnchildIDChanging(Nullable<global::System.Int32> value);
         partial void OnchildIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Byte> grade
+        {
+            get
+            {
+                return _grade;
+            }
+            set
+            {
+                OngradeChanging(value);
+                ReportPropertyChanging("grade");
+                _grade = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("grade");
+                OngradeChanged();
+            }
+        }
+        private Nullable<global::System.Byte> _grade;
+        partial void OngradeChanging(Nullable<global::System.Byte> value);
+        partial void OngradeChanged();
 
         #endregion
 
@@ -7248,6 +7272,30 @@ namespace EVEMon.XmlGenerator
         private global::System.String _colorScheme;
         partial void OncolorSchemeChanging(global::System.String value);
         partial void OncolorSchemeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String sofHullName
+        {
+            get
+            {
+                return _sofHullName;
+            }
+            set
+            {
+                OnsofHullNameChanging(value);
+                ReportPropertyChanging("sofHullName");
+                _sofHullName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("sofHullName");
+                OnsofHullNameChanged();
+            }
+        }
+        private global::System.String _sofHullName;
+        partial void OnsofHullNameChanging(global::System.String value);
+        partial void OnsofHullNameChanged();
 
         #endregion
 
