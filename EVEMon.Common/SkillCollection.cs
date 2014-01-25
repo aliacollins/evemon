@@ -72,10 +72,10 @@ namespace EVEMon.Common
                 skill.Reset(fromCCP);
             }
 
-            foreach (SerializableCharacterSkill serialSkill in skills.Where(x => this[x.ID] != null))
+            // Take care of the new skills not in our datafiles yet
+            // Update if it exists
+            foreach (SerializableCharacterSkill serialSkill in skills.Where(x => this[x.ID] != null && Items.ContainsKey(x.ID)))
             {
-                // Take care of the new skills not in our datafiles yet
-                // Update if it exists
                 Items[serialSkill.ID].Import(serialSkill, fromCCP);
             }
         }
