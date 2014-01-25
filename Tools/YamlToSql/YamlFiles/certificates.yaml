@@ -196,6 +196,7 @@
     - 24692
     - 28659
     - 32305
+    - 33472
     skillTypes:
         3300:
             advanced: 5
@@ -1810,10 +1811,10 @@
             standard: 1
         3436:
             advanced: 5
-            basic: 1
+            basic: 4
             elite: 5
             improved: 4
-            standard: 3
+            standard: 4
         3438:
             advanced: 4
             basic: 1
@@ -2392,6 +2393,7 @@
     - 33190
     - 33468
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3392:
@@ -2912,6 +2914,7 @@
     - 33190
     - 33468
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3327:
@@ -3308,6 +3311,7 @@
     - 33190
     - 33468
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3402:
@@ -3620,6 +3624,7 @@
     - 33157
     - 33468
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3426:
@@ -3881,6 +3886,7 @@
     - 33190
     - 33468
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3402:
@@ -3945,6 +3951,7 @@
     - 33190
     - 33468
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3402:
@@ -5249,6 +5256,7 @@
     - 33190
     - 33468
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3413:
@@ -5440,7 +5448,7 @@
             standard: 2
 119:
     description: This certificate represents the ability to survey and manage planet
-        colonies in order to mamiximize resource extraction from their soil. The holder
+        colonies in order to maximize resource extraction from their soil. The holder
         has learned that Command Centers have to be manually launched into Temperate
         planets before a colony may be founded. This is a good skillset for capsuleers
         wishing to develop an additional source of income.
@@ -5619,6 +5627,7 @@
     - 32307
     - 32311
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3426:
@@ -5993,6 +6002,7 @@
     - 33151
     - 33468
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3426:
@@ -6630,6 +6640,7 @@
     - 33155
     - 33157
     - 33470
+    - 33472
     - 33553
     skillTypes:
         3300:

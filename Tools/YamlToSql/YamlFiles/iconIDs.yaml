@@ -5419,3 +5419,20 @@
 21090:
   description: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_soerfm01.png
   iconFile: res:/UI/Asset/mannequin/Male_TopMiddle_ShirtQM01_Types_soerfm01.png
+21092:
+  description: Corp Logo - State Peacekeepers
+  iconFile: res:/UI/Texture/Corps/state_peacekeepers.png
+21093:
+  description: Corp Logo - Federal Marines
+  iconFile: res:/UI/Texture/Corps/federal_marines.png
+21094:
+  description: Corp Logo - Republic Command
+  iconFile: res:/UI/Texture/Corps/republic_command.png
+21095:
+  iconFile: '107_14'
+21096:
+  iconFile: '107_13'
+21097:
+  iconFile: '107_16'
+21098:
+  iconFile: '107_15'

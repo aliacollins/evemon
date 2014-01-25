@@ -20,6 +20,7 @@ namespace EVEMon.YamlToSql.Tables
         private const string GraphicNameText = "graphicName";
         private const string GfxRaceIDText = "gfxRaceID";
         private const string ColorSchemeText = "colorScheme";
+        private const string SofHullNameText = "sofHullName";
 
         /// <summary>
         /// Imports the graphic ids.
@@ -100,6 +101,7 @@ namespace EVEMon.YamlToSql.Tables
                         string graphicName = String.Format("'{0}'", String.Empty);
                         string gfxRaceID = "null";
                         string colorScheme = "null";
+                        string sofHullName = "null";
 
                         YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
 
@@ -168,6 +170,13 @@ namespace EVEMon.YamlToSql.Tables
                                 ((YamlScalarNode)cNode.Children[colorSchemeNode]).Value.Replace("'", "''"));
                         }
 
+                        YamlNode sofHullNameNode = new YamlScalarNode(SofHullNameText);
+                        if (cNode.Children.ContainsKey(sofHullNameNode))
+                        {
+                            sofHullName = String.Format("'{0}'",
+                                ((YamlScalarNode)cNode.Children[sofHullNameNode]).Value.Replace("'", "''"));
+                        }
+
                         var parameters = new Dictionary<string, string>();
                         parameters["graphicID"] = ((YamlScalarNode)pair.Key).Value;
                         parameters[GraphicFileText] = graphicFile;
@@ -179,6 +188,7 @@ namespace EVEMon.YamlToSql.Tables
                         parameters[GraphicNameText] = graphicName;
                         parameters[GfxRaceIDText] = gfxRaceID;
                         parameters[ColorSchemeText] = colorScheme;
+                        parameters[SofHullNameText] = sofHullName;
 
                         command.CommandText = Database.SqlInsertCommandText(EveGraphicsTableName, parameters);
                         command.ExecuteNonQuery();

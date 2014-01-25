@@ -15,6 +15,7 @@ CREATE TABLE [dbo].[eveGraphics](
 	[graphicName] [nvarchar](64) NOT NULL,
 	[gfxRaceID] [varchar](255) NULL,
 	[colorScheme] [varchar](255) NULL,
+	[sofHullName] [varchar](64) NULL,
  CONSTRAINT [eveGraphics_PK] PRIMARY KEY CLUSTERED 
 (
 	[graphicID] ASC

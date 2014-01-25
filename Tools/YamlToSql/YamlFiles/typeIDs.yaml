@@ -3552,7 +3552,6 @@
 785:
     iconID: 1061
 786:
-    graphicID: 168
     iconID: 168
 788:
     graphicID: 20081
@@ -4516,13 +4515,11 @@
     graphicID: 20092
     iconID: 1345
 1876:
-    graphicID: 1345
     iconID: 1345
 1877:
     graphicID: 20093
     iconID: 1345
 1878:
-    graphicID: 1345
     iconID: 1345
 1893:
     iconID: 1046
@@ -5547,7 +5544,6 @@
     graphicID: 20098
     iconID: 168
 2405:
-    graphicID: 168
     iconID: 168
 2406:
     iconID: 33
@@ -9597,8 +9593,7 @@
     radius: 1000.0
 3916:
     graphicID: 10958
-3919:
-    graphicID: 10960
+3919: {}
 3920:
     graphicID: 1070
     radius: 17000.0
@@ -9621,8 +9616,7 @@
     graphicID: 10944
 3931:
     graphicID: 11026
-3932:
-    graphicID: 11019
+3932: {}
 3933:
     graphicID: 11402
 3934:
@@ -10013,7 +10007,7 @@
 4121:
     iconID: 10617
 4122:
-    iconID: 10617
+    iconID: 10618
 4123:
     iconID: 10619
 4124:
@@ -10296,12 +10290,10 @@
 4258:
     iconID: 2677
 4259:
-    graphicID: 168
     iconID: 168
 4260:
     iconID: 2677
 4261:
-    graphicID: 168
     iconID: 168
 4262:
     iconID: 2858
@@ -12658,7 +12650,7 @@
     radius: 25975.0
     soundID: 15
 9867:
-    graphicID: 1404
+    graphicID: 2008
     radius: 47998.0
     soundID: 17
 9868:
@@ -12697,7 +12689,7 @@
     graphicID: 3776
     radius: 4758.0
 9881:
-    graphicID: 3777
+    graphicID: 3368
     radius: 12350.0
 9882:
     graphicID: 3778
@@ -13507,19 +13499,15 @@
     graphicID: 20089
     iconID: 1345
 10630:
-    graphicID: 1345
     iconID: 1345
 10631:
     graphicID: 20090
     iconID: 1345
 10632:
-    graphicID: 1345
     iconID: 1345
 10642:
-    graphicID: 1345
     iconID: 1345
 10643:
-    graphicID: 1345
     iconID: 1345
 10645:
     graphicID: 1211
@@ -24688,7 +24676,6 @@
     graphicID: 20088
     iconID: 1345
 16066:
-    graphicID: 1345
     iconID: 1345
 16067:
     graphicID: 20071
@@ -28557,7 +28544,6 @@
     graphicID: 20088
     iconID: 1345
 17489:
-    graphicID: 1345
     iconID: 1345
 17490:
     graphicID: 20071
@@ -30452,7 +30438,6 @@
 17901:
     iconID: 2677
 17902:
-    graphicID: 168
     iconID: 168
 17903:
     graphicID: 1238
@@ -30905,7 +30890,6 @@
 17938:
     iconID: 2677
 17939:
-    graphicID: 168
     iconID: 168
 17940:
     iconID: 33
@@ -31499,7 +31483,6 @@
 18639:
     iconID: 2677
 18640:
-    graphicID: 168
     iconID: 168
 18641:
     graphicID: 1824
@@ -34540,19 +34523,16 @@
     graphicID: 20087
     iconID: 1345
 20594:
-    graphicID: 1345
     iconID: 1345
 20595:
     graphicID: 20095
     iconID: 168
 20596:
-    graphicID: 168
     iconID: 168
 20597:
     graphicID: 20091
     iconID: 1345
 20598:
-    graphicID: 1345
     iconID: 1345
 20599:
     graphicID: 20079
@@ -36544,7 +36524,6 @@
     graphicID: 20087
     iconID: 1345
 21543:
-    graphicID: 1345
     iconID: 1345
 21544:
     iconID: 2038
@@ -36735,7 +36714,6 @@
 21624:
     iconID: 1192
 21625:
-    graphicID: 1345
     iconID: 1345
 21626:
     iconID: 2329
@@ -40085,7 +40063,6 @@
 22782:
     iconID: 2990
 22783:
-    graphicID: 168
     iconID: 168
 22788:
     iconID: 2536
@@ -48194,7 +48171,6 @@
 25771:
     iconID: 2677
 25772:
-    graphicID: 168
     iconID: 168
 25797:
     iconID: 2222
@@ -48974,7 +48950,6 @@
 26173:
     iconID: 2677
 26174:
-    graphicID: 168
     iconID: 168
 26176:
     graphicID: 2479
@@ -49150,7 +49125,7 @@
     graphicID: 3779
     radius: 9239.0
 26236:
-    graphicID: 3777
+    graphicID: 3368
     radius: 12350.0
 26237:
     graphicID: 3782
@@ -53416,13 +53391,13 @@
     graphicID: 2613
     radius: 450.0
 28066:
-    graphicID: 3771
+    graphicID: 3776
     radius: 22578.0
 28070:
     graphicID: 3789
     radius: 12013.0
 28071:
-    graphicID: 3796
+    graphicID: 3797
     radius: 17443.0
 28073:
     iconID: 33
@@ -53438,15 +53413,15 @@
     iconID: 3304
     radius: 19079.0
 28078:
-    graphicID: 3303
+    graphicID: 3304
     iconID: 3303
     radius: 19079.0
 28079:
-    graphicID: 3306
+    graphicID: 3304
     iconID: 3306
     radius: 19079.0
 28080:
-    graphicID: 3305
+    graphicID: 3304
     iconID: 3305
     radius: 19079.0
 28081:
@@ -53458,15 +53433,15 @@
     iconID: 3304
     radius: 19079.0
 28083:
-    graphicID: 3303
+    graphicID: 3304
     iconID: 3303
     radius: 19079.0
 28084:
-    graphicID: 3306
+    graphicID: 3304
     iconID: 3306
     radius: 19079.0
 28085:
-    graphicID: 3305
+    graphicID: 3304
     iconID: 3305
     radius: 19079.0
 28086:
@@ -53478,19 +53453,19 @@
     iconID: 3304
     radius: 19079.0
 28088:
-    graphicID: 3303
+    graphicID: 3304
     iconID: 3303
     radius: 19079.0
 28089:
-    graphicID: 3306
+    graphicID: 3304
     iconID: 3306
     radius: 19079.0
 28090:
-    graphicID: 3305
+    graphicID: 3304
     iconID: 3305
     radius: 19079.0
 28091:
-    graphicID: 3304
+    graphicID: 3303
     iconID: 3304
     radius: 19079.0
 28092:
@@ -53502,15 +53477,15 @@
     iconID: 3303
     radius: 19079.0
 28094:
-    graphicID: 3306
+    graphicID: 3303
     iconID: 3306
     radius: 19079.0
 28095:
-    graphicID: 3305
+    graphicID: 3303
     iconID: 3305
     radius: 19079.0
 28096:
-    graphicID: 3304
+    graphicID: 3303
     iconID: 3304
     radius: 19079.0
 28097:
@@ -53522,15 +53497,15 @@
     iconID: 3303
     radius: 19079.0
 28099:
-    graphicID: 3306
+    graphicID: 3303
     iconID: 3306
     radius: 19079.0
 28100:
-    graphicID: 3305
+    graphicID: 3303
     iconID: 3305
     radius: 19079.0
 28101:
-    graphicID: 3304
+    graphicID: 3303
     iconID: 3304
     radius: 19079.0
 28102:
@@ -53542,23 +53517,23 @@
     iconID: 3303
     radius: 19079.0
 28104:
-    graphicID: 3306
+    graphicID: 3303
     iconID: 3306
     radius: 19079.0
 28105:
-    graphicID: 3305
+    graphicID: 3303
     iconID: 3305
     radius: 19079.0
 28106:
-    graphicID: 3304
+    graphicID: 3306
     iconID: 3304
     radius: 19079.0
 28107:
-    graphicID: 3304
+    graphicID: 3306
     iconID: 3304
     radius: 19079.0
 28108:
-    graphicID: 3303
+    graphicID: 3306
     iconID: 3303
     radius: 19079.0
 28109:
@@ -53566,19 +53541,19 @@
     iconID: 3306
     radius: 19079.0
 28110:
-    graphicID: 3305
+    graphicID: 3306
     iconID: 3305
     radius: 19079.0
 28111:
-    graphicID: 3304
+    graphicID: 3306
     iconID: 3304
     radius: 19079.0
 28112:
-    graphicID: 3304
+    graphicID: 3306
     iconID: 3304
     radius: 19079.0
 28113:
-    graphicID: 3303
+    graphicID: 3306
     iconID: 3303
     radius: 19079.0
 28114:
@@ -53586,19 +53561,19 @@
     iconID: 3306
     radius: 19079.0
 28115:
-    graphicID: 3305
+    graphicID: 3306
     iconID: 3305
     radius: 19079.0
 28116:
-    graphicID: 3304
+    graphicID: 3306
     iconID: 3304
     radius: 19079.0
 28117:
-    graphicID: 3304
+    graphicID: 3306
     iconID: 3304
     radius: 19079.0
 28118:
-    graphicID: 3303
+    graphicID: 3306
     iconID: 3303
     radius: 19079.0
 28119:
@@ -53606,23 +53581,23 @@
     iconID: 3306
     radius: 19079.0
 28120:
-    graphicID: 3305
+    graphicID: 3306
     iconID: 3305
     radius: 19079.0
 28121:
-    graphicID: 3304
+    graphicID: 3305
     iconID: 3304
     radius: 19079.0
 28122:
-    graphicID: 3304
+    graphicID: 3305
     iconID: 3304
     radius: 19079.0
 28123:
-    graphicID: 3303
+    graphicID: 3305
     iconID: 3303
     radius: 19079.0
 28124:
-    graphicID: 3306
+    graphicID: 3305
     iconID: 3306
     radius: 19079.0
 28125:
@@ -53630,19 +53605,19 @@
     iconID: 3305
     radius: 19079.0
 28126:
-    graphicID: 3304
+    graphicID: 3305
     iconID: 3304
     radius: 19079.0
 28127:
-    graphicID: 3304
+    graphicID: 3305
     iconID: 3304
     radius: 19079.0
 28128:
-    graphicID: 3303
+    graphicID: 3305
     iconID: 3303
     radius: 19079.0
 28129:
-    graphicID: 3306
+    graphicID: 3305
     iconID: 3306
     radius: 19079.0
 28130:
@@ -53650,19 +53625,19 @@
     iconID: 3305
     radius: 19079.0
 28131:
-    graphicID: 3304
+    graphicID: 3305
     iconID: 3304
     radius: 19079.0
 28132:
-    graphicID: 3304
+    graphicID: 3305
     iconID: 3304
     radius: 19079.0
 28133:
-    graphicID: 3303
+    graphicID: 3305
     iconID: 3303
     radius: 19079.0
 28134:
-    graphicID: 3306
+    graphicID: 3305
     iconID: 3306
     radius: 19079.0
 28135:
@@ -54558,7 +54533,6 @@
     graphicID: 20088
     iconID: 1345
 28512:
-    graphicID: 1345
     iconID: 1345
 28513:
     graphicID: 20071
@@ -55258,12 +55232,10 @@
 28756:
     iconID: 2677
 28757:
-    graphicID: 168
     iconID: 168
 28758:
     iconID: 2677
 28759:
-    graphicID: 168
     iconID: 168
 28766:
     iconID: 2222
@@ -56614,7 +56586,7 @@
     graphicID: 1171
     iconID: 1171
 29323:
-    graphicID: 3368
+    graphicID: 3394
     radius: 52868.0
     soundID: 13
 29324:
@@ -56936,7 +56908,7 @@
     graphicID: 3392
     radius: 48532.0
 29389:
-    graphicID: 3393
+    graphicID: 3776
     radius: 13887.0
 29390:
     graphicID: 3395
@@ -63251,7 +63223,7 @@
 32272:
     iconID: 2302
 32273:
-    graphicID: 3771
+    graphicID: 3776
     radius: 22578.0
 32275:
     graphicID: 2404
@@ -66054,12 +66026,10 @@
 33270:
     iconID: 2677
 33271:
-    graphicID: 168
     iconID: 168
 33272:
     iconID: 2677
 33273:
-    graphicID: 168
     iconID: 168
 33277:
     iconID: 3200
@@ -66529,6 +66499,64 @@
 33472:
     factionID: 500016
     graphicID: 20384
+    masteries:
+        0:
+        - 96
+        - 65
+        - 99
+        - 133
+        - 104
+        - 105
+        - 140
+        - 150
+        - 89
+        - 94
+        1:
+        - 96
+        - 65
+        - 99
+        - 133
+        - 104
+        - 105
+        - 140
+        - 150
+        - 89
+        - 94
+        2:
+        - 96
+        - 65
+        - 99
+        - 133
+        - 104
+        - 105
+        - 140
+        - 150
+        - 89
+        - 94
+        3:
+        - 96
+        - 65
+        - 99
+        - 133
+        - 104
+        - 105
+        - 140
+        - 150
+        - 89
+        - 94
+        4:
+        - 96
+        - 65
+        - 99
+        - 133
+        - 104
+        - 105
+        - 140
+        - 117
+        - 150
+        - 89
+        - 94
+    radius: 250.0
     soundID: 20127
 33473:
     graphicID: 43
@@ -66548,8 +66576,18 @@
     soundID: 20131
 33478:
     graphicID: 20397
+    soundID: 20131
 33479:
     graphicID: 20398
+    soundID: 20131
+33482:
+    iconID: 21095
+33483:
+    iconID: 21098
+33484:
+    iconID: 21096
+33485:
+    iconID: 21097
 33486:
     iconID: 2224
     radius: 1.0
@@ -66857,3 +66895,54 @@
     iconID: 21090
 33579:
     iconID: 21089
+33581:
+    graphicID: 20437
+    soundID: 20131
+33583:
+    graphicID: 20436
+    soundID: 20131
+33585:
+    graphicID: 20446
+    soundID: 20154
+33587:
+    graphicID: 20438
+    soundID: 20150
+33589:
+    graphicID: 20439
+    soundID: 20152
+33591:
+    graphicID: 20450
+    soundID: 20151
+33595:
+    graphicID: 20447
+    soundID: 20154
+33597:
+    iconID: 21096
+33598:
+    iconID: 21098
+33599:
+    iconID: 21097
+33600:
+    iconID: 21095
+33601:
+    iconID: 21096
+33602:
+    iconID: 21098
+33603:
+    iconID: 21097
+33604:
+    iconID: 21095
+33605:
+    iconID: 21096
+33606:
+    iconID: 21097
+33607:
+    iconID: 21095
+33608:
+    graphicID: 20448
+    soundID: 20154
+33610:
+    graphicID: 20449
+    soundID: 20154
+33612:
+    iconID: 21098
