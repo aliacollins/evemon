@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>24 November 2013</date>
-    <version>1.8.4.4125</version>
-    <md5>915b40b56c615c3db6eddbb100065bb9</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,180665.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.4.4125.exe</autopatchurl>
+    <date>26 January 2014</date>
+    <version>1.8.5.4162</version>
+    <md5>8428d49f260b2e562e07aa65931c6e5a</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,181782.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.5.4162.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
@@ -14,11 +14,12 @@
  
 == Bug Fixes ==
 
- * Fixed a crash when an unknown skill is present in the skill queue.
+ * Fixed the display of a ship's warp speed.
+ * Fixed an issue where settings file is not being uploaded to BC storage, if it's set so in options, when EVEMon closes from the tray icon or from the auto update procedure. Note: Unfortunately we haven't found a way yet to gracefully upload the settings file when you shutdown your machine.
+ * Fixed a crash bug when importing a skill from a character that is not in our DB.
  
 == Misc ==
 
- * Certificates Browser and  notifications have been deprecated due to their removal in Rubicon expansion. 
  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
