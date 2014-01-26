@@ -1,6 +1,6 @@
-637ba612927a84a18a1af7409c424892 *eve-blueprints-en-US.xml.gz
+5fded6fdcf970d1359f9eb0f23e35c80 *eve-blueprints-en-US.xml.gz
 886a36e599134e54d7895d3038d31fe8 *eve-geography-en-US.xml.gz
-20d702027e9b4723fa51f08260f3de42 *eve-items-en-US.xml.gz
-bee4a3983e5de5ff6375d0484dcc1a8e *eve-properties-en-US.xml.gz
-0592b2e35a602dad241b061c2e374b9e *eve-reprocessing-en-US.xml.gz
-e5fcf5b00ee16e93658ac2f27bc79bea *eve-skills-en-US.xml.gz
+015dc654e7c185a9e330da3dbc433ebc *eve-items-en-US.xml.gz
+5383169776ad8102a260ca6a2f4a2483 *eve-properties-en-US.xml.gz
+57dd4660c4cbd6b39a8d219333da38c4 *eve-reprocessing-en-US.xml.gz
+ce0e15cd031d792832d53d0416f27927 *eve-skills-en-US.xml.gz
