@@ -785,9 +785,10 @@ namespace EVEMon.XmlGenerator
                         {
                             ID = flag.flagID,
                             Name = flag.flagName,
-                            Text = flag.flagText.Clean(),
+                            Text = flag.flagText,
                         }))
             {
+                item.Text = item.Text.Clean();
                 collection.Items.Add(item);
             }
 
