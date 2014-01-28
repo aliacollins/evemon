@@ -25,50 +25,50 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>24 November 2013</date>
-      <md5>637ba612927a84a18a1af7409c424892</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
-      <message><![CDATA[Rubicon 1.0 (653401) blueprints data file by the EVEMon Development Team
+      <date>28 January 2014</date>
+      <md5>5fded6fdcf970d1359f9eb0f23e35c80</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
+      <message><![CDATA[Rubicon 1.1 (708191) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>24 November 2013</date>
+      <date>28 January 2014</date>
       <md5>886a36e599134e54d7895d3038d31fe8</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
-      <message><![CDATA[Rubicon 1.0 (653401) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
+      <message><![CDATA[Rubicon 1.1 (708191) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>24 November 2013</date>
-      <md5>20d702027e9b4723fa51f08260f3de42</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
-      <message><![CDATA[Rubicon 1.0 (653401) items data file by the EVEMon Development Team
+      <date>28 January 2014</date>
+      <md5>4d393825d9d5ccf7bff20f9d0331c3d9</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
+      <message><![CDATA[Rubicon 1.1 (708191) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>24 November 2013</date>
-      <md5>bee4a3983e5de5ff6375d0484dcc1a8e</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
-      <message><![CDATA[Rubicon 1.0 (653401) properties data file by the EVEMon Development Team
+      <date>28 January 2014</date>
+      <md5>5383169776ad8102a260ca6a2f4a2483</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
+      <message><![CDATA[Rubicon 1.1 (708191) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>24 November 2013</date>
-      <md5>0592b2e35a602dad241b061c2e374b9e</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
-      <message><![CDATA[Rubicon 1.0 (653401) reprocessing data file by the EVEMon Development Team
+      <date>28 January 2014</date>
+      <md5>57dd4660c4cbd6b39a8d219333da38c4</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
+      <message><![CDATA[Rubicon 1.1 (708191) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>24 November 2013</date>
-      <md5>e5fcf5b00ee16e93658ac2f27bc79bea</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/653401</url>
-      <message><![CDATA[Rubicon 1.0 (653401) skills data file by the EVEMon Development Team
+      <date>28 January 2014</date>
+      <md5>ce0e15cd031d792832d53d0416f27927</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
+      <message><![CDATA[Rubicon 1.1 (708191) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
   </datafiles>
