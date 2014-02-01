@@ -44,11 +44,9 @@ namespace EVEMon.YamlToSql.Tables
         private const string ClassNameText = "className";
 
         // crtRecommendations
-        private const string RecommendationIDText = "recommendationID";
         private const string ShipTypeIDText = "shipTypeID";
 
         // crtRecommendations
-        private const string RelationshipIDText = "relationshipID";
         private const string ParentTypeIDText = "parentTypeID";
         private const string ParentLevelText = "parentLevel";
         private const string ChildIDText = "childID";
@@ -98,8 +96,6 @@ namespace EVEMon.YamlToSql.Tables
         {
             var command = new SqlCommand { Connection = connection };
             int classId = 0;
-            int recommendationId = 0;
-            int relationshipId = 0;
 
             using (var tx = connection.BeginTransaction())
             {
@@ -157,9 +153,7 @@ namespace EVEMon.YamlToSql.Tables
 
                             foreach (YamlNode recommendation in recNode)
                             {
-                                recommendationId++;
                                 parameters = new Dictionary<string, string>();
-                                parameters[RecommendationIDText] = recommendationId.ToString(CultureInfo.InvariantCulture);
                                 parameters[ShipTypeIDText] = ((YamlScalarNode)recommendation).Value;
                                 parameters[CertificateIDText] = certificateId;
 
@@ -183,12 +177,9 @@ namespace EVEMon.YamlToSql.Tables
                                 if (grNode == null)
                                     continue;
 
-
                                 foreach (KeyValuePair<YamlNode, YamlNode> grade in grNode)
                                 {
-                                    relationshipId++;
                                     parameters = new Dictionary<string, string>();
-                                    parameters[RelationshipIDText] = relationshipId.ToString(CultureInfo.InvariantCulture);
                                     parameters[ParentTypeIDText] = ((YamlScalarNode)skillType.Key).Value;
                                     parameters[ParentLevelText] = ((YamlScalarNode)grade.Value).Value;
                                     parameters[ChildIDText] = certificateId;
