@@ -75,8 +75,10 @@ namespace EVEMon.YamlToSql.Tables
 
                         var parameters = new Dictionary<string, string>();
                         parameters["iconID"] = pair.Key.ToString();
-                        parameters[IconFileText] = String.Format("'{0}'",
-                            cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", StringEmpty));
+                        parameters[IconFileText] = cNode.Children.Keys.Any(key => key.ToString() == IconFileText)
+                            ? String.Format("'{0}'",
+                                cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", StringEmpty))
+                            : StringEmpty;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("'{0}'",
                                 cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", StringEmpty))
