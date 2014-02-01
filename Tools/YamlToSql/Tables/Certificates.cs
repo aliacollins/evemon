@@ -208,6 +208,7 @@ namespace EVEMon.YamlToSql.Tables
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
+                    Console.ReadLine();
                     Environment.Exit(-1);
                 }
             }
