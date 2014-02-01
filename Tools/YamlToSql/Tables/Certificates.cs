@@ -51,6 +51,9 @@ namespace EVEMon.YamlToSql.Tables
         private const string ParentLevelText = "parentLevel";
         private const string ChildIDText = "childID";
         private const string GradeText = "grade";
+        
+        private const string StringEmpty = "''";
+        private const string NullText = "Null";
 
         /// <summary>
         /// Imports the certificates.
@@ -106,9 +109,6 @@ namespace EVEMon.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        string certificateId = ((YamlScalarNode)pair.Key).Value;
-                        string groupID = "null";
-                        string description = String.Format("'{0}'", String.Empty);
                         Dictionary<string, string> parameters;
 
                         YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
@@ -116,28 +116,20 @@ namespace EVEMon.YamlToSql.Tables
                         if (cNode == null)
                             continue;
 
-                        YamlNode descriptionNode = new YamlScalarNode(DescriptionText);
-                        if (cNode.Children.ContainsKey(descriptionNode))
-                        {
-                            description = String.Format("'{0}'",
-                                ((YamlScalarNode)cNode.Children[descriptionNode]).Value.Replace("'", "''"));
-                        }
-
-                        YamlNode groupIDNode = new YamlScalarNode(GroupIDText);
-                        if (cNode.Children.ContainsKey(groupIDNode))
-                            groupID = ((YamlScalarNode)cNode.Children[groupIDNode]).Value;
-
                         YamlNode nameNode = new YamlScalarNode(NameText);
                         if (cNode.Children.ContainsKey(nameNode))
                         {
-                            string name = String.Format("'{0}'",
-                                ((YamlScalarNode)cNode.Children[nameNode]).Value.Replace("'", "''"));
-
                             classId++;
                             parameters = new Dictionary<string, string>();
                             parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
-                            parameters[ClassNameText] = name;
-                            parameters[DescriptionText] = name;
+                            parameters[ClassNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+                            ? String.Format("'{0}'",
+                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", StringEmpty))
+                            : StringEmpty;
+                            parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+                            ? String.Format("'{0}'",
+                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", StringEmpty))
+                            : StringEmpty;
 
                             command.CommandText = Database.SqlInsertCommandText(CrtClassesTableName, parameters);
                             command.ExecuteNonQuery();
@@ -154,8 +146,8 @@ namespace EVEMon.YamlToSql.Tables
                             foreach (YamlNode recommendation in recNode)
                             {
                                 parameters = new Dictionary<string, string>();
-                                parameters[ShipTypeIDText] = ((YamlScalarNode)recommendation).Value;
-                                parameters[CertificateIDText] = certificateId;
+                                parameters[ShipTypeIDText] = recommendation.ToString();
+                                parameters[CertificateIDText] = pair.Key.ToString();
 
                                 command.CommandText = Database.SqlInsertCommandText(CrtRecommendationsTableName, parameters);
                                 command.ExecuteNonQuery();
@@ -180,11 +172,11 @@ namespace EVEMon.YamlToSql.Tables
                                 foreach (KeyValuePair<YamlNode, YamlNode> grade in grNode)
                                 {
                                     parameters = new Dictionary<string, string>();
-                                    parameters[ParentTypeIDText] = ((YamlScalarNode)skillType.Key).Value;
-                                    parameters[ParentLevelText] = ((YamlScalarNode)grade.Value).Value;
-                                    parameters[ChildIDText] = certificateId;
+                                    parameters[ParentTypeIDText] = skillType.Key.ToString();
+                                    parameters[ParentLevelText] = grade.Value.ToString();
+                                    parameters[ChildIDText] = pair.Key.ToString();
                                     parameters[GradeText] =
-                                        ((int)Enum.Parse(typeof(CertificateGrade), ((YamlScalarNode)grade.Key).Value, true))
+                                        ((int)Enum.Parse(typeof(CertificateGrade), grade.Key.ToString(), true))
                                             .ToString(CultureInfo.InvariantCulture);
 
                                     command.CommandText = Database.SqlInsertCommandText(CrtRelationshipsTableName, parameters);
@@ -194,10 +186,15 @@ namespace EVEMon.YamlToSql.Tables
                         }
 
                         parameters = new Dictionary<string, string>();
-                        parameters[CertificateIDText] = certificateId;
-                        parameters[CategoryIDText] = groupID;
+                        parameters[CertificateIDText] = pair.Key.ToString();
+                        parameters[CategoryIDText] = cNode.Children.Keys.Any(key => key.ToString() == GroupIDText)
+                            ? cNode.Children[new YamlScalarNode(GroupIDText)].ToString()
+                            : NullText;
                         parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
-                        parameters[DescriptionText] = description;
+                        parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
+                            ? String.Format("'{0}'",
+                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", StringEmpty))
+                            : StringEmpty;
 
                         command.CommandText = Database.SqlInsertCommandText(CrtCertificateTableName, parameters);
                         command.ExecuteNonQuery();
