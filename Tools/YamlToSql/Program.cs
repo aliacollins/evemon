@@ -12,10 +12,12 @@ namespace EVEMon.YamlToSql
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
             SqlConnection connection = Database.Connect();
+            
             InvTypes.ImportTypeIds(connection);
             EveGraphics.ImportGraphicIds(connection);
             EveIcons.ImportIconIds(connection);
             Certificates.ImportCertificates(connection);
+            
             Database.Disconnect();
         }
     }

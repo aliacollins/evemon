@@ -3,7 +3,7 @@ SET ANSI_NULLS ON
 SET QUOTED_IDENTIFIER ON
 
 CREATE TABLE [dbo].[crtRelationships](
-	[relationshipID] [int] NOT NULL,
+	[relationshipID] [int] IDENTITY NOT NULL,
 	[parentID] [int] NULL,
 	[parentTypeID] [int] NULL,
 	[parentLevel] [tinyint] NULL,
