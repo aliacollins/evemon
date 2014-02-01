@@ -14,6 +14,8 @@ namespace EVEMon.YamlToSql.Tables
         private const string IconFileText = "iconFile";
         private const string DescriptionText = "description";
 
+        private const string StringEmpty = "''";
+
         /// <summary>
         /// Imports the icon ids.
         /// </summary>
@@ -66,32 +68,19 @@ namespace EVEMon.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        string iconFile = String.Format("'{0}'", String.Empty);
-                        string description = String.Format("'{0}'", String.Empty);
-
                         YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
 
                         if (cNode == null)
                             continue;
 
-                        YamlNode iconFileNode = new YamlScalarNode(IconFileText);
-                        if (cNode.Children.ContainsKey(iconFileNode))
-                        {
-                            iconFile = String.Format("'{0}'",
-                                ((YamlScalarNode)cNode.Children[iconFileNode]).Value.Replace("'", "''"));
-                        }
-
-                        YamlNode descriptionNode = new YamlScalarNode(DescriptionText);
-                        if (cNode.Children.ContainsKey(descriptionNode))
-                        {
-                            description = String.Format("'{0}'",
-                                ((YamlScalarNode)cNode.Children[descriptionNode]).Value.Replace("'", "''"));
-                        }
-
                         var parameters = new Dictionary<string, string>();
-                        parameters["iconID"] = ((YamlScalarNode)pair.Key).Value;
-                        parameters[IconFileText] = iconFile;
-                        parameters[DescriptionText] = description;
+                        parameters["iconID"] = pair.Key.ToString();
+                        parameters[IconFileText] = String.Format("'{0}'",
+                            cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", StringEmpty));
+                        parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
+                            ? String.Format("'{0}'",
+                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", StringEmpty))
+                            : StringEmpty;
 
                         command.CommandText = Database.SqlInsertCommandText(EveIconsTableName, parameters);
                         command.ExecuteNonQuery();
