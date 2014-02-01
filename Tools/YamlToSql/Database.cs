@@ -161,6 +161,7 @@ namespace EVEMon.YamlToSql
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
+                    Environment.Exit(-1);
                 }
             }
         }
@@ -190,6 +191,7 @@ namespace EVEMon.YamlToSql
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
+                    Environment.Exit(-1);
                 }
             }
         }
@@ -223,6 +225,7 @@ namespace EVEMon.YamlToSql
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
+                    Environment.Exit(-1);
                 }
             }
         }
