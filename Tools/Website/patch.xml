@@ -25,50 +25,50 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gz</name>
-      <date>28 January 2014</date>
+      <date>02 February 2014</date>
       <md5>5fded6fdcf970d1359f9eb0f23e35c80</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
-      <message><![CDATA[Rubicon 1.1 (708191) blueprints data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/710254</url>
+      <message><![CDATA[Rubicon 1.1.2 (710254) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gz</name>
-      <date>28 January 2014</date>
+      <date>02 February 2014</date>
       <md5>886a36e599134e54d7895d3038d31fe8</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
-      <message><![CDATA[Rubicon 1.1 (708191) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/710254</url>
+      <message><![CDATA[Rubicon 1.1.2 (710254) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gz</name>
-      <date>28 January 2014</date>
-      <md5>4d393825d9d5ccf7bff20f9d0331c3d9</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
-      <message><![CDATA[Rubicon 1.1 (708191) items data file by the EVEMon Development Team
+      <date>02 February 2014</date>
+      <md5>972efb7c9d7f60103fb1c21dd7837b45</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/710254</url>
+      <message><![CDATA[Rubicon 1.1.2 (710254) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gz</name>
-      <date>28 January 2014</date>
+      <date>02 February 2014</date>
       <md5>5383169776ad8102a260ca6a2f4a2483</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
-      <message><![CDATA[Rubicon 1.1 (708191) properties data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/710254</url>
+      <message><![CDATA[Rubicon 1.1.2 (710254) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gz</name>
-      <date>28 January 2014</date>
+      <date>02 February 2014</date>
       <md5>57dd4660c4cbd6b39a8d219333da38c4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
-      <message><![CDATA[Rubicon 1.1 (708191) reprocessing data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/710254</url>
+      <message><![CDATA[Rubicon 1.1.2 (710254) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gz</name>
-      <date>28 January 2014</date>
+      <date>02 February 2014</date>
       <md5>ce0e15cd031d792832d53d0416f27927</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/708191</url>
-      <message><![CDATA[Rubicon 1.1 (708191) skills data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rubicon/710254</url>
+      <message><![CDATA[Rubicon 1.1.2 (710254) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.7.0]]></message>
     </datafile>
   </datafiles>
