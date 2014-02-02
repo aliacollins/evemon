@@ -324,6 +324,11 @@
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
     <Compile Include="StaticData\ChrFactions.cs" />
+    <Compile Include="StaticData\CrtCategories.cs" />
+    <Compile Include="StaticData\CrtCertificates.cs" />
+    <Compile Include="StaticData\CrtClasses.cs" />
+    <Compile Include="StaticData\CrtRecommendations.cs" />
+    <Compile Include="StaticData\CrtRelationships.cs" />
     <Compile Include="StaticData\InvControlTowerResources.cs" />
     <Compile Include="StaticData\InvControlTowerResourcePurposes.cs" />
     <Compile Include="StaticData\InvFlags.cs" />

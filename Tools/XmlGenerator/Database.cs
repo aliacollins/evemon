@@ -19,6 +19,7 @@ namespace EVEMon.XmlGenerator
         internal static int PropertiesTotalCount;
         internal static int ItemsTotalCount;
         internal static int SkillsTotalCount;
+        internal static int CertificatesTotalCount; 
         internal static int BlueprintsTotalCount;
         internal static int GeographyTotalCount;
         internal static int ReprocessingTotalCount;
@@ -55,6 +56,36 @@ namespace EVEMon.XmlGenerator
         /// </summary>
         /// <value>The crp NPC divisions table.</value>
         internal static Bag<CrpNPCDivisions> CrpNPCDivisionsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt categories table.
+        /// </summary>
+        /// <value>The crt categories table.</value>
+        internal static Bag<CrtCategories> CrtCategoriesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt classes table.
+        /// </summary>
+        /// <value>The crt classes table.</value>
+        internal static Bag<CrtClasses> CrtClassesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt certificates table.
+        /// </summary>
+        /// <value>The crt certificates table.</value>
+        internal static Bag<CrtCertificates> CrtCertificatesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt recommendations table.
+        /// </summary>
+        /// <value>The crt recommendations table.</value>
+        internal static Bag<CrtRecommendations> CrtRecommendationsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt relationships table.
+        /// </summary>
+        /// <value>The crt relationships table.</value>
+        internal static Bag<CrtRelationships> CrtRelationshipsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the inv names table.
@@ -289,6 +320,16 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             CrpNPCDivisionsTable = NPCDivisions();
             Util.UpdateProgress();
+            CrtCategoriesTable = CertificateCategories();
+            Util.UpdateProgress();
+            CrtClassesTable = CertificateClasses();
+            Util.UpdateProgress();
+            CrtCertificatesTable = Certificates();
+            Util.UpdateProgress();
+            CrtRecommendationsTable = CertificateRecommendations();
+            Util.UpdateProgress();
+            CrtRelationshipsTable = CertificateRelationships(); 
+            Util.UpdateProgress();
             DgmAttributeCategoriesTable = AttributeCategories();
             Util.UpdateProgress();
             DgmAttributeTypesTable = AttributeTypes();
@@ -484,6 +525,148 @@ namespace EVEMon.XmlGenerator
                                    DivisionName = npcDivision.divisionName
                                }))
             {
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Categories.
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificate Categories.</returns>
+        private static Bag<CrtCategories> CertificateCategories()
+        {
+            IndexedCollection<CrtCategories> collection = new IndexedCollection<CrtCategories>();
+
+            foreach (CrtCategories item in Context.crtCategories.Select(
+                category => new CrtCategories
+                {
+                    ID = category.categoryID,
+                    CategoryName = category.categoryName,
+                    Description = category.description
+                }))
+            {
+                item.Description = item.Description.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            CertificatesTotalCount = collection.Items.Count;
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Certificates.
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificates.</returns>
+        private static Bag<CrtCertificates> Certificates()
+        {
+            IndexedCollection<CrtCertificates> collection = new IndexedCollection<CrtCertificates>();
+
+            foreach (crtCertificates certificate in Context.crtCertificates)
+            {
+                CrtCertificates item = new CrtCertificates
+                {
+                    ID = certificate.certificateID,
+                    Description = certificate.description
+                };
+                item.Description = item.Description.Clean();
+
+                if (certificate.categoryID.HasValue)
+                    item.CategoryID = certificate.categoryID.Value;
+
+                if (certificate.classID.HasValue)
+                    item.ClassID = certificate.classID.Value;
+
+                if (certificate.grade.HasValue)
+                    item.Grade = certificate.grade.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Classes.
+        /// </summary>
+        /// <returns><c>Bag</c> of Classes of Certificate.</returns>
+        private static Bag<CrtClasses> CertificateClasses()
+        {
+            IndexedCollection<CrtClasses> collection = new IndexedCollection<CrtClasses>();
+
+            foreach (CrtClasses item in Context.crtClasses.Select(
+                cClass => new CrtClasses
+                {
+                    ID = cClass.classID,
+                    ClassName = cClass.className,
+                    Description = cClass.description
+                }))
+            {
+                item.Description = item.Description.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            //CertificatesTotalCount *= collection.Items
+            //    .Count(x => Datafiles.Certificates.ExcludedCertClassesIDs.All(y => y != x.ID));
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Recommendations.
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificate Recommendations.</returns>
+        private static Bag<CrtRecommendations> CertificateRecommendations()
+        {
+            IndexedCollection<CrtRecommendations> collection = new IndexedCollection<CrtRecommendations>();
+
+            foreach (crtRecommendations recommendation in Context.crtRecommendations)
+            {
+                CrtRecommendations item = new CrtRecommendations
+                {
+                    ID = recommendation.recommendationID,
+                    Level = recommendation.recommendationLevel,
+                };
+
+                if (recommendation.certificateID.HasValue)
+                    item.CertificateID = recommendation.certificateID.Value;
+
+                if (recommendation.shipTypeID.HasValue)
+                    item.ShipTypeID = recommendation.shipTypeID.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Relationships.
+        /// </summary>
+        /// <returns><c>Bag</c> of parent-child relationships between certificates.</returns>
+        private static Bag<CrtRelationships> CertificateRelationships()
+        {
+            IndexedCollection<CrtRelationships> collection = new IndexedCollection<CrtRelationships>();
+
+            foreach (crtRelationships relationship in Context.crtRelationships)
+            {
+                CrtRelationships item = new CrtRelationships
+                {
+                    ID = relationship.relationshipID,
+                    ParentID = relationship.parentID,
+                    ParentLevel = relationship.parentLevel,
+                };
+
+                if (relationship.parentTypeID != 0)
+                    item.ParentTypeID = relationship.parentTypeID;
+
+                if (relationship.childID.HasValue)
+                    item.ChildID = relationship.childID.Value;
+
                 collection.Items.Add(item);
             }
 
