@@ -18,5 +18,8 @@ namespace EVEMon.XmlGenerator.StaticData
 
         [XmlElement("childID")]
         public int ChildID { get; set; }
+
+        [XmlElement("grade")]
+        public short Grade { get; set; }
     }
 }

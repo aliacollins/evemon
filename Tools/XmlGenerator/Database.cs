@@ -106,16 +106,34 @@ namespace EVEMon.XmlGenerator
         internal static Bag<EveUnits> EveUnitsTable { get; private set; }
 
         /// <summary>
+        /// Gets or sets the dgm attribute categories table.
+        /// </summary>
+        /// <value>The dgm attribute categories table.</value>
+        internal static Bag<DgmAttributeCategories> DgmAttributeCategoriesTable { get; private set; }
+
+        /// <summary>
         /// Gets or sets the dgm attribute types table.
         /// </summary>
         /// <value>The dgm attribute types table.</value>
         internal static Bag<DgmAttributeTypes> DgmAttributeTypesTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the dgm attribute categories table.
+        /// Gets or sets the dgm attribute types table.
         /// </summary>
-        /// <value>The dgm attribute categories table.</value>
-        internal static Bag<DgmAttributeCategories> DgmAttributeCategoriesTable { get; private set; }
+        /// <value>The dgm attribute types table.</value>
+        internal static Bag<DgmMasteries> DgmMasteriesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the dgm attribute types table.
+        /// </summary>
+        /// <value>The dgm attribute types table.</value>
+        internal static Bag<DgmTraits> DgmTraitsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the dgm type attributes table.
+        /// </summary>
+        /// <value>The type attributes table.</value>
+        internal static RelationSet<DgmTypeAttributes> DgmTypeAttributesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the dgm type effects table.
@@ -124,10 +142,16 @@ namespace EVEMon.XmlGenerator
         internal static RelationSet<DgmTypeEffects> DgmTypeEffectsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the dgm type attributes table.
+        /// Gets or sets the dgm type effects table.
         /// </summary>
-        /// <value>The type attributes table.</value>
-        internal static RelationSet<DgmTypeAttributes> DgmTypeAttributesTable { get; private set; }
+        /// <value>The dgm type effects table.</value>
+        internal static RelationSet<DgmTypeMasteries> DgmTypeMasteriesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the dgm type effects table.
+        /// </summary>
+        /// <value>The dgm type effects table.</value>
+        internal static RelationSet<DgmTypeTraits> DgmTypeTraitsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the map regions table.
@@ -334,9 +358,17 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             DgmAttributeTypesTable = AttributeTypes();
             Util.UpdateProgress();
+            DgmMasteriesTable = Masteries();
+            Util.UpdateProgress();
+            DgmTraitsTable = Traits();
+            Util.UpdateProgress();
             DgmTypeAttributesTable = TypeAttributes();
             Util.UpdateProgress();
             DgmTypeEffectsTable = TypeEffects();
+            Util.UpdateProgress();
+            DgmTypeMasteriesTable = TypeMasteries();
+            Util.UpdateProgress();
+            DgmTypeTraitsTable = TypeTraits();
             Util.UpdateProgress();
             EveIconsTable = Icons();
             Util.UpdateProgress();
@@ -742,6 +774,50 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// Dogma Masteries.
+        /// </summary>
+        /// <returns></returns>
+        private static Bag<DgmMasteries> Masteries()
+        {
+            IndexedCollection<DgmMasteries> collection = new IndexedCollection<DgmMasteries>();
+
+            foreach (DgmMasteries item in Context.dgmMasteries.Select(
+                mastery => new DgmMasteries
+                           {
+                               ID = mastery.masteryID,
+                               CertificateID = mastery.certificateID,
+                               Grade = mastery.grade,
+                           }))
+            {
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Dogma Traits.
+        /// </summary>
+        /// <returns></returns>
+        private static Bag<DgmTraits> Traits()
+        {
+            IndexedCollection<DgmTraits> collection = new IndexedCollection<DgmTraits>();
+
+            foreach (DgmTraits item in Context.dgmTraits.Select(
+                trait => new DgmTraits
+                {
+                    ID = trait.traitID,
+                    BonusText = trait.bonusText,
+                    UnitID = trait.unitID,
+                }))
+            {
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
         /// Dogma Type Attributes.
         /// </summary>
         /// <returns><c>RelationSet</c> of attributes for types.</returns>
@@ -773,6 +849,40 @@ namespace EVEMon.XmlGenerator
                               }).ToList();
 
             return new RelationSet<DgmTypeEffects>(list);
+        }
+
+        /// <summary>
+        /// Dogma Type Masteries.
+        /// </summary>
+        /// <returns></returns>
+        private static RelationSet<DgmTypeMasteries> TypeMasteries()
+        {
+            List<DgmTypeMasteries> list = Context.dgmTypeMasteries.Select(
+                typeMastery => new DgmTypeMasteries
+                {
+                    MasteryID = typeMastery.masteryID,
+                    ItemID = typeMastery.typeID
+                }).ToList();
+
+            return new RelationSet<DgmTypeMasteries>(list);
+        }
+
+        /// <summary>
+        /// Dogma Type Traits.
+        /// </summary>
+        /// <returns></returns>
+        private static RelationSet<DgmTypeTraits> TypeTraits()
+        {
+            List<DgmTypeTraits> list = Context.dgmTypeTraits.Select(
+                typeTraits => new DgmTypeTraits
+                {
+                    TraitID = typeTraits.traitID,
+                    ItemID = typeTraits.typeID,
+                    ParentItemID = typeTraits.parentTypeID,
+                    Bonus = typeTraits.bonus
+                }).ToList();
+
+            return new RelationSet<DgmTypeTraits>(list);
         }
 
         /// <summary>

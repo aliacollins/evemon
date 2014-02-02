@@ -329,6 +329,10 @@
     <Compile Include="StaticData\CrtClasses.cs" />
     <Compile Include="StaticData\CrtRecommendations.cs" />
     <Compile Include="StaticData\CrtRelationships.cs" />
+    <Compile Include="StaticData\DgmMasteries.cs" />
+    <Compile Include="StaticData\DgmTraits.cs" />
+    <Compile Include="StaticData\DgmTypeMasteries.cs" />
+    <Compile Include="StaticData\DgmTypeTraits.cs" />
     <Compile Include="StaticData\InvControlTowerResources.cs" />
     <Compile Include="StaticData\InvControlTowerResourcePurposes.cs" />
     <Compile Include="StaticData\InvFlags.cs" />
