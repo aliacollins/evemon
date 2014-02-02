@@ -215,7 +215,7 @@
           <Key>
             <PropertyRef Name="recommendationID" />
           </Key>
-          <Property Name="recommendationID" Type="int" Nullable="false" />
+          <Property Name="recommendationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="shipTypeID" Type="int" />
           <Property Name="certificateID" Type="int" />
           <Property Name="recommendationLevel" Type="tinyint" Nullable="false" />
@@ -224,7 +224,7 @@
           <Key>
             <PropertyRef Name="relationshipID" />
           </Key>
-          <Property Name="relationshipID" Type="int" Nullable="false" />
+          <Property Name="relationshipID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="parentID" Type="int" />
           <Property Name="parentTypeID" Type="int" />
           <Property Name="parentLevel" Type="tinyint" />
@@ -287,6 +287,22 @@
           <Property Name="npcActivationChanceAttributeID" Type="smallint" />
           <Property Name="fittingUsageChanceAttributeID" Type="smallint" />
         </EntityType>
+        <EntityType Name="dgmMasteries">
+          <Key>
+            <PropertyRef Name="masteryID" />
+          </Key>
+          <Property Name="masteryID" Type="int" Nullable="false" />
+          <Property Name="certificateID" Type="int" Nullable="false" />
+          <Property Name="grade" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="dgmTraits">
+          <Key>
+            <PropertyRef Name="traitID" />
+          </Key>
+          <Property Name="traitID" Type="int" Nullable="false" />
+          <Property Name="bonusText" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="unitID" Type="tinyint" />
+        </EntityType>
         <EntityType Name="dgmTypeAttributes">
           <Key>
             <PropertyRef Name="typeID" />
@@ -305,6 +321,25 @@
           <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="effectID" Type="smallint" Nullable="false" />
           <Property Name="isDefault" Type="bit" />
+        </EntityType>
+        <EntityType Name="dgmTypeMasteries">
+          <Key>
+            <PropertyRef Name="typeID" />
+            <PropertyRef Name="masteryID" />
+          </Key>
+          <Property Name="typeID" Type="int" Nullable="false" />
+          <Property Name="masteryID" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="dgmTypeTraits">
+          <Key>
+            <PropertyRef Name="typeID" />
+            <PropertyRef Name="parentTypeID" />
+            <PropertyRef Name="traitID" />
+          </Key>
+          <Property Name="typeID" Type="int" Nullable="false" />
+          <Property Name="parentTypeID" Type="int" Nullable="false" />
+          <Property Name="traitID" Type="int" Nullable="false" />
+          <Property Name="bonus" Type="smallint" />
         </EntityType>
         <EntityType Name="eveGraphics">
           <Key>
@@ -519,6 +554,7 @@
           <Property Name="published" Type="bit" />
           <Property Name="marketGroupID" Type="int" />
           <Property Name="chanceOfDuplicating" Type="float" />
+          <Property Name="factionID" Type="int" />
           <Property Name="graphicID" Type="int" />
           <Property Name="iconID" Type="int" />
           <Property Name="radius" Type="float" />
@@ -1008,8 +1044,12 @@
           <EntitySet Name="dgmAttributeCategories" EntityType="Self.dgmAttributeCategories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dgmAttributeTypes" EntityType="Self.dgmAttributeTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dgmEffects" EntityType="Self.dgmEffects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dgmMasteries" EntityType="Self.dgmMasteries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dgmTraits" EntityType="Self.dgmTraits" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dgmTypeAttributes" EntityType="Self.dgmTypeAttributes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dgmTypeEffects" EntityType="Self.dgmTypeEffects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dgmTypeMasteries" EntityType="Self.dgmTypeMasteries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="dgmTypeTraits" EntityType="Self.dgmTypeTraits" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="eveGraphics" EntityType="Self.eveGraphics" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="eveIcons" EntityType="Self.eveIcons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="eveUnits" EntityType="Self.eveUnits" Schema="dbo" store:Type="Tables" />
@@ -1588,6 +1628,7 @@
           <Property Name="iconID" Type="Int32" />
           <Property Name="radius" Type="Double" />
           <Property Name="soundID" Type="Int32" />
+          <Property Name="factionID" Type="Int32" />
         </EntityType>
         <EntityType Name="invUniqueNames">
           <Key>
@@ -2130,7 +2171,46 @@
           <EntitySet Name="trnTranslations" EntityType="Self.trnTranslations" />
           <EntitySet Name="warCombatZones" EntityType="Self.warCombatZones" />
           <EntitySet Name="warCombatZoneSystems" EntityType="Self.warCombatZoneSystems" />
+          <EntitySet Name="dgmMasteries" EntityType="EveStaticDataModel.dgmMasteries" />
+          <EntitySet Name="dgmTraits" EntityType="EveStaticDataModel.dgmTraits" />
+          <EntitySet Name="dgmTypeMasteries" EntityType="EveStaticDataModel.dgmTypeMasteries" />
+          <EntitySet Name="dgmTypeTraits" EntityType="EveStaticDataModel.dgmTypeTraits" />
         </EntityContainer>
+        <EntityType Name="dgmMasteries">
+          <Key>
+            <PropertyRef Name="masteryID" />
+          </Key>
+          <Property Name="masteryID" Type="Int32" Nullable="false" />
+          <Property Name="certificateID" Type="Int32" Nullable="false" />
+          <Property Name="grade" Type="Byte" Nullable="false" />
+        </EntityType>
+        <EntityType Name="dgmTraits">
+          <Key>
+            <PropertyRef Name="traitID" />
+          </Key>
+          <Property Name="traitID" Type="Int32" Nullable="false" />
+          <Property Name="bonusText" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="unitID" Type="Byte" />
+        </EntityType>
+        <EntityType Name="dgmTypeMasteries">
+          <Key>
+            <PropertyRef Name="typeID" />
+            <PropertyRef Name="masteryID" />
+          </Key>
+          <Property Name="typeID" Type="Int32" Nullable="false" />
+          <Property Name="masteryID" Type="Int16" Nullable="false" />
+        </EntityType>
+        <EntityType Name="dgmTypeTraits">
+          <Key>
+            <PropertyRef Name="typeID" />
+            <PropertyRef Name="parentTypeID" />
+            <PropertyRef Name="traitID" />
+          </Key>
+          <Property Name="typeID" Type="Int32" Nullable="false" />
+          <Property Name="parentTypeID" Type="Int32" Nullable="false" />
+          <Property Name="traitID" Type="Int32" Nullable="false" />
+          <Property Name="bonus" Type="Int16" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2668,6 +2748,7 @@
           <EntitySetMapping Name="invTypes">
             <EntityTypeMapping TypeName="EveStaticDataModel.invTypes">
               <MappingFragment StoreEntitySet="invTypes">
+                <ScalarProperty Name="factionID" ColumnName="factionID" />
                 <ScalarProperty Name="typeID" ColumnName="typeID" />
                 <ScalarProperty Name="groupID" ColumnName="groupID" />
                 <ScalarProperty Name="typeName" ColumnName="typeName" />
@@ -3167,6 +3248,42 @@
               <MappingFragment StoreEntitySet="warCombatZoneSystems">
                 <ScalarProperty Name="solarSystemID" ColumnName="solarSystemID" />
                 <ScalarProperty Name="combatZoneID" ColumnName="combatZoneID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dgmMasteries">
+            <EntityTypeMapping TypeName="EveStaticDataModel.dgmMasteries">
+              <MappingFragment StoreEntitySet="dgmMasteries">
+                <ScalarProperty Name="grade" ColumnName="grade" />
+                <ScalarProperty Name="certificateID" ColumnName="certificateID" />
+                <ScalarProperty Name="masteryID" ColumnName="masteryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dgmTraits">
+            <EntityTypeMapping TypeName="EveStaticDataModel.dgmTraits">
+              <MappingFragment StoreEntitySet="dgmTraits">
+                <ScalarProperty Name="unitID" ColumnName="unitID" />
+                <ScalarProperty Name="bonusText" ColumnName="bonusText" />
+                <ScalarProperty Name="traitID" ColumnName="traitID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dgmTypeMasteries">
+            <EntityTypeMapping TypeName="EveStaticDataModel.dgmTypeMasteries">
+              <MappingFragment StoreEntitySet="dgmTypeMasteries">
+                <ScalarProperty Name="masteryID" ColumnName="masteryID" />
+                <ScalarProperty Name="typeID" ColumnName="typeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="dgmTypeTraits">
+            <EntityTypeMapping TypeName="EveStaticDataModel.dgmTypeTraits">
+              <MappingFragment StoreEntitySet="dgmTypeTraits">
+                <ScalarProperty Name="bonus" ColumnName="bonus" />
+                <ScalarProperty Name="traitID" ColumnName="traitID" />
+                <ScalarProperty Name="parentTypeID" ColumnName="parentTypeID" />
+                <ScalarProperty Name="typeID" ColumnName="typeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

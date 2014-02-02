@@ -31,5 +31,6 @@ namespace EVEMon.XmlGenerator
         public Nullable<int> iconID { get; set; }
         public Nullable<double> radius { get; set; }
         public Nullable<int> soundID { get; set; }
+        public Nullable<int> factionID { get; set; }
     }
 }

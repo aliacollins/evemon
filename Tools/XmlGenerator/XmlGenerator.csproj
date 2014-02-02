@@ -143,10 +143,22 @@
     <Compile Include="dgmEffects.cs">
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
+    <Compile Include="dgmMasteries.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dgmTraits.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
     <Compile Include="dgmTypeAttributes.cs">
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
     <Compile Include="dgmTypeEffects.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dgmTypeMasteries.cs">
+      <DependentUpon>EveStaticData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="dgmTypeTraits.cs">
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
     <Compile Include="eveGraphics.cs">
