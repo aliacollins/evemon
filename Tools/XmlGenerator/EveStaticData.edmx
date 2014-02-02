@@ -339,7 +339,7 @@
           <Property Name="typeID" Type="int" Nullable="false" />
           <Property Name="parentTypeID" Type="int" Nullable="false" />
           <Property Name="traitID" Type="int" Nullable="false" />
-          <Property Name="bonus" Type="smallint" />
+          <Property Name="bonus" Type="float" />
         </EntityType>
         <EntityType Name="eveGraphics">
           <Key>
@@ -2209,7 +2209,7 @@
           <Property Name="typeID" Type="Int32" Nullable="false" />
           <Property Name="parentTypeID" Type="Int32" Nullable="false" />
           <Property Name="traitID" Type="Int32" Nullable="false" />
-          <Property Name="bonus" Type="Int16" />
+          <Property Name="bonus" Type="Double" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>

@@ -17,6 +17,6 @@ namespace EVEMon.XmlGenerator
         public int typeID { get; set; }
         public int parentTypeID { get; set; }
         public int traitID { get; set; }
-        public Nullable<short> bonus { get; set; }
+        public Nullable<double> bonus { get; set; }
     }
 }
