@@ -12,10 +12,10 @@ namespace EVEMon.XmlGenerator.StaticData
         public int AttributeID { get; set; }
 
         [XmlElement("valueInt")]
-        public Nullable<Int64> ValueInt64 { get; set; }
+        public long? ValueInt64 { get; set; }
 
         [XmlElement("valueFloat")]
-        public Nullable<Double> ValueFloat { get; set; }
+        public double? ValueFloat { get; set; }
 
         /// <summary>
         /// Returns the value as an integer. 

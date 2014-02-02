@@ -26,7 +26,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 Util.UpdatePercentDone(Database.ReprocessingTotalCount);
 
                 List<SerializableMaterialQuantity> materials = Database.InvTypeMaterialsTable.Where(
-                    x => x.TypeID == typeID).Select(
+                    x => x.ID == typeID).Select(
                         srcMaterial => new SerializableMaterialQuantity
                                            {
                                                ID = srcMaterial.MaterialTypeID,

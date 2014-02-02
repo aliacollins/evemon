@@ -6,7 +6,7 @@ CREATE TABLE [dbo].[dgmTypeTraits](
 	[typeID] [int] NOT NULL,
 	[parentTypeID] [int] NOT NULL,
 	[traitID] [int] NOT NULL,
-	[bonus] [smallint] NULL,
+	[bonus] [float] NULL,
  CONSTRAINT [dgmTypeTraits_PK] PRIMARY KEY CLUSTERED 
 (
 	[typeID] ASC,

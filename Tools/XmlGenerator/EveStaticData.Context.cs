@@ -104,5 +104,9 @@ namespace EVEMon.XmlGenerator
         public virtual DbSet<trnTranslations> trnTranslations { get; set; }
         public virtual DbSet<warCombatZones> warCombatZones { get; set; }
         public virtual DbSet<warCombatZoneSystems> warCombatZoneSystems { get; set; }
+        public virtual DbSet<dgmMasteries> dgmMasteries { get; set; }
+        public virtual DbSet<dgmTraits> dgmTraits { get; set; }
+        public virtual DbSet<dgmTypeMasteries> dgmTypeMasteries { get; set; }
+        public virtual DbSet<dgmTypeTraits> dgmTypeTraits { get; set; }
     }
 }

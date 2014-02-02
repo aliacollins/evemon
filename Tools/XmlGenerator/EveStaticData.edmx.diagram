@@ -84,6 +84,10 @@
         <EntityTypeShape EntityType="EveStaticDataModel.trnTranslations" Width="1.5" PointX="24.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.warCombatZones" Width="1.5" PointX="24.75" PointY="13.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.warCombatZoneSystems" Width="1.5" PointX="24.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmMasteries" Width="1.5" PointX="3.375" PointY="25.75" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmTraits" Width="1.5" PointX="9.375" PointY="25.75" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeMasteries" Width="1.5" PointX="25.375" PointY="19.75" />
+        <EntityTypeShape EntityType="EveStaticDataModel.dgmTypeTraits" Width="1.5" PointX="25.375" PointY="22.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

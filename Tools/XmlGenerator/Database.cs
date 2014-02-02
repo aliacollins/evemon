@@ -19,6 +19,7 @@ namespace EVEMon.XmlGenerator
         internal static int PropertiesTotalCount;
         internal static int ItemsTotalCount;
         internal static int SkillsTotalCount;
+        internal static int CertificatesTotalCount; 
         internal static int BlueprintsTotalCount;
         internal static int GeographyTotalCount;
         internal static int ReprocessingTotalCount;
@@ -57,6 +58,36 @@ namespace EVEMon.XmlGenerator
         internal static Bag<CrpNPCDivisions> CrpNPCDivisionsTable { get; private set; }
 
         /// <summary>
+        /// Gets or sets the crt categories table.
+        /// </summary>
+        /// <value>The crt categories table.</value>
+        internal static Bag<CrtCategories> CrtCategoriesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt classes table.
+        /// </summary>
+        /// <value>The crt classes table.</value>
+        internal static Bag<CrtClasses> CrtClassesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt certificates table.
+        /// </summary>
+        /// <value>The crt certificates table.</value>
+        internal static Bag<CrtCertificates> CrtCertificatesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt recommendations table.
+        /// </summary>
+        /// <value>The crt recommendations table.</value>
+        internal static Bag<CrtRecommendations> CrtRecommendationsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the crt relationships table.
+        /// </summary>
+        /// <value>The crt relationships table.</value>
+        internal static Bag<CrtRelationships> CrtRelationshipsTable { get; private set; }
+
+        /// <summary>
         /// Gets or sets the inv names table.
         /// </summary>
         /// <value>The inv names table.</value>
@@ -75,16 +106,34 @@ namespace EVEMon.XmlGenerator
         internal static Bag<EveUnits> EveUnitsTable { get; private set; }
 
         /// <summary>
+        /// Gets or sets the dgm attribute categories table.
+        /// </summary>
+        /// <value>The dgm attribute categories table.</value>
+        internal static Bag<DgmAttributeCategories> DgmAttributeCategoriesTable { get; private set; }
+
+        /// <summary>
         /// Gets or sets the dgm attribute types table.
         /// </summary>
         /// <value>The dgm attribute types table.</value>
         internal static Bag<DgmAttributeTypes> DgmAttributeTypesTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the dgm attribute categories table.
+        /// Gets or sets the dgm attribute types table.
         /// </summary>
-        /// <value>The dgm attribute categories table.</value>
-        internal static Bag<DgmAttributeCategories> DgmAttributeCategoriesTable { get; private set; }
+        /// <value>The dgm attribute types table.</value>
+        internal static Bag<DgmMasteries> DgmMasteriesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the dgm attribute types table.
+        /// </summary>
+        /// <value>The dgm attribute types table.</value>
+        internal static Bag<DgmTraits> DgmTraitsTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the dgm type attributes table.
+        /// </summary>
+        /// <value>The type attributes table.</value>
+        internal static RelationSet<DgmTypeAttributes> DgmTypeAttributesTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the dgm type effects table.
@@ -93,10 +142,16 @@ namespace EVEMon.XmlGenerator
         internal static RelationSet<DgmTypeEffects> DgmTypeEffectsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the dgm type attributes table.
+        /// Gets or sets the dgm type effects table.
         /// </summary>
-        /// <value>The type attributes table.</value>
-        internal static RelationSet<DgmTypeAttributes> DgmTypeAttributesTable { get; private set; }
+        /// <value>The dgm type effects table.</value>
+        internal static RelationSet<DgmTypeMasteries> DgmTypeMasteriesTable { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the dgm type effects table.
+        /// </summary>
+        /// <value>The dgm type effects table.</value>
+        internal static RelationSet<DgmTypeTraits> DgmTypeTraitsTable { get; private set; }
 
         /// <summary>
         /// Gets or sets the map regions table.
@@ -289,13 +344,31 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             CrpNPCDivisionsTable = NPCDivisions();
             Util.UpdateProgress();
+            CrtCategoriesTable = CertificateCategories();
+            Util.UpdateProgress();
+            CrtClassesTable = CertificateClasses();
+            Util.UpdateProgress();
+            CrtCertificatesTable = Certificates();
+            Util.UpdateProgress();
+            CrtRecommendationsTable = CertificateRecommendations();
+            Util.UpdateProgress();
+            CrtRelationshipsTable = CertificateRelationships(); 
+            Util.UpdateProgress();
             DgmAttributeCategoriesTable = AttributeCategories();
             Util.UpdateProgress();
             DgmAttributeTypesTable = AttributeTypes();
             Util.UpdateProgress();
+            DgmMasteriesTable = Masteries();
+            Util.UpdateProgress();
+            DgmTraitsTable = Traits();
+            Util.UpdateProgress();
             DgmTypeAttributesTable = TypeAttributes();
             Util.UpdateProgress();
             DgmTypeEffectsTable = TypeEffects();
+            Util.UpdateProgress();
+            DgmTypeMasteriesTable = TypeMasteries();
+            Util.UpdateProgress();
+            DgmTypeTraitsTable = TypeTraits();
             Util.UpdateProgress();
             EveIconsTable = Icons();
             Util.UpdateProgress();
@@ -491,6 +564,148 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// Certificate Categories.
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificate Categories.</returns>
+        private static Bag<CrtCategories> CertificateCategories()
+        {
+            IndexedCollection<CrtCategories> collection = new IndexedCollection<CrtCategories>();
+
+            foreach (CrtCategories item in Context.crtCategories.Select(
+                category => new CrtCategories
+                {
+                    ID = category.categoryID,
+                    CategoryName = category.categoryName,
+                    Description = category.description
+                }))
+            {
+                item.Description = item.Description.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            CertificatesTotalCount = collection.Items.Count;
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Certificates.
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificates.</returns>
+        private static Bag<CrtCertificates> Certificates()
+        {
+            IndexedCollection<CrtCertificates> collection = new IndexedCollection<CrtCertificates>();
+
+            foreach (crtCertificates certificate in Context.crtCertificates)
+            {
+                CrtCertificates item = new CrtCertificates
+                {
+                    ID = certificate.certificateID,
+                    Description = certificate.description
+                };
+                item.Description = item.Description.Clean();
+
+                if (certificate.categoryID.HasValue)
+                    item.CategoryID = certificate.categoryID.Value;
+
+                if (certificate.classID.HasValue)
+                    item.ClassID = certificate.classID.Value;
+
+                if (certificate.grade.HasValue)
+                    item.Grade = certificate.grade.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Classes.
+        /// </summary>
+        /// <returns><c>Bag</c> of Classes of Certificate.</returns>
+        private static Bag<CrtClasses> CertificateClasses()
+        {
+            IndexedCollection<CrtClasses> collection = new IndexedCollection<CrtClasses>();
+
+            foreach (CrtClasses item in Context.crtClasses.Select(
+                cClass => new CrtClasses
+                {
+                    ID = cClass.classID,
+                    ClassName = cClass.className,
+                    Description = cClass.description
+                }))
+            {
+                item.Description = item.Description.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            //CertificatesTotalCount *= collection.Items
+            //    .Count(x => Datafiles.Certificates.ExcludedCertClassesIDs.All(y => y != x.ID));
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Recommendations.
+        /// </summary>
+        /// <returns><c>Bag</c> of Certificate Recommendations.</returns>
+        private static Bag<CrtRecommendations> CertificateRecommendations()
+        {
+            IndexedCollection<CrtRecommendations> collection = new IndexedCollection<CrtRecommendations>();
+
+            foreach (crtRecommendations recommendation in Context.crtRecommendations)
+            {
+                CrtRecommendations item = new CrtRecommendations
+                {
+                    ID = recommendation.recommendationID,
+                    Level = recommendation.recommendationLevel,
+                };
+
+                if (recommendation.certificateID.HasValue)
+                    item.CertificateID = recommendation.certificateID.Value;
+
+                if (recommendation.shipTypeID.HasValue)
+                    item.ShipTypeID = recommendation.shipTypeID.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Certificate Relationships.
+        /// </summary>
+        /// <returns><c>Bag</c> of parent-child relationships between certificates.</returns>
+        private static Bag<CrtRelationships> CertificateRelationships()
+        {
+            IndexedCollection<CrtRelationships> collection = new IndexedCollection<CrtRelationships>();
+
+            foreach (crtRelationships relationship in Context.crtRelationships)
+            {
+                CrtRelationships item = new CrtRelationships
+                {
+                    ID = relationship.relationshipID,
+                    ParentID = relationship.parentID,
+                    ParentLevel = relationship.parentLevel,
+                };
+
+                if (relationship.parentTypeID != 0)
+                    item.ParentTypeID = relationship.parentTypeID;
+
+                if (relationship.childID.HasValue)
+                    item.ChildID = relationship.childID.Value;
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
         /// Dogma Attribute categories.
         /// </summary>
         /// <returns><c>Bag</c> of Dogma Attribute Categories.</returns>
@@ -559,6 +774,52 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
+        /// Dogma Masteries.
+        /// </summary>
+        /// <returns></returns>
+        private static Bag<DgmMasteries> Masteries()
+        {
+            IndexedCollection<DgmMasteries> collection = new IndexedCollection<DgmMasteries>();
+
+            foreach (DgmMasteries item in Context.dgmMasteries.Select(
+                mastery => new DgmMasteries
+                           {
+                               ID = mastery.masteryID,
+                               CertificateID = mastery.certificateID,
+                               Grade = mastery.grade,
+                           }))
+            {
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
+        /// Dogma Traits.
+        /// </summary>
+        /// <returns></returns>
+        private static Bag<DgmTraits> Traits()
+        {
+            IndexedCollection<DgmTraits> collection = new IndexedCollection<DgmTraits>();
+
+            foreach (DgmTraits item in Context.dgmTraits.Select(
+                trait => new DgmTraits
+                {
+                    ID = trait.traitID,
+                    BonusText = trait.bonusText,
+                    UnitID = trait.unitID
+                }))
+            {
+                item.BonusText = item.BonusText.Clean();
+
+                collection.Items.Add(item);
+            }
+
+            return collection.ToBag();
+        }
+
+        /// <summary>
         /// Dogma Type Attributes.
         /// </summary>
         /// <returns><c>RelationSet</c> of attributes for types.</returns>
@@ -590,6 +851,40 @@ namespace EVEMon.XmlGenerator
                               }).ToList();
 
             return new RelationSet<DgmTypeEffects>(list);
+        }
+
+        /// <summary>
+        /// Dogma Type Masteries.
+        /// </summary>
+        /// <returns></returns>
+        private static RelationSet<DgmTypeMasteries> TypeMasteries()
+        {
+            List<DgmTypeMasteries> list = Context.dgmTypeMasteries.Select(
+                typeMastery => new DgmTypeMasteries
+                {
+                    MasteryID = typeMastery.masteryID,
+                    ItemID = typeMastery.typeID
+                }).ToList();
+
+            return new RelationSet<DgmTypeMasteries>(list);
+        }
+
+        /// <summary>
+        /// Dogma Type Traits.
+        /// </summary>
+        /// <returns></returns>
+        private static RelationSet<DgmTypeTraits> TypeTraits()
+        {
+            List<DgmTypeTraits> list = Context.dgmTypeTraits.Select(
+                typeTraits => new DgmTypeTraits
+                {
+                    TraitID = typeTraits.traitID,
+                    ItemID = typeTraits.typeID,
+                    ParentItemID = typeTraits.parentTypeID,
+                    Bonus = typeTraits.bonus
+                }).ToList();
+
+            return new RelationSet<DgmTypeTraits>(list);
         }
 
         /// <summary>
@@ -904,7 +1199,7 @@ namespace EVEMon.XmlGenerator
             return Context.invTypeMaterials.Select(
                 material => new InvTypeMaterials
                             {
-                                TypeID = material.typeID,
+                                ID = material.typeID,
                                 MaterialTypeID = material.materialTypeID,
                                 Quantity = material.quantity
                             }).ToList();
@@ -922,7 +1217,7 @@ namespace EVEMon.XmlGenerator
             {
                 InvTypeReactions item = new InvTypeReactions
                                         {
-                                            ReactionTypeID = reaction.reactionTypeID,
+                                            ID = reaction.reactionTypeID,
                                             Input = reaction.input,
                                             TypeID = reaction.typeID,
                                         };
@@ -1107,7 +1402,7 @@ namespace EVEMon.XmlGenerator
             {
                 RamTypeRequirements item = new RamTypeRequirements
                                            {
-                                               TypeID = requirement.typeID,
+                                               ID = requirement.typeID,
                                                ActivityID = requirement.activityID,
                                                RequiredTypeID = requirement.requiredTypeID
                                            };

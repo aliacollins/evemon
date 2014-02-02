@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using EVEMon.Common;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Datafiles;
@@ -169,6 +170,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                             Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0))
                                         };
 
+
             // Set race to Faction if item race is Jovian or belongs to a Faction market group
             if (item.Race == Race.Jove ||
                 Database.InvMarketGroupsTable.Any(group => srcItem.MarketGroupID == group.ID
@@ -177,6 +179,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             {
                 item.Race = Race.Faction;
             }
+
+            // Add traits
+            AddTraits(srcItem, item);
 
             // Add the properties and prereqs
             AddItemPropsAndPrereq(srcItem, item);
@@ -221,6 +226,71 @@ namespace EVEMon.XmlGenerator.Datafiles
         }
 
         /// <summary>
+        /// Adds the traits.
+        /// </summary>
+        /// <param name="srcItem">The source item.</param>
+        /// <param name="item">The item.</param>
+        private static void AddTraits(InvTypes srcItem, SerializableItem item)
+        {
+            if (Database.InvGroupsTable[srcItem.GroupID].CategoryID != DBConstants.ShipCategoryID)
+                return;
+
+            string skillBonusesText = String.Empty;
+            string roleBonusesText = String.Empty;
+
+            // Find the skill bonuses
+            foreach (IGrouping<int, DgmTypeTraits> bonuses in Database.DgmTypeTraitsTable
+                .Where(x => x.ItemID == srcItem.ID && x.ParentItemID != -1)
+                .GroupBy(x => x.ParentItemID))
+            {
+                skillBonusesText += String.Format("{0} bonuses (per skill level):{1}", Database.InvTypesTable[bonuses.Key].Name,
+                    Environment.NewLine);
+
+                foreach (DgmTypeTraits bonus in bonuses)
+                {
+                    DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
+
+                    skillBonusesText += String.Format(CultureConstants.DefaultCulture, "{0}{1} {2}{3}",
+                        bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty,
+                        trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty,
+                        Database.DgmTraitsTable[trait.ID].BonusText, Environment.NewLine).TrimStart();
+                }
+                skillBonusesText += Environment.NewLine;
+            }
+
+            // Find the role bonuses
+            foreach (IGrouping<int, DgmTypeTraits> bonuses in Database.DgmTypeTraitsTable
+                .Where(x => x.ItemID == srcItem.ID && x.ParentItemID == -1)
+                .GroupBy(x => x.ParentItemID))
+            {
+                roleBonusesText += String.Format("Role bonus:{0}", Environment.NewLine);
+
+                foreach (DgmTypeTraits bonus in bonuses)
+                {
+                    DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
+
+                    roleBonusesText += String.Format(CultureConstants.DefaultCulture, "{0}{1} {2}{3}",
+                        bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty,
+                        trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty,
+                        Database.DgmTraitsTable[trait.ID].BonusText, Environment.NewLine).TrimStart();
+                }
+            }
+
+            // Skip if no bonuses
+            if (String.IsNullOrWhiteSpace(skillBonusesText) && String.IsNullOrWhiteSpace(roleBonusesText))
+                return;
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine().AppendLine();
+            sb.AppendLine("Traits");
+            sb.Append(skillBonusesText);
+            sb.Append(roleBonusesText);
+
+            // Add to item description
+            item.Description += sb.ToString();
+        }
+
+        /// <summary>
         /// Adds the control tower fuel info.
         /// </summary>
         /// <param name="srcItem">The source item.</param>
@@ -258,7 +328,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="item">The item.</param>
         private static void AddReactionInfo(IHasID srcItem, SerializableItem item)
         {
-            item.ReactionInfo.AddRange(Database.InvTypeReactionsTable.Where(x => x.ReactionTypeID == srcItem.ID).Select(
+            item.ReactionInfo.AddRange(Database.InvTypeReactionsTable.Where(x => x.ID == srcItem.ID).Select(
                 srcReaction => new
                                    {
                                        srcReaction,

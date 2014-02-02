@@ -2,10 +2,10 @@ using System.Xml.Serialization;
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class RamTypeRequirements
+    public sealed class RamTypeRequirements : IHasID
     {
         [XmlElement("typeID")]
-        public int TypeID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("activityID")]
         public int ActivityID { get; set; }

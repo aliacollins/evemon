@@ -345,7 +345,6 @@ namespace EVEMon.Common.Data
         public const int IceHarvestCycleBonusPropertyID = 780;
         public const int SpecialisationAsteroidGroupPropertyID = 781;
         public const int ReprocessingSkillPropertyID = 790;
-        public const int ShipBonusPirateFactionPropertyID = 793;
         public const int ReactionGroup1PropertyID = 842;
         public const int ReactionGroup2PropertyID = 843;
         public const int ShipMaintenanceBayCapacityPropertyID = 908;
@@ -403,6 +402,7 @@ namespace EVEMon.Common.Data
 
         #region Category IDs
 
+        public const int ShipCategoryID = 6;
         public const int BlueprintCategoryID = 9;
         public const int SkillCategoryID = 16;
         public const int ImplantCategoryID = 20;
@@ -595,7 +595,6 @@ namespace EVEMon.Common.Data
         public const int NavigationSkillID = 3449;
         public const int EchelonBlueprintID = 3533;
         public const int ScrapMetalProcessingSkillID = 12196;
-        public const int MegathronFederateIssueID = 13202;
         public const int AllianceID = 16159;
         public const int ProcurementSkillID = 16594;
         public const int DaytradingSkillID = 16595;
@@ -616,9 +615,7 @@ namespace EVEMon.Common.Data
         public const int DaredevilBlueprintID = 17929;
         public const int DramielBlueprintID = 17933;
         public const int TycconSkillID = 18580;
-        public const int GorusShuttleID = 21097;
         public const int GorusShuttleBlueprintID = 21098;
-        public const int GuristasShuttleID = 21628;
         public const int GuristasShuttleBlueprintID = 21629;
         public const int GallenteMiningLaserBlueprintID = 21842;
         public const int WildMinerIBlueprintID = 22924;
@@ -627,8 +624,6 @@ namespace EVEMon.Common.Data
         public const int ScientificNetworkingSkillID = 24270;
         public const int AdvancedLaboratoryOperationSkillID = 24624;
         public const int AdvancedMassProductionSkillID = 24625;
-        public const int RavenStateIssueID = 26840;
-        public const int TempestTribalIssueID = 26842;
         public const int ZainouBeancounterF50ID = 27167;
         public const int ZainouBeancounterG50ID = 27168;
         public const int ZainouBeancounterF40ID = 27170;
@@ -668,7 +663,6 @@ namespace EVEMon.Common.Data
         public const int TenguOffensiveAcceleratedEjectionBayBlueprintID = 30397;
         public const int ProteusOffensiveDissonicEncodingPlatformBlueprintID = 30402;
         public const int LokiOffensiveTurretConcurrenceRegistryBlueprintID = 30407;
-        public const int InterbusShuttleID = 30842;
         public const int InterbusShuttleBlueprintID = 30843;
         public const int FrekiBlueprintID = 32208;
         public const int MimirBlueprintID = 32210;
