@@ -416,7 +416,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             // Find the raw materials needed for the produced item and add them to the list
             IEnumerable<SerializableRequiredMaterial> rawMaterials = Database.InvTypeMaterialsTable.Where(
-                x => x.TypeID == produceItemID).Select(
+                x => x.ID == produceItemID).Select(
                     reprocItem => new SerializableRequiredMaterial
                                       {
                                           ID = reprocItem.MaterialTypeID,
@@ -440,7 +440,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                       ICollection<SerializableRequiredMaterial> requiredMaterials)
         {
             // Find the additional extra materials and add them to the list
-            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable.Where(x => x.TypeID == blueprintID))
+            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable.Where(x => x.ID == blueprintID))
             {
                 // Is it a skill ? Add it to the prerequisities skills list
                 if (Database.InvTypesTable.Any(x => x.ID == requirement.RequiredTypeID &&
@@ -469,7 +469,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     if (requirement.Recyclable)
                     {
                         foreach (InvTypeMaterials reprocItem in Database.InvTypeMaterialsTable.Where(
-                            x => x.TypeID == requirement.RequiredTypeID))
+                            x => x.ID == requirement.RequiredTypeID))
                         {
                             if (requiredMaterials.All(x => x.ID != reprocItem.MaterialTypeID))
                                 continue;

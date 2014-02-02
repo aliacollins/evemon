@@ -2,10 +2,10 @@ using System.Xml.Serialization;
 
 namespace EVEMon.XmlGenerator.StaticData
 {
-    public sealed class InvTypeReactions
+    public sealed class InvTypeReactions : IHasID
     {
         [XmlElement("reactionTypeID")]
-        public int ReactionTypeID { get; set; }
+        public int ID { get; set; }
 
         [XmlElement("input")]
         public bool Input { get; set; }

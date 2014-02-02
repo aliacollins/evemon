@@ -258,7 +258,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="item">The item.</param>
         private static void AddReactionInfo(IHasID srcItem, SerializableItem item)
         {
-            item.ReactionInfo.AddRange(Database.InvTypeReactionsTable.Where(x => x.ReactionTypeID == srcItem.ID).Select(
+            item.ReactionInfo.AddRange(Database.InvTypeReactionsTable.Where(x => x.ID == srcItem.ID).Select(
                 srcReaction => new
                                    {
                                        srcReaction,

@@ -1197,7 +1197,7 @@ namespace EVEMon.XmlGenerator
             return Context.invTypeMaterials.Select(
                 material => new InvTypeMaterials
                             {
-                                TypeID = material.typeID,
+                                ID = material.typeID,
                                 MaterialTypeID = material.materialTypeID,
                                 Quantity = material.quantity
                             }).ToList();
@@ -1215,7 +1215,7 @@ namespace EVEMon.XmlGenerator
             {
                 InvTypeReactions item = new InvTypeReactions
                                         {
-                                            ReactionTypeID = reaction.reactionTypeID,
+                                            ID = reaction.reactionTypeID,
                                             Input = reaction.input,
                                             TypeID = reaction.typeID,
                                         };
@@ -1400,7 +1400,7 @@ namespace EVEMon.XmlGenerator
             {
                 RamTypeRequirements item = new RamTypeRequirements
                                            {
-                                               TypeID = requirement.typeID,
+                                               ID = requirement.typeID,
                                                ActivityID = requirement.activityID,
                                                RequiredTypeID = requirement.requiredTypeID
                                            };
