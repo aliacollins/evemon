@@ -808,9 +808,11 @@ namespace EVEMon.XmlGenerator
                 {
                     ID = trait.traitID,
                     BonusText = trait.bonusText,
-                    UnitID = trait.unitID,
+                    UnitID = trait.unitID
                 }))
             {
+                item.BonusText = item.BonusText.Clean();
+
                 collection.Items.Add(item);
             }
 

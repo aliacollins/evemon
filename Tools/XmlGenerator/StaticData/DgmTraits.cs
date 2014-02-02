@@ -11,7 +11,7 @@ namespace EVEMon.XmlGenerator.StaticData
         public string BonusText { get; set; }
 
         [XmlElement("unitID")]
-        public short? UnitID { get; set; }
+        public int? UnitID { get; set; }
 
     }
 }

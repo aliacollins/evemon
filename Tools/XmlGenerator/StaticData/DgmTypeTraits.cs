@@ -14,7 +14,7 @@ namespace EVEMon.XmlGenerator.StaticData
         public int TraitID { get; set; }
 
         [XmlElement("bonus")]
-        public short? Bonus { get; set; }
+        public double? Bonus { get; set; }
 
 
         #region IRelation Members
