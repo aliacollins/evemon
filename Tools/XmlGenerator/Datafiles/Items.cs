@@ -355,7 +355,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static void AddMetaGroup(IHasID srcItem, SerializableItem item)
         {
             int itemID = Database.InvBlueprintTypesTable.Any(x => x.ID == srcItem.ID)
-                             ? Database.InvBlueprintTypesTable.First(x => x.ID == srcItem.ID).ProductTypeID
+                             ? Database.InvBlueprintTypesTable[srcItem.ID].ProductTypeID
                              : srcItem.ID;
 
             foreach (InvMetaTypes relation in Database.InvMetaTypesTable.Where(x => x.ItemID == itemID))

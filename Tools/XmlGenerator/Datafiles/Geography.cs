@@ -22,23 +22,26 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Regions
             IEnumerable<SerializableRegion> regions = Database.MapRegionsTable.Select(
                 srcRegion =>
-                    {
-                        Util.UpdatePercentDone(Database.GeographyTotalCount);
-                        SerializableRegion region = new SerializableRegion
-                                                        {
-                                                            ID = srcRegion.ID,
-                                                            Name = srcRegion.Name
-                                                        };
+                {
+                    Util.UpdatePercentDone(Database.GeographyTotalCount);
+                    SerializableRegion region = new SerializableRegion
+                                                {
+                                                    ID = srcRegion.ID,
+                                                    Name = srcRegion.Name
+                                                };
 
-                        // Constellations
-                        region.Constellations.AddRange(ExportConstellations(srcRegion).OrderBy(x => x.Name));
-                        return region;
-                    });
+                    // Constellations
+                    region.Constellations.AddRange(ExportConstellations(srcRegion).OrderBy(x => x.Name));
+                    return region;
+                });
 
             // Jumps
-            IEnumerable<SerializableJump> jumps = Database.MapSolarSystemJumpsTable.Where(
-                srcJump => srcJump.A < srcJump.B).Select(
-                    srcJump => new SerializableJump { FirstSystemID = srcJump.A, SecondSystemID = srcJump.B });
+            IEnumerable<SerializableJump> jumps = Database.MapSolarSystemJumpsTable.Where(srcJump => srcJump.A < srcJump.B)
+                .Select(srcJump => new SerializableJump
+                                   {
+                                       FirstSystemID = srcJump.A,
+                                       SecondSystemID = srcJump.B
+                                   });
 
             // Serialize
             GeoDatafile datafile = new GeoDatafile();
@@ -57,20 +60,19 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <returns></returns>
         private static IEnumerable<SerializableConstellation> ExportConstellations(IHasID srcRegion)
         {
-            return Database.MapConstellationsTable.Where(
-                x => x.RegionID == srcRegion.ID).Select(
-                    srcConstellation =>
-                        {
-                            SerializableConstellation constellation = new SerializableConstellation
-                                                                          {
-                                                                              ID = srcConstellation.ID,
-                                                                              Name = srcConstellation.Name
-                                                                          };
+            return Database.MapConstellationsTable.Where(x => x.RegionID == srcRegion.ID).Select(
+                srcConstellation =>
+                {
+                    SerializableConstellation constellation = new SerializableConstellation
+                                                              {
+                                                                  ID = srcConstellation.ID,
+                                                                  Name = srcConstellation.Name
+                                                              };
 
-                            // Systems
-                            constellation.Systems.AddRange(ExportSystems(srcConstellation).OrderBy(x => x.Name));
-                            return constellation;
-                        });
+                    // Systems
+                    constellation.Systems.AddRange(ExportSystems(srcConstellation).OrderBy(x => x.Name));
+                    return constellation;
+                });
         }
 
         /// <summary>
@@ -80,25 +82,24 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <returns></returns>
         private static IEnumerable<SerializableSolarSystem> ExportSystems(IHasID srcConstellation)
         {
-            return Database.MapSolarSystemsTable.Where(
-                x => x.ConstellationID == srcConstellation.ID).Select(
-                    srcSystem =>
-                        {
-                            const double BaseDistance = 1.0E14;
-                            SerializableSolarSystem system = new SerializableSolarSystem
-                                                                 {
-                                                                     ID = srcSystem.ID,
-                                                                     Name = srcSystem.Name,
-                                                                     X = (int)(srcSystem.X / BaseDistance),
-                                                                     Y = (int)(srcSystem.Y / BaseDistance),
-                                                                     Z = (int)(srcSystem.Z / BaseDistance),
-                                                                     SecurityLevel = srcSystem.SecurityLevel
-                                                                 };
+            return Database.MapSolarSystemsTable.Where(x => x.ConstellationID == srcConstellation.ID).Select(
+                srcSystem =>
+                {
+                    const double BaseDistance = 1.0E14;
+                    SerializableSolarSystem system = new SerializableSolarSystem
+                                                     {
+                                                         ID = srcSystem.ID,
+                                                         Name = srcSystem.Name,
+                                                         X = (int)(srcSystem.X / BaseDistance),
+                                                         Y = (int)(srcSystem.Y / BaseDistance),
+                                                         Z = (int)(srcSystem.Z / BaseDistance),
+                                                         SecurityLevel = srcSystem.SecurityLevel
+                                                     };
 
-                            // Stations
-                            system.Stations.AddRange(ExportStations(srcSystem).OrderBy(x => x.Name));
-                            return system;
-                        });
+                    // Stations
+                    system.Stations.AddRange(ExportStations(srcSystem).OrderBy(x => x.Name));
+                    return system;
+                });
         }
 
         /// <summary>
@@ -110,22 +111,21 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             return Database.StaStationsTable.Where(x => x.SolarSystemID == srcSystem.ID).Select(
                 srcStation =>
-                    {
-                        SerializableStation station = new SerializableStation
-                                                          {
-                                                              ID = srcStation.ID,
-                                                              Name = srcStation.Name,
-                                                              CorporationID = srcStation.CorporationID,
-                                                              CorporationName = Database.InvNamesTable.First(
-                                                                  x => x.ID == srcStation.CorporationID).Name,
-                                                              ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
-                                                              ReprocessingStationsTake = srcStation.ReprocessingStationsTake
-                                                          };
+                {
+                    SerializableStation station = new SerializableStation
+                                                  {
+                                                      ID = srcStation.ID,
+                                                      Name = srcStation.Name,
+                                                      CorporationID = srcStation.CorporationID,
+                                                      CorporationName = Database.InvNamesTable[srcStation.CorporationID].Name,
+                                                      ReprocessingEfficiency = srcStation.ReprocessingEfficiency,
+                                                      ReprocessingStationsTake = srcStation.ReprocessingStationsTake
+                                                  };
 
-                        // Agents
-                        station.Agents.AddRange(ExportAgents(srcStation));
-                        return station;
-                    });
+                    // Agents
+                    station.Agents.AddRange(ExportAgents(srcStation));
+                    return station;
+                });
         }
 
         /// <summary>
@@ -135,28 +135,20 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <returns></returns>
         private static IEnumerable<SerializableAgent> ExportAgents(IHasID srcStation)
         {
-            return Database.AgtAgentsTable.Where(x => x.LocationID == srcStation.ID).Select(
-                srcAgent =>
-                new
-                    {
-                        srcAgent,
-                        researchAgent = Database.AgtResearchAgentsTable.FirstOrDefault(x => x.ID == srcAgent.ID)
-                    }).Select(agent =>
-                              new SerializableAgent
-                                  {
-                                      ID = agent.srcAgent.ID,
-                                      Level = agent.srcAgent.Level,
-                                      Quality = agent.srcAgent.Quality,
-                                      Name = Database.InvNamesTable.First(x => x.ID == agent.srcAgent.ID).Name,
-                                      DivisionName = Database.CrpNPCDivisionsTable.First(
-                                          x => x.ID == agent.srcAgent.DivisionID).DivisionName,
-                                      AgentType = Database.AgtAgentTypesTable.First(
-                                          x => x.ID == agent.srcAgent.AgentTypeID).AgentType,
-                                      ResearchSkillID = agent.researchAgent != null
-                                                            ? agent.researchAgent.ResearchSkillID
-                                                            : 0,
-                                      LocatorService = agent.srcAgent.IsLocator
-                                  });
+            return Database.AgtAgentsTable.Where(x => x.LocationID == srcStation.ID)
+                .Select(agent => new SerializableAgent
+                                 {
+                                     ID = agent.ID,
+                                     Level = agent.Level,
+                                     Quality = agent.Quality,
+                                     Name = Database.InvNamesTable[agent.ID].Name,
+                                     DivisionName = Database.CrpNPCDivisionsTable[agent.DivisionID].DivisionName,
+                                     AgentType = Database.AgtAgentTypesTable[agent.AgentTypeID].AgentType,
+                                     ResearchSkillID = Database.AgtResearchAgentsTable.Any(x => x.ID == agent.ID)
+                                         ? Database.AgtResearchAgentsTable[agent.ID].ResearchSkillID
+                                         : 0,
+                                     LocatorService = agent.IsLocator
+                                 });
         }
     }
 }

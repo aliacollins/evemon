@@ -36,7 +36,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                         };
 
                 // Add classes to categories
-                crtGroup.Classes.AddRange(ExportCertificateClasses(group));
+                crtGroup.Classes.AddRange(ExportCertificateClasses(group).OrderBy(x => x.Name));
 
                 //// Add category
                 listOfCertGroups.Add(crtGroup);
@@ -85,7 +85,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 // Add certificate class to classes
                 listOfCertClasses.Add(crtClass);
             }
-            return listOfCertClasses.OrderBy(x => x.Name);
+            return listOfCertClasses;
         }
 
         /// <summary>

@@ -278,30 +278,27 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             srcBlueprint.Generated = true;
 
+            InvBlueprintTypes blueprintType = Database.InvBlueprintTypesTable[srcBlueprint.ID];
+
             // Creates the blueprint with base informations
             SerializableBlueprint blueprint = new SerializableBlueprint
-                                                  {
-                                                      ID = srcBlueprint.ID,
-                                                      Name = srcBlueprint.Name,
-                                                      Icon = (srcBlueprint.IconID.HasValue
-                                                                  ? Database.EveIconsTable[srcBlueprint.IconID.Value].Icon
-                                                                  : String.Empty),
-                                                  };
-
-            // Export attributes
-            foreach (InvBlueprintTypes attribute in Database.InvBlueprintTypesTable.Where(x => x.ID == srcBlueprint.ID))
-            {
-                blueprint.ProduceItemID = attribute.ProductTypeID;
-                blueprint.ProductionTime = attribute.ProductionTime;
-                blueprint.TechLevel = attribute.TechLevel;
-                blueprint.ResearchProductivityTime = attribute.ResearchProductivityTime;
-                blueprint.ResearchMaterialTime = attribute.ResearchMaterialTime;
-                blueprint.ResearchCopyTime = attribute.ResearchCopyTime;
-                blueprint.ResearchTechTime = attribute.ResearchTechTime;
-                blueprint.ProductivityModifier = attribute.ProductivityModifier;
-                blueprint.WasteFactor = attribute.WasteFactor;
-                blueprint.MaxProductionLimit = attribute.MaxProductionLimit;
-            }
+                                              {
+                                                  ID = srcBlueprint.ID,
+                                                  Name = srcBlueprint.Name,
+                                                  Icon = srcBlueprint.IconID.HasValue
+                                                      ? Database.EveIconsTable[srcBlueprint.IconID.Value].Icon
+                                                      : String.Empty,
+                                                  ProduceItemID = blueprintType.ProductTypeID,
+                                                  ProductionTime = blueprintType.ProductionTime,
+                                                  TechLevel = blueprintType.TechLevel,
+                                                  ResearchProductivityTime = blueprintType.ResearchProductivityTime,
+                                                  ResearchMaterialTime = blueprintType.ResearchMaterialTime,
+                                                  ResearchCopyTime = blueprintType.ResearchCopyTime,
+                                                  ResearchTechTime = blueprintType.ResearchTechTime,
+                                                  ProductivityModifier = blueprintType.ProductivityModifier,
+                                                  WasteFactor = blueprintType.WasteFactor,
+                                                  MaxProductionLimit = blueprintType.MaxProductionLimit
+                                              };
 
             // Metagroup
             SetBlueprintMetaGroup(srcBlueprint, blueprint);
