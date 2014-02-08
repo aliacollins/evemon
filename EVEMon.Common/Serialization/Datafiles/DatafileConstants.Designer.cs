@@ -70,6 +70,15 @@ namespace EVEMon.Common.Serialization.Datafiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to eve-certificates-v2-en-US.xml.gz.
+        /// </summary>
+        public static string CertificatesDatafile {
+            get {
+                return ResourceManager.GetString("CertificatesDatafile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to eve-geography-en-US.xml.gz.
         /// </summary>
         public static string GeographyDatafile {

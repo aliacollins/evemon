@@ -13,6 +13,9 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("groupName")]
         public string Name { get; set; }
 
+        [XmlElement("decription")]
+        public string Description { get; set; }
+
         [XmlElement("published")]
         public bool Published { get; set; }
     }

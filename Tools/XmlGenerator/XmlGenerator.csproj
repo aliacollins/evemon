@@ -129,6 +129,7 @@
     </Compile>
     <Compile Include="Database.cs" />
     <Compile Include="Datafiles\Blueprints.cs" />
+    <Compile Include="Datafiles\Certificates.cs" />
     <Compile Include="Datafiles\Geography.cs" />
     <Compile Include="Datafiles\Items.cs" />
     <Compile Include="Datafiles\Properties.cs" />
@@ -324,7 +325,6 @@
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
     <Compile Include="StaticData\ChrFactions.cs" />
-    <Compile Include="StaticData\CrtCategories.cs" />
     <Compile Include="StaticData\CrtCertificates.cs" />
     <Compile Include="StaticData\CrtClasses.cs" />
     <Compile Include="StaticData\CrtRecommendations.cs" />

@@ -120,6 +120,9 @@
   <data name="BlueprintsDatafile" xml:space="preserve">
     <value>eve-blueprints-en-US.xml.gz</value>
   </data>
+  <data name="CertificatesDatafile" xml:space="preserve">
+    <value>eve-certificates-v2-en-US.xml.gz</value>
+  </data>
   <data name="GeographyDatafile" xml:space="preserve">
     <value>eve-geography-en-US.xml.gz</value>
   </data>

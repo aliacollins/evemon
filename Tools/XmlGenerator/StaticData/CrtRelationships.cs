@@ -11,10 +11,10 @@ namespace EVEMon.XmlGenerator.StaticData
         public int? ParentID { get; set; }
 
         [XmlElement("parentTypeID")]
-        public int? ParentTypeID { get; set; }
+        public int ParentTypeID { get; set; }
 
         [XmlElement("parentLevel")]
-        public int? ParentLevel { get; set; }
+        public int ParentLevel { get; set; }
 
         [XmlElement("childID")]
         public int ChildID { get; set; }

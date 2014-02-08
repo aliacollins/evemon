@@ -7,8 +7,8 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("certificateID")]
         public int ID { get; set; }
 
-        [XmlElement("categoryID")]
-        public int CategoryID { get; set; }
+        [XmlElement("groupID")]
+        public int GroupID { get; set; }
 
         [XmlElement("classID")]
         public int ClassID { get; set; }

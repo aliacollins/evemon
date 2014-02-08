@@ -370,9 +370,15 @@
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadout.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutRace.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutSlot.cs" />
+    <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
     <Compile Include="Serialization\Datafiles\SerializableAgent.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprint.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprintMarketGroup.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificate.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificateClass.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificateGroup.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificatePrerequisite.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificateRecommendation.cs" />
     <Compile Include="Serialization\Datafiles\SerializableConstellation.cs" />
     <Compile Include="Serialization\Datafiles\SerializableControlTowerFuel.cs" />
     <Compile Include="Serialization\Datafiles\SerializableItem.cs" />

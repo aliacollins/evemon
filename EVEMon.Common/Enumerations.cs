@@ -93,6 +93,19 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// Represents a certificate grade.
+    /// </summary>
+    public enum CertificateGrade
+    {
+        None = 0,
+        Basic = 1,
+        Standard = 2,
+        Improved = 3,
+        Advanced = 4,
+        Elite = 5
+    }
+
+    /// <summary>
     /// Represents a plan entry sort.
     /// </summary>
     public enum PlanEntrySort

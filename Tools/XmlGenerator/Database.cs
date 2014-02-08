@@ -58,12 +58,6 @@ namespace EVEMon.XmlGenerator
         internal static Bag<CrpNPCDivisions> CrpNPCDivisionsTable { get; private set; }
 
         /// <summary>
-        /// Gets or sets the crt categories table.
-        /// </summary>
-        /// <value>The crt categories table.</value>
-        internal static Bag<CrtCategories> CrtCategoriesTable { get; private set; }
-
-        /// <summary>
         /// Gets or sets the crt classes table.
         /// </summary>
         /// <value>The crt classes table.</value>
@@ -344,11 +338,9 @@ namespace EVEMon.XmlGenerator
             Util.UpdateProgress();
             CrpNPCDivisionsTable = NPCDivisions();
             Util.UpdateProgress();
-            CrtCategoriesTable = CertificateCategories();
+            CrtCertificatesTable = Certificates();
             Util.UpdateProgress();
             CrtClassesTable = CertificateClasses();
-            Util.UpdateProgress();
-            CrtCertificatesTable = Certificates();
             Util.UpdateProgress();
             CrtRecommendationsTable = CertificateRecommendations();
             Util.UpdateProgress();
@@ -564,32 +556,6 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Certificate Categories.
-        /// </summary>
-        /// <returns><c>Bag</c> of Certificate Categories.</returns>
-        private static Bag<CrtCategories> CertificateCategories()
-        {
-            IndexedCollection<CrtCategories> collection = new IndexedCollection<CrtCategories>();
-
-            foreach (CrtCategories item in Context.crtCategories.Select(
-                category => new CrtCategories
-                {
-                    ID = category.categoryID,
-                    CategoryName = category.categoryName,
-                    Description = category.description
-                }))
-            {
-                item.Description = item.Description.Clean();
-
-                collection.Items.Add(item);
-            }
-
-            CertificatesTotalCount = collection.Items.Count;
-
-            return collection.ToBag();
-        }
-
-        /// <summary>
         /// Certificate Certificates.
         /// </summary>
         /// <returns><c>Bag</c> of Certificates.</returns>
@@ -604,10 +570,11 @@ namespace EVEMon.XmlGenerator
                     ID = certificate.certificateID,
                     Description = certificate.description
                 };
+
                 item.Description = item.Description.Clean();
 
-                if (certificate.categoryID.HasValue)
-                    item.CategoryID = certificate.categoryID.Value;
+                if (certificate.groupID.HasValue)
+                    item.GroupID = certificate.groupID.Value;
 
                 if (certificate.classID.HasValue)
                     item.ClassID = certificate.classID.Value;
@@ -617,6 +584,8 @@ namespace EVEMon.XmlGenerator
 
                 collection.Items.Add(item);
             }
+
+            CertificatesTotalCount = collection.Items.Select(x => x.GroupID).Distinct().Count();
 
             return collection.ToBag();
         }
@@ -630,11 +599,11 @@ namespace EVEMon.XmlGenerator
             IndexedCollection<CrtClasses> collection = new IndexedCollection<CrtClasses>();
 
             foreach (CrtClasses item in Context.crtClasses.Select(
-                cClass => new CrtClasses
+                crtClass => new CrtClasses
                 {
-                    ID = cClass.classID,
-                    ClassName = cClass.className,
-                    Description = cClass.description
+                    ID = crtClass.classID,
+                    ClassName = crtClass.className,
+                    Description = crtClass.description
                 }))
             {
                 item.Description = item.Description.Clean();
@@ -642,8 +611,7 @@ namespace EVEMon.XmlGenerator
                 collection.Items.Add(item);
             }
 
-            //CertificatesTotalCount *= collection.Items
-            //    .Count(x => Datafiles.Certificates.ExcludedCertClassesIDs.All(y => y != x.ID));
+            CertificatesTotalCount *= collection.Items.Count();
 
             return collection.ToBag();
         }
@@ -690,14 +658,19 @@ namespace EVEMon.XmlGenerator
                 {
                     ID = relationship.relationshipID,
                     ParentID = relationship.parentID,
-                    ParentLevel = relationship.parentLevel,
                 };
 
-                if (relationship.parentTypeID != 0)
-                    item.ParentTypeID = relationship.parentTypeID;
+                if (relationship.parentLevel.HasValue)
+                    item.ParentLevel = relationship.parentLevel.Value;
+
+                if (relationship.parentTypeID.HasValue)
+                    item.ParentTypeID = relationship.parentTypeID.Value;
 
                 if (relationship.childID.HasValue)
                     item.ChildID = relationship.childID.Value;
+
+                if (relationship.grade.HasValue)
+                    item.Grade = relationship.grade.Value;
 
                 collection.Items.Add(item);
             }
@@ -1103,8 +1076,11 @@ namespace EVEMon.XmlGenerator
                 InvGroups item = new InvGroups
                                  {
                                      ID = group.groupID,
-                                     Name = group.groupName
+                                     Name = group.groupName,
+                                     Description = group.description
                                  };
+
+                item.Description = item.Description.Clean();
 
                 if (group.published.HasValue)
                     item.Published = group.published.Value;
