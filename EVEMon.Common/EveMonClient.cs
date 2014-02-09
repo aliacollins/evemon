@@ -79,6 +79,7 @@ namespace EVEMon.Common
                 StaticProperties.Load();
                 StaticSkills.Load();
                 StaticItems.Load();
+                StaticCertificates.Load();
                 StaticBlueprints.Load();
                 Trace("Load Datafiles - done");
 

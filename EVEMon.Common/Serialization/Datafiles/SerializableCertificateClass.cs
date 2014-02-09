@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.Datafiles
 {

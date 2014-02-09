@@ -103,7 +103,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Export prerequesities
             IEnumerable<SerializableCertificatePrerequisite> listOfPrereq = Database.CrtRelationshipsTable
-                .Where(x => x.ChildID == certificate.ID)
+                .Where(x => x.ChildID == certificate.ID && x.ParentLevel != 0)
                 .Select(relationship => new SerializableCertificatePrerequisite
                                         {
                                             ID = Database.InvTypesTable[relationship.ParentTypeID].ID,
