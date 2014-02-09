@@ -65,7 +65,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this certificate's grades.
         /// </summary>
-        public Dictionary<CertificateGrade, List<StaticSkillLevel>> Grades { get; private set; }
+        public IDictionary<CertificateGrade, List<StaticSkillLevel>> Grades { get; private set; }
 
         /// <summary>
         /// Gets the ships this certificate is recommended for.
@@ -118,13 +118,13 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal void CompleteInitialization(IEnumerable<SerializableCertificatePrerequisite> prereqs)
         {
-            foreach (IGrouping<CertificateGrade, SerializableCertificatePrerequisite> prerequisite in prereqs.GroupBy(x => x.Grade))
+            foreach (IGrouping<CertificateGrade, SerializableCertificatePrerequisite> prereqGrade in prereqs.GroupBy(x => x.Grade))
             {
-                var gradePrereq = prerequisite.Select(
+                var gradePrereq = prereqGrade.Select(
                     prereq => new StaticSkillLevel(prereq.ID, Int32.Parse(prereq.Level, CultureConstants.InvariantCulture)))
                     .ToList();
 
-                Grades.Add(prerequisite.Key, gradePrereq);
+                Grades.Add(prereqGrade.Key, gradePrereq);
                 m_prerequisiteSkills.AddRange(gradePrereq);
             }
         }

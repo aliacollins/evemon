@@ -39,13 +39,9 @@ namespace EVEMon.Common.Data
             }
 
             // Completes intialization
-            foreach (SerializableCertificateGroup srcGroup in datafile.Groups)
+            foreach (SerializableCertificateClass srcClass in datafile.Groups.SelectMany(srcGroup => srcGroup.Classes))
             {
-                foreach (SerializableCertificateClass srcClass in srcGroup.Classes)
-                {
-                    StaticCertificateClass certClass = s_classesByName[srcClass.Name];
-                    certClass.Certificate.CompleteInitialization(srcClass.Certificate.Prerequisites);
-                }
+                s_classesByName[srcClass.Name].Certificate.CompleteInitialization(srcClass.Certificate.Prerequisites);
             }
         }
 
