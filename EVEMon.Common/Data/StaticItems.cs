@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -29,6 +30,9 @@ namespace EVEMon.Common.Data
             {
                 s_implantSlots[i] = new ImplantCollection((ImplantSlots)i) { new Implant() };
             }
+
+            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.ItemsDatafile)))
+                return;
 
             // Deserialize the items datafile
             ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile,

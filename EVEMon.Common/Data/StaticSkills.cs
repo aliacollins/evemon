@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -25,6 +26,9 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
+            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.SkillsDatafile)))
+                return;
+
             SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>(DatafileConstants.SkillsDatafile);
 
             // Fetch deserialized data

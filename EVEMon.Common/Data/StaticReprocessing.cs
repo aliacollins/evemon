@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -18,6 +19,9 @@ namespace EVEMon.Common.Data
         private static void EnsureInitialized()
         {
             if (s_initialized)
+                return;
+
+            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.ReprocessingDatafile)))
                 return;
 
             ReprocessingDatafile datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);

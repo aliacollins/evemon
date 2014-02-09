@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -23,6 +24,9 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
+            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.CertificatesDatafile)))
+                return;
+
             CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
             Groups = new Collection<StaticCertificateGroup>();
 
