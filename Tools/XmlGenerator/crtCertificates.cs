@@ -15,7 +15,7 @@ namespace EVEMon.XmlGenerator
     public partial class crtCertificates
     {
         public int certificateID { get; set; }
-        public Nullable<short> categoryID { get; set; }
+        public Nullable<short> groupID { get; set; }
         public Nullable<int> classID { get; set; }
         public Nullable<byte> grade { get; set; }
         public Nullable<int> corpID { get; set; }

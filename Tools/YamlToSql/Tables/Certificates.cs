@@ -37,7 +37,6 @@ namespace EVEMon.YamlToSql.Tables
 
         // crtCertificates
         private const string CertificateIDText = "certificateID";
-        private const string CategoryIDText = "categoryID";
 
         // crtClasses
         private const string ClassIDText = "classID";
@@ -187,7 +186,7 @@ namespace EVEMon.YamlToSql.Tables
 
                         parameters = new Dictionary<string, string>();
                         parameters[CertificateIDText] = pair.Key.ToString();
-                        parameters[CategoryIDText] = cNode.Children.Keys.Any(key => key.ToString() == GroupIDText)
+                        parameters[GroupIDText] = cNode.Children.Keys.Any(key => key.ToString() == GroupIDText)
                             ? cNode.Children[new YamlScalarNode(GroupIDText)].ToString()
                             : NullText;
                         parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);

@@ -262,7 +262,7 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 // Export attributes
                 foreach (DgmAttributeTypes srcProp in Database.DgmAttributeTypesTable.Concat(s_injectedProperties).Where(
-                    x => x.CategoryID == srcCategory.ID))
+                    x => x.CategoryID == category.ID))
                 {
                     Util.UpdatePercentDone(Database.PropertiesTotalCount);
 

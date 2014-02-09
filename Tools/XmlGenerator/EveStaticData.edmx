@@ -196,7 +196,7 @@
             <PropertyRef Name="certificateID" />
           </Key>
           <Property Name="certificateID" Type="int" Nullable="false" />
-          <Property Name="categoryID" Type="smallint" />
+          <Property Name="groupID" Type="smallint" />
           <Property Name="classID" Type="int" />
           <Property Name="grade" Type="tinyint" />
           <Property Name="corpID" Type="int" />
@@ -1301,7 +1301,7 @@
             <PropertyRef Name="certificateID" />
           </Key>
           <Property Name="certificateID" Type="Int32" Nullable="false" />
-          <Property Name="categoryID" Type="Int16" />
+          <Property Name="groupID" Type="Int16" />
           <Property Name="classID" Type="Int32" />
           <Property Name="grade" Type="Byte" />
           <Property Name="corpID" Type="Int32" />
@@ -2417,8 +2417,8 @@
           <EntitySetMapping Name="crtCertificates">
             <EntityTypeMapping TypeName="EveStaticDataModel.crtCertificates">
               <MappingFragment StoreEntitySet="crtCertificates">
+                <ScalarProperty Name="groupID" ColumnName="groupID" />
                 <ScalarProperty Name="certificateID" ColumnName="certificateID" />
-                <ScalarProperty Name="categoryID" ColumnName="categoryID" />
                 <ScalarProperty Name="classID" ColumnName="classID" />
                 <ScalarProperty Name="grade" ColumnName="grade" />
                 <ScalarProperty Name="corpID" ColumnName="corpID" />

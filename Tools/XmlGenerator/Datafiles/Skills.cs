@@ -67,7 +67,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                                     {
                                                         ID = skill.ID,
                                                         Name = skill.Name,
-                                                        Description = skill.Description ?? String.Empty,
+                                                        Description = skill.Description,
                                                         Public = skill.Published,
                                                         Cost = (long)skill.BasePrice,
                                                     };
@@ -101,20 +101,15 @@ namespace EVEMon.XmlGenerator.Datafiles
                         !skillAttributes.ContainsKey(DBConstants.RequiredSkillLevelPropertyIDs[i]))
                         continue;
 
-                    InvTypes prereqSkill = Database.InvTypesTable.First(
-                        x => x.ID == skillAttributes[DBConstants.RequiredSkillPropertyIDs[i]]);
-
-                    if (prereqSkill == null)
-                        continue;
+                    InvTypes prereqSkill = Database.InvTypesTable[skillAttributes[DBConstants.RequiredSkillPropertyIDs[i]]];
 
                     SerializableSkillPrerequisite preReq = new SerializableSkillPrerequisite
-                                                               {
-                                                                   ID = prereqSkill.ID,
-                                                                   Level =
-                                                                       skillAttributes[
-                                                                           DBConstants.RequiredSkillLevelPropertyIDs[i]],
-                                                                   Name = prereqSkill.Name
-                                                               };
+                                                           {
+                                                               ID = prereqSkill.ID,
+                                                               Level =
+                                                                   skillAttributes[DBConstants.RequiredSkillLevelPropertyIDs[i]],
+                                                               Name = prereqSkill.Name
+                                                           };
 
                     // Add prerequisites
                     listOfPrerequisites.Add(preReq);

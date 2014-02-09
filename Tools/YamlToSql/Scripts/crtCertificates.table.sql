@@ -4,7 +4,7 @@ SET QUOTED_IDENTIFIER ON
 
 CREATE TABLE [dbo].[crtCertificates](
 	[certificateID] [int] NOT NULL,
-	[categoryID] [smallint] NULL,
+	[groupID] [smallint] NULL,
 	[classID] [int] NULL,
 	[grade] [tinyint] NULL,
 	[corpID] [int] NULL,

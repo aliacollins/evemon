@@ -237,6 +237,11 @@
     <Compile Include="Data\NPCCorporation.cs" />
     <Compile Include="Data\ReactionMaterialCollection.cs" />
     <Compile Include="Data\ReactionMaterial.cs" />
+    <Compile Include="Data\StaticCertificate.cs" />
+    <Compile Include="Data\StaticCertificateClass.cs" />
+    <Compile Include="Data\StaticCertificateGroup.cs" />
+    <Compile Include="Data\StaticCertificates.cs" />
+    <Compile Include="Data\StaticRecommendations.cs" />
     <Compile Include="Data\StaticReprocessing.cs" />
     <Compile Include="EmailProvider\DefaultProvider.cs" />
     <Compile Include="EmailProvider\EmailProviders.cs" />
@@ -370,9 +375,15 @@
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadout.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutRace.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutSlot.cs" />
+    <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
     <Compile Include="Serialization\Datafiles\SerializableAgent.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprint.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprintMarketGroup.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificate.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificateClass.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificateGroup.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificatePrerequisite.cs" />
+    <Compile Include="Serialization\Datafiles\SerializableCertificateRecommendation.cs" />
     <Compile Include="Serialization\Datafiles\SerializableConstellation.cs" />
     <Compile Include="Serialization\Datafiles\SerializableControlTowerFuel.cs" />
     <Compile Include="Serialization\Datafiles\SerializableItem.cs" />
