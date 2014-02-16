@@ -12,8 +12,11 @@ namespace EVEMon.XmlGenerator
 {
     public static class Database
     {
+        private static readonly EveStaticDataEntities s_context = new EveStaticDataEntities();
+
         private static DateTime s_startTime;
         private static string s_text = String.Empty;
+
         internal static int TotalTablesCount;
 
         internal static int PropertiesTotalCount;
@@ -248,12 +251,6 @@ namespace EVEMon.XmlGenerator
         /// <value>The ram type requirements table.</value>
         internal static List<RamTypeRequirements> RamTypeRequirementsTable { get; private set; }
 
-        /// <summary>
-        /// Makes the context available to all database methods without
-        /// reinstantiating each time.
-        /// </summary>
-        private static EveStaticDataEntities Context { get; set; }
-
         #endregion
 
 
@@ -274,7 +271,6 @@ namespace EVEMon.XmlGenerator
             try
             {
                 connection.Open();
-                Context = new EveStaticDataEntities();
 
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
                 Console.WriteLine(@"Connection to SQL Database: Successful");
@@ -414,7 +410,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<AgtAgents> collection = new IndexedCollection<AgtAgents>();
 
-            foreach (agtAgents agent in Context.agtAgents)
+            foreach (agtAgents agent in s_context.agtAgents)
             {
                 AgtAgents item = new AgtAgents
                                  {
@@ -453,7 +449,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<AgtAgentTypes> collection = new IndexedCollection<AgtAgentTypes>();
 
-            foreach (AgtAgentTypes item in Context.agtAgentTypes.Select(
+            foreach (AgtAgentTypes item in s_context.agtAgentTypes.Select(
                 agentType => new AgtAgentTypes
                              {
                                  ID = agentType.agentTypeID,
@@ -474,7 +470,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<AgtResearchAgents> collection = new IndexedCollection<AgtResearchAgents>();
 
-            foreach (AgtResearchAgents item in Context.agtResearchAgents.Select(
+            foreach (AgtResearchAgents item in s_context.agtResearchAgents.Select(
                 researchAgent => new AgtResearchAgents
                                  {
                                      ID = researchAgent.agentID,
@@ -495,7 +491,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<ChrFactions> collection = new IndexedCollection<ChrFactions>();
 
-            foreach (chrFactions faction in Context.chrFactions)
+            foreach (chrFactions faction in s_context.chrFactions)
             {
                 ChrFactions item = new ChrFactions
                                    {
@@ -542,7 +538,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<CrpNPCDivisions> collection = new IndexedCollection<CrpNPCDivisions>();
 
-            foreach (CrpNPCDivisions item in Context.crpNPCDivisions.Select(
+            foreach (CrpNPCDivisions item in s_context.crpNPCDivisions.Select(
                 npcDivision => new CrpNPCDivisions
                                {
                                    ID = npcDivision.divisionID,
@@ -563,7 +559,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<CrtCertificates> collection = new IndexedCollection<CrtCertificates>();
 
-            foreach (crtCertificates certificate in Context.crtCertificates)
+            foreach (crtCertificates certificate in s_context.crtCertificates)
             {
                 CrtCertificates item = new CrtCertificates
                 {
@@ -598,7 +594,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<CrtClasses> collection = new IndexedCollection<CrtClasses>();
 
-            foreach (CrtClasses item in Context.crtClasses.Select(
+            foreach (CrtClasses item in s_context.crtClasses.Select(
                 crtClass => new CrtClasses
                 {
                     ID = crtClass.classID,
@@ -624,7 +620,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<CrtRecommendations> collection = new IndexedCollection<CrtRecommendations>();
 
-            foreach (crtRecommendations recommendation in Context.crtRecommendations)
+            foreach (crtRecommendations recommendation in s_context.crtRecommendations)
             {
                 CrtRecommendations item = new CrtRecommendations
                 {
@@ -652,7 +648,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<CrtRelationships> collection = new IndexedCollection<CrtRelationships>();
 
-            foreach (crtRelationships relationship in Context.crtRelationships)
+            foreach (crtRelationships relationship in s_context.crtRelationships)
             {
                 CrtRelationships item = new CrtRelationships
                 {
@@ -686,7 +682,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<DgmAttributeCategories> collection = new IndexedCollection<DgmAttributeCategories>();
 
-            foreach (DgmAttributeCategories item in Context.dgmAttributeCategories.Select(
+            foreach (DgmAttributeCategories item in s_context.dgmAttributeCategories.Select(
                 category => new DgmAttributeCategories
                             {
                                 ID = category.categoryID,
@@ -711,7 +707,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<DgmAttributeTypes> collection = new IndexedCollection<DgmAttributeTypes>();
 
-            foreach (dgmAttributeTypes attribute in Context.dgmAttributeTypes)
+            foreach (dgmAttributeTypes attribute in s_context.dgmAttributeTypes)
             {
                 DgmAttributeTypes item = new DgmAttributeTypes
                                          {
@@ -754,7 +750,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<DgmMasteries> collection = new IndexedCollection<DgmMasteries>();
 
-            foreach (DgmMasteries item in Context.dgmMasteries.Select(
+            foreach (DgmMasteries item in s_context.dgmMasteries.Select(
                 mastery => new DgmMasteries
                            {
                                ID = mastery.masteryID,
@@ -776,7 +772,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<DgmTraits> collection = new IndexedCollection<DgmTraits>();
 
-            foreach (DgmTraits item in Context.dgmTraits.Select(
+            foreach (DgmTraits item in s_context.dgmTraits.Select(
                 trait => new DgmTraits
                 {
                     ID = trait.traitID,
@@ -798,7 +794,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>RelationSet</c> of attributes for types.</returns>
         private static RelationSet<DgmTypeAttributes> TypeAttributes()
         {
-            IEnumerable<DgmTypeAttributes> list = Context.dgmTypeAttributes.Select(
+            IEnumerable<DgmTypeAttributes> list = s_context.dgmTypeAttributes.Select(
                 typeAttribute => new DgmTypeAttributes
                                  {
                                      AttributeID = typeAttribute.attributeID,
@@ -816,7 +812,7 @@ namespace EVEMon.XmlGenerator
         /// <returns><c>RelationSet</c> of Types and Effects.</returns>
         private static RelationSet<DgmTypeEffects> TypeEffects()
         {
-            List<DgmTypeEffects> list = Context.dgmTypeEffects.Select(
+            List<DgmTypeEffects> list = s_context.dgmTypeEffects.Select(
                 typeEffect => new DgmTypeEffects
                               {
                                   EffectID = typeEffect.effectID,
@@ -832,7 +828,7 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         private static RelationSet<DgmTypeMasteries> TypeMasteries()
         {
-            List<DgmTypeMasteries> list = Context.dgmTypeMasteries.Select(
+            List<DgmTypeMasteries> list = s_context.dgmTypeMasteries.Select(
                 typeMastery => new DgmTypeMasteries
                 {
                     MasteryID = typeMastery.masteryID,
@@ -848,7 +844,7 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         private static RelationSet<DgmTypeTraits> TypeTraits()
         {
-            List<DgmTypeTraits> list = Context.dgmTypeTraits.Select(
+            List<DgmTypeTraits> list = s_context.dgmTypeTraits.Select(
                 typeTraits => new DgmTypeTraits
                 {
                     TraitID = typeTraits.traitID,
@@ -868,7 +864,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<EveIcons> collection = new IndexedCollection<EveIcons>();
 
-            foreach (EveIcons item in Context.eveIcons.Select(
+            foreach (EveIcons item in s_context.eveIcons.Select(
                 icon => new EveIcons
                         {
                             ID = icon.iconID,
@@ -889,7 +885,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<EveUnits> collection = new IndexedCollection<EveUnits>();
 
-            foreach (EveUnits item in Context.eveUnits.Select(
+            foreach (EveUnits item in s_context.eveUnits.Select(
                 unit => new EveUnits
                         {
                             Description = unit.description,
@@ -915,7 +911,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<InvBlueprintTypes> collection = new IndexedCollection<InvBlueprintTypes>();
 
-            foreach (invBlueprintTypes blueprint in Context.invBlueprintTypes)
+            foreach (invBlueprintTypes blueprint in s_context.invBlueprintTypes)
             {
                 InvBlueprintTypes item = new InvBlueprintTypes
                                          {
@@ -969,7 +965,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<InvCategories> collection = new IndexedCollection<InvCategories>();
 
-            foreach (invCategories category in Context.invCategories)
+            foreach (invCategories category in s_context.invCategories)
             {
                 InvCategories item = new InvCategories
                                      {
@@ -997,7 +993,7 @@ namespace EVEMon.XmlGenerator
             IndexedCollection<InvControlTowerResourcePurposes> collection =
                 new IndexedCollection<InvControlTowerResourcePurposes>();
 
-            foreach (InvControlTowerResourcePurposes item in Context.invControlTowerResourcePurposes.Select(
+            foreach (InvControlTowerResourcePurposes item in s_context.invControlTowerResourcePurposes.Select(
                 resource => new InvControlTowerResourcePurposes
                             {
                                 ID = resource.purpose,
@@ -1018,7 +1014,7 @@ namespace EVEMon.XmlGenerator
         {
             List<InvControlTowerResources> list = new List<InvControlTowerResources>();
 
-            foreach (invControlTowerResources resource in Context.invControlTowerResources)
+            foreach (invControlTowerResources resource in s_context.invControlTowerResources)
             {
                 InvControlTowerResources item = new InvControlTowerResources
                                                 {
@@ -1048,7 +1044,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<InvFlags> collection = new IndexedCollection<InvFlags>();
 
-            foreach (InvFlags item in Context.invFlags.Select(
+            foreach (InvFlags item in s_context.invFlags.Select(
                 flag => new InvFlags
                         {
                             ID = flag.flagID,
@@ -1071,7 +1067,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<InvGroups> collection = new IndexedCollection<InvGroups>();
 
-            foreach (invGroups group in Context.invGroups)
+            foreach (invGroups group in s_context.invGroups)
             {
                 InvGroups item = new InvGroups
                                  {
@@ -1102,7 +1098,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<InvMarketGroups> collection = new IndexedCollection<InvMarketGroups>();
 
-            foreach (InvMarketGroups item in Context.invMarketGroups.Select(
+            foreach (InvMarketGroups item in s_context.invMarketGroups.Select(
                 marketGroup => new InvMarketGroups
                                {
                                    ID = marketGroup.marketGroupID,
@@ -1128,7 +1124,7 @@ namespace EVEMon.XmlGenerator
         {
             List<InvMetaTypes> list = new List<InvMetaTypes>();
 
-            foreach (invMetaTypes metaType in Context.invMetaTypes)
+            foreach (invMetaTypes metaType in s_context.invMetaTypes)
             {
                 InvMetaTypes item = new InvMetaTypes
                                     {
@@ -1153,7 +1149,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<InvNames> collection = new IndexedCollection<InvNames>();
 
-            foreach (InvNames item in Context.invNames.Select(
+            foreach (InvNames item in s_context.invNames.Select(
                 name => new InvNames
                         {
                             ID = name.itemID,
@@ -1172,7 +1168,7 @@ namespace EVEMon.XmlGenerator
         /// <returns>List of Materials.</returns>
         private static List<InvTypeMaterials> TypeMaterials()
         {
-            return Context.invTypeMaterials.Select(
+            return s_context.invTypeMaterials.Select(
                 material => new InvTypeMaterials
                             {
                                 ID = material.typeID,
@@ -1189,7 +1185,7 @@ namespace EVEMon.XmlGenerator
         {
             List<InvTypeReactions> list = new List<InvTypeReactions>();
 
-            foreach (invTypeReactions reaction in Context.invTypeReactions)
+            foreach (invTypeReactions reaction in s_context.invTypeReactions)
             {
                 InvTypeReactions item = new InvTypeReactions
                                         {
@@ -1215,7 +1211,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<InvTypes> collection = new IndexedCollection<InvTypes>();
 
-            foreach (invTypes type in Context.invTypes)
+            foreach (invTypes type in s_context.invTypes)
             {
                 InvTypes item = new InvTypes
                                 {
@@ -1271,7 +1267,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<MapConstellations> collection = new IndexedCollection<MapConstellations>();
 
-            foreach (mapConstellations constellation in Context.mapConstellations)
+            foreach (mapConstellations constellation in s_context.mapConstellations)
             {
                 MapConstellations item = new MapConstellations
                                          {
@@ -1297,7 +1293,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<MapRegions> collection = new IndexedCollection<MapRegions>();
 
-            foreach (MapRegions item in Context.mapRegions.Select(
+            foreach (MapRegions item in s_context.mapRegions.Select(
                 region => new MapRegions
                           {
                               ID = region.regionID,
@@ -1320,7 +1316,7 @@ namespace EVEMon.XmlGenerator
         /// <remarks>Jumps between two solar systems in the EVE Universe.</remarks>
         private static List<MapSolarSystemsJump> SolarSystemsJumps()
         {
-            return Context.mapSolarSystemJumps.Select(
+            return s_context.mapSolarSystemJumps.Select(
                 jump => new MapSolarSystemsJump
                         {
                             A = jump.fromSolarSystemID,
@@ -1336,7 +1332,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<MapSolarSystems> collection = new IndexedCollection<MapSolarSystems>();
 
-            foreach (mapSolarSystems solarsystem in Context.mapSolarSystems)
+            foreach (mapSolarSystems solarsystem in s_context.mapSolarSystems)
             {
                 MapSolarSystems item = new MapSolarSystems
                                        {
@@ -1374,7 +1370,7 @@ namespace EVEMon.XmlGenerator
         {
             List<RamTypeRequirements> list = new List<RamTypeRequirements>();
 
-            foreach (ramTypeRequirements requirement in Context.ramTypeRequirements)
+            foreach (ramTypeRequirements requirement in s_context.ramTypeRequirements)
             {
                 RamTypeRequirements item = new RamTypeRequirements
                                            {
@@ -1407,7 +1403,7 @@ namespace EVEMon.XmlGenerator
         {
             IndexedCollection<StaStations> collection = new IndexedCollection<StaStations>();
 
-            foreach (staStations station in Context.staStations)
+            foreach (staStations station in s_context.staStations)
             {
                 StaStations item = new StaStations
                                    {
