@@ -1365,7 +1365,7 @@
 1712:
   description: Gallente Battlestation Research
   gfxRaceID: Gallente
-  graphicFile: res:/dx9/model/Battlestation/Gallente/gbs1/gbs1.red
+  graphicFile: res:/dx9/model/Battlestation/Gallente/gbs2/gbs2.red
 1713:
   description: Drydock_Gallente
   gfxRaceID: Gallente

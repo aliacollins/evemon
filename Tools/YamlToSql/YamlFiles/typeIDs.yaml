@@ -72999,3 +72999,9 @@
     soundID: 20154
 33612:
     iconID: 21098
+33621:
+    graphicID: 1211
+    radius: 1.0
+33622:
+    graphicID: 1266
+    radius: 4634.0
