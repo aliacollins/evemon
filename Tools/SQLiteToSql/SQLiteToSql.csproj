@@ -200,6 +200,7 @@
     <EmbeddedResource Include="Scripts\mapRegions.table.sql" />
     <EmbeddedResource Include="Scripts\mapSolarSystemJumps.table.sql" />
     <EmbeddedResource Include="Scripts\mapSolarSystems.table.sql" />
+    <Content Include="SqliteFiles\Put universeDataDx.db here.txt" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -237,6 +238,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
