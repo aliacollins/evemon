@@ -37,6 +37,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -92,12 +93,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database.cs" />
     <Compile Include="mapCelestialStatistics.cs">
       <DependentUpon>UniverseData.tt</DependentUpon>
     </Compile>
     <Compile Include="mapConstellationJumps.cs">
       <DependentUpon>UniverseData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tables\MapCelestialStatisticsTable.cs" />
+    <Compile Include="Tables\MapLocationWormholeClassesTable.cs" />
+    <Compile Include="Tables\MapRegionJumpsTable.cs" />
+    <Compile Include="Tables\MapRegionTable.cs" />
+    <Compile Include="Tables\MapSolarSystemJumpsTable.cs" />
+    <Compile Include="Tables\MapSolarSystemsTable.cs" />
+    <Compile Include="Tables\MapLocationScenesTable.cs" />
+    <Compile Include="Tables\MapLandmarksTable.cs" />
+    <Compile Include="Tables\MapJumpsTable.cs" />
+    <Compile Include="Tables\MapDenormalizeTable.cs" />
+    <Compile Include="Tables\MapConstellationsTable.cs" />
+    <Compile Include="Tables\MapConstellationJumpsTable.cs" />
     <Compile Include="mapConstellations.cs">
       <DependentUpon>UniverseData.tt</DependentUpon>
     </Compile>
@@ -145,6 +159,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UniverseData.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -176,6 +191,18 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Scripts\mapCelestialStatistics.table.sql" />
+    <EmbeddedResource Include="Scripts\mapConstellationJumps.table.sql" />
+    <EmbeddedResource Include="Scripts\mapConstellations.table.sql" />
+    <EmbeddedResource Include="Scripts\mapDenormalize.table.sql" />
+    <EmbeddedResource Include="Scripts\mapJumps.table.sql" />
+    <EmbeddedResource Include="Scripts\mapLandmarks.table.sql" />
+    <EmbeddedResource Include="Scripts\mapLocationScenes.table.sql" />
+    <EmbeddedResource Include="Scripts\mapLocationWormholeClasses.table.sql" />
+    <EmbeddedResource Include="Scripts\mapRegionJumps.table.sql" />
+    <EmbeddedResource Include="Scripts\mapRegions.table.sql" />
+    <EmbeddedResource Include="Scripts\mapSolarSystemJumps.table.sql" />
+    <EmbeddedResource Include="Scripts\mapSolarSystems.table.sql" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
