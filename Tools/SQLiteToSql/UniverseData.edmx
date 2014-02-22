@@ -19,16 +19,16 @@
           <Property Name="eccentricity" Type="real" />
           <Property Name="massDust" Type="real" />
           <Property Name="massGas" Type="real" />
-          <Property Name="fragmented" Type="int" />
+          <Property Name="fragmented" Type="bit" />
           <Property Name="density" Type="real" />
           <Property Name="surfaceGravity" Type="real" />
           <Property Name="escapeVelocity" Type="real" />
           <Property Name="orbitPeriod" Type="real" />
           <Property Name="rotationRate" Type="real" />
-          <Property Name="locked" Type="int" />
-          <Property Name="pressure" Type="int" />
-          <Property Name="radius" Type="int" />
-          <Property Name="mass" Type="int" />
+          <Property Name="locked" Type="bit" />
+          <Property Name="pressure" Type="real" />
+          <Property Name="radius" Type="real" />
+          <Property Name="mass" Type="real" />
         </EntityType>
         <EntityType Name="mapConstellationJumps">
           <Key>
@@ -215,16 +215,16 @@
           <Property Name="eccentricity" Type="Double" />
           <Property Name="massDust" Type="Double" />
           <Property Name="massGas" Type="Double" />
-          <Property Name="fragmented" Type="Int32" />
+          <Property Name="fragmented" Type="Boolean" />
           <Property Name="density" Type="Double" />
           <Property Name="surfaceGravity" Type="Double" />
           <Property Name="escapeVelocity" Type="Double" />
           <Property Name="orbitPeriod" Type="Double" />
           <Property Name="rotationRate" Type="Double" />
-          <Property Name="locked" Type="Int32" />
-          <Property Name="pressure" Type="Int32" />
-          <Property Name="radius" Type="Int32" />
-          <Property Name="mass" Type="Int32" />
+          <Property Name="locked" Type="Boolean" />
+          <Property Name="pressure" Type="Double" />
+          <Property Name="radius" Type="Double" />
+          <Property Name="mass" Type="Double" />
         </EntityType>
         <EntityType Name="mapConstellationJumps">
           <Key>

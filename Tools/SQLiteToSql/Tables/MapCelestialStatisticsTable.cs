@@ -63,13 +63,13 @@ namespace EVEMon.SQLiteToSql.Tables
                         parameters["eccentricity"] = mCelStat.eccentricity.GetValueOrDefaultString();
                         parameters["massDust"] = mCelStat.massDust.GetValueOrDefaultString();
                         parameters["massGas"] = mCelStat.massGas.GetValueOrDefaultString();
-                        parameters["fragmented"] = mCelStat.fragmented.GetValueOrDefaultString();
+                        parameters["fragmented"] = Convert.ToByte(mCelStat.fragmented.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
                         parameters["density"] = mCelStat.density.GetValueOrDefaultString();
                         parameters["surfaceGravity"] = mCelStat.surfaceGravity.GetValueOrDefaultString();
                         parameters["escapeVelocity"] = mCelStat.escapeVelocity.GetValueOrDefaultString();
                         parameters["orbitPeriod"] = mCelStat.orbitPeriod.GetValueOrDefaultString();
                         parameters["rotationRate"] = mCelStat.rotationRate.GetValueOrDefaultString();
-                        parameters["locked"] = mCelStat.locked.GetValueOrDefaultString();
+                        parameters["locked"] = Convert.ToByte(mCelStat.locked.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
                         parameters["pressure"] = mCelStat.pressure.GetValueOrDefaultString();
                         parameters["radius"] = mCelStat.radius.GetValueOrDefaultString();
                         parameters["mass"] = mCelStat.mass.GetValueOrDefaultString();

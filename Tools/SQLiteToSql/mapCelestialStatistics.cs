@@ -24,15 +24,15 @@ namespace EVEMon.SQLiteToSql
         public Nullable<double> eccentricity { get; set; }
         public Nullable<double> massDust { get; set; }
         public Nullable<double> massGas { get; set; }
-        public Nullable<int> fragmented { get; set; }
+        public Nullable<bool> fragmented { get; set; }
         public Nullable<double> density { get; set; }
         public Nullable<double> surfaceGravity { get; set; }
         public Nullable<double> escapeVelocity { get; set; }
         public Nullable<double> orbitPeriod { get; set; }
         public Nullable<double> rotationRate { get; set; }
-        public Nullable<int> locked { get; set; }
-        public Nullable<int> pressure { get; set; }
-        public Nullable<int> radius { get; set; }
-        public Nullable<int> mass { get; set; }
+        public Nullable<bool> locked { get; set; }
+        public Nullable<double> pressure { get; set; }
+        public Nullable<double> radius { get; set; }
+        public Nullable<double> mass { get; set; }
     }
 }
