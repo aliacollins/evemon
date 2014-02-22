@@ -55,7 +55,7 @@ namespace EVEMon.SQLiteToSql.Tables
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters["celestialID"] = mCelStat.celestialID.ToString(CultureInfo.InvariantCulture);
                         parameters["temperature"] = mCelStat.temperature.GetValueOrDefaultString();
-                        parameters["spectralClass"] = mCelStat.spectralClass;
+                        parameters["spectralClass"] = String.Format("'{0}'", mCelStat.spectralClass.Replace("'", Database.StringEmpty));
                         parameters["luminosity"] = mCelStat.luminosity.GetValueOrDefaultString();
                         parameters["age"] = mCelStat.age.GetValueOrDefaultString();
                         parameters["life"] = mCelStat.life.GetValueOrDefaultString();
