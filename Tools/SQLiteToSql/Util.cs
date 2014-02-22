@@ -76,22 +76,5 @@ namespace EVEMon.SQLiteToSql
             Console.WriteLine(@"{0}.table.sql resource file does not exists!", tableName);
             return String.Empty;
         }
-
-        /// <summary>
-        /// Checks the yaml file exists.
-        /// </summary>
-        /// <param name="filename">The filename.</param>
-        /// <returns></returns>
-        internal static string CheckYamlFileExists(string filename)
-        {
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                String.Format(@"YamlFiles{0}{1}", Path.DirectorySeparatorChar, filename));
-
-            if (File.Exists(filePath))
-                return filePath;
-
-            Console.WriteLine(@"{0} file does not exists!", filename);
-            return String.Empty;
-        }
     }
 }
