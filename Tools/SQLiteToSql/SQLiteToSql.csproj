@@ -166,9 +166,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="SQLiteFiles\universeDataDx.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <EntityDeploy Include="UniverseData.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>UniverseData.Designer.cs</LastGenOutput>
