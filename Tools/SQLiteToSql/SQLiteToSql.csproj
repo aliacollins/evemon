@@ -200,7 +200,9 @@
     <EmbeddedResource Include="Scripts\mapRegions.table.sql" />
     <EmbeddedResource Include="Scripts\mapSolarSystemJumps.table.sql" />
     <EmbeddedResource Include="Scripts\mapSolarSystems.table.sql" />
-    <None Include="SQLiteFiles\Put universeDataDx.db here" />
+    <None Include="SQLiteFiles\Put universeDataDx.db here">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
