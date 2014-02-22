@@ -76,11 +76,12 @@ namespace EVEMon.SQLiteToSql.Tables
                         parameters["regional"] =  Convert.ToByte(mSolarSystem.regional.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
                         parameters["constellation"] = Convert.ToByte(mSolarSystem.constellation.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
                         parameters["security"] = mSolarSystem.security.GetValueOrDefaultString();
-                        parameters["factionID"] = mSolarSystem.factionID.GetValueOrDefault()
-                            .ToString(CultureInfo.InvariantCulture);
+                        parameters["factionID"] = mSolarSystem.factionID.GetValueOrDefaultString();
                         parameters["radius"] = mSolarSystem.radius.GetValueOrDefaultString();
                         parameters["sunTypeID"] = mSolarSystem.sunTypeID.GetValueOrDefaultString();
-                        parameters["securityClass"] = String.Format("'{0}'", mSolarSystem.securityClass);
+                        parameters["securityClass"] = mSolarSystem.securityClass != null
+                            ? String.Format("'{0}'", mSolarSystem.securityClass)
+                            : Database.Null;
 
                         command.CommandText = Database.SqlInsertCommandText(TableName, parameters);
                         command.ExecuteNonQuery();
