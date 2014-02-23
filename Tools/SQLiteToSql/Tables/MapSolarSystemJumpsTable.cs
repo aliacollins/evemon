@@ -41,14 +41,14 @@ namespace EVEMon.SQLiteToSql.Tables
                                  {
                                      Connection = connection
                                  };
-            var total = Database.Context.mapSolarSystemJumps.Count();
+            var total = Database.UniverseDataContext.mapSolarSystemJumps.Count();
 
             using (var tx = connection.BeginTransaction())
             {
                 command.Transaction = tx;
                 try
                 {
-                    foreach (mapSolarSystemJumps mSolarSystemJump in Database.Context.mapSolarSystemJumps)
+                    foreach (mapSolarSystemJumps mSolarSystemJump in Database.UniverseDataContext.mapSolarSystemJumps)
                     {
                         Util.UpdatePercentDone(total);
 

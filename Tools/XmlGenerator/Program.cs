@@ -43,6 +43,8 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine();
             Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating files completed in {0}",
                                             DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+            Console.WriteLine();
+            Console.Write(@"Press any key to exit.");
             Console.ReadLine();
         }
     }

@@ -41,14 +41,14 @@ namespace EVEMon.SQLiteToSql.Tables
                                  {
                                      Connection = connection
                                  };
-            var total = Database.Context.mapConstellationJumps.Count();
+            var total = Database.UniverseDataContext.mapConstellationJumps.Count();
 
             using (var tx = connection.BeginTransaction())
             {
                 command.Transaction = tx;
                 try
                 {
-                    foreach (mapConstellationJumps mConstJump in Database.Context.mapConstellationJumps)
+                    foreach (mapConstellationJumps mConstJump in Database.UniverseDataContext.mapConstellationJumps)
                     {
                         Util.UpdatePercentDone(total);
 

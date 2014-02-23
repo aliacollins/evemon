@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
@@ -22,13 +21,10 @@ namespace EVEMon.YamlToSql.Tables
         private const string ColorSchemeText = "colorScheme";
         private const string SofHullNameText = "sofHullName";
 
-        private const string StringEmpty = "''";
-        private const string NullText = "Null";
-
         /// <summary>
         /// Imports the graphic ids.
         /// </summary>
-        internal static void ImportGraphicIds(SqlConnection connection)
+        internal static void Import(SqlConnection connection)
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
@@ -39,7 +35,7 @@ namespace EVEMon.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            CreateEveGraphicsTable(connection);
+            Database.CreateTable(connection, EveGraphicsTableName);
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
@@ -52,7 +48,7 @@ namespace EVEMon.YamlToSql.Tables
                 return;
             }
 
-            ImportEveGraphicsData(connection, rNode);
+            ImportData(connection, rNode);
 
             Util.DisplayEndTime(startTime);
 
@@ -60,29 +56,11 @@ namespace EVEMon.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Creates the eve graphics table.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void CreateEveGraphicsTable(SqlConnection connection)
-        {
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", EveGraphicsTableName)).Length == 0)
-                Database.CreateTable(command, EveGraphicsTableName);
-            else
-            {
-                Database.DropTable(command, EveGraphicsTableName);
-                Database.CreateTable(command, EveGraphicsTableName);
-            }
-        }
-
-        /// <summary>
-        /// Imports the eve graphics data.
+        /// Imports the data.
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <param name="rNode">The r node.</param>
-        private static void ImportEveGraphicsData(SqlConnection connection, YamlMappingNode rNode)
+        private static void ImportData(SqlConnection connection, YamlMappingNode rNode)
         {
             var command = new SqlCommand { Connection = connection };
 
@@ -104,12 +82,12 @@ namespace EVEMon.YamlToSql.Tables
                         parameters["graphicID"] = pair.Key.ToString();
                         parameters[GraphicFileText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicFileText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicFileText)].ToString().Replace("'", StringEmpty))
-                            : StringEmpty;
+                                cNode.Children[new YamlScalarNode(GraphicFileText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", StringEmpty))
-                            : StringEmpty;
+                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                         parameters[ObsoleteText] = cNode.Children.Keys.Any(key => key.ToString() == ObsoleteText)
                             ? cNode.Children[new YamlScalarNode(ObsoleteText)].ToString().ToUpperInvariant() == "TRUE"
                                 ? "1"
@@ -117,32 +95,32 @@ namespace EVEMon.YamlToSql.Tables
                             : "0";
                         parameters[GraphicTypeText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicTypeText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicTypeText)].ToString().Replace("'", StringEmpty))
-                            : NullText;
+                                cNode.Children[new YamlScalarNode(GraphicTypeText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.Null;
                         parameters[DirectoryIDText] = cNode.Children.Keys.Any(key => key.ToString() == DirectoryIDText)
                             ? cNode.Children[new YamlScalarNode(DirectoryIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[CollidableText] = cNode.Children.Keys.Any(key => key.ToString() == CollidableText)
                             ? cNode.Children[new YamlScalarNode(CollidableText)].ToString().ToUpperInvariant() == "TRUE"
                                 ? "1"
-                                : NullText
-                            : NullText;
+                                : Database.Null
+                            : Database.Null;
                         parameters[GraphicNameText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicNameText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicNameText)].ToString().Replace("'", StringEmpty))
-                            : StringEmpty;
+                                cNode.Children[new YamlScalarNode(GraphicNameText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                         parameters[GfxRaceIDText] = cNode.Children.Keys.Any(key => key.ToString() == GfxRaceIDText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GfxRaceIDText)].ToString().Replace("'", StringEmpty))
-                            : NullText;
+                                cNode.Children[new YamlScalarNode(GfxRaceIDText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.Null;
                         parameters[ColorSchemeText] = cNode.Children.Keys.Any(key => key.ToString() == ColorSchemeText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(ColorSchemeText)].ToString().Replace("'", StringEmpty))
-                            : NullText;
+                                cNode.Children[new YamlScalarNode(ColorSchemeText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.Null;
                         parameters[SofHullNameText] = cNode.Children.Keys.Any(key => key.ToString() == SofHullNameText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(SofHullNameText)].ToString().Replace("'", StringEmpty))
-                            : NullText;
+                                cNode.Children[new YamlScalarNode(SofHullNameText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.Null;
 
                         command.CommandText = Database.SqlInsertCommandText(EveGraphicsTableName, parameters);
                         command.ExecuteNonQuery();

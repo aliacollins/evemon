@@ -82,10 +82,10 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <returns></returns>
         private static IEnumerable<SerializableSolarSystem> ExportSystems(IHasID srcConstellation)
         {
+            const double BaseDistance = 1.0E14;
             return Database.MapSolarSystemsTable.Where(x => x.ConstellationID == srcConstellation.ID).Select(
                 srcSystem =>
                 {
-                    const double BaseDistance = 1.0E14;
                     SerializableSolarSystem system = new SerializableSolarSystem
                                                      {
                                                          ID = srcSystem.ID,

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
@@ -41,12 +40,10 @@ namespace EVEMon.YamlToSql.Tables
         // TypeMasteries
         private const string MasteryIDText = "masteryID";
 
-        private const string NullText = "Null";
-
         /// <summary>
         /// Imports the type ids.
         /// </summary>
-        internal static void ImportTypeIds(SqlConnection connection)
+        internal static void Import(SqlConnection connection)
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
@@ -57,11 +54,19 @@ namespace EVEMon.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            CreateInvTypesColumns(connection);
-            CreateDgmMasteriesTable(connection);
-            CreateDgmTypeMasteriesTable(connection);
-            CreateDgmTraitsTable(connection);
-            CreateDgmTypeTraitsTable(connection);
+            Database.CreateColumns(connection, InvTypesTableName, new Dictionary<string, string>
+                                                                  {
+                                                                      { FactionIDText, "int" },
+                                                                      { GraphicIDText, "int" },
+                                                                      { IconIDText, "int" },
+                                                                      { RadiusText, "float" },
+                                                                      { SoundIDText, "int" },
+                                                                  });
+
+            Database.CreateTable(connection, DgmMasteriesTableName);
+            Database.CreateTable(connection, DgmTypeMasteriesTableName);
+            Database.CreateTable(connection, DgmTraitsTableName);
+            Database.CreateTable(connection, DgmTypeTraitsTableName);
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
@@ -74,7 +79,7 @@ namespace EVEMon.YamlToSql.Tables
                 return;
             }
 
-            ImportInvTypesData(connection, rNode);
+            ImportData(connection, rNode);
 
             Util.DisplayEndTime(startTime);
 
@@ -82,106 +87,11 @@ namespace EVEMon.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Creates the DGM type traits table.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void CreateDgmTypeTraitsTable(SqlConnection connection)
-        {
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", DgmTypeTraitsTableName)).Length == 0)
-                Database.CreateTable(command, DgmTypeTraitsTableName);
-            else
-            {
-                Database.DropTable(command, DgmTypeTraitsTableName);
-                Database.CreateTable(command, DgmTypeTraitsTableName);
-            }
-        }
-
-        /// <summary>
-        /// Creates the DGM traits table.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void CreateDgmTraitsTable(SqlConnection connection)
-        {
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", DgmTraitsTableName)).Length == 0)
-                Database.CreateTable(command, DgmTraitsTableName);
-            else
-            {
-                Database.DropTable(command, DgmTraitsTableName);
-                Database.CreateTable(command, DgmTraitsTableName);
-            }
-        }
-
-        /// <summary>
-        /// Creates the DGM type masteries table.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void CreateDgmTypeMasteriesTable(SqlConnection connection)
-        {
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", DgmTypeMasteriesTableName)).Length == 0)
-                Database.CreateTable(command, DgmTypeMasteriesTableName);
-            else
-            {
-                Database.DropTable(command, DgmTypeMasteriesTableName);
-                Database.CreateTable(command, DgmTypeMasteriesTableName);
-            }
-        }
-
-        /// <summary>
-        /// Creates the DGM masteries table.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void CreateDgmMasteriesTable(SqlConnection connection)
-        {
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", DgmMasteriesTableName)).Length == 0)
-                Database.CreateTable(command, DgmMasteriesTableName);
-            else
-            {
-                Database.DropTable(command, DgmMasteriesTableName);
-                Database.CreateTable(command, DgmMasteriesTableName);
-            }
-        }
-
-        /// <summary>
-        /// Creates the inv types columns.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void CreateInvTypesColumns(SqlConnection connection)
-        {
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", InvTypesTableName)).Length == 0)
-            {
-                Console.WriteLine(@"Can't find table '{0}'.", InvTypesTableName);
-                Console.ReadLine();
-                Environment.Exit(-1);
-            }
-
-            Database.CreateColumn(dataTable, command, InvTypesTableName, FactionIDText, "int");
-            Database.CreateColumn(dataTable, command, InvTypesTableName, GraphicIDText, "int");
-            Database.CreateColumn(dataTable, command, InvTypesTableName, IconIDText, "int");
-            Database.CreateColumn(dataTable, command, InvTypesTableName, RadiusText, "float");
-            Database.CreateColumn(dataTable, command, InvTypesTableName, SoundIDText, "int");
-        }
-
-        /// <summary>
-        /// Imports the inv types data.
+        /// Imports the data.
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <param name="rNode">The r node.</param>
-        private static void ImportInvTypesData(SqlConnection connection,YamlMappingNode rNode)
+        private static void ImportData(SqlConnection connection,YamlMappingNode rNode)
         {
             var command = new SqlCommand { Connection = connection };
 
@@ -292,7 +202,7 @@ namespace EVEMon.YamlToSql.Tables
                                                 .Replace("'", "''"));
                                         parameters[UnitIDText] = bonusNode.Children.Keys.Any(key => key.ToString() == UnitIDText)
                                             ? bonusNode.Children[new YamlScalarNode(UnitIDText)].ToString()
-                                            : NullText;
+                                            : Database.Null;
                                         
                                         var pars = new Dictionary<string, string>();
                                         pars[TypeIDText] = pair.Key.ToString();
@@ -305,7 +215,7 @@ namespace EVEMon.YamlToSql.Tables
                                             pars[TraitIDText] = traitsDict.First(x => x.Value == value).Key.ToString(CultureInfo.InvariantCulture);
                                             pars[BonusText] = bonusNode.Children.Keys.Any(key => key.ToString() == BonusText)
                                             ? bonusNode.Children[new YamlScalarNode(BonusText)].ToString()
-                                            : NullText;
+                                            : Database.Null;
 
                                             command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
                                             command.ExecuteNonQuery();
@@ -318,7 +228,7 @@ namespace EVEMon.YamlToSql.Tables
                                         pars[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
                                         pars[BonusText] = bonusNode.Children.Keys.Any(key => key.ToString() == BonusText)
                                             ? bonusNode.Children[new YamlScalarNode(BonusText)].ToString()
-                                            : NullText;
+                                            : Database.Null;
 
                                         command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
                                         command.ExecuteNonQuery();
@@ -338,19 +248,19 @@ namespace EVEMon.YamlToSql.Tables
 
                         parameters[FactionIDText] = cNode.Children.Keys.Any(key => key.ToString() == FactionIDText)
                             ? cNode.Children[new YamlScalarNode(FactionIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[GraphicIDText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicIDText)
                             ? cNode.Children[new YamlScalarNode(GraphicIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[IconIDText] = cNode.Children.Keys.Any(key => key.ToString() == IconIDText)
                             ? cNode.Children[new YamlScalarNode(IconIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[RadiusText] = cNode.Children.Keys.Any(key => key.ToString() == RadiusText)
                             ? cNode.Children[new YamlScalarNode(RadiusText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[SoundIDText] = cNode.Children.Keys.Any(key => key.ToString() == SoundIDText)
                             ? cNode.Children[new YamlScalarNode(SoundIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
 
                         command.CommandText = Database.SqlUpdateCommandText(InvTypesTableName, parameters);
                         command.ExecuteNonQuery();

@@ -41,14 +41,14 @@ namespace EVEMon.SQLiteToSql.Tables
                                  {
                                      Connection = connection
                                  };
-            var total = Database.Context.mapLocationWormholeClasses.Count();
+            var total = Database.UniverseDataContext.mapLocationWormholeClasses.Count();
 
             using (var tx = connection.BeginTransaction())
             {
                 command.Transaction = tx;
                 try
                 {
-                    foreach (mapLocationWormholeClasses mLocWormClass in Database.Context.mapLocationWormholeClasses)
+                    foreach (mapLocationWormholeClasses mLocWormClass in Database.UniverseDataContext.mapLocationWormholeClasses)
                     {
                         Util.UpdatePercentDone(total);
 
