@@ -8,6 +8,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
 {
     internal static class MapSolarSystemJumpsTable
     {
+        private static int s_total;
         private const string TableName = "mapSolarSystemJumps";
 
         /// <summary>
@@ -19,10 +20,21 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
 
-            Database.CreateTable(connection, TableName);
+            try
+            {
+                s_total = Database.UniverseDataContext.mapSolarSystemJumps.Count();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine();
+                Console.WriteLine(e.InnerException.Message);
+                return;
+            }
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", TableName);
+
+            Database.CreateTable(connection, TableName);
 
             ImportData(connection);
 
@@ -37,11 +49,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
         /// <param name="connection">The connection.</param>
         private static void ImportData(SqlConnection connection)
         {
-            SqlCommand command = new SqlCommand
-                                 {
-                                     Connection = connection
-                                 };
-            var total = Database.UniverseDataContext.mapSolarSystemJumps.Count();
+            SqlCommand command = new SqlCommand { Connection = connection };
 
             using (var tx = connection.BeginTransaction())
             {
@@ -50,7 +58,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                 {
                     foreach (mapSolarSystemJumps mSolarSystemJump in Database.UniverseDataContext.mapSolarSystemJumps)
                     {
-                        Util.UpdatePercentDone(total);
+                        Util.UpdatePercentDone(s_total);
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters["fromRegionID"] = mSolarSystemJump.fromRegionID.GetValueOrDefaultString();

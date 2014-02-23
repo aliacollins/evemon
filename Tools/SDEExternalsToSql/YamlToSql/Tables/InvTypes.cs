@@ -54,6 +54,17 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
+            YamlMappingNode rNode = Util.ParseYamlFile(filePath);
+
+            if (rNode == null)
+            {
+                Console.WriteLine(@"Unable to parse {0}.", yamlFile);
+                return;
+            }
+
+            Console.WriteLine();
+            Console.Write(@"Importing {0}... ", yamlFile);
+
             Database.CreateColumns(connection, InvTypesTableName, new Dictionary<string, string>
                                                                   {
                                                                       { FactionIDText, "int" },
@@ -67,18 +78,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Database.CreateTable(connection, DgmTypeMasteriesTableName);
             Database.CreateTable(connection, DgmTraitsTableName);
             Database.CreateTable(connection, DgmTypeTraitsTableName);
-
-            Console.WriteLine();
-            Console.Write(@"Importing {0}... ", yamlFile);
-
-            YamlMappingNode rNode = Util.ParseYamlFile(filePath);
-
-            if (rNode == null)
-            {
-                Console.WriteLine(@"Unable to parse {0}.", yamlFile);
-                return;
-            }
-
+            
             ImportData(connection, rNode);
 
             Util.DisplayEndTime(startTime);

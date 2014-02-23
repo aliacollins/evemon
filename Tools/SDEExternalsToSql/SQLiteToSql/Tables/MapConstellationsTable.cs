@@ -8,6 +8,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
 {
     internal static class MapConstellationsTable
     {
+        private static int s_total;
         private const string TableName = "mapConstellations";
 
         /// <summary>
@@ -18,6 +19,17 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
+
+            try
+            {
+                s_total = Database.UniverseDataContext.mapConstellations.Count();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine();
+                Console.WriteLine(e.InnerException.Message);
+                return;
+            }
 
             Database.CreateTable(connection, TableName);
 
@@ -37,11 +49,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
         /// <param name="connection">The connection.</param>
         private static void ImportData(SqlConnection connection)
         {
-            SqlCommand command = new SqlCommand
-                                 {
-                                     Connection = connection
-                                 };
-            var total = Database.UniverseDataContext.mapConstellations.Count();
+            SqlCommand command = new SqlCommand { Connection = connection };
 
             using (var tx = connection.BeginTransaction())
             {
@@ -50,7 +58,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                 {
                     foreach (mapConstellations mConsts in Database.UniverseDataContext.mapConstellations)
                     {
-                        Util.UpdatePercentDone(total);
+                        Util.UpdatePercentDone(s_total);
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters["constellationID"] = mConsts.constellationID.ToString(CultureInfo.InvariantCulture);

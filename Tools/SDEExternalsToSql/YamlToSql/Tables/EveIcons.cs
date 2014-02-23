@@ -27,11 +27,6 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            Database.CreateTable(connection, EveIconsTableName);
-
-            Console.WriteLine();
-            Console.Write(@"Importing {0}... ", yamlFile);
-
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
             if (rNode == null)
@@ -39,6 +34,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 Console.WriteLine(@"Unable to parse {0}.", yamlFile);
                 return;
             }
+
+            Console.WriteLine();
+            Console.Write(@"Importing {0}... ", yamlFile);
+
+            Database.CreateTable(connection, EveIconsTableName);
 
             ImportData(connection, rNode);
 

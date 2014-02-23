@@ -65,11 +65,6 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            CreateCertTables(connection);
-
-            Console.WriteLine();
-            Console.Write(@"Importing {0}... ", yamlFile);
-
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
             if (rNode == null)
@@ -77,6 +72,14 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 Console.WriteLine(@"Unable to parse {0}.", yamlFile);
                 return;
             }
+
+            Console.WriteLine();
+            Console.Write(@"Importing {0}... ", yamlFile);
+
+            Database.CreateTable(connection, CrtClassesTableName);
+            Database.CreateTable(connection, CrtCertificateTableName);
+            Database.CreateTable(connection, CrtRecommendationsTableName);
+            Database.CreateTable(connection, CrtRelationshipsTableName);
 
             ImportData(connection, rNode);
 
@@ -207,18 +210,6 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     Environment.Exit(-1);
                 }
             }
-        }
-
-        /// <summary>
-        /// Creates the cert tables.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void CreateCertTables(SqlConnection connection)
-        {
-            Database.CreateTable(connection, CrtClassesTableName);
-            Database.CreateTable(connection, CrtCertificateTableName);
-            Database.CreateTable(connection, CrtRecommendationsTableName);
-            Database.CreateTable(connection, CrtRelationshipsTableName);
         }
     }
 }

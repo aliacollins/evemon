@@ -4,9 +4,11 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using EVEMon.SDEExternalsToSql.SQLiteToSql;
 
 namespace EVEMon.SDEExternalsToSql
@@ -43,12 +45,15 @@ namespace EVEMon.SDEExternalsToSql
         /// <returns></returns>
         internal static T Connect<T>(string connectionName) where T : DbConnection
         {
-            s_text = "Connecting to Database... ";
+            string databaseTypeName = typeof(T) == typeof(SqlConnection) ? "SQL" : "SQLite";
+            s_text = String.Format("Connecting to {0} Database... ", databaseTypeName);
             Console.Write(s_text);
 
             DbConnection connection = GetConnection<T>(connectionName);
 
-            string databaseTypeName = connection is SqlConnection ? "SQL" : "SQLite";
+            if (connection == null)
+                return null;
+
             try
             {
                 connection.Open();
@@ -103,6 +108,23 @@ namespace EVEMon.SDEExternalsToSql
         private static DbConnection GetConnection<T>(string connectionName) where T : DbConnection
         {
             ConnectionStringSettings connectionStringSetting = ConfigurationManager.ConnectionStrings[connectionName];
+
+            if (typeof(T) != typeof(SqlConnection))
+            {
+                var match = Regex.Match(connectionStringSetting.ConnectionString, "data source=(.*)",
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase).Groups;
+
+                if (match.Count != 2 || !File.Exists(match[1].Value.TrimEnd(new []{'\"'})))
+                {
+                    Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+                    Console.WriteLine(@"Database {0}file does not exists!",
+                        match.Count != 2
+                            ? String.Empty
+                            : String.Format("{0} ", match[1].Value.TrimEnd(new[] {'\"'}).Replace("SQLiteFiles\\", String.Empty)));
+                    return null;
+                }
+            }
+        
             if (connectionStringSetting != null)
             {
                 ConstructorInfo ci = typeof(T).GetConstructor(new[]
