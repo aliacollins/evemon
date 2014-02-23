@@ -41,14 +41,14 @@ namespace EVEMon.SQLiteToSql.Tables
                                  {
                                      Connection = connection
                                  };
-            var total = Database.Context.mapDenormalize.Count();
+            var total = Database.UniverseDataContext.mapDenormalize.Count();
 
             using (var tx = connection.BeginTransaction())
             {
                 command.Transaction = tx;
                 try
                 {
-                    foreach (mapDenormalize mDenorm in Database.Context.mapDenormalize)
+                    foreach (mapDenormalize mDenorm in Database.UniverseDataContext.mapDenormalize)
                     {
                         Util.UpdatePercentDone(total);
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
@@ -28,7 +27,7 @@ namespace EVEMon.YamlToSql.Tables
         /// <summary>
         /// Imports the graphic ids.
         /// </summary>
-        internal static void ImportGraphicIds(SqlConnection connection)
+        internal static void Import(SqlConnection connection)
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
@@ -39,7 +38,7 @@ namespace EVEMon.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            CreateEveGraphicsTable(connection);
+            Database.CreateTable(connection, EveGraphicsTableName);
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
@@ -52,7 +51,7 @@ namespace EVEMon.YamlToSql.Tables
                 return;
             }
 
-            ImportEveGraphicsData(connection, rNode);
+            ImportData(connection, rNode);
 
             Util.DisplayEndTime(startTime);
 
@@ -60,29 +59,11 @@ namespace EVEMon.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Creates the eve graphics table.
-        /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void CreateEveGraphicsTable(SqlConnection connection)
-        {
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", EveGraphicsTableName)).Length == 0)
-                Database.CreateTable(command, EveGraphicsTableName);
-            else
-            {
-                Database.DropTable(command, EveGraphicsTableName);
-                Database.CreateTable(command, EveGraphicsTableName);
-            }
-        }
-
-        /// <summary>
-        /// Imports the eve graphics data.
+        /// Imports the data.
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <param name="rNode">The r node.</param>
-        private static void ImportEveGraphicsData(SqlConnection connection, YamlMappingNode rNode)
+        private static void ImportData(SqlConnection connection, YamlMappingNode rNode)
         {
             var command = new SqlCommand { Connection = connection };
 

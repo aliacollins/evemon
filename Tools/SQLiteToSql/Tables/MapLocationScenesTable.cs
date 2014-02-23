@@ -41,14 +41,14 @@ namespace EVEMon.SQLiteToSql.Tables
                                  {
                                      Connection = connection
                                  };
-            var total = Database.Context.mapLocationScenes.Count();
+            var total = Database.UniverseDataContext.mapLocationScenes.Count();
 
             using (var tx = connection.BeginTransaction())
             {
                 command.Transaction = tx;
                 try
                 {
-                    foreach (mapLocationScenes mLocScene in Database.Context.mapLocationScenes)
+                    foreach (mapLocationScenes mLocScene in Database.UniverseDataContext.mapLocationScenes)
                     {
                         Util.UpdatePercentDone(total);
 

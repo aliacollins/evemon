@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
@@ -58,7 +57,7 @@ namespace EVEMon.YamlToSql.Tables
         /// Imports the certificates.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public static void ImportCertificates(SqlConnection connection)
+        public static void Import(SqlConnection connection)
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
@@ -82,7 +81,7 @@ namespace EVEMon.YamlToSql.Tables
                 return;
             }
 
-            ImportCertificatesData(connection, rNode);
+            ImportData(connection, rNode);
 
             Util.DisplayEndTime(startTime);
 
@@ -90,11 +89,11 @@ namespace EVEMon.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Imports the certificates data.
+        /// Imports the data.
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <param name="rNode">The r node.</param>
-        private static void ImportCertificatesData(SqlConnection connection, YamlMappingNode rNode)
+        private static void ImportData(SqlConnection connection, YamlMappingNode rNode)
         {
             var command = new SqlCommand { Connection = connection };
             int classId = 0;
@@ -219,40 +218,10 @@ namespace EVEMon.YamlToSql.Tables
         /// <param name="connection">The connection.</param>
         private static void CreateCertTables(SqlConnection connection)
         {
-            var command = new SqlCommand { Connection = connection };
-            DataTable dataTable = connection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", CrtClassesTableName)).Length == 0)
-                Database.CreateTable(command, CrtClassesTableName);
-            else
-            {
-                Database.DropTable(command, CrtClassesTableName);
-                Database.CreateTable(command, CrtClassesTableName);
-            }
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", CrtCertificateTableName)).Length == 0)
-                Database.CreateTable(command, CrtCertificateTableName);
-            else
-            {
-                Database.DropTable(command, CrtCertificateTableName);
-                Database.CreateTable(command, CrtCertificateTableName);
-            }
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", CrtRecommendationsTableName)).Length == 0)
-                Database.CreateTable(command, CrtRecommendationsTableName);
-            else
-            {
-                Database.DropTable(command, CrtRecommendationsTableName);
-                Database.CreateTable(command, CrtRecommendationsTableName);
-            }
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", CrtRelationshipsTableName)).Length == 0)
-                Database.CreateTable(command, CrtRelationshipsTableName);
-            else
-            {
-                Database.DropTable(command, CrtRelationshipsTableName);
-                Database.CreateTable(command, CrtRelationshipsTableName);
-            }
+            Database.CreateTable(connection, CrtClassesTableName);
+            Database.CreateTable(connection, CrtCertificateTableName);
+            Database.CreateTable(connection, CrtRecommendationsTableName);
+            Database.CreateTable(connection, CrtRelationshipsTableName);
         }
     }
 }

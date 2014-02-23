@@ -12,9 +12,11 @@ namespace EVEMon.SQLiteToSql
         private static void Main()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-
+            
             EntityConnection sqliteConnection = Database.Connect<EntityConnection>("UniverseDataEntities");
             SqlConnection sqlConnection = Database.Connect<SqlConnection>("EveStaticData");
+
+            Database.UniverseDataContext = new UniverseDataEntities();
 
             MapCelestialStatisticsTable.Import(sqlConnection);
             MapConstellationJumpsTable.Import(sqlConnection);

@@ -16,7 +16,13 @@ namespace EVEMon.SQLiteToSql
         internal const string StringEmpty = "''";
         internal const string Null = "Null";
 
-        public static UniverseDataEntities Context { get; private set; }
+        /// <summary>
+        /// Gets or sets the context.
+        /// </summary>
+        /// <value>
+        /// The context.
+        /// </value>
+        public static UniverseDataEntities UniverseDataContext { get; set; }
 
         /// <summary>
         /// Gets the value or default string.
@@ -36,8 +42,6 @@ namespace EVEMon.SQLiteToSql
         /// <returns></returns>
         internal static T Connect<T>(string connectionName) where T : DbConnection
         {
-            Context = new UniverseDataEntities();
-
             s_text = "Connecting to Database... ";
             Console.Write(s_text);
 
