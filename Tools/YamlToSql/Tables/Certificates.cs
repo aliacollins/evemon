@@ -49,9 +49,6 @@ namespace EVEMon.YamlToSql.Tables
         private const string ParentLevelText = "parentLevel";
         private const string ChildIDText = "childID";
         private const string GradeText = "grade";
-        
-        private const string StringEmpty = "''";
-        private const string NullText = "Null";
 
         /// <summary>
         /// Imports the certificates.
@@ -122,12 +119,12 @@ namespace EVEMon.YamlToSql.Tables
                             parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
                             parameters[ClassNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", StringEmpty))
-                            : StringEmpty;
+                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                             parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", StringEmpty))
-                            : StringEmpty;
+                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
 
                             command.CommandText = Database.SqlInsertCommandText(CrtClassesTableName, parameters);
                             command.ExecuteNonQuery();
@@ -187,12 +184,12 @@ namespace EVEMon.YamlToSql.Tables
                         parameters[CertificateIDText] = pair.Key.ToString();
                         parameters[GroupIDText] = cNode.Children.Keys.Any(key => key.ToString() == GroupIDText)
                             ? cNode.Children[new YamlScalarNode(GroupIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", StringEmpty))
-                            : StringEmpty;
+                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
 
                         command.CommandText = Database.SqlInsertCommandText(CrtCertificateTableName, parameters);
                         command.ExecuteNonQuery();

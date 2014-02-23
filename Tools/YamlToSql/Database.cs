@@ -12,7 +12,9 @@ namespace EVEMon.YamlToSql
 {
     internal static class Database
     {
-        private static string s_text = String.Empty;
+        private static string s_text;
+        internal const string StringEmpty = "''";
+        internal const string Null = "Null";
 
         /// <summary>
         /// Connects the database.

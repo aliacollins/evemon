@@ -13,8 +13,6 @@ namespace EVEMon.YamlToSql.Tables
         private const string IconFileText = "iconFile";
         private const string DescriptionText = "description";
 
-        private const string StringEmpty = "''";
-
         /// <summary>
         /// Imports the icon ids.
         /// </summary>
@@ -76,12 +74,12 @@ namespace EVEMon.YamlToSql.Tables
                         parameters["iconID"] = pair.Key.ToString();
                         parameters[IconFileText] = cNode.Children.Keys.Any(key => key.ToString() == IconFileText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", StringEmpty))
-                            : StringEmpty;
+                                cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", StringEmpty))
-                            : StringEmpty;
+                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
 
                         command.CommandText = Database.SqlInsertCommandText(EveIconsTableName, parameters);
                         command.ExecuteNonQuery();

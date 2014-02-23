@@ -191,12 +191,10 @@ namespace EVEMon.SQLiteToSql
         /// <param name="tableName">Name of the table.</param>
         private static void CreateTable(SqlConnection connection, IDbCommand command, string tableName)
         {
-            var query = Util.GetScriptFor(tableName);
-
             using (var tx = connection.BeginTransaction())
             {
                 command.Transaction = tx;
-                command.CommandText = query;
+                command.CommandText = Util.GetScriptFor(tableName);
 
                 try
                 {
@@ -222,10 +220,7 @@ namespace EVEMon.SQLiteToSql
         /// <param name="tableName">Name of the table.</param>
         internal static void CreateTable(SqlConnection connection, string tableName)
         {
-            var command = new SqlCommand
-            {
-                Connection = connection
-            };
+            var command = new SqlCommand { Connection = connection };
             DataTable dataTable = connection.GetSchema("columns");
 
             if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length == 0)

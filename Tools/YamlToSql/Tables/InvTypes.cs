@@ -40,8 +40,6 @@ namespace EVEMon.YamlToSql.Tables
         // TypeMasteries
         private const string MasteryIDText = "masteryID";
 
-        private const string NullText = "Null";
-
         /// <summary>
         /// Imports the type ids.
         /// </summary>
@@ -204,7 +202,7 @@ namespace EVEMon.YamlToSql.Tables
                                                 .Replace("'", "''"));
                                         parameters[UnitIDText] = bonusNode.Children.Keys.Any(key => key.ToString() == UnitIDText)
                                             ? bonusNode.Children[new YamlScalarNode(UnitIDText)].ToString()
-                                            : NullText;
+                                            : Database.Null;
                                         
                                         var pars = new Dictionary<string, string>();
                                         pars[TypeIDText] = pair.Key.ToString();
@@ -217,7 +215,7 @@ namespace EVEMon.YamlToSql.Tables
                                             pars[TraitIDText] = traitsDict.First(x => x.Value == value).Key.ToString(CultureInfo.InvariantCulture);
                                             pars[BonusText] = bonusNode.Children.Keys.Any(key => key.ToString() == BonusText)
                                             ? bonusNode.Children[new YamlScalarNode(BonusText)].ToString()
-                                            : NullText;
+                                            : Database.Null;
 
                                             command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
                                             command.ExecuteNonQuery();
@@ -230,7 +228,7 @@ namespace EVEMon.YamlToSql.Tables
                                         pars[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
                                         pars[BonusText] = bonusNode.Children.Keys.Any(key => key.ToString() == BonusText)
                                             ? bonusNode.Children[new YamlScalarNode(BonusText)].ToString()
-                                            : NullText;
+                                            : Database.Null;
 
                                         command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
                                         command.ExecuteNonQuery();
@@ -250,19 +248,19 @@ namespace EVEMon.YamlToSql.Tables
 
                         parameters[FactionIDText] = cNode.Children.Keys.Any(key => key.ToString() == FactionIDText)
                             ? cNode.Children[new YamlScalarNode(FactionIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[GraphicIDText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicIDText)
                             ? cNode.Children[new YamlScalarNode(GraphicIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[IconIDText] = cNode.Children.Keys.Any(key => key.ToString() == IconIDText)
                             ? cNode.Children[new YamlScalarNode(IconIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[RadiusText] = cNode.Children.Keys.Any(key => key.ToString() == RadiusText)
                             ? cNode.Children[new YamlScalarNode(RadiusText)].ToString()
-                            : NullText;
+                            : Database.Null;
                         parameters[SoundIDText] = cNode.Children.Keys.Any(key => key.ToString() == SoundIDText)
                             ? cNode.Children[new YamlScalarNode(SoundIDText)].ToString()
-                            : NullText;
+                            : Database.Null;
 
                         command.CommandText = Database.SqlUpdateCommandText(InvTypesTableName, parameters);
                         command.ExecuteNonQuery();
