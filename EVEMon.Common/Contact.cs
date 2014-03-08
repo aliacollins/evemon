@@ -14,8 +14,8 @@ namespace EVEMon.Common
         #region Fields
 
         private readonly long m_contactID;
+        private readonly ContactType m_contactType;
         private Image m_image;
-        private ContactType m_contactType;
 
         #endregion
 
