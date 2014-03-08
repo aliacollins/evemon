@@ -28,7 +28,7 @@ namespace EVEMon.Common.Serialization.API
             {
                 foreach (SerializableContactListItem contact in m_contacts)
                 {
-                    contact.Group = ContactGroup.Contact;
+                    contact.Group = ContactGroup.Personal;
                 }
                 return m_contacts;
             }

@@ -14,9 +14,8 @@ namespace EVEMon.Common
         #region Fields
 
         private readonly long m_contactID;
+        private readonly ContactType m_contactType;
         private Image m_image;
-        private ContactType m_contactType;
-        private bool m_contactTypeChanged;
 
         #endregion
 
@@ -31,12 +30,17 @@ namespace EVEMon.Common
             Name = src.ContactName;
             IsInWatchlist = src.InWatchlist;
             Standing = src.Standing;
-            Group = (src.Group == ContactGroup.Contact && StaticGeography.AllAgents.Any(x => x.ID == m_contactID))
-                        ? ContactGroup.Agent
-                        : src.Group;
+            Group = (src.Group == ContactGroup.Personal && StaticGeography.AllAgents.Any(x => x.ID == m_contactID))
+                ? ContactGroup.Agent
+                : src.Group;
 
-            GetContactType();
+            m_contactType = src.ContactTypeID == DBConstants.CorporationID
+                ? m_contactType = ContactType.Corporation
+                : src.ContactTypeID == DBConstants.AllianceID
+                    ? m_contactType = ContactType.Alliance
+                    : ContactType.Character;
         }
+
 
         #region Public Properties
 
@@ -74,15 +78,6 @@ namespace EVEMon.Common
         {
             get
             {
-                // When the contact type changed update the image
-                if (m_contactTypeChanged)
-                {
-                    m_image = null;
-                    
-                    // Reset flag
-                    m_contactTypeChanged = false;
-                }
-
                 if (m_image == null)
                     GetImage();
                 
@@ -94,68 +89,6 @@ namespace EVEMon.Common
 
 
         #region Helper Methods
-
-        /// <summary>
-        /// Gets the type of the contact.
-        /// </summary>
-        private void GetContactType()
-        {
-            // Quit here if it's an EVE agent
-            if (Group == ContactGroup.Agent)
-                return;
-
-            // Assign the contact type if it's an EVE Faction
-            if(DBConstants.FactionIDs.Contains((int)m_contactID))
-            {
-                m_contactType = ContactType.Alliance;
-                return;
-            }
-
-            EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
-                APICharacterMethods.CharacterInfo, 0, null, m_contactID, OnCharacterInfoQueried);
-        }
-
-        /// <summary>
-        /// Called when the character info got queried.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private void OnCharacterInfoQueried(APIResult<SerializableAPICharacterInfo> result)
-        {
-            if (result.EVEDatabaseError)
-                return;
-
-            if (!result.HasError)
-                return;
-
-            if (result.CCPError != null && result.CCPError.IsCharacterInfoFailure)
-            {
-                EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICorporationSheet>(
-                    APICorporationMethods.CorporationSheet, 0, null, m_contactID, OnCorporationSheetQuery);
-            }
-        }
-
-        /// <summary>
-        /// Called when the corporation sheet got queried.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private void OnCorporationSheetQuery(APIResult<SerializableAPICorporationSheet> result)
-        {
-            if (result.EVEDatabaseError)
-                return;
-
-            // Set flag for contact type change
-            m_contactTypeChanged = true;
-
-            if (result.HasError)
-            {
-                if (result.CCPError != null && result.CCPError.IsCorporationInfoFailure)
-                    m_contactType = ContactType.Alliance;
-
-                return;
-            }
-
-            m_contactType = ContactType.Corporation;
-        }
 
         /// <summary>
         /// Gets the entity image.

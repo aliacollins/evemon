@@ -1635,7 +1635,7 @@ namespace EVEMon.Common
     public enum ContactGroup
     {
         [Description("Personal")]
-        Contact = 0,
+        Personal = 0,
 
         [Description("Corporation")]
         Corporate = 1,
