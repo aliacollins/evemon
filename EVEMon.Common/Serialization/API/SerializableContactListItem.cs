@@ -29,6 +29,9 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("standing")]
         public float Standing { get; set; }
 
+        [XmlAttribute("contactTypeID")]
+        public long ContactTypeID { get; set; }
+
         [XmlIgnore]
         public ContactGroup Group { get; set; }
 
