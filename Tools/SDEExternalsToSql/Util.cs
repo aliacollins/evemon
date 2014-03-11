@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -111,6 +112,33 @@ namespace EVEMon.SDEExternalsToSql
                 rNode = yStream.Documents.First().RootNode as YamlMappingNode;
             }
             return rNode;
+        }
+
+        /// <summary>
+        /// Gets the value or default string.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj">The object.</param>
+        /// <returns></returns>
+        internal static string GetValueOrDefaultString<T>(this T? obj) where T : struct
+        {
+            return obj.HasValue
+                ? obj is Boolean
+                    ? Convert.ToByte(obj.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture)
+                    : obj.Value.ToString()
+                : Database.Null;
+        }
+
+        /// <summary>
+        /// Gets the text or default string.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        public static string GetTextOrDefaultString(this string text)
+        {
+            return String.IsNullOrWhiteSpace(text)
+                ? Database.Null
+                : String.Format("'{0}'", text.Replace("'", Database.StringEmpty));
         }
     }
 }

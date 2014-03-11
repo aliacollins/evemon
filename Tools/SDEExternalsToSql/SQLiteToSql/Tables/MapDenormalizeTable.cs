@@ -72,7 +72,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         parameters["y"] = mDenorm.y.GetValueOrDefaultString();
                         parameters["z"] = mDenorm.z.GetValueOrDefaultString();
                         parameters["radius"] = mDenorm.radius.GetValueOrDefaultString();
-                        parameters["itemName"] = String.Format("'{0}'", mDenorm.itemName.Replace("'", Database.StringEmpty));
+                        parameters["itemName"] = mDenorm.itemName.GetTextOrDefaultString();
                         parameters["security"] = mDenorm.security.GetValueOrDefaultString();
                         parameters["celestialIndex"] = mDenorm.celestialIndex.GetValueOrDefaultString();
                         parameters["orbitIndex"] = mDenorm.orbitIndex.GetValueOrDefaultString();

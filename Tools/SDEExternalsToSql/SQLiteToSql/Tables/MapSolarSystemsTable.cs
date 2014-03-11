@@ -65,7 +65,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         parameters["constellationID"] =
                             mSolarSystem.constellationID.GetValueOrDefaultString();
                         parameters["solarSystemID"] = mSolarSystem.solarSystemID.ToString(CultureInfo.InvariantCulture);
-                        parameters["solarSystemName"] = String.Format("'{0}'", mSolarSystem.solarSystemName.Replace("'", Database.StringEmpty));
+                        parameters["solarSystemName"] = mSolarSystem.solarSystemName.GetTextOrDefaultString();
                         parameters["x"] = mSolarSystem.x.GetValueOrDefaultString();
                         parameters["y"] = mSolarSystem.y.GetValueOrDefaultString();
                         parameters["z"] = mSolarSystem.z.GetValueOrDefaultString();
@@ -76,20 +76,18 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         parameters["zMin"] = mSolarSystem.zMin.GetValueOrDefaultString();
                         parameters["zMax"] = mSolarSystem.zMax.GetValueOrDefaultString();
                         parameters["luminosity"] = mSolarSystem.luminosity.GetValueOrDefaultString();
-                        parameters["border"] = Convert.ToByte(mSolarSystem.border.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
-                        parameters["fringe"] =  Convert.ToByte(mSolarSystem.fringe.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
-                        parameters["corridor"] =  Convert.ToByte(mSolarSystem.corridor.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
-                        parameters["hub"] =  Convert.ToByte(mSolarSystem.hub.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
-                        parameters["international"] =  Convert.ToByte(mSolarSystem.international.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
-                        parameters["regional"] =  Convert.ToByte(mSolarSystem.regional.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
-                        parameters["constellation"] = Convert.ToByte(mSolarSystem.constellation.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
+                        parameters["border"] = mSolarSystem.border.GetValueOrDefaultString();
+                        parameters["fringe"] =  mSolarSystem.fringe.GetValueOrDefaultString();
+                        parameters["corridor"] =  mSolarSystem.corridor.GetValueOrDefaultString();
+                        parameters["hub"] =  mSolarSystem.hub.GetValueOrDefaultString();
+                        parameters["international"] =  mSolarSystem.international.GetValueOrDefaultString();
+                        parameters["regional"] =  mSolarSystem.regional.GetValueOrDefaultString();
+                        parameters["constellation"] = mSolarSystem.constellation.GetValueOrDefaultString();
                         parameters["security"] = mSolarSystem.security.GetValueOrDefaultString();
                         parameters["factionID"] = mSolarSystem.factionID.GetValueOrDefaultString();
                         parameters["radius"] = mSolarSystem.radius.GetValueOrDefaultString();
                         parameters["sunTypeID"] = mSolarSystem.sunTypeID.GetValueOrDefaultString();
-                        parameters["securityClass"] = mSolarSystem.securityClass != null
-                            ? String.Format("'{0}'", mSolarSystem.securityClass)
-                            : Database.Null;
+                        parameters["securityClass"] = mSolarSystem.securityClass.GetTextOrDefaultString();
 
                         command.CommandText = Database.SqlInsertCommandText(TableName, parameters);
                         command.ExecuteNonQuery();
