@@ -63,7 +63,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters["celestialID"] = mCelStat.celestialID.ToString(CultureInfo.InvariantCulture);
                         parameters["temperature"] = mCelStat.temperature.GetValueOrDefaultString();
-                        parameters["spectralClass"] = String.Format("'{0}'", mCelStat.spectralClass.Replace("'", Database.StringEmpty));
+                        parameters["spectralClass"] = mCelStat.spectralClass.GetTextOrDefaultString();
                         parameters["luminosity"] = mCelStat.luminosity.GetValueOrDefaultString();
                         parameters["age"] = mCelStat.age.GetValueOrDefaultString();
                         parameters["life"] = mCelStat.life.GetValueOrDefaultString();
@@ -71,13 +71,13 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         parameters["eccentricity"] = mCelStat.eccentricity.GetValueOrDefaultString();
                         parameters["massDust"] = mCelStat.massDust.GetValueOrDefaultString();
                         parameters["massGas"] = mCelStat.massGas.GetValueOrDefaultString();
-                        parameters["fragmented"] = Convert.ToByte(mCelStat.fragmented.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
+                        parameters["fragmented"] = mCelStat.fragmented.GetValueOrDefaultString();
                         parameters["density"] = mCelStat.density.GetValueOrDefaultString();
                         parameters["surfaceGravity"] = mCelStat.surfaceGravity.GetValueOrDefaultString();
                         parameters["escapeVelocity"] = mCelStat.escapeVelocity.GetValueOrDefaultString();
                         parameters["orbitPeriod"] = mCelStat.orbitPeriod.GetValueOrDefaultString();
                         parameters["rotationRate"] = mCelStat.rotationRate.GetValueOrDefaultString();
-                        parameters["locked"] = Convert.ToByte(mCelStat.locked.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
+                        parameters["locked"] = mCelStat.locked.GetValueOrDefaultString();
                         parameters["pressure"] = mCelStat.pressure.GetValueOrDefaultString();
                         parameters["radius"] = mCelStat.radius.GetValueOrDefaultString();
                         parameters["mass"] = mCelStat.mass.GetValueOrDefaultString();

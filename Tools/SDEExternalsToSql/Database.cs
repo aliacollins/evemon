@@ -28,17 +28,6 @@ namespace EVEMon.SDEExternalsToSql
         public static UniverseDataEntities UniverseDataContext { get; set; }
 
         /// <summary>
-        /// Gets the value or default string.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="o">The o.</param>
-        /// <returns></returns>
-        internal static string GetValueOrDefaultString<T>(this T? o) where T : struct
-        {
-            return o.HasValue ? o.Value.ToString() : Null;
-        }
-
-        /// <summary>
         /// Connects the database.
         /// </summary>
         /// <param name="connectionName">Name of the connection.</param>

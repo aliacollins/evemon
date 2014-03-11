@@ -63,7 +63,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters["constellationID"] = mConsts.constellationID.ToString(CultureInfo.InvariantCulture);
                         parameters["regionID"] = mConsts.regionID.GetValueOrDefaultString();
-                        parameters["constellationName"] = String.Format("'{0}'", mConsts.constellationName.Replace("'", Database.StringEmpty));
+                        parameters["constellationName"] = mConsts.constellationName.GetTextOrDefaultString();
                         parameters["x"] = mConsts.x.GetValueOrDefaultString();
                         parameters["y"] = mConsts.y.GetValueOrDefaultString();
                         parameters["z"] = mConsts.z.GetValueOrDefaultString();

@@ -62,8 +62,8 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters["landmarkID"] = mLandmark.landmarkID.ToString(CultureInfo.InvariantCulture);
-                        parameters["landmarkName"] =  String.Format("'{0}'", mLandmark.landmarkName.Replace("'", Database.StringEmpty));
-                        parameters["description"] = String.Format("'{0}'", mLandmark.description.Replace("'", Database.StringEmpty));
+                        parameters["landmarkName"] = mLandmark.landmarkName.GetTextOrDefaultString();
+                        parameters["description"] = mLandmark.description.GetTextOrDefaultString();
                         parameters["locationID"] = mLandmark.locationID.GetValueOrDefaultString();
                         parameters["x"] = mLandmark.x.GetValueOrDefaultString();
                         parameters["y"] = mLandmark.y.GetValueOrDefaultString();
