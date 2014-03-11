@@ -118,14 +118,14 @@ namespace EVEMon.SDEExternalsToSql
         /// Gets the value or default string.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="o">The o.</param>
+        /// <param name="obj">The object.</param>
         /// <returns></returns>
-        internal static string GetValueOrDefaultString<T>(this T? o) where T : struct
+        internal static string GetValueOrDefaultString<T>(this T? obj) where T : struct
         {
-            return o.HasValue
-                ? o is Boolean
-                    ? Convert.ToByte(o.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture)
-                    : o.Value.ToString()
+            return obj.HasValue
+                ? obj is Boolean
+                    ? Convert.ToByte(obj.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture)
+                    : obj.Value.ToString()
                 : Database.Null;
         }
 
@@ -136,7 +136,9 @@ namespace EVEMon.SDEExternalsToSql
         /// <returns></returns>
         public static string GetTextOrDefaultString(this string text)
         {
-            return String.IsNullOrWhiteSpace(text) ? Database.Null : String.Format("'{0}'", text.Replace("'", Database.StringEmpty));
+            return String.IsNullOrWhiteSpace(text)
+                ? Database.Null
+                : String.Format("'{0}'", text.Replace("'", Database.StringEmpty));
         }
     }
 }
