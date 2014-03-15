@@ -278,11 +278,11 @@ namespace EVEMon.Controls
 
                 // Repaint the listbox if the previous index was different
                 m_hoveredIndex = i;
-                if (oldHoveredIndex != m_hoveredIndex)
-                {
-                    listBox.Invalidate();
-                    DisplayTooltip((NotificationEventArgs)listBox.Items[i]);
-                }
+                if (oldHoveredIndex == m_hoveredIndex)
+                    return;
+
+                listBox.Invalidate();
+                DisplayTooltip((NotificationEventArgs)listBox.Items[i]);
                 return;
             }
 

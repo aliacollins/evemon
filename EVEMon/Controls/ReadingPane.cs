@@ -220,16 +220,16 @@ namespace EVEMon.Controls
             Color textColor = ColorTranslator.FromHtml(String.Format(CultureConstants.InvariantCulture, "#{0}", color));
             bool textColorIsShadeOfWhite = (textColor.R == textColor.G && textColor.G == textColor.B);
             bool backColorIsShadeOfWhite = (backColor.R == backColor.G && backColor.G == backColor.B);
-            if (textColorIsShadeOfWhite && backColorIsShadeOfWhite)
-            {
-                const int ContrastDiff = 64;
-                int colorValue = (textColor.R <= backColor.R - ContrastDiff) ? textColor.R : 0;
-                string colorElement = Convert.ToString(colorValue, 16);
-                color = String.Format(CultureConstants.InvariantCulture, "{0}{0}{0}",
-                                      (colorElement.Length == 1
-                                           ? String.Format(CultureConstants.InvariantCulture, "0{0}", colorElement)
-                                           : colorElement));
-            }
+            if (!textColorIsShadeOfWhite || !backColorIsShadeOfWhite)
+                return color;
+
+            const int ContrastDiff = 64;
+            int colorValue = (textColor.R <= backColor.R - ContrastDiff) ? textColor.R : 0;
+            string colorElement = Convert.ToString(colorValue, 16);
+            color = String.Format(CultureConstants.InvariantCulture, "{0}{0}{0}",
+                (colorElement.Length == 1
+                    ? String.Format(CultureConstants.InvariantCulture, "0{0}", colorElement)
+                    : colorElement));
             return color;
         }
 

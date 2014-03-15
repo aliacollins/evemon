@@ -106,13 +106,11 @@ namespace EVEMon
             get
             {
                 InstanceManager im = InstanceManager.Instance;
-                if (!im.CreatedNew)
-                {
-                    im.Signal();
-                    return false;
-                }
+                if (im.CreatedNew)
+                    return true;
 
-                return true;
+                im.Signal();
+                return false;
             }
         }
 

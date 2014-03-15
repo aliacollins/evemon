@@ -290,11 +290,11 @@ namespace EVEMon.Common
 
             // Update state
             JobState state = GetState(src);
-            if (State != JobState.Paused && state != State)
-            {
-                State = state;
-                LastStateChange = DateTime.UtcNow;
-            }
+            if (State == JobState.Paused || state == State)
+                return true;
+
+            State = state;
+            LastStateChange = DateTime.UtcNow;
 
             return true;
         }
@@ -383,25 +383,25 @@ namespace EVEMon.Common
         /// <returns>State of the seriallzable job.</returns>
         private static JobState GetState(SerializableJobListItem src)
         {
-            if (src.Completed == (int)JobState.Delivered)
+            if (src.Completed != (int)JobState.Delivered)
+                return JobState.Active;
+
+            switch ((CCPJobCompletedStatus)src.CompletedStatus)
             {
-                switch ((CCPJobCompletedStatus)src.CompletedStatus)
-                {
-                        // Canceled States
-                    case CCPJobCompletedStatus.Aborted:
-                    case CCPJobCompletedStatus.GM_Aborted:
-                        return JobState.Canceled;
-                        // Failed States
-                    case CCPJobCompletedStatus.Inflight_Unanchored:
-                    case CCPJobCompletedStatus.Destroyed:
-                    case CCPJobCompletedStatus.Failed:
-                        return JobState.Failed;
-                        // Delivered States
-                    case CCPJobCompletedStatus.Delivered:
-                        return JobState.Delivered;
-                    default:
-                        throw new NotImplementedException();
-                }
+                    // Canceled States
+                case CCPJobCompletedStatus.Aborted:
+                case CCPJobCompletedStatus.GM_Aborted:
+                    return JobState.Canceled;
+                    // Failed States
+                case CCPJobCompletedStatus.Inflight_Unanchored:
+                case CCPJobCompletedStatus.Destroyed:
+                case CCPJobCompletedStatus.Failed:
+                    return JobState.Failed;
+                    // Delivered States
+                case CCPJobCompletedStatus.Delivered:
+                    return JobState.Delivered;
+                default:
+                    throw new NotImplementedException();
             }
 
             return JobState.Active;
@@ -413,15 +413,13 @@ namespace EVEMon.Common
         /// <returns>State of an active job.</returns>
         private ActiveJobState GetActiveJobState()
         {
-            if (State == JobState.Active)
-            {
-                if (BeginProductionTime > DateTime.UtcNow)
-                    return ActiveJobState.Pending;
+            if (State != JobState.Active)
+                return ActiveJobState.None;
 
-                return EndProductionTime > DateTime.UtcNow ? ActiveJobState.InProgress : ActiveJobState.Ready;
-            }
+            if (BeginProductionTime > DateTime.UtcNow)
+                return ActiveJobState.Pending;
 
-            return ActiveJobState.None;
+            return EndProductionTime > DateTime.UtcNow ? ActiveJobState.InProgress : ActiveJobState.Ready;
         }
 
         #endregion

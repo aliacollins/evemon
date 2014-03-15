@@ -148,14 +148,12 @@ namespace EVEMon.Common.ExternalCalendar
 
             // If the appointment falls outside the two reminders: if the appointment is before the early reminder, set 
             // the late reminder to the day before....
-            if (StartDate < EarlyReminder)
-            {
-                DateTime lateRem = LateReminder;
-                lateRem = lateRem.AddDays(-1);
-                return lateRem;
-            }
+            if (StartDate >= EarlyReminder)
+                return LateReminder;
 
-            return LateReminder;
+            DateTime lateRem = LateReminder;
+            lateRem = lateRem.AddDays(-1);
+            return lateRem;
         }
 
         #endregion

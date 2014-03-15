@@ -121,13 +121,11 @@ namespace EVEMon.Common
         {
             T cast = obj as T;
 
-            if (cast == null)
-            {
-                message = string.IsNullOrEmpty(message) ? string.Concat(obj, " must implement ", typeof(T)) : message;
-                throw new InvalidCastException(message);
-            }
+            if (cast != null)
+                return cast;
 
-            return cast;
+            message = string.IsNullOrEmpty(message) ? string.Concat(obj, " must implement ", typeof(T)) : message;
+            throw new InvalidCastException(message);
         }
     }
 }

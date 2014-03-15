@@ -110,20 +110,17 @@ namespace EVEMon.Common
             DateTime previousUpdateTime = updateTime.Subtract(period);
 
             // File is already downloaded ?
-            if (File.Exists(file.FullName))
-            {
-                // Is it up to date ?
-                // (file is updated after the update time
-                // or was updated between the previous day update time
-                // and today's update time and its not time to update yet) ?
-                if (file.LastWriteTimeUtc > updateTime
-                    || (file.LastWriteTimeUtc > previousUpdateTime &&
-                        file.LastWriteTimeUtc < updateTime &&
-                        DateTime.UtcNow < updateTime))
-                    return true;
-            }
+            if (!File.Exists(file.FullName))
+                return false;
 
-            return false;
+            // Is it up to date ?
+            // (file is updated after the update time
+            // or was updated between the previous day update time
+            // and today's update time and its not time to update yet) ?
+            return file.LastWriteTimeUtc > updateTime
+                   || (file.LastWriteTimeUtc > previousUpdateTime &&
+                       file.LastWriteTimeUtc < updateTime &&
+                       DateTime.UtcNow < updateTime);
         }
     }
 }

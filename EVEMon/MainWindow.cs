@@ -2118,11 +2118,11 @@ namespace EVEMon
             // Not using the IGB server? stop it if it is running
             if (!Settings.IGB.IGBServerEnabled)
             {
-                if (m_igbServer != null)
-                {
-                    m_igbServer.Stop();
-                    m_igbServer = null;
-                }
+                if (m_igbServer == null)
+                    return;
+
+                m_igbServer.Stop();
+                m_igbServer = null;
 
                 return;
             }

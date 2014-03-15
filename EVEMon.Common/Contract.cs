@@ -374,21 +374,21 @@ namespace EVEMon.Common
 
             // Update if modified
             ContractState state = GetState(src);
-            if (state != m_state || NeedsAttention)
+            if (state == m_state && !NeedsAttention)
+                return true;
+
+            if (state != m_state || Overdue)
             {
-                if (state != m_state || Overdue)
-                {
-                    // Update state
-                    m_state = state;
+                // Update state
+                m_state = state;
 
-                    // Update modified info
-                    UpdateContractInfo(src);
-                }
-
-                // Should we notify it to the user ?
-                if (NeedsAttention || state == ContractState.Finished)
-                    endedContracts.Add(this);
+                // Update modified info
+                UpdateContractInfo(src);
             }
+
+            // Should we notify it to the user ?
+            if (NeedsAttention || state == ContractState.Finished)
+                endedContracts.Add(this);
 
             return true;
         }

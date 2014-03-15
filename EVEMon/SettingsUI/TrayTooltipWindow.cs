@@ -159,44 +159,42 @@ namespace EVEMon.SettingsUI
             }
 
             CCPCharacter ccpCharacter = character as CCPCharacter;
-            if (ccpCharacter != null && (ccpCharacter.IsTraining || ccpCharacter.SkillQueue.IsPaused))
-            {
-                int level;
-                switch (m.Groups[1].Value[0])
-                {
-                    case 'r':
-                        return String.Format(CultureConstants.DefaultCulture, "%{0}r",
-                                             character.CharacterID);
-                    case 's':
-                        return character.CurrentlyTrainingSkill.SkillName;
-                    case 'd':
-                        return character.CurrentlyTrainingSkill.EndTime.ToString("g", CultureConstants.DefaultCulture);
-                    case 'c':
-                        level = character.CurrentlyTrainingSkill.Level - 1;
-                        break;
-                    case 't':
-                        level = character.CurrentlyTrainingSkill.Level;
-                        break;
-                    default:
-                        return String.Empty;
-                }
+            if (ccpCharacter == null || (!ccpCharacter.IsTraining && !ccpCharacter.SkillQueue.IsPaused))
+                return String.Empty;
 
-                // Second group
-                if (level >= 0 && m.Groups[1].Value.Length > 1)
-                {
-                    switch (m.Groups[1].Value[1])
-                    {
-                        case 'i':
-                            return level.ToString(CultureConstants.DefaultCulture);
-                        case 'r':
-                            return Skill.GetRomanFromInt(level);
-                        default:
-                            return String.Empty;
-                    }
-                }
+            int level;
+            switch (m.Groups[1].Value[0])
+            {
+                case 'r':
+                    return String.Format(CultureConstants.DefaultCulture, "%{0}r",
+                        character.CharacterID);
+                case 's':
+                    return character.CurrentlyTrainingSkill.SkillName;
+                case 'd':
+                    return character.CurrentlyTrainingSkill.EndTime.ToString("g", CultureConstants.DefaultCulture);
+                case 'c':
+                    level = character.CurrentlyTrainingSkill.Level - 1;
+                    break;
+                case 't':
+                    level = character.CurrentlyTrainingSkill.Level;
+                    break;
+                default:
+                    return String.Empty;
             }
 
-            return String.Empty;
+            // Second group
+            if (level < 0 || m.Groups[1].Value.Length <= 1)
+                return String.Empty;
+
+            switch (m.Groups[1].Value[1])
+            {
+                case 'i':
+                    return level.ToString(CultureConstants.DefaultCulture);
+                case 'r':
+                    return Skill.GetRomanFromInt(level);
+                default:
+                    return String.Empty;
+            }
         }
 
         #endregion

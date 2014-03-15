@@ -160,15 +160,15 @@ namespace EVEMon.Common
             }
 
             APIKey apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterSheet);
-            if (apiKey != null)
-            {
-                builder.AppendFormat(CultureConstants.InvariantCulture, "KeyID={0}{1}", apiKey.ID,
-                                     Environment.NewLine);
-                builder.AppendFormat(CultureConstants.InvariantCulture, "VCode={0}{1}", apiKey.VerificationCode,
-                                     Environment.NewLine);
+            if (apiKey == null)
+                return builder.ToString();
 
-                builder.AppendFormat(CultureConstants.InvariantCulture, "CharID={0}", character.CharacterID);
-            }
+            builder.AppendFormat(CultureConstants.InvariantCulture, "KeyID={0}{1}", apiKey.ID,
+                Environment.NewLine);
+            builder.AppendFormat(CultureConstants.InvariantCulture, "VCode={0}{1}", apiKey.VerificationCode,
+                Environment.NewLine);
+
+            builder.AppendFormat(CultureConstants.InvariantCulture, "CharID={0}", character.CharacterID);
 
             return builder.ToString();
         }

@@ -217,11 +217,11 @@ namespace EVEMon.Common.Controls
 
             TabPage nextPage = GetTabPageAt(new Point(rect.Right + 1, pt.Y));
 
-            if (nextPage != null && nextPage != draggedPage)
-            {
-                onLeft = true;
-                newIndex++;
-            }
+            if (nextPage == null || nextPage == draggedPage)
+                return newIndex;
+
+            onLeft = true;
+            newIndex++;
 
             return newIndex;
         }

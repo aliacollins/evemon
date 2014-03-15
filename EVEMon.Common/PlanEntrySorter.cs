@@ -309,13 +309,13 @@ namespace EVEMon.Common
         private static TimeSpan GetSkillGroupDuration(StaticSkillGroup group, IEnumerable<PlanEntry> entries,
                                                       IDictionary<StaticSkillGroup, TimeSpan> skillGroupsDurations)
         {
-            if (!skillGroupsDurations.ContainsKey(group))
-            {
-                TimeSpan time = entries.Where(x => x.Skill.Group == group).Aggregate(TimeSpan.Zero,
-                                                                                     (current, entry) =>
-                                                                                     current + entry.TrainingTime);
-                skillGroupsDurations[group] = time;
-            }
+            if (skillGroupsDurations.ContainsKey(group))
+                return skillGroupsDurations[group];
+
+            TimeSpan time = entries.Where(x => x.Skill.Group == group).Aggregate(TimeSpan.Zero,
+                (current, entry) =>
+                    current + entry.TrainingTime);
+            skillGroupsDurations[group] = time;
 
             return skillGroupsDurations[group];
         }

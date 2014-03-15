@@ -155,16 +155,16 @@ namespace EVEMon.Common
         {
             get
             {
-                if (s_defaultEvePortraitCacheFolders == null || !s_defaultEvePortraitCacheFolders.Any())
-                {
-                    s_defaultEvePortraitCacheFolders = Settings.PortableEveInstallations.EVEClients.Select(
-                        eveClientInstallation => String.Format(
-                            CultureConstants.InvariantCulture, "{1}{0}cache{0}Pictures{0}Characters",
-                            Path.DirectorySeparatorChar, eveClientInstallation.Path)).Where(Directory.Exists);
+                if (s_defaultEvePortraitCacheFolders != null && s_defaultEvePortraitCacheFolders.Any())
+                    return s_defaultEvePortraitCacheFolders;
 
-                    if (s_defaultEvePortraitCacheFolders.Any())
-                        EvePortraitCacheFolders = s_defaultEvePortraitCacheFolders;
-                }
+                s_defaultEvePortraitCacheFolders = Settings.PortableEveInstallations.EVEClients.Select(
+                    eveClientInstallation => String.Format(
+                        CultureConstants.InvariantCulture, "{1}{0}cache{0}Pictures{0}Characters",
+                        Path.DirectorySeparatorChar, eveClientInstallation.Path)).Where(Directory.Exists).ToList();
+
+                if (s_defaultEvePortraitCacheFolders.Any())
+                    EvePortraitCacheFolders = s_defaultEvePortraitCacheFolders;
 
                 return s_defaultEvePortraitCacheFolders;
             }

@@ -228,18 +228,18 @@ namespace EVEMon.Sales
             else
             {
                 IDictionary<string, Decimal> prices = e.Result as IDictionary<string, Decimal>;
-                if (prices != null)
-                {
-                    foreach (MineralTile mt in Tiles.Where(mt => prices.ContainsKey(mt.MineralName)))
-                    {
-                        mt.PricePerUnit = prices[mt.MineralName];
-                    }
+                if (prices == null)
+                    return;
 
-                    tslCourtesy.Text = String.Format(CultureConstants.DefaultCulture, "Mineral Prices Courtesy of {0}",
-                                                     MineralDataRequest.GetCourtesyText(m_source));
-                    m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(m_source).AbsoluteUri;
-                    tslCourtesy.Visible = true;
+                foreach (MineralTile mt in Tiles.Where(mt => prices.ContainsKey(mt.MineralName)))
+                {
+                    mt.PricePerUnit = prices[mt.MineralName];
                 }
+
+                tslCourtesy.Text = String.Format(CultureConstants.DefaultCulture, "Mineral Prices Courtesy of {0}",
+                    MineralDataRequest.GetCourtesyText(m_source));
+                m_courtesyUrl = MineralDataRequest.GetCourtesyUrl(m_source).AbsoluteUri;
+                tslCourtesy.Visible = true;
             }
         }
 

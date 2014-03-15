@@ -195,12 +195,12 @@ namespace EVEMon.Common.Collections
         public bool Remove(T item)
         {
             OnRemoving(item);
-            if (m_items.Remove(item))
-            {
-                OnChanged();
-                return true;
-            }
-            return false;
+
+            if (!m_items.Remove(item))
+                return false;
+
+            OnChanged();
+            return true;
         }
 
         /// <summary>

@@ -303,13 +303,14 @@ namespace EVEMon.Common.IgbService
 
             // If the host string already contains a port then do nothing
             // (IGB shouldn't really do this but it is!)
-            if (!hostPort.Contains(":"))
-            {
-                // Now cater for when/if CCP fix the IGB to not send port as part of the host header
-                if (IgbServerPort != 80)
-                    // non-standard port - let's add it
-                    hostPort = String.Format(CultureConstants.InvariantCulture, "{0}:{1}", hostPort, IgbServerPort);
-            }
+            if (hostPort.Contains(":"))
+                return hostPort;
+
+            // Now cater for when/if CCP fix the IGB to not send port as part of the host header
+            if (IgbServerPort != 80)
+                // non-standard port - let's add it
+                hostPort = String.Format(CultureConstants.InvariantCulture, "{0}:{1}", hostPort, IgbServerPort);
+
             return hostPort;
         }
 

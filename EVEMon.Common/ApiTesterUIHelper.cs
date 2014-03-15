@@ -232,29 +232,29 @@ namespace EVEMon.Common
                 return SupplementalAPIMethodsPostData();
 
             // Post data for non account generic API methods
-            if (!APIMethods.NonAccountGenericMethods.Contains(SelectedItem))
+            if (APIMethods.NonAccountGenericMethods.Contains(SelectedItem))
+                return String.Empty;
+
+            if (UseInternalInfo)
             {
-                if (UseInternalInfo)
-                {
-                    if (SelectedCharacter == null)
-                        return String.Empty;
+                if (SelectedCharacter == null)
+                    return String.Empty;
 
-                    // Find associated API key 
-                    Character character = (Character)SelectedCharacter;
-                    APIKey apiKey = character.Identity.APIKeys.FirstOrDefault(key => key.IsCharacterOrAccountType);
+                // Find associated API key 
+                Character character = (Character)SelectedCharacter;
+                APIKey apiKey = character.Identity.APIKeys.FirstOrDefault(key => key.IsCharacterOrAccountType);
 
-                    // No API key found else generic post data
-                    return apiKey == null
-                               ? NoAPIKeyWithAccess
-                               : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                                               apiKey.ID, apiKey.VerificationCode);
-                }
-
-                // Generic post data
-                if (UseExternalInfo)
-                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
-                                         KeyID, VCode);
+                // No API key found else generic post data
+                return apiKey == null
+                    ? NoAPIKeyWithAccess
+                    : String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
+                        apiKey.ID, apiKey.VerificationCode);
             }
+
+            // Generic post data
+            if (UseExternalInfo)
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
+                    KeyID, VCode);
 
             return String.Empty;
         }

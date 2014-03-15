@@ -58,11 +58,11 @@ namespace EVEMon.Common
         {
             if (value)
             {
-                if (!Items.Contains(character))
-                {
-                    Items.Add(character);
-                    EveMonClient.OnMonitoredCharactersChanged();
-                }
+                if (Items.Contains(character))
+                    return;
+
+                Items.Add(character);
+                EveMonClient.OnMonitoredCharactersChanged();
                 return;
             }
 

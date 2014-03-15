@@ -961,21 +961,21 @@ namespace EVEMon.CharacterMonitoring
             Int64 totalSP = group.Sum(x => x.SkillPoints);
             int known = group.Count(x => x.IsKnown);
 
-            // If the group is not completed yet
-            if (totalValidSP < maxSP)
+            // The group has been completed !
+            if (totalValidSP >= maxSP)
             {
-                double percentDonePoints = (1.0 * Math.Min(totalSP, maxSP)) / maxSP;
-                double percentDoneSkills = (1.0 * Math.Min(known, maxKnown)) / maxKnown;
-
                 return String.Format(CultureConstants.DefaultCulture,
-                                     "Points Completed: {0:N0} of {1:N0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
-                                     totalSP, maxSP, percentDonePoints, known, maxKnown, percentDoneSkills);
+                    "Skill Group completed: {0:N0}/{1:N0} (100%)\nSkills: {2}/{3} (100%)",
+                    totalSP, maxSP, known, maxKnown);
             }
 
-            // The group has been completed !
+            // If the group is not completed yet
+            double percentDonePoints = (1.0 * Math.Min(totalSP, maxSP)) / maxSP;
+            double percentDoneSkills = (1.0 * Math.Min(known, maxKnown)) / maxKnown;
+
             return String.Format(CultureConstants.DefaultCulture,
-                                 "Skill Group completed: {0:N0}/{1:N0} (100%)\nSkills: {2}/{3} (100%)",
-                                 totalSP, maxSP, known, maxKnown);
+                "Points Completed: {0:N0} of {1:N0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
+                totalSP, maxSP, percentDonePoints, known, maxKnown, percentDoneSkills);
         }
 
         /// <summary>

@@ -369,15 +369,12 @@ namespace EVEMon.Common.Controls
         {
             using (EveFolderWindow f = new EveFolderWindow())
             {
-                if (f.ShowDialog() == DialogResult.OK)
-                {
-                    EveMonClient.EvePortraitCacheFolders = f.SpecifiedEVEPortraitCacheFolder;
-                    return true;
-                }
+                if (f.ShowDialog() != DialogResult.OK)
+                    return false;
 
+                EveMonClient.EvePortraitCacheFolders = f.SpecifiedEVEPortraitCacheFolder;
+                return true;
             }
-
-            return false;
         }
 
         #endregion

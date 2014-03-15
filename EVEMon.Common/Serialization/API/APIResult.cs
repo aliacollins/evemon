@@ -128,19 +128,19 @@ namespace EVEMon.Common.Serialization.API
                                          CCPError.IsEVEBackendDatabaseDisabled ||
                                          CCPError.IsWebSiteDatabaseDisabled))
                 {
-                    if (!EveMonClient.EVEDatabaseDisabled)
-                    {
-                        EveMonClient.Notifications.NotifyEVEDatabaseError(this);
-                        EveMonClient.EVEDatabaseDisabled = true;
-                    }
+                    if (EveMonClient.EVEDatabaseDisabled)
+                        return true;
+
+                    EveMonClient.Notifications.NotifyEVEDatabaseError(this);
+                    EveMonClient.EVEDatabaseDisabled = true;
                     return true;
                 }
 
-                if (EveMonClient.EVEDatabaseDisabled)
-                {
-                    EveMonClient.Notifications.InvalidateAPIError();
-                    EveMonClient.EVEDatabaseDisabled = false;
-                }
+                if (!EveMonClient.EVEDatabaseDisabled)
+                    return false;
+
+                EveMonClient.Notifications.InvalidateAPIError();
+                EveMonClient.EVEDatabaseDisabled = false;
                 return false;
             }
         }

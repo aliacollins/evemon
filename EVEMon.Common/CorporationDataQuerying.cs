@@ -211,8 +211,11 @@ namespace EVEMon.Common
             // Query the contract bids
             QueryCorporationContractBids();
 
-            result.Result.Contracts.ToList().ForEach(x => x.IssuedFor = IssuedFor.Corporation);
-            result.Result.Contracts.ToList().ForEach(x => x.APIMethod = APICorporationMethods.CorporationContracts);
+            result.Result.Contracts.ToList().ForEach(x =>
+            {
+                x.IssuedFor = IssuedFor.Corporation;
+                x.APIMethod = APICorporationMethods.CorporationContracts;
+            });
 
             // Import the data
             List<Contract> endedContracts = new List<Contract>();

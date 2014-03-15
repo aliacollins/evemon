@@ -1553,22 +1553,22 @@ namespace EVEMon.CharacterMonitoring
             CCPCharacter ccpCharacter = (CCPCharacter)m_character;
 
             List<IQueryMonitor> monitors = new List<IQueryMonitor>();
-            if (page != null)
-            {
-                if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
-                {
-                    APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
-                    if (ccpCharacter.QueryMonitors[method] != null)
-                        monitors.Add(ccpCharacter.QueryMonitors[method]);
-                }
+            if (page == null)
+                return monitors;
 
-                string corpMethod = String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag);
-                if (Enum.IsDefined(typeof(APICorporationMethods), corpMethod))
-                {
-                    APICorporationMethods method = (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods), corpMethod);
-                    if (ccpCharacter.QueryMonitors[method] != null)
-                        monitors.Add(ccpCharacter.QueryMonitors[method]);
-                }
+            if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
+            {
+                APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
+                if (ccpCharacter.QueryMonitors[method] != null)
+                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+            }
+
+            string corpMethod = String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag);
+            if (Enum.IsDefined(typeof(APICorporationMethods), corpMethod))
+            {
+                APICorporationMethods method = (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods), corpMethod);
+                if (ccpCharacter.QueryMonitors[method] != null)
+                    monitors.Add(ccpCharacter.QueryMonitors[method]);
             }
 
             return monitors;

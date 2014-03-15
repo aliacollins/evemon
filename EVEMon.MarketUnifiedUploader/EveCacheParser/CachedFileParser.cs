@@ -179,66 +179,66 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser
             // Initialize the list with the calculated unpacked size
             List<byte> buffer = new List<byte>(unpackedDataSize);
 
-            if (data.Any())
+            if (!data.Any())
+                return buffer.ToArray();
+
+            int i = 0;
+            while (i < data.Count)
             {
-                int i = 0;
-                while (i < data.Count)
+                unchecked
                 {
-                    unchecked
+                    byte b = data[i++];
+                    byte tlen = (byte)((byte)(b << 5) >> 5);
+                    bool tzero = (byte)((byte)(b << 4) >> 7) == 1;
+                    byte blen = (byte)((byte)(b << 1) >> 5);
+                    bool bzero = (byte)(b >> 7) == 1;
+
+                    if (tzero)
                     {
-                        byte b = data[i++];
-                        byte tlen = (byte)((byte)(b << 5) >> 5);
-                        bool tzero = (byte)((byte)(b << 4) >> 7) == 1;
-                        byte blen = (byte)((byte)(b << 1) >> 5);
-                        bool bzero = (byte)(b >> 7) == 1;
-
-                        if (tzero)
+                        byte count = (byte)(tlen + 1);
+                        for (; count > 0; count--)
                         {
-                            byte count = (byte)(tlen + 1);
-                            for (; count > 0; count--)
-                            {
-                                buffer.Add(0);
-                            }
+                            buffer.Add(0);
                         }
-                        else
+                    }
+                    else
+                    {
+                        byte count = (byte)(8 - tlen);
+                        for (; count > 0; count--)
                         {
-                            byte count = (byte)(8 - tlen);
-                            for (; count > 0; count--)
-                            {
-                                buffer.Add(data[i++]);
-                            }
+                            buffer.Add(data[i++]);
                         }
+                    }
 
-                        if (bzero)
+                    if (bzero)
+                    {
+                        if (i == data.Count)
+                            break;
+
+                        byte count = (byte)(blen + 1);
+                        for (; count > 0; count--)
                         {
-                            if (i == data.Count)
-                                break;
-
-                            byte count = (byte)(blen + 1);
-                            for (; count > 0; count--)
-                            {
-                                buffer.Add(0);
-                            }
+                            buffer.Add(0);
                         }
-                        else
-                        {
-                            if (i == data.Count)
-                                break;
+                    }
+                    else
+                    {
+                        if (i == data.Count)
+                            break;
 
-                            byte count = (byte)(8 - blen);
-                            for (; count > 0; count--)
-                            {
-                                buffer.Add(data[i++]);
-                            }
+                        byte count = (byte)(8 - blen);
+                        for (; count > 0; count--)
+                        {
+                            buffer.Add(data[i++]);
                         }
                     }
                 }
+            }
 
-                // Ensure that the buffer has enough data
-                while (buffer.Count < unpackedDataSize)
-                {
-                    buffer.Add(0);
-                }
+            // Ensure that the buffer has enough data
+            while (buffer.Count < unpackedDataSize)
+            {
+                buffer.Add(0);
             }
 
             return buffer.ToArray();

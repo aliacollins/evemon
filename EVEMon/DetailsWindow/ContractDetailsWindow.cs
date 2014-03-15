@@ -1092,11 +1092,11 @@ namespace EVEMon.DetailsWindow
         {
             if (RoutePanelParent.Visible)
             {
-                if (!m_route.SequenceEqual(m_oldRoute))
-                {
-                    m_oldRoute = m_route;
-                    RoutePanel.Invalidate();
-                }
+                if (m_route.SequenceEqual(m_oldRoute))
+                    return;
+
+                m_oldRoute = m_route;
+                RoutePanel.Invalidate();
 
                 return;
             }

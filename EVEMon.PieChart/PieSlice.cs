@@ -1093,39 +1093,39 @@ namespace EVEMon.PieChart
             ArrayList peripherySurfaceBounds = new ArrayList();
             // outer periphery side is visible only when startAngle or endAngle 
             // is between 0 and 180 degrees
-            if (!(Math.Abs(SweepAngle) < float.Epsilon || (StartAngle >= 180 && StartAngle + SweepAngle <= 360)))
+            if (Math.Abs(SweepAngle) < float.Epsilon || (StartAngle >= 180 && StartAngle + SweepAngle <= 360))
+                return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
+
+            // draws the periphery from start angle to the end angle or left
+            // edge, whichever comes first
+            PointF x1 = new PointF(m_pointStart.X, m_pointStart.Y);
+            float fi2 = EndAngle;
+            PointF x2 = new PointF(m_pointEnd.X, m_pointEnd.Y);
+            if (StartAngle < 180)
             {
-                // draws the periphery from start angle to the end angle or left
-                // edge, whichever comes first
-                if (StartAngle < 180)
+                if (StartAngle + SweepAngle > 180)
                 {
-                    float fi1 = StartAngle;
-                    PointF x1 = new PointF(m_pointStart.X, m_pointStart.Y);
-                    float fi2 = EndAngle;
-                    PointF x2 = new PointF(m_pointEnd.X, m_pointEnd.Y);
-                    if (StartAngle + SweepAngle > 180)
-                    {
-                        fi2 = 180;
-                        x2.X = BoundingRectangle.X;
-                        x2.Y = m_center.Y;
-                    }
-                    peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
+                    fi2 = 180;
+                    x2.X = BoundingRectangle.X;
+                    x2.Y = m_center.Y;
                 }
-                // if lateral surface is visible from the right edge 
-                if (StartAngle + SweepAngle > 360)
-                {
-                    PointF x1 = new PointF(BoundingRectangle.Right, m_center.Y);
-                    float fi2 = EndAngle;
-                    PointF x2 = new PointF(m_pointEnd.X, m_pointEnd.Y);
-                    if (fi2 > 180)
-                    {
-                        fi2 = 180;
-                        x2.X = BoundingRectangle.Left;
-                        x2.Y = m_center.Y;
-                    }
-                    peripherySurfaceBounds.Add(new PeripherySurfaceBounds(0, fi2, x1, x2));
-                }
+                peripherySurfaceBounds.Add(new PeripherySurfaceBounds(StartAngle, fi2, x1, x2));
             }
+
+            // if lateral surface is visible from the right edge 
+            if (!(StartAngle + SweepAngle > 360))
+                return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
+
+            x1 = new PointF(BoundingRectangle.Right, m_center.Y);
+            fi2 = EndAngle;
+            x2 = new PointF(m_pointEnd.X, m_pointEnd.Y);
+            if (fi2 > 180)
+            {
+                fi2 = 180;
+                x2.X = BoundingRectangle.Left;
+                x2.Y = m_center.Y;
+            }
+            peripherySurfaceBounds.Add(new PeripherySurfaceBounds(0, fi2, x1, x2));
             return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
         }
 
@@ -1140,41 +1140,42 @@ namespace EVEMon.PieChart
             ArrayList peripherySurfaceBounds = new ArrayList();
             // outer periphery side is not visible when startAngle or endAngle 
             // is between 180 and 360 degrees
-            if (!(Math.Abs(SweepAngle) < float.Epsilon || (StartAngle >= 0 && StartAngle + SweepAngle <= 180)))
+            if (Math.Abs(SweepAngle) < float.Epsilon || (StartAngle >= 0 && StartAngle + SweepAngle <= 180))
+                return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
+
+            // draws the periphery from start angle to the end angle or right
+            // edge, whichever comes first
+            if (!(StartAngle + SweepAngle > 180))
+                return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
+
+            float fi1 = StartAngle;
+            PointF x1 = new PointF(m_pointStart.X, m_pointStart.Y);
+            float fi2 = StartAngle + SweepAngle;
+            PointF x2 = new PointF(m_pointEnd.X, m_pointEnd.Y);
+            if (fi1 < 180)
             {
-                // draws the periphery from start angle to the end angle or right
-                // edge, whichever comes first
-                if (StartAngle + SweepAngle > 180)
-                {
-                    float fi1 = StartAngle;
-                    PointF x1 = new PointF(m_pointStart.X, m_pointStart.Y);
-                    float fi2 = StartAngle + SweepAngle;
-                    PointF x2 = new PointF(m_pointEnd.X, m_pointEnd.Y);
-                    if (fi1 < 180)
-                    {
-                        fi1 = 180;
-                        x1.X = BoundingRectangle.Left;
-                        x1.Y = m_center.Y;
-                    }
-                    if (fi2 > 360)
-                    {
-                        fi2 = 360;
-                        x2.X = BoundingRectangle.Right;
-                        x2.Y = m_center.Y;
-                    }
-                    peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
-                    // if pie is crossing 360 & 180 deg. boundary, we have to 
-                    // invisible peripheries
-                    if (StartAngle < 360 && StartAngle + SweepAngle > 540)
-                    {
-                        fi1 = 180;
-                        x1 = new PointF(BoundingRectangle.Left, m_center.Y);
-                        fi2 = EndAngle;
-                        x2 = new PointF(m_pointEnd.X, m_pointEnd.Y);
-                        peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
-                    }
-                }
+                fi1 = 180;
+                x1.X = BoundingRectangle.Left;
+                x1.Y = m_center.Y;
             }
+            if (fi2 > 360)
+            {
+                fi2 = 360;
+                x2.X = BoundingRectangle.Right;
+                x2.Y = m_center.Y;
+            }
+            peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
+
+            // if pie is crossing 360 & 180 deg. boundary, we have to 
+            // invisible peripheries
+            if (!(StartAngle < 360) || !(StartAngle + SweepAngle > 540))
+                return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
+
+            fi1 = 180;
+            x1 = new PointF(BoundingRectangle.Left, m_center.Y);
+            fi2 = EndAngle;
+            x2 = new PointF(m_pointEnd.X, m_pointEnd.Y);
+            peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
             return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
         }
 
@@ -1283,14 +1284,13 @@ namespace EVEMon.PieChart
                 angle += (2 * Math.PI);
             double angleDegrees = angle * 180 / Math.PI;
             // point is inside the pie slice only if between start and end angle
-            if ((angleDegrees >= startAngle && angleDegrees <= (startAngle + sweepAngle)) ||
-                (startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle)))
-            {
-                // distance of the point from the ellipse centre
-                double r = Math.Sqrt(y * y + x * x);
-                return GetEllipseRadius(angle) > r;
-            }
-            return false;
+            if ((!(angleDegrees >= startAngle) || !(angleDegrees <= (startAngle + sweepAngle))) &&
+                ((!(startAngle + sweepAngle > 360)) || (!((angleDegrees + 360) <= (startAngle + sweepAngle)))))
+                return false;
+
+            // distance of the point from the ellipse centre
+            double r = Math.Sqrt(y * y + x * x);
+            return GetEllipseRadius(angle) > r;
         }
 
         /// <summary>

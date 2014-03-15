@@ -258,11 +258,11 @@ namespace EVEMon.Common
             if (!m_forceUpdate)
             {
                 // If not due time yet, quits
-                if (NextUpdate > DateTime.UtcNow)
-                {
-                    Status = QueryStatus.Pending;
+                if (NextUpdate <= DateTime.UtcNow)
                     return;
-                }
+
+                Status = QueryStatus.Pending;
+                return;
             }
 
             // Starts the update
