@@ -144,7 +144,7 @@ namespace EVEMon.Common
                 s_listOfIDsToQuery = s_listOfIDs;
 
             // Avoid querying an already querying id
-            IEnumerable<string> idsToQuery = s_listOfIDsToQuery.Where(id => !s_queriedIDs.Contains(id));
+            IList<string> idsToQuery = s_listOfIDsToQuery.Where(id => !s_queriedIDs.Contains(id)).ToList();
             if (idsToQuery.Any())
                 QueryAPICharacterName(idsToQuery);
 
@@ -171,7 +171,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Queries the API Character Name.
         /// </summary>
-        private static void QueryAPICharacterName(IEnumerable<string> idsToQuery)
+        private static void QueryAPICharacterName(IList<string> idsToQuery)
         {
             string ids = string.Join(",", idsToQuery);
 

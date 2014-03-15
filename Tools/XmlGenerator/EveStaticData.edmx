@@ -183,14 +183,6 @@
           <Property Name="description" Type="nvarchar" MaxLength="1000" />
           <Property Name="leaderType" Type="nvarchar" MaxLength="100" />
         </EntityType>
-        <EntityType Name="crtCategories">
-          <Key>
-            <PropertyRef Name="categoryID" />
-          </Key>
-          <Property Name="categoryID" Type="tinyint" Nullable="false" />
-          <Property Name="description" Type="nvarchar" MaxLength="500" />
-          <Property Name="categoryName" Type="nvarchar" MaxLength="256" />
-        </EntityType>
         <EntityType Name="crtCertificates">
           <Key>
             <PropertyRef Name="certificateID" />
@@ -1036,7 +1028,6 @@
           <EntitySet Name="crpNPCCorporations" EntityType="Self.crpNPCCorporations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="crpNPCCorporationTrades" EntityType="Self.crpNPCCorporationTrades" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="crpNPCDivisions" EntityType="Self.crpNPCDivisions" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="crtCategories" EntityType="Self.crtCategories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="crtCertificates" EntityType="Self.crtCertificates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="crtClasses" EntityType="Self.crtClasses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="crtRecommendations" EntityType="Self.crtRecommendations" Schema="dbo" store:Type="Tables" />
@@ -1287,14 +1278,6 @@
           <Property Name="divisionName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="leaderType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="crtCategories">
-          <Key>
-            <PropertyRef Name="categoryID" />
-          </Key>
-          <Property Name="categoryID" Type="Byte" Nullable="false" />
-          <Property Name="description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="categoryName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="crtCertificates">
           <Key>
@@ -2106,7 +2089,6 @@
           <EntitySet Name="crpNPCCorporations" EntityType="Self.crpNPCCorporations" />
           <EntitySet Name="crpNPCCorporationTrades" EntityType="Self.crpNPCCorporationTrades" />
           <EntitySet Name="crpNPCDivisions" EntityType="Self.crpNPCDivisions" />
-          <EntitySet Name="crtCategories" EntityType="Self.crtCategories" />
           <EntitySet Name="crtCertificates" EntityType="Self.crtCertificates" />
           <EntitySet Name="crtClasses" EntityType="Self.crtClasses" />
           <EntitySet Name="crtRecommendations" EntityType="Self.crtRecommendations" />
@@ -2402,15 +2384,6 @@
                 <ScalarProperty Name="divisionName" ColumnName="divisionName" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="leaderType" ColumnName="leaderType" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="crtCategories">
-            <EntityTypeMapping TypeName="EveStaticDataModel.crtCategories">
-              <MappingFragment StoreEntitySet="crtCategories">
-                <ScalarProperty Name="categoryID" ColumnName="categoryID" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="categoryName" ColumnName="categoryName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

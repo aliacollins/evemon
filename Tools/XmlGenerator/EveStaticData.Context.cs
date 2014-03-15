@@ -39,7 +39,6 @@ namespace EVEMon.XmlGenerator
         public virtual DbSet<crpNPCCorporations> crpNPCCorporations { get; set; }
         public virtual DbSet<crpNPCCorporationTrades> crpNPCCorporationTrades { get; set; }
         public virtual DbSet<crpNPCDivisions> crpNPCDivisions { get; set; }
-        public virtual DbSet<crtCategories> crtCategories { get; set; }
         public virtual DbSet<crtCertificates> crtCertificates { get; set; }
         public virtual DbSet<crtClasses> crtClasses { get; set; }
         public virtual DbSet<crtRecommendations> crtRecommendations { get; set; }

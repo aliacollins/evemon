@@ -19,7 +19,6 @@
         <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporations" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.crpNPCCorporationTrades" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.crpNPCDivisions" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.crtCategories" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.crtCertificates" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.crtClasses" Width="1.5" PointX="10.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.crtRecommendations" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
