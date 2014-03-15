@@ -112,9 +112,6 @@
     <Compile Include="crpNPCDivisions.cs">
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
-    <Compile Include="crtCategories.cs">
-      <DependentUpon>EveStaticData.tt</DependentUpon>
-    </Compile>
     <Compile Include="crtCertificates.cs">
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
