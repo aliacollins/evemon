@@ -181,12 +181,11 @@ namespace EVEMon.PieChart
             float y2 = point2.Y;
             float x1 = point1.X;
             float y1 = point1.Y;
-            if ((x2 < point.X && x1 >= point.X) || (x2 >= point.X && x1 < point.X))
-            {
-                float y = (y2 - y1) / (x2 - x1) * (point.X - x1) + y1;
-                return y > point.Y;
-            }
-            return false;
+            if ((!(x2 < point.X) || !(x1 >= point.X)) && (!(x2 >= point.X) || !(x1 < point.X)))
+                return false;
+
+            float y = (y2 - y1) / (x2 - x1) * (point.X - x1) + y1;
+            return y > point.Y;
         }
     }
 }

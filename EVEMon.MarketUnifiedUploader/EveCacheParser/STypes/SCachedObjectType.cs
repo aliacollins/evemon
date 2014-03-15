@@ -126,17 +126,17 @@ namespace EVEMon.MarketUnifiedUploader.EveCacheParser.STypes
         /// <returns></returns>
         internal object GetCachedObject()
         {
-            if (Object == null)
-            {
-                if (RawData == null)
-                    throw new InvalidDataException("No object?!");
+            if (Object != null)
+                return Object;
 
-                byte[] rawData = Encoding.Default.GetBytes((string)RawData);
-                byte[] data = IsCompressed ? Decompress(rawData) : rawData;
+            if (RawData == null)
+                throw new InvalidDataException("No object?!");
 
-                Object = CachedFileParser.Parse(data);
-                RawData = null;
-            }
+            byte[] rawData = Encoding.Default.GetBytes((string)RawData);
+            byte[] data = IsCompressed ? Decompress(rawData) : rawData;
+
+            Object = CachedFileParser.Parse(data);
+            RawData = null;
 
             return Object;
         }

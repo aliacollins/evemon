@@ -271,12 +271,12 @@ namespace EVEMon.SkillPlanner
                     }
                 }
 
+                if (selectedNode != null)
+                    return;
+
                 // Reset if the node doesn't exist anymore
-                if (selectedNode == null)
-                {
-                    tvItems.SelectNodeWithTag(null);
-                    SelectedObject = null;
-                }
+                tvItems.SelectNodeWithTag(null);
+                SelectedObject = null;
             }
             finally
             {

@@ -71,12 +71,13 @@ namespace EVEMon.Common
                 throw new ArgumentNullException("item");
 
             MemberInfo[] members = item.GetType().GetMember(item.ToString());
-            if (members.Length > 0)
-            {
-                object[] attrs = members[0].GetCustomAttributes(typeof(TAttribute), false);
-                if (attrs.Length > 0)
-                    return (TAttribute)attrs[0];
-            }
+            if (members.Length <= 0)
+                return null;
+
+            object[] attrs = members[0].GetCustomAttributes(typeof(TAttribute), false);
+            if (attrs.Length > 0)
+                return (TAttribute)attrs[0];
+
             return null;
         }
 

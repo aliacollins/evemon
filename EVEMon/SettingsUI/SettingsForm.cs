@@ -681,16 +681,14 @@ namespace EVEMon.SettingsUI
             if (!Int32.TryParse(str, out port))
                 return false;
 
-            if ((port < IPEndPoint.MinPort) || (port > IPEndPoint.MaxPort))
-            {
-                ShowErrorMessage("Invalid port",
-                                 String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}.",
-                                               portName, IPEndPoint.MinPort, IPEndPoint.MaxPort));
+            if ((port >= IPEndPoint.MinPort) && (port <= IPEndPoint.MaxPort))
+                return true;
 
-                return false;
-            }
+            ShowErrorMessage("Invalid port",
+                String.Format(CultureConstants.DefaultCulture, "{0} value must be between {1} and {2}.",
+                    portName, IPEndPoint.MinPort, IPEndPoint.MaxPort));
 
-            return true;
+            return false;
         }
 
         /// <summary>

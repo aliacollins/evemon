@@ -231,11 +231,11 @@ namespace EVEMon.Common
 
             // CCP's API indicates paused training skill with missing start and end times
             // Mimicing them is ugly but necessary
-            if (Owner.IsTraining)
-            {
-                skill.StartTime = StartTime;
-                skill.EndTime = EndTime;
-            }
+            if (!Owner.IsTraining)
+                return skill;
+
+            skill.StartTime = StartTime;
+            skill.EndTime = EndTime;
 
             return skill;
         }

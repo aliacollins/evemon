@@ -719,12 +719,11 @@ namespace EVEMon.PieChart
                         return (int)m_pieSlicesMapping[i];
                 }
             }
-            if (indexFound > -1)
-            {
-                indexFound %= (m_pieSlicesMapping.Count);
-                return (int)m_pieSlicesMapping[indexFound];
-            }
-            return -1;
+            if (indexFound <= -1)
+                return -1;
+
+            indexFound %= (m_pieSlicesMapping.Count);
+            return (int)m_pieSlicesMapping[indexFound];
         }
 
         /// <summary>
@@ -739,17 +738,18 @@ namespace EVEMon.PieChart
         /// </returns>
         private static int GetForemostPieSlice(IList<PieSlice> pieSlices)
         {
-            if (pieSlices != null && pieSlices.Count > 0)
+            if (pieSlices == null || pieSlices.Count <= 0)
+                return -1;
+
+            for (int i = 0; i < pieSlices.Count; ++i)
             {
-                for (int i = 0; i < pieSlices.Count; ++i)
-                {
-                    PieSlice pieSlice = pieSlices[i];
-                    if (((pieSlice.StartAngle <= 90) && ((pieSlice.StartAngle + pieSlice.SweepAngle) >= 90)) ||
-                        ((pieSlice.StartAngle + pieSlice.SweepAngle > 360) && ((pieSlice.StartAngle) <= 450) &&
-                         (pieSlice.StartAngle + pieSlice.SweepAngle) >= 450))
-                        return i;
-                }
+                PieSlice pieSlice = pieSlices[i];
+                if (((pieSlice.StartAngle <= 90) && ((pieSlice.StartAngle + pieSlice.SweepAngle) >= 90)) ||
+                    ((pieSlice.StartAngle + pieSlice.SweepAngle > 360) && ((pieSlice.StartAngle) <= 450) &&
+                     (pieSlice.StartAngle + pieSlice.SweepAngle) >= 450))
+                    return i;
             }
+
             return -1;
         }
 

@@ -77,14 +77,14 @@ namespace EVEMon.MarketUnifiedUploader
 
             Dictionary<string, object> jsonObj = GetEndPointsOnline();
 
-            if (jsonObj != null && jsonObj.Any())
-            {
-                ArrayList endPointsList = jsonObj["endpoints"] as ArrayList;
-                if (endPointsList == null)
-                    return endPoints;
+            if (jsonObj == null || !jsonObj.Any())
+                return endPoints;
 
-                endPoints.AddRange(endPointsList.OfType<Dictionary<string, object>>().Select(endPoint => new EndPoint(endPoint)));
-            }
+            ArrayList endPointsList = jsonObj["endpoints"] as ArrayList;
+            if (endPointsList == null)
+                return endPoints;
+
+            endPoints.AddRange(endPointsList.OfType<Dictionary<string, object>>().Select(endPoint => new EndPoint(endPoint)));
             return endPoints;
         }
 

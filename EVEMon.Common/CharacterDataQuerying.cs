@@ -406,14 +406,14 @@ namespace EVEMon.Common
             // Quits if there is an error
             if (result.HasError)
             {
-                if (result.CCPError != null && result.CCPError.IsFactionalWarfareEnlistedError)
-                {
-                    // Update the enlisted in factional warfare flag
-                    m_ccpCharacter.IsFactionalWarfareNotEnlisted = true;
+                if (result.CCPError == null || !result.CCPError.IsFactionalWarfareEnlistedError)
+                    return;
 
-                    // Fires the event regarding factional warfare stats update
-                    EveMonClient.OnCharacterFactionalWarfareStatsUpdated(m_ccpCharacter);
-                }
+                // Update the enlisted in factional warfare flag
+                m_ccpCharacter.IsFactionalWarfareNotEnlisted = true;
+
+                // Fires the event regarding factional warfare stats update
+                EveMonClient.OnCharacterFactionalWarfareStatsUpdated(m_ccpCharacter);
                 return;
             }
 

@@ -530,24 +530,22 @@ namespace EVEMon.SkillPlanner
 
             // Special condition check for activity 'Any' 
             // as negative logic returns incorrect results
-            if (this is BlueprintSelectControl && ActivityFilter == ObjectActivityFilter.Any)
-            {
-                IEnumerable<StaticSkillLevel> prerequisites =
-                    item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
+            if (!(this is BlueprintSelectControl) || ActivityFilter != ObjectActivityFilter.Any)
+                return !CanUse(item) && hasActivity;
 
-                IEnumerable<Boolean> prereqTrained = prerequisites
-                    .Where(prereq => prereq.Skill != null)
-                    .Select(prereq => new
-                                          {
-                                              prereq,
-                                              level = Plan.Character.GetSkillLevel(prereq.Skill)
-                                          }).Select(y => y.level >= y.prereq.Level);
+            List<StaticSkillLevel> prerequisites =
+                item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering).ToList();
 
-                // Has the character trained all prereq skills for this activity ?
-                return prerequisites.Any() && !prereqTrained.All(x => x);
-            }
+            IEnumerable<Boolean> prereqTrained = prerequisites
+                .Where(prereq => prereq.Skill != null)
+                .Select(prereq => new
+                                  {
+                                      prereq,
+                                      level = Plan.Character.GetSkillLevel(prereq.Skill)
+                                  }).Select(y => y.level >= y.prereq.Level);
 
-            return !CanUse(item) && hasActivity;
+            // Has the character trained all prereq skills for this activity ?
+            return prerequisites.Any() && !prereqTrained.All(x => x);
         }
 
         #endregion

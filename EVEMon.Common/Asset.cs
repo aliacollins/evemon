@@ -179,32 +179,30 @@ namespace EVEMon.Common
 
             string location = m_locationID.ToString(CultureConstants.InvariantCulture);
 
-            if (m_locationID <= Int32.MaxValue)
-            {
-                int locationID = Convert.ToInt32(LocationID);
-                Station station = Station.GetByID(locationID);
-                ConquerableStation outpost = station as ConquerableStation;
+            if (m_locationID > Int32.MaxValue)
+                return location;
 
-                SolarSystem = station == null
-                                  ? StaticGeography.GetSolarSystemByID(locationID)
-                                  : station.SolarSystem;
+            int locationID = Convert.ToInt32(LocationID);
+            Station station = Station.GetByID(locationID);
+            ConquerableStation outpost = station as ConquerableStation;
 
-                FullLocation = station == null
-                                   ? SolarSystem == null
-                                         ? location
-                                         : SolarSystem.FullLocation
-                                   : outpost != null
-                                         ? outpost.FullLocation
-                                         : station.FullLocation;
+            SolarSystem = station == null
+                ? StaticGeography.GetSolarSystemByID(locationID)
+                : station.SolarSystem;
 
-                return station == null
-                           ? SolarSystem == null
-                                 ? location
-                                 : SolarSystem.Name
-                           : station.Name;
-            }
+            FullLocation = station == null
+                ? SolarSystem == null
+                    ? location
+                    : SolarSystem.FullLocation
+                : outpost != null
+                    ? outpost.FullLocation
+                    : station.FullLocation;
 
-            return location;
+            return station == null
+                ? SolarSystem == null
+                    ? location
+                    : SolarSystem.Name
+                : station.Name;
         }
 
         #endregion

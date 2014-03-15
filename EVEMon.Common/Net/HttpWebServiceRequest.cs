@@ -211,16 +211,14 @@ namespace EVEMon.Common.Net
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
             // When the address has been redirected, connects to the redirection
-            if (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.Moved ||
-                response.StatusCode == HttpStatusCode.MovedPermanently)
-            {
-                string target = response.GetResponseHeader("Location");
-                response.Close();
+            if (response.StatusCode != HttpStatusCode.Redirect && response.StatusCode != HttpStatusCode.Moved &&
+                response.StatusCode != HttpStatusCode.MovedPermanently)
+                return response;
 
-                return GetRedirectedHttpResponse(target);
-            }
+            string target = response.GetResponseHeader("Location");
+            response.Close();
 
-            return response;
+            return GetRedirectedHttpResponse(target);
         }
 
         /// <summary>
@@ -286,24 +284,24 @@ namespace EVEMon.Common.Net
                 request.Proxy = proxy;
             }
 
-            if (m_postData != null)
-            {
-                request.ContentType = "application/x-www-form-urlencoded";
+            if (m_postData == null)
+                return request;
 
-                if (m_method != HttpMethod.Get)
-                {
-                    request.ContentLength = m_postData.Length;
+            request.ContentType = "application/x-www-form-urlencoded";
 
-                    // If we are going to send a compressed request set the appropriate header
-                    if (Enum.IsDefined(typeof(DataCompression), m_dataCompression) && m_dataCompression != DataCompression.None)
-                        request.Headers[HttpRequestHeader.ContentEncoding] =
-                            m_dataCompression.ToString().ToLower(CultureConstants.InvariantCulture);
+            if (m_method == HttpMethod.Get)
+                return request;
 
-                    Stream requestStream = request.GetRequestStream();
-                    requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);
-                    requestStream.Close();
-                }
-            }
+            request.ContentLength = m_postData.Length;
+
+            // If we are going to send a compressed request set the appropriate header
+            if (Enum.IsDefined(typeof(DataCompression), m_dataCompression) && m_dataCompression != DataCompression.None)
+                request.Headers[HttpRequestHeader.ContentEncoding] =
+                    m_dataCompression.ToString().ToLower(CultureConstants.InvariantCulture);
+
+            Stream requestStream = request.GetRequestStream();
+            requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);
+            requestStream.Close();
             return request;
         }
 

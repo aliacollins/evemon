@@ -541,11 +541,11 @@ namespace EVEMon.Schedule
                 result = rse;
             }
 
-            if (result != null)
-            {
-                result.Title = tbTitle.Text;
-                result.Options = GetTypeFlags();
-            }
+            if (result == null)
+                return null;
+
+            result.Title = tbTitle.Text;
+            result.Options = GetTypeFlags();
 
             return result;
         }

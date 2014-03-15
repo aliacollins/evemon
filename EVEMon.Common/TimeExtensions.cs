@@ -64,35 +64,34 @@ namespace EVEMon.Common
             // Small chance that the function could cross over the
             // second boundry, and have an inconsistent result.
             StringBuilder sb = new StringBuilder();
-            if (t > now)
+            if (t <= now)
+                return "Done";
+
+            TimeSpan ts = t.Subtract(now);
+            if (ts.Days > 0)
             {
-                TimeSpan ts = t.Subtract(now);
-                if (ts.Days > 0)
-                {
-                    sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
-                    sb.Append("d ");
-                }
-                ts -= TimeSpan.FromDays(ts.Days);
-                if (ts.Hours > 0)
-                {
-                    sb.Append(ts.Hours.ToString(CultureConstants.DefaultCulture));
-                    sb.Append("h ");
-                }
-                ts -= TimeSpan.FromHours(ts.Hours);
-                if (ts.Minutes > 0)
-                {
-                    sb.Append(ts.Minutes.ToString(CultureConstants.DefaultCulture));
-                    sb.Append("m ");
-                }
-                ts -= TimeSpan.FromMinutes(ts.Minutes);
-                if (ts.Seconds > 0)
-                {
-                    sb.Append(ts.Seconds.ToString(CultureConstants.DefaultCulture));
-                    sb.Append("s");
-                }
-                return sb.ToString();
+                sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
+                sb.Append("d ");
             }
-            return "Done";
+            ts -= TimeSpan.FromDays(ts.Days);
+            if (ts.Hours > 0)
+            {
+                sb.Append(ts.Hours.ToString(CultureConstants.DefaultCulture));
+                sb.Append("h ");
+            }
+            ts -= TimeSpan.FromHours(ts.Hours);
+            if (ts.Minutes > 0)
+            {
+                sb.Append(ts.Minutes.ToString(CultureConstants.DefaultCulture));
+                sb.Append("m ");
+            }
+            ts -= TimeSpan.FromMinutes(ts.Minutes);
+            if (ts.Seconds > 0)
+            {
+                sb.Append(ts.Seconds.ToString(CultureConstants.DefaultCulture));
+                sb.Append("s");
+            }
+            return sb.ToString();
         }
 
         /// <summary>
@@ -112,51 +111,50 @@ namespace EVEMon.Common
             DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
 
             StringBuilder sb = new StringBuilder();
-            if (t > now)
+            if (t <= now)
+                return "Completed";
+
+            TimeSpan ts = t.Subtract(now);
+            if (ts.Days > 0)
             {
-                TimeSpan ts = t.Subtract(now);
-                if (ts.Days > 0)
-                {
-                    sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
-                    sb.Append(" day");
-                    if (ts.Days > 1)
-                        sb.Append("s");
-                }
-                ts -= TimeSpan.FromDays(ts.Days);
-                if (ts.Hours > 0)
-                {
-                    if (sb.Length > 0)
-                        sb.Append(", ");
-
-                    sb.Append(ts.Hours.ToString(CultureConstants.DefaultCulture));
-                    sb.Append(" hour");
-                    if (ts.Hours > 1)
-                        sb.Append("s");
-                }
-                ts -= TimeSpan.FromHours(ts.Hours);
-                if (ts.Minutes > 0)
-                {
-                    if (sb.Length > 0)
-                        sb.Append(", ");
-
-                    sb.Append(ts.Minutes.ToString(CultureConstants.DefaultCulture));
-                    sb.Append(" minute");
-                    if (ts.Minutes > 1)
-                        sb.Append("s");
-                }
-                ts -= TimeSpan.FromMinutes(ts.Minutes);
-                if (ts.Seconds > 0)
-                {
-                    if (sb.Length > 0)
-                        sb.Append(", ");
-                    sb.Append(ts.Seconds.ToString(CultureConstants.DefaultCulture));
-                    sb.Append(" second");
-                    if (ts.Seconds > 1)
-                        sb.Append("s");
-                }
-                return sb.ToString();
+                sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
+                sb.Append(" day");
+                if (ts.Days > 1)
+                    sb.Append("s");
             }
-            return "Completed";
+            ts -= TimeSpan.FromDays(ts.Days);
+            if (ts.Hours > 0)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+
+                sb.Append(ts.Hours.ToString(CultureConstants.DefaultCulture));
+                sb.Append(" hour");
+                if (ts.Hours > 1)
+                    sb.Append("s");
+            }
+            ts -= TimeSpan.FromHours(ts.Hours);
+            if (ts.Minutes > 0)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+
+                sb.Append(ts.Minutes.ToString(CultureConstants.DefaultCulture));
+                sb.Append(" minute");
+                if (ts.Minutes > 1)
+                    sb.Append("s");
+            }
+            ts -= TimeSpan.FromMinutes(ts.Minutes);
+            if (ts.Seconds > 0)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+                sb.Append(ts.Seconds.ToString(CultureConstants.DefaultCulture));
+                sb.Append(" second");
+                if (ts.Seconds > 1)
+                    sb.Append("s");
+            }
+            return sb.ToString();
         }
 
         /// <summary>

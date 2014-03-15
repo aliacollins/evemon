@@ -211,11 +211,11 @@ namespace EVEMon.Common
                     return null;
 
                 // Save the new settings
-                if (f.SetAsDefault)
-                {
-                    Settings.Exportation.PlanToText = settings;
-                    Settings.Save();
-                }
+                if (!f.SetAsDefault)
+                    return settings;
+
+                Settings.Exportation.PlanToText = settings;
+                Settings.Save();
 
                 return settings;
             }

@@ -254,33 +254,32 @@ namespace EVEMon.Common.Data
             if (cpuAvailable == null && gridAvailable == null)
                 return true;
 
-            if (FittingSlot != ItemSlot.None)
-            {
-                // If we have a slot index, we're a fittable item
-                // Now see if we can find our usage numbers
-                String cpuUsage = FindProperty(EveProperty.CPU, null);
-                String gridUsage = FindProperty(EveProperty.Powergrid, null);
+            if (FittingSlot == ItemSlot.None)
+                return false;
 
-                double? cpuRequired = TryParseNullable(TryStripTail(cpuUsage, " tf"));
-                double? gridRequired = TryParseNullable(TryStripTail(gridUsage, " MW"));
+            // If we have a slot index, we're a fittable item
+            // Now see if we can find our usage numbers
+            String cpuUsage = FindProperty(EveProperty.CPU, null);
+            String gridUsage = FindProperty(EveProperty.Powergrid, null);
 
-                if (cpuRequired != null || gridRequired != null)
-                {
-                    //We have information about this item, see if it fits
-                    bool fits = true;
-                    if (cpuAvailable != null)
-                        fits &= cpuRequired <= cpuAvailable;
+            double? cpuRequired = TryParseNullable(TryStripTail(cpuUsage, " tf"));
+            double? gridRequired = TryParseNullable(TryStripTail(gridUsage, " MW"));
 
-                    if (gridAvailable != null)
-                        fits &= gridRequired <= gridAvailable;
+            if (cpuRequired == null && gridRequired == null)
+                return false;
 
-                    return fits;
-                }
-            }
+            //We have information about this item, see if it fits
+            bool fits = true;
+            if (cpuAvailable != null)
+                fits &= cpuRequired <= cpuAvailable;
+
+            if (gridAvailable != null)
+                fits &= gridRequired <= gridAvailable;
+
+            return fits;
 
             // We lack information about this item, or this item isn't fittable
             // Return false as specced in the method docs
-            return false;
         }
 
         #endregion

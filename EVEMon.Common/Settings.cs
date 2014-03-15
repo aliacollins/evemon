@@ -397,16 +397,14 @@ namespace EVEMon.Common
                                               "Do you want to use the local settings file?",
                                               Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
-            if (dr == DialogResult.No)
-            {
-                MessageBox.Show("A new settings file will be created.\n"
-                                + "You may wish then to restore a saved copy of the file.", Caption,
-                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (dr != DialogResult.No)
+                return TryDeserializeFromFile();
 
-                return null;
-            }
+            MessageBox.Show("A new settings file will be created.\n"
+                            + "You may wish then to restore a saved copy of the file.", Caption,
+                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-            return TryDeserializeFromFile();
+            return null;
         }
 
         /// <summary>
@@ -456,15 +454,13 @@ namespace EVEMon.Common
                                                                                                     SettingsTransform);
 
             // If the settings loaded OK, make a backup as 'last good settings' and return
-            if (settings != null)
-            {
-                CheckSettingsVersion(settings);
-                FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                EveMonClient.Trace("Settings.TryDeserializeFromFile - done");
-                return settings;
-            }
+            if (settings == null)
+                return TryDeserializeFromBackupFile(backupFile);
 
-            return TryDeserializeFromBackupFile(backupFile);
+            CheckSettingsVersion(settings);
+            FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
+            EveMonClient.Trace("Settings.TryDeserializeFromFile - done");
+            return settings;
         }
 
         /// <summary>

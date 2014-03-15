@@ -307,11 +307,11 @@ namespace EVEMon.CharacterMonitoring
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
             int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
-            if (fillWidth > 0)
-            {
-                Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
-                g.FillRectangle(Brushes.Black, fillRect);
-            }
+            if (fillWidth <= 0)
+                return;
+
+            Rectangle fillRect = new Rectangle(pctBarRect.X, pctBarRect.Y, fillWidth, pctBarRect.Height);
+            g.FillRectangle(Brushes.Black, fillRect);
         }
 
         /// <summary>
@@ -478,15 +478,15 @@ namespace EVEMon.CharacterMonitoring
             Skill skill = item.Skill;
             if (skill != null)
             {
-                if (e.Button == MouseButtons.Right)
-                {
-                    // Build the context menu
-                    BuildContextMenu(skill);
-
-                    // Display the context menu
-                    contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
+                if (e.Button != MouseButtons.Right)
                     return;
-                }
+
+                // Build the context menu
+                BuildContextMenu(skill);
+
+                // Display the context menu
+                contextMenuStripPlanPopup.Show((Control)sender, new Point(e.X, e.Y));
+                return;
             }
 
             // Non-right click or already lv5, display the tooltip

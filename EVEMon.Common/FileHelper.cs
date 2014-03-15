@@ -222,26 +222,26 @@ namespace EVEMon.Common
                 lock (s_removeReadOnlyAttributesLock)
                 {
                     // We request the user to allow us to remove the attributes
-                    if (!s_removeReadOnlyAttributes.HasValue)
-                    {
-                        // Prepare caption and text
-                        string message = "EVEMon detected that some of its files are read-only, " +
-                                         "preventing it to save its datas.\r\n\r\n";
-                        message +=
-                            "Choosing YES will allow EVEMon to remove the read-only attributes on its own files (only).\r\n";
-                        message += "Choosing NO will force EVEMon to continue without writing its files. " +
-                                   "This can cause unexpected behaviours.\r\n\r\n";
-                        message += "Note : if you restart EVEMon and it still encounters read-only files, " +
-                                   "you will be prompted again.";
+                    if (s_removeReadOnlyAttributes.HasValue)
+                        return s_removeReadOnlyAttributes.Value;
 
-                        // Display the message box
-                        DialogResult result = MessageBox.Show(message, "Allow EVEMon to make its files writable",
-                                                              MessageBoxButtons.YesNo,
-                                                              MessageBoxIcon.Error);
+                    // Prepare caption and text
+                    string message = "EVEMon detected that some of its files are read-only, " +
+                                     "preventing it to save its datas.\r\n\r\n";
+                    message +=
+                        "Choosing YES will allow EVEMon to remove the read-only attributes on its own files (only).\r\n";
+                    message += "Choosing NO will force EVEMon to continue without writing its files. " +
+                               "This can cause unexpected behaviours.\r\n\r\n";
+                    message += "Note : if you restart EVEMon and it still encounters read-only files, " +
+                               "you will be prompted again.";
 
-                        // User denied us the permission to make files writeable
-                        s_removeReadOnlyAttributes = result != DialogResult.No;
-                    }
+                    // Display the message box
+                    DialogResult result = MessageBox.Show(message, "Allow EVEMon to make its files writable",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Error);
+
+                    // User denied us the permission to make files writeable
+                    s_removeReadOnlyAttributes = result != DialogResult.No;
 
                     // Returns the permission granted by the user
                     return s_removeReadOnlyAttributes.Value;

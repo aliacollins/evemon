@@ -675,21 +675,26 @@ namespace EVEMon.Common
         {
             PlanEntry entry = GetEntry(skill, level);
 
-            // If the entry is already in the plan, we create an entry that will never be added to the plan.
-            // However, the existing entry's notes and priotity will be updated from this new entry
-            if (entry != null)
+            // So we have to create a new entry. We first check it's not already learned or something
+            if (entry == null)
             {
-                // Is the priority the lowest so far (higher numbers = lower priority) ?
-                int priority = entry.Priority;
-                lowestPrereqPriority = Math.Max(priority, lowestPrereqPriority);
-
-                //Skill at this level is planned - just update the Note.
-                entry = new PlanEntry(null, skill, level) { Priority = priority, Type = type, Notes = note };
-                return entry;
+                return new PlanEntry(null, skill, level)
+                       {
+                           Type = type,
+                           Notes = note
+                       };
             }
 
-            // So we have to create a new entry. We first check it's not already learned or something
-            return new PlanEntry(null, skill, level) { Type = type, Notes = note };
+            // If the entry is already in the plan, we create an entry that will never be added to the plan.
+            // However, the existing entry's notes and priotity will be updated from this new entry
+
+            // Is the priority the lowest so far (higher numbers = lower priority) ?
+            int priority = entry.Priority;
+            lowestPrereqPriority = Math.Max(priority, lowestPrereqPriority);
+
+            //Skill at this level is planned - just update the Note.
+            entry = new PlanEntry(null, skill, level) { Priority = priority, Type = type, Notes = note };
+            return entry;
         }
 
         #endregion

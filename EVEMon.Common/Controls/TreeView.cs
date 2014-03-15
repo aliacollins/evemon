@@ -560,24 +560,24 @@ namespace EVEMon.Common.Controls
             else
             {
                 // Only unselect node if it was selected
-                if (IsNodeSelected(tn))
+                if (!IsNodeSelected(tn))
+                    return;
+
+                OnBeforeDeselect(tn);
+
+                Color[] originalColors = (Color[])m_htblSelectedNodesOrigColors[tn.GetHashCode()];
+                if (originalColors != null)
                 {
-                    OnBeforeDeselect(tn);
+                    m_listSelectedNodes.Remove(tn);
+                    m_blnSelectionChanged = true;
+                    m_htblSelectedNodesOrigColors.Remove(tn.GetHashCode());
 
-                    Color[] originalColors = (Color[])m_htblSelectedNodesOrigColors[tn.GetHashCode()];
-                    if (originalColors != null)
-                    {
-                        m_listSelectedNodes.Remove(tn);
-                        m_blnSelectionChanged = true;
-                        m_htblSelectedNodesOrigColors.Remove(tn.GetHashCode());
-
-                        // GKM - Restore original node colors
-                        tn.BackColor = originalColors[0]; // GKM - was BackColor;
-                        tn.ForeColor = originalColors[1]; // GKM - was ForeColor;
-                    }
-
-                    OnAfterDeselect(tn);
+                    // GKM - Restore original node colors
+                    tn.BackColor = originalColors[0]; // GKM - was BackColor;
+                    tn.ForeColor = originalColors[1]; // GKM - was ForeColor;
                 }
+
+                OnAfterDeselect(tn);
             }
         }
 
@@ -835,13 +835,13 @@ namespace EVEMon.Common.Controls
             {
                 Invalidate(rect, false);
                 Update();
-                if (tn.BackColor != SelectionBackColor)
+                if (tn.BackColor == SelectionBackColor)
+                    return;
+
+                using(SolidBrush brush = new SolidBrush(SelectionBackColor))
+                using (Pen pen = new Pen(brush, 1))
                 {
-                    using(SolidBrush brush = new SolidBrush(SelectionBackColor))
-                    using (Pen pen = new Pen(brush, 1))
-                    {
-                        g.DrawRectangle(pen, rect);
-                    }
+                    g.DrawRectangle(pen, rect);
                 }
             }
             else
@@ -1747,12 +1747,11 @@ namespace EVEMon.Common.Controls
 
         bool ICollection<TreeNode>.Remove(TreeNode treeNode)
         {
-            if (List.Contains(treeNode))
-            {
-                List.Remove(treeNode);
-                return true;
-            }
-            return false;
+            if (!List.Contains(treeNode))
+                return false;
+
+            List.Remove(treeNode);
+            return true;
         }
 
         int IList<TreeNode>.IndexOf(TreeNode treeNode)

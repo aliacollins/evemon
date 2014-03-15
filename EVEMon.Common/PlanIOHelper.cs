@@ -439,13 +439,11 @@ namespace EVEMon.Common
                 ExceptionHandler.LogException(exc, true);
             }
 
-            if (result == null)
-            {
-                MessageBox.Show("There was a problem with the format of the document.");
-                return null;
-            }
+            if (result != null)
+                return result.Plans;
 
-            return result.Plans;
+            MessageBox.Show("There was a problem with the format of the document.");
+            return null;
         }
     }
 }

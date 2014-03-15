@@ -552,9 +552,9 @@ namespace EVEMon.Common
         {
             message = String.Empty;
 
-            IEnumerable<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == APIKeyType.Account &&
-                                                                                      x.CharacterIdentities.Any() &&
-                                                                                      !x.HasCharacterInTraining);
+            List<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == APIKeyType.Account &&
+                                                                               x.CharacterIdentities.Any() &&
+                                                                               !x.HasCharacterInTraining).ToList();
 
             // All accounts are training ?
             if (!accountsNotTraining.Any())

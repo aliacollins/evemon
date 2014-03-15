@@ -337,14 +337,14 @@ namespace EVEMon.SkillPlanner
                 if (PropertiesList.Items.Count > 0)
                     AdjustColumns();
 
+                if (selectedItem <= 0)
+                    return;
+
                 // Restore the selected item (if any)
-                if (selectedItem > 0)
+                foreach (ListViewItem lvItem in PropertiesList.Items.Cast<ListViewItem>().Where(
+                    lvItem => lvItem.Tag.GetHashCode() == selectedItem))
                 {
-                    foreach (ListViewItem lvItem in PropertiesList.Items.Cast<ListViewItem>().Where(
-                        lvItem => lvItem.Tag.GetHashCode() == selectedItem))
-                    {
-                        lvItem.Selected = true;
-                    }
+                    lvItem.Selected = true;
                 }
             }
             finally
@@ -716,17 +716,17 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            if (text.StartsWith("Advance Mobile", StringComparison.CurrentCulture))
+            if (!text.StartsWith("Advance Mobile", StringComparison.CurrentCulture))
+                return 1.0d;
+
+            switch (activity)
             {
-                switch (activity)
-                {
-                    case BlueprintActivity.ResearchingMaterialProductivity:
-                        return 0.75d;
-                    case BlueprintActivity.Copying:
-                        return 0.65d;
-                    case BlueprintActivity.Invention:
-                        return 0.5d;
-                }
+                case BlueprintActivity.ResearchingMaterialProductivity:
+                    return 0.75d;
+                case BlueprintActivity.Copying:
+                    return 0.65d;
+                case BlueprintActivity.Invention:
+                    return 0.5d;
             }
 
             return 1.0d;

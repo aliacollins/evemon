@@ -256,15 +256,17 @@ namespace EVEMon.Common
 
             // Update state
             OrderState state = GetState(src);
-            if (m_state != OrderState.Modified && state != m_state) // it has either expired or fulfilled
-            {
-                m_state = state;
-                LastStateChange = DateTime.UtcNow;
+            
+            if (m_state == OrderState.Modified || state == m_state)
+                return true;
 
-                // Should we notify it to the user ?
-                if (state == OrderState.Expired || state == OrderState.Fulfilled)
-                    endedOrders.Add(this);
-            }
+            // It has either expired or fulfilled
+            m_state = state;
+            LastStateChange = DateTime.UtcNow;
+
+            // Should we notify it to the user ?
+            if (state == OrderState.Expired || state == OrderState.Fulfilled)
+                endedOrders.Add(this);
 
             return true;
         }
