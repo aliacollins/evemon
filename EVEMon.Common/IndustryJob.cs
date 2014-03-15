@@ -403,8 +403,6 @@ namespace EVEMon.Common
                 default:
                     throw new NotImplementedException();
             }
-
-            return JobState.Active;
         }
 
         /// <summary>

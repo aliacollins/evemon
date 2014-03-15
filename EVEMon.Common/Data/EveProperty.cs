@@ -249,7 +249,6 @@ namespace EVEMon.Common.Data
             {
                 return "N/A";
             }
-            return value;
         }
 
         #endregion
