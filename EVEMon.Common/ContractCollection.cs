@@ -54,12 +54,13 @@ namespace EVEMon.Common
             // Import the contracts from the API, excluding the expired assigned ones
             List<Contract> newContracts = src.Where(
                 x => (x.IssuerID == m_character.CharacterID ||
+                      x.AcceptorID == m_character.CharacterID ||
                       x.Status == CCPContractStatus.Completed.ToString() ||
                       x.Status == CCPContractStatus.CompletedByContractor.ToString() ||
                       x.Status == CCPContractStatus.CompletedByIssuer.ToString() ||
                       (x.Status == CCPContractStatus.Outstanding.ToString() && x.DateExpired >= DateTime.UtcNow))).Select(
                           srcContract =>
-                          new
+                              new
                               {
                                   srcContract,
                                   limit = srcContract.DateExpired.AddDays(Contract.MaxEndedDays),
@@ -69,7 +70,7 @@ namespace EVEMon.Common
                                                        contract => !Items.Any(
                                                            x => x.TryImport(contract.srcContract, endedContracts))).Select(
                                                                contract =>
-                                                               new Contract(m_character, contract.srcContract)).ToList();
+                                                                   new Contract(m_character, contract.srcContract)).ToList();
 
             // Add the new contracts that need attention to be notified to the user
             endedContracts.AddRange(newContracts.Where(newContract => newContract.NeedsAttention));
