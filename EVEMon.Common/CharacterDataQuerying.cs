@@ -503,8 +503,11 @@ namespace EVEMon.Common
             // Query the contract bids
             QueryCharacterContractBids();
 
-            result.Result.Contracts.ToList().ForEach(x => x.IssuedFor = IssuedFor.Character);
-            result.Result.Contracts.ToList().ForEach(x => x.APIMethod = APICharacterMethods.Contracts);
+            result.Result.Contracts.ToList().ForEach(x =>
+            {
+                x.IssuedFor = IssuedFor.Character;
+                x.APIMethod = APICharacterMethods.Contracts;
+            });
 
             // Import the data
             List<Contract> endedContracts = new List<Contract>();
