@@ -255,12 +255,9 @@ namespace EVEMon.Common
             }
 
             // Is it an auto-update test ?
-            if (!m_forceUpdate)
+            // If not due time yet, quits
+            if (!m_forceUpdate && NextUpdate > DateTime.UtcNow)
             {
-                // If not due time yet, quits
-                if (NextUpdate <= DateTime.UtcNow)
-                    return;
-
                 Status = QueryStatus.Pending;
                 return;
             }
