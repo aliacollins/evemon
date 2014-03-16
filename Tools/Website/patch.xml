@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>15 March 2014</date>
-    <version>1.8.6.4263</version>
-    <md5>079c225380c6cde5b2fc3700eb06da26</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,182568.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.6.4263.exe</autopatchurl>
+    <date>16 March 2014</date>
+    <version>1.8.7.4273</version>
+    <md5>13241da03591fa1f2848f70b1f6478fc</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,182587.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.7.4273.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
@@ -14,16 +14,7 @@
   
 == Bug Fixes ==
 
-  * Fixed a crash bug when pressing shift key and selecting an end node without first selecting a start node.
-  
-== Enhancements ==
-
-  * Refactored Contacts code to remove excess calls to CharacterInfo and CorporationSheet which are now redundant.
-  * Revised the logic of contract's visibility. Now also the acceptor can see the status of a contract.
-  
-== Misc ==
-
-  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
+ * Fixed an issue with the API query mechanism.]]></message>
   </newest>
   <datafiles>
     <datafile>
