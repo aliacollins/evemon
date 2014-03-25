@@ -379,12 +379,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case EVEMailMessagesGrouping.Sender:
                     IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups4 =
-                        eveMailMessages.GroupBy(x => x.Sender).OrderBy(x => x.Key);
+                        eveMailMessages.GroupBy(x => x.SenderName).OrderBy(x => x.Key);
                     UpdateContent(groups4);
                     break;
                 case EVEMailMessagesGrouping.SenderDesc:
                     IOrderedEnumerable<IGrouping<string, EveMailMessage>> groups5 =
-                        eveMailMessages.GroupBy(x => x.Sender).OrderByDescending(x => x.Key);
+                        eveMailMessages.GroupBy(x => x.SenderName).OrderByDescending(x => x.Key);
                     UpdateContent(groups5);
                     break;
                 case EVEMailMessagesGrouping.Subject:
@@ -459,7 +459,7 @@ namespace EVEMon.CharacterMonitoring
                     group.Select(eveMailMessage => new
                                                        {
                                                            eveMailMessage,
-                                                           item = new ListViewItem(eveMailMessage.Sender, listGroup)
+                                                           item = new ListViewItem(eveMailMessage.SenderName, listGroup)
                                                                       {
                                                                           UseItemStyleForSubItems = false,
                                                                           Tag = eveMailMessage
@@ -564,7 +564,7 @@ namespace EVEMon.CharacterMonitoring
             switch (column)
             {
                 case EveMailMessageColumn.SenderName:
-                    item.Text = eveMailMessage.Sender;
+                    item.Text = eveMailMessage.SenderName;
                     break;
                 case EveMailMessageColumn.Title:
                     item.Text = eveMailMessage.Title;
@@ -686,7 +686,7 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(EveMailMessage x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Sender.ToLowerInvariant().Contains(text)
+                   || x.SenderName.ToLowerInvariant().Contains(text)
                    || x.Title.ToLowerInvariant().Contains(text)
                    || x.ToCorpOrAlliance.ToLowerInvariant().Contains(text)
                    || x.ToCharacters.Any(y => y.ToLowerInvariant().Contains(text))

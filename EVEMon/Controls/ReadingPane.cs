@@ -68,7 +68,7 @@ namespace EVEMon.Controls
         {
             // Update the text on the header labels
             lblMessageHeader.Text = m_selectedObject.Title;
-            lblSender.Text = m_selectedObject.Sender;
+            lblSender.Text = m_selectedObject.SenderName;
             lblSendDate.Text = String.Format(CultureConstants.DefaultCulture, "Sent: {0:ddd} {0:G}",
                                              m_selectedObject.SentDate.ToLocalTime());
             lblRecipient.Text = String.Format(CultureConstants.DefaultCulture, "To: {0}",
