@@ -50,12 +50,18 @@ namespace EVEMon.Common.CustomEventArgs
                     identity.CharacterName = character.Name;
                     identity.CorporationID = character.CorporationID;
                     identity.CorporationName = character.CorporationName;
+                    identity.AllianceID = character.AllianceID;
+                    identity.AllianceName = character.AllianceName;
+                    identity.FactionID = character.FactionID;
+                    identity.FactionName = character.FactionName;
                 }
                 else
                 {
                     // Create an identity if necessary
                     identity = EveMonClient.CharacterIdentities.Add(character.ID, character.Name,
-                                                                    character.CorporationID, character.CorporationName);
+                                                                    character.CorporationID, character.CorporationName,
+                                                                    character.AllianceID, character.AllianceName,
+                                                                    character.FactionID, character.FactionName);
                 }
 
                 Identities.Add(identity);

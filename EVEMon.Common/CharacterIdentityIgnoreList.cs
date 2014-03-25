@@ -86,8 +86,7 @@ namespace EVEMon.Common
             Items.Clear();
             foreach (CharacterIdentity id in serialIDList.Select(
                 serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
-                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name,
-                                                                 serialID.CorporationID, serialID.CorporationName)))
+                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
             {
                 Items.Add(id);
             }
@@ -103,8 +102,6 @@ namespace EVEMon.Common
                                           {
                                               ID = id.CharacterID,
                                               Name = id.CharacterName,
-                                              CorporationID = id.CorporationID,
-                                              CorporationName = id.CorporationName
                                           });
         }
     }

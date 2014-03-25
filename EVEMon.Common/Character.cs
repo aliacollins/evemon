@@ -162,12 +162,22 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the name of the character's alliance.
         /// </summary>
-        public string AllianceName { get; private set; }
+        public string AllianceName { get; set; }
 
         /// <summary>
         /// Gets the id of the character's alliance.
         /// </summary>
-        public int AllianceID { get; private set; }
+        public long AllianceID { get; set; }
+
+        /// <summary>
+        /// Gets the name of the character's warfare faction.
+        /// </summary>
+        public string FactionName { get; set; }
+
+        /// <summary>
+        /// Gets the id of the character's warfare faction.
+        /// </summary>
+        public int FactionID { get; set; }
 
         /// <summary>
         /// Gets the name of the clone.

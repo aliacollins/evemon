@@ -71,6 +71,12 @@ namespace EVEMon.Common.Serialization.API
             set { AllianceName = value == null ? String.Empty : value.HtmlDecode(); }
         }
 
+        [XmlElement("factionID")]
+        public int FactionID { get; set; }
+
+        [XmlElement("factionName")]
+        public string FactionName { get; set; }
+
         [XmlElement("taxRate")]
         public float TaxRate { get; set; }
 

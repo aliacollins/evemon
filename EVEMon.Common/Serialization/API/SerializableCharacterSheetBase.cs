@@ -70,7 +70,13 @@ namespace EVEMon.Common.Serialization.API
         }
 
         [XmlElement("allianceID")]
-        public int AllianceID { get; set; }
+        public long AllianceID { get; set; }
+
+        [XmlElement("factionName")]
+        public string FactionName { get; set; }
+
+        [XmlElement("factionID")]
+        public int FactionID { get; set; }
 
         [XmlElement("cloneName")]
         public string CloneName { get; set; }
