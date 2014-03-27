@@ -65,7 +65,7 @@ namespace EVEMon.Common
             switch (m_column)
             {
                 case EveMailMessageColumn.SenderName:
-                    return String.Compare(x.Sender, y.Sender, StringComparison.CurrentCulture);
+                    return String.Compare(x.SenderName, y.SenderName, StringComparison.CurrentCulture);
                 case EveMailMessageColumn.Title:
                     return String.Compare(x.Title, y.Title, StringComparison.CurrentCulture);
                 case EveMailMessageColumn.SentDate:

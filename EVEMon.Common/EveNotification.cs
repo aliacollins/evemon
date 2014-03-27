@@ -58,7 +58,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the EVE notification sender name.
         /// </summary>
-        public string Sender
+        public string SenderName
         {
             get
             {

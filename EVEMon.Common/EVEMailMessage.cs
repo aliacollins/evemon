@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
@@ -15,9 +14,7 @@ namespace EVEMon.Common
         private IEnumerable<string> m_mailingLists;
         private IEnumerable<string> m_toCharacters;
         private string m_toCorpOrAlliance;
-        private string m_sender; 
         private bool m_queryPending;
-
 
 
         #region Constructor
@@ -33,20 +30,20 @@ namespace EVEMon.Common
             m_source = src;
 
             State = (src.SenderID != ccpCharacter.CharacterID
-                         ? EVEMailState.Inbox
-                         : EVEMailState.SentItem);
+                ? EVEMailState.Inbox
+                : EVEMailState.SentItem);
             MessageID = src.MessageID;
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();
-            m_sender = GetSender();
+            SenderName = src.SenderName;
             m_toCharacters = GetIDsToNames(src.ToCharacterIDs);
             m_mailingLists = GetMailingListIDsToNames(src.ToListID);
             m_toCorpOrAlliance = GetCorpOrAlliance(src.ToCorpOrAllianceID);
             EVEMailBody = new EveMailBody(new SerializableMailBodiesListItem
-                                              {
-                                                  MessageID = 0,
-                                                  MessageText = String.Empty
-                                              });
+                                          {
+                                              MessageID = 0,
+                                              MessageText = String.Empty
+                                          });
         }
 
         #endregion
@@ -70,15 +67,7 @@ namespace EVEMon.Common
         /// Gets or sets the EVE mail sender name.
         /// </summary>
         /// <value>The sender.</value>
-        public string Sender
-        {
-            get
-            {
-                return m_sender == "Unknown"
-                           ? m_sender = GetSender()
-                           : m_sender;
-            }
-        }
+        public string SenderName { get; private set; }
 
         /// <summary>
         /// Gets or sets the sent date of the EVE mail.
@@ -100,8 +89,8 @@ namespace EVEMon.Common
             get
             {
                 return m_toCorpOrAlliance == "Unknown"
-                           ? m_toCorpOrAlliance = GetCorpOrAlliance(m_source.ToCorpOrAllianceID)
-                           : m_toCorpOrAlliance;
+                    ? m_toCorpOrAlliance = GetCorpOrAlliance(m_source.ToCorpOrAllianceID)
+                    : m_toCorpOrAlliance;
             }
         }
 
@@ -113,8 +102,8 @@ namespace EVEMon.Common
             get
             {
                 return m_toCharacters.Contains("Unknown")
-                           ? m_toCharacters = GetIDsToNames(m_source.ToCharacterIDs)
-                           : m_toCharacters;
+                    ? m_toCharacters = GetIDsToNames(m_source.ToCharacterIDs)
+                    : m_toCharacters;
             }
         }
 
@@ -126,8 +115,8 @@ namespace EVEMon.Common
             get
             {
                 return m_mailingLists.Contains("Unknown")
-                           ? m_mailingLists = GetMailingListIDsToNames(m_source.ToListID)
-                           : m_mailingLists;
+                    ? m_mailingLists = GetMailingListIDsToNames(m_source.ToListID)
+                    : m_mailingLists;
             }
         }
 
@@ -140,12 +129,15 @@ namespace EVEMon.Common
             get
             {
                 return !String.IsNullOrEmpty(ToCharacters.FirstOrDefault())
-                           ? ToCharacters
-                           : !String.IsNullOrEmpty(ToCorpOrAlliance)
-                                 ? new List<string> { ToCorpOrAlliance }
-                                 : !String.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
-                                       ? ToMailingLists
-                                       : new EmptyEnumerable<string>();
+                    ? ToCharacters
+                    : !String.IsNullOrEmpty(ToCorpOrAlliance)
+                        ? new List<string>
+                          {
+                              ToCorpOrAlliance
+                          }
+                        : !String.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
+                            ? ToMailingLists
+                            : new EmptyEnumerable<string>();
             }
         }
 
@@ -172,38 +164,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the sender.
         /// </summary>
-        /// <returns></returns>
-        private string GetSender()
-        {
-            return m_source.ToListID.Any(x => x == m_source.SenderID.ToString(CultureConstants.InvariantCulture))
-                       ? GetMailingListIDToName(m_source.SenderID.ToString(CultureConstants.InvariantCulture))
-                       : GetIDToName(m_source.SenderID.ToString(CultureConstants.InvariantCulture));
-        }
-
-        /// <summary>
-        /// Gets the sender.
-        /// </summary>
         /// <param name="toCorpOrAlliance">The source.</param>
         /// <returns></returns>
         private string GetCorpOrAlliance(string toCorpOrAlliance)
         {
             return toCorpOrAlliance == m_ccpCharacter.Corporation.Name
-                       ? m_ccpCharacter.Corporation.Name
-                       : toCorpOrAlliance == m_ccpCharacter.AllianceName
-                             ? m_ccpCharacter.AllianceName
-                             : EveIDToName.GetIDToName(toCorpOrAlliance);
+                ? m_ccpCharacter.Corporation.Name
+                : toCorpOrAlliance == m_ccpCharacter.AllianceName
+                    ? m_ccpCharacter.AllianceName
+                    : EveIDToName.GetIDToName(toCorpOrAlliance);
         }
 
-        /// <summary>
-        /// Gets the name of the ID.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
-        private string GetIDToName(string id)
-        {
-            // If it's a zero ID return "(None)"
-            return id == "0" ? "(None)" : GetIDsToNames(new Collection<string> { id }).First();
-        }
 
         /// <summary>
         /// Gets the names of the IDs.
@@ -237,24 +208,6 @@ namespace EVEMon.Common
             return listOfNames;
         }
 
-        /// <summary>
-        /// Gets the name of the mailing list ID.
-        /// </summary>
-        /// <param name="mailingListID">The mailing list ID.</param>
-        /// <returns></returns>
-        private string GetMailingListIDToName(string mailingListID)
-        {
-            // If there is no ID to query return an empty string
-            if (String.IsNullOrEmpty(mailingListID))
-                return String.Empty;
-
-            // If it's a zero ID return "Unknown"
-            if (mailingListID == "0")
-                return "Unknown";
-
-            Collection<string> list = new Collection<string> { mailingListID };
-            return GetMailingListIDsToNames(list).First();
-        }
 
         /// <summary>
         /// Gets the mailing list IDs to names.
@@ -332,10 +285,10 @@ namespace EVEMon.Common
             {
                 result.Result.Bodies.Add(
                     new SerializableMailBodiesListItem
-                        {
-                            MessageID = long.Parse(result.Result.MissingMessageIDs, CultureConstants.InvariantCulture),
-                            MessageText = "The text for this message was reported missing."
-                        });
+                    {
+                        MessageID = long.Parse(result.Result.MissingMessageIDs, CultureConstants.InvariantCulture),
+                        MessageText = "The text for this message was reported missing."
+                    });
             }
 
             // Quit if for any reason there is no text

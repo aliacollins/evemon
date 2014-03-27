@@ -376,12 +376,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case EVENotificationsGrouping.Sender:
                     IOrderedEnumerable<IGrouping<string, EveNotification>> groups4 =
-                        eveNotifications.GroupBy(x => x.Sender).OrderBy(x => x.Key);
+                        eveNotifications.GroupBy(x => x.SenderName).OrderBy(x => x.Key);
                     UpdateContent(groups4);
                     break;
                 case EVENotificationsGrouping.SenderDesc:
                     IOrderedEnumerable<IGrouping<string, EveNotification>> groups5 =
-                        eveNotifications.GroupBy(x => x.Sender).OrderByDescending(x => x.Key);
+                        eveNotifications.GroupBy(x => x.SenderName).OrderByDescending(x => x.Key);
                     UpdateContent(groups5);
                     break;
             }
@@ -416,7 +416,7 @@ namespace EVEMon.CharacterMonitoring
                     group.Select(eveNotification => new
                                                         {
                                                             eveNotification,
-                                                            item = new ListViewItem(eveNotification.Sender, listGroup)
+                                                            item = new ListViewItem(eveNotification.SenderName, listGroup)
                                                                        {
                                                                            UseItemStyleForSubItems = false,
                                                                            Tag = eveNotification
@@ -521,7 +521,7 @@ namespace EVEMon.CharacterMonitoring
             switch (column)
             {
                 case EveNotificationColumn.SenderName:
-                    item.Text = eveNotification.Sender;
+                    item.Text = eveNotification.SenderName;
                     break;
                 case EveNotificationColumn.Type:
                     item.Text = eveNotification.Type;
@@ -574,7 +574,7 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(EveNotification x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Sender.ToLowerInvariant().Contains(text)
+                   || x.SenderName.ToLowerInvariant().Contains(text)
                    || x.Type.ToLowerInvariant().Contains(text)
                    || (x.EVENotificationText.NotificationText.ToLowerInvariant().Contains(text));
         }
