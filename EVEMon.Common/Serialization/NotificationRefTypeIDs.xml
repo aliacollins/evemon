@@ -3,6 +3,7 @@
 <NotificationRefTypeIDs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <rowset name="refTypes" key="refTypeID" columns="refTypeID,refTypeName">
+    <row refTypeID="1" refTypeName="Legacy" />
     <row refTypeID="2" refTypeName="Character deleted" />
     <row refTypeID="3" refTypeName="Give medal to character" />
     <row refTypeID="4" refTypeName="Alliance maintenance bill" />
@@ -99,5 +100,40 @@
     <row refTypeID="93" refTypeName="Customs office has been attacked" />
     <row refTypeID="94" refTypeName="Customs office has entered reinforced" />
     <row refTypeID="95" refTypeName="Customs office has been transferred" />
+    <row refTypeID="96" refTypeName="FW Alliance Warning" />
+    <row refTypeID="97" refTypeName="FW Alliance Kick" />
+    <row refTypeID="98" refTypeName="AllWarCorpJoined Msg" />
+    <row refTypeID="99" refTypeName="Ally Joined Defender" />
+    <row refTypeID="100" refTypeName="Ally Has Joined a War Aggressor" />
+    <row refTypeID="101" refTypeName="Ally Joined War Ally" />
+    <row refTypeID="102" refTypeName="New war system: entity is offering assistance in a war" />
+    <row refTypeID="103" refTypeName="War Surrender Offer" />
+    <row refTypeID="104" refTypeName="War Surrender Declined" />
+    <row refTypeID="105" refTypeName="FacWar LP Payout Kill" />
+    <row refTypeID="106" refTypeName="FacWar LP Payout Event" />
+    <row refTypeID="107" refTypeName="FacWar LP Disqualified Event" />
+    <row refTypeID="108" refTypeName="FacWar LP Disqualified Kill" />
+    <row refTypeID="109" refTypeName="Alliance Contract Cancelled" />
+    <row refTypeID="110" refTypeName="War Ally Declined Offer" />
+    <row refTypeID="111" refTypeName="Your Bounty Claimed" />
+    <row refTypeID="112" refTypeName="Bounty Placed (Char)" />
+    <row refTypeID="113" refTypeName="Bounty Placed (Corp)" />
+    <row refTypeID="114" refTypeName="Bounty Placed (Alliance)" />
+    <row refTypeID="115" refTypeName="Kill Right Available" />
+    <row refTypeID="116" refTypeName="Kill Right Available Open" />
+    <row refTypeID="117" refTypeName="Kill Right Earned" />
+    <row refTypeID="118" refTypeName="Kill Right Used" />
+    <row refTypeID="119" refTypeName="Kill Right Unavailable" />
+    <row refTypeID="120" refTypeName="Kill Right Unavailable Open" />
+    <row refTypeID="121" refTypeName="Declare War" />
+    <row refTypeID="122" refTypeName="Offered Surrender" />
+    <row refTypeID="123" refTypeName="Accepted Surrender" />
+    <row refTypeID="124" refTypeName="Made War Mutual" />
+    <row refTypeID="125" refTypeName="Retracts War" />
+    <row refTypeID="126" refTypeName="Offered To Ally" />
+    <row refTypeID="127" refTypeName="Accepted Ally" />
+    <row refTypeID="128" refTypeName="Character Application Accept Message" />
+    <row refTypeID="129" refTypeName="Character Application Reject Message" />
+    <row refTypeID="130" refTypeName="Character Application Withdraw Message" />
   </rowset>
 </NotificationRefTypeIDs>

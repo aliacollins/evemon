@@ -14,6 +14,9 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("senderID")]
         public int SenderID { get; set; }
 
+        [XmlAttribute("senderName")]
+        public string SenderName { get; set; }
+
         [XmlAttribute("sentDate")]
         public string SentDateXml
         {
