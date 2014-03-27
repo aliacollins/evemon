@@ -22,7 +22,7 @@ namespace EVEMon.Common.Serialization.API
         public string CorporationNameXml
         {
             get { return CorporationName; }
-            set { CorporationName = value == null ? String.Empty : value.HtmlDecode(); }
+            set { CorporationName = String.IsNullOrEmpty(value) ? "Unknown" : value.HtmlDecode(); }
         }
 
         [XmlAttribute("allianceID")]

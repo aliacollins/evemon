@@ -9,5 +9,9 @@ namespace EVEMon.Common.Serialization.API
         string Name { get; }
         long CorporationID { get; }
         string CorporationName { get; }
+        long AllianceID { get; }
+        string AllianceName { get; }
+        int FactionID { get; }
+        string FactionName { get; }
     }
 }

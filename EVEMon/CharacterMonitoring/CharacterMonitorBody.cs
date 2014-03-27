@@ -379,8 +379,18 @@ namespace EVEMon.CharacterMonitoring
                 foreach (IQueryMonitor monitor in monitors)
                 {
                     monitor.Enabled = IsEnabledFeature(button.Text);
-                    if (monitor.QueryOnStartup && monitor.Enabled && monitor.LastResult == null)
-                        ccpCharacter.QueryMonitors.Query(monitor.Method);
+                    if (!monitor.QueryOnStartup || !monitor.Enabled || monitor.LastResult != null)
+                        continue;
+
+                    if (monitor.Method is APICharacterMethods &&
+                        (APICharacterMethods)monitor.Method == APICharacterMethods.FactionalWarfareStats &&
+                        ccpCharacter.IsFactionalWarfareNotEnlisted)
+                    {
+                        monitor.Enabled = !ccpCharacter.IsFactionalWarfareNotEnlisted;
+                        continue;
+                    }
+
+                    ccpCharacter.QueryMonitors.Query(monitor.Method);
                 }
             }
         }

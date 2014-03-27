@@ -26,6 +26,7 @@ namespace EVEMon.Common
         private List<SerializableAPIUpdate> m_lastAPIUpdates;
 
         private Enum m_errorNotifiedMethod = APIMethodsExtensions.None;
+        private bool m_isFwEnlisted;
 
         #endregion
 
@@ -313,7 +314,7 @@ namespace EVEMon.Common
             {
                 IEnumerable<BuyOrder> activeBuyOrders = MarketOrders.OfType<BuyOrder>().Where(
                     order => (order.State == OrderState.Active || order.State == OrderState.Modified) &&
-                             order.IssuedFor == IssuedFor.Character);
+                             order.IssuedFor == IssuedFor.Character).ToList();
 
                 decimal additionalToCover = activeBuyOrders.Sum(x => x.TotalPrice) - activeBuyOrders.Sum(order => order.Escrow);
 
@@ -328,7 +329,11 @@ namespace EVEMon.Common
         /// <value>
         ///   <c>true</c> if character is not enlisted in factional warfare; otherwise, <c>false</c>.
         /// </value>
-        public bool IsFactionalWarfareNotEnlisted { get; internal set; }
+        public bool IsFactionalWarfareNotEnlisted
+        {
+            get { return FactionID == 0 || m_isFwEnlisted; }
+            internal set { m_isFwEnlisted = value; }
+        }
 
         /// <summary>
         /// Gets true when a new character is created.
@@ -494,7 +499,7 @@ namespace EVEMon.Common
         /// Imports the market orders.
         /// </summary>
         /// <param name="marketOrders">The market orders.</param>
-        private void MarketOrdersImport(IEnumerable<SerializableOrderBase> marketOrders)
+        private void MarketOrdersImport(IList<SerializableOrderBase> marketOrders)
         {
             CharacterMarketOrders.Import(marketOrders.Where(job => job.IssuedFor == IssuedFor.Character));
             CorporationMarketOrders.Import(marketOrders.Where(job => job.IssuedFor == IssuedFor.Corporation));
@@ -504,7 +509,7 @@ namespace EVEMon.Common
         /// Imports the contracts.
         /// </summary>
         /// <param name="contracts">The contracts.</param>
-        private void ContractsImport(IEnumerable<SerializableContract> contracts)
+        private void ContractsImport(IList<SerializableContract> contracts)
         {
             CharacterContracts.Import(contracts.Where(contract => contract.IssuedFor == IssuedFor.Character));
             CorporationContracts.Import(contracts.Where(contract => contract.IssuedFor == IssuedFor.Corporation));
@@ -514,7 +519,7 @@ namespace EVEMon.Common
         /// Imports the industry jobs.
         /// </summary>
         /// <param name="industryJobs">The industry jobs.</param>
-        private void IndustryJobsImport(IEnumerable<SerializableJob> industryJobs)
+        private void IndustryJobsImport(IList<SerializableJob> industryJobs)
         {
             CharacterIndustryJobs.Import(industryJobs.Where(job => job.IssuedFor == IssuedFor.Character));
             CorporationIndustryJobs.Import(industryJobs.Where(job => job.IssuedFor == IssuedFor.Corporation));
@@ -767,7 +772,7 @@ namespace EVEMon.Common
         {
             // Force update a monitor if the last update exceed the current datetime
             foreach (IQueryMonitorEx monitor in QueryMonitors.Where(
-                monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow))
+                monitor => !monitor.IsUpdating && monitor.LastUpdate > DateTime.UtcNow).Cast<IQueryMonitorEx>())
             {
                 monitor.ForceUpdate(true);
             }

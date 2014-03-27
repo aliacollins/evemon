@@ -12,11 +12,5 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlAttribute("name")]
         public string Name { get; set; }
-
-        [XmlAttribute("corporationID")]
-        public long CorporationID { get; set; }
-
-        [XmlAttribute("corporationName")]
-        public string CorporationName { get; set; }
     }
 }

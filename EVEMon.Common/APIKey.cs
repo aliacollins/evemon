@@ -616,15 +616,19 @@ namespace EVEMon.Common
                 return;
 
             // Assign owned identities to this API key
-            foreach (CharacterIdentity id in identities.Select(
+            var serializableCharacterIdentities = identities.ToList();
+            foreach (CharacterIdentity id in serializableCharacterIdentities.Select(
                 serialID => EveMonClient.CharacterIdentities[serialID.ID] ??
-                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name,
-                                                                 serialID.CorporationID, serialID.CorporationName)))
+                            EveMonClient.CharacterIdentities.Add(serialID.ID, serialID.Name)))
             {
-                // Update the corporation info as they may have changed
-                ISerializableCharacterIdentity characterIdentity = identities.First(x => x.ID == id.CharacterID);
+                // Update the other info as they may have changed
+                ISerializableCharacterIdentity characterIdentity = serializableCharacterIdentities.First(x => x.ID == id.CharacterID);
                 id.CorporationID = characterIdentity.CorporationID;
                 id.CorporationName = characterIdentity.CorporationName;
+                id.AllianceID = characterIdentity.AllianceID;
+                id.AllianceName = characterIdentity.AllianceName;
+                id.FactionID = characterIdentity.FactionID;
+                id.FactionName = characterIdentity.FactionName;
 
                 // Add the API key to the identity
                 id.APIKeys.Add(this);
@@ -632,9 +636,13 @@ namespace EVEMon.Common
                 if (id.CCPCharacter == null)
                     continue;
 
-                // Update the corporation info
+                // Update the other info
                 id.CCPCharacter.CorporationID = id.CorporationID;
                 id.CCPCharacter.CorporationName = id.CorporationName;
+                id.CCPCharacter.AllianceID = id.AllianceID;
+                id.CCPCharacter.AllianceName = id.AllianceName;
+                id.CCPCharacter.FactionID = id.FactionID;
+                id.CCPCharacter.FactionName = id.FactionName;
 
                 // Notify subscribers
                 EveMonClient.OnCharacterUpdated(id.CCPCharacter);
