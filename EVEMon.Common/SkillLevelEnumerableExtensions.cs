@@ -26,10 +26,11 @@ namespace EVEMon.Common
         /// <param name="includeRoots">When true, the levels in this enumeration are also included.</param>
         public static IEnumerable<SkillLevel> GetAllDependencies(this IEnumerable<SkillLevel> src, bool includeRoots)
         {
-            SkillLevel first = src.FirstOrDefault();
+            var skillLevels = src as IList<SkillLevel> ?? src.ToList();
+            SkillLevel first = skillLevels.FirstOrDefault();
             return first == null || first.Skill == null
-                       ? new EmptyEnumerable<SkillLevel>()
-                       : src.ToStatic().GetAllDependencies(includeRoots).ToCharacter(first.Skill.Character);
+                       ? Enumerable.Empty<SkillLevel>()
+                       : skillLevels.ToStatic().GetAllDependencies(includeRoots).ToCharacter(first.Skill.Character);
         }
 
         /// <summary>

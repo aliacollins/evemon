@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using EVEMon.Common.Collections;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Controls
@@ -133,12 +132,12 @@ namespace EVEMon.Common.Controls
 
         protected virtual IEnumerable<int> AllKeys
         {
-            get { return new EmptyEnumerable<int>(); }
+            get { return Enumerable.Empty<int>(); }
         }
 
         protected virtual IEnumerable<IColumnSettings> DefaultColumns
         {
-            get { return new EmptyEnumerable<IColumnSettings>(); }
+            get { return Enumerable.Empty<IColumnSettings>(); }
         }
     }
 }

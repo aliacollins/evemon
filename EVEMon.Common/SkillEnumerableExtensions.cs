@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common
@@ -25,10 +24,11 @@ namespace EVEMon.Common
         /// <remarks>Please note they may be redundancies.</remarks>
         public static IEnumerable<SkillLevel> GetAllPrerequisites(this IEnumerable<Skill> src)
         {
-            Skill first = src.FirstOrDefault();
+            var enumerable = src as IList<Skill> ?? src.ToList();
+            Skill first = enumerable.FirstOrDefault();
             return first == null
-                       ? new EmptyEnumerable<SkillLevel>()
-                       : src.ToStatic().GetAllPrerequisites().ToCharacter(first.Character);
+                       ? Enumerable.Empty<SkillLevel>()
+                       : enumerable.ToStatic().GetAllPrerequisites().ToCharacter(first.Character);
         }
     }
 }

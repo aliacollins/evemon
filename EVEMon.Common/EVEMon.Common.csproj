@@ -723,7 +723,6 @@
     <Compile Include="MarketOrderComparer.cs" />
     <Compile Include="Net\NetworkMonitor.cs" />
     <Compile Include="CharacterScratchpad.cs" />
-    <Compile Include="Collections\EmptyEnumerator.cs" />
     <Compile Include="Collections\IReadonlyCollection.cs" />
     <Compile Include="Collections\ReadonlyKeyedCollection.cs" />
     <Compile Include="Collections\ReadonlyVirtualCollection.cs" />
