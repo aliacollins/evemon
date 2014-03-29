@@ -339,7 +339,7 @@ namespace EVEMon.Common.Collections
         public IEnumerator<T> GetEnumerator()
         {
             if (m_items == null || Count == 0)
-                return new EmptyEnumerator<T>();
+                return new Enumerator();
             return new Enumerator(m_items, Count);
         }
 
@@ -350,7 +350,7 @@ namespace EVEMon.Common.Collections
         IEnumerator IEnumerable.GetEnumerator()
         {
             if (m_items == null || Count == 0)
-                return new EmptyEnumerator<T>();
+                return new Enumerator();
             return new Enumerator(m_items, Count);
         }
 

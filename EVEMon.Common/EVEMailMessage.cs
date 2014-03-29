@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -137,7 +136,7 @@ namespace EVEMon.Common
                           }
                         : !String.IsNullOrEmpty(ToMailingLists.FirstOrDefault())
                             ? ToMailingLists
-                            : new EmptyEnumerable<string>();
+                            : Enumerable.Empty<string>();
             }
         }
 

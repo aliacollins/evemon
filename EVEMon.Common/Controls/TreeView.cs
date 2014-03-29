@@ -626,6 +626,9 @@ namespace EVEMon.Common.Controls
         /// <param name="tva">Specifies the action that caused the selection change.</param>
         private void UnselectNodesOutsideRange(TreeNode startNode, TreeNode endNode, TreeViewAction tva)
         {
+            if (startNode == null || endNode == null)
+                return;
+
             // Calculate start node and end node
             TreeNode firstNode;
             TreeNode lastNode;
