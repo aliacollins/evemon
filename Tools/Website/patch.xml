@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>16 March 2014</date>
-    <version>1.8.7.4273</version>
-    <md5>13241da03591fa1f2848f70b1f6478fc</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,182587.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.7.4273.exe</autopatchurl>
+    <date>30 March 2014</date>
+    <version>1.8.8.4290</version>
+    <md5>86a73f5a7415a17d054706dcfa7fc4da</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,182840.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.8.4290.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
@@ -14,7 +14,18 @@
   
 == Bug Fixes ==
 
- * Fixed an issue with the API query mechanism.]]></message>
+  * Fixed call to character factional warfare endpoint determining if a character is enlisted, so it doesn't produce API errors any more.
+  * Fixed a crash bug when shift selecting in Items browser without first selecting a node.
+
+== Enhancements ==
+
+  * Switched to usage of API endpoint sender name element for EVE mail messages instead of internal discovery algorithm via CharacterID call.
+  * Switched to usage of API endpoint sender name element for EVE notifications instead of internal discovery algorithm via CharacterID call.
+  * Updated the notifications ref type list.
+  
+== Misc ==
+
+  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
