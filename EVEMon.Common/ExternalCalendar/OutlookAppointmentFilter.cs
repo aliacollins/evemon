@@ -245,7 +245,7 @@ namespace EVEMon.Common.ExternalCalendar
             // Must use 'like' comparison for Find/FindNext
             string subjectFilter = (!String.IsNullOrEmpty(Subject)
                                         ? String.Format(CultureConstants.InvariantCulture,
-                                                        "@SQL=\"urn:schemas:httpmail:subject\" like '%{0}%'", Subject)
+                                        "@SQL=\"urn:schemas:httpmail:subject\" like '%{0}%'", Subject.Replace("'", "''"))
                                         : "@SQL=\"urn:schemas:httpmail:subject\" <> '!@#'");
 
             // Use Find and FindNext methods to get all the items
