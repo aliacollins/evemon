@@ -33,7 +33,7 @@ namespace EVEMon.Common.Net
                     s_networkAvailable = NetworkInterface.GetIsNetworkAvailable();
                     NetworkChange.NetworkAvailabilityChanged += OnNetworkAvailabilityChanged;
                 }
-                catch (ArgumentException ex)
+                catch (Exception ex)
                 {
                     // GetIsNetworkAvailable doesn't seem to work on every system (f.ex. Mac OSX/Darwine)
                     ExceptionHandler.LogException(ex, true);
