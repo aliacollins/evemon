@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="PieSlice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="app.config" />
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="Quadrilateral.cs" />
     <Compile Include="SkillsPieChart.cs">

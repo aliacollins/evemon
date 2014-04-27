@@ -73,6 +73,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="LcdDisplay.cs" />
     <Compile Include="LcdState.cs" />
