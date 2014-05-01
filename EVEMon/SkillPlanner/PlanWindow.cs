@@ -256,6 +256,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill"></param>
         public void ShowSkillInBrowser(Skill skill)
         {
+            // Quit if it's an "Unknown" skill
+            if (skill.ID == Int32.MaxValue)
+                return;
+
             tabControl.SelectedTab = tpSkillBrowser;
             skillBrowser.SelectedSkill = skill;
         }
@@ -266,6 +270,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill"></param>
         public void ShowSkillInExplorer(Skill skill)
         {
+            // Quit if it's an "Unknown" skill
+            if (skill.ID == Int32.MaxValue)
+                return;
+
             skillBrowser.ShowSkillInExplorer(skill);
         }
 
