@@ -1,6 +1,8 @@
+using System;
+
 namespace EVEMon.Common.SettingsObjects
 {
-    public interface IColumnSettings
+    public interface IColumnSettings : ICloneable
     {
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="IColumnSettings"/> is visible.

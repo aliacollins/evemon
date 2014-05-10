@@ -11,6 +11,7 @@ namespace EVEMon.Common.Controls
     /// </summary>
     public partial class ColumnSelectWindow : EVEMonForm
     {
+        private readonly List<IColumnSettings> m_initialColumns = new List<IColumnSettings>();
         private readonly List<IColumnSettings> m_columns = new List<IColumnSettings>();
 
         /// <summary>
@@ -29,7 +30,8 @@ namespace EVEMon.Common.Controls
             :this()
         {
             // Fill the columns list
-            m_columns.AddRange(columns);
+            m_initialColumns.AddRange(columns.Select(x => (IColumnSettings)x.Clone()));
+            m_columns.AddRange(m_initialColumns.Select(x => (IColumnSettings)x.Clone()));
         }
 
         /// <summary>
@@ -79,16 +81,7 @@ namespace EVEMon.Common.Controls
             // Gets the column for this key
             IColumnSettings column = m_columns.First(x => x.Key == key);
 
-            // Add or remove from the list
-            if (column.Visible == isChecked)
-                return;
-
             column.Visible = isChecked;
-            if (!isChecked)
-                return;
-
-            m_columns.Remove(column);
-            m_columns.Add(column);
         }
 
         /// <summary>
@@ -98,6 +91,10 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            // Revert changes
+            m_columns.Clear();
+            m_columns.AddRange(m_initialColumns);
+            
             DialogResult = DialogResult.Cancel;
             Close();
         }

@@ -52,23 +52,23 @@ namespace EVEMon.Common.SettingsObjects
         {
             get
             {
-                EveMailMessageColumn[] defaultColumns = new[]
-                                                             {
-                                                                 EveMailMessageColumn.SenderName,
-                                                                 EveMailMessageColumn.Title,
-                                                                 EveMailMessageColumn.SentDate,
-                                                                 EveMailMessageColumn.ToCharacters
-                                                             };
+                EveMailMessageColumn[] defaultColumns =
+                {
+                    EveMailMessageColumn.SenderName,
+                    EveMailMessageColumn.Title,
+                    EveMailMessageColumn.SentDate,
+                    EveMailMessageColumn.ToCharacters
+                };
 
                 return EnumExtensions.GetValues<EveMailMessageColumn>().Where(
                     column => column != EveMailMessageColumn.None).Where(
                         column => Columns.All(columnSetting => columnSetting.Column != column)).Select(
                             column => new EveMailMessageColumnSettings
-                                              {
-                                                  Column = column,
-                                                  Visible = defaultColumns.Contains(column),
-                                                  Width = -2
-                                              });
+                                      {
+                                          Column = column,
+                                          Visible = defaultColumns.Contains(column),
+                                          Width = -2
+                                      });
             }
         }
     }
