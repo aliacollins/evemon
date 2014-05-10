@@ -279,8 +279,4 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		CodeStyleEnforcer_RulesLocation = 
-		CodeStyleEnforcer_Active = 0
-	EndGlobalSection
 EndGlobal
