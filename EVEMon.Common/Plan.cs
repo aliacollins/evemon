@@ -372,7 +372,7 @@ namespace EVEMon.Common
                 List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
                 for (int i = plannedLevel + 1; i <= level; i++)
                 {
-                    skillsToAdd.Add(new StaticSkillLevel(skill, level));
+                    skillsToAdd.Add(new StaticSkillLevel(skill, i));
                 }
 
                 // Create the operation
@@ -387,6 +387,7 @@ namespace EVEMon.Common
                 skillsToRemove.Add(new StaticSkillLevel(skill, i));
             }
 
+            // Create the operation
             return TryRemoveSet(skillsToRemove);
         }
 

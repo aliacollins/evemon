@@ -58,7 +58,7 @@ namespace EVEMon.Common
                 Enforce.Argument(level > 0 && level <= 5, "level", "Level must be greater than 0 and lesser or equal than 5.");
                 T oldValue = m_items[skillArrayIndex * 5 + level - 1];
 
-                if (value.Skill == null)
+                if (value == null || value.Skill == null)
                     Count--;
                 else if (oldValue == null || oldValue.Skill == null)
                     Count++;
