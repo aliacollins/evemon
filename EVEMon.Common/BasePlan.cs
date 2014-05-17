@@ -637,8 +637,8 @@ namespace EVEMon.Common
                 // Let's first add dependencies
                 StaticSkillLevel item = new StaticSkillLevel(itemToAdd);
                 foreach (StaticSkillLevel dependency in item.AllDependencies.Where(
-                    dependency => !entriesSet.Contains(dependency)).Where(
-                        dependency => Character.GetSkillLevel(dependency.Skill) < dependency.Level))
+                    dependency => !entriesSet.Contains(dependency) && dependency.Skill != item.Skill &&
+                        Character.GetSkillLevel(dependency.Skill) < dependency.Level))
                 {
                     // Create an entry (even for existing ones, we will update them later from those new entries)
                     PlanEntry dependencyEntry = CreateEntryToAdd(dependency.Skill, dependency.Level,
