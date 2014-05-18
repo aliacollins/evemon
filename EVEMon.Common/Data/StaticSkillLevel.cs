@@ -101,7 +101,7 @@ namespace EVEMon.Common.Data
                 List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Fill the set and list
-                StaticSkillLevelEnumerableExtensions.FillDependencies(set, list, this, false);
+                list.FillDependencies(set, this, false);
 
                 // Return the results
                 return list;

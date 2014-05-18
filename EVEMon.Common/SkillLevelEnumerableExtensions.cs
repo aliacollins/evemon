@@ -19,7 +19,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Gets all the dependencies, in a way matching the hirarchical order and without redudancies.
+        /// Gets all the dependencies, in a way matching the hierachical order and without redudancies.
         /// I.e, for eidetic memory II, it will return <c>{ instant recall I, instant recall II, instant recall III, instant recall IV,  eidetic memory I, eidetic memory II }</c>.
         /// </summary>
         /// <param name="src"></param>
