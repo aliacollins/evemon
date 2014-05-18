@@ -24,7 +24,7 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets all the dependencies, in a way matching the hirarchical order and without redudancies.
+        /// Gets all the dependencies, in a way matching the hierachical order and without redudancies.
         /// I.e, for eidetic memory II, it will return <c>{ instant recall I, instant recall II, instant recall III, instant recall IV,  eidetic memory I, eidetic memory II }</c>.
         /// </summary>
         /// <param name="src">The source.</param>
@@ -41,26 +41,21 @@ namespace EVEMon.Common.Data
             // Fill the set and list
             foreach (StaticSkillLevel item in src)
             {
-                FillDependencies(set, list, item, includeRoots);
+                list.FillDependencies(set, item, includeRoots);
             }
 
             // Return the results
             return list;
         }
 
-        #endregion
-
-
-        #region Internal Static Methods
-
         /// <summary>
         /// Add the item, its previous levels and its prerequisites to the given set and list.
         /// </summary>
-        /// <param name="set"></param>
-        /// <param name="list"></param>
-        /// <param name="item"></param>
-        /// <param name="includeRoots"></param>
-        internal static void FillDependencies(SkillLevelSet<StaticSkillLevel> set, List<StaticSkillLevel> list,
+        /// <param name="list">The list.</param>
+        /// <param name="set">The set.</param>
+        /// <param name="item">The item.</param>
+        /// <param name="includeRoots">if set to <c>true</c> [include roots].</param>
+        internal static void FillDependencies(this IList<StaticSkillLevel> list, SkillLevelSet<StaticSkillLevel> set,
                                               StaticSkillLevel item, bool includeRoots)
         {
             StaticSkill skill = item.Skill;
@@ -71,7 +66,7 @@ namespace EVEMon.Common.Data
                 // Prerequisites
                 foreach (StaticSkillLevel prereq in skill.Prerequisites.Where(prereq => skill != prereq.Skill))
                 {
-                    FillDependencies(set, list, prereq, true);
+                    list.FillDependencies(set, prereq, true);
                 }
 
                 // Include the first level

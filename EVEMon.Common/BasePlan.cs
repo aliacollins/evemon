@@ -634,15 +634,25 @@ namespace EVEMon.Common
                     continue;
                 }
 
-                // Let's first add dependencies
+                // Let's first add dependencies excluding those that the depending skill is already trained
                 StaticSkillLevel item = new StaticSkillLevel(itemToAdd);
                 foreach (StaticSkillLevel dependency in item.AllDependencies.Where(
                     dependency => !entriesSet.Contains(dependency) && dependency.Skill != item.Skill &&
-                        Character.GetSkillLevel(dependency.Skill) < dependency.Level))
+                                  Character.GetSkillLevel(dependency.Skill) < dependency.Level)
+                    .Select(dependency => new
+                                          {
+                                              dependency,
+                                              depItems = item.AllDependencies.Where(
+                                                  dep => item.Skill != dep.Skill &&
+                                                         dep.Skill.Prerequisites.Any(prereq => prereq.Skill == dependency.Skill))
+                                                  .ToList()
+                                          })
+                    .Where(dep => !dep.depItems.Any() || !dep.depItems.All(depItem => Character.GetSkillLevel(depItem.Skill) >= depItem.Level))
+                    .Select(dep => dep.dependency))
                 {
                     // Create an entry (even for existing ones, we will update them later from those new entries)
                     PlanEntry dependencyEntry = CreateEntryToAdd(dependency.Skill, dependency.Level,
-                                                                 PlanEntryType.Prerequisite, note, ref lowestPrereqPriority);
+                        PlanEntryType.Prerequisite, note, ref lowestPrereqPriority);
                     planEntries.Add(dependencyEntry);
                     entriesSet.Set(dependencyEntry);
                 }
@@ -653,7 +663,7 @@ namespace EVEMon.Common
 
                 // Then add the item itself
                 PlanEntry entry = CreateEntryToAdd(itemToAdd.Skill, itemToAdd.Level,
-                                                   PlanEntryType.Planned, note, ref lowestPrereqPriority);
+                    PlanEntryType.Planned, note, ref lowestPrereqPriority);
                 planEntries.Add(entry);
                 entriesSet.Set(entry);
             }
