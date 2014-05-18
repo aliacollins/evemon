@@ -634,7 +634,7 @@ namespace EVEMon.Common
                     continue;
                 }
 
-                // Let's first add dependencies excluding those that the depending skill is already trained
+                // Let's first add dependencies excluding those that the dependent skill is already trained
                 StaticSkillLevel item = new StaticSkillLevel(itemToAdd);
                 foreach (StaticSkillLevel dependency in item.AllDependencies.Where(
                     dependency => !entriesSet.Contains(dependency) && dependency.Skill != item.Skill &&
@@ -644,10 +644,11 @@ namespace EVEMon.Common
                                               dependency,
                                               depItems = item.AllDependencies.Where(
                                                   dep => item.Skill != dep.Skill &&
-                                                         dep.Skill.Prerequisites.Any(prereq => prereq.Skill == dependency.Skill))
-                                                  .ToList()
+                                                         dep.Skill.Prerequisites.Any(
+                                                             prereq => prereq.Skill == dependency.Skill))
                                           })
-                    .Where(dep => !dep.depItems.Any() || !dep.depItems.All(depItem => Character.GetSkillLevel(depItem.Skill) >= depItem.Level))
+                    .Where(dep => !dep.depItems.Any() ||
+                                  !dep.depItems.All(depItem => Character.GetSkillLevel(depItem.Skill) >= depItem.Level))
                     .Select(dep => dep.dependency))
                 {
                     // Create an entry (even for existing ones, we will update them later from those new entries)
