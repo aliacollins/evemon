@@ -508,4 +508,10 @@
   <data name="EVEImageBase" xml:space="preserve">
     <value>https://image.eveonline.com</value>
   </data>
+  <data name="APICharacterAffiliation" xml:space="preserve">
+    <value>/eve/CharacterAffiliation.xml.aspx</value>
+  </data>
+  <data name="APIOwnerID" xml:space="preserve">
+    <value>/eve/OwnerID.xml.aspx</value>
+  </data>
 </root>

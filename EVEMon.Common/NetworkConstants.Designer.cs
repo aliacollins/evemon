@@ -133,6 +133,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /eve/CharacterAffiliation.xml.aspx.
+        /// </summary>
+        public static string APICharacterAffiliation {
+            get {
+                return ResourceManager.GetString("APICharacterAffiliation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /eve/CharacterID.xml.aspx.
         /// </summary>
         public static string APICharacterID {
@@ -660,6 +669,15 @@ namespace EVEMon.Common {
         public static string APINotificationTexts {
             get {
                 return ResourceManager.GetString("APINotificationTexts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /eve/OwnerID.xml.aspx.
+        /// </summary>
+        public static string APIOwnerID {
+            get {
+                return ResourceManager.GetString("APIOwnerID", resourceCulture);
             }
         }
         

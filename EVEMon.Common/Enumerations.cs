@@ -1130,12 +1130,12 @@ namespace EVEMon.Common
         ConquerableStationList,
 
         /// <summary>
-        /// The character name. Used to convert IDs to Names.
+        /// Used to convert IDs to Names.
         /// </summary>
         CharacterName,
 
         /// <summary>
-        /// The character id. Used to convert Names to IDs.
+        /// Used to convert Names to IDs.
         /// </summary>
         CharacterID,
 
@@ -1190,7 +1190,7 @@ namespace EVEMon.Common
         SkillTree,
 
         /// <summary>
-        /// The type id. Used to convert typeIDs to typeNames.
+        /// Used to convert typeIDs to typeNames.
         /// </summary>
         TypeName,
 
@@ -1213,6 +1213,16 @@ namespace EVEMon.Common
         /// List of solar systems that are controled by faction or alliance.
         /// </summary>
         Sovereignty,
+
+        /// <summary>
+        /// Used to convert Names to IDs.
+        /// </summary>
+        OwnerID,
+
+        /// <summary>
+        /// Used to convert IDs to character affiliation info.
+        /// </summary>
+        CharacterAffiliation,
     }
 
     public enum QueryStatus
