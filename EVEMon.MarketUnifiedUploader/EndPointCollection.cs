@@ -108,7 +108,9 @@ namespace EVEMon.MarketUnifiedUploader
             string response;
             try
             {
-                Uri url = new Uri(NetworkConstants.UploaderEndPoints);
+                Uri url =
+                    new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
+                        NetworkConstants.UploaderEndPoints));
                 response = HttpWebService.DownloadString(url);
             }
             catch (HttpWebServiceException ex)

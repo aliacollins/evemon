@@ -134,12 +134,16 @@ namespace EVEMon.Common
         private Uri GetImageUrl()
         {
             if (m_contactType == ContactType.Character)
-                return new Uri(String.Format(CultureConstants.InvariantCulture,
-                                             NetworkConstants.CCPPortraits, m_contactID, (int)EveImageSize.x32));
+                return
+                    new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                        String.Format(CultureConstants.InvariantCulture,
+                            NetworkConstants.CCPPortraits, m_contactID, (int)EveImageSize.x32)));
 
-            return new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                                         (m_contactType == ContactType.Alliance ? "alliance" : "corporation"),
-                                         m_contactID, (int)EveImageSize.x32));
+            return
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
+                        (m_contactType == ContactType.Alliance ? "alliance" : "corporation"),
+                        m_contactID, (int)EveImageSize.x32)));
         }
 
         #endregion

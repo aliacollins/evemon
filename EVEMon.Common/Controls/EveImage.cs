@@ -269,8 +269,10 @@ namespace EVEMon.Common.Controls
                 drawOverlayIcon = true;
             }
 
-            Uri imageURL = new Uri(String.Format(CultureConstants.InvariantCulture,
-                                                 NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize));
+            Uri imageURL =
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture,
+                        NetworkConstants.CCPIconsFromImageServer, urlPath, m_item.ID, (int)m_imageSize)));
 
             ImageService.GetImageAsync(imageURL, img =>
                                                      {

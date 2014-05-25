@@ -20,7 +20,9 @@ namespace EVEMon.Common
         public static void CheckIsSynchronised(TimeSynchronisationCallback callback)
         {
             SyncState state = new SyncState(callback);
-            Uri url = new Uri(NetworkConstants.BatlleclinicTimeSynch);
+            Uri url =
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicBase,
+                    NetworkConstants.BatlleClinicTimeSynch));
             string id = s_macAddressSHA1Sum ?? (s_macAddressSHA1Sum = Util.CreateSHA1SumFromMacAddress());
             string postdata = String.Format(CultureConstants.InvariantCulture, "id={0}", id);
             HttpWebService.DownloadStringAsync(url, SyncDownloadCompleted, state, HttpMethod.Post, false, postdata);

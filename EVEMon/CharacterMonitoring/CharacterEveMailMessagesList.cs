@@ -634,7 +634,7 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailOpen,
                                                      message.MessageID))));
         }
@@ -646,7 +646,7 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReply,
                                                      message.MessageID))));
         }
@@ -658,7 +658,7 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReplyAll,
                                                      message.MessageID))));
         }
@@ -670,7 +670,7 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailForward,
                                                      message.MessageID))));
         }

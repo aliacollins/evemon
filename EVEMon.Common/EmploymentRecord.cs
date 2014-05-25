@@ -149,9 +149,11 @@ namespace EVEMon.Common
         /// <returns></returns>
         private Uri GetImageUrl()
         {
-            return new Uri(String.Format(CultureConstants.InvariantCulture,
-                                         NetworkConstants.CCPIconsFromImageServer, "corporation", m_corporationId,
-                                         (int)EveImageSize.x32));
+            return
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture,
+                        NetworkConstants.CCPIconsFromImageServer, "corporation", m_corporationId,
+                        (int)EveImageSize.x32)));
         }
 
 

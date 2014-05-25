@@ -130,7 +130,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
         private static Uri GetMethodUrl(BCAPIMethods requestMethod)
         {
             // Build the uri
-            Uri baseUri = new Uri(NetworkConstants.BCAPIBase);
+            Uri baseUri = new Uri(NetworkConstants.BattleClinicAPIBase);
             UriBuilder uriBuilder = new UriBuilder(baseUri);
             uriBuilder.Path = String.Format(CultureConstants.InvariantCulture, "{0}{1}",
                                             uriBuilder.Path.TrimEnd("/".ToCharArray()), GetMethod(requestMethod).Path);

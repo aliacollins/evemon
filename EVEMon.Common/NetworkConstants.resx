@@ -132,33 +132,33 @@
   <data name="APIBase" xml:space="preserve">
     <value>https://api.eveonline.com</value>
   </data>
-  <data name="BatlleclinicTimeSynch" xml:space="preserve">
-    <value>http://www.battleclinic.com/time.php</value>
+  <data name="BatlleClinicTimeSynch" xml:space="preserve">
+    <value>/time.php</value>
   </data>
-  <data name="BattleclinicLoadoutDetails" xml:space="preserve">
-    <value>http://eve.battleclinic.com/ship_loadout_feed.php?id={0}</value>
+  <data name="BattleClinicLoadoutDetails" xml:space="preserve">
+    <value>/ship_loadout_feed.php?id={0}</value>
   </data>
-  <data name="BattleclinicLoadoutsFeed" xml:space="preserve">
-    <value>http://eve.battleclinic.com/ship_loadout_feed.php?typeID={0}</value>
+  <data name="BattleClinicLoadoutsFeed" xml:space="preserve">
+    <value>/ship_loadout_feed.php?typeID={0}</value>
   </data>
-  <data name="BattleclinicLoadoutTopic" xml:space="preserve">
+  <data name="BattleClinicLoadoutTopic" xml:space="preserve">
     <value>http://forum.battleclinic.com/index.php/topic,{0}.0.html</value>
   </data>
   <data name="EVEMonUpdates" xml:space="preserve">
-    <value>https://bitbucket.org/BattleClinic/evemon/wiki/updates/patch.xml</value>
+    <value>/updates/patch.xml</value>
   </data>
   <data name="CCPIcons" xml:space="preserve">
     <value>http://eve.no-ip.de/{0}/{1}/{2}.png</value>
   </data>
   <data name="CCPPortraits" xml:space="preserve">
-    <value>http://image.eveonline.com/character/{0}_{1}.jpg</value>
+    <value>/character/{0}_{1}.jpg</value>
     <comment>New web address for portraits as part of Incursion 1.1.0</comment>
   </data>
   <data name="GoogleCalendarURL" xml:space="preserve">
     <value>https://www.google.com/calendar/feeds/default/private/full</value>
   </data>
-  <data name="APICredentials" xml:space="preserve">
-    <value>https://community.eveonline.com/support/api-key/</value>
+  <data name="APICredentialsBase" xml:space="preserve">
+    <value>/support/api-key/</value>
   </data>
   <data name="EVEMonBugReport" xml:space="preserve">
     <value>http://wiki.battleclinic.com/index.php/How_to_write_an_useful_bug_report_%28EVEMon%29_%3F</value>
@@ -176,7 +176,7 @@
     <value>/char/AccountBalance.xml.aspx</value>
   </data>
   <data name="MyEVELevelImage" xml:space="preserve">
-    <value>http://www.eveonline.com/bitmaps/character/level</value>
+    <value>/bitmaps/character/level</value>
   </data>
   <data name="APIMarketOrders" xml:space="preserve">
     <value>/char/MarketOrders.xml.aspx</value>
@@ -229,28 +229,28 @@
     <value>/char/Standings.xml.aspx</value>
   </data>
   <data name="CCPIconsFromImageServer" xml:space="preserve">
-    <value>http://image.eveonline.com/{0}/{1}_{2}.png</value>
+    <value>/{0}/{1}_{2}.png</value>
     <comment>Icons from CCP's image server</comment>
   </data>
   <data name="BattleClinicBase" xml:space="preserve">
     <value>http://www.battleclinic.com</value>
   </data>
-  <data name="BCAPIAccountCredentials" xml:space="preserve">
-    <value>http://api.battleclinic.com/api_key.php</value>
+  <data name="BattleClinicAPIAccountCredentials" xml:space="preserve">
+    <value>/api_key.php</value>
   </data>
-  <data name="BCAPIBase" xml:space="preserve">
+  <data name="BattleClinicAPIBase" xml:space="preserve">
     <value>http://api.battleclinic.com</value>
   </data>
-  <data name="BCAPICheckCredentials" xml:space="preserve">
+  <data name="BattleClinicAPICheckCredentials" xml:space="preserve">
     <value>/account/checkAPICredentials.php</value>
   </data>
-  <data name="BCAPIFileGet" xml:space="preserve">
+  <data name="BattleClinicAPIFileGet" xml:space="preserve">
     <value>/files/fileGet.php</value>
   </data>
-  <data name="BCAPIFileSave" xml:space="preserve">
+  <data name="BattleClinicAPIFileSave" xml:space="preserve">
     <value>/files/fileSave.php</value>
   </data>
-  <data name="BCAPIFileGetByName" xml:space="preserve">
+  <data name="BattleClinicAPIFileGetByName" xml:space="preserve">
     <value>/files/fileGetByName.php</value>
   </data>
   <data name="EVEGateMailOpen" xml:space="preserve">
@@ -265,7 +265,7 @@
   <data name="EVEGateMailReplyAll" xml:space="preserve">
     <value>/Mail/ComposeReplyAll/{0}</value>
   </data>
-  <data name="EVEGate" xml:space="preserve">
+  <data name="EVEGateBase" xml:space="preserve">
     <value>https://gate.eveonline.com</value>
   </data>
   <data name="EVEGateCharacterProfile" xml:space="preserve">
@@ -281,7 +281,7 @@
     <value>/account/APIKeyInfo.xml.aspx</value>
   </data>
   <data name="APICredentialsPredefined" xml:space="preserve">
-    <value>https://community.eveonline.com/support/api-key/createpredefined?accessmask={0}</value>
+    <value>/createpredefined?accessmask={0}</value>
     <comment>Used to create api key with predefined access mask</comment>
   </data>
   <data name="PostDataBase" xml:space="preserve">
@@ -300,7 +300,7 @@
     <value>https://secure.eveonline.com/AccountManMenu.aspx</value>
   </data>
   <data name="APICredentialsUpdate" xml:space="preserve">
-    <value>https://community.eveonline.com/support/api-key/update/?keyID={0}</value>
+    <value>/update/?keyID={0}</value>
     <comment>Used to update the api credentials</comment>
   </data>
   <data name="APICorporationIndustryJobs" xml:space="preserve">
@@ -487,13 +487,25 @@
     <value>corporationID={0}</value>
   </data>
   <data name="UploaderEndPoints" xml:space="preserve">
-    <value>https://bitbucket.org/BattleClinic/evemon/wiki/emuu/endpoints/endpoints.json</value>
+    <value>/emuu/endpoints/endpoints.json</value>
   </data>
   <data name="PostDataWithCharIDAndRowCount" xml:space="preserve">
     <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;rowCount={3}</value>
   </data>
-  <data name="BattleclinicItemPrices" xml:space="preserve">
-    <value>http://eve.battleclinic.com/xml_item_prices.php</value>
+  <data name="BattleClinicItemPrices" xml:space="preserve">
+    <value>/xml_item_prices.php</value>
     <comment>Used for fetching item prices from BattleClinic</comment>
+  </data>
+  <data name="BattleClinicEVEBase" xml:space="preserve">
+    <value>http://eve.battleclinic.com</value>
+  </data>
+  <data name="BitBucketWikiBase" xml:space="preserve">
+    <value>https://bitbucket.org/BattleClinic/evemon/wiki</value>
+  </data>
+  <data name="EVECommunityBase" xml:space="preserve">
+    <value>https://community.eveonline.com</value>
+  </data>
+  <data name="EVEImageBase" xml:space="preserve">
+    <value>https://image.eveonline.com</value>
   </data>
 </root>

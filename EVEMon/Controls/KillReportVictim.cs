@@ -90,33 +90,37 @@ namespace EVEMon.Controls
             string url = null;
 
             if (pictureBox.Equals(CharacterPictureBox))
-                url = String.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.CCPPortraits, m_killLog.Victim.ID, (int)EveImageSize.x128);
+                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture,
+                        NetworkConstants.CCPPortraits, m_killLog.Victim.ID, (int)EveImageSize.x128));
 
             if (pictureBox.Equals(ShipPictureBox))
-                url = String.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.CCPIconsFromImageServer, "render", m_killLog.Victim.ShipTypeID,
-                                    (int)EveImageSize.x128);
+                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture,
+                        NetworkConstants.CCPIconsFromImageServer, "render", m_killLog.Victim.ShipTypeID,
+                        (int)EveImageSize.x128));
 
             if (pictureBox.Equals(CorpPictureBox))
-                url = String.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.CCPIconsFromImageServer, "corporation", m_killLog.Victim.CorporationID,
-                                    (int)EveImageSize.x32);
+                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture,
+                        NetworkConstants.CCPIconsFromImageServer, "corporation", m_killLog.Victim.CorporationID,
+                        (int)EveImageSize.x32));
 
             if (pictureBox.Equals(AlliancePictureBox))
-                url = String.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.CCPIconsFromImageServer, "alliance", m_killLog.Victim.AllianceID,
-                                    (int)EveImageSize.x32);
+                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture,
+                        NetworkConstants.CCPIconsFromImageServer, "alliance", m_killLog.Victim.AllianceID,
+                        (int)EveImageSize.x32));
 
             if (!String.IsNullOrEmpty(url))
             {
                 ImageService.GetImageAsync(new Uri(url), img =>
-                                                             {
-                                                                 if (img == null)
-                                                                     return;
+                {
+                    if (img == null)
+                        return;
 
-                                                                 pictureBox.Image = img;
-                                                             });
+                    pictureBox.Image = img;
+                });
             }
         }
 
