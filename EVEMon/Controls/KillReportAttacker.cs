@@ -86,15 +86,17 @@ namespace EVEMon.Controls
 
             if (pictureBox.Equals(CharacterPictureBox))
             {
-                url = String.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.CCPPortraits, m_attacker.ID, (int)EveImageSize.x64);
+                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture,
+                        NetworkConstants.CCPPortraits, m_attacker.ID, (int)EveImageSize.x64));
             }
 
             if (pictureBox.Equals(ShipPictureBox) || pictureBox.Equals(WeaponPictureBox))
             {
                 int typeId = pictureBox.Equals(ShipPictureBox) ? m_attacker.ShipTypeID : m_attacker.WeaponTypeID;
-                url = String.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.CCPIconsFromImageServer, "type", typeId, (int)EveImageSize.x32);
+                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture,
+                        NetworkConstants.CCPIconsFromImageServer, "type", typeId, (int)EveImageSize.x32));
             }
 
             if (!String.IsNullOrEmpty(url))

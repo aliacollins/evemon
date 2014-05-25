@@ -25,7 +25,8 @@ namespace EVEMon.Common.SettingsObjects
             IgnoreNetworkStatus = false;
             UpdateFrequency = 720;
             UseCustomUpdatesUrl = false;
-            UpdatesAddress = NetworkConstants.EVEMonUpdates;
+            UpdatesAddress = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
+                NetworkConstants.EVEMonUpdates);
         }
 
         /// <summary>
@@ -73,17 +74,16 @@ namespace EVEMon.Common.SettingsObjects
         {
             get
             {
-                if (!UseCustomUpdatesUrl)
-                    return NetworkConstants.EVEMonUpdates;
-
-                if (String.IsNullOrEmpty(m_updatesUrl))
-                    return NetworkConstants.EVEMonUpdates;
+                if (!UseCustomUpdatesUrl || String.IsNullOrEmpty(m_updatesUrl))
+                    return String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
+                        NetworkConstants.EVEMonUpdates);
 
                 // We don't want this to be abused, so we lock the custom update url to localhost.
                 // For convenience any localhost path can be used on any port. file:// does not work anyway.
                 return !m_updatesUrl.StartsWith("http://localhost:", StringComparison.OrdinalIgnoreCase)
-                           ? NetworkConstants.EVEMonUpdates
-                           : m_updatesUrl;
+                    ? String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
+                        NetworkConstants.EVEMonUpdates)
+                    : m_updatesUrl;
             }
             set { m_updatesUrl = value; }
         }

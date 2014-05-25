@@ -145,7 +145,7 @@ namespace EVEMon.Controls
 
                     if (typeID >= DBConstants.CharacterAmarrID && typeID <= DBConstants.CharacterVherokiorID)
                     {
-                        url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                        url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                             String.Format(CultureConstants.InvariantCulture,
                                                           NetworkConstants.EVEGateCharacterProfile,
                                                           Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
@@ -155,13 +155,13 @@ namespace EVEMon.Controls
                         switch (typeID)
                         {
                             case DBConstants.AllianceID:
-                                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                                     String.Format(CultureConstants.InvariantCulture,
                                                                   NetworkConstants.EVEGateAllianceProfile,
                                                                   Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
                                 break;
                             case DBConstants.CorporationID:
-                                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGate,
+                                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                                     String.Format(CultureConstants.InvariantCulture,
                                                                   NetworkConstants.EVEGateCorporationProfile,
                                                                   Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));

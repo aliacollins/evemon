@@ -95,8 +95,9 @@ namespace EVEMon.SkillPlanner
             eveImage.EveItem = m_ship;
 
             // Download the loadouts feed
-            Uri url = new Uri(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutsFeed,
-                                       m_ship.ID));
+            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
+                String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutsFeed,
+                    m_ship.ID)));
             Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutFeedDownloaded, true);
 
             // Set labels while the user wait
@@ -250,8 +251,10 @@ namespace EVEMon.SkillPlanner
             lblSubmitDate.Text = m_selectedLoadout.SubmissionDate.ToString();
 
             // Download the loadout details
-            Uri url = new Uri(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutDetails,
-                                       m_selectedLoadout.LoadoutID));
+            Uri url =
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
+                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutDetails,
+                        m_selectedLoadout.LoadoutID)));
             Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutDownloaded, true);
         }
 
@@ -494,8 +497,10 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                Util.OpenURL(new Uri(String.Format(CultureConstants.DefaultCulture, NetworkConstants.BattleclinicLoadoutTopic,
-                                           m_selectedLoadout.Topic)));
+                Util.OpenURL(
+                    new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
+                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutTopic,
+                            m_selectedLoadout.Topic))));
             }
             else
             {

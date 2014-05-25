@@ -175,12 +175,16 @@ namespace EVEMon.Common
         private Uri GetImageUrl()
         {
             if (Group == StandingGroup.Agents)
-                return new Uri(String.Format(CultureConstants.InvariantCulture,
-                                             NetworkConstants.CCPPortraits, m_entityID, (int)EveImageSize.x32));
+                return
+                    new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                        String.Format(CultureConstants.InvariantCulture,
+                            NetworkConstants.CCPPortraits, m_entityID, (int)EveImageSize.x32)));
 
-            return new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                                 (Group == StandingGroup.Factions ? "alliance" : "corporation"),
-                                 m_entityID, (int)EveImageSize.x32));
+            return
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
+                        (Group == StandingGroup.Factions ? "alliance" : "corporation"),
+                        m_entityID, (int)EveImageSize.x32)));
         }
 
         #endregion

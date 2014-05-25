@@ -24,8 +24,11 @@ namespace EVEMon.Common
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
         public static void GetCharacterImageAsync(long charId, GetImageCallback callback)
         {
-            GetImageAsync(new Uri(String.Format(CultureConstants.InvariantCulture,
-                                                NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128)), callback, false);
+            GetImageAsync(
+                new Uri(
+                    String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                        String.Format(CultureConstants.InvariantCulture,
+                            NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128))), callback, false);
         }
 
         /// <summary>
@@ -35,8 +38,10 @@ namespace EVEMon.Common
         /// <param name="allianceID">The alliance ID.</param>
         public static void GetAllianceImage(PictureBox pictureBox, long allianceID)
         {
-            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                                            "alliance", allianceID, pictureBox.Width));
+            Uri url =
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
+                        "alliance", allianceID, pictureBox.Width)));
 
             GetImageAsync(url, (img =>
                                     {
@@ -52,8 +57,10 @@ namespace EVEMon.Common
         /// <param name="corporationID">The corporation ID.</param>
         public static void GetCorporationImage(PictureBox pictureBox, long corporationID)
         {
-            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                                            "corporation", corporationID, pictureBox.Width));
+            Uri url =
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
+                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
+                        "corporation", corporationID, pictureBox.Width)));
 
             GetImageAsync(url, (img =>
                                     {

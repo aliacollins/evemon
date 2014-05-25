@@ -105,7 +105,10 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
             if (s_queryPending)
                 return;
 
-            Util.DownloadXmlAsync<SerializableBCItemPrices>(new Uri(NetworkConstants.BattleclinicItemPrices), OnDownloaded, true);
+            Util.DownloadXmlAsync<SerializableBCItemPrices>(
+                new Uri(
+                    String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
+                        NetworkConstants.BattleClinicItemPrices)), OnDownloaded, true);
 
             s_queryPending = true;
         }

@@ -39,17 +39,17 @@ namespace EVEMon.Common.Serialization.BattleClinic
         {
             return Enum.GetNames(typeof(BCAPIMethods)).Select(
                 methodName =>
-                new
+                    new
                     {
                         methodName,
                         methodEnum = (BCAPIMethods)Enum.Parse(typeof(BCAPIMethods), methodName)
                     }).Select(method =>
-                              new
-                                  {
-                                      method,
-                                      methodURL = NetworkConstants.ResourceManager.GetString(
-                                          String.Format(CultureConstants.InvariantCulture, "BCAPI{0}", method.methodName))
-                                  }).Select(bcAPIMethod => new BCAPIMethod(bcAPIMethod.method.methodEnum, bcAPIMethod.methodURL));
+                        new
+                        {
+                            method,
+                            methodURL = NetworkConstants.ResourceManager.GetString(
+                                String.Format(CultureConstants.InvariantCulture, "BattleClinicAPI{0}", method.methodName))
+                        }).Select(bcAPIMethod => new BCAPIMethod(bcAPIMethod.method.methodEnum, bcAPIMethod.methodURL));
         }
     }
 }

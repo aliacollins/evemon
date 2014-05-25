@@ -363,8 +363,8 @@ namespace EVEMon.Common
                         skillGroupAppended = true;
                     }
 
-                    result.AppendFormat(CultureConstants.InvariantCulture, "[img]{0}{1}.gif[/img] {2}{3}",
-                                        NetworkConstants.MyEVELevelImage, skill.Level, skill.Name, Environment.NewLine);
+                    result.AppendFormat(CultureConstants.InvariantCulture, "[img]{0}{1}{2}.gif[/img] {3}{4}",
+                                        NetworkConstants.EVECommunityBase, NetworkConstants.MyEVELevelImage, skill.Level, skill.Name, Environment.NewLine);
                 }
 
                 if (skillGroupAppended)

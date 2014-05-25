@@ -338,7 +338,9 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void ApiCredentialsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(new Uri(NetworkConstants.APICredentials));
+            Util.OpenURL(
+                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVECommunityBase,
+                    NetworkConstants.APICredentialsBase)));
         }
 
         /// <summary>
@@ -358,9 +360,8 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void APIKeyExpiredLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(new Uri(
-                             String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsUpdate,
-                                           IDTextBox.Text)));
+            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVECommunityBase,
+                String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsUpdate, IDTextBox.Text))));
         }
 
         /// <summary>
