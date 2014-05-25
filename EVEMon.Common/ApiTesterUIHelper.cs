@@ -15,20 +15,22 @@ namespace EVEMon.Common
 
         private const string NoAPIKeyWithAccess = "No API key with access to API call found";
 
-        private static readonly Enum[] s_apiMethodsHasIDOrName = new Enum[]
-                                                                     {
-                                                                         APIGenericMethods.CharacterID,
-                                                                         APIGenericMethods.CharacterName,
-                                                                         APIGenericMethods.TypeName,
-                                                                         APIGenericMethods.ContractItems,
-                                                                         APIGenericMethods.CorporationContractItems,
-                                                                         APICharacterMethods.CalendarEventAttendees,
-                                                                         APICharacterMethods.Locations,
-                                                                         APICharacterMethods.MailBodies,
-                                                                         APICharacterMethods.NotificationTexts,
-                                                                         APICorporationMethods.CorporationLocations,
-                                                                         APICorporationMethods.CorporationStarbaseDetails
-                                                                     };
+        private static readonly Enum[] s_apiMethodsHasIDOrName =
+        {
+            APIGenericMethods.CharacterID,
+            APIGenericMethods.OwnerID,
+            APIGenericMethods.CharacterName,
+            APIGenericMethods.TypeName,
+            APIGenericMethods.CharacterAffiliation,
+            APIGenericMethods.ContractItems,
+            APIGenericMethods.CorporationContractItems,
+            APICharacterMethods.CalendarEventAttendees,
+            APICharacterMethods.Locations,
+            APICharacterMethods.MailBodies,
+            APICharacterMethods.NotificationTexts,
+            APICorporationMethods.CorporationLocations,
+            APICorporationMethods.CorporationStarbaseDetails
+        };
 
         #endregion
 
@@ -218,13 +220,15 @@ namespace EVEMon.Common
 
             // Post data for character name, type name
             if (SelectedItem.Equals(APIGenericMethods.CharacterName) ||
-                SelectedItem.Equals(APIGenericMethods.TypeName))
+                SelectedItem.Equals(APIGenericMethods.TypeName) ||
+                SelectedItem.Equals(APIGenericMethods.CharacterAffiliation))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly, IDOrNameText);
             }
 
             // Post data for character id
-            if (SelectedItem.Equals(APIGenericMethods.CharacterID))
+            if (SelectedItem.Equals(APIGenericMethods.CharacterID) ||
+                SelectedItem.Equals(APIGenericMethods.OwnerID))
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataNamesOnly, IDOrNameText);
 
             // Post data for supplemental API methods

@@ -129,10 +129,12 @@ namespace EVEMon.ApiTester
             if (!IDOrNameLabel.Visible || APIMethodComboBox.SelectedItem == null)
                 return;
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterName))
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterName) ||
+                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterAffiliation))
                 IDOrNameLabel.Text = "IDs:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID))
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID) ||
+                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.OwnerID))
                 IDOrNameLabel.Text = "Names:";
 
             if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.TypeName))
@@ -405,7 +407,8 @@ namespace EVEMon.ApiTester
             if (String.IsNullOrEmpty(textbox.Text))
             {
                 string errorText = String.Format(CultureConstants.DefaultCulture, "{0} can not be blank.",
-                                                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID)
+                                                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID) ||
+                                                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.OwnerID)
                                                      ? "Names"
                                                      : "IDs");
                 ErrorProvider.SetError(textbox, errorText);
@@ -413,7 +416,8 @@ namespace EVEMon.ApiTester
                 return;
             }
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID))
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID) ||
+                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.OwnerID))
                 return;
 
             if (ids.Any(id => id == "0"))
