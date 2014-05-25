@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
@@ -136,7 +137,7 @@ namespace EVEMon.Common
             // Build the uri
             Uri baseUri = url;
             UriBuilder uriBuilder = new UriBuilder(baseUri);
-            uriBuilder.Path = uriBuilder.Path.TrimEnd("/".ToCharArray()) + path;
+            uriBuilder.Path = uriBuilder.Path.TrimEnd(Path.AltDirectorySeparatorChar) + path;
             return uriBuilder.Uri;
         }
 

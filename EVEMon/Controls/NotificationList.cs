@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -605,7 +606,7 @@ namespace EVEMon.Controls
                     // Expired :    12k/15k invulnerability fields at Pator V - Tech School
                     // Fulfilled :  15k invulnerability fields at Pator V - Tech School
                     if (order.State == OrderState.Expired)
-                        builder.Append(FormatHelper.Format(order.RemainingVolume, Format)).Append("/");
+                        builder.Append(FormatHelper.Format(order.RemainingVolume, Format)).Append(Path.AltDirectorySeparatorChar);
 
                     builder.Append(FormatHelper.Format(order.InitialVolume, Format)).Append(" ");
                     builder.Append(order.Item.Name).Append(" at ");
