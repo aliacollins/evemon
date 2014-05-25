@@ -133,7 +133,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
             Uri baseUri = new Uri(NetworkConstants.BCAPIBase);
             UriBuilder uriBuilder = new UriBuilder(baseUri);
             uriBuilder.Path = String.Format(CultureConstants.InvariantCulture, "{0}{1}",
-                                            uriBuilder.Path.TrimEnd("/".ToCharArray()), GetMethod(requestMethod).Path);
+                uriBuilder.Path.TrimEnd(Path.AltDirectorySeparatorChar), GetMethod(requestMethod).Path);
             return uriBuilder.Uri;
         }
 
