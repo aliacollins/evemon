@@ -120,7 +120,7 @@
   <data name="LatestBinariesLinkLabel.Text" xml:space="preserve">
     <value>Use the latest snapshot binaries (beta) as the problem may have been already solved or 
 go to EVEMon's data directory (by clicking on the related button below) and delete, your settings file 
-(after you have made a backup), cache folder and data files (*.gz),  to see if the problem persists.</value>
+(after you have made a backup), cache folder and data files (*.gzip),  to see if the problem persists.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="KnownProblemsPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

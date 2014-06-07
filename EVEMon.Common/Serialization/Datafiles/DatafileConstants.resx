@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BlueprintsDatafile" xml:space="preserve">
-    <value>eve-blueprints-en-US.xml.gz</value>
+    <value>eve-blueprints-en-US.xml.gzip</value>
   </data>
   <data name="CertificatesDatafile" xml:space="preserve">
-    <value>eve-certificates-v2-en-US.xml.gz</value>
+    <value>eve-certificates-v2-en-US.xml.gzip</value>
   </data>
   <data name="GeographyDatafile" xml:space="preserve">
-    <value>eve-geography-en-US.xml.gz</value>
+    <value>eve-geography-en-US.xml.gzip</value>
   </data>
   <data name="ItemsDatafile" xml:space="preserve">
-    <value>eve-items-en-US.xml.gz</value>
+    <value>eve-items-en-US.xml.gzip</value>
   </data>
   <data name="PropertiesDatafile" xml:space="preserve">
-    <value>eve-properties-en-US.xml.gz</value>
+    <value>eve-properties-en-US.xml.gzip</value>
   </data>
   <data name="ReprocessingDatafile" xml:space="preserve">
-    <value>eve-reprocessing-en-US.xml.gz</value>
+    <value>eve-reprocessing-en-US.xml.gzip</value>
   </data>
   <data name="SkillsDatafile" xml:space="preserve">
-    <value>eve-skills-en-US.xml.gz</value>
+    <value>eve-skills-en-US.xml.gzip</value>
   </data>
 </root>

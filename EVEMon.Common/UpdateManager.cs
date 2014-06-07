@@ -41,8 +41,7 @@ namespace EVEMon.Common
         /// </summary>
         public static void DeleteDataFiles()
         {
-            foreach (string file in Directory.GetFiles(
-                EveMonClient.EVEMonDataDir, "*.xml.gz", SearchOption.TopDirectoryOnly))
+            foreach (string file in Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir))
             {
                 try
                 {

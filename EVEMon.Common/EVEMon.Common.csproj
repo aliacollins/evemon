@@ -967,22 +967,22 @@
   <ItemGroup>
     <EmbeddedResource Include="Serialization\Settings\settings-transform.xslt" />
     <EmbeddedResource Include="Serialization\NotificationRefTypeIDs.xml" />
-    <None Include="Resources\eve-blueprints-en-US.xml.gz">
+    <None Include="Resources\eve-blueprints-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\eve-geography-en-US.xml.gz">
+    <None Include="Resources\eve-geography-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\eve-items-en-US.xml.gz">
+    <None Include="Resources\eve-items-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\eve-properties-en-US.xml.gz">
+    <None Include="Resources\eve-properties-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\eve-reprocessing-en-US.xml.gz">
+    <None Include="Resources\eve-reprocessing-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\eve-skills-en-US.xml.gz">
+    <None Include="Resources\eve-skills-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Skill_Select\IconSettings.settings">

@@ -176,7 +176,8 @@ namespace EVEMon.XmlGenerator
         /// Creates one file alongside the resources file containing
         /// the MD5 sums for each resource.
         /// </summary>
-        /// <param name="filename">Filename of resource .xml.gz</param>
+        /// <param name="filename">The filename.</param>
+        /// <exception cref="System.IO.FileNotFoundException"></exception>
         internal static void CreateMD5SumsFile(string filename)
         {
             ResetCounters();
@@ -188,7 +189,7 @@ namespace EVEMon.XmlGenerator
 
             using (StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath))
             {
-                foreach (string file in Directory.GetFiles(ResourcesPath, "*.xml.gz", SearchOption.TopDirectoryOnly))
+                foreach (string file in Datafile.GetFilesFrom(ResourcesPath))
                 {
                     FileInfo datafile = new FileInfo(file);
                     if (!datafile.Exists)

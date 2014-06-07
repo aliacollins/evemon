@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace EVEMon.Common
@@ -36,7 +37,18 @@ namespace EVEMon.Common
         public string MD5Sum { get; private set; }
 
         /// <summary>
-        /// Gets the fuly-qualified path of the provided datafile name
+        /// Gets the datafile extension.
+        /// </summary>
+        /// <value>
+        /// The datafile extension.
+        /// </value>
+        public static string DatafileExtension
+        {
+            get { return ".xml.gzip"; }
+        }
+
+        /// <summary>
+        /// Gets the fully-qualified path of the provided datafile name
         /// </summary>
         /// <remarks>
         /// Attempts to find a datafile  - firstly, look in the %APPDATA% folder
@@ -51,14 +63,14 @@ namespace EVEMon.Common
 
             // Look in the %APPDATA% folder
             string filepath = String.Format(CultureConstants.InvariantCulture,
-                                            "{0}{1}{2}", evemonDataDir, Path.DirectorySeparatorChar, filename);
+                "{0}{1}{2}", evemonDataDir, Path.DirectorySeparatorChar, filename);
 
             if (File.Exists(filepath))
                 return filepath;
 
             // File isn't in the current folder, look in installation directory ("resources" subdirectory)
             string baseFile = String.Format(CultureConstants.InvariantCulture, "{1}Resources{0}{2}", Path.DirectorySeparatorChar,
-                                            AppDomain.CurrentDomain.BaseDirectory, filename);
+                AppDomain.CurrentDomain.BaseDirectory, filename);
 
             // Does not exist also ? 
             if (!File.Exists(baseFile))
@@ -69,6 +81,16 @@ namespace EVEMon.Common
 
             // Return
             return baseFile;
+        }
+
+        /// <summary>
+        /// Gets the data files from the given directory path.
+        /// </summary>
+        /// <param name="dirPath">The directory path.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetFilesFrom(string dirPath)
+        {
+            return Directory.GetFiles(dirPath, "*" + DatafileExtension, SearchOption.TopDirectoryOnly);
         }
     }
 

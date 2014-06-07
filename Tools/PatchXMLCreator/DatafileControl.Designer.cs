@@ -50,7 +50,7 @@ namespace EVEMon.PatchXmlCreator
             this.gbDatafile.Size = new System.Drawing.Size(398, 92);
             this.gbDatafile.TabIndex = 17;
             this.gbDatafile.TabStop = false;
-            this.gbDatafile.Text = "eve-datafilename-culture-xml.gz";
+            this.gbDatafile.Text = "eve-datafilename-culture-xml.gzip";
             this.gbDatafile.MouseCaptureChanged += new System.EventHandler(this.OnClick);
             // 
             // dtpDatafiles
