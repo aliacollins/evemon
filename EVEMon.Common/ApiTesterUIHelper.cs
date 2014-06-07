@@ -336,6 +336,15 @@ namespace EVEMon.Common
                                      KeyID, VCode, CharID, IDOrNameText);
             }
 
+            // Post data for planetary pins, routes, and links
+            if (SelectedItem.Equals(APIGenericMethods.PlanetaryPins) ||
+                SelectedItem.Equals(APIGenericMethods.PlanetaryRoutes) ||
+                SelectedItem.Equals(APIGenericMethods.PlanetaryLinks))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndPlanetID,
+                                     KeyID, VCode, CharID, IDOrNameText);
+            }
+
             // Generic post data
             return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                  KeyID, VCode, CharID);
