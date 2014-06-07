@@ -514,4 +514,19 @@
   <data name="APIOwnerID" xml:space="preserve">
     <value>/eve/OwnerID.xml.aspx</value>
   </data>
+  <data name="APIPlanetaryColonies" xml:space="preserve">
+    <value>/char/PlanetaryColonies.xml.aspx</value>
+  </data>
+  <data name="APIPlanetaryLinks" xml:space="preserve">
+    <value>/char/PlanetaryLinks.xml.aspx</value>
+  </data>
+  <data name="APIPlanetaryPins" xml:space="preserve">
+    <value>/char/PlanetaryPins.xml.aspx</value>
+  </data>
+  <data name="APIPlanetaryRoutes" xml:space="preserve">
+    <value>/char/PlanetaryRoutes.xml.aspx</value>
+  </data>
+  <data name="PostDataWithCharIDAndPlanetID" xml:space="preserve">
+    <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;planetID={3}</value>
+  </data>
 </root>

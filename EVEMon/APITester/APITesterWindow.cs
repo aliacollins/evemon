@@ -144,6 +144,11 @@ namespace EVEMon.ApiTester
                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
                 IDOrNameLabel.Text = "Contract ID:";
 
+            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.PlanetaryPins) ||
+                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.PlanetaryRoutes) ||
+                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.PlanetaryLinks))
+                IDOrNameLabel.Text = "Planet ID:";
+
             if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees))
                 IDOrNameLabel.Text = "Event IDs:";
 

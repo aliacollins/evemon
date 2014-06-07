@@ -24,6 +24,9 @@ namespace EVEMon.Common
             APIGenericMethods.CharacterAffiliation,
             APIGenericMethods.ContractItems,
             APIGenericMethods.CorporationContractItems,
+            APIGenericMethods.PlanetaryPins,
+            APIGenericMethods.PlanetaryRoutes,
+            APIGenericMethods.PlanetaryLinks,
             APICharacterMethods.CalendarEventAttendees,
             APICharacterMethods.Locations,
             APICharacterMethods.MailBodies,
@@ -288,6 +291,10 @@ namespace EVEMon.Common
                 if (SelectedItem.ToString().StartsWith("Contract", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
 
+                // Find associated API key for character planets
+                if (SelectedItem.ToString().StartsWith("Planetary", StringComparison.Ordinal))
+                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
+
                 // No API key found
                 if (apiKey == null)
                     return NoAPIKeyWithAccess;
@@ -297,6 +304,22 @@ namespace EVEMon.Common
                     SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndContractID,
+                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
+                }
+                
+                // Post data for planetary colonies
+                if (SelectedItem.Equals(APIGenericMethods.PlanetaryColonies))
+                {
+                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                         apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
+                }
+
+                // Post data for planetary pins, routes, and links
+                if (SelectedItem.Equals(APIGenericMethods.PlanetaryPins) ||
+                    SelectedItem.Equals(APIGenericMethods.PlanetaryRoutes) ||
+                    SelectedItem.Equals(APIGenericMethods.PlanetaryLinks))
+                {
+                    return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndPlanetID,
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
                 }
 

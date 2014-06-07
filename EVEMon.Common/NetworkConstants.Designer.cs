@@ -682,6 +682,42 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /char/PlanetaryColonies.xml.aspx.
+        /// </summary>
+        public static string APIPlanetaryColonies {
+            get {
+                return ResourceManager.GetString("APIPlanetaryColonies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/PlanetaryLinks.xml.aspx.
+        /// </summary>
+        public static string APIPlanetaryLinks {
+            get {
+                return ResourceManager.GetString("APIPlanetaryLinks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/PlanetaryPins.xml.aspx.
+        /// </summary>
+        public static string APIPlanetaryPins {
+            get {
+                return ResourceManager.GetString("APIPlanetaryPins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /char/PlanetaryRoutes.xml.aspx.
+        /// </summary>
+        public static string APIPlanetaryRoutes {
+            get {
+                return ResourceManager.GetString("APIPlanetaryRoutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /eve/RefTypes.xml.aspx.
         /// </summary>
         public static string APIRefTypes {
@@ -1191,6 +1227,15 @@ namespace EVEMon.Common {
         public static string PostDataWithCharIDAndIDS {
             get {
                 return ResourceManager.GetString("PostDataWithCharIDAndIDS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;planetID={3}.
+        /// </summary>
+        public static string PostDataWithCharIDAndPlanetID {
+            get {
+                return ResourceManager.GetString("PostDataWithCharIDAndPlanetID", resourceCulture);
             }
         }
         
