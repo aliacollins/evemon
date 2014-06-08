@@ -1,36 +1,43 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>30 March 2014</date>
-    <version>1.8.8.4290</version>
-    <md5>86a73f5a7415a17d054706dcfa7fc4da</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,182840.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.8.4290.exe</autopatchurl>
+    <date>08 June 2014</date>
+    <version>1.8.9.4357</version>
+    <md5>a87c18bbc7bb3232bf0f43db3a6659e6</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,185000.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.9.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[== Contributors for this version ==
-  
+    <message><![CDATA[== Breaking Changes ==
+
+ * Data files extension has been changed due to CDN restrictions that distributes our data files. EVEMon versions prior of 1.8.9 will not be able to get updates of future data files.
+
+== Contributors for this version ==
+
  * Jimi
-  
+ * Protag
+ 
 == Bug Fixes ==
 
-  * Fixed call to character factional warfare endpoint determining if a character is enlisted, so it doesn't produce API errors any more.
-  * Fixed a crash bug when shift selecting in Items browser without first selecting a node.
+ * Fixed a crash bug when creating or updating an outlook calendar entry and the character name contains a (') character.
+ * Fixed a crash bug when double-clicking on an "Unknown" skill in the required skills section in Items Browser.
+ * Fixed a crash bug when after cancelling selections in any Column Settings window and try to reopen the window.
 
 == Enhancements ==
 
-  * Switched to usage of API endpoint sender name element for EVE mail messages instead of internal discovery algorithm via CharacterID call.
-  * Switched to usage of API endpoint sender name element for EVE notifications instead of internal discovery algorithm via CharacterID call.
-  * Updated the notifications ref type list.
-  
+ * Switching to general Exception catching for special use cases with Darwine/Wine. Not a best practice but will resolve future issues.
+ * Skill planner now does not add a dependency skill level if the dependent skill level is already trained.
+ * Added OwnerID and CharacterAffiliation endpoints for API Tester.
+ * Added PlanetaryColonies, PlanetaryPins, PlanetaryRoutes, and PlanetaryLinks endpoints to the API Tester.
+
 == Misc ==
 
-  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
+ * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>07 June 2014</date>
+      <date>08 June 2014</date>
       <md5>d6a637e3a7f118f1c451e1e8ab740ad3</md5>
       <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
       <message><![CDATA[Kronos 1.0 (793961) blueprints data file by the EVEMon Development Team
@@ -38,7 +45,7 @@ NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>07 June 2014</date>
+      <date>08 June 2014</date>
       <md5>96524d5fda5e89dcd6fb55caf57d2c42</md5>
       <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
       <message><![CDATA[Kronos 1.0 (793961) geography data file by the EVEMon Development Team
@@ -46,7 +53,7 @@ NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>07 June 2014</date>
+      <date>08 June 2014</date>
       <md5>d27f35fc75a9f70e660f31b13419459c</md5>
       <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
       <message><![CDATA[Kronos 1.0 (793961) items data file by the EVEMon Development Team
@@ -54,7 +61,7 @@ NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>07 June 2014</date>
+      <date>08 June 2014</date>
       <md5>4789af3274c8d7cdc5d53e2b4b5eb54b</md5>
       <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
       <message><![CDATA[Kronos 1.0 (793961) properties data file by the EVEMon Development Team
@@ -62,7 +69,7 @@ NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>07 June 2014</date>
+      <date>08 June 2014</date>
       <md5>2aad2ebbd9bc382fdd81550b3ddd1a5b</md5>
       <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
       <message><![CDATA[Kronos 1.0 (793961) reprocessing data file by the EVEMon Development Team
@@ -70,7 +77,7 @@ NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>07 June 2014</date>
+      <date>08 June 2014</date>
       <md5>1e10821dd26203c9c7260b626ff1d81f</md5>
       <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
       <message><![CDATA[Kronos 1.0 (793961) skills data file by the EVEMon Development Team
