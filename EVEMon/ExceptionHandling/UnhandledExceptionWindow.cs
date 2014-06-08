@@ -174,7 +174,7 @@ namespace EVEMon.ExceptionHandling
             {
                 datafileReport.AppendLine("Datafile report:");
 
-                foreach (string datafile in Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir))
+                foreach (string datafile in Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir, Datafile.DatafilesExtension))
                 {
                     FileInfo info = new FileInfo(datafile);
                     Datafile file = new Datafile(Path.GetFileName(datafile));

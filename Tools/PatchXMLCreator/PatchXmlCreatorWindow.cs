@@ -178,7 +178,7 @@ namespace EVEMon.PatchXmlCreator
         {
             DirectoryInfo di = new DirectoryInfo(DatafileDir);
             FileInfo[] directoryFiles = di.GetFiles(String.Format(CultureConstants.InvariantCulture, "{0}*{1}{2}",
-                                                                  DatafileHeader, DatafileCulture, Datafile.DatafileExtension));
+                                                                  DatafileHeader, DatafileCulture, Datafile.DatafilesExtension));
             foreach (FileInfo datafile in directoryFiles)
             {
                 s_datafiles.Add(new Datafile(datafile.Name));
@@ -272,7 +272,7 @@ namespace EVEMon.PatchXmlCreator
                             s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text, tbExpRevision.Text,
                             datafile.Filename.Replace(DatafileHeader, String.Empty)
                                 .Replace(DatafileCulture, String.Empty)
-                                .Replace(Datafile.DatafileExtension, String.Empty));
+                                .Replace(Datafile.DatafilesExtension, String.Empty));
                     }
                 }
             }
@@ -296,7 +296,7 @@ namespace EVEMon.PatchXmlCreator
                 tbExpRevision.Text,
                 control.Parent.Text.Replace(DatafileHeader, String.Empty)
                     .Replace(DatafileCulture, String.Empty)
-                    .Replace(Datafile.DatafileExtension, String.Empty));
+                    .Replace(Datafile.DatafilesExtension, String.Empty));
 
             // Check if the new header text is already present and remove it
             if (control.Text.Contains(headerText))

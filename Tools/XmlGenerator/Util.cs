@@ -189,7 +189,7 @@ namespace EVEMon.XmlGenerator
 
             using (StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath))
             {
-                foreach (string file in Datafile.GetFilesFrom(ResourcesPath))
+                foreach (string file in Datafile.GetFilesFrom(ResourcesPath, Datafile.DatafilesExtension))
                 {
                     FileInfo datafile = new FileInfo(file);
                     if (!datafile.Exists)

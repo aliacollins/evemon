@@ -227,7 +227,7 @@ namespace EVEMon.Common
                 String message = String.Format(CultureConstants.DefaultCulture,
                                                "An error occurred decompressing {0}, the error message was '{1}' from '{2}'. "
                                                + "Try deleting all of the {3} files in %APPDATA%\\EVEMon.", filename,
-                                               ex.Message, ex.Source, Datafile.DatafileExtension);
+                                               ex.Message, ex.Source, Datafile.DatafilesExtension);
                 throw new InvalidOperationException(message, ex);
             }
             catch (XmlException ex)
@@ -235,7 +235,7 @@ namespace EVEMon.Common
                 String message = String.Format(CultureConstants.DefaultCulture,
                                                "An error occurred reading the XML from {0}, the error message was '{1}' from '{2}'. "
                                                + "Try deleting all of the {3} files in %APPDATA%\\EVEMon.", filename,
-                                               ex.Message, ex.Source, Datafile.DatafileExtension);
+                                               ex.Message, ex.Source, Datafile.DatafilesExtension);
                 throw new XmlException(message, ex);
             }
         }

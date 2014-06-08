@@ -13,6 +13,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class Datafile
     {
+        private const string DatafileExtension = ".xml.gzip";
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -42,20 +44,33 @@ namespace EVEMon.Common
         /// <value>
         /// The datafile extension.
         /// </value>
-        public static string DatafileExtension
+        public static string DatafilesExtension
         {
-            get { return ".xml.gzip"; }
+            get { return DatafileExtension; }
+        }
+
+        /// <summary>
+        /// Gets the old datafile extension.
+        /// </summary>
+        /// <value>
+        /// The old datafile extension.
+        /// </value>
+        public static string OldDatafileExtension
+        {
+            get { return DatafileExtension.TrimEnd("ip".ToCharArray()); }
         }
 
         /// <summary>
         /// Gets the fully-qualified path of the provided datafile name
         /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns></returns>
+        /// <exception cref="System.IO.FileNotFoundException"></exception>
         /// <remarks>
         /// Attempts to find a datafile  - firstly, look in the %APPDATA% folder
         /// Then look in the Application data folder (roaming users on usb devices)
         /// If not there, this could be a first run so copy from resources folder in installation directory
         /// </remarks>
-        /// <exception cref="ApplicationException">The file does not exist or it cannot be copied</exception>
         internal static string GetFullPath(string filename)
         {
             string evemonDataDir = EveMonClient.EVEMonDataDir ??
@@ -87,10 +102,11 @@ namespace EVEMon.Common
         /// Gets the data files from the given directory path.
         /// </summary>
         /// <param name="dirPath">The directory path.</param>
+        /// <param name="fileExtension">The file extension.</param>
         /// <returns></returns>
-        public static IEnumerable<string> GetFilesFrom(string dirPath)
+        public static IEnumerable<string> GetFilesFrom(string dirPath, string fileExtension)
         {
-            return Directory.GetFiles(dirPath, "*" + DatafileExtension, SearchOption.TopDirectoryOnly);
+            return Directory.GetFiles(dirPath, "*" + fileExtension, SearchOption.TopDirectoryOnly);
         }
     }
 
