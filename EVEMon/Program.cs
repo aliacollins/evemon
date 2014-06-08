@@ -32,6 +32,9 @@ namespace EVEMon
             // Check if we are in DEBUG mode 
             EveMonClient.CheckIsDebug();
 
+            // Check if we are in SNAPSHOT mode 
+            EveMonClient.CheckIsSnapshot();
+
             // Quits non-debug builds if another instance already exists
             if (!EveMonClient.IsDebugBuild && !IsInstanceUnique)
                 return;

@@ -143,6 +143,14 @@ namespace EVEMon.Common
         /// </value>
         public static bool IsDebugBuild { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is snapshot build.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is snapshot build; otherwise, <c>false</c>.
+        /// </value>
+        public static bool IsSnapshotBuild { get; private set; }
+
         #endregion
 
 
@@ -1574,6 +1582,15 @@ namespace EVEMon.Common
         public static void CheckIsDebug()
         {
             IsDebugBuild = true;
+        }
+
+        /// <summary>
+        /// Will only execute if SHAPSHOT is set, thus lets us avoid #IFDEF.
+        /// </summary>
+        [Conditional("SNAPSHOT")]
+        public static void CheckIsSnapshot()
+        {
+            IsSnapshotBuild = true;
         }
 
         #endregion

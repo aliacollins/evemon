@@ -124,6 +124,7 @@ namespace EVEMon.About
                                    { "Pharazon", 6 },
                                    { "Phoenix Flames", 6 },
                                    { "phorge", 6 },
+                                   { "Protag", 6 },
                                    { "Optica", 6 },
                                    { "Quantix Blackstar", 6 },
                                    { "Risako", 6 },
@@ -172,11 +173,7 @@ namespace EVEMon.About
         private void AboutWindow_Load(object sender, EventArgs e)
         {
             CopyrightLabel.Text = String.Format(CultureConstants.DefaultCulture, CopyrightLabel.Text, DateTime.UtcNow.Year);
-            VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, Application.ProductVersion);
-
-            // Adds " (Debug)" to the version number if the build is in DEBUG
-            if (EveMonClient.IsDebugBuild)
-                VersionLabel.Text = String.Format(CultureConstants.DefaultCulture, "{0} (Debug)", VersionLabel.Text);
+            VersionLabel.Text = GetVersionText();
 
             AddDevelopersToListView();
 
@@ -187,6 +184,25 @@ namespace EVEMon.About
             AddLinkToLabel(googleDataLinkLabel, "Google.Data", "http://code.google.com/apis/gdata/client-cs.html");
             AddLinkToLabel(lironLeviLinkLabel, "Liron Levi", "http://www.codeproject.com/KB/cs/multipanelcontrol.aspx");
             AddLinkToLabel(stackOverflowLinkLabel, "Stack Overflow", "http://stackoverflow.com");
+        }
+
+        /// <summary>
+        /// Gets the version text.
+        /// </summary>
+        /// <returns></returns>
+        private string GetVersionText()
+        {
+            // Returns the product version if the build is in SNAPSHOT
+            if (EveMonClient.IsSnapshotBuild)
+                return String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, Application.ProductVersion);
+
+            // Adds " (Debug)" to the version number if the build is in DEBUG
+            if (EveMonClient.IsDebugBuild)
+                return String.Format(CultureConstants.DefaultCulture, VersionLabel.Text + " (Debug)", Application.ProductVersion);
+
+            // Returns only the Major, Minor and Build of the version number
+            return String.Format(CultureConstants.DefaultCulture, VersionLabel.Text,
+                Application.ProductVersion.Remove(Application.ProductVersion.LastIndexOf(".", StringComparison.Ordinal)));
         }
 
         /// <summary>
