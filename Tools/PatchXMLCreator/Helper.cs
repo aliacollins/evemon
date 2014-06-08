@@ -37,13 +37,8 @@ namespace EVEMon.PatchXmlCreator
                 return;
             }
 
-            string installerFile = String.Format(CultureConstants.InvariantCulture, PatchXmlCreatorWindow.InstallerFilename,
-                                                 PatchXmlCreatorWindow.AssemblyVersion);
-            string installerPath = String.Format(CultureConstants.InvariantCulture, "{1}{0}{2}",
-                                                 Path.DirectorySeparatorChar, PatchXmlCreatorWindow.InstallerDir, installerFile);
-
             // Ensure that the installer file has been created
-            if (File.Exists(installerPath))
+            if (PatchXmlCreatorWindow.GetInstallerPath().Exists)
                 return;
 
             text = String.Format(CultureConstants.DefaultCulture,
@@ -74,10 +69,10 @@ namespace EVEMon.PatchXmlCreator
             s_msgBox.Button2.Click += OnButtonClick;
             s_msgBox.Button3.Click += OnButtonClick;
             s_msgBox.Text = String.Format(CultureConstants.DefaultCulture, "{0} - Action Selector", PatchXmlCreatorWindow.Caption);
-            s_msgBox.Message.Text = "Select an action for patch file creation.";
-            s_msgBox.Button1.Text = "Datafiles Only";
-            s_msgBox.Button2.Text = "Release Only";
-            s_msgBox.Button3.Text = "Release && Datafiles";
+            s_msgBox.Message.Text = @"Select an action for patch file creation.";
+            s_msgBox.Button1.Text = @"Datafiles Only";
+            s_msgBox.Button2.Text = @"Release Only";
+            s_msgBox.Button3.Text = @"Release && Datafiles";
             s_msgBox.Button1.AutoSize = true;
             s_msgBox.Button2.AutoSize = true;
             s_msgBox.Button3.AutoSize = true;
