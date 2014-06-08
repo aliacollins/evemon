@@ -35,7 +35,7 @@ namespace EVEMon.PatchXmlCreator
         private const string PatchDir = @"..\..\..\..\Website";
         private const string DatafileDir = @"..\..\..\..\..\EVEMon.Common\Resources";
         private const string DatafileHeader = "eve-";
-        private const string DatafileTail = "-en-US.xml.gz";
+        private const string DatafileCulture = "-en-US";
 
         private const string InstallerArgs = "/S /AUTORUN /SKIPDOTNET";
         private const string AdditionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
@@ -177,8 +177,8 @@ namespace EVEMon.PatchXmlCreator
         private static void InitDatafiles()
         {
             DirectoryInfo di = new DirectoryInfo(DatafileDir);
-            FileInfo[] directoryFiles = di.GetFiles(String.Format(CultureConstants.InvariantCulture, "{0}*{1}",
-                                                                  DatafileHeader, DatafileTail));
+            FileInfo[] directoryFiles = di.GetFiles(String.Format(CultureConstants.InvariantCulture, "{0}*{1}{2}",
+                                                                  DatafileHeader, DatafileCulture, Datafile.DatafilesExtension));
             foreach (FileInfo datafile in directoryFiles)
             {
                 s_datafiles.Add(new Datafile(datafile.Name));
@@ -270,7 +270,9 @@ namespace EVEMon.PatchXmlCreator
                     {
                         dfControl.rtbDatafileMessage.Text = String.Format(
                             s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text, tbExpRevision.Text,
-                            datafile.Filename.Replace(DatafileHeader, String.Empty).Replace(DatafileTail, String.Empty));
+                            datafile.Filename.Replace(DatafileHeader, String.Empty)
+                                .Replace(DatafileCulture, String.Empty)
+                                .Replace(Datafile.DatafilesExtension, String.Empty));
                     }
                 }
             }
@@ -291,9 +293,10 @@ namespace EVEMon.PatchXmlCreator
 
             // Create the new header text
             string headerText = String.Format(s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text,
-                                              tbExpRevision.Text,
-                                              control.Parent.Text.Replace(DatafileHeader, String.Empty).Replace(DatafileTail,
-                                                                                                                String.Empty));
+                tbExpRevision.Text,
+                control.Parent.Text.Replace(DatafileHeader, String.Empty)
+                    .Replace(DatafileCulture, String.Empty)
+                    .Replace(Datafile.DatafilesExtension, String.Empty));
 
             // Check if the new header text is already present and remove it
             if (control.Text.Contains(headerText))
@@ -537,7 +540,7 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private void ExportDatafiles(ICollection<SerializableDatafile> datafiles)
         {
-            const string CompatibilityMessage = "\nNOT COMPATIBLE with EVEMon prior to version 1.7.0";
+            const string CompatibilityMessage = "\nNOT COMPATIBLE with EVEMon prior to version 1.8.9";
 
             string url = String.Format(CultureConstants.InvariantCulture, "{1}{2}{0}{3}",
                                        Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);

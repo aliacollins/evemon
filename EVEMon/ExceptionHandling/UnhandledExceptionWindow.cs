@@ -172,11 +172,9 @@ namespace EVEMon.ExceptionHandling
 
             try
             {
-                string[] datafiles = Directory.GetFiles(EveMonClient.EVEMonDataDir, "*.gz", SearchOption.TopDirectoryOnly);
-
                 datafileReport.AppendLine("Datafile report:");
 
-                foreach (string datafile in datafiles)
+                foreach (string datafile in Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir, Datafile.DatafilesExtension))
                 {
                     FileInfo info = new FileInfo(datafile);
                     Datafile file = new Datafile(Path.GetFileName(datafile));

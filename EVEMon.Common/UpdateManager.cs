@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.PatchXml;
@@ -18,7 +19,7 @@ namespace EVEMon.Common
         private static bool s_enabled;
 
         /// <summary>
-        /// Delete the installation files on a previous autoupdate.
+        /// Deletes the installation files.
         /// </summary>
         public static void DeleteInstallationFiles()
         {
@@ -27,7 +28,11 @@ namespace EVEMon.Common
             {
                 try
                 {
-                    File.Delete(file);
+                    FileInfo installationFile = new FileInfo(file);
+                    if (!installationFile.Exists)
+                        continue;
+
+                    File.Delete(installationFile.FullName);
                 }
                 catch (UnauthorizedAccessException e)
                 {
@@ -37,16 +42,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Delete the data files on an autoupdate.
+        /// Deletes the data files.
         /// </summary>
         public static void DeleteDataFiles()
         {
-            foreach (string file in Directory.GetFiles(
-                EveMonClient.EVEMonDataDir, "*.xml.gz", SearchOption.TopDirectoryOnly))
+            foreach (string file in Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir, Datafile.DatafilesExtension).Concat(
+                Datafile.GetFilesFrom(EveMonClient.EVEMonDataDir, Datafile.OldDatafileExtension)))
             {
                 try
                 {
-                    File.Delete(file);
+                    FileInfo dataFile = new FileInfo(file);
+                    if (!dataFile.Exists)
+                        continue;
+
+                    File.Delete(dataFile.FullName);
                 }
                 catch (UnauthorizedAccessException e)
                 {

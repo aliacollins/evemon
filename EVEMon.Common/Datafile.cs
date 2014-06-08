@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace EVEMon.Common
@@ -12,6 +13,8 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class Datafile
     {
+        private const string DatafileExtension = ".xml.gzip";
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -36,14 +39,38 @@ namespace EVEMon.Common
         public string MD5Sum { get; private set; }
 
         /// <summary>
-        /// Gets the fuly-qualified path of the provided datafile name
+        /// Gets the datafile extension.
         /// </summary>
+        /// <value>
+        /// The datafile extension.
+        /// </value>
+        public static string DatafilesExtension
+        {
+            get { return DatafileExtension; }
+        }
+
+        /// <summary>
+        /// Gets the old datafile extension.
+        /// </summary>
+        /// <value>
+        /// The old datafile extension.
+        /// </value>
+        public static string OldDatafileExtension
+        {
+            get { return DatafileExtension.TrimEnd("ip".ToCharArray()); }
+        }
+
+        /// <summary>
+        /// Gets the fully-qualified path of the provided datafile name
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns></returns>
+        /// <exception cref="System.IO.FileNotFoundException"></exception>
         /// <remarks>
         /// Attempts to find a datafile  - firstly, look in the %APPDATA% folder
         /// Then look in the Application data folder (roaming users on usb devices)
         /// If not there, this could be a first run so copy from resources folder in installation directory
         /// </remarks>
-        /// <exception cref="ApplicationException">The file does not exist or it cannot be copied</exception>
         internal static string GetFullPath(string filename)
         {
             string evemonDataDir = EveMonClient.EVEMonDataDir ??
@@ -51,14 +78,14 @@ namespace EVEMon.Common
 
             // Look in the %APPDATA% folder
             string filepath = String.Format(CultureConstants.InvariantCulture,
-                                            "{0}{1}{2}", evemonDataDir, Path.DirectorySeparatorChar, filename);
+                "{0}{1}{2}", evemonDataDir, Path.DirectorySeparatorChar, filename);
 
             if (File.Exists(filepath))
                 return filepath;
 
             // File isn't in the current folder, look in installation directory ("resources" subdirectory)
             string baseFile = String.Format(CultureConstants.InvariantCulture, "{1}Resources{0}{2}", Path.DirectorySeparatorChar,
-                                            AppDomain.CurrentDomain.BaseDirectory, filename);
+                AppDomain.CurrentDomain.BaseDirectory, filename);
 
             // Does not exist also ? 
             if (!File.Exists(baseFile))
@@ -69,6 +96,17 @@ namespace EVEMon.Common
 
             // Return
             return baseFile;
+        }
+
+        /// <summary>
+        /// Gets the data files from the given directory path.
+        /// </summary>
+        /// <param name="dirPath">The directory path.</param>
+        /// <param name="fileExtension">The file extension.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetFilesFrom(string dirPath, string fileExtension)
+        {
+            return Directory.GetFiles(dirPath, "*" + fileExtension, SearchOption.TopDirectoryOnly);
         }
     }
 
