@@ -15,11 +15,10 @@ namespace EVEMon.InstallBuilder
         private static readonly string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer");
         private static readonly string s_snapshotDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Snapshot");
         private static readonly string s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Binaries");
-        private static readonly string s_programFilesDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-        private static readonly string s_programFilesX86Dir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 
         private static string s_projectDir;
-        private static Version s_version;
+        private static Version s_fullVersion;
+        private static string s_version;
         private static string s_nsisExe;
         
         private static bool s_isSnapshot;
@@ -41,17 +40,15 @@ namespace EVEMon.InstallBuilder
 
             if (args.Any())
             {
-                string version = String.Format("{0}.{1}.{2}", s_version.Major, s_version.Minor, s_version.Build);
-
                 if (args[0] == "-version" || args[0] == "-v")
                 {
-                    Console.WriteLine(version);
+                    Console.WriteLine(s_version);
                     return 0;
                 }
 
                 if (args[0] == "-version=tc" || args[0] == "-v=tc")
                 {
-                    Console.WriteLine("##teamcity[buildNumber '{0}']", version);
+                    Console.WriteLine("##teamcity[buildNumber '{0}']", s_version);
                     return 0;
                 }
             }
@@ -164,7 +161,8 @@ namespace EVEMon.InstallBuilder
         {
             try
             {
-                s_version = AssemblyName.GetAssemblyName(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe").Version;
+                s_fullVersion = AssemblyName.GetAssemblyName(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe").Version;
+                s_version = String.Format("{0}.{1}.{2}", s_fullVersion.Major, s_fullVersion.Minor, s_fullVersion.Build);
             }
             catch (Exception)
             {
@@ -188,7 +186,7 @@ namespace EVEMon.InstallBuilder
 
             string filename = s_isSnapshot
                                   ? String.Format(CultureInfo.InvariantCulture, "EVEMon_{0}_{1:yyyy-MM-dd}.zip",
-                                                  s_version.Revision, DateTime.Now)
+                                                  s_fullVersion.Revision, DateTime.Now)
                                   : String.Format(CultureInfo.InvariantCulture, "EVEMon-binaries-{0}.zip", s_version);
 
             string zipFileName = Path.Combine(directory, filename);
@@ -255,21 +253,36 @@ namespace EVEMon.InstallBuilder
             int exitCode;
             try
             {
-                string nsisScript = Path.Combine(s_projectDir, String.Format(@"bin\x86\{0}\EVEMonInstallerScript.nsi", 
-                                                                             s_isDebug? "Debug": "Release"));
+                string nsisScript = Path.Combine(s_projectDir, String.Format(@"bin\x86\{0}\EVEMonInstallerScript.nsi",
+                    s_isDebug ? "Debug" : "Release"));
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                string appCopyright =
+                    ((AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute)))
+                        .Copyright;
+                string appDescription =
+                    ((AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute)))
+                        .Description;
 
-                string param = String.Format(CultureInfo.InvariantCulture, "/DVERSION={0} \"/DOUTDIR={1}\" \"{2}\"",
-                                             s_version, s_installerDir, nsisScript);
+                string productName = String.Format(CultureInfo.InvariantCulture, "/DPRODUCTNAME=\"{0}\"", Application.ProductName);
+                string companyName = String.Format(CultureInfo.InvariantCulture, "/DCOMPANYNAME=\"{0}\"", Application.CompanyName);
+                string copyright = String.Format(CultureInfo.InvariantCulture, "/DCOPYRIGHT=\"{0}\"", appCopyright);
+                string description = String.Format(CultureInfo.InvariantCulture, "/DDESCRIPTION=\"{0}\"", appDescription);
+                string version = String.Format(CultureInfo.InvariantCulture, "/DVERSION={0}", s_version);
+                string fullVersion = String.Format(CultureInfo.InvariantCulture, "/DFULLVERSION={0}", s_fullVersion);
+                string installerDir = String.Format(CultureInfo.InvariantCulture, "/DOUTDIR={0}", s_installerDir);
+
+                string param = String.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3} {4} {5} {6} {7}",
+                    productName, companyName, copyright, description, version, fullVersion, installerDir, nsisScript);
 
                 Console.WriteLine("NSIS script : {0}", nsisScript);
                 Console.WriteLine("Output directory : {0}", s_installerDir);
 
                 ProcessStartInfo psi = new ProcessStartInfo(s_nsisExe, param)
-                                           {
-                                               WorkingDirectory = s_projectDir,
-                                               UseShellExecute = false,
-                                               RedirectStandardOutput = true
-                                           };
+                                       {
+                                           WorkingDirectory = s_projectDir,
+                                           UseShellExecute = false,
+                                           RedirectStandardOutput = true
+                                       };
 
                 using (Process makensisProcess = new Process())
                 {
