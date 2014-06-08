@@ -21,12 +21,12 @@ OutFile "${OUTDIR}\EVEMon-install-${VERSION}.exe"
 InstallDir "$PROGRAMFILES\EVEMon\"
 InstallDirRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" "UninstallString"
 
-VIAddVersionKey "ProductName" "EVEMon Installer"
-VIAddVersionKey "CompanyName" "battleclinic.com"
-VIAddVersionKey "LegalCopyright" "Copyright 2006-2012, EVEMon Development Team"
-VIAddVersionKey "FileDescription" "Installs EVEMon on your computer"
-VIAddVersionKey "FileVersion" "${VERSION}"
-VIProductVersion ${VERSION}
+VIAddVersionKey "ProductName" "${PRODUCTNAME}"
+VIAddVersionKey "CompanyName" "${COMPANYNAME}"
+VIAddVersionKey "LegalCopyright" "${COPYRIGHT}"
+VIAddVersionKey "FileDescription" "${DESCRIPTION}"
+VIAddVersionKey "ProductVersion" "${VERSION}"
+VIProductVersion "${FULLVERSION}"
 
 Var STARTMENU_FOLDER
 Var MUI_TEMP

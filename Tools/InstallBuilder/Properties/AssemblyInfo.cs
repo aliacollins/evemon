@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("InstallBuilder")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Installs EVEMon on your computer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
-[assembly: AssemblyProduct("EVEMonInstallBuilder")]
+[assembly: AssemblyProduct("EVEMon Installer")]
 [assembly: AssemblyCopyright("Copyright © 2006-2014, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
