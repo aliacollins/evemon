@@ -1223,6 +1223,38 @@ namespace EVEMon.Common
         /// Used to convert IDs to character affiliation info.
         /// </summary>
         CharacterAffiliation,
+
+        /// <summary>
+        /// A list of the planets on which the character has a command center located.
+        /// </summary>
+        [Header("Planetary Colonies")]
+        [Description("The planets on which a character has a command center")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        PlanetaryColonies,
+
+        /// <summary>
+        /// A list of the pins located on the planet of a character.
+        /// </summary>
+        [Header("Planetary Pins")]
+        [Description("The pins placed on the planet of a character")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        PlanetaryPins,
+
+        /// <summary>
+        /// A list of the routes defined between pins on the planet of a character.
+        /// </summary>
+        [Header("Planetary Routes")]
+        [Description("The routes defined between pins on the planet of a character")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        PlanetaryRoutes,
+
+        /// <summary>
+        /// The links defined between the pins on the planet of a character.
+        /// </summary>
+        [Header("Planetary Links")]
+        [Description("The links defined between the pins on the planet of a character")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        PlanetaryLinks
     }
 
     public enum QueryStatus
