@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMonInstallBuilder")]
-[assembly: AssemblyCopyright("Copyright © 2006-2013, EVEMon Development Team")]
+[assembly: AssemblyCopyright("Copyright © 2006-2014, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
