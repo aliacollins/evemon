@@ -419,6 +419,16 @@ namespace EVEMon.SkillPlanner
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
         }
 
+        /// <summary>
+        /// Handles the MouseUp event of the pbSerachTextDel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pbSerachTextDel_MouseUp(object sender, MouseEventArgs e)
+        {
+            tbSearchText.Clear();
+        }
+
         #endregion
 
 

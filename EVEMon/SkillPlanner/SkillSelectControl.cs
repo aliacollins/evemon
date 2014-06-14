@@ -933,6 +933,16 @@ namespace EVEMon.SkillPlanner
             DoDragDrop(node, DragDropEffects.Move);
         }
 
+        /// <summary>
+        /// Handles the MouseUp event of the pbSearchTextDel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
+        {
+            tbSearchText.Clear();
+        }
+
         #endregion
 
 

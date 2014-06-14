@@ -45,6 +45,7 @@ namespace EVEMon.SkillPlanner
             this.upperPanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.pnlCPU.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numCPU)).BeginInit();
@@ -54,30 +55,17 @@ namespace EVEMon.SkillPlanner
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSearchText.Location = new System.Drawing.Point(45, 135);
             this.tbSearchText.Size = new System.Drawing.Size(179, 20);
             this.tbSearchText.TabIndex = 10;
-            // 
-            // tvItems
-            // 
-            this.tvItems.LineColor = System.Drawing.Color.Black;
-            this.tvItems.Margin = new System.Windows.Forms.Padding(2);
-            this.tvItems.Size = new System.Drawing.Size(224, 239);
-            this.tvItems.TabIndex = 12;
             // 
             // lbNoMatches
             // 
             this.lbNoMatches.Size = new System.Drawing.Size(224, 239);
             this.lbNoMatches.TabIndex = 0;
             this.lbNoMatches.Text = "No items match your search.";
-            // 
-            // lbSearchList
-            // 
-            this.lbSearchList.Margin = new System.Windows.Forms.Padding(2);
-            this.lbSearchList.Size = new System.Drawing.Size(224, 239);
-            this.lbSearchList.TabIndex = 0;
             // 
             // upperPanel
             // 
@@ -98,6 +86,7 @@ namespace EVEMon.SkillPlanner
             this.upperPanel.Controls.SetChildIndex(this.tbSearchText, 0);
             this.upperPanel.Controls.SetChildIndex(this.lbSearchTextHint, 0);
             this.upperPanel.Controls.SetChildIndex(this.cbUsabilityFilter, 0);
+            this.upperPanel.Controls.SetChildIndex(this.pbSerachTextDel, 0);
             // 
             // lowerPanel
             // 
@@ -125,10 +114,27 @@ namespace EVEMon.SkillPlanner
             this.cbUsabilityFilter.TabIndex = 1;
             this.cbUsabilityFilter.SelectedIndexChanged += new System.EventHandler(this.cbUsabilityFilter_SelectedIndexChanged);
             // 
+            // lbSearchList
+            // 
+            this.lbSearchList.Margin = new System.Windows.Forms.Padding(2);
+            this.lbSearchList.Size = new System.Drawing.Size(224, 239);
+            this.lbSearchList.TabIndex = 0;
+            // 
+            // tvItems
+            // 
+            this.tvItems.LineColor = System.Drawing.Color.Black;
+            this.tvItems.Margin = new System.Windows.Forms.Padding(2);
+            this.tvItems.Size = new System.Drawing.Size(224, 239);
+            this.tvItems.TabIndex = 12;
+            // 
+            // pbSerachTextDel
+            // 
+            this.pbSerachTextDel.Location = new System.Drawing.Point(205, 137);
+            // 
             // cbSlotFilter
             // 
-            this.cbSlotFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlotFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlotFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSlotFilter.FormattingEnabled = true;
             this.cbSlotFilter.Items.AddRange(new object[] {
@@ -156,8 +162,8 @@ namespace EVEMon.SkillPlanner
             // 
             // ccbGroupFilter
             // 
-            this.ccbGroupFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ccbGroupFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ccbGroupFilter.CheckOnClick = true;
             this.ccbGroupFilter.Cursor = System.Windows.Forms.Cursors.Default;
             this.ccbGroupFilter.CustomTextBuilder = null;
@@ -192,8 +198,8 @@ namespace EVEMon.SkillPlanner
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -335,6 +341,7 @@ namespace EVEMon.SkillPlanner
             this.upperPanel.PerformLayout();
             this.lowerPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.pnlCPU.ResumeLayout(false);

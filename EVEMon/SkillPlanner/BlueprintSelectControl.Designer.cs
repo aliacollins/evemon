@@ -31,22 +31,23 @@ namespace EVEMon.SkillPlanner
             this.cbTech1 = new System.Windows.Forms.CheckBox();
             this.cbTech2 = new System.Windows.Forms.CheckBox();
             this.tlpGrouping = new System.Windows.Forms.TableLayoutPanel();
+            this.cbOfficer = new System.Windows.Forms.CheckBox();
             this.cbStoryline = new System.Windows.Forms.CheckBox();
             this.cbFaction = new System.Windows.Forms.CheckBox();
             this.cbTech3 = new System.Windows.Forms.CheckBox();
             this.lblActivity = new System.Windows.Forms.Label();
             this.cbActivityFilter = new System.Windows.Forms.ComboBox();
-            this.cbOfficer = new System.Windows.Forms.CheckBox();
             this.upperPanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).BeginInit();
             this.tlpGrouping.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSearchText.Location = new System.Drawing.Point(45, 148);
             this.tbSearchText.Size = new System.Drawing.Size(179, 20);
             this.tbSearchText.TabIndex = 3;
@@ -56,11 +57,6 @@ namespace EVEMon.SkillPlanner
             this.lbNoMatches.Size = new System.Drawing.Size(224, 240);
             this.lbNoMatches.TabIndex = 10;
             this.lbNoMatches.Text = "No blueprints match your search.";
-            // 
-            // lbSearchList
-            // 
-            this.lbSearchList.Size = new System.Drawing.Size(224, 240);
-            this.lbSearchList.TabIndex = 9;
             // 
             // upperPanel
             // 
@@ -77,6 +73,7 @@ namespace EVEMon.SkillPlanner
             this.upperPanel.Controls.SetChildIndex(this.cbActivityFilter, 0);
             this.upperPanel.Controls.SetChildIndex(this.pbSearchImage, 0);
             this.upperPanel.Controls.SetChildIndex(this.cbUsabilityFilter, 0);
+            this.upperPanel.Controls.SetChildIndex(this.pbSerachTextDel, 0);
             // 
             // lowerPanel
             // 
@@ -104,12 +101,21 @@ namespace EVEMon.SkillPlanner
             this.cbUsabilityFilter.TabIndex = 1;
             this.cbUsabilityFilter.SelectedIndexChanged += new System.EventHandler(this.cbUsabilityFilter_SelectedIndexChanged);
             // 
+            // lbSearchList
+            // 
+            this.lbSearchList.Size = new System.Drawing.Size(224, 240);
+            this.lbSearchList.TabIndex = 9;
+            // 
             // tvItems
             // 
             this.tvItems.LineColor = System.Drawing.Color.Black;
             this.tvItems.SelectionMode = EVEMon.Common.Controls.TreeViewSelectionMode.SingleSelect;
             this.tvItems.Size = new System.Drawing.Size(224, 240);
             this.tvItems.TabIndex = 4;
+            // 
+            // pbSerachTextDel
+            // 
+            this.pbSerachTextDel.Location = new System.Drawing.Point(205, 150);
             // 
             // cbTech1
             // 
@@ -139,8 +145,8 @@ namespace EVEMon.SkillPlanner
             // 
             // tlpGrouping
             // 
-            this.tlpGrouping.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpGrouping.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tlpGrouping.ColumnCount = 2;
             this.tlpGrouping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpGrouping.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -158,6 +164,18 @@ namespace EVEMon.SkillPlanner
             this.tlpGrouping.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpGrouping.Size = new System.Drawing.Size(212, 70);
             this.tlpGrouping.TabIndex = 2;
+            // 
+            // cbOfficer
+            // 
+            this.cbOfficer.AutoSize = true;
+            this.cbOfficer.Checked = true;
+            this.cbOfficer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbOfficer.Location = new System.Drawing.Point(109, 49);
+            this.cbOfficer.Name = "cbOfficer";
+            this.cbOfficer.Size = new System.Drawing.Size(57, 17);
+            this.cbOfficer.TabIndex = 5;
+            this.cbOfficer.Text = "Officer";
+            this.cbOfficer.UseVisualStyleBackColor = true;
             // 
             // cbStoryline
             // 
@@ -209,8 +227,8 @@ namespace EVEMon.SkillPlanner
             // 
             // cbActivityFilter
             // 
-            this.cbActivityFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbActivityFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbActivityFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbActivityFilter.FormattingEnabled = true;
             this.cbActivityFilter.Items.AddRange(new object[] {
@@ -227,18 +245,6 @@ namespace EVEMon.SkillPlanner
             this.cbActivityFilter.TabIndex = 22;
             this.cbActivityFilter.SelectedIndexChanged += new System.EventHandler(this.cbActivity_SelectedIndexChanged);
             // 
-            // cbOfficer
-            // 
-            this.cbOfficer.AutoSize = true;
-            this.cbOfficer.Checked = true;
-            this.cbOfficer.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbOfficer.Location = new System.Drawing.Point(109, 49);
-            this.cbOfficer.Name = "cbOfficer";
-            this.cbOfficer.Size = new System.Drawing.Size(57, 17);
-            this.cbOfficer.TabIndex = 5;
-            this.cbOfficer.Text = "Officer";
-            this.cbOfficer.UseVisualStyleBackColor = true;
-            // 
             // BlueprintSelectControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -249,6 +255,7 @@ namespace EVEMon.SkillPlanner
             this.upperPanel.PerformLayout();
             this.lowerPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).EndInit();
             this.tlpGrouping.ResumeLayout(false);
             this.tlpGrouping.PerformLayout();
             this.ResumeLayout(false);

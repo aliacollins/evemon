@@ -41,6 +41,7 @@ namespace EVEMon.SkillPlanner
             this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.upperPanel = new System.Windows.Forms.Panel();
+            this.pbSerachTextDel = new System.Windows.Forms.PictureBox();
             this.cbUsabilityFilter = new System.Windows.Forms.ComboBox();
             this.lblFilter = new System.Windows.Forms.Label();
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
@@ -48,23 +49,24 @@ namespace EVEMon.SkillPlanner
             this.tvItems = new EVEMon.Common.Controls.TreeView();
             this.contextMenu.SuspendLayout();
             this.upperPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.lowerPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSearchText.Location = new System.Drawing.Point(45, 29);
             this.tbSearchText.Margin = new System.Windows.Forms.Padding(0);
             this.tbSearchText.Name = "tbSearchText";
             this.tbSearchText.Size = new System.Drawing.Size(140, 20);
             this.tbSearchText.TabIndex = 21;
             this.tbSearchText.TextChanged += new System.EventHandler(this.tbSearchText_TextChanged);
-            this.tbSearchText.Leave += new System.EventHandler(this.tbSearchText_Leave);
-            this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearchText_KeyPress);
             this.tbSearchText.Enter += new System.EventHandler(this.tbSearchText_Enter);
+            this.tbSearchText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSearchText_KeyPress);
+            this.tbSearchText.Leave += new System.EventHandler(this.tbSearchText_Leave);
             // 
             // lbSearchTextHint
             // 
@@ -82,7 +84,7 @@ namespace EVEMon.SkillPlanner
             // 
             // lbNoMatches
             // 
-            this.lbNoMatches.BackColor = System.Drawing.SystemColors.Window;
+            this.lbNoMatches.BackColor = System.Drawing.Color.Transparent;
             this.lbNoMatches.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbNoMatches.ForeColor = System.Drawing.SystemColors.GrayText;
             this.lbNoMatches.Location = new System.Drawing.Point(0, 0);
@@ -117,7 +119,7 @@ namespace EVEMon.SkillPlanner
             this.cmiExpandAll,
             this.cmiCollapseAll});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(167, 120);
+            this.contextMenu.Size = new System.Drawing.Size(167, 98);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // cmiExpandSelected
@@ -155,6 +157,7 @@ namespace EVEMon.SkillPlanner
             // 
             // upperPanel
             // 
+            this.upperPanel.Controls.Add(this.pbSerachTextDel);
             this.upperPanel.Controls.Add(this.cbUsabilityFilter);
             this.upperPanel.Controls.Add(this.lblFilter);
             this.upperPanel.Controls.Add(this.lbSearchTextHint);
@@ -167,10 +170,24 @@ namespace EVEMon.SkillPlanner
             this.upperPanel.Size = new System.Drawing.Size(185, 54);
             this.upperPanel.TabIndex = 26;
             // 
+            // pbSerachTextDel
+            // 
+            this.pbSerachTextDel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbSerachTextDel.Image = ((System.Drawing.Image)(resources.GetObject("pbSerachTextDel.Image")));
+            this.pbSerachTextDel.InitialImage = null;
+            this.pbSerachTextDel.Location = new System.Drawing.Point(167, 31);
+            this.pbSerachTextDel.Name = "pbSerachTextDel";
+            this.pbSerachTextDel.Size = new System.Drawing.Size(16, 16);
+            this.pbSerachTextDel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbSerachTextDel.TabIndex = 25;
+            this.pbSerachTextDel.TabStop = false;
+            this.pbSerachTextDel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbSerachTextDel_MouseUp);
+            // 
             // cbUsabilityFilter
             // 
-            this.cbUsabilityFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbUsabilityFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbUsabilityFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbUsabilityFilter.FormattingEnabled = true;
             this.cbUsabilityFilter.Items.AddRange(new object[] {
@@ -244,6 +261,7 @@ namespace EVEMon.SkillPlanner
             this.contextMenu.ResumeLayout(false);
             this.upperPanel.ResumeLayout(false);
             this.upperPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.lowerPanel.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -269,5 +287,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
         private System.Windows.Forms.ToolStripSeparator tsSeparator;
+        protected System.Windows.Forms.PictureBox pbSerachTextDel;
     }
 }
