@@ -304,6 +304,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /corp/CustomsOffices.xml.aspx.
+        /// </summary>
+        public static string APICorporationCustomsOffices {
+            get {
+                return ResourceManager.GetString("APICorporationCustomsOffices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /corp/FacWarStats.xml.aspx.
         /// </summary>
         public static string APICorporationFactionalWarfareStats {

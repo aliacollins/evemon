@@ -72,7 +72,8 @@ namespace EVEMon.Common
             {
                 return s_items.OfType<APIGenericMethods>().Where(
                     method => method == APIGenericMethods.CorporationContractItems ||
-                              method == APIGenericMethods.CorporationContractBids).Cast<Enum>();
+                              method == APIGenericMethods.CorporationContractBids ||
+                              method == APIGenericMethods.CorporationCustomsOffices).Cast<Enum>();
             }
         }
 
