@@ -124,6 +124,7 @@
             this.killLogList = new EVEMon.CharacterMonitoring.CharacterKillLogList();
             this.warningLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.Controls.NotificationList();
+            this.searchTextDel = new System.Windows.Forms.ToolStripButton();
             this.toolstripPanel.SuspendLayout();
             this.toolStripContextual.SuspendLayout();
             this.toolStripFeatures.SuspendLayout();
@@ -166,6 +167,7 @@
             this.toolStripContextual.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStripContextual.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.preferencesMenu,
+            this.searchTextDel,
             this.searchTextBox,
             this.groupMenu,
             this.walletJournalCharts,
@@ -1169,6 +1171,19 @@
             this.notificationList.Size = new System.Drawing.Size(611, 72);
             this.notificationList.TabIndex = 13;
             // 
+            // searchTextDel
+            // 
+            this.searchTextDel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.searchTextDel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.searchTextDel.Image = ((System.Drawing.Image)(resources.GetObject("searchTextDel.Image")));
+            this.searchTextDel.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.searchTextDel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchTextDel.Name = "searchTextDel";
+            this.searchTextDel.Size = new System.Drawing.Size(23, 22);
+            this.searchTextDel.Text = "searchTextDel";
+            this.searchTextDel.ToolTipText = "Delete search text";
+            this.searchTextDel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.searchTextDel_MouseUp);
+            // 
             // CharacterMonitorBody
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1304,5 +1319,6 @@
         private CharacterKillLogList killLogList;
         private System.Windows.Forms.ToolStripSeparator combatLogSeparator;
         private System.Windows.Forms.ToolStripMenuItem combatLogMenuItem;
+        private System.Windows.Forms.ToolStripButton searchTextDel;
     }
 }
