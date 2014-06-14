@@ -33,29 +33,21 @@
             this.upperPanel.SuspendLayout();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbSearchText
             // 
-            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbSearchText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSearchText.Location = new System.Drawing.Point(45, 135);
             this.tbSearchText.Size = new System.Drawing.Size(179, 20);
             this.tbSearchText.TabIndex = 35;
             // 
-            // tvItems
-            // 
-            this.tvItems.LineColor = System.Drawing.Color.Black;
-            this.tvItems.Size = new System.Drawing.Size(224, 256);
-            // 
             // lbNoMatches
             // 
             this.lbNoMatches.Size = new System.Drawing.Size(224, 256);
-            // 
-            // lbSearchList
-            // 
-            this.lbSearchList.Size = new System.Drawing.Size(224, 256);
             // 
             // upperPanel
             // 
@@ -67,6 +59,7 @@
             this.upperPanel.Controls.SetChildIndex(this.tbSearchText, 0);
             this.upperPanel.Controls.SetChildIndex(this.lbSearchTextHint, 0);
             this.upperPanel.Controls.SetChildIndex(this.lblFilter, 0);
+            this.upperPanel.Controls.SetChildIndex(this.pbSerachTextDel, 0);
             // 
             // lowerPanel
             // 
@@ -89,6 +82,19 @@
             // 
             this.cbUsabilityFilter.Size = new System.Drawing.Size(179, 21);
             this.cbUsabilityFilter.SelectedIndexChanged += new System.EventHandler(this.cbUsabilityFilter_SelectedIndexChanged);
+            // 
+            // lbSearchList
+            // 
+            this.lbSearchList.Size = new System.Drawing.Size(224, 256);
+            // 
+            // tvItems
+            // 
+            this.tvItems.LineColor = System.Drawing.Color.Black;
+            this.tvItems.Size = new System.Drawing.Size(224, 256);
+            // 
+            // pbSerachTextDel
+            // 
+            this.pbSerachTextDel.Location = new System.Drawing.Point(205, 137);
             // 
             // cbCaldari
             // 
@@ -166,8 +172,8 @@
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -197,6 +203,7 @@
             this.upperPanel.PerformLayout();
             this.lowerPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

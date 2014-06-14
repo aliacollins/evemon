@@ -860,6 +860,16 @@ namespace EVEMon.CharacterMonitoring
             filterTimer.Stop();
         }
 
+        /// <summary>
+        /// Handles the MouseUp event of the searchTextDel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void searchTextDel_MouseUp(object sender, MouseEventArgs e)
+        {
+            searchTextBox.Clear();
+        }
+
         #endregion
 
 
