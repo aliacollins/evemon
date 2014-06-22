@@ -307,7 +307,7 @@ namespace EVEMon.CharacterMonitoring
             // Enables / Disables the contacts page related controls
             if (multiPanel.SelectedPage == contactsPage)
             {
-                groupMenu.Visible = searchTextBox.Visible = preferencesMenu.Visible = false;
+                groupMenu.Visible = searchTextBox.Visible = searchTextDel.Visible = preferencesMenu.Visible = false;
                 toolStripContextual.Enabled = true;
             }
 
@@ -315,7 +315,7 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == killLogPage)
             {
                 groupMenu.Visible = false;
-                searchTextBox.Visible = Settings.UI.MainWindow.CombatLog.ShowCondensedLogs;
+                searchTextBox.Visible = searchTextDel.Visible = Settings.UI.MainWindow.CombatLog.ShowCondensedLogs;
                 toolStripContextual.Enabled = true;
             }
 
