@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
@@ -9,14 +10,15 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
     internal static class EveIcons
     {
         private const string EveIconsTableName = "eveIcons";
-        
+
+        private const string IconIDText = "iconID";
         private const string IconFileText = "iconFile";
         private const string DescriptionText = "description";
 
         /// <summary>
         /// Imports the icon ids.
         /// </summary>
-        internal static void Import(SqlConnection connection)
+        internal static void Import()
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
@@ -38,9 +40,9 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(connection, EveIconsTableName);
+            Database.CreateTable(EveIconsTableName);
 
-            ImportData(connection, rNode);
+            ImportData(rNode);
 
             Util.DisplayEndTime(startTime);
 
@@ -50,15 +52,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// <summary>
         /// Imports the data.
         /// </summary>
-        /// <param name="connection">The connection.</param>
         /// <param name="rNode">The r node.</param>
-        private static void ImportData(SqlConnection connection, YamlMappingNode rNode)
+        private static void ImportData(YamlMappingNode rNode)
         {
-            var command = new SqlCommand { Connection = connection };
-
-            using (var tx = connection.BeginTransaction())
+            using (SqlTransaction tx = Database.SqlConnection.BeginTransaction())
             {
-                command.Transaction = tx;
+                IDbCommand command = new SqlCommand { Connection = Database.SqlConnection, Transaction = tx };
                 try
                 {
                     foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
@@ -70,8 +69,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         if (cNode == null)
                             continue;
 
-                        var parameters = new Dictionary<string, string>();
-                        parameters["iconID"] = pair.Key.ToString();
+                        Dictionary<string, string> parameters = new Dictionary<string, string>();
+                        parameters[IconIDText] = pair.Key.ToString();
                         parameters[IconFileText] = cNode.Children.Keys.Any(key => key.ToString() == IconFileText)
                             ? String.Format("'{0}'",
                                 cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", Database.StringEmpty))
@@ -90,11 +89,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 catch (SqlException e)
                 {
                     tx.Rollback();
-                    Console.WriteLine();
-                    Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
-                    Console.WriteLine(e.Message);
-                    Console.ReadLine();
-                    Environment.Exit(-1);
+                    Util.HandleException(command, e);
                 }
             }
         }

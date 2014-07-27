@@ -148,6 +148,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Util.cs" />
+    <Compile Include="YamlToSql\Tables\Blueprints.cs" />
     <Compile Include="YamlToSql\Tables\Certificates.cs" />
     <Compile Include="YamlToSql\Tables\EveGraphics.cs" />
     <Compile Include="YamlToSql\Tables\EveIcons.cs" />
@@ -221,6 +222,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Scripts\invBlueprintTypes.table.sql" />
+    <EmbeddedResource Include="Scripts\ramTypeRequirements.table.sql" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

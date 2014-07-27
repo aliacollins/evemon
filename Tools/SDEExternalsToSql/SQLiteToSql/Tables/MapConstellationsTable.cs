@@ -14,8 +14,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
         /// <summary>
         /// Imports data in table of specified connection.
         /// </summary>
-        /// <param name="connection">The connection.</param>
-        public static void Import(SqlConnection connection)
+        public static void Import()
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
@@ -31,12 +30,12 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                 return;
             }
 
-            Database.CreateTable(connection, TableName);
+            Database.CreateTable(TableName);
 
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", TableName);
 
-            ImportData(connection);
+            ImportData();
 
             Util.DisplayEndTime(startTime);
 
@@ -46,12 +45,11 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
         /// <summary>
         /// Imports the data.
         /// </summary>
-        /// <param name="connection">The connection.</param>
-        private static void ImportData(SqlConnection connection)
+        private static void ImportData()
         {
-            SqlCommand command = new SqlCommand { Connection = connection };
+            SqlCommand command = new SqlCommand { Connection = Database.SqlConnection };
 
-            using (var tx = connection.BeginTransaction())
+            using (var tx = Database.SqlConnection.BeginTransaction())
             {
                 command.Transaction = tx;
                 try
