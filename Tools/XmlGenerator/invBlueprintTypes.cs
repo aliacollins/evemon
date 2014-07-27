@@ -27,5 +27,8 @@ namespace EVEMon.XmlGenerator
         public Nullable<short> materialModifier { get; set; }
         public Nullable<short> wasteFactor { get; set; }
         public Nullable<int> maxProductionLimit { get; set; }
+        public Nullable<int> duplicatingTime { get; set; }
+        public Nullable<int> reverseEngineeringTime { get; set; }
+        public Nullable<int> inventionTime { get; set; }
     }
 }

@@ -1388,6 +1388,9 @@ namespace EVEMon.XmlGenerator
                 if (requirement.recycle.HasValue)
                     item.Recyclable = requirement.recycle.Value;
 
+                if (requirement.level.HasValue)
+                    item.Level = requirement.level.Value;
+
                 list.Add(item);
             }
 

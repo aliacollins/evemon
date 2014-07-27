@@ -65,7 +65,6 @@
         <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsPinMap" Width="1.5" PointX="20.75" PointY="19.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.planetSchematicsTypeMap" Width="1.5" PointX="6.75" PointY="21.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.ramActivities" Width="1.5" PointX="22.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLines" Width="1.5" PointX="22.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineStations" Width="1.5" PointX="22.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerCategory" Width="1.5" PointX="22.75" PointY="13.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EveStaticDataModel.ramAssemblyLineTypeDetailPerGroup" Width="1.5" PointX="22.75" PointY="16.75" IsExpanded="true" />

@@ -287,9 +287,6 @@
     <Compile Include="ramActivities.cs">
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
-    <Compile Include="ramAssemblyLines.cs">
-      <DependentUpon>EveStaticData.tt</DependentUpon>
-    </Compile>
     <Compile Include="ramAssemblyLineStations.cs">
       <DependentUpon>EveStaticData.tt</DependentUpon>
     </Compile>
