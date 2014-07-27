@@ -15,43 +15,44 @@ namespace EVEMon.SDEExternalsToSql
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
-            SqlConnection sqlConnection = Database.Connect<SqlConnection>("EveStaticData");
+            Database.SqlConnection = Database.Connect<SqlConnection>("EveStaticData");
 
-            if (sqlConnection != null)
+            if (Database.SqlConnection != null)
             {
-                InvTypes.Import(sqlConnection);
-                EveGraphics.Import(sqlConnection);
-                EveIcons.Import(sqlConnection);
-                Certificates.Import(sqlConnection);
+                InvTypes.Import();
+                EveGraphics.Import();
+                EveIcons.Import();
+                Certificates.Import();
+                Blueprints.Import();
             }
 
             Console.WriteLine();
 
-            EntityConnection sqliteConnection = Database.Connect<EntityConnection>("UniverseDataEntities");
+            Database.SqliteConnection = Database.Connect<EntityConnection>("UniverseDataEntities");
 
-            if (sqlConnection != null && sqliteConnection != null)
+            if (Database.SqlConnection != null && Database.SqliteConnection != null)
             {
                 Database.UniverseDataContext = new UniverseDataEntities();
 
-                MapCelestialStatisticsTable.Import(sqlConnection);
-                MapConstellationJumpsTable.Import(sqlConnection);
-                MapConstellationsTable.Import(sqlConnection);
-                MapDenormalizeTable.Import(sqlConnection);
-                MapJumpsTable.Import(sqlConnection);
-                MapLandmarksTable.Import(sqlConnection);
-                MapLocationScenesTable.Import(sqlConnection);
-                MapLocationWormholeClassesTable.Import(sqlConnection);
-                MapRegionJumpsTable.Import(sqlConnection);
-                MapRegionTable.Import(sqlConnection);
-                MapSolarSystemJumpsTable.Import(sqlConnection);
-                MapSolarSystemsTable.Import(sqlConnection);
+                MapCelestialStatisticsTable.Import();
+                MapConstellationJumpsTable.Import();
+                MapConstellationsTable.Import();
+                MapDenormalizeTable.Import();
+                MapJumpsTable.Import();
+                MapLandmarksTable.Import();
+                MapLocationScenesTable.Import();
+                MapLocationWormholeClassesTable.Import();
+                MapRegionJumpsTable.Import();
+                MapRegionTable.Import();
+                MapSolarSystemJumpsTable.Import();
+                MapSolarSystemsTable.Import();
             }
 
-            if (sqliteConnection != null)
-                Database.Disconnect(sqliteConnection);
+            if (Database.SqliteConnection != null)
+                Database.Disconnect(Database.SqliteConnection);
 
-            if (sqlConnection != null)
-                Database.Disconnect(sqlConnection);
+            if (Database.SqlConnection != null)
+                Database.Disconnect(Database.SqlConnection);
 
             Console.WriteLine();
             Console.Write(@"Press any key to exit.");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -134,11 +135,21 @@ namespace EVEMon.SDEExternalsToSql
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        public static string GetTextOrDefaultString(this string text)
+        internal static string GetTextOrDefaultString(this string text)
         {
             return String.IsNullOrWhiteSpace(text)
                 ? Database.Null
                 : String.Format("'{0}'", text.Replace("'", Database.StringEmpty));
+        }
+
+        internal static void HandleException(IDbCommand command, Exception e)
+        {
+            Console.WriteLine();
+            Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
+            Console.WriteLine(e.Message);
+            Console.ReadLine();
+            Environment.Exit(-1);
+
         }
     }
 }
