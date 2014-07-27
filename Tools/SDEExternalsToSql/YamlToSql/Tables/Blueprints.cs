@@ -200,27 +200,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                 {
                                     if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
                                         reverseEngeneeringTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-
-                                    ImportProducts(command, activity, blueprintTypeIDText);
                                 }
 
                                 if (activity.Key.Equals(invActivity))
                                 {
                                     if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
                                         inventionTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-
-                                    ImportProducts(command, activity, blueprintTypeIDText);
                                 }
 
-                                ImportMaterials(command, activity,
-                                    activity.Key.Equals(invActivity)
-                                        ? blueprintTypeIDText
-                                        : productTypeIDText);
+                                if (!activity.Key.Equals(manActivity))
+                                    ImportProducts(command, activity, blueprintTypeIDText);
 
-                                ImportSkills(command, activity,
-                                    activity.Key.Equals(invActivity)
-                                        ? blueprintTypeIDText
-                                        : productTypeIDText);
+                                ImportMaterials(command, activity, blueprintTypeIDText);
+                                ImportSkills(command, activity, blueprintTypeIDText);
                             }
                         }
 
@@ -334,9 +326,6 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 parameters[RtrQuantityText] = matNode.Children.Keys.Any(key => key.ToString() == QuantityText)
                     ? matNode.Children[new YamlScalarNode(QuantityText)].ToString()
                     : Database.Null;
-                //parameters[RtrProbabilityText] = matNode.Children.Keys.Any(key => key.ToString() == ProbabilityText)
-                //    ? matNode.Children[new YamlScalarNode(ProbabilityText)].ToString()
-                //    : Database.Null;
                 parameters[RtrConsumeText] = matNode.Children.Keys.Any(key => key.ToString() == ConsumeText)
                     ? Convert.ToByte(Convert.ToBoolean(matNode.Children[new YamlScalarNode(ConsumeText)].ToString()))
                         .ToString(CultureInfo.InvariantCulture)
