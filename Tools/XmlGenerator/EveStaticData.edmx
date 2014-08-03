@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EveStaticDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EveStaticDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="agtAgents">
           <Key>
             <PropertyRef Name="agentID" />
@@ -379,6 +379,9 @@
           <Property Name="researchMaterialTime" Type="int" />
           <Property Name="researchCopyTime" Type="int" />
           <Property Name="researchTechTime" Type="int" />
+          <Property Name="duplicatingTime" Type="int" />
+          <Property Name="reverseEngineeringTime" Type="int" />
+          <Property Name="inventionTime" Type="int" />
           <Property Name="productivityModifier" Type="int" />
           <Property Name="materialModifier" Type="smallint" />
           <Property Name="wasteFactor" Type="smallint" />
@@ -792,28 +795,6 @@
           <Property Name="description" Type="nvarchar" MaxLength="1000" />
           <Property Name="published" Type="bit" />
         </EntityType>
-        <EntityType Name="ramAssemblyLines">
-          <Key>
-            <PropertyRef Name="assemblyLineID" />
-          </Key>
-          <Property Name="assemblyLineID" Type="int" Nullable="false" />
-          <Property Name="assemblyLineTypeID" Type="tinyint" />
-          <Property Name="containerID" Type="int" />
-          <Property Name="nextFreeTime" Type="smalldatetime" />
-          <Property Name="UIGroupingID" Type="tinyint" />
-          <Property Name="costInstall" Type="float" />
-          <Property Name="costPerHour" Type="float" />
-          <Property Name="restrictionMask" Type="tinyint" />
-          <Property Name="discountPerGoodStandingPoint" Type="float" />
-          <Property Name="surchargePerBadStandingPoint" Type="float" />
-          <Property Name="minimumStanding" Type="float" />
-          <Property Name="minimumCharSecurity" Type="float" />
-          <Property Name="minimumCorpSecurity" Type="float" />
-          <Property Name="maximumCharSecurity" Type="float" />
-          <Property Name="maximumCorpSecurity" Type="float" />
-          <Property Name="ownerID" Type="int" />
-          <Property Name="activityID" Type="tinyint" />
-        </EntityType>
         <EntityType Name="ramAssemblyLineStations">
           <Key>
             <PropertyRef Name="stationID" />
@@ -836,6 +817,7 @@
           <Property Name="categoryID" Type="int" Nullable="false" />
           <Property Name="timeMultiplier" Type="float" />
           <Property Name="materialMultiplier" Type="float" />
+          <Property Name="costMultiplier" Type="float" />
         </EntityType>
         <EntityType Name="ramAssemblyLineTypeDetailPerGroup">
           <Key>
@@ -846,6 +828,7 @@
           <Property Name="groupID" Type="int" Nullable="false" />
           <Property Name="timeMultiplier" Type="float" />
           <Property Name="materialMultiplier" Type="float" />
+          <Property Name="costMultiplier" Type="float" />
         </EntityType>
         <EntityType Name="ramAssemblyLineTypes">
           <Key>
@@ -856,6 +839,7 @@
           <Property Name="description" Type="nvarchar" MaxLength="1000" />
           <Property Name="baseTimeMultiplier" Type="float" />
           <Property Name="baseMaterialMultiplier" Type="float" />
+          <Property Name="baseCostMultiplier" Type="float" />
           <Property Name="volume" Type="float" />
           <Property Name="activityID" Type="tinyint" />
           <Property Name="minCostPerHour" Type="float" />
@@ -879,8 +863,12 @@
           <Property Name="activityID" Type="tinyint" Nullable="false" />
           <Property Name="requiredTypeID" Type="int" Nullable="false" />
           <Property Name="quantity" Type="int" />
+          <Property Name="level" Type="int" />
           <Property Name="damagePerJob" Type="float" />
           <Property Name="recycle" Type="bit" />
+          <Property Name="raceID" Type="int" />
+          <Property Name="probability" Type="float" />
+          <Property Name="consume" Type="bit" />
         </EntityType>
         <EntityType Name="staOperations">
           <Key>
@@ -1078,7 +1066,6 @@
           <EntitySet Name="planetSchematicsPinMap" EntityType="Self.planetSchematicsPinMap" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="planetSchematicsTypeMap" EntityType="Self.planetSchematicsTypeMap" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ramActivities" EntityType="Self.ramActivities" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ramAssemblyLines" EntityType="Self.ramAssemblyLines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ramAssemblyLineStations" EntityType="Self.ramAssemblyLineStations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ramAssemblyLineTypeDetailPerCategory" EntityType="Self.ramAssemblyLineTypeDetailPerCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ramAssemblyLineTypeDetailPerGroup" EntityType="Self.ramAssemblyLineTypeDetailPerGroup" Schema="dbo" store:Type="Tables" />
@@ -1444,6 +1431,9 @@
           <Property Name="materialModifier" Type="Int16" />
           <Property Name="wasteFactor" Type="Int16" />
           <Property Name="maxProductionLimit" Type="Int32" />
+          <Property Name="duplicatingTime" Type="Int32" />
+          <Property Name="reverseEngineeringTime" Type="Int32" />
+          <Property Name="inventionTime" Type="Int32" />
         </EntityType>
         <EntityType Name="invCategories">
           <Key>
@@ -1853,28 +1843,6 @@
           <Property Name="description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="published" Type="Boolean" />
         </EntityType>
-        <EntityType Name="ramAssemblyLines">
-          <Key>
-            <PropertyRef Name="assemblyLineID" />
-          </Key>
-          <Property Name="assemblyLineID" Type="Int32" Nullable="false" />
-          <Property Name="assemblyLineTypeID" Type="Byte" />
-          <Property Name="containerID" Type="Int32" />
-          <Property Name="nextFreeTime" Type="DateTime" Precision="0" />
-          <Property Name="UIGroupingID" Type="Byte" />
-          <Property Name="costInstall" Type="Double" />
-          <Property Name="costPerHour" Type="Double" />
-          <Property Name="restrictionMask" Type="Byte" />
-          <Property Name="discountPerGoodStandingPoint" Type="Double" />
-          <Property Name="surchargePerBadStandingPoint" Type="Double" />
-          <Property Name="minimumStanding" Type="Double" />
-          <Property Name="minimumCharSecurity" Type="Double" />
-          <Property Name="minimumCorpSecurity" Type="Double" />
-          <Property Name="maximumCharSecurity" Type="Double" />
-          <Property Name="maximumCorpSecurity" Type="Double" />
-          <Property Name="ownerID" Type="Int32" />
-          <Property Name="activityID" Type="Byte" />
-        </EntityType>
         <EntityType Name="ramAssemblyLineStations">
           <Key>
             <PropertyRef Name="stationID" />
@@ -1897,6 +1865,7 @@
           <Property Name="categoryID" Type="Int32" Nullable="false" />
           <Property Name="timeMultiplier" Type="Double" />
           <Property Name="materialMultiplier" Type="Double" />
+          <Property Name="costMultiplier" Type="Double" />
         </EntityType>
         <EntityType Name="ramAssemblyLineTypeDetailPerGroup">
           <Key>
@@ -1907,6 +1876,7 @@
           <Property Name="groupID" Type="Int32" Nullable="false" />
           <Property Name="timeMultiplier" Type="Double" />
           <Property Name="materialMultiplier" Type="Double" />
+          <Property Name="costMultiplier" Type="Double" />
         </EntityType>
         <EntityType Name="ramAssemblyLineTypes">
           <Key>
@@ -1920,6 +1890,7 @@
           <Property Name="volume" Type="Double" />
           <Property Name="activityID" Type="Byte" />
           <Property Name="minCostPerHour" Type="Double" />
+          <Property Name="baseCostMultiplier" Type="Double" />
         </EntityType>
         <EntityType Name="ramInstallationTypeContents">
           <Key>
@@ -1942,6 +1913,10 @@
           <Property Name="quantity" Type="Int32" />
           <Property Name="damagePerJob" Type="Double" />
           <Property Name="recycle" Type="Boolean" />
+          <Property Name="level" Type="Int32" />
+          <Property Name="raceID" Type="Int32" />
+          <Property Name="probability" Type="Double" />
+          <Property Name="consume" Type="Boolean" />
         </EntityType>
         <EntityType Name="staOperations">
           <Key>
@@ -2135,7 +2110,6 @@
           <EntitySet Name="planetSchematicsPinMap" EntityType="Self.planetSchematicsPinMap" />
           <EntitySet Name="planetSchematicsTypeMap" EntityType="Self.planetSchematicsTypeMap" />
           <EntitySet Name="ramActivities" EntityType="Self.ramActivities" />
-          <EntitySet Name="ramAssemblyLines" EntityType="Self.ramAssemblyLines" />
           <EntitySet Name="ramAssemblyLineStations" EntityType="Self.ramAssemblyLineStations" />
           <EntitySet Name="ramAssemblyLineTypeDetailPerCategory" EntityType="Self.ramAssemblyLineTypeDetailPerCategory" />
           <EntitySet Name="ramAssemblyLineTypeDetailPerGroup" EntityType="Self.ramAssemblyLineTypeDetailPerGroup" />
@@ -2548,6 +2522,9 @@
           <EntitySetMapping Name="invBlueprintTypes">
             <EntityTypeMapping TypeName="EveStaticDataModel.invBlueprintTypes">
               <MappingFragment StoreEntitySet="invBlueprintTypes">
+                <ScalarProperty Name="inventionTime" ColumnName="inventionTime" />
+                <ScalarProperty Name="reverseEngineeringTime" ColumnName="reverseEngineeringTime" />
+                <ScalarProperty Name="duplicatingTime" ColumnName="duplicatingTime" />
                 <ScalarProperty Name="blueprintTypeID" ColumnName="blueprintTypeID" />
                 <ScalarProperty Name="parentBlueprintTypeID" ColumnName="parentBlueprintTypeID" />
                 <ScalarProperty Name="productTypeID" ColumnName="productTypeID" />
@@ -2995,29 +2972,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ramAssemblyLines">
-            <EntityTypeMapping TypeName="EveStaticDataModel.ramAssemblyLines">
-              <MappingFragment StoreEntitySet="ramAssemblyLines">
-                <ScalarProperty Name="assemblyLineID" ColumnName="assemblyLineID" />
-                <ScalarProperty Name="assemblyLineTypeID" ColumnName="assemblyLineTypeID" />
-                <ScalarProperty Name="containerID" ColumnName="containerID" />
-                <ScalarProperty Name="nextFreeTime" ColumnName="nextFreeTime" />
-                <ScalarProperty Name="UIGroupingID" ColumnName="UIGroupingID" />
-                <ScalarProperty Name="costInstall" ColumnName="costInstall" />
-                <ScalarProperty Name="costPerHour" ColumnName="costPerHour" />
-                <ScalarProperty Name="restrictionMask" ColumnName="restrictionMask" />
-                <ScalarProperty Name="discountPerGoodStandingPoint" ColumnName="discountPerGoodStandingPoint" />
-                <ScalarProperty Name="surchargePerBadStandingPoint" ColumnName="surchargePerBadStandingPoint" />
-                <ScalarProperty Name="minimumStanding" ColumnName="minimumStanding" />
-                <ScalarProperty Name="minimumCharSecurity" ColumnName="minimumCharSecurity" />
-                <ScalarProperty Name="minimumCorpSecurity" ColumnName="minimumCorpSecurity" />
-                <ScalarProperty Name="maximumCharSecurity" ColumnName="maximumCharSecurity" />
-                <ScalarProperty Name="maximumCorpSecurity" ColumnName="maximumCorpSecurity" />
-                <ScalarProperty Name="ownerID" ColumnName="ownerID" />
-                <ScalarProperty Name="activityID" ColumnName="activityID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ramAssemblyLineStations">
             <EntityTypeMapping TypeName="EveStaticDataModel.ramAssemblyLineStations">
               <MappingFragment StoreEntitySet="ramAssemblyLineStations">
@@ -3034,6 +2988,7 @@
           <EntitySetMapping Name="ramAssemblyLineTypeDetailPerCategory">
             <EntityTypeMapping TypeName="EveStaticDataModel.ramAssemblyLineTypeDetailPerCategory">
               <MappingFragment StoreEntitySet="ramAssemblyLineTypeDetailPerCategory">
+                <ScalarProperty Name="costMultiplier" ColumnName="costMultiplier" />
                 <ScalarProperty Name="assemblyLineTypeID" ColumnName="assemblyLineTypeID" />
                 <ScalarProperty Name="categoryID" ColumnName="categoryID" />
                 <ScalarProperty Name="timeMultiplier" ColumnName="timeMultiplier" />
@@ -3044,6 +2999,7 @@
           <EntitySetMapping Name="ramAssemblyLineTypeDetailPerGroup">
             <EntityTypeMapping TypeName="EveStaticDataModel.ramAssemblyLineTypeDetailPerGroup">
               <MappingFragment StoreEntitySet="ramAssemblyLineTypeDetailPerGroup">
+                <ScalarProperty Name="costMultiplier" ColumnName="costMultiplier" />
                 <ScalarProperty Name="assemblyLineTypeID" ColumnName="assemblyLineTypeID" />
                 <ScalarProperty Name="groupID" ColumnName="groupID" />
                 <ScalarProperty Name="timeMultiplier" ColumnName="timeMultiplier" />
@@ -3054,6 +3010,7 @@
           <EntitySetMapping Name="ramAssemblyLineTypes">
             <EntityTypeMapping TypeName="EveStaticDataModel.ramAssemblyLineTypes">
               <MappingFragment StoreEntitySet="ramAssemblyLineTypes">
+                <ScalarProperty Name="baseCostMultiplier" ColumnName="baseCostMultiplier" />
                 <ScalarProperty Name="assemblyLineTypeID" ColumnName="assemblyLineTypeID" />
                 <ScalarProperty Name="assemblyLineTypeName" ColumnName="assemblyLineTypeName" />
                 <ScalarProperty Name="description" ColumnName="description" />
@@ -3077,6 +3034,10 @@
           <EntitySetMapping Name="ramTypeRequirements">
             <EntityTypeMapping TypeName="EveStaticDataModel.ramTypeRequirements">
               <MappingFragment StoreEntitySet="ramTypeRequirements">
+                <ScalarProperty Name="consume" ColumnName="consume" />
+                <ScalarProperty Name="probability" ColumnName="probability" />
+                <ScalarProperty Name="raceID" ColumnName="raceID" />
+                <ScalarProperty Name="level" ColumnName="level" />
                 <ScalarProperty Name="typeID" ColumnName="typeID" />
                 <ScalarProperty Name="activityID" ColumnName="activityID" />
                 <ScalarProperty Name="requiredTypeID" ColumnName="requiredTypeID" />

@@ -940,6 +940,15 @@ namespace EVEMon.XmlGenerator
                 if (blueprint.researchTechTime.HasValue)
                     item.ResearchTechTime = blueprint.researchTechTime.Value;
 
+                if (blueprint.duplicatingTime.HasValue)
+                    item.DuplicatingTime = blueprint.duplicatingTime.Value;
+
+                if (blueprint.reverseEngineeringTime.HasValue)
+                    item.ReverseEngineeringTime = blueprint.reverseEngineeringTime.Value;
+
+                if (blueprint.inventionTime.HasValue)
+                    item.InventionTime = blueprint.inventionTime.Value;
+
                 if (blueprint.productivityModifier.HasValue)
                     item.ProductivityModifier = blueprint.productivityModifier.Value;
 
@@ -1382,11 +1391,23 @@ namespace EVEMon.XmlGenerator
                 if (requirement.quantity.HasValue)
                     item.Quantity = requirement.quantity.Value;
 
+                if (requirement.level.HasValue)
+                    item.Level = requirement.level.Value;
+
                 if (requirement.damagePerJob.HasValue)
                     item.DamagePerJob = requirement.damagePerJob.Value;
 
                 if (requirement.recycle.HasValue)
                     item.Recyclable = requirement.recycle.Value;
+
+                if (requirement.raceID.HasValue)
+                    item.RaceID = requirement.raceID.Value;
+
+                if (requirement.probability.HasValue)
+                    item.Probability = requirement.probability.Value;
+
+                if (requirement.consume.HasValue)
+                    item.Consume = requirement.consume.Value;
 
                 list.Add(item);
             }

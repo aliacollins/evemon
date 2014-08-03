@@ -408,6 +408,7 @@ namespace EVEMon.Common.Data
         public const int ImplantCategoryID = 20;
         public const int ReactionCategoryID = 24;
         public const int AsteroidCategoryID = 25;
+        public const int AncientRelicsCategoryID = 34;
 
         #endregion
 
@@ -507,6 +508,7 @@ namespace EVEMon.Common.Data
         public const int FactionCruisersMarketGroupID = 1369;
         public const int FactionBattleshipsMarketGroupID = 1378;
         public const int FactionCarrierMarketGroupID = 1392;
+        public const int AncientRelicsMarketGroupID = 1909;
 
         #endregion
 
@@ -524,6 +526,7 @@ namespace EVEMon.Common.Data
         public const int BlueprintFactionNonMarketGroupID = 21004;
         public const int BlueprintOfficerNonMarketGroupID = 21005;
         public const int BlueprintTechIIINonMarketGroupID = 21014;
+        public const int RevereseEngineerableNonMarketGroupID = 21100;
 
         #endregion
 

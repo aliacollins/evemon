@@ -85,7 +85,6 @@ namespace EVEMon.XmlGenerator
         public virtual DbSet<planetSchematicsPinMap> planetSchematicsPinMap { get; set; }
         public virtual DbSet<planetSchematicsTypeMap> planetSchematicsTypeMap { get; set; }
         public virtual DbSet<ramActivities> ramActivities { get; set; }
-        public virtual DbSet<ramAssemblyLines> ramAssemblyLines { get; set; }
         public virtual DbSet<ramAssemblyLineStations> ramAssemblyLineStations { get; set; }
         public virtual DbSet<ramAssemblyLineTypeDetailPerCategory> ramAssemblyLineTypeDetailPerCategory { get; set; }
         public virtual DbSet<ramAssemblyLineTypeDetailPerGroup> ramAssemblyLineTypeDetailPerGroup { get; set; }

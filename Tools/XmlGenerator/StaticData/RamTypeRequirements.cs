@@ -14,12 +14,24 @@ namespace EVEMon.XmlGenerator.StaticData
         public int RequiredTypeID { get; set; }
 
         [XmlElement("quantity")]
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
+
+        [XmlElement("level")]
+        public int? Level { get; set; }
 
         [XmlElement("damagePerJob")]
-        public double DamagePerJob { get; set; }
+        public double? DamagePerJob { get; set; }
 
         [XmlElement("recycle")]
-        public bool Recyclable { get; set; }
+        public bool? Recyclable { get; set; }
+
+        [XmlElement("raceID")]
+        public int? RaceID { get; set; }
+
+        [XmlElement("probability")]
+        public double? Probability { get; set; }
+
+        [XmlElement("consume")]
+        public bool? Consume { get; set; }
     }
 }

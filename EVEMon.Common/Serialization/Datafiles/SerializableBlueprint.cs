@@ -104,6 +104,20 @@ namespace EVEMon.Common.Serialization.Datafiles
         public int ResearchTechTime { get; set; }
 
         /// <summary>
+        /// Gets or sets the reverse engineering time.
+        /// </summary>
+        /// <value>The reverse engineering time.</value>
+        [XmlAttribute("reverseEngineeringTime")]
+        public int ReverseEngineeringTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the invention time.
+        /// </summary>
+        /// <value>The invention time.</value>
+        [XmlAttribute("inventionTime")]
+        public int InventionTime { get; set; }
+
+        /// <summary>
         /// Gets or sets the productivity modifier.
         /// </summary>
         /// <value>The productivity modifier.</value>

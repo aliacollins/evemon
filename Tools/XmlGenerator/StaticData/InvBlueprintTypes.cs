@@ -31,6 +31,15 @@ namespace EVEMon.XmlGenerator.StaticData
         [XmlElement("researchTechTime")]
         public int ResearchTechTime { get; set; }
 
+        [XmlAttribute("duplicatingTime")]
+        public int DuplicatingTime { get; set; }
+
+        [XmlAttribute("reverseEngineeringTime")]
+        public int ReverseEngineeringTime { get; set; }
+
+        [XmlAttribute("inventionTime")]
+        public int InventionTime { get; set; }
+
         [XmlElement("productivityModifier")]
         public int ProductivityModifier { get; set; }
 

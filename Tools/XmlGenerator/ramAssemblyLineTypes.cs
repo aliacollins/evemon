@@ -22,5 +22,6 @@ namespace EVEMon.XmlGenerator
         public Nullable<double> volume { get; set; }
         public Nullable<byte> activityID { get; set; }
         public Nullable<double> minCostPerHour { get; set; }
+        public Nullable<double> baseCostMultiplier { get; set; }
     }
 }

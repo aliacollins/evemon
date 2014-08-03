@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Data;
@@ -50,12 +51,24 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Reset the custom market groups
             s_nullMarketBlueprints.ForEach(srcItem => srcItem.MarketGroupID = null);
+            Database.InvTypesTable
+                .Where(item => Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.AncientRelicsCategoryID)
+                .ToList()
+                .ForEach(x => x.MarketGroupID = DBConstants.AncientRelicsMarketGroupID);
 
             // Serialize
             BlueprintsDatafile datafile = new BlueprintsDatafile();
             datafile.MarketGroups.AddRange(blueprintGroups);
 
             Util.DisplayEndTime(startTime);
+
+            // DEBUG: Find which blueprints have not been generated
+            if (Debugger.IsAttached)
+            {
+                var blueprintIds = groups.Values.SelectMany(x => x.Blueprints).Select(y => y.ID).ToList();
+                var diff = Database.InvBlueprintTypesTable.Where(blueprint => !blueprintIds.Contains(blueprint.ID)).ToList();
+                Console.WriteLine("{0} blueprints were not generated.", diff.Count);
+            }
 
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }
@@ -69,10 +82,10 @@ namespace EVEMon.XmlGenerator.Datafiles
             foreach (InvMarketGroups marketGroup in Database.InvMarketGroupsTable.Concat(s_injectedMarketGroups))
             {
                 SerializableBlueprintMarketGroup group = new SerializableBlueprintMarketGroup
-                                                             {
-                                                                 ID = marketGroup.ID,
-                                                                 Name = marketGroup.Name,
-                                                             };
+                {
+                    ID = marketGroup.ID,
+                    Name = marketGroup.Name,
+                };
 
                 groups[marketGroup.ID] = group;
 
@@ -80,7 +93,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                 List<SerializableBlueprint> blueprints = new List<SerializableBlueprint>();
                 foreach (InvTypes item in Database.InvTypesTable.Where(
                     item => item.MarketGroupID.GetValueOrDefault() == marketGroup.ID &&
-                        Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID))
+                            (Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID ||
+                             Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.AncientRelicsCategoryID)))
                 {
                     CreateBlueprint(item, blueprints);
                 }
@@ -97,67 +111,82 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             // Create custom market groups that don't exist in EVE
             s_injectedMarketGroups = new List<InvMarketGroups>
-                                         {
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Various Non-Market",
-                                                     Description = "Various blueprints not in EVE market",
-                                                     ID = DBConstants.BlueprintRootNonMarketGroupID,
-                                                     ParentID = DBConstants.BlueprintsMarketGroupID,
-                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Tech I",
-                                                     Description = "Tech I blueprints not in EVE market",
-                                                     ID = DBConstants.BlueprintTechINonMarketGroupID,
-                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Tech II",
-                                                     Description = "Tech II blueprints not in EVE market",
-                                                     ID = DBConstants.BlueprintTechIINonMarketGroupID,
-                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Storyline",
-                                                     Description = "Storyline blueprints not in EVE market",
-                                                     ID = DBConstants.BlueprintStorylineNonMarketGroupID,
-                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Faction",
-                                                     Description = "Faction blueprints not in EVE market",
-                                                     ID = DBConstants.BlueprintFactionNonMarketGroupID,
-                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Officer",
-                                                     Description = "Officer blueprints not in EVE market",
-                                                     ID = DBConstants.BlueprintOfficerNonMarketGroupID,
-                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Tech III",
-                                                     Description = "Tech III blueprints not in EVE market",
-                                                     ID = DBConstants.BlueprintTechIIINonMarketGroupID,
-                                                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
-                                                     IconID = DBConstants.UnknownBlueprintBackdropIconID
-                                                 }
-                                         };
+            {
+                new InvMarketGroups
+                {
+                    Name = "Various Non-Market",
+                    Description = "Various blueprints not in EVE market",
+                    ID = DBConstants.BlueprintRootNonMarketGroupID,
+                    ParentID = DBConstants.BlueprintsMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Tech I",
+                    Description = "Tech I blueprints not in EVE market",
+                    ID = DBConstants.BlueprintTechINonMarketGroupID,
+                    ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Tech II",
+                    Description = "Tech II blueprints not in EVE market",
+                    ID = DBConstants.BlueprintTechIINonMarketGroupID,
+                    ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Storyline",
+                    Description = "Storyline blueprints not in EVE market",
+                    ID = DBConstants.BlueprintStorylineNonMarketGroupID,
+                    ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Faction",
+                    Description = "Faction blueprints not in EVE market",
+                    ID = DBConstants.BlueprintFactionNonMarketGroupID,
+                    ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Officer",
+                    Description = "Officer blueprints not in EVE market",
+                    ID = DBConstants.BlueprintOfficerNonMarketGroupID,
+                    ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Tech III",
+                    Description = "Tech III blueprints not in EVE market",
+                    ID = DBConstants.BlueprintTechIIINonMarketGroupID,
+                    ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Reverse Engineerable",
+                    Description = "Items that can be reverse engineered to a blueprint not in EVE market",
+                    ID = DBConstants.RevereseEngineerableNonMarketGroupID,
+                    ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
+                }
+            };
 
-            s_nullMarketBlueprints = Database.InvTypesTable.Where(item => item.MarketGroupID == null &&
-                        Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID).ToList();
+            s_nullMarketBlueprints = Database.InvTypesTable
+                .Where(item => item.MarketGroupID == null &&
+                               Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID).ToList();
+
+            // Set ancient relics to reverse engineerable custom market group
+            Database.InvTypesTable
+                .Where(item => Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.AncientRelicsCategoryID)
+                .ToList()
+                .ForEach(x => x.MarketGroupID = DBConstants.RevereseEngineerableNonMarketGroupID);
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (InvTypes item in s_nullMarketBlueprints)
@@ -276,35 +305,31 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             Util.UpdatePercentDone(Database.BlueprintsTotalCount);
 
-            srcBlueprint.Generated = true;
-
             InvBlueprintTypes blueprintType = Database.InvBlueprintTypesTable[srcBlueprint.ID];
 
             // Creates the blueprint with base informations
             SerializableBlueprint blueprint = new SerializableBlueprint
-                                              {
-                                                  ID = srcBlueprint.ID,
-                                                  Name = srcBlueprint.Name,
-                                                  Icon = srcBlueprint.IconID.HasValue
-                                                      ? Database.EveIconsTable[srcBlueprint.IconID.Value].Icon
-                                                      : String.Empty,
-                                                  ProduceItemID = blueprintType.ProductTypeID,
-                                                  ProductionTime = blueprintType.ProductionTime,
-                                                  TechLevel = blueprintType.TechLevel,
-                                                  ResearchProductivityTime = blueprintType.ResearchProductivityTime,
-                                                  ResearchMaterialTime = blueprintType.ResearchMaterialTime,
-                                                  ResearchCopyTime = blueprintType.ResearchCopyTime,
-                                                  ResearchTechTime = blueprintType.ResearchTechTime,
-                                                  ProductivityModifier = blueprintType.ProductivityModifier,
-                                                  WasteFactor = blueprintType.WasteFactor,
-                                                  MaxProductionLimit = blueprintType.MaxProductionLimit
-                                              };
+            {
+                ID = srcBlueprint.ID,
+                Name = srcBlueprint.Name,
+                Icon = srcBlueprint.IconID.HasValue
+                    ? Database.EveIconsTable[srcBlueprint.IconID.Value].Icon
+                    : String.Empty,
+                ProduceItemID = blueprintType.ProductTypeID,
+                ProductionTime = blueprintType.ProductionTime,
+                ResearchProductivityTime = blueprintType.ResearchProductivityTime,
+                ResearchMaterialTime = blueprintType.ResearchMaterialTime,
+                ResearchCopyTime = blueprintType.ResearchCopyTime,
+                InventionTime = blueprintType.InventionTime,
+                ReverseEngineeringTime = blueprintType.ReverseEngineeringTime,
+                MaxProductionLimit = blueprintType.MaxProductionLimit
+            };
 
             // Metagroup
             SetBlueprintMetaGroup(srcBlueprint, blueprint);
 
             // Export item requirements
-            ExportRequirements(srcBlueprint, blueprint);
+            GetRequirements(srcBlueprint, blueprint);
 
             // Look for the tech 2 variations that this blueprint invents
             IEnumerable<int> listOfInventionTypeID = Database.InvMetaTypesTable.Where(
@@ -381,160 +406,48 @@ namespace EVEMon.XmlGenerator.Datafiles
         }
 
         /// <summary>
-        /// Export item requirements. 
+        /// Get's the item requirements. 
         /// </summary>
         /// <param name="srcBlueprint"></param>
         /// <param name="blueprint"></param>
-        private static void ExportRequirements(IHasID srcBlueprint, SerializableBlueprint blueprint)
+        private static void GetRequirements(IHasID srcBlueprint, SerializableBlueprint blueprint)
         {
             List<SerializablePrereqSkill> prerequisiteSkills = new List<SerializablePrereqSkill>();
             List<SerializableRequiredMaterial> requiredMaterials = new List<SerializableRequiredMaterial>();
 
-            // Add the required raw materials
-            AddRequiredRawMaterials(blueprint.ProduceItemID, requiredMaterials);
+            // Find the requirements and add them to the list, ignore any blueprint type
+            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable.Where(requirement => requirement.ID == srcBlueprint.ID &&
+                Database.InvBlueprintTypesTable.All(x => x.ID != requirement.RequiredTypeID)))
+            {
+                // Is it a skill ? Add it to the prerequisities skills list
+                if (requirement.Level.HasValue)
+                {
+                    prerequisiteSkills.Add(new SerializablePrereqSkill
+                    {
+                        ID = requirement.RequiredTypeID,
+                        Level = requirement.Level.Value,
+                        Activity = requirement.ActivityID
+                    });
+                    continue;
+                }
 
-            // Add the required extra materials
-            AddRequiredExtraMaterials(srcBlueprint.ID, prerequisiteSkills, requiredMaterials);
+                // It is an item (material)
+                if (requirement.Quantity.HasValue)
+                {
+                    requiredMaterials.Add(new SerializableRequiredMaterial
+                    {
+                        ID = requirement.RequiredTypeID,
+                        Quantity = requirement.Quantity.Value,
+                        Activity = requirement.ActivityID,
+                    });
+                }
+            }
 
             // Add prerequisite skills to item
             blueprint.PrereqSkill.AddRange(prerequisiteSkills.OrderBy(x => x.Activity));
 
             // Add required materials to item
             blueprint.ReqMaterial.AddRange(requiredMaterials.OrderBy(x => x.Activity));
-        }
-
-        /// <summary>
-        /// Adds the raw materials needed to produce an item.
-        /// </summary>
-        /// <param name="produceItemID">The produce item ID.</param>
-        /// <param name="requiredMaterials">The required materials.</param>
-        private static void AddRequiredRawMaterials(int produceItemID,
-                                                    ICollection<SerializableRequiredMaterial> requiredMaterials)
-        {
-            // Find the raw materials needed for the produced item and add them to the list
-            IEnumerable<SerializableRequiredMaterial> rawMaterials = Database.InvTypeMaterialsTable.Where(
-                x => x.ID == produceItemID).Select(
-                    reprocItem => new SerializableRequiredMaterial
-                                      {
-                                          ID = reprocItem.MaterialTypeID,
-                                          Quantity = reprocItem.Quantity,
-                                          DamagePerJob = 1,
-                                          Activity = (int)BlueprintActivity.Manufacturing,
-                                          WasteAffected = 1
-                                      });
-
-            requiredMaterials.AddRange(rawMaterials);
-        }
-
-        /// <summary>
-        /// Adds the extra materials needed to produce an item.
-        /// </summary>
-        /// <param name="blueprintID">The blueprint ID.</param>
-        /// <param name="prerequisiteSkills">The prerequisite skills.</param>
-        /// <param name="requiredMaterials">The required materials.</param>
-        private static void AddRequiredExtraMaterials(int blueprintID,
-                                                      ICollection<SerializablePrereqSkill> prerequisiteSkills,
-                                                      ICollection<SerializableRequiredMaterial> requiredMaterials)
-        {
-            // Find the additional extra materials and add them to the list
-            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable.Where(x => x.ID == blueprintID))
-            {
-                // Is it a skill ? Add it to the prerequisities skills list
-                if (Database.InvTypesTable.Any(x => x.ID == requirement.RequiredTypeID &&
-                                                    Database.InvGroupsTable[x.GroupID].CategoryID == DBConstants.SkillCategoryID))
-                {
-                    prerequisiteSkills.Add(new SerializablePrereqSkill
-                                               {
-                                                   ID = requirement.RequiredTypeID,
-                                                   Level = requirement.Quantity,
-                                                   Activity = requirement.ActivityID
-                                               });
-                }
-                else // It is an item (extra material)
-                {
-                    requiredMaterials.Add(new SerializableRequiredMaterial
-                                              {
-                                                  ID = requirement.RequiredTypeID,
-                                                  Quantity = requirement.Quantity,
-                                                  DamagePerJob = requirement.DamagePerJob,
-                                                  Activity = requirement.ActivityID,
-                                                  WasteAffected = 0
-                                              });
-
-                    // If the item is recyclable, we need to find the materials produced by reprocessing it
-                    // and substracted them from the related materials of the requiredMaterials list
-                    if (requirement.Recyclable)
-                    {
-                        foreach (InvTypeMaterials reprocItem in Database.InvTypeMaterialsTable.Where(
-                            x => x.ID == requirement.RequiredTypeID))
-                        {
-                            if (requiredMaterials.All(x => x.ID != reprocItem.MaterialTypeID))
-                                continue;
-
-                            SerializableRequiredMaterial material = requiredMaterials.First(
-                                x => x.ID == reprocItem.MaterialTypeID);
-
-                            material.Quantity -= requirement.Quantity * reprocItem.Quantity;
-
-                            if (material.Quantity < 1)
-                                requiredMaterials.Remove(material);
-                        }
-                    }
-
-                    // If activity is invention, add the prerequisite skill
-                    // of the required material as it's not included in this table
-                    if (requirement.ActivityID == (int)BlueprintActivity.Invention)
-                    {
-                        // Add the prerequisite skills for a material used in invention activity.
-                        MaterialPrereqSkill(requirement, prerequisiteSkills);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Add the prerequisite skills for a material used in invention activity.
-        /// </summary>
-        private static void MaterialPrereqSkill(RamTypeRequirements requirement,
-                                                ICollection<SerializablePrereqSkill> prerequisiteSkills)
-        {
-            Int64[] prereqSkills = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
-            Int64[] prereqLevels = new Int64[DBConstants.RequiredSkillPropertyIDs.Count];
-
-            foreach (DgmTypeAttributes attribute in Database.DgmTypeAttributesTable.Where(
-                x => x.ItemID == requirement.RequiredTypeID))
-            {
-                long attributeInt64Value = attribute.GetInt64Value;
-
-                // Is it a prereq skill ?
-                int prereqIndex = DBConstants.RequiredSkillPropertyIDs.IndexOf(attribute.AttributeID);
-                if (prereqIndex >= 0)
-                {
-                    prereqSkills[prereqIndex] = attributeInt64Value;
-                    continue;
-                }
-
-                // Is it a prereq level ?
-                prereqIndex = DBConstants.RequiredSkillLevelPropertyIDs.IndexOf(attribute.AttributeID);
-                if (prereqIndex < 0)
-                    continue;
-
-                prereqLevels[prereqIndex] = attributeInt64Value;
-            }
-
-            // Add the prerequisite skills
-            for (int i = 0; i < prereqSkills.Length; i++)
-            {
-                if (prereqSkills[i] != 0)
-                {
-                    prerequisiteSkills.Add(new SerializablePrereqSkill
-                                               {
-                                                   ID = prereqSkills[i],
-                                                   Level = prereqLevels[i],
-                                                   Activity = requirement.ActivityID
-                                               });
-                }
-            }
         }
     }
 }

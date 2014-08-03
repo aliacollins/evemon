@@ -20,5 +20,9 @@ namespace EVEMon.XmlGenerator
         public Nullable<int> quantity { get; set; }
         public Nullable<double> damagePerJob { get; set; }
         public Nullable<bool> recycle { get; set; }
+        public Nullable<int> level { get; set; }
+        public Nullable<int> raceID { get; set; }
+        public Nullable<double> probability { get; set; }
+        public Nullable<bool> consume { get; set; }
     }
 }

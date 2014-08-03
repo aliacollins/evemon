@@ -18,5 +18,6 @@ namespace EVEMon.XmlGenerator
         public int groupID { get; set; }
         public Nullable<double> timeMultiplier { get; set; }
         public Nullable<double> materialMultiplier { get; set; }
+        public Nullable<double> costMultiplier { get; set; }
     }
 }
