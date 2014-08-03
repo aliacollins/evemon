@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Data;
@@ -50,12 +51,24 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Reset the custom market groups
             s_nullMarketBlueprints.ForEach(srcItem => srcItem.MarketGroupID = null);
+            Database.InvTypesTable
+                .Where(item => Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.AncientRelicsCategoryID)
+                .ToList()
+                .ForEach(x => x.MarketGroupID = DBConstants.AncientRelicsMarketGroupID);
 
             // Serialize
             BlueprintsDatafile datafile = new BlueprintsDatafile();
             datafile.MarketGroups.AddRange(blueprintGroups);
 
             Util.DisplayEndTime(startTime);
+
+            // DEBUG: Find which blueprints have not been generated
+            if (Debugger.IsAttached)
+            {
+                var blueprintIds = groups.Values.SelectMany(x => x.Blueprints).Select(y => y.ID).ToList();
+                var diff = Database.InvBlueprintTypesTable.Where(blueprint => !blueprintIds.Contains(blueprint.ID)).ToList();
+                Console.WriteLine("{0} blueprints were not generated.", diff.Count);
+            }
 
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
         }
@@ -80,7 +93,8 @@ namespace EVEMon.XmlGenerator.Datafiles
                 List<SerializableBlueprint> blueprints = new List<SerializableBlueprint>();
                 foreach (InvTypes item in Database.InvTypesTable.Where(
                     item => item.MarketGroupID.GetValueOrDefault() == marketGroup.ID &&
-                            Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID))
+                            (Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID ||
+                             Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.AncientRelicsCategoryID)))
                 {
                     CreateBlueprint(item, blueprints);
                 }
@@ -153,12 +167,26 @@ namespace EVEMon.XmlGenerator.Datafiles
                     ID = DBConstants.BlueprintTechIIINonMarketGroupID,
                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                     IconID = DBConstants.UnknownBlueprintBackdropIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Reverse Engineerable",
+                    Description = "Items that can be reverse engineered to a blueprint not in EVE market",
+                    ID = DBConstants.RevereseEngineerableNonMarketGroupID,
+                    ParentID = DBConstants.BlueprintRootNonMarketGroupID,
+                    IconID = DBConstants.UnknownBlueprintBackdropIconID
                 }
             };
 
-            s_nullMarketBlueprints = Database.InvTypesTable.Where(item => item.MarketGroupID == null &&
-                                                                          Database.InvGroupsTable[item.GroupID].CategoryID ==
-                                                                          DBConstants.BlueprintCategoryID).ToList();
+            s_nullMarketBlueprints = Database.InvTypesTable
+                .Where(item => item.MarketGroupID == null &&
+                               Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID).ToList();
+
+            // Set ancient relics to reverse engineerable custom market group
+            Database.InvTypesTable
+                .Where(item => Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.AncientRelicsCategoryID)
+                .ToList()
+                .ForEach(x => x.MarketGroupID = DBConstants.RevereseEngineerableNonMarketGroupID);
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (InvTypes item in s_nullMarketBlueprints)
@@ -277,8 +305,6 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             Util.UpdatePercentDone(Database.BlueprintsTotalCount);
 
-            srcBlueprint.Generated = true;
-
             InvBlueprintTypes blueprintType = Database.InvBlueprintTypesTable[srcBlueprint.ID];
 
             // Creates the blueprint with base informations
@@ -291,13 +317,11 @@ namespace EVEMon.XmlGenerator.Datafiles
                     : String.Empty,
                 ProduceItemID = blueprintType.ProductTypeID,
                 ProductionTime = blueprintType.ProductionTime,
-                TechLevel = blueprintType.TechLevel,
                 ResearchProductivityTime = blueprintType.ResearchProductivityTime,
                 ResearchMaterialTime = blueprintType.ResearchMaterialTime,
                 ResearchCopyTime = blueprintType.ResearchCopyTime,
-                ResearchTechTime = blueprintType.ResearchTechTime,
-                ProductivityModifier = blueprintType.ProductivityModifier,
-                WasteFactor = blueprintType.WasteFactor,
+                InventionTime = blueprintType.InventionTime,
+                ReverseEngineeringTime = blueprintType.ReverseEngineeringTime,
                 MaxProductionLimit = blueprintType.MaxProductionLimit
             };
 

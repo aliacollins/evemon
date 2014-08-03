@@ -13,8 +13,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         None = 0,
         Manufacturing = 1,
         ResearchingTechnology = 2,
-        ResearchingTimeProductivity = 3,
-        ResearchingMaterialProductivity = 4,
+        ResearchingTimeEfficiency = 3,
+        ResearchingMaterialEfficiency = 4,
         Copying = 5,
         Duplicating = 6,
         ReverseEngineering = 7,
@@ -107,9 +107,9 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     YamlNode rteActivity =
                         new YamlScalarNode(((int)Activity.ResearchingTechnology).ToString(CultureInfo.InvariantCulture));
                     YamlNode rtpActivity =
-                        new YamlScalarNode(((int)Activity.ResearchingTimeProductivity).ToString(CultureInfo.InvariantCulture));
+                        new YamlScalarNode(((int)Activity.ResearchingTimeEfficiency).ToString(CultureInfo.InvariantCulture));
                     YamlNode rmpActivity =
-                        new YamlScalarNode(((int)Activity.ResearchingMaterialProductivity).ToString(CultureInfo.InvariantCulture));
+                        new YamlScalarNode(((int)Activity.ResearchingMaterialEfficiency).ToString(CultureInfo.InvariantCulture));
                     YamlNode copActivity = new YamlScalarNode(((int)Activity.Copying).ToString(CultureInfo.InvariantCulture));
                     YamlNode dupActivity = new YamlScalarNode(((int)Activity.Duplicating).ToString(CultureInfo.InvariantCulture));
                     YamlNode renActivity =

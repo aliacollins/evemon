@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -64,6 +65,14 @@ namespace EVEMon.XmlGenerator.Datafiles
             datafile.MarketGroups.AddRange(rootGroups);
 
             Util.DisplayEndTime(startTime);
+
+            // DEBUG: Find which items have not been generated
+            if (Debugger.IsAttached)
+            {
+                var itemids = groups.Values.SelectMany(x => x.Items).Select(y => y.ID).ToList();
+                var diff = Database.InvTypesTable.Where(item => !itemids.Contains(item.ID)).ToList();
+                Console.WriteLine("{0} items were not generated.", diff.Count);
+            }
 
             Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
         }
