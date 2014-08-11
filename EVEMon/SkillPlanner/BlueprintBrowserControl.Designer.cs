@@ -38,44 +38,41 @@ namespace EVEMon.SkillPlanner
             this.chManufItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chManufQuantityBase = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chManufQuantityYou = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chManufQuantityPerfect = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chDamagePerRun = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chPerfectMELevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ActivityContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tpCopying = new System.Windows.Forms.TabPage();
             this.gbCopyBoM = new System.Windows.Forms.GroupBox();
+            this.lblNoItemCopy = new System.Windows.Forms.Label();
             this.lvCopying = new System.Windows.Forms.ListView();
             this.tpResearchME = new System.Windows.Forms.TabPage();
             this.gbResearchMEBoM = new System.Windows.Forms.GroupBox();
-            this.lvResearchME = new System.Windows.Forms.ListView();
             this.lblNoItemME = new System.Windows.Forms.Label();
+            this.lvResearchME = new System.Windows.Forms.ListView();
             this.tpResearchPE = new System.Windows.Forms.TabPage();
             this.gbResearchPEBoM = new System.Windows.Forms.GroupBox();
-            this.lvResearchPE = new System.Windows.Forms.ListView();
             this.lblNoItemPE = new System.Windows.Forms.Label();
+            this.lvResearchPE = new System.Windows.Forms.ListView();
             this.tpInvention = new System.Windows.Forms.TabPage();
             this.gbInvBoM = new System.Windows.Forms.GroupBox();
             this.lvInvention = new System.Windows.Forms.ListView();
-            this.tpResearching = new System.Windows.Forms.TabPage();
+            this.tpReverseEngineering = new System.Windows.Forms.TabPage();
             this.gbResearchBoM = new System.Windows.Forms.GroupBox();
-            this.lblNoResearch = new System.Windows.Forms.Label();
+            this.lvReverseEngineering = new System.Windows.Forms.ListView();
+            this.lblNoItemReverseEngineering = new System.Windows.Forms.Label();
             this.tlpModifiers = new System.Windows.Forms.TableLayoutPanel();
             this.flpUpper = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblMaterialLevel = new System.Windows.Forms.Label();
+            this.lblMaterialEfficiency = new System.Windows.Forms.Label();
             this.nudME = new System.Windows.Forms.NumericUpDown();
-            this.lblProductivityLevel = new System.Windows.Forms.Label();
-            this.nudPE = new System.Windows.Forms.NumericUpDown();
+            this.lblTimeEfficiency = new System.Windows.Forms.Label();
+            this.nudTE = new System.Windows.Forms.NumericUpDown();
             this.flpLower = new System.Windows.Forms.FlowLayoutPanel();
             this.cbFacility = new System.Windows.Forms.ComboBox();
             this.cbImplantSet = new System.Windows.Forms.ComboBox();
             this.blueprintSelectControl = new EVEMon.SkillPlanner.BlueprintSelectControl();
             this.lblProduce = new System.Windows.Forms.Label();
-            this.lblWasteFactor = new System.Windows.Forms.Label();
             this.lblProductionLimit = new System.Windows.Forms.Label();
             this.lblProductionTime = new System.Windows.Forms.Label();
             this.lblItem = new System.Windows.Forms.Label();
-            this.lblWaste = new System.Windows.Forms.Label();
             this.lblRunsPerCopy = new System.Windows.Forms.Label();
             this.lblProductionBaseTime = new System.Windows.Forms.Label();
             this.lblProductionCharTime = new System.Windows.Forms.Label();
@@ -85,18 +82,19 @@ namespace EVEMon.SkillPlanner
             this.lblResearchCopyCharTime = new System.Windows.Forms.Label();
             this.lblResearchCopyBaseTime = new System.Windows.Forms.Label();
             this.lblResearchCopy = new System.Windows.Forms.Label();
-            this.lblResearchPECharTime = new System.Windows.Forms.Label();
-            this.lblResearchPEBaseTime = new System.Windows.Forms.Label();
+            this.lblResearchTECharTime = new System.Windows.Forms.Label();
+            this.lblResearchTEBaseTime = new System.Windows.Forms.Label();
             this.lblResearchPE = new System.Windows.Forms.Label();
             this.lblInvention = new System.Windows.Forms.Label();
             this.gbGeneralInfo = new System.Windows.Forms.GroupBox();
-            this.lblPerfectMELevelValue = new System.Windows.Forms.Label();
-            this.lblPerfectME = new System.Windows.Forms.Label();
+            this.lblSuccessProbability = new System.Windows.Forms.Label();
+            this.lblProbability = new System.Windows.Forms.Label();
             this.InventBlueprintListBox = new System.Windows.Forms.ListBox();
             this.gbResearching = new System.Windows.Forms.GroupBox();
             this.gbManufacturing = new System.Windows.Forms.GroupBox();
             this.pnlAttributes = new System.Windows.Forms.Panel();
             this.gbInvention = new System.Windows.Forms.GroupBox();
+            this.lblInventionCharTime = new System.Windows.Forms.Label();
             this.lblInventionTime = new System.Windows.Forms.Label();
             this.lblInventionBaseTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).BeginInit();
@@ -127,12 +125,12 @@ namespace EVEMon.SkillPlanner
             this.gbResearchPEBoM.SuspendLayout();
             this.tpInvention.SuspendLayout();
             this.gbInvBoM.SuspendLayout();
-            this.tpResearching.SuspendLayout();
+            this.tpReverseEngineering.SuspendLayout();
             this.gbResearchBoM.SuspendLayout();
             this.tlpModifiers.SuspendLayout();
             this.flpUpper.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudME)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPE)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTE)).BeginInit();
             this.flpLower.SuspendLayout();
             this.gbGeneralInfo.SuspendLayout();
             this.gbResearching.SuspendLayout();
@@ -219,7 +217,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl.Controls.Add(this.tpResearchME);
             this.tabControl.Controls.Add(this.tpResearchPE);
             this.tabControl.Controls.Add(this.tpInvention);
-            this.tabControl.Controls.Add(this.tpResearching);
+            this.tabControl.Controls.Add(this.tpReverseEngineering);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.HotTrack = true;
             this.tabControl.Location = new System.Drawing.Point(0, 65);
@@ -256,10 +254,7 @@ namespace EVEMon.SkillPlanner
             this.lvManufacturing.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chManufItem,
             this.chManufQuantityBase,
-            this.chManufQuantityYou,
-            this.chManufQuantityPerfect,
-            this.chDamagePerRun,
-            this.chPerfectMELevel});
+            this.chManufQuantityYou});
             this.lvManufacturing.ContextMenuStrip = this.ActivityContextMenu;
             this.lvManufacturing.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvManufacturing.FullRowSelect = true;
@@ -286,20 +281,7 @@ namespace EVEMon.SkillPlanner
             // chManufQuantityYou
             // 
             this.chManufQuantityYou.Text = "Quantity (You)";
-            this.chManufQuantityYou.Width = 92;
-            // 
-            // chManufQuantityPerfect
-            // 
-            this.chManufQuantityPerfect.Text = "Quantity (Perfect)";
-            this.chManufQuantityPerfect.Width = 95;
-            // 
-            // chDamagePerRun
-            // 
-            this.chDamagePerRun.Text = "Damage Per Run";
-            // 
-            // chPerfectMELevel
-            // 
-            this.chPerfectMELevel.Text = "Perfect ME Level/Item";
+            this.chManufQuantityYou.Width = 82;
             // 
             // ActivityContextMenu
             // 
@@ -328,6 +310,7 @@ namespace EVEMon.SkillPlanner
             // 
             // gbCopyBoM
             // 
+            this.gbCopyBoM.Controls.Add(this.lblNoItemCopy);
             this.gbCopyBoM.Controls.Add(this.lvCopying);
             this.gbCopyBoM.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbCopyBoM.Location = new System.Drawing.Point(3, 3);
@@ -336,6 +319,17 @@ namespace EVEMon.SkillPlanner
             this.gbCopyBoM.TabIndex = 1;
             this.gbCopyBoM.TabStop = false;
             this.gbCopyBoM.Text = "Bill of Materials";
+            // 
+            // lblNoItemCopy
+            // 
+            this.lblNoItemCopy.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemCopy.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemCopy.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemCopy.Name = "lblNoItemCopy";
+            this.lblNoItemCopy.Size = new System.Drawing.Size(218, 174);
+            this.lblNoItemCopy.TabIndex = 3;
+            this.lblNoItemCopy.Text = "No item required.";
+            this.lblNoItemCopy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lvCopying
             // 
@@ -363,8 +357,8 @@ namespace EVEMon.SkillPlanner
             // 
             // gbResearchMEBoM
             // 
-            this.gbResearchMEBoM.Controls.Add(this.lvResearchME);
             this.gbResearchMEBoM.Controls.Add(this.lblNoItemME);
+            this.gbResearchMEBoM.Controls.Add(this.lvResearchME);
             this.gbResearchMEBoM.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbResearchMEBoM.Location = new System.Drawing.Point(3, 3);
             this.gbResearchMEBoM.Name = "gbResearchMEBoM";
@@ -372,6 +366,17 @@ namespace EVEMon.SkillPlanner
             this.gbResearchMEBoM.TabIndex = 1;
             this.gbResearchMEBoM.TabStop = false;
             this.gbResearchMEBoM.Text = "Bill of Materials";
+            // 
+            // lblNoItemME
+            // 
+            this.lblNoItemME.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemME.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemME.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemME.Name = "lblNoItemME";
+            this.lblNoItemME.Size = new System.Drawing.Size(218, 174);
+            this.lblNoItemME.TabIndex = 2;
+            this.lblNoItemME.Text = "No item required.";
+            this.lblNoItemME.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lvResearchME
             // 
@@ -386,17 +391,6 @@ namespace EVEMon.SkillPlanner
             this.lvResearchME.View = System.Windows.Forms.View.Details;
             this.lvResearchME.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
             // 
-            // lblNoItemME
-            // 
-            this.lblNoItemME.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoItemME.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoItemME.Location = new System.Drawing.Point(3, 16);
-            this.lblNoItemME.Name = "lblNoItemME";
-            this.lblNoItemME.Size = new System.Drawing.Size(218, 174);
-            this.lblNoItemME.TabIndex = 2;
-            this.lblNoItemME.Text = "No item required.";
-            this.lblNoItemME.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // tpResearchPE
             // 
             this.tpResearchPE.Controls.Add(this.gbResearchPEBoM);
@@ -405,13 +399,13 @@ namespace EVEMon.SkillPlanner
             this.tpResearchPE.Padding = new System.Windows.Forms.Padding(3);
             this.tpResearchPE.Size = new System.Drawing.Size(230, 199);
             this.tpResearchPE.TabIndex = 4;
-            this.tpResearchPE.Text = "Researching Time Productivity";
+            this.tpResearchPE.Text = "Researching Time Efficiency";
             this.tpResearchPE.UseVisualStyleBackColor = true;
             // 
             // gbResearchPEBoM
             // 
-            this.gbResearchPEBoM.Controls.Add(this.lvResearchPE);
             this.gbResearchPEBoM.Controls.Add(this.lblNoItemPE);
+            this.gbResearchPEBoM.Controls.Add(this.lvResearchPE);
             this.gbResearchPEBoM.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbResearchPEBoM.Location = new System.Drawing.Point(3, 3);
             this.gbResearchPEBoM.Name = "gbResearchPEBoM";
@@ -419,6 +413,17 @@ namespace EVEMon.SkillPlanner
             this.gbResearchPEBoM.TabIndex = 1;
             this.gbResearchPEBoM.TabStop = false;
             this.gbResearchPEBoM.Text = "Bill of Materials";
+            // 
+            // lblNoItemPE
+            // 
+            this.lblNoItemPE.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemPE.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemPE.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemPE.Name = "lblNoItemPE";
+            this.lblNoItemPE.Size = new System.Drawing.Size(218, 174);
+            this.lblNoItemPE.TabIndex = 2;
+            this.lblNoItemPE.Text = "No item required.";
+            this.lblNoItemPE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lvResearchPE
             // 
@@ -432,17 +437,6 @@ namespace EVEMon.SkillPlanner
             this.lvResearchPE.UseCompatibleStateImageBehavior = false;
             this.lvResearchPE.View = System.Windows.Forms.View.Details;
             this.lvResearchPE.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
-            // 
-            // lblNoItemPE
-            // 
-            this.lblNoItemPE.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoItemPE.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoItemPE.Location = new System.Drawing.Point(3, 16);
-            this.lblNoItemPE.Name = "lblNoItemPE";
-            this.lblNoItemPE.Size = new System.Drawing.Size(218, 174);
-            this.lblNoItemPE.TabIndex = 2;
-            this.lblNoItemPE.Text = "No item required.";
-            this.lblNoItemPE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tpInvention
             // 
@@ -479,20 +473,21 @@ namespace EVEMon.SkillPlanner
             this.lvInvention.View = System.Windows.Forms.View.Details;
             this.lvInvention.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
             // 
-            // tpResearching
+            // tpReverseEngineering
             // 
-            this.tpResearching.Controls.Add(this.gbResearchBoM);
-            this.tpResearching.Location = new System.Drawing.Point(4, 22);
-            this.tpResearching.Name = "tpResearching";
-            this.tpResearching.Padding = new System.Windows.Forms.Padding(3);
-            this.tpResearching.Size = new System.Drawing.Size(230, 199);
-            this.tpResearching.TabIndex = 5;
-            this.tpResearching.Text = "Researching";
-            this.tpResearching.UseVisualStyleBackColor = true;
+            this.tpReverseEngineering.Controls.Add(this.gbResearchBoM);
+            this.tpReverseEngineering.Location = new System.Drawing.Point(4, 22);
+            this.tpReverseEngineering.Name = "tpReverseEngineering";
+            this.tpReverseEngineering.Padding = new System.Windows.Forms.Padding(3);
+            this.tpReverseEngineering.Size = new System.Drawing.Size(230, 199);
+            this.tpReverseEngineering.TabIndex = 5;
+            this.tpReverseEngineering.Text = "Reverse Engineering";
+            this.tpReverseEngineering.UseVisualStyleBackColor = true;
             // 
             // gbResearchBoM
             // 
-            this.gbResearchBoM.Controls.Add(this.lblNoResearch);
+            this.gbResearchBoM.Controls.Add(this.lvReverseEngineering);
+            this.gbResearchBoM.Controls.Add(this.lblNoItemReverseEngineering);
             this.gbResearchBoM.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbResearchBoM.Location = new System.Drawing.Point(3, 3);
             this.gbResearchBoM.Name = "gbResearchBoM";
@@ -501,16 +496,28 @@ namespace EVEMon.SkillPlanner
             this.gbResearchBoM.TabStop = false;
             this.gbResearchBoM.Text = "Bill of Materials";
             // 
-            // lblNoResearch
+            // lvReverseEngineering
             // 
-            this.lblNoResearch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoResearch.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoResearch.Location = new System.Drawing.Point(3, 16);
-            this.lblNoResearch.Name = "lblNoResearch";
-            this.lblNoResearch.Size = new System.Drawing.Size(218, 174);
-            this.lblNoResearch.TabIndex = 2;
-            this.lblNoResearch.Text = "No item required.";
-            this.lblNoResearch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lvReverseEngineering.ContextMenuStrip = this.ActivityContextMenu;
+            this.lvReverseEngineering.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvReverseEngineering.Location = new System.Drawing.Point(3, 16);
+            this.lvReverseEngineering.MultiSelect = false;
+            this.lvReverseEngineering.Name = "lvReverseEngineering";
+            this.lvReverseEngineering.Size = new System.Drawing.Size(218, 174);
+            this.lvReverseEngineering.TabIndex = 3;
+            this.lvReverseEngineering.UseCompatibleStateImageBehavior = false;
+            this.lvReverseEngineering.View = System.Windows.Forms.View.Details;
+            // 
+            // lblNoItemReverseEngineering
+            // 
+            this.lblNoItemReverseEngineering.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemReverseEngineering.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemReverseEngineering.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemReverseEngineering.Name = "lblNoItemReverseEngineering";
+            this.lblNoItemReverseEngineering.Size = new System.Drawing.Size(218, 174);
+            this.lblNoItemReverseEngineering.TabIndex = 2;
+            this.lblNoItemReverseEngineering.Text = "No item required.";
+            this.lblNoItemReverseEngineering.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tlpModifiers
             // 
@@ -532,69 +539,78 @@ namespace EVEMon.SkillPlanner
             // flpUpper
             // 
             this.flpUpper.AutoSize = true;
-            this.flpUpper.Controls.Add(this.lblMaterialLevel);
+            this.flpUpper.Controls.Add(this.lblMaterialEfficiency);
             this.flpUpper.Controls.Add(this.nudME);
-            this.flpUpper.Controls.Add(this.lblProductivityLevel);
-            this.flpUpper.Controls.Add(this.nudPE);
+            this.flpUpper.Controls.Add(this.lblTimeEfficiency);
+            this.flpUpper.Controls.Add(this.nudTE);
             this.flpUpper.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpUpper.Location = new System.Drawing.Point(3, 3);
             this.flpUpper.Name = "flpUpper";
             this.flpUpper.Size = new System.Drawing.Size(616, 26);
             this.flpUpper.TabIndex = 0;
             // 
-            // lblMaterialLevel
+            // lblMaterialEfficiency
             // 
-            this.lblMaterialLevel.Location = new System.Drawing.Point(3, 0);
-            this.lblMaterialLevel.Name = "lblMaterialLevel";
-            this.lblMaterialLevel.Size = new System.Drawing.Size(78, 23);
-            this.lblMaterialLevel.TabIndex = 1;
-            this.lblMaterialLevel.Text = "Material Level:";
-            this.lblMaterialLevel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblMaterialEfficiency.Location = new System.Drawing.Point(3, 0);
+            this.lblMaterialEfficiency.Name = "lblMaterialEfficiency";
+            this.lblMaterialEfficiency.Size = new System.Drawing.Size(116, 23);
+            this.lblMaterialEfficiency.TabIndex = 1;
+            this.lblMaterialEfficiency.Text = "Material Efficiency (%) :";
+            this.lblMaterialEfficiency.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // nudME
             // 
-            this.nudME.Location = new System.Drawing.Point(87, 3);
+            this.nudME.Location = new System.Drawing.Point(125, 3);
             this.nudME.Maximum = new decimal(new int[] {
-            999,
+            10,
             0,
             0,
             0});
             this.nudME.Minimum = new decimal(new int[] {
-            10,
+            100,
             0,
             0,
             -2147483648});
             this.nudME.Name = "nudME";
+            this.nudME.ReadOnly = true;
             this.nudME.Size = new System.Drawing.Size(45, 20);
             this.nudME.TabIndex = 9;
+            this.nudME.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.nudME.ValueChanged += new System.EventHandler(this.nudME_ValueChanged);
             // 
-            // lblProductivityLevel
+            // lblTimeEfficiency
             // 
-            this.lblProductivityLevel.Location = new System.Drawing.Point(138, 0);
-            this.lblProductivityLevel.Name = "lblProductivityLevel";
-            this.lblProductivityLevel.Size = new System.Drawing.Size(98, 23);
-            this.lblProductivityLevel.TabIndex = 2;
-            this.lblProductivityLevel.Text = "Productivity Level:";
-            this.lblProductivityLevel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblTimeEfficiency.Location = new System.Drawing.Point(176, 0);
+            this.lblTimeEfficiency.Name = "lblTimeEfficiency";
+            this.lblTimeEfficiency.Size = new System.Drawing.Size(103, 23);
+            this.lblTimeEfficiency.TabIndex = 2;
+            this.lblTimeEfficiency.Text = "Time Efficiency (%) :";
+            this.lblTimeEfficiency.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // nudPE
+            // nudTE
             // 
-            this.nudPE.Location = new System.Drawing.Point(242, 3);
-            this.nudPE.Maximum = new decimal(new int[] {
-            999,
+            this.nudTE.Increment = new decimal(new int[] {
+            2,
             0,
             0,
             0});
-            this.nudPE.Minimum = new decimal(new int[] {
-            10,
+            this.nudTE.Location = new System.Drawing.Point(285, 3);
+            this.nudTE.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.nudTE.Minimum = new decimal(new int[] {
+            100,
             0,
             0,
             -2147483648});
-            this.nudPE.Name = "nudPE";
-            this.nudPE.Size = new System.Drawing.Size(45, 20);
-            this.nudPE.TabIndex = 11;
-            this.nudPE.ValueChanged += new System.EventHandler(this.nudPE_ValueChanged);
+            this.nudTE.Name = "nudTE";
+            this.nudTE.ReadOnly = true;
+            this.nudTE.Size = new System.Drawing.Size(45, 20);
+            this.nudTE.TabIndex = 11;
+            this.nudTE.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudTE.ValueChanged += new System.EventHandler(this.nudTE_ValueChanged);
             // 
             // flpLower
             // 
@@ -654,21 +670,11 @@ namespace EVEMon.SkillPlanner
             this.lblProduce.TabIndex = 1;
             this.lblProduce.Text = "Produces:";
             // 
-            // lblWasteFactor
-            // 
-            this.lblWasteFactor.AutoSize = true;
-            this.lblWasteFactor.BackColor = System.Drawing.SystemColors.Control;
-            this.lblWasteFactor.Location = new System.Drawing.Point(6, 113);
-            this.lblWasteFactor.Name = "lblWasteFactor";
-            this.lblWasteFactor.Size = new System.Drawing.Size(86, 13);
-            this.lblWasteFactor.TabIndex = 2;
-            this.lblWasteFactor.Text = "Wastage Factor:";
-            // 
             // lblProductionLimit
             // 
             this.lblProductionLimit.AutoSize = true;
             this.lblProductionLimit.BackColor = System.Drawing.SystemColors.Control;
-            this.lblProductionLimit.Location = new System.Drawing.Point(6, 95);
+            this.lblProductionLimit.Location = new System.Drawing.Point(6, 110);
             this.lblProductionLimit.Name = "lblProductionLimit";
             this.lblProductionLimit.Size = new System.Drawing.Size(104, 13);
             this.lblProductionLimit.TabIndex = 3;
@@ -698,22 +704,11 @@ namespace EVEMon.SkillPlanner
             this.lblItem.Text = "Item";
             this.lblItem.Click += new System.EventHandler(this.lblItem_Click);
             // 
-            // lblWaste
-            // 
-            this.lblWaste.AutoSize = true;
-            this.lblWaste.BackColor = System.Drawing.SystemColors.Control;
-            this.lblWaste.Location = new System.Drawing.Point(110, 113);
-            this.lblWaste.Name = "lblWaste";
-            this.lblWaste.Size = new System.Drawing.Size(46, 13);
-            this.lblWaste.TabIndex = 10;
-            this.lblWaste.Text = "Waste%";
-            this.lblWaste.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // lblRunsPerCopy
             // 
             this.lblRunsPerCopy.AutoSize = true;
             this.lblRunsPerCopy.BackColor = System.Drawing.SystemColors.Control;
-            this.lblRunsPerCopy.Location = new System.Drawing.Point(110, 95);
+            this.lblRunsPerCopy.Location = new System.Drawing.Point(110, 110);
             this.lblRunsPerCopy.Name = "lblRunsPerCopy";
             this.lblRunsPerCopy.Size = new System.Drawing.Size(78, 13);
             this.lblRunsPerCopy.TabIndex = 12;
@@ -811,29 +806,29 @@ namespace EVEMon.SkillPlanner
             this.lblResearchCopy.TabIndex = 18;
             this.lblResearchCopy.Text = "Research Copy Time:";
             // 
-            // lblResearchPECharTime
+            // lblResearchTECharTime
             // 
-            this.lblResearchPECharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lblResearchTECharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblResearchPECharTime.AutoEllipsis = true;
-            this.lblResearchPECharTime.BackColor = System.Drawing.SystemColors.Control;
-            this.lblResearchPECharTime.Location = new System.Drawing.Point(16, 134);
-            this.lblResearchPECharTime.Name = "lblResearchPECharTime";
-            this.lblResearchPECharTime.Size = new System.Drawing.Size(200, 13);
-            this.lblResearchPECharTime.TabIndex = 23;
-            this.lblResearchPECharTime.Text = "You";
+            this.lblResearchTECharTime.AutoEllipsis = true;
+            this.lblResearchTECharTime.BackColor = System.Drawing.SystemColors.Control;
+            this.lblResearchTECharTime.Location = new System.Drawing.Point(16, 134);
+            this.lblResearchTECharTime.Name = "lblResearchTECharTime";
+            this.lblResearchTECharTime.Size = new System.Drawing.Size(200, 13);
+            this.lblResearchTECharTime.TabIndex = 23;
+            this.lblResearchTECharTime.Text = "You";
             // 
-            // lblResearchPEBaseTime
+            // lblResearchTEBaseTime
             // 
-            this.lblResearchPEBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.lblResearchTEBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblResearchPEBaseTime.AutoEllipsis = true;
-            this.lblResearchPEBaseTime.BackColor = System.Drawing.SystemColors.Control;
-            this.lblResearchPEBaseTime.Location = new System.Drawing.Point(16, 121);
-            this.lblResearchPEBaseTime.Name = "lblResearchPEBaseTime";
-            this.lblResearchPEBaseTime.Size = new System.Drawing.Size(200, 13);
-            this.lblResearchPEBaseTime.TabIndex = 22;
-            this.lblResearchPEBaseTime.Text = "Base Time";
+            this.lblResearchTEBaseTime.AutoEllipsis = true;
+            this.lblResearchTEBaseTime.BackColor = System.Drawing.SystemColors.Control;
+            this.lblResearchTEBaseTime.Location = new System.Drawing.Point(16, 121);
+            this.lblResearchTEBaseTime.Name = "lblResearchTEBaseTime";
+            this.lblResearchTEBaseTime.Size = new System.Drawing.Size(200, 13);
+            this.lblResearchTEBaseTime.TabIndex = 22;
+            this.lblResearchTEBaseTime.Text = "Base Time";
             // 
             // lblResearchPE
             // 
@@ -860,43 +855,40 @@ namespace EVEMon.SkillPlanner
             this.gbGeneralInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbGeneralInfo.BackColor = System.Drawing.SystemColors.Control;
-            this.gbGeneralInfo.Controls.Add(this.lblPerfectMELevelValue);
-            this.gbGeneralInfo.Controls.Add(this.lblPerfectME);
+            this.gbGeneralInfo.Controls.Add(this.lblSuccessProbability);
+            this.gbGeneralInfo.Controls.Add(this.lblProbability);
             this.gbGeneralInfo.Controls.Add(this.InventBlueprintListBox);
             this.gbGeneralInfo.Controls.Add(this.lblProduce);
             this.gbGeneralInfo.Controls.Add(this.lblProductionLimit);
             this.gbGeneralInfo.Controls.Add(this.lblInvention);
-            this.gbGeneralInfo.Controls.Add(this.lblWaste);
             this.gbGeneralInfo.Controls.Add(this.lblItem);
             this.gbGeneralInfo.Controls.Add(this.lblRunsPerCopy);
-            this.gbGeneralInfo.Controls.Add(this.lblWasteFactor);
             this.gbGeneralInfo.Location = new System.Drawing.Point(3, 5);
             this.gbGeneralInfo.Name = "gbGeneralInfo";
-            this.gbGeneralInfo.Size = new System.Drawing.Size(224, 150);
+            this.gbGeneralInfo.Size = new System.Drawing.Size(224, 130);
             this.gbGeneralInfo.TabIndex = 26;
             this.gbGeneralInfo.TabStop = false;
             this.gbGeneralInfo.Text = "GENERAL INFORMATION";
             // 
-            // lblPerfectMELevelValue
+            // lblSuccessProbability
             // 
-            this.lblPerfectMELevelValue.AutoSize = true;
-            this.lblPerfectMELevelValue.BackColor = System.Drawing.SystemColors.Control;
-            this.lblPerfectMELevelValue.Location = new System.Drawing.Point(110, 131);
-            this.lblPerfectMELevelValue.Name = "lblPerfectMELevelValue";
-            this.lblPerfectMELevelValue.Size = new System.Drawing.Size(48, 13);
-            this.lblPerfectMELevelValue.TabIndex = 26;
-            this.lblPerfectMELevelValue.Text = "ME level";
-            this.lblPerfectMELevelValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblSuccessProbability.AutoSize = true;
+            this.lblSuccessProbability.BackColor = System.Drawing.SystemColors.Control;
+            this.lblSuccessProbability.Location = new System.Drawing.Point(6, 94);
+            this.lblSuccessProbability.Name = "lblSuccessProbability";
+            this.lblSuccessProbability.Size = new System.Drawing.Size(102, 13);
+            this.lblSuccessProbability.TabIndex = 25;
+            this.lblSuccessProbability.Text = "Success Probability:";
             // 
-            // lblPerfectME
+            // lblProbability
             // 
-            this.lblPerfectME.AutoSize = true;
-            this.lblPerfectME.BackColor = System.Drawing.SystemColors.Control;
-            this.lblPerfectME.Location = new System.Drawing.Point(7, 131);
-            this.lblPerfectME.Name = "lblPerfectME";
-            this.lblPerfectME.Size = new System.Drawing.Size(92, 13);
-            this.lblPerfectME.TabIndex = 25;
-            this.lblPerfectME.Text = "Perfect ME Level:";
+            this.lblProbability.AutoSize = true;
+            this.lblProbability.BackColor = System.Drawing.SystemColors.Control;
+            this.lblProbability.Location = new System.Drawing.Point(110, 94);
+            this.lblProbability.Name = "lblProbability";
+            this.lblProbability.Size = new System.Drawing.Size(66, 13);
+            this.lblProbability.TabIndex = 26;
+            this.lblProbability.Text = "Probability %";
             // 
             // InventBlueprintListBox
             // 
@@ -905,7 +897,7 @@ namespace EVEMon.SkillPlanner
             this.InventBlueprintListBox.BackColor = System.Drawing.SystemColors.Control;
             this.InventBlueprintListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.InventBlueprintListBox.ForeColor = System.Drawing.Color.Blue;
-            this.InventBlueprintListBox.Location = new System.Drawing.Point(8, 61);
+            this.InventBlueprintListBox.Location = new System.Drawing.Point(9, 61);
             this.InventBlueprintListBox.Name = "InventBlueprintListBox";
             this.InventBlueprintListBox.Size = new System.Drawing.Size(209, 26);
             this.InventBlueprintListBox.Sorted = true;
@@ -919,15 +911,15 @@ namespace EVEMon.SkillPlanner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbResearching.BackColor = System.Drawing.SystemColors.Control;
             this.gbResearching.Controls.Add(this.lblResearchME);
-            this.gbResearching.Controls.Add(this.lblResearchPECharTime);
+            this.gbResearching.Controls.Add(this.lblResearchTECharTime);
             this.gbResearching.Controls.Add(this.lblResearchMEBaseTime);
-            this.gbResearching.Controls.Add(this.lblResearchPEBaseTime);
+            this.gbResearching.Controls.Add(this.lblResearchTEBaseTime);
             this.gbResearching.Controls.Add(this.lblResearchMECharTime);
             this.gbResearching.Controls.Add(this.lblResearchPE);
             this.gbResearching.Controls.Add(this.lblResearchCopy);
             this.gbResearching.Controls.Add(this.lblResearchCopyCharTime);
             this.gbResearching.Controls.Add(this.lblResearchCopyBaseTime);
-            this.gbResearching.Location = new System.Drawing.Point(3, 225);
+            this.gbResearching.Location = new System.Drawing.Point(3, 202);
             this.gbResearching.Name = "gbResearching";
             this.gbResearching.Size = new System.Drawing.Size(224, 155);
             this.gbResearching.TabIndex = 1;
@@ -942,7 +934,7 @@ namespace EVEMon.SkillPlanner
             this.gbManufacturing.Controls.Add(this.lblProductionCharTime);
             this.gbManufacturing.Controls.Add(this.lblProductionTime);
             this.gbManufacturing.Controls.Add(this.lblProductionBaseTime);
-            this.gbManufacturing.Location = new System.Drawing.Point(3, 160);
+            this.gbManufacturing.Location = new System.Drawing.Point(3, 137);
             this.gbManufacturing.Name = "gbManufacturing";
             this.gbManufacturing.Size = new System.Drawing.Size(224, 60);
             this.gbManufacturing.TabIndex = 27;
@@ -969,14 +961,27 @@ namespace EVEMon.SkillPlanner
             this.gbInvention.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbInvention.BackColor = System.Drawing.SystemColors.Control;
+            this.gbInvention.Controls.Add(this.lblInventionCharTime);
             this.gbInvention.Controls.Add(this.lblInventionTime);
             this.gbInvention.Controls.Add(this.lblInventionBaseTime);
-            this.gbInvention.Location = new System.Drawing.Point(3, 385);
+            this.gbInvention.Location = new System.Drawing.Point(3, 362);
             this.gbInvention.Name = "gbInvention";
-            this.gbInvention.Size = new System.Drawing.Size(224, 50);
+            this.gbInvention.Size = new System.Drawing.Size(224, 64);
             this.gbInvention.TabIndex = 28;
             this.gbInvention.TabStop = false;
             this.gbInvention.Text = "INVENTION";
+            // 
+            // lblInventionCharTime
+            // 
+            this.lblInventionCharTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblInventionCharTime.AutoEllipsis = true;
+            this.lblInventionCharTime.BackColor = System.Drawing.SystemColors.Control;
+            this.lblInventionCharTime.Location = new System.Drawing.Point(16, 42);
+            this.lblInventionCharTime.Name = "lblInventionCharTime";
+            this.lblInventionCharTime.Size = new System.Drawing.Size(200, 13);
+            this.lblInventionCharTime.TabIndex = 24;
+            this.lblInventionCharTime.Text = "You";
             // 
             // lblInventionTime
             // 
@@ -1040,13 +1045,13 @@ namespace EVEMon.SkillPlanner
             this.gbResearchPEBoM.ResumeLayout(false);
             this.tpInvention.ResumeLayout(false);
             this.gbInvBoM.ResumeLayout(false);
-            this.tpResearching.ResumeLayout(false);
+            this.tpReverseEngineering.ResumeLayout(false);
             this.gbResearchBoM.ResumeLayout(false);
             this.tlpModifiers.ResumeLayout(false);
             this.tlpModifiers.PerformLayout();
             this.flpUpper.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nudME)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPE)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTE)).EndInit();
             this.flpLower.ResumeLayout(false);
             this.gbGeneralInfo.ResumeLayout(false);
             this.gbGeneralInfo.PerformLayout();
@@ -1071,18 +1076,14 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TabPage tpInvention;
         private System.Windows.Forms.GroupBox gbManufBoM;
         private System.Windows.Forms.ColumnHeader chManufItem;
-        private System.Windows.Forms.ColumnHeader chManufQuantityYou;
-        private System.Windows.Forms.ColumnHeader chManufQuantityPerfect;
         private BlueprintSelectControl blueprintSelectControl;
         private System.Windows.Forms.GroupBox gbInvBoM;
         private System.Windows.Forms.ListView lvInvention;
         private System.Windows.Forms.Label lblProduce;
         private System.Windows.Forms.Label lblProductionTime;
         private System.Windows.Forms.Label lblProductionLimit;
-        private System.Windows.Forms.Label lblWasteFactor;
         private System.Windows.Forms.Label lblRunsPerCopy;
-        private System.Windows.Forms.NumericUpDown nudPE;
-        private System.Windows.Forms.Label lblWaste;
+        private System.Windows.Forms.NumericUpDown nudTE;
         private System.Windows.Forms.NumericUpDown nudME;
         private System.Windows.Forms.Label lblItem;
         private System.Windows.Forms.Label lblProductionCharTime;
@@ -1090,8 +1091,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblResearchMECharTime;
         private System.Windows.Forms.Label lblResearchMEBaseTime;
         private System.Windows.Forms.Label lblResearchME;
-        private System.Windows.Forms.Label lblResearchPECharTime;
-        private System.Windows.Forms.Label lblResearchPEBaseTime;
+        private System.Windows.Forms.Label lblResearchTECharTime;
+        private System.Windows.Forms.Label lblResearchTEBaseTime;
         private System.Windows.Forms.Label lblResearchPE;
         private System.Windows.Forms.Label lblResearchCopyCharTime;
         private System.Windows.Forms.Label lblResearchCopyBaseTime;
@@ -1113,8 +1114,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ComboBox cbFacility;
         private System.Windows.Forms.ComboBox cbImplantSet;
         private System.Windows.Forms.ListBox InventBlueprintListBox;
-        private System.Windows.Forms.Label lblMaterialLevel;
-        private System.Windows.Forms.Label lblProductivityLevel;
+        private System.Windows.Forms.Label lblMaterialEfficiency;
+        private System.Windows.Forms.Label lblTimeEfficiency;
         private System.Windows.Forms.TableLayoutPanel tlpModifiers;
         private System.Windows.Forms.FlowLayoutPanel flpUpper;
         private System.Windows.Forms.FlowLayoutPanel flpLower;
@@ -1123,16 +1124,18 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblInventionBaseTime;
         private System.Windows.Forms.Label lblNoItemPE;
         private System.Windows.Forms.Label lblNoItemME;
-        private System.Windows.Forms.ColumnHeader chDamagePerRun;
-        private System.Windows.Forms.Label lblPerfectMELevelValue;
-        private System.Windows.Forms.Label lblPerfectME;
-        private System.Windows.Forms.TabPage tpResearching;
+        private System.Windows.Forms.TabPage tpReverseEngineering;
         private System.Windows.Forms.GroupBox gbResearchBoM;
-        private System.Windows.Forms.Label lblNoResearch;
+        private System.Windows.Forms.Label lblNoItemReverseEngineering;
         private System.Windows.Forms.ContextMenuStrip ActivityContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader chManufQuantityBase;
-        private System.Windows.Forms.ColumnHeader chPerfectMELevel;
+        private System.Windows.Forms.ColumnHeader chManufQuantityYou;
+        private System.Windows.Forms.Label lblInventionCharTime;
+        private System.Windows.Forms.Label lblNoItemCopy;
+        private System.Windows.Forms.ListView lvReverseEngineering;
+        private System.Windows.Forms.Label lblSuccessProbability;
+        private System.Windows.Forms.Label lblProbability;
 
 
 

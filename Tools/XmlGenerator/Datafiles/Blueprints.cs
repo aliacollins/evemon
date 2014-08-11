@@ -322,7 +322,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 ResearchCopyTime = blueprintType.ResearchCopyTime,
                 InventionTime = blueprintType.InventionTime,
                 ReverseEngineeringTime = blueprintType.ReverseEngineeringTime,
-                MaxProductionLimit = blueprintType.MaxProductionLimit
+                MaxProductionLimit = blueprintType.MaxProductionLimit,
             };
 
             // Metagroup
@@ -331,18 +331,37 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Export item requirements
             GetRequirements(srcBlueprint, blueprint);
 
-            // Look for the tech 2 variations that this blueprint invents
-            IEnumerable<int> listOfInventionTypeID = Database.InvMetaTypesTable.Where(
-                x => x.ParentItemID == blueprint.ProduceItemID &&
-                     x.MetaGroupID == DBConstants.TechIIMetaGroupID).SelectMany(
-                         relationItem => Database.InvBlueprintTypesTable.Where(
-                             x => x.ProductTypeID == relationItem.ItemID).Select(x => x.ID));
+            // Look for the tech 2 or tech 3 variations that this blueprint invents
+            GetInventingItems(srcBlueprint, blueprint);
+            
+            //IEnumerable<int> listOfInventionTypeID = Database.InvMetaTypesTable.Where(
+            //    x => x.ParentItemID == blueprint.ProduceItemID &&
+            //         x.MetaGroupID == DBConstants.TechIIMetaGroupID).SelectMany(
+            //             relationItem => Database.InvBlueprintTypesTable.Where(
+            //                 x => x.ProductTypeID == relationItem.ItemID).Select(x => x.ID));
 
-            // Add invention blueprints to item
-            blueprint.InventionTypeID.AddRange(listOfInventionTypeID);
+            //// Add invention blueprints to item
+            //blueprint.InventionTypeID.AddRange(listOfInventionTypeID);
 
             // Add this item
             blueprintsGroup.Add(blueprint);
+        }
+
+        /// <summary>
+        /// Gets the inventing items.
+        /// </summary>
+        /// <param name="srcBlueprint">The source blueprint.</param>
+        /// <param name="blueprint">The blueprint.</param>
+        private static void GetInventingItems(InvTypes srcBlueprint, SerializableBlueprint blueprint)
+        {
+            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable
+                .Where(requirement => requirement.ID == srcBlueprint.ID &&
+                                      Database.InvBlueprintTypesTable.Any(x => x.ID == requirement.RequiredTypeID) &&
+                                      (requirement.ActivityID == (int)BlueprintActivity.Invention ||
+                                       requirement.ActivityID == (int)BlueprintActivity.ReverseEngineering)))
+            {
+                blueprint.InventionTypeIDs.Add(requirement.RequiredTypeID, requirement.Probability.GetValueOrDefault());
+            }
         }
 
         /// <summary>
@@ -416,8 +435,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             List<SerializableRequiredMaterial> requiredMaterials = new List<SerializableRequiredMaterial>();
 
             // Find the requirements and add them to the list, ignore any blueprint type
-            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable.Where(requirement => requirement.ID == srcBlueprint.ID &&
-                Database.InvBlueprintTypesTable.All(x => x.ID != requirement.RequiredTypeID)))
+            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable
+                .Where(requirement => requirement.ID == srcBlueprint.ID &&
+                                      Database.InvBlueprintTypesTable.All(x => x.ID != requirement.RequiredTypeID)))
             {
                 // Is it a skill ? Add it to the prerequisities skills list
                 if (requirement.Level.HasValue)

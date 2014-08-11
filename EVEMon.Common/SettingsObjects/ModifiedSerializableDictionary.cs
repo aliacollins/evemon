@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -90,7 +91,7 @@ namespace EVEMon.Common.SettingsObjects
                             break;
 
                         // Assign the value
-                        value = (TValue)converter.ConvertFrom(attribute);
+                        value = (TValue)converter.ConvertFromInvariantString(attribute);
                     }
                     else
                     {
@@ -111,7 +112,7 @@ namespace EVEMon.Common.SettingsObjects
                             if (String.IsNullOrEmpty(attribute))
                                 break;
 
-                            object propertyValue = converter.ConvertFrom(attribute);
+                            object propertyValue = converter.ConvertFromInvariantString(attribute);
 
                             property.SetValue(value, propertyValue, null);
                         }

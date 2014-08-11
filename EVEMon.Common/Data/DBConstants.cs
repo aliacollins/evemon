@@ -152,31 +152,25 @@ namespace EVEMon.Common.Data
         public static readonly ReadOnlyCollection<int> ManufacturingModifyingImplantIDs =
             new ReadOnlyCollection<int>(new[]
                                             {
-                                                ZainouBeancounterF40ID, ZainouBeancounterF50ID, ZainouBeancounterF60ID
+                                                ZainouBeancounterBX801ID, ZainouBeancounterBX802ID, ZainouBeancounterBX804ID
                                             });
 
-        public static readonly ReadOnlyCollection<int> ResearchMaterialTimeModifyingImplantIDs =
+        public static readonly ReadOnlyCollection<int> ResearchMaterialEfficiencyTimeModifyingImplantIDs =
             new ReadOnlyCollection<int>(new[]
                                             {
-                                                ZainouBeancounterJ40ID, ZainouBeancounterJ50ID, ZainouBeancounterJ60ID
+                                                ZainouBeancounterMY701ID, ZainouBeancounterMY703ID, ZainouBeancounterMY705ID
                                             });
 
         public static readonly ReadOnlyCollection<int> ResearchCopyTimeModifyingImplantIDs =
             new ReadOnlyCollection<int>(new[]
                                             {
-                                                ZainouBeancounterK40ID, ZainouBeancounterK50ID, ZainouBeancounterK60ID
+                                                ZainouBeancounterSC801ID, ZainouBeancounterSC803ID, ZainouBeancounterSC805ID
                                             });
 
-        public static readonly ReadOnlyCollection<int> ResearchProductivityTimeModifyingImplantIDs =
+        public static readonly ReadOnlyCollection<int> ResearchTimeEfficiencyTimeModifyingImplantIDs =
             new ReadOnlyCollection<int>(new[]
                                             {
-                                                ZainouBeancounterI40ID, ZainouBeancounterI50ID, ZainouBeancounterI60ID
-                                            });
-
-        public static readonly ReadOnlyCollection<int> MaterialQuantityModifyingImplantIDs =
-            new ReadOnlyCollection<int>(new[]
-                                            {
-                                                ZainouBeancounterG40ID, ZainouBeancounterG50ID, ZainouBeancounterG60ID
+                                                ZainouBeancounterRR601ID, ZainouBeancounterRR603ID, ZainouBeancounterRR605ID
                                             });
 
         // Group of Faction IDs
@@ -627,21 +621,18 @@ namespace EVEMon.Common.Data
         public const int ScientificNetworkingSkillID = 24270;
         public const int AdvancedLaboratoryOperationSkillID = 24624;
         public const int AdvancedMassProductionSkillID = 24625;
-        public const int ZainouBeancounterF50ID = 27167;
-        public const int ZainouBeancounterG50ID = 27168;
-        public const int ZainouBeancounterF40ID = 27170;
-        public const int ZainouBeancounterF60ID = 27171;
-        public const int ZainouBeancounterG60ID = 27172;
-        public const int ZainouBeancounterG40ID = 27173;
-        public const int ZainouBeancounterJ50ID = 27176;
-        public const int ZainouBeancounterI50ID = 27177;
-        public const int ZainouBeancounterK50ID = 27178;
-        public const int ZainouBeancounterI60ID = 27179;
-        public const int ZainouBeancounterI40ID = 27180;
-        public const int ZainouBeancounterJ60ID = 27181;
-        public const int ZainouBeancounterJ40ID = 27182;
-        public const int ZainouBeancounterK60ID = 27184;
-        public const int ZainouBeancounterK40ID = 27185;
+        public const int ZainouBeancounterBX802ID = 27167;
+        public const int ZainouBeancounterBX801ID = 27170;
+        public const int ZainouBeancounterBX804ID = 27171;
+        public const int ZainouBeancounterMY703ID = 27176;
+        public const int ZainouBeancounterRR603ID = 27177;
+        public const int ZainouBeancounterSC803ID = 27178;
+        public const int ZainouBeancounterRR605ID = 27179;
+        public const int ZainouBeancounterRR601ID = 27180;
+        public const int ZainouBeancounterMY705ID = 27181;
+        public const int ZainouBeancounterMY701ID = 27182;
+        public const int ZainouBeancounterSC805ID = 27184;
+        public const int ZainouBeancounterSC801ID = 27185;
         public const int TenguBlueprintID = 29985;
         public const int LegionBlueprintID = 29987;
         public const int ProteusBlueprintID = 29989;

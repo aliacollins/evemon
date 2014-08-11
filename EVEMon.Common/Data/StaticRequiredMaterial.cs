@@ -15,9 +15,7 @@ namespace EVEMon.Common.Data
             : base(src.ID, GetName(src.ID))
         {
             Quantity = src.Quantity;
-            DamagePerJob = src.DamagePerJob;
             Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.Activity);
-            WasteAffected = Convert.ToBoolean(src.WasteAffected);
         }
 
         #endregion
@@ -31,19 +29,9 @@ namespace EVEMon.Common.Data
         public long Quantity { get; private set; }
 
         /// <summary>
-        /// Gets or sets the damage per job.
-        /// </summary>
-        public double DamagePerJob { get; private set; }
-
-        /// <summary>
         /// Gets or sets the activity.
         /// </summary>
         public BlueprintActivity Activity { get; private set; }
-
-        /// <summary>
-        /// Gets or sets if waste affected.
-        /// </summary>
-        public bool WasteAffected { get; private set; }
 
         #endregion
 
