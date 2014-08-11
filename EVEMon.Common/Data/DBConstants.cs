@@ -576,7 +576,7 @@ namespace EVEMon.Common.Data
         public const int IndustrySkillID = 3380;
         public const int MiningSkillID = 3386;
         public const int MassProductionSkillID = 3387;
-        public const int ProductionEfficiencySkillID = 3388;
+        public const int AdvancedIndustrySkillID = 3388;
         public const int MechanicSkillID = 3392;
         public const int ScienceSkillID = 3402;
         public const int ResearchSkillID = 3403;

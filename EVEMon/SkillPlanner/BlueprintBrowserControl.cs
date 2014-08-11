@@ -535,21 +535,24 @@ namespace EVEMon.SkillPlanner
         private string CharacterActivityTime(double activityTime, int skillID = 0)
         {
             double activityTimeModifier = 1d;
+            const double AdvancedIndustrySkillBonusFactor = 0.03d;
             if (skillID != 0)
             {
-                double factor;
+                double skillBonusFactor;
                 switch (skillID)
                 {
                     case DBConstants.IndustrySkillID:
-                        factor = 0.04d;
+                        skillBonusFactor = 0.04d;
                         break;
                     default:
-                        factor = 0.05d;
+                        skillBonusFactor = 0.05d;
                         break;
                 }
 
                 Int64 skillLevel = (m_character.Skills[skillID]).LastConfirmedLvl;
-                activityTimeModifier = (1d - (factor * skillLevel));
+                Int64 advancedIndustrySkillLevel = ((m_character.Skills[DBConstants.AdvancedIndustrySkillID]).LastConfirmedLvl);
+                activityTimeModifier = 1d - (skillBonusFactor * skillLevel) -
+                                       (AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel);
             }
 
             TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier);
