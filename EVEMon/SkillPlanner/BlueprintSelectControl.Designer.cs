@@ -237,7 +237,7 @@ namespace EVEMon.SkillPlanner
             "Manufacturing",
             "Copying",
             "Researching Material Efficiency ",
-            "Researching Time Productivity",
+            "Researching Time Efficiency",
             "Invention"});
             this.cbActivityFilter.Location = new System.Drawing.Point(45, 28);
             this.cbActivityFilter.Name = "cbActivityFilter";

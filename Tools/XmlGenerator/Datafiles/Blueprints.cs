@@ -211,8 +211,41 @@ namespace EVEMon.XmlGenerator.Datafiles
             switch (item.ID)
             {
                 case DBConstants.WildMinerIBlueprintID:
+                case DBConstants.AlphaDataAnalyzerIBlueprintID:
+                case DBConstants.DaemonDataAnalyzerIBlueprintID:
+                case DBConstants.CodexDataAnalyzerIBlueprintID:
+                case DBConstants.CropGasCloudHarvesterBlueprintID:
+                case DBConstants.Dual1000mmScoutIAcceleratorCannonBlueprintID:
+                case DBConstants.HabitatMinerIBlueprintID:
+                case DBConstants.LibramDataAnalyzerIBlueprintID:
+                case DBConstants.LimosCitadelCruiseLauncherIBlueprintID:
+                case DBConstants.MagpieMobileTractorUnitBlueprintID:
+                case DBConstants.PackratMobileTractorUnitBlueprintID:
+                case DBConstants.PlowGascloudHarvesterBlueprintID:
+                case DBConstants.ShockLimosCitadelTorpedoBayIBlueprintID:
+                case DBConstants.WetuMobileDepotBlueprintID:
+                case DBConstants.YurtMobileDepotBlueprintID:
                     item.MarketGroupID = DBConstants.BlueprintStorylineNonMarketGroupID;
                     break;
+
+                case DBConstants.AsteroBlueprintID:
+                case DBConstants.BarghestBlueprintID:
+                case DBConstants.CambionBlueprintID:
+                case DBConstants.ChremoasBlueprintID:
+                case DBConstants.EtanaBlueprintID:
+                case DBConstants.GarmurBlueprintID:
+                case DBConstants.MaliceBlueprintID:
+                case DBConstants.MorachaBlueprintID:
+                case DBConstants.NestorBlueprintID:
+                case DBConstants.OrthrusBlueprintID:
+                case DBConstants.PolicePursuitCometBlueprintID:
+                case DBConstants.ScorpionIshukoneWatchBlueprintID:
+                case DBConstants.ShadowBlueprintID:
+                case DBConstants.StratiosBlueprintID:
+                case DBConstants.StratiosEmergencyResponderBlueprintID:
+                case DBConstants.UtuBlueprintID:
+                case DBConstants.VangelBlueprintID:
+                case DBConstants.WhiptailBlueprintID:
                 case DBConstants.AdrestiaBlueprintID:
                 case DBConstants.EchelonBlueprintID:
                 case DBConstants.ImperialNavySlicerBlueprintID:
@@ -236,6 +269,59 @@ namespace EVEMon.XmlGenerator.Datafiles
                 case DBConstants.MimirBlueprintID:
                     item.MarketGroupID = DBConstants.BlueprintFactionNonMarketGroupID;
                     break;
+
+                case DBConstants.BladeBlueprintID:
+                case DBConstants.BlazeLBlueprintID:
+                case DBConstants.BlazeMBlueprintID:
+                case DBConstants.BlazeSBlueprintID:
+                case DBConstants.BoltLBlueprintID:
+                case DBConstants.BoltMBlueprintID:
+                case DBConstants.BoltSBlueprintID:
+                case DBConstants.CapitalRemoteCapacitorTransmitterIIBlueprintID:
+                case DBConstants.CapitalRemoteShieldBoosterIIBlueprintID:
+                case DBConstants.ChameleonBlueprintID:
+                case DBConstants.DaggerBlueprintID:
+                case DBConstants.DesolationLBlueprintID:
+                case DBConstants.DesolationMBlueprintID:
+                case DBConstants.DesolationSBlueprintID:
+                case DBConstants.DroneDamageRigIIBlueprintID:
+                case DBConstants.ErinyeBlueprintID:
+                case DBConstants.GathererBlueprintID:
+                case DBConstants.HighGradeAscendancyAlphaBlueprintID:
+                case DBConstants.HighGradeAscendancyBetaBlueprintID:
+                case DBConstants.HighGradeAscendancyGammaBlueprintID:
+                case DBConstants.HighGradeAscendancyDeltaBlueprintID:
+                case DBConstants.HighGradeAscendancyEpsilonBlueprintID:
+                case DBConstants.HighGradeAscendancyOmegaBlueprintID:
+                case DBConstants.KisharBlueprintID:
+                case DBConstants.LuxLBlueprintID:
+                case DBConstants.LuxMBlueprintID:
+                case DBConstants.LuxSBlueprintID:
+                case DBConstants.MackinawOREDevelopmentEditionBlueprintID:
+                case DBConstants.MediumEWDroneRangeAugmentorIIBlueprintID:
+                case DBConstants.MidGradeAscenancyAlphaBlueprintID:
+                case DBConstants.MidGradeAscenancyBetaBlueprintID:
+                case DBConstants.MidGradeAscenancyGammaBlueprintID:
+                case DBConstants.MidGradeAscenancyDeltaBlueprintID:
+                case DBConstants.MidGradeAscenancyEpsilonBlueprintID:
+                case DBConstants.MidGradeAscenancyOmegaBlueprintID:
+                case DBConstants.MinerIIChinaBlueprintID:
+                case DBConstants.MiningLaserOptimizationIIBlueprintID:
+                case DBConstants.MiningLaserRangeIIBlueprintID:
+                case DBConstants.ReconProbeLauncherIIBlueprintID:
+                case DBConstants.ScanProbeLauncherIIBlueprintID:
+                case DBConstants.ShieldTransporterRigIIBlueprintID:
+                case DBConstants.ShockLBlueprintID:
+                case DBConstants.ShockMBlueprintID:
+                case DBConstants.ShockSBlueprintID:
+                case DBConstants.SmallEWDroneRangeAugmentorIIBlueprintID:
+                case DBConstants.StormLBlueprintID:
+                case DBConstants.StormMBlueprintID:
+                case DBConstants.StormSBlueprintID:
+                case DBConstants.TalismanAlphaBlueprintID:
+                    item.MarketGroupID = DBConstants.BlueprintTechIINonMarketGroupID;
+                    break;
+
                 case DBConstants.LegionBlueprintID:
                 case DBConstants.LegionDefensiveAdaptiveAugmenterBlueprintID:
                 case DBConstants.LegionElectronicsEnergyParasiticComplexBlueprintID:
@@ -322,7 +408,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 ResearchCopyTime = blueprintType.ResearchCopyTime,
                 InventionTime = blueprintType.InventionTime,
                 ReverseEngineeringTime = blueprintType.ReverseEngineeringTime,
-                MaxProductionLimit = blueprintType.MaxProductionLimit
+                MaxProductionLimit = blueprintType.MaxProductionLimit,
             };
 
             // Metagroup
@@ -331,18 +417,28 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Export item requirements
             GetRequirements(srcBlueprint, blueprint);
 
-            // Look for the tech 2 variations that this blueprint invents
-            IEnumerable<int> listOfInventionTypeID = Database.InvMetaTypesTable.Where(
-                x => x.ParentItemID == blueprint.ProduceItemID &&
-                     x.MetaGroupID == DBConstants.TechIIMetaGroupID).SelectMany(
-                         relationItem => Database.InvBlueprintTypesTable.Where(
-                             x => x.ProductTypeID == relationItem.ItemID).Select(x => x.ID));
-
-            // Add invention blueprints to item
-            blueprint.InventionTypeID.AddRange(listOfInventionTypeID);
+            // Look for the tech 2 or tech 3 variations that this blueprint invents
+            GetInventingItems(srcBlueprint, blueprint);
 
             // Add this item
             blueprintsGroup.Add(blueprint);
+        }
+
+        /// <summary>
+        /// Gets the inventing items.
+        /// </summary>
+        /// <param name="srcBlueprint">The source blueprint.</param>
+        /// <param name="blueprint">The blueprint.</param>
+        private static void GetInventingItems(InvTypes srcBlueprint, SerializableBlueprint blueprint)
+        {
+            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable
+                .Where(requirement => requirement.ID == srcBlueprint.ID &&
+                                      Database.InvBlueprintTypesTable.Any(x => x.ID == requirement.RequiredTypeID) &&
+                                      (requirement.ActivityID == (int)BlueprintActivity.Invention ||
+                                       requirement.ActivityID == (int)BlueprintActivity.ReverseEngineering)))
+            {
+                blueprint.InventionTypeIDs.Add(requirement.RequiredTypeID, requirement.Probability.GetValueOrDefault());
+            }
         }
 
         /// <summary>
@@ -416,8 +512,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             List<SerializableRequiredMaterial> requiredMaterials = new List<SerializableRequiredMaterial>();
 
             // Find the requirements and add them to the list, ignore any blueprint type
-            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable.Where(requirement => requirement.ID == srcBlueprint.ID &&
-                Database.InvBlueprintTypesTable.All(x => x.ID != requirement.RequiredTypeID)))
+            foreach (RamTypeRequirements requirement in Database.RamTypeRequirementsTable
+                .Where(requirement => requirement.ID == srcBlueprint.ID &&
+                                      Database.InvBlueprintTypesTable.All(x => x.ID != requirement.RequiredTypeID)))
             {
                 // Is it a skill ? Add it to the prerequisities skills list
                 if (requirement.Level.HasValue)

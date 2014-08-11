@@ -553,14 +553,14 @@ namespace EVEMon.CharacterMonitoring
             builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
                                  job.EndProductionTime.ToLocalTime()).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity).AppendLine();
-            if (job.Activity == BlueprintActivity.ResearchingMaterialProductivity)
+            if (job.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
             {
                 builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
                                      job.InstalledME).AppendLine();
                 builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
                                      job.InstalledME + job.Runs).AppendLine();
             }
-            if (job.Activity == BlueprintActivity.ResearchingTimeProductivity)
+            if (job.Activity == BlueprintActivity.ResearchingTimeEfficiency)
             {
                 builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
                                      job.InstalledPE).AppendLine();
@@ -685,22 +685,22 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.BlueprintType.ToString();
                     break;
                 case IndustryJobColumn.InstalledME:
-                    item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialProductivity
+                    item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
                                      ? job.InstalledME.ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.EndME:
-                    item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialProductivity
+                    item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
                                      ? (job.InstalledME + job.Runs).ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.InstalledPE:
-                    item.Text = (job.Activity == BlueprintActivity.ResearchingTimeProductivity
+                    item.Text = (job.Activity == BlueprintActivity.ResearchingTimeEfficiency
                                      ? job.InstalledPE.ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;
                 case IndustryJobColumn.EndPE:
-                    item.Text = (job.Activity == BlueprintActivity.ResearchingTimeProductivity
+                    item.Text = (job.Activity == BlueprintActivity.ResearchingTimeEfficiency
                                      ? (job.InstalledPE + job.Runs).ToString(CultureConstants.DefaultCulture)
                                      : String.Empty);
                     break;

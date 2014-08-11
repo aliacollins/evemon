@@ -141,7 +141,6 @@ namespace EVEMon.Common.SettingsObjects
         [XmlElement("locations")]
         public ModifiedSerializableDictionary<string, WindowLocationSettings> WindowLocations { get; set; }
 
-
         /// <summary>
         /// Gets or sets the splitters.
         /// </summary>

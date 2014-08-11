@@ -342,8 +342,8 @@ namespace EVEMon.Common
         All = 1,
         Manufacturing = 2,
         Copying = 3,
-        ResearchingMaterialProductivity = 4,
-        ResearchingTimeProductivity = 5,
+        ResearchingMaterialEfficiency = 4,
+        ResearchingTimeEfficiency = 5,
         Invention = 6
     }
 
@@ -1329,10 +1329,10 @@ namespace EVEMon.Common
         ResearchingTechnology = 2,
 
         [Description("Time Efficiency Research")]
-        ResearchingTimeProductivity = 3,
+        ResearchingTimeEfficiency = 3,
 
-        [Description("Material Research")]
-        ResearchingMaterialProductivity = 4,
+        [Description("Material Efficiency Research")]
+        ResearchingMaterialEfficiency = 4,
 
         [Description("Copying")]
         Copying = 5,

@@ -113,12 +113,12 @@ namespace EVEMon.SkillPlanner
                     Activity = BlueprintActivity.Copying;
                     break;
 
-                case ObjectActivityFilter.ResearchingMaterialProductivity:
-                    Activity = BlueprintActivity.ResearchingMaterialProductivity;
+                case ObjectActivityFilter.ResearchingMaterialEfficiency:
+                    Activity = BlueprintActivity.ResearchingMaterialEfficiency;
                     break;
 
-                case ObjectActivityFilter.ResearchingTimeProductivity:
-                    Activity = BlueprintActivity.ResearchingTimeProductivity;
+                case ObjectActivityFilter.ResearchingTimeEfficiency:
+                    Activity = BlueprintActivity.ResearchingTimeEfficiency;
                     break;
 
                 case ObjectActivityFilter.Invention:

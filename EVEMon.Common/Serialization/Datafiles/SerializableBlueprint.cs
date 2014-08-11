@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Serialization.Datafiles
 {
@@ -12,7 +13,6 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// </remarks>
     public sealed class SerializableBlueprint
     {
-        private readonly Collection<int> m_inventTypeID;
         private readonly Collection<SerializablePrereqSkill> m_prereqSkills;
         private readonly Collection<SerializableRequiredMaterial> m_requiredMaterials;
 
@@ -21,7 +21,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// </summary>
         public SerializableBlueprint()
         {
-            m_inventTypeID = new Collection<int>();
+            InventionTypeIDs = new ModifiedSerializableDictionary<int, double>();
             m_prereqSkills = new Collection<SerializablePrereqSkill>();
             m_requiredMaterials = new Collection<SerializableRequiredMaterial>();
         }
@@ -69,13 +69,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public int ProductionTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the tech level.
-        /// </summary>
-        /// <value>The tech level.</value>
-        [XmlAttribute("techLevel")]
-        public short TechLevel { get; set; }
-
-        /// <summary>
         /// Gets or sets the research productivity time.
         /// </summary>
         /// <value>The research productivity time.</value>
@@ -97,13 +90,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public int ResearchCopyTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the research tech time.
-        /// </summary>
-        /// <value>The research tech time.</value>
-        [XmlAttribute("researchTechTime")]
-        public int ResearchTechTime { get; set; }
-
-        /// <summary>
         /// Gets or sets the reverse engineering time.
         /// </summary>
         /// <value>The reverse engineering time.</value>
@@ -118,20 +104,6 @@ namespace EVEMon.Common.Serialization.Datafiles
         public int InventionTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the productivity modifier.
-        /// </summary>
-        /// <value>The productivity modifier.</value>
-        [XmlAttribute("productivityModifier")]
-        public int ProductivityModifier { get; set; }
-
-        /// <summary>
-        /// Gets or sets the waste factor.
-        /// </summary>
-        /// <value>The waste factor.</value>
-        [XmlAttribute("wasteFactor")]
-        public short WasteFactor { get; set; }
-
-        /// <summary>
         /// Gets or sets the max production limit.
         /// </summary>
         /// <value>The max production limit.</value>
@@ -142,11 +114,8 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Gets or sets the invention type ID.
         /// </summary>
         /// <value>The invention type ID.</value>
-        [XmlElement("inventTypeID")]
-        public Collection<int> InventionTypeID
-        {
-            get { return m_inventTypeID; }
-        }
+        [XmlElement("inventTypeIDs")]
+        public ModifiedSerializableDictionary<int, double> InventionTypeIDs { get; set; }
 
         /// <summary>
         /// Gets the prereq skill.

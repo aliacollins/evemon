@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
@@ -7,7 +8,7 @@ namespace EVEMon.Common.Data
 {
     public class Blueprint : Item
     {
-        private readonly FastList<int> m_inventBlueprint;
+        private readonly Dictionary<int, double> m_inventBlueprints;
         private readonly FastList<StaticRequiredMaterial> m_materialRequirements;
 
 
@@ -24,22 +25,17 @@ namespace EVEMon.Common.Data
             RunsPerCopy = src.MaxProductionLimit;
             ProducesItem = StaticItems.GetItemByID(src.ProduceItemID);
             ProductionTime = src.ProductionTime;
-            ProductivityModifier = src.ProductivityModifier;
-            ResearchCopyTime = src.ResearchCopyTime * 2;
+            ResearchCopyTime = src.ResearchCopyTime;
             ResearchMaterialTime = src.ResearchMaterialTime;
             ResearchProductivityTime = src.ResearchProductivityTime;
-            ResearchTechTime = src.ResearchTechTime;
-            TechLevel = src.TechLevel;
-            WasteFactor = src.WasteFactor;
+            ResearchInventionTime = src.InventionTime;
+            ReverseEngineeringTime = src.ReverseEngineeringTime;
 
-            // Invented blueprint
-            m_inventBlueprint = new FastList<int>(src.InventionTypeID != null ? src.InventionTypeID.Count : 0);
-            if (src.InventionTypeID != null)
+            // Invented blueprints
+            m_inventBlueprints = new Dictionary<int, double>(src.InventionTypeIDs != null ? src.InventionTypeIDs.Count : 0);
+            if (src.InventionTypeIDs != null && src.InventionTypeIDs.Any())
             {
-                foreach (int blueprintID in src.InventionTypeID)
-                {
-                    m_inventBlueprint.Add(blueprintID);
-                }
+                m_inventBlueprints.AddRange(src.InventionTypeIDs);
             }
 
             // Materials prerequisites
@@ -75,11 +71,6 @@ namespace EVEMon.Common.Data
         public double ProductionTime { get; private set; }
 
         /// <summary>
-        /// Gets the production modifier of the blueprint.
-        /// </summary>
-        public double ProductivityModifier { get; private set; }
-
-        /// <summary>
         /// Gets the copying time of the blueprint.
         /// </summary>
         public double ResearchCopyTime { get; private set; }
@@ -97,17 +88,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the invention time of the blueprint.
         /// </summary>
-        public double ResearchTechTime { get; private set; }
+        public double ResearchInventionTime { get; private set; }
 
         /// <summary>
-        /// Gets the tech level of the blueprint.
+        /// Gets the reverse engineering time.
         /// </summary>
-        public int TechLevel { get; private set; }
-
-        /// <summary>
-        /// Gets the wastage factor of the blueprint.
-        /// </summary>
-        public short WasteFactor { get; private set; }
+        public double ReverseEngineeringTime { get; private set; }
 
         /// <summary>
         /// Gets the collection of materials this blueprint must satisfy to be build.
@@ -120,9 +106,16 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of blueprints this object can invent.
         /// </summary>
-        public IEnumerable<Blueprint> InventsBlueprint
+        public IEnumerable<KeyValuePair<Blueprint, double>> InventBlueprints
         {
-            get { return m_inventBlueprint.Select(StaticBlueprints.GetBlueprintByID); }
+            get
+            {
+                return
+                    m_inventBlueprints.Select(
+                        inventBlueprint =>
+                            new KeyValuePair<Blueprint, double>(StaticBlueprints.GetBlueprintByID(inventBlueprint.Key),
+                                inventBlueprint.Value));
+            }
         }
 
         #endregion
