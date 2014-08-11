@@ -41,9 +41,11 @@ namespace EVEMon.SkillPlanner
         {
             InitializeComponent();
 
+            lblNoItemManufacturing.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemCopy.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemME.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemPE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemInvention.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemReverseEngineering.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             m_gbManufOriginalLocation = gbManufacturing.Location;
@@ -236,7 +238,7 @@ namespace EVEMon.SkillPlanner
             // Produce item
             lblItem.ForeColor = Color.Blue;
             lblItem.Text = m_blueprint.ProducesItem == null || m_blueprint.ProducesItem.ID == 0
-                ? "Unknown"
+                ? String.Empty
                 : m_blueprint.ProducesItem.Name;
             lblItem.Tag = m_blueprint.ProducesItem;
 
