@@ -42,7 +42,7 @@ namespace EVEMon.Updater
             StringBuilder notes = new StringBuilder("UPDATE NOTES:\n");
             foreach (SerializableDatafile versionDatafile in m_args.ChangedFiles)
             {
-                changedFiles.AppendFormat(CultureConstants.DefaultCulture,
+                changedFiles.AppendFormat(CultureConstants.InvariantCulture,
                                           "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
                                           versionDatafile.Name, versionDatafile.Date, versionDatafile.Address, Environment.NewLine);
                 notes.AppendLine(versionDatafile.Message).AppendLine();
@@ -69,7 +69,7 @@ namespace EVEMon.Updater
                     break;
 
                 // One or more files failed
-                string message = String.Format(CultureConstants.DefaultCulture,
+                string message = String.Format(CultureConstants.InvariantCulture,
                                                "{0} file{1} failed to download, do you wish to try again?",
                                                m_args.ChangedFiles.Count, m_args.ChangedFiles.Count == 1 ? String.Empty : "s");
 
@@ -95,9 +95,9 @@ namespace EVEMon.Updater
             foreach (SerializableDatafile versionDatafile in datafiles)
             {
                 // Work out the new names of the files
-                string url = String.Format(CultureConstants.DefaultCulture, "{0}/{1}", versionDatafile.Address, versionDatafile.Name);
+                string url = String.Format(CultureConstants.InvariantCulture, "{0}/{1}", versionDatafile.Address, versionDatafile.Name);
                 string oldFilename = Path.Combine(EveMonClient.EVEMonDataDir, versionDatafile.Name);
-                string newFilename = String.Format(CultureConstants.DefaultCulture, "{0}.tmp", oldFilename);
+                string newFilename = String.Format(CultureConstants.InvariantCulture, "{0}.tmp", oldFilename);
 
                 // If the file already exists delete it
                 if (File.Exists(newFilename))
@@ -164,8 +164,8 @@ namespace EVEMon.Updater
         {
             try
             {
-                File.Delete(String.Format(CultureConstants.DefaultCulture, "{0}.bak", oldFilename));
-                File.Copy(oldFilename, String.Format(CultureConstants.DefaultCulture, "{0}.bak", oldFilename));
+                File.Delete(String.Format(CultureConstants.InvariantCulture, "{0}.bak", oldFilename));
+                File.Copy(oldFilename, String.Format(CultureConstants.InvariantCulture, "{0}.bak", oldFilename));
                 File.Delete(oldFilename);
                 File.Move(newFilename, oldFilename);
             }
