@@ -261,8 +261,9 @@ namespace EVEMon.SkillPlanner
             lblRunsPerCopy.Text = m_blueprint.RunsPerCopy.ToString(CultureConstants.DefaultCulture);
 
             // Manufacturing base time
-            var s = (int)(m_blueprint.ProductionTime * GetTimeEfficiencyModifier(BlueprintActivity.Manufacturing));
-            double activityTime = s * GetFacilityMultiplier();
+            double activityTime = (int)(m_blueprint.ProductionTime *
+                                        GetTimeEfficiencyModifier(BlueprintActivity.Manufacturing)) *
+                                  GetFacilityMultiplier();
             lblProductionBaseTime.Text = BaseActivityTime(activityTime);
 
             // Manufacturing character time
@@ -270,8 +271,9 @@ namespace EVEMon.SkillPlanner
             lblProductionCharTime.Text = CharacterActivityTime(activityTime, DBConstants.IndustrySkillID);
 
             // Researching material efficiency base time
-            s = (int)(m_blueprint.ResearchMaterialTime * GetTimeEfficiencyModifier(BlueprintActivity.ResearchingMaterialEfficiency));
-            activityTime = s * GetFacilityMultiplier(BlueprintActivity.ResearchingMaterialEfficiency);
+            activityTime = (int)(m_blueprint.ResearchMaterialTime *
+                                 GetTimeEfficiencyModifier(BlueprintActivity.ResearchingMaterialEfficiency)) *
+                           GetFacilityMultiplier(BlueprintActivity.ResearchingMaterialEfficiency);
             lblResearchMEBaseTime.Text = BaseActivityTime(activityTime);
 
             // Researching material efficiency character time
@@ -313,16 +315,16 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Invention or Reverse Engineering time base time
-            activityTime = (int)((m_hasInvention
+            activityTime = m_hasInvention
                 ? m_blueprint.ResearchInventionTime
-                : m_blueprint.ReverseEngineeringTime) * GetTimeEfficiencyModifier(BlueprintActivity.ResearchingTimeEfficiency)) *
-                           GetFacilityMultiplier(m_hasInvention
-                               ? BlueprintActivity.Invention
-                               : BlueprintActivity.ReverseEngineering);
+                : m_blueprint.ReverseEngineeringTime *
+                  GetFacilityMultiplier(m_hasInvention
+                      ? BlueprintActivity.Invention
+                      : BlueprintActivity.ReverseEngineering);
             lblInventionBaseTime.Text = BaseActivityTime(activityTime);
 
             // Invention or Reverse Engineering character time
-            activityTime *= 1;
+            activityTime *= 1d;
             lblInventionCharTime.Text = CharacterActivityTime(activityTime);
         }
 
