@@ -522,8 +522,7 @@ namespace EVEMon.SkillPlanner
                 return TimeSpanToText(TimeSpan.FromSeconds(0d), false);
 
             TimeSpan time = TimeSpan.FromSeconds(activityTime);
-            bool includeSeconds = (time.Hours < 1);
-            return TimeSpanToText(time, includeSeconds);
+            return TimeSpanToText(time, time.Seconds != 0);
         }
 
         /// <summary>
@@ -549,15 +548,14 @@ namespace EVEMon.SkillPlanner
                         break;
                 }
 
-                Int64 skillLevel = (m_character.Skills[skillID]).LastConfirmedLvl;
-                Int64 advancedIndustrySkillLevel = ((m_character.Skills[DBConstants.AdvancedIndustrySkillID]).LastConfirmedLvl);
-                activityTimeModifier = 1d - (skillBonusFactor * skillLevel) -
-                                       (AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel);
+                Int64 skillLevel = m_character.Skills[skillID].LastConfirmedLvl;
+                Int64 advancedIndustrySkillLevel = m_character.Skills[DBConstants.AdvancedIndustrySkillID].LastConfirmedLvl;
+                activityTimeModifier = (1d - (skillBonusFactor * skillLevel)) *
+                                       (1d - (AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel));
             }
 
             TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier);
-            bool includeSeconds = (time.Hours == 0 && time.Minutes < 10);
-            return String.Format(CultureConstants.DefaultCulture, "{0} (You)", TimeSpanToText(time, includeSeconds));
+            return String.Format(CultureConstants.DefaultCulture, "{0} (You)", TimeSpanToText(time, time.Seconds != 0));
         }
 
         /// <summary>
