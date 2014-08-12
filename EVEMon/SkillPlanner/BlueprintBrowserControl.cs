@@ -252,14 +252,17 @@ namespace EVEMon.SkillPlanner
             // Success probability
             lblSuccessProbability.Visible = lblProbability.Visible = m_blueprint.InventBlueprints.Any();
             if (lblProbability.Visible)
-                lblProbability.Text = m_blueprint.InventBlueprints.Max(x => x.Value).ToString("P1");
+            {
+                lblProbability.Text =
+                    (m_blueprint.InventBlueprints.Max(x => x.Value) * GetProbabilityModifier()).ToString("P1");
+            }
 
             // Runs per copy
             lblRunsPerCopy.Text = m_blueprint.RunsPerCopy.ToString(CultureConstants.DefaultCulture);
 
             // Manufacturing base time
-            double timeEffModifier = 1 - ((double)nudTE.Value / 100);
-            double activityTime = m_blueprint.ProductionTime * timeEffModifier * GetFacilityMultiplier();
+            var s = (int)(m_blueprint.ProductionTime * GetTimeEfficiencyModifier(BlueprintActivity.Manufacturing));
+            double activityTime = s * GetFacilityMultiplier();
             lblProductionBaseTime.Text = BaseActivityTime(activityTime);
 
             // Manufacturing character time
@@ -267,8 +270,8 @@ namespace EVEMon.SkillPlanner
             lblProductionCharTime.Text = CharacterActivityTime(activityTime, DBConstants.IndustrySkillID);
 
             // Researching material efficiency base time
-            activityTime = m_blueprint.ResearchMaterialTime *
-                           GetFacilityMultiplier(BlueprintActivity.ResearchingMaterialEfficiency);
+            s = (int)(m_blueprint.ResearchMaterialTime * GetTimeEfficiencyModifier(BlueprintActivity.ResearchingMaterialEfficiency));
+            activityTime = s * GetFacilityMultiplier(BlueprintActivity.ResearchingMaterialEfficiency);
             lblResearchMEBaseTime.Text = BaseActivityTime(activityTime);
 
             // Researching material efficiency character time
@@ -276,7 +279,9 @@ namespace EVEMon.SkillPlanner
             lblResearchMECharTime.Text = CharacterActivityTime(activityTime, DBConstants.MetallurgySkillID);
 
             // Researching copy base time
-            activityTime = m_blueprint.ResearchCopyTime * GetFacilityMultiplier(BlueprintActivity.Copying);
+            activityTime = (int)(m_blueprint.ResearchCopyTime *
+                                 GetTimeEfficiencyModifier(BlueprintActivity.Copying)) *
+                           GetFacilityMultiplier(BlueprintActivity.Copying);
             lblResearchCopyBaseTime.Text = BaseActivityTime(activityTime);
 
             // Researching copy character time
@@ -284,7 +289,8 @@ namespace EVEMon.SkillPlanner
             lblResearchCopyCharTime.Text = CharacterActivityTime(activityTime, DBConstants.ScienceSkillID);
 
             // Researching time efficiency base time
-            activityTime = m_blueprint.ResearchProductivityTime *
+            activityTime = (int)(m_blueprint.ResearchProductivityTime *
+                                 GetTimeEfficiencyModifier(BlueprintActivity.ResearchingTimeEfficiency)) *
                            GetFacilityMultiplier(BlueprintActivity.ResearchingTimeEfficiency);
             lblResearchTEBaseTime.Text = BaseActivityTime(activityTime);
 
@@ -307,9 +313,9 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Invention or Reverse Engineering time base time
-            activityTime = (m_hasInvention
+            activityTime = (int)((m_hasInvention
                 ? m_blueprint.ResearchInventionTime
-                : m_blueprint.ReverseEngineeringTime) *
+                : m_blueprint.ReverseEngineeringTime) * GetTimeEfficiencyModifier(BlueprintActivity.ResearchingTimeEfficiency)) *
                            GetFacilityMultiplier(m_hasInvention
                                ? BlueprintActivity.Invention
                                : BlueprintActivity.ReverseEngineering);
@@ -318,8 +324,6 @@ namespace EVEMon.SkillPlanner
             // Invention or Reverse Engineering character time
             activityTime *= 1;
             lblInventionCharTime.Text = CharacterActivityTime(activityTime);
-
-
         }
 
         /// <summary>
@@ -382,7 +386,7 @@ namespace EVEMon.SkillPlanner
         private IEnumerable<ListViewItem> AddGroups()
         {
             List<ListViewItem> items = new List<ListViewItem>();
-            double materiaEffModifier = 1 - ((double)nudME.Value / 100);
+            double materiaEffModifier = 1d - ((double)nudME.Value / 100);
 
             foreach (MarketGroup marketGroup in StaticItems.AllGroups)
             {
@@ -521,7 +525,7 @@ namespace EVEMon.SkillPlanner
             if (Double.IsNaN(activityTime))
                 return TimeSpanToText(TimeSpan.FromSeconds(0d), false);
 
-            TimeSpan time = TimeSpan.FromSeconds(activityTime);
+            TimeSpan time = TimeSpan.FromSeconds(Math.Ceiling(activityTime));
             return TimeSpanToText(time, time.Seconds != 0);
         }
 
@@ -533,11 +537,14 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private string CharacterActivityTime(double activityTime, int skillID = 0)
         {
-            double activityTimeModifier = 1d;
-            const double AdvancedIndustrySkillBonusFactor = 0.03d;
+            Int64 advancedIndustrySkillLevel = m_character.Skills[DBConstants.AdvancedIndustrySkillID].LastConfirmedLvl;
+            const Double AdvancedIndustrySkillBonusFactor = 0.03d;
+            Double activityTimeModifier = 1d;
+            Double skillBonusModifier = 0d;
+
             if (skillID != 0)
             {
-                double skillBonusFactor;
+                Double skillBonusFactor;
                 switch (skillID)
                 {
                     case DBConstants.IndustrySkillID:
@@ -549,12 +556,12 @@ namespace EVEMon.SkillPlanner
                 }
 
                 Int64 skillLevel = m_character.Skills[skillID].LastConfirmedLvl;
-                Int64 advancedIndustrySkillLevel = m_character.Skills[DBConstants.AdvancedIndustrySkillID].LastConfirmedLvl;
-                activityTimeModifier = (1d - (skillBonusFactor * skillLevel)) *
-                                       (1d - (AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel));
+                skillBonusModifier = skillBonusFactor * skillLevel;
             }
+            activityTimeModifier = (activityTimeModifier - (skillBonusModifier)) *
+                                   (activityTimeModifier - (AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel));
 
-            TimeSpan time = TimeSpan.FromSeconds(activityTime * activityTimeModifier);
+            TimeSpan time = TimeSpan.FromSeconds(Math.Ceiling(activityTime * activityTimeModifier));
             return String.Format(CultureConstants.DefaultCulture, "{0} (You)", TimeSpanToText(time, time.Seconds != 0));
         }
 
@@ -572,6 +579,88 @@ namespace EVEMon.SkillPlanner
                 | DescriptiveTextOptions.FullText
                 | DescriptiveTextOptions.IncludeCommas,
                 includeSeconds);
+        }
+
+        /// <summary>
+        /// Gets the probability modifier.
+        /// </summary>
+        /// <returns></returns>
+        private double GetProbabilityModifier()
+        {
+            const Double BonusFactor = 0.05d;
+            Double skillLevel = m_blueprint.Prerequisites.Where(x => x.Activity == BlueprintActivity.Invention)
+                    .Max(x => m_character.Skills[x.Skill.ID].LastConfirmedLvl);
+
+            return 1d + (BonusFactor * skillLevel);
+        }
+
+        /// <summary>
+        /// Gets the time efficiency modifier.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns></returns>
+        private double GetTimeEfficiencyModifier(BlueprintActivity activity)
+        {
+            if (activity == BlueprintActivity.Manufacturing)
+                return 1d - ((double)nudTE.Value / 100);
+
+            if (activity == BlueprintActivity.ResearchingMaterialEfficiency)
+            {
+                switch ((int)nudME.Value)
+                {
+                    case 0:
+                        return 1d;
+                    case 1:
+                        return 1.381d;
+                    case 2:
+                        return 3.286d;
+                    case 3:
+                        return 7.8d;
+                    case 4:
+                        return 18.534d;
+                    case 5:
+                        return 44.19d;
+                    case 6:
+                        return 104.762d;
+                    case 7:
+                        return 250.048d;
+                    case 8:
+                        return 594.81d;
+                    case 9:
+                    case 10:
+                        return 1412.381;
+                }
+            }
+
+            if (activity == BlueprintActivity.ResearchingTimeEfficiency)
+            {
+                switch ((int)nudTE.Value)
+                {
+                    case 0:
+                        return 1d;
+                    case 2:
+                        return 1.381d;
+                    case 4:
+                        return 3.286d;
+                    case 6:
+                        return 7.8d;
+                    case 8:
+                        return 18.534d;
+                    case 10:
+                        return 44.19d;
+                    case 12:
+                        return 104.762d;
+                    case 14:
+                        return 250.048d;
+                    case 16:
+                        return 594.81d;
+                    case 18:
+                    case 20:
+                        return 1412.381;
+                }
+            }
+
+            return 1d;
         }
 
         /// <summary>

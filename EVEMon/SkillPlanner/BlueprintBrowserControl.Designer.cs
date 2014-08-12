@@ -830,7 +830,7 @@ namespace EVEMon.SkillPlanner
             this.lblResearchCopy.Name = "lblResearchCopy";
             this.lblResearchCopy.Size = new System.Drawing.Size(109, 13);
             this.lblResearchCopy.TabIndex = 18;
-            this.lblResearchCopy.Text = "Research Copy Time:";
+            this.lblResearchCopy.Text = "Research Copy Time (Per Copy):";
             // 
             // lblResearchTECharTime
             // 
