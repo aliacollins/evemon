@@ -247,8 +247,9 @@ namespace EVEMon.SkillPlanner
             lblSuccessProbability.Visible = lblProbability.Visible = m_blueprint.InventBlueprints.Any();
             if (lblProbability.Visible)
             {
-                lblProbability.Text =
-                    (m_blueprint.InventBlueprints.Max(x => x.Value) * GetProbabilityModifier()).ToString("P1");
+                Double baseProbability = m_blueprint.InventBlueprints.Max(x => x.Value);
+                lblProbability.Text = String.Format(CultureConstants.DefaultCulture, "{0:P1} (You: {1:P1})", baseProbability,
+                    baseProbability * GetProbabilityModifier());
             }
 
             // Runs per copy
@@ -617,8 +618,10 @@ namespace EVEMon.SkillPlanner
         private double GetProbabilityModifier()
         {
             const Double BonusFactor = 0.05d;
-            Double skillLevel = m_blueprint.Prerequisites.Where(x => x.Activity == BlueprintActivity.Invention)
-                    .Max(x => m_character.Skills[x.Skill.ID].LastConfirmedLvl);
+            Double skillLevel = m_blueprint.Prerequisites
+                .Where(x => x.Activity == BlueprintActivity.Invention || x.Activity == BlueprintActivity.ReverseEngineering)
+                .Where(x => x.Skill != null)
+                .Max(x => m_character.Skills[x.Skill.ID].LastConfirmedLvl);
 
             return 1d + (BonusFactor * skillLevel);
         }
