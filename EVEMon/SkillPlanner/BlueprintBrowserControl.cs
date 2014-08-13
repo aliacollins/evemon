@@ -411,7 +411,7 @@ namespace EVEMon.SkillPlanner
                     long baseMaterialQuantity = material.Quantity;
 
                     // Calculate the base material quantity
-                    long actualMaterialQuantity = (long)Math.Ceiling(material.Quantity * m_materialFacilityMultiplier * materiaEffModifier);
+                    long actualMaterialQuantity = (long)Math.Ceiling(material.Quantity * materiaEffModifier * m_materialFacilityMultiplier);
 
                     // Add the base quantity for every item
                     ListViewItem.ListViewSubItem subItemBase =
@@ -575,12 +575,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static string TimeSpanToText(TimeSpan time, bool includeSeconds)
         {
-            return time.ToDescriptiveText(
-                DescriptiveTextOptions.FirstLetterUppercase
-                | DescriptiveTextOptions.SpaceText
-                | DescriptiveTextOptions.FullText
-                | DescriptiveTextOptions.IncludeCommas,
-                includeSeconds);
+            return time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds);
         }
 
         /// <summary>
@@ -613,24 +608,34 @@ namespace EVEMon.SkillPlanner
                     case 0:
                         return 1d;
                     case 1:
-                        return 1.381d;
+                    case -10:
+                        return (250 - 105) / 105d;
                     case 2:
-                        return 3.286d;
+                    case -20:
+                        return (595d - 250d) / 105d;
                     case 3:
-                        return 7.8d;
+                    case -30:
+                        return (1414 - 595) / 105d;
                     case 4:
-                        return 18.534d;
+                    case -40:
+                        return (3360 - 1414) / 105d;
                     case 5:
-                        return 44.19d;
+                    case -50:
+                        return (8000 - 3360) / 105d;
                     case 6:
-                        return 104.762d;
+                    case -60:
+                        return (19000 - 8000) / 105d;
                     case 7:
-                        return 250.048d;
+                    case -70:
+                        return (45255 - 19000) / 105d;
                     case 8:
-                        return 594.81d;
+                    case -80:
+                        return (107700 - 45255) / 105d;
                     case 9:
                     case 10:
-                        return 1412.381;
+                    case -90:
+                    case -100:
+                        return (256000 - 107700) / 105d;
                 }
             }
 
@@ -641,24 +646,26 @@ namespace EVEMon.SkillPlanner
                     case 0:
                         return 1d;
                     case 2:
-                        return 1.381d;
+                        return (250 - 105) / 105d;
                     case 4:
-                        return 3.286d;
+                        return (595d - 250d) / 105d;
                     case 6:
-                        return 7.8d;
+                        return (1414 - 595) / 105d;
                     case 8:
-                        return 18.534d;
+                        return (3360 - 1414) / 105d;
                     case 10:
-                        return 44.19d;
+                    case -50:
+                        return (8000 - 3360) / 105d;
                     case 12:
-                        return 104.762d;
+                        return (19000 - 8000) / 105d;
                     case 14:
-                        return 250.048d;
+                        return (45255 - 19000) / 105d;
                     case 16:
-                        return 594.81d;
+                        return (107700 - 45255) / 105d;
                     case 18:
                     case 20:
-                        return 1412.381;
+                    case -100:
+                        return (256000 - 107700) / 105d;
                 }
             }
 
@@ -836,21 +843,45 @@ namespace EVEMon.SkillPlanner
             switch (value)
             {
                 case -1:
-                case -49:
-                    ((NumericUpDown)sender).Value = -25;
+                case -19:
+                    ((NumericUpDown)sender).Value = -10;
                     break;
-                case -26:
-                case -74:
+                case -11:
+                case -29:
+                    ((NumericUpDown)sender).Value = -20;
+                    break;
+                case -21:
+                case -39:
+                    ((NumericUpDown)sender).Value = -30;
+                    break;
+                case -31:
+                case -49:
+                    ((NumericUpDown)sender).Value = -40;
+                    break;
+                case -41:
+                case -59:
                     ((NumericUpDown)sender).Value = -50;
                     break;
                 case -51:
-                case -99:
-                    ((NumericUpDown)sender).Value = -75;
+                case -69:
+                    ((NumericUpDown)sender).Value = -60;
                     break;
-                case -76:
+                case -61:
+                case -79:
+                    ((NumericUpDown)sender).Value = -70;
+                    break;
+                case -71:
+                case -89:
+                    ((NumericUpDown)sender).Value = -80;
+                    break;
+                case -81:
+                case -99:
+                    ((NumericUpDown)sender).Value = -90;
+                    break;
+                case -91:
                     ((NumericUpDown)sender).Value = -100;
                     break;
-                case -24:
+                case -9:
                     ((NumericUpDown)sender).Value = 0;
                     break;
             }
