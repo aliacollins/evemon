@@ -34,29 +34,29 @@ namespace EVEMon.SkillPlanner
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpManufacturing = new System.Windows.Forms.TabPage();
             this.gbManufBoM = new System.Windows.Forms.GroupBox();
-            this.lblNoItemManufacturing = new System.Windows.Forms.Label();
             this.lvManufacturing = new System.Windows.Forms.ListView();
             this.chManufItem = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chManufQuantityBase = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chManufQuantityYou = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ActivityContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblNoItemManufacturing = new System.Windows.Forms.Label();
             this.tpCopying = new System.Windows.Forms.TabPage();
             this.gbCopyBoM = new System.Windows.Forms.GroupBox();
-            this.lblNoItemCopy = new System.Windows.Forms.Label();
             this.lvCopying = new System.Windows.Forms.ListView();
+            this.lblNoItemCopy = new System.Windows.Forms.Label();
             this.tpResearchME = new System.Windows.Forms.TabPage();
             this.gbResearchMEBoM = new System.Windows.Forms.GroupBox();
-            this.lblNoItemME = new System.Windows.Forms.Label();
             this.lvResearchME = new System.Windows.Forms.ListView();
+            this.lblNoItemME = new System.Windows.Forms.Label();
             this.tpResearchPE = new System.Windows.Forms.TabPage();
             this.gbResearchPEBoM = new System.Windows.Forms.GroupBox();
-            this.lblNoItemPE = new System.Windows.Forms.Label();
             this.lvResearchPE = new System.Windows.Forms.ListView();
+            this.lblNoItemPE = new System.Windows.Forms.Label();
             this.tpInvention = new System.Windows.Forms.TabPage();
             this.gbInvBoM = new System.Windows.Forms.GroupBox();
-            this.lblNoItemInvention = new System.Windows.Forms.Label();
             this.lvInvention = new System.Windows.Forms.ListView();
+            this.lblNoItemInvention = new System.Windows.Forms.Label();
             this.tpReverseEngineering = new System.Windows.Forms.TabPage();
             this.gbResearchBoM = new System.Windows.Forms.GroupBox();
             this.lvReverseEngineering = new System.Windows.Forms.ListView();
@@ -215,9 +215,9 @@ namespace EVEMon.SkillPlanner
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tpManufacturing);
-            this.tabControl.Controls.Add(this.tpCopying);
             this.tabControl.Controls.Add(this.tpResearchME);
             this.tabControl.Controls.Add(this.tpResearchPE);
+            this.tabControl.Controls.Add(this.tpCopying);
             this.tabControl.Controls.Add(this.tpInvention);
             this.tabControl.Controls.Add(this.tpReverseEngineering);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -251,17 +251,6 @@ namespace EVEMon.SkillPlanner
             this.gbManufBoM.TabIndex = 1;
             this.gbManufBoM.TabStop = false;
             this.gbManufBoM.Text = "Bill of Materials";
-            // 
-            // lblNoItemManufacturing
-            // 
-            this.lblNoItemManufacturing.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoItemManufacturing.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoItemManufacturing.Location = new System.Drawing.Point(3, 16);
-            this.lblNoItemManufacturing.Name = "lblNoItemManufacturing";
-            this.lblNoItemManufacturing.Size = new System.Drawing.Size(602, 456);
-            this.lblNoItemManufacturing.TabIndex = 4;
-            this.lblNoItemManufacturing.Text = "No item required.";
-            this.lblNoItemManufacturing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lvManufacturing
             // 
@@ -311,6 +300,17 @@ namespace EVEMon.SkillPlanner
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
             this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
+            // lblNoItemManufacturing
+            // 
+            this.lblNoItemManufacturing.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemManufacturing.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemManufacturing.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemManufacturing.Name = "lblNoItemManufacturing";
+            this.lblNoItemManufacturing.Size = new System.Drawing.Size(602, 456);
+            this.lblNoItemManufacturing.TabIndex = 4;
+            this.lblNoItemManufacturing.Text = "No item required.";
+            this.lblNoItemManufacturing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // tpCopying
             // 
             this.tpCopying.Controls.Add(this.gbCopyBoM);
@@ -334,17 +334,6 @@ namespace EVEMon.SkillPlanner
             this.gbCopyBoM.TabStop = false;
             this.gbCopyBoM.Text = "Bill of Materials";
             // 
-            // lblNoItemCopy
-            // 
-            this.lblNoItemCopy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoItemCopy.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoItemCopy.Location = new System.Drawing.Point(3, 16);
-            this.lblNoItemCopy.Name = "lblNoItemCopy";
-            this.lblNoItemCopy.Size = new System.Drawing.Size(602, 456);
-            this.lblNoItemCopy.TabIndex = 3;
-            this.lblNoItemCopy.Text = "No item required.";
-            this.lblNoItemCopy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lvCopying
             // 
             this.lvCopying.ContextMenuStrip = this.ActivityContextMenu;
@@ -357,6 +346,17 @@ namespace EVEMon.SkillPlanner
             this.lvCopying.UseCompatibleStateImageBehavior = false;
             this.lvCopying.View = System.Windows.Forms.View.Details;
             this.lvCopying.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
+            // 
+            // lblNoItemCopy
+            // 
+            this.lblNoItemCopy.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemCopy.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemCopy.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemCopy.Name = "lblNoItemCopy";
+            this.lblNoItemCopy.Size = new System.Drawing.Size(602, 456);
+            this.lblNoItemCopy.TabIndex = 3;
+            this.lblNoItemCopy.Text = "No item required.";
+            this.lblNoItemCopy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tpResearchME
             // 
@@ -381,17 +381,6 @@ namespace EVEMon.SkillPlanner
             this.gbResearchMEBoM.TabStop = false;
             this.gbResearchMEBoM.Text = "Bill of Materials";
             // 
-            // lblNoItemME
-            // 
-            this.lblNoItemME.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoItemME.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoItemME.Location = new System.Drawing.Point(3, 16);
-            this.lblNoItemME.Name = "lblNoItemME";
-            this.lblNoItemME.Size = new System.Drawing.Size(602, 456);
-            this.lblNoItemME.TabIndex = 2;
-            this.lblNoItemME.Text = "No item required.";
-            this.lblNoItemME.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lvResearchME
             // 
             this.lvResearchME.ContextMenuStrip = this.ActivityContextMenu;
@@ -404,6 +393,17 @@ namespace EVEMon.SkillPlanner
             this.lvResearchME.UseCompatibleStateImageBehavior = false;
             this.lvResearchME.View = System.Windows.Forms.View.Details;
             this.lvResearchME.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
+            // 
+            // lblNoItemME
+            // 
+            this.lblNoItemME.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemME.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemME.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemME.Name = "lblNoItemME";
+            this.lblNoItemME.Size = new System.Drawing.Size(602, 456);
+            this.lblNoItemME.TabIndex = 2;
+            this.lblNoItemME.Text = "No item required.";
+            this.lblNoItemME.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tpResearchPE
             // 
@@ -428,17 +428,6 @@ namespace EVEMon.SkillPlanner
             this.gbResearchPEBoM.TabStop = false;
             this.gbResearchPEBoM.Text = "Bill of Materials";
             // 
-            // lblNoItemPE
-            // 
-            this.lblNoItemPE.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoItemPE.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoItemPE.Location = new System.Drawing.Point(3, 16);
-            this.lblNoItemPE.Name = "lblNoItemPE";
-            this.lblNoItemPE.Size = new System.Drawing.Size(602, 456);
-            this.lblNoItemPE.TabIndex = 2;
-            this.lblNoItemPE.Text = "No item required.";
-            this.lblNoItemPE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lvResearchPE
             // 
             this.lvResearchPE.ContextMenuStrip = this.ActivityContextMenu;
@@ -451,6 +440,17 @@ namespace EVEMon.SkillPlanner
             this.lvResearchPE.UseCompatibleStateImageBehavior = false;
             this.lvResearchPE.View = System.Windows.Forms.View.Details;
             this.lvResearchPE.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
+            // 
+            // lblNoItemPE
+            // 
+            this.lblNoItemPE.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemPE.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemPE.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemPE.Name = "lblNoItemPE";
+            this.lblNoItemPE.Size = new System.Drawing.Size(602, 456);
+            this.lblNoItemPE.TabIndex = 2;
+            this.lblNoItemPE.Text = "No item required.";
+            this.lblNoItemPE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tpInvention
             // 
@@ -475,17 +475,6 @@ namespace EVEMon.SkillPlanner
             this.gbInvBoM.TabStop = false;
             this.gbInvBoM.Text = "Bill of Materials";
             // 
-            // lblNoItemInvention
-            // 
-            this.lblNoItemInvention.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoItemInvention.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoItemInvention.Location = new System.Drawing.Point(3, 16);
-            this.lblNoItemInvention.Name = "lblNoItemInvention";
-            this.lblNoItemInvention.Size = new System.Drawing.Size(602, 456);
-            this.lblNoItemInvention.TabIndex = 5;
-            this.lblNoItemInvention.Text = "No item required.";
-            this.lblNoItemInvention.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lvInvention
             // 
             this.lvInvention.ContextMenuStrip = this.ActivityContextMenu;
@@ -498,6 +487,17 @@ namespace EVEMon.SkillPlanner
             this.lvInvention.UseCompatibleStateImageBehavior = false;
             this.lvInvention.View = System.Windows.Forms.View.Details;
             this.lvInvention.DoubleClick += new System.EventHandler(this.propertiesList_DoubleClick);
+            // 
+            // lblNoItemInvention
+            // 
+            this.lblNoItemInvention.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoItemInvention.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblNoItemInvention.Location = new System.Drawing.Point(3, 16);
+            this.lblNoItemInvention.Name = "lblNoItemInvention";
+            this.lblNoItemInvention.Size = new System.Drawing.Size(602, 456);
+            this.lblNoItemInvention.TabIndex = 5;
+            this.lblNoItemInvention.Text = "No item required.";
+            this.lblNoItemInvention.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tpReverseEngineering
             // 
@@ -828,9 +828,9 @@ namespace EVEMon.SkillPlanner
             this.lblResearchCopy.BackColor = System.Drawing.SystemColors.Control;
             this.lblResearchCopy.Location = new System.Drawing.Point(6, 62);
             this.lblResearchCopy.Name = "lblResearchCopy";
-            this.lblResearchCopy.Size = new System.Drawing.Size(109, 13);
+            this.lblResearchCopy.Size = new System.Drawing.Size(216, 13);
             this.lblResearchCopy.TabIndex = 18;
-            this.lblResearchCopy.Text = "Research Copy Time (Runs Per Copy):";
+            this.lblResearchCopy.Text = "Research Copy Time (Single Run Per Copy):";
             // 
             // lblResearchTECharTime
             // 

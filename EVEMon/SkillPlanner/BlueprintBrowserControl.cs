@@ -11,12 +11,6 @@ namespace EVEMon.SkillPlanner
 {
     internal partial class BlueprintBrowserControl : EveObjectBrowserControl
     {
-        private readonly object[] m_laboratories = {
-                                                       "Mobile Laboratory",
-                                                       "Advance Mobile Laboratory",
-                                                       "Any Other Laboratory"
-                                                   };
-
         private double m_materialFacilityMultiplier;
         private bool m_hasManufacturing;
         private bool m_hasCopying;
@@ -166,15 +160,15 @@ namespace EVEMon.SkillPlanner
         /// Refreshes the tabs.
         /// </summary>
         private void RefreshTabs()
-        {            
+        {
             // Determine the blueprints' activities  
             m_hasManufacturing = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Manufacturing)
-                              || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Manufacturing)
-                              || m_blueprint.ProductionTime > 0d;
+                                 || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Manufacturing)
+                                 || m_blueprint.ProductionTime > 0d;
 
             m_hasCopying = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Copying)
-                              || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Copying)
-                              || m_blueprint.ResearchCopyTime > 0d;
+                           || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Copying)
+                           || m_blueprint.ResearchCopyTime > 0d;
 
             m_hasResearchingMaterialEfficiency =
                 m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
@@ -206,20 +200,20 @@ namespace EVEMon.SkillPlanner
             if (m_hasManufacturing)
                 tabControl.TabPages.Add(tpManufacturing);
 
-            if (m_hasCopying)
-                tabControl.TabPages.Add(tpCopying);
-
             if (m_hasResearchingMaterialEfficiency)
                 tabControl.TabPages.Add(tpResearchME);
 
             if (m_hasResearchingTimeEfficiency)
                 tabControl.TabPages.Add(tpResearchPE);
 
-            if (!m_hasCopying && !m_hasResearchingMaterialEfficiency && !m_hasResearchingTimeEfficiency)
-                tabControl.TabPages.Add(tpReverseEngineering);
+            if (m_hasCopying)
+                tabControl.TabPages.Add(tpCopying);
 
             if (m_hasInvention)
                 tabControl.TabPages.Add(tpInvention);
+
+            if (!m_hasCopying && !m_hasResearchingMaterialEfficiency && !m_hasResearchingTimeEfficiency && !m_hasInvention)
+                tabControl.TabPages.Add(tpReverseEngineering);
 
             // Restore the index of the previous selected tab,
             // if the index doesn't exist it smartly selects
@@ -315,9 +309,9 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Invention or Reverse Engineering time base time
-            activityTime = m_hasInvention
+            activityTime = (m_hasInvention
                 ? m_blueprint.ResearchInventionTime
-                : m_blueprint.ReverseEngineeringTime *
+                : m_blueprint.ReverseEngineeringTime) *
                   GetFacilityMultiplier(m_hasInvention
                       ? BlueprintActivity.Invention
                       : BlueprintActivity.ReverseEngineering);
@@ -454,11 +448,16 @@ namespace EVEMon.SkillPlanner
             {
                 case BlueprintActivity.Manufacturing:
                     if (producedItem.MarketGroup.BelongsIn(DBConstants.DronesMarketGroupID)
-                        && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
+                        && !producedItem.MarketGroup.BelongsIn(DBConstants.SmallToLargeShipsMarketGroupIDs))
+                    {
                         cbFacility.Items.Add("Drone Assembly Array");
+                    }
 
-                    if (producedItem.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID))
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID) ||
+                        producedItem.MarketGroup.BelongsIn(DBConstants.FuelBlocksMarketGroupID))
+                    {
                         cbFacility.Items.Add("Ammunition Assembly Array");
+                    }
 
                     if (producedItem.MarketGroup.BelongsIn(DBConstants.ShipEquipmentsMarketGroupID))
                     {
@@ -472,31 +471,64 @@ namespace EVEMon.SkillPlanner
                     if (producedItem.MarketGroup.BelongsIn(DBConstants.StrategicComponentsMarketGroupIDs))
                         cbFacility.Items.Add("Subsystem Assembly Array");
 
-                    if (producedItem.MarketGroup.BelongsIn(DBConstants.SmallToXLargeShipsMarketGroupIDs))
-                        cbFacility.Items.Add("Ship Assembly Array (Ship Size)");
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.SmallToLargeShipsMarketGroupIDs))
+                        cbFacility.Items.Add("(Ship Size) Ship Assembly Array");
 
                     if (producedItem.MarketGroup.BelongsIn(DBConstants.CapitalShipsMarketGroupIDs))
                         cbFacility.Items.Add("Capital Assembly Array");
 
                     if (producedItem.MarketGroup.BelongsIn(DBConstants.AdvancedSmallToLargeShipsMarketGroupIDs))
-                        cbFacility.Items.Add("Advanced Ship Assembly Array (Ship Size)");
+                        cbFacility.Items.Add("Advanced (Ship Size) Ship Assembly Array");
+
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.SupercapitalShipsMarketGroupIDs))
+                        cbFacility.Items.Add("Supercapital Assembly Array");
+
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.StandardCapitalShipComponentsMarketGroupID) ||
+                        producedItem.MarketGroup.BelongsIn(DBConstants.AdvancedCapitalComponentsMarketGroupID))
+                    {
+                        cbFacility.Items.Add("Thukker Component Assembly Array");
+                    }
+
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.BoostersMarketGroupID))
+                        cbFacility.Items.Add("Drug Laboratory");
 
                     break;
-                default:
-                    cbFacility.Items.AddRange(m_laboratories);
+                case BlueprintActivity.Copying:
+                case BlueprintActivity.Invention:
+                    cbFacility.Items.AddRange(new object[]
+                    {
+                        "Design Laboratory"
+                    });
+                    break;
+                case BlueprintActivity.ReverseEngineering:
+                    cbFacility.Items.AddRange(new object[]
+                    {
+                        "Experimental Laboratory"
+                    });
+                    break;
+                case BlueprintActivity.ResearchingMaterialEfficiency:
+                case BlueprintActivity.ResearchingTimeEfficiency:
+                    cbFacility.Items.AddRange(new object[]
+                    {
+                        "Research Laboratory",
+                        "Hyasyoda Research Laboratory"
+                    });
                     break;
             }
 
             // Update the selected index
             if (m_activity == BlueprintActivity.Manufacturing)
             {
-                cbFacility.SelectedIndex = (Settings.UI.BlueprintBrowser.ProductionFacilityIndex <
-                                            cbFacility.Items.Count
-                                                ? Settings.UI.BlueprintBrowser.ProductionFacilityIndex
-                                                : 0);
+                cbFacility.SelectedIndex = Settings.UI.BlueprintBrowser.ProductionFacilityIndex < cbFacility.Items.Count
+                    ? Settings.UI.BlueprintBrowser.ProductionFacilityIndex
+                    : 0;
             }
             else
-                cbFacility.SelectedIndex = Settings.UI.BlueprintBrowser.ResearchFacilityIndex;
+            {
+                cbFacility.SelectedIndex = Settings.UI.BlueprintBrowser.ResearchFacilityIndex < cbFacility.Items.Count
+                    ? Settings.UI.BlueprintBrowser.ResearchFacilityIndex
+                    : 0;
+            }
         }
 
         /// <summary>
@@ -737,20 +769,25 @@ namespace EVEMon.SkillPlanner
 
             if (text.StartsWith("Rapid", StringComparison.Ordinal))
             {
-                m_materialFacilityMultiplier = 1.2d;
+                m_materialFacilityMultiplier = 1.05d;
                 return 0.65d;
             }
 
+            if (text.StartsWith("Thukker Component", StringComparison.Ordinal))
+            {
+                m_materialFacilityMultiplier = 0.9d;
+                return 0.75d;
+            }
+
             if (text.StartsWith("Subsystem", StringComparison.Ordinal) ||
-                text.StartsWith("Capital", StringComparison.Ordinal) ||
+                text.StartsWith("Supercapital", StringComparison.Ordinal) ||
+                text.StartsWith("Drug", StringComparison.Ordinal) ||
                 text.StartsWith("NPC", StringComparison.Ordinal))
             {
                 return 1.0d;
             }
 
-            if (text.StartsWith("Advanced", StringComparison.Ordinal))
-                m_materialFacilityMultiplier = 1.1d;
-
+            m_materialFacilityMultiplier = 0.98d;
             return 0.75d;
         }
 
@@ -763,28 +800,27 @@ namespace EVEMon.SkillPlanner
         {
             string text = cbFacility.Text;
 
-            if (text.StartsWith("Mobile", StringComparison.Ordinal))
+            if (text.StartsWith("Design", StringComparison.Ordinal))
             {
                 switch (activity)
                 {
                     case BlueprintActivity.Invention:
                         return 0.5d;
+                    case BlueprintActivity.Copying:
+                        return 0.6d;
                     default:
-                        return 0.75d;
+                        return 1;
                 }
             }
 
-            if (!text.StartsWith("Advance Mobile", StringComparison.Ordinal))
+            if (!text.Contains("Research Laboratory"))
                 return 1.0d;
 
             switch (activity)
             {
                 case BlueprintActivity.ResearchingMaterialEfficiency:
-                    return 0.75d;
-                case BlueprintActivity.Copying:
-                    return 0.65d;
-                case BlueprintActivity.Invention:
-                    return 0.5d;
+                case BlueprintActivity.ResearchingTimeEfficiency:
+                    return text.StartsWith("Hyasyoda") ? 0.65d : 0.70d;
             }
 
             return 1.0d;

@@ -118,23 +118,13 @@ namespace EVEMon.Common.Data
         public static readonly ReadOnlyCollection<int> StrategicComponentsMarketGroupIDs =
             new ReadOnlyCollection<int>(new[] { SubsystemsMarketGroupID, StrategicCruisersMarketGroupID });
 
-        public static readonly ReadOnlyCollection<int> SmallToXLargeShipsMarketGroupIDs =
+        public static readonly ReadOnlyCollection<int> SmallToLargeShipsMarketGroupIDs =
             new ReadOnlyCollection<int>(new[]
             {
-                StandardFrigatesMarketGroupID, StandardCruisersMarketGroupID,
-                StandardBattleshipsMarketGroupID, StandardIndustrialShipsMarketGroupID,
-                ShuttlessMarketGroupID, StandardDestroyersMarketGroupID,
-                StandardBattlecruisersMarketGroupID, MiningBargesMarketGroupID,
-                DreadnoughtsMarketGroupID, FreightersMarketGroupID, CarriersMarketGroupID,
-                FightersMarketGroupID, CapitalIndustrialShipsMarketGroupID,
-                FighterBombersMarketGroupID
-            });
-
-        public static readonly ReadOnlyCollection<int> CapitalShipsMarketGroupIDs =
-            new ReadOnlyCollection<int>(new[]
-            {
-                DreadnoughtsMarketGroupID, FreightersMarketGroupID,
-                TitansMarketGroupID, CarriersMarketGroupID
+                ShuttlessMarketGroupID, StandardFrigatesMarketGroupID, StandardDestroyersMarketGroupID,
+                FightersMarketGroupID, FighterBombersMarketGroupID, StandardCruisersMarketGroupID, 
+                StandardBattlecruisersMarketGroupID, StandardBattleshipsMarketGroupID, StandardIndustrialShipsMarketGroupID,
+                MiningBargesMarketGroupID, FreightersMarketGroupID
             });
 
         public static readonly ReadOnlyCollection<int> AdvancedSmallToLargeShipsMarketGroupIDs =
@@ -146,6 +136,20 @@ namespace EVEMon.Common.Data
                 ReconShipsMarketGroupID, ExhumersMarketGroupID,
                 ElectronicAttackFrigatesMarketGroupID, HeavyInterdictorsMarketGroupID,
                 BlackOpsMarketGroupID, MaraudersMarketGroupID, JumpFreightersMarketGroupID
+            });
+
+        public static readonly ReadOnlyCollection<int> CapitalShipsMarketGroupIDs =
+            new ReadOnlyCollection<int>(new[]
+            {
+                StandardBattleshipsMarketGroupID, DreadnoughtsMarketGroupID, FreightersMarketGroupID,
+                CarriersMarketGroupID, CapitalIndustrialShipsMarketGroupID
+            });
+
+        public static readonly ReadOnlyCollection<int> SupercapitalShipsMarketGroupIDs =
+            new ReadOnlyCollection<int>(new[]
+            {
+                DreadnoughtsMarketGroupID, FreightersMarketGroupID, CarriersMarketGroupID,
+                CapitalIndustrialShipsMarketGroupID, JumpFreightersMarketGroupID, TitansMarketGroupID
             });
 
         // Group of Implants IDs
@@ -481,6 +485,7 @@ namespace EVEMon.Common.Data
         public const int TransportShipsMarketGroupID = 629;
         public const int DreadnoughtsMarketGroupID = 761;
         public const int FreightersMarketGroupID = 766;
+        public const int StandardCapitalShipComponentsMarketGroupID = 781;
         public const int TitansMarketGroupID = 812;
         public const int CarriersMarketGroupID = 817;
         public const int CommandShipsMarketGroupID = 822;
@@ -489,6 +494,7 @@ namespace EVEMon.Common.Data
         public const int FightersMarketGroupID = 840;
         public const int ExhumersMarketGroupID = 874;
         public const int ShipModificationsMarketGroupID = 955;
+        public const int BoostersMarketGroupID = 977;
         public const int CapitalIndustrialShipsMarketGroupID = 1047;
         public const int ElectronicAttackFrigatesMarketGroupID = 1065;
         public const int HeavyInterdictorsMarketGroupID = 1070;
@@ -502,6 +508,8 @@ namespace EVEMon.Common.Data
         public const int FactionCruisersMarketGroupID = 1369;
         public const int FactionBattleshipsMarketGroupID = 1378;
         public const int FactionCarrierMarketGroupID = 1392;
+        public const int FuelBlocksMarketGroupID = 1870;
+        public const int AdvancedCapitalComponentsMarketGroupID = 1883;
         public const int AncientRelicsMarketGroupID = 1909;
 
         #endregion
