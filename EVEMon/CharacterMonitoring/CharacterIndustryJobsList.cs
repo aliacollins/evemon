@@ -430,12 +430,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobGrouping.EndDate:
                     IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups2 =
-                        jobs.GroupBy(x => x.EndProductionTime.ToLocalTime().Date).OrderBy(x => x.Key);
+                        jobs.GroupBy(x => x.EndDate.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups2);
                     break;
                 case IndustryJobGrouping.EndDateDesc:
                     IOrderedEnumerable<IGrouping<DateTime, IndustryJob>> groups3 =
-                        jobs.GroupBy(x => x.EndProductionTime.ToLocalTime().Date).OrderByDescending(x => x.Key);
+                        jobs.GroupBy(x => x.EndDate.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups3);
                     break;
                 case IndustryJobGrouping.InstalledItemType:
@@ -551,22 +551,22 @@ namespace EVEMon.CharacterMonitoring
             builder.AppendFormat(CultureConstants.DefaultCulture, "Installed: {0}",
                                  job.InstalledTime.ToLocalTime()).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Finishes: {0}",
-                                 job.EndProductionTime.ToLocalTime()).AppendLine();
-            builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity).AppendLine();
-            if (job.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
-            {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
-                                     job.InstalledME).AppendLine();
-                builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
-                                     job.InstalledME + job.Runs).AppendLine();
-            }
-            if (job.Activity == BlueprintActivity.ResearchingTimeEfficiency)
-            {
-                builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
-                                     job.InstalledPE).AppendLine();
-                builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
-                                     job.InstalledPE + job.Runs).AppendLine();
-            }
+                                 job.EndDate.ToLocalTime()).AppendLine();
+            builder.AppendFormat(CultureConstants.DefaultCulture, "Activity: {0}", job.Activity.GetDescription()).AppendLine();
+            //if (job.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
+            //{
+            //    builder.AppendFormat(CultureConstants.DefaultCulture, "Installed ME: {0}",
+            //                         job.InstalledME).AppendLine();
+            //    builder.AppendFormat(CultureConstants.DefaultCulture, "End ME: {0}",
+            //                         job.InstalledME + job.Runs).AppendLine();
+            //}
+            //if (job.Activity == BlueprintActivity.ResearchingTimeEfficiency)
+            //{
+            //    builder.AppendFormat(CultureConstants.DefaultCulture, "Installed PE: {0}",
+            //                         job.InstalledPE).AppendLine();
+            //    builder.AppendFormat(CultureConstants.DefaultCulture, "End PE: {0}",
+            //                         job.InstalledPE + job.Runs).AppendLine();
+            //}
             builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
                                  job.SolarSystem.FullLocation).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Installation: {0}", job.Installation).AppendLine();
@@ -679,7 +679,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.InstalledTime.ToLocalTime().ToString();
                     break;
                 case IndustryJobColumn.EndTime:
-                    item.Text = job.EndProductionTime.ToLocalTime().ToString();
+                    item.Text = job.EndDate.ToLocalTime().ToString();
                     break;
                 case IndustryJobColumn.OriginalOrCopy:
                     item.Text = job.BlueprintType.ToString();
@@ -852,7 +852,7 @@ namespace EVEMon.CharacterMonitoring
                 }
 
                 // Job was pending and its time to start
-                if (job.ActiveJobState == ActiveJobState.Pending && job.BeginProductionTime < DateTime.UtcNow)
+                if (job.ActiveJobState == ActiveJobState.Pending && job.StartDate < DateTime.UtcNow)
                 {
                     job.ActiveJobState = ActiveJobState.InProgress;
                     UpdateContent();

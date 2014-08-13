@@ -81,18 +81,18 @@ namespace EVEMon.Common
             // Import the jobs from the API
             List<IndustryJob> newJobs = src.Select(
                 srcJob => new
-                              {
-                                  srcJob,
-                                  limit = srcJob.EndProductionTime.AddDays(IndustryJob.MaxEndedDays),
-                                  state = srcJob.Completed,
-                                  status = srcJob.CompletedStatus
-                              }).Where(
-                                  job => job.limit >= DateTime.UtcNow ||
-                                         (job.state == (int)JobState.Active &&
-                                          job.status != (int)CCPJobCompletedStatus.Delivered)).Where(
-                                              job => !Items.Any(x => x.TryImport(job.srcJob))).Select(
-                                                  job => new IndustryJob(job.srcJob)).Where(
-                                                      job => job.InstalledItem != null && job.OutputItem != null).ToList();
+                {
+                    srcJob,
+                    limit = srcJob.EndDate.AddDays(IndustryJob.MaxEndedDays),
+                    state = srcJob.CompletedDate == DateTime.MinValue ? 0 : 1,
+                    status = srcJob.Status
+                }).Where(
+                    job => job.limit >= DateTime.UtcNow ||
+                           (job.state == (int)JobState.Active &&
+                            job.status != (int)CCPJobCompletedStatus.Ready)).Where(
+                                job => !Items.Any(x => x.TryImport(job.srcJob))).Select(
+                                    job => new IndustryJob(job.srcJob)).Where(
+                                        job => job.InstalledItem != null && job.OutputItem != null).ToList();
 
             // Add the items that are no longer marked for deletion
             newJobs.AddRange(Items.Where(x => !x.MarkedForDeletion));

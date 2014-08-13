@@ -66,7 +66,7 @@ namespace EVEMon.Common
                 case IndustryJobColumn.State:
                     return x.State == JobState.Active ? x.ActiveJobState.CompareTo(y.ActiveJobState) : x.State.CompareTo(y.State);
                 case IndustryJobColumn.TTC:
-                    return x.EndProductionTime.CompareTo(y.EndProductionTime);
+                    return x.EndDate.CompareTo(y.EndDate);
                 case IndustryJobColumn.InstalledItem:
                     return String.Compare(x.InstalledItem.Name, y.InstalledItem.Name, StringComparison.CurrentCulture);
                 case IndustryJobColumn.InstalledItemType:
@@ -82,7 +82,7 @@ namespace EVEMon.Common
                 case IndustryJobColumn.InstallTime:
                     return x.InstalledTime.CompareTo(y.InstalledTime);
                 case IndustryJobColumn.EndTime:
-                    return x.EndProductionTime.CompareTo(y.EndProductionTime);
+                    return x.EndDate.CompareTo(y.EndDate);
                 case IndustryJobColumn.OriginalOrCopy:
                     return x.BlueprintType.CompareTo(y.BlueprintType);
                 case IndustryJobColumn.InstalledME:

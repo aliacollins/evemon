@@ -43,9 +43,9 @@ namespace EVEMon.Common
 
             ID = src.JobID;
             State = src.State;
-            BeginProductionTime = src.BeginProductionTime;
-            EndProductionTime = src.EndProductionTime;
-            PauseProductionTime = src.PauseProductionTime;
+            StartDate = src.StartDate;
+            EndDate = src.EndDate;
+            PauseDate = src.PauseDate;
             LastStateChange = src.LastStateChange;
             IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
             ActiveJobState = GetActiveJobState();
@@ -90,12 +90,12 @@ namespace EVEMon.Common
             {
                 if (State == JobState.Paused)
                 {
-                    return EndProductionTime.Subtract(PauseProductionTime).ToDescriptiveText(
+                    return EndDate.Subtract(PauseDate).ToDescriptiveText(
                         DescriptiveTextOptions.SpaceBetween);
                 }
 
-                if (State == JobState.Active && EndProductionTime > DateTime.UtcNow)
-                    return EndProductionTime.ToRemainingTimeShortDescription(DateTimeKind.Utc);
+                if (State == JobState.Active && EndDate > DateTime.UtcNow)
+                    return EndDate.ToRemainingTimeShortDescription(DateTimeKind.Utc);
 
                 return String.Empty;
             }
@@ -160,22 +160,25 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the time the job was installed.
         /// </summary>
-        public DateTime InstalledTime { get; private set; }
+        public DateTime InstalledTime
+        {
+            get { return StartDate; }
+        }
 
         /// <summary>
         /// Gets the time the job begins.
         /// </summary>
-        public DateTime BeginProductionTime { get; private set; }
+        public DateTime StartDate { get; private set; }
 
         /// <summary>
         /// Gets the time the job ends.
         /// </summary>
-        public DateTime EndProductionTime { get; private set; }
+        public DateTime EndDate { get; private set; }
 
         /// <summary>
         /// Gets the time the job was paused.
         /// </summary>
-        public DateTime PauseProductionTime { get; private set; }
+        public DateTime PauseDate { get; private set; }
 
         /// <summary>
         /// Gets where this job is installed.
@@ -225,8 +228,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         private bool IsModified(SerializableJobListItem src)
         {
-            return src.EndProductionTime != EndProductionTime
-                   || src.PauseProductionTime != PauseProductionTime;
+            return src.EndDate != EndDate
+                   || src.PauseDate != PauseDate;
         }
 
         #endregion
@@ -243,9 +246,9 @@ namespace EVEMon.Common
                        {
                            JobID = ID,
                            State = State,                         
-                           BeginProductionTime = BeginProductionTime,
-                           EndProductionTime = EndProductionTime,
-                           PauseProductionTime = PauseProductionTime,
+                           StartDate = StartDate,
+                           EndDate = EndDate,
+                           PauseDate = PauseDate,
                            IssuedFor = IssuedFor,
                            LastStateChange = LastStateChange,
                        };
@@ -275,11 +278,11 @@ namespace EVEMon.Common
                     PopulateJobInfo(src);
                 else
                 {
-                    EndProductionTime = src.EndProductionTime;
-                    PauseProductionTime = src.PauseProductionTime;
+                    EndDate = src.EndDate;
+                    PauseDate = src.PauseDate;
                 }
 
-                State = (PauseProductionTime == DateTime.MinValue ? JobState.Active : JobState.Paused);
+                State = (PauseDate == DateTime.MinValue ? JobState.Active : JobState.Paused);
                 ActiveJobState = GetActiveJobState();
                 LastStateChange = DateTime.UtcNow;
             }
@@ -307,26 +310,26 @@ namespace EVEMon.Common
         {
             ID = src.JobID;
             InstallerID = src.InstallerID;
-            InstalledItemID = src.InstalledItemTypeID;
-            InstalledItem = StaticBlueprints.GetBlueprintByID(src.InstalledItemTypeID);
-            OutputItemID = src.OutputTypeID;
-            OutputItem = GetOutputItem(src.OutputTypeID);
+            InstalledItemID = src.BlueprintTypeID;
+            InstalledItem = StaticBlueprints.GetBlueprintByID(src.BlueprintTypeID);
+            OutputItemID = src.ProductTypeID;
+            OutputItem = GetOutputItem(src.ProductTypeID);
             Runs = src.Runs;
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
-            InstalledTime = src.InstallTime;
-            InstalledME = src.InstalledItemMaterialLevel;
-            InstalledPE = src.InstalledItemProductivityLevel;
-            BeginProductionTime = src.BeginProductionTime;
-            EndProductionTime = src.EndProductionTime;
-            PauseProductionTime = src.PauseProductionTime;
+            //InstalledTime = src.InstallTime;
+            //InstalledME = src.InstalledItemMaterialLevel;
+            //InstalledPE = src.InstalledItemProductivityLevel;
+            StartDate = src.StartDate;
+            EndDate = src.EndDate;
+            PauseDate = src.PauseDate;
             IssuedFor = src.IssuedFor;
-            m_installedItemLocationID = src.InstalledItemLocationID;
+            m_installedItemLocationID = src.BlueprintLocationID;
 
             UpdateInstallation();
             if (Enum.IsDefined(typeof(BlueprintActivity), src.ActivityID))
                 Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
-            if (Enum.IsDefined(typeof(BlueprintType), src.InstalledItemCopy))
-                BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
+            //if (Enum.IsDefined(typeof(BlueprintType), src.InstalledItemCopy))
+            //    BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
         }
 
         #endregion
@@ -359,8 +362,7 @@ namespace EVEMon.Common
             // so we look it up in our datafile
             if (id <= Int32.MaxValue)
             {
-                int stationID = Convert.ToInt32(id);
-                station = Station.GetByID(stationID);
+                station = Station.GetByID((int)id);
                 outpost = station as ConquerableStation;
             }
 
@@ -383,23 +385,27 @@ namespace EVEMon.Common
         /// <returns>State of the seriallzable job.</returns>
         private static JobState GetState(SerializableJobListItem src)
         {
-            if (src.Completed != (int)JobState.Delivered)
-                return JobState.Active;
+            //if (src.CompletedDate != DateTime.MinValue)
+            //    return JobState.Active;
 
-            switch ((CCPJobCompletedStatus)src.CompletedStatus)
+            switch ((CCPJobCompletedStatus)src.Status)
             {
+                    // Active States
+                case CCPJobCompletedStatus.Installed:
+                    return JobState.Active;
                     // Canceled States
-                case CCPJobCompletedStatus.Aborted:
-                case CCPJobCompletedStatus.GM_Aborted:
+                case CCPJobCompletedStatus.Canceled:
                     return JobState.Canceled;
                     // Failed States
-                case CCPJobCompletedStatus.Inflight_Unanchored:
-                case CCPJobCompletedStatus.Destroyed:
+                case CCPJobCompletedStatus.Reverted:
                 case CCPJobCompletedStatus.Failed:
                     return JobState.Failed;
                     // Delivered States
-                case CCPJobCompletedStatus.Delivered:
+                case CCPJobCompletedStatus.Succeeded:
                     return JobState.Delivered;
+                    // Paused States
+                case CCPJobCompletedStatus.Paused:
+                    return JobState.Paused;
                 default:
                     throw new NotImplementedException();
             }
@@ -414,10 +420,10 @@ namespace EVEMon.Common
             if (State != JobState.Active)
                 return ActiveJobState.None;
 
-            if (BeginProductionTime > DateTime.UtcNow)
+            if (StartDate > DateTime.UtcNow)
                 return ActiveJobState.Pending;
 
-            return EndProductionTime > DateTime.UtcNow ? ActiveJobState.InProgress : ActiveJobState.Ready;
+            return EndDate > DateTime.UtcNow ? ActiveJobState.InProgress : ActiveJobState.Ready;
         }
 
         #endregion
