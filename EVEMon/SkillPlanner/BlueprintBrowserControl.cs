@@ -38,7 +38,7 @@ namespace EVEMon.SkillPlanner
             lblNoItemManufacturing.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemCopy.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemME.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemPE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            lblNoItemTE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemInvention.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemReverseEngineering.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
@@ -204,7 +204,7 @@ namespace EVEMon.SkillPlanner
                 tabControl.TabPages.Add(tpResearchME);
 
             if (m_hasResearchingTimeEfficiency)
-                tabControl.TabPages.Add(tpResearchPE);
+                tabControl.TabPages.Add(tpResearchTE);
 
             if (m_hasCopying)
                 tabControl.TabPages.Add(tpCopying);
@@ -725,7 +725,7 @@ namespace EVEMon.SkillPlanner
                     PropertiesList = lvResearchME;
                     return BlueprintActivity.ResearchingMaterialEfficiency;
                 case "Researching Time Efficiency":
-                    PropertiesList = lvResearchPE;
+                    PropertiesList = lvResearchTE;
                     return BlueprintActivity.ResearchingTimeEfficiency;
                 case "Invention":
                     PropertiesList = lvInvention;
