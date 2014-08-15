@@ -20,7 +20,7 @@ namespace EVEMon.Common.SettingsObjects
         Amount = 2,
 
         [Header("Balance")]
-        [Description("Balance")]
+        [Description("Balance (ISK)")]
         Balance = 3,
 
         [Header("Reason")]
@@ -40,7 +40,7 @@ namespace EVEMon.Common.SettingsObjects
         TaxReceiver = 7,
 
         [Header("Tax Amount")]
-        [Description("Tax Amount")]
+        [Description("Tax Amount (ISK)")]
         TaxAmount = 8,
 
         [Header("ID")]

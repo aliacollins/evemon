@@ -62,12 +62,14 @@ namespace EVEMon.Common.Serialization.API
 
     public enum CCPJobCompletedStatus
     {
-        Failed = 0,
-        Delivered = 1,
-        Aborted = 2,
-        GM_Aborted = 3,
-        Inflight_Unanchored = 4,
-        Destroyed = 5
+        Installed = 1,
+        Paused = 2,
+        Ready = 3,
+
+        Canceled = 102,
+        Reverted = 103,
+        Succeeded = 104,
+        Failed = 105,
     }
 
     #endregion

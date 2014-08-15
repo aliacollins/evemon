@@ -16,15 +16,15 @@ namespace EVEMon.Common.SettingsObjects
         Quantity = 1,
 
         [Header("Unit Price")]
-        [Description("Unit Price")]
+        [Description("Unit Price (ISK)")]
         UnitaryPrice = 2,
 
         [Header("Total Price")]
-        [Description("Total Price")]
+        [Description("Total Price (ISK)")]
         TotalPrice = 3,
 
-        [Header("Volume (m³)")]
-        [Description("Total Volume")]
+        [Header("Volume")]
+        [Description("Total Volume (m³)")]
         Volume = 4,
 
         [Header("Blueprint type")]

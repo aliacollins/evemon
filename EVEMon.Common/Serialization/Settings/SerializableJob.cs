@@ -18,14 +18,14 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlAttribute("jobState")]
         public JobState State { get; set; }
 
-        [XmlAttribute("beginProductionTime")]
-        public DateTime BeginProductionTime { get; set; }
+        [XmlAttribute("startDate")]
+        public DateTime StartDate { get; set; }
 
-        [XmlAttribute("endProductionTime")]
-        public DateTime EndProductionTime { get; set; }
+        [XmlAttribute("endDate")]
+        public DateTime EndDate { get; set; }
 
-        [XmlAttribute("pauseProductionTime")]
-        public DateTime PauseProductionTime { get; set; }
+        [XmlAttribute("pauseDate")]
+        public DateTime PauseDate { get; set; }
 
         /// <summary>
         /// Which this job was issued for.

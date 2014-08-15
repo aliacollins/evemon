@@ -8,83 +8,113 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("jobID")]
         public long JobID { get; set; }
 
-        [XmlAttribute("installedItemLocationID")]
-        public long InstalledItemLocationID { get; set; }
-
-        [XmlAttribute("installedInSolarSystemID")]
-        public int SolarSystemID { get; set; }
-
-        [XmlAttribute("installedItemProductivityLevel")]
-        public int InstalledItemProductivityLevel { get; set; }
-
-        [XmlAttribute("installedItemMaterialLevel")]
-        public int InstalledItemMaterialLevel { get; set; }
-
         [XmlAttribute("installerID")]
         public long InstallerID { get; set; }
 
-        [XmlAttribute("runs")]
-        public int Runs { get; set; }
+        [XmlAttribute("installerName")]
+        public string InstallerName { get; set; }
 
-        [XmlAttribute("installedItemTypeID")]
-        public int InstalledItemTypeID { get; set; }
+        [XmlAttribute("facilityID")]
+        public long FacilityID { get; set; }
 
-        [XmlAttribute("outputTypeID")]
-        public int OutputTypeID { get; set; }
+        [XmlAttribute("solarSystemID")]
+        public int SolarSystemID { get; set; }
 
-        [XmlAttribute("installedItemCopy")]
-        public int InstalledItemCopy { get; set; }
+        [XmlAttribute("solarSystemName")]
+        public string SolarSystemName { get; set; }
 
-        [XmlAttribute("completed")]
-        public int Completed { get; set; }
+        [XmlAttribute("stationID")]
+        public long StationID { get; set; }
 
         [XmlAttribute("activityID")]
         public int ActivityID { get; set; }
 
-        [XmlAttribute("completedStatus")]
-        public int CompletedStatus { get; set; }
+        [XmlAttribute("blueprintID")]
+        public long BlueprintID { get; set; }
 
-        [XmlAttribute("installTime")]
-        public string InstallTimeXml
+        [XmlAttribute("blueprintTypeID")]
+        public int BlueprintTypeID { get; set; }
+
+        [XmlAttribute("blueprintTypeName")]
+        public string BlueprintTypeName { get; set; }
+
+        [XmlAttribute("blueprintLocationID")]
+        public long BlueprintLocationID { get; set; }
+
+        [XmlAttribute("outputLocationID")]
+        public long OutputLocationID { get; set; }
+
+        [XmlAttribute("runs")]
+        public int Runs { get; set; }
+
+        [XmlAttribute("cost")]
+        public double Cost { get; set; }
+
+        [XmlAttribute("teamID")]
+        public long TeamID { get; set; }
+
+        [XmlAttribute("licensedRuns")]
+        public int LicensedRuns { get; set; }
+
+        [XmlAttribute("probability")]
+        public double Probability { get; set; }
+
+        [XmlAttribute("productTypeID")]
+        public int ProductTypeID { get; set; }
+
+        [XmlAttribute("productTypeName")]
+        public string ProductTypeName { get; set; }
+
+        [XmlAttribute("status")]
+        public int Status { get; set; }
+
+        [XmlAttribute("timeInSeconds")]
+        public int TimeInSeconds { get; set; }
+
+        [XmlAttribute("completedCharacterID")]
+        public long CompletedCharacterID { get; set; }
+
+        [XmlAttribute("startDate")]
+        public string StartDateXml
         {
-            get { return InstallTime.DateTimeToTimeString(); }
+            get { return StartDate.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    InstallTime = value.TimeStringToDateTime();
+                    StartDate = value.TimeStringToDateTime();
             }
         }
 
-        [XmlAttribute("beginProductionTime")]
-        public string BeginProductionTimeXml
+        [XmlAttribute("endDate")]
+        public string EndDateXml
         {
-            get { return BeginProductionTime.DateTimeToTimeString(); }
+            get { return EndDate.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    BeginProductionTime = value.TimeStringToDateTime();
+                    EndDate = value.TimeStringToDateTime();
             }
         }
 
-        [XmlAttribute("endProductionTime")]
-        public string EndProductionTimeXml
-        {
-            get { return EndProductionTime.DateTimeToTimeString(); }
-            set
-            {
-                if (!String.IsNullOrEmpty(value))
-                    EndProductionTime = value.TimeStringToDateTime();
-            }
-        }
-
-        [XmlAttribute("pauseProductionTime")]
+        [XmlAttribute("pauseDate")]
         public string PauseProductionTimeXml
         {
-            get { return PauseProductionTime.DateTimeToTimeString(); }
+            get { return PauseDate.DateTimeToTimeString(); }
             set
             {
                 if (!String.IsNullOrEmpty(value))
-                    PauseProductionTime = value.TimeStringToDateTime();
+                    PauseDate = value.TimeStringToDateTime();
+            }
+        }
+
+        [XmlAttribute("completedDate")]
+        public string CompletedDateXml
+        {
+            get { return CompletedDate.DateTimeToTimeString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    CompletedDate = value.TimeStringToDateTime();
             }
         }
 
@@ -92,25 +122,25 @@ namespace EVEMon.Common.Serialization.API
         /// The time this job was installed.
         /// </summary>
         [XmlIgnore]
-        public DateTime InstallTime { get; set; }
-
-        /// <summary>
-        /// The time this job began.
-        /// </summary>
-        [XmlIgnore]
-        public DateTime BeginProductionTime { get; set; }
+        public DateTime StartDate { get; set; }
 
         /// <summary>
         /// The time this job will finish.
         /// </summary>
         [XmlIgnore]
-        public DateTime EndProductionTime { get; set; }
+        public DateTime EndDate { get; set; }
 
         /// <summary>
         /// The time this job was paused.
         /// </summary>
         [XmlIgnore]
-        public DateTime PauseProductionTime { get; set; }
+        public DateTime PauseDate { get; set; }
+
+        /// <summary>
+        /// The time this job was completed.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime CompletedDate { get; set; }
 
         /// <summary>
         /// Which this job was issued for.
