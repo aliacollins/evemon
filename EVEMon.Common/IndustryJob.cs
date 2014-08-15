@@ -89,13 +89,10 @@ namespace EVEMon.Common
             get
             {
                 if (State == JobState.Paused)
-                {
-                    return EndDate.Subtract(PauseDate).ToDescriptiveText(
-                        DescriptiveTextOptions.SpaceBetween);
-                }
+                    return new DateTime(EndDate.Subtract(PauseDate).Ticks).ToRemainingTimeDigitalDescription(DateTimeKind.Utc);
 
                 if (State == JobState.Active && EndDate > DateTime.UtcNow)
-                    return EndDate.ToRemainingTimeShortDescription(DateTimeKind.Utc);
+                    return EndDate.ToRemainingTimeDigitalDescription(DateTimeKind.Utc);
 
                 return String.Empty;
             }

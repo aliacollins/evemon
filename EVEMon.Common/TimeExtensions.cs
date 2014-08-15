@@ -95,6 +95,48 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Returns a string representation for the time left to the given date, using the following formats : 
+        /// <list type="bullet">
+        /// <item>1D 13:00:05</item>
+        /// <item>13:00:05</item>
+        /// <item>00:13:05</item>
+        /// </list>
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="dateTimeKind">Kind of the date time.</param>
+        /// <returns></returns>
+        public static string ToRemainingTimeDigitalDescription(this DateTime t, DateTimeKind dateTimeKind)
+        {
+            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+
+            // Small chance that the function could cross over the
+            // second boundry, and have an inconsistent result.
+            StringBuilder sb = new StringBuilder();
+            if (t <= now)
+                return String.Empty;
+
+            TimeSpan ts = t.Subtract(now);
+            if (ts.Days > 0)
+            {
+                sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
+                sb.Append("D ");
+            }
+
+            ts -= TimeSpan.FromDays(ts.Days);
+            sb.Append(ts.Hours.ToString("0#"));
+            sb.Append(":");
+
+            ts -= TimeSpan.FromHours(ts.Hours);
+            sb.Append(ts.Minutes.ToString("0#"));
+            sb.Append(":");
+
+            ts -= TimeSpan.FromMinutes(ts.Minutes);
+            sb.Append(ts.Seconds.ToString("0#"));
+
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// Returns a string representation for the time left to the given date, using the following formats :
         /// <list type="bullet">
         /// 		<item>2 days, 3 hours, 1 minute, 5seconds</item>

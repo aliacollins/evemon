@@ -326,6 +326,7 @@ namespace EVEMon.CharacterMonitoring
 
                     switch (column.Column)
                     {
+                        case IndustryJobColumn.TTC:
                         case IndustryJobColumn.Cost:
                         case IndustryJobColumn.Probability:
                             header.TextAlign = HorizontalAlignment.Right;
