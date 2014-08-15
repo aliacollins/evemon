@@ -82,12 +82,20 @@ namespace EVEMon.Common.SettingsObjects
         [Description("End Material Efficiency Level")]
         EndME = 17,
 
-        [Header("Installed PE")]
-        [Description("Installed Production Efficiency Level")]
+        [Header("Installed TE")]
+        [Description("Installed Time Efficiency Level")]
         InstalledPE = 18,
 
-        [Header("End PE")]
-        [Description("End Production Efficiency Level")]
-        EndPE = 19
+        [Header("End TE")]
+        [Description("End Time Efficiency Level")]
+        EndPE = 19,
+
+        [Header("Cost")]
+        [Description("Cost (ISK)")]
+        Cost = 20,
+
+        [Header("Probability")]
+        [Description("Probability (%)")]
+        Probability = 21,
     }
 }

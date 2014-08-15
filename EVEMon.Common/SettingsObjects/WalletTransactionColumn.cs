@@ -16,7 +16,7 @@ namespace EVEMon.Common.SettingsObjects
         ItemName = 1,
 
         [Header("Price")]
-        [Description("Price")]
+        [Description("Price (ISK)")]
         Price = 2,
 
         [Header("Quantity")]
@@ -24,7 +24,7 @@ namespace EVEMon.Common.SettingsObjects
         Quantity = 3,
 
         [Header("Credit")]
-        [Description("Credit")]
+        [Description("Credit (ISK)")]
         Credit = 4,
 
         [Header("Client")]

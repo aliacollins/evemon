@@ -138,6 +138,16 @@ namespace EVEMon.Common
         public int Runs { get; private set; }
 
         /// <summary>
+        /// Gets the job runs.
+        /// </summary>
+        public double Cost { get; private set; }
+
+        /// <summary>
+        /// Gets the job runs.
+        /// </summary>
+        public double Probability { get; private set; }
+
+        /// <summary>
         /// Gets the job activity.
         /// </summary>
         public BlueprintActivity Activity { get; private set; }
@@ -155,7 +165,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the job installed productivity level.
         /// </summary>
-        public int InstalledPE { get; private set; }
+        public int InstalledTE { get; private set; }
 
         /// <summary>
         /// Gets the time the job was installed.
@@ -313,9 +323,10 @@ namespace EVEMon.Common
             InstalledItemID = src.BlueprintTypeID;
             InstalledItem = StaticBlueprints.GetBlueprintByID(src.BlueprintTypeID);
             OutputItemID = src.ProductTypeID;
-            OutputItem = GetOutputItem(src.ProductTypeID);
             Runs = src.Runs;
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
+            Cost = src.Cost;
+            Probability = src.Probability;
             //InstalledTime = src.InstallTime;
             //InstalledME = src.InstalledItemMaterialLevel;
             //InstalledPE = src.InstalledItemProductivityLevel;
@@ -323,11 +334,15 @@ namespace EVEMon.Common
             EndDate = src.EndDate;
             PauseDate = src.PauseDate;
             IssuedFor = src.IssuedFor;
-            m_installedItemLocationID = src.BlueprintLocationID;
+            m_installedItemLocationID = src.StationID;
 
             UpdateInstallation();
+
             if (Enum.IsDefined(typeof(BlueprintActivity), src.ActivityID))
                 Activity = (BlueprintActivity)Enum.ToObject(typeof(BlueprintActivity), src.ActivityID);
+
+            OutputItem = GetOutputItem(src.ProductTypeID);
+
             //if (Enum.IsDefined(typeof(BlueprintType), src.InstalledItemCopy))
             //    BlueprintType = (BlueprintType)Enum.ToObject(typeof(BlueprintType), src.InstalledItemCopy);
         }
@@ -342,10 +357,22 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The itemID of the blueprint.</param>
         /// <returns>The output item from the bluperint.</returns>
-        private static Item GetOutputItem(int id)
+        private Item GetOutputItem(int id)
         {
-            // Is it a blueprint ? If not then it's an item
-            return StaticBlueprints.GetBlueprintByID(id) ?? StaticItems.GetItemByID(id);
+            switch (Activity)
+            {
+                case BlueprintActivity.Manufacturing:
+                    return StaticBlueprints.GetBlueprintByID(InstalledItemID).ProducesItem ?? StaticItems.GetItemByID(0);
+                case BlueprintActivity.ResearchingMaterialEfficiency:
+                case BlueprintActivity.ResearchingTimeEfficiency:
+                case BlueprintActivity.Copying:
+                    return InstalledItem;
+                case BlueprintActivity.Invention:
+                case BlueprintActivity.ReverseEngineering:
+                    return StaticBlueprints.GetBlueprintByID(id) ?? StaticItems.GetItemByID(0);
+                default:
+                    return StaticItems.GetItemByID(0);
+            }
         }
 
         /// <summary>

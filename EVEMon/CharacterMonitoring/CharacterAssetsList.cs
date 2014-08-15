@@ -316,9 +316,9 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<Asset> assets = m_list
+                List<Asset> assets = m_list
                     .Where(x => x.Item != null && x.SolarSystem != null)
-                    .Where(x => IsTextMatching(x, text));
+                    .Where(x => IsTextMatching(x, text)).ToList();
 
                 UpdateSort();
 
@@ -704,11 +704,11 @@ namespace EVEMon.CharacterMonitoring
             if (!item.Selected || lvAssets.SelectedItems.Count < 2)
                 return String.Empty;
 
-            IEnumerable<ListViewItem> selectedItems = lvAssets.SelectedItems.Cast<ListViewItem>();
+            List<ListViewItem> selectedItems = lvAssets.SelectedItems.Cast<ListViewItem>().ToList();
             if (selectedItems.Any(selectedItem => selectedItem.Text != item.Text))
                 return String.Empty;
 
-            IEnumerable<Asset> selectedAssets = selectedItems.Select(selectedItem => selectedItem.Tag).OfType<Asset>();
+            List<Asset> selectedAssets = selectedItems.Select(selectedItem => selectedItem.Tag).OfType<Asset>().ToList();
             long sumQuantity = selectedAssets.Sum(selectedAsset => selectedAsset.Quantity);
             decimal sumVolume = selectedAssets.Sum(selectedAsset => selectedAsset.TotalVolume);
             int uniqueLocations = selectedAssets.Select(asset => asset.Location).Distinct().Count();

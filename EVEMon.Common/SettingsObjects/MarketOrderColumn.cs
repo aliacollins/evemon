@@ -35,11 +35,11 @@ namespace EVEMon.Common.SettingsObjects
         Station = 5,
 
         [Header("Unit Price")]
-        [Description("Unit Price")]
+        [Description("Unit Price (ISK)")]
         UnitaryPrice = 6,
 
         [Header("Total Price")]
-        [Description("Total Price")]
+        [Description("Total Price (ISK)")]
         TotalPrice = 7,
 
         [Header("Issued")]
@@ -83,7 +83,7 @@ namespace EVEMon.Common.SettingsObjects
         OrderRange = 17,
 
         [Header("Escrow")]
-        [Description("Escrow")]
+        [Description("Escrow (ISK)")]
         Escrow = 18
     }
 }

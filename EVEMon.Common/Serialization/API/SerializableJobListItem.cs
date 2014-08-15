@@ -48,7 +48,7 @@ namespace EVEMon.Common.Serialization.API
         public int Runs { get; set; }
 
         [XmlAttribute("cost")]
-        public decimal Cost { get; set; }
+        public double Cost { get; set; }
 
         [XmlAttribute("teamID")]
         public long TeamID { get; set; }

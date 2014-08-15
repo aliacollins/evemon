@@ -83,16 +83,16 @@ namespace EVEMon.Common
                     return x.InstalledTime.CompareTo(y.InstalledTime);
                 case IndustryJobColumn.EndTime:
                     return x.EndDate.CompareTo(y.EndDate);
-                case IndustryJobColumn.OriginalOrCopy:
-                    return x.BlueprintType.CompareTo(y.BlueprintType);
-                case IndustryJobColumn.InstalledME:
-                    return x.InstalledME.CompareTo(y.InstalledME);
-                case IndustryJobColumn.EndME:
-                    return (x.InstalledME + x.Runs).CompareTo(y.InstalledME + y.Runs);
-                case IndustryJobColumn.InstalledPE:
-                    return x.InstalledPE.CompareTo(y.InstalledPE);
-                case IndustryJobColumn.EndPE:
-                    return (x.InstalledPE + x.Runs).CompareTo(y.InstalledPE + y.Runs);
+                //case IndustryJobColumn.OriginalOrCopy:
+                //    return x.BlueprintType.CompareTo(y.BlueprintType);
+                //case IndustryJobColumn.InstalledME:
+                //    return x.InstalledME.CompareTo(y.InstalledME);
+                //case IndustryJobColumn.EndME:
+                //    return (x.InstalledME + x.Runs).CompareTo(y.InstalledME + y.Runs);
+                //case IndustryJobColumn.InstalledPE:
+                //    return x.InstalledPE.CompareTo(y.InstalledPE);
+                //case IndustryJobColumn.EndPE:
+                //    return (x.InstalledPE + x.Runs).CompareTo(y.InstalledPE + y.Runs);
                 case IndustryJobColumn.Location:
                     return String.Compare(x.FullLocation, y.FullLocation, StringComparison.CurrentCulture);
                 case IndustryJobColumn.Region:
@@ -105,6 +105,10 @@ namespace EVEMon.Common
                     return x.IssuedFor.CompareTo(y.IssuedFor);
                 case IndustryJobColumn.LastStateChange:
                     return x.LastStateChange.CompareTo(y.LastStateChange);
+                case IndustryJobColumn.Cost:
+                    return x.Cost.CompareTo(y.Cost);
+                case IndustryJobColumn.Probability:
+                    return x.Probability.CompareTo(y.Probability);
                 default:
                     return 0;
             }

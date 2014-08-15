@@ -323,6 +323,14 @@ namespace EVEMon.CharacterMonitoring
                 {
                     ColumnHeader header = lvJobs.Columns.Add(column.Column.GetHeader(), column.Width);
                     header.Tag = column.Column;
+
+                    switch (column.Column)
+                    {
+                        case IndustryJobColumn.Cost:
+                        case IndustryJobColumn.Probability:
+                            header.TextAlign = HorizontalAlignment.Right;
+                            break;
+                    }
                 }
 
                 // We update the content
@@ -650,8 +658,8 @@ namespace EVEMon.CharacterMonitoring
             {
                 case IndustryJobColumn.State:
                     item.Text = (job.State == JobState.Active
-                                     ? job.ActiveJobState.GetDescription()
-                                     : job.State.ToString());
+                        ? job.ActiveJobState.GetDescription()
+                        : job.State.ToString());
                     item.ForeColor = GetStateColor(job);
                     break;
                 case IndustryJobColumn.TTC:
@@ -663,14 +671,14 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.InstalledItem.Name;
                     break;
                 case IndustryJobColumn.InstalledItemType:
-                    item.Text = job.InstalledItem.MarketGroup.Name;
+                    item.Text = job.InstalledItem.MarketGroup.CategoryPath;
                     break;
                 case IndustryJobColumn.OutputItem:
                     item.Text = String.Format(CultureConstants.DefaultCulture, "{0} Unit{1} of {2}", GetUnitCount(job),
-                                              (GetUnitCount(job) > 1 ? "s" : String.Empty), job.OutputItem.Name);
+                        (GetUnitCount(job) > 1 ? "s" : String.Empty), job.OutputItem.Name);
                     break;
                 case IndustryJobColumn.OutputItemType:
-                    item.Text = job.OutputItem.MarketGroup.Name;
+                    item.Text = job.OutputItem.MarketGroup.CategoryPath;
                     break;
                 case IndustryJobColumn.Activity:
                     item.Text = job.Activity.GetDescription();
@@ -682,27 +690,27 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.EndDate.ToLocalTime().ToString();
                     break;
                 case IndustryJobColumn.OriginalOrCopy:
-                    item.Text = job.BlueprintType.ToString();
+                    item.Text = "Unknown";
                     break;
                 case IndustryJobColumn.InstalledME:
-                    item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
-                                     ? job.InstalledME.ToString(CultureConstants.DefaultCulture)
-                                     : String.Empty);
+                    item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
+                        ? job.InstalledME.ToString(CultureConstants.DefaultCulture)
+                        : String.Empty);*/
                     break;
                 case IndustryJobColumn.EndME:
-                    item.Text = (job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
-                                     ? (job.InstalledME + job.Runs).ToString(CultureConstants.DefaultCulture)
-                                     : String.Empty);
+                    item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingMaterialEfficiency
+                        ? (job.InstalledME + job.Runs).ToString(CultureConstants.DefaultCulture)
+                        : String.Empty);*/
                     break;
                 case IndustryJobColumn.InstalledPE:
-                    item.Text = (job.Activity == BlueprintActivity.ResearchingTimeEfficiency
-                                     ? job.InstalledPE.ToString(CultureConstants.DefaultCulture)
-                                     : String.Empty);
+                    item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingTimeEfficiency
+                        ? job.InstalledTE.ToString(CultureConstants.DefaultCulture)
+                        : String.Empty);*/
                     break;
                 case IndustryJobColumn.EndPE:
-                    item.Text = (job.Activity == BlueprintActivity.ResearchingTimeEfficiency
-                                     ? (job.InstalledPE + job.Runs).ToString(CultureConstants.DefaultCulture)
-                                     : String.Empty);
+                    item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingTimeEfficiency
+                        ? (job.InstalledTE + job.Runs).ToString(CultureConstants.DefaultCulture)
+                        : String.Empty);*/
                     break;
                 case IndustryJobColumn.Location:
                     item.Text = job.FullLocation;
@@ -722,6 +730,12 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobColumn.LastStateChange:
                     item.Text = job.LastStateChange.ToLocalTime().ToString();
+                    break;
+                case IndustryJobColumn.Cost:
+                    item.Text = job.Cost.ToNumericString(2);
+                    break;
+                case IndustryJobColumn.Probability:
+                    item.Text = Math.Abs(job.Probability) < Double.Epsilon ? String.Empty : job.Probability.ToString("P1");
                     break;
                 default:
                     throw new NotImplementedException();
