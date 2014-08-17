@@ -498,9 +498,8 @@ namespace EVEMon.SkillPlanner
             if (m_selectedLoadout != null)
             {
                 Util.OpenURL(
-                    new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
-                        String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutTopic,
-                            m_selectedLoadout.Topic))));
+                    new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutTopic,
+                            m_selectedLoadout.Topic)));
             }
             else
             {
