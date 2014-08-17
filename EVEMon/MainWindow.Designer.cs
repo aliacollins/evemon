@@ -87,7 +87,6 @@ namespace EVEMon
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.forumsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.knownProblemsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutKnownProblemsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -148,7 +147,7 @@ namespace EVEMon
             this.tpOverview.SuspendLayout();
             this.SuspendLayout();
             // 
-            // trayIconToolStrip
+            // trayIconContextMenuStrip
             // 
             this.trayIconContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.planToolStripMenuItem,
@@ -603,7 +602,6 @@ namespace EVEMon
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.forumsMenuItem,
-            this.knownProblemsMenuItem,
             this.userVoiceMenuItem,
             this.helpAboutKnownProblemsToolStripSeparator,
             this.aboutMenuItem});
@@ -615,36 +613,28 @@ namespace EVEMon
             // 
             this.forumsMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("forumsMenuItem.Image")));
             this.forumsMenuItem.Name = "forumsMenuItem";
-            this.forumsMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.forumsMenuItem.Size = new System.Drawing.Size(230, 22);
             this.forumsMenuItem.Text = "&Forums";
             this.forumsMenuItem.Click += new System.EventHandler(this.forumsMenu_Click);
-            // 
-            // knownProblemsMenuItem
-            // 
-            this.knownProblemsMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("knownProblemsMenuItem.Image")));
-            this.knownProblemsMenuItem.Name = "knownProblemsMenuItem";
-            this.knownProblemsMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.knownProblemsMenuItem.Text = "&Known problems and solutions";
-            this.knownProblemsMenuItem.Click += new System.EventHandler(this.knownProblemsMenu_Click);
             // 
             // userVoiceMenuItem
             // 
             this.userVoiceMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("userVoiceMenuItem.Image")));
             this.userVoiceMenuItem.Name = "userVoiceMenuItem";
-            this.userVoiceMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.userVoiceMenuItem.Size = new System.Drawing.Size(230, 22);
             this.userVoiceMenuItem.Text = "&Suggest a Feature (UserVoice)";
             this.userVoiceMenuItem.Click += new System.EventHandler(this.userVoiceMenuItem_Click);
             // 
             // helpAboutKnownProblemsToolStripSeparator
             // 
             this.helpAboutKnownProblemsToolStripSeparator.Name = "helpAboutKnownProblemsToolStripSeparator";
-            this.helpAboutKnownProblemsToolStripSeparator.Size = new System.Drawing.Size(235, 6);
+            this.helpAboutKnownProblemsToolStripSeparator.Size = new System.Drawing.Size(227, 6);
             // 
             // aboutMenuItem
             // 
             this.aboutMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutMenuItem.Image")));
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.aboutMenuItem.Size = new System.Drawing.Size(230, 22);
             this.aboutMenuItem.Text = "&About...";
             this.aboutMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -1204,7 +1194,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem copySkillsToClipboardBBFormatToolStripMenuItem;
         private EVEMon.Common.Controls.TrayIcon trayIcon;
         private System.Windows.Forms.ToolStripSeparator helpAboutKnownProblemsToolStripSeparator;
-        private System.Windows.Forms.ToolStripMenuItem knownProblemsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forumsMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolsOwnedOptionsToolStripSeparator;
         private EVEMon.Controls.NotificationList notificationList;
