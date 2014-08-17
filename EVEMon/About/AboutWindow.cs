@@ -76,6 +76,7 @@ namespace EVEMon.About
                                    { "Arengor", 6 },
                                    { "ATGardner", 6 },
                                    { "Barend", 6 },
+                                   { "berin", 6 },
                                    { "bugusnot", 6 },
                                    { "Candle", 6 },
                                    { "coeus", 6 },
