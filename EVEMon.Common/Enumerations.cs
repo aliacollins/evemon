@@ -1247,7 +1247,17 @@ namespace EVEMon.Common
         /// <summary>
         /// The links defined between the pins on the planet of a character.
         /// </summary>
-        PlanetaryLinks
+        PlanetaryLinks,
+
+        /// <summary>
+        /// The personal issued industry jobs history of a character.
+        /// </summary>
+        IndustryJobsHistory,
+
+        /// <summary>
+        /// The corporation issued industry jobs history.
+        /// </summary>
+        CorporationIndustryJobsHistory,
     }
 
     public enum QueryStatus
