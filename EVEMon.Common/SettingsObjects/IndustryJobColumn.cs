@@ -97,5 +97,9 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Probability")]
         [Description("Probability (%)")]
         Probability = 21,
+
+        [Header("Runs")]
+        [Description("Runs")]
+        Runs = 22,
     }
 }

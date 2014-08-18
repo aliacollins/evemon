@@ -331,6 +331,9 @@ namespace EVEMon.CharacterMonitoring
                         case IndustryJobColumn.Probability:
                             header.TextAlign = HorizontalAlignment.Right;
                             break;
+                        case IndustryJobColumn.Runs:
+                            header.TextAlign = HorizontalAlignment.Center;
+                            break;
                     }
                 }
 
@@ -737,6 +740,9 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobColumn.Probability:
                     item.Text = Math.Abs(job.Probability) < Double.Epsilon ? String.Empty : job.Probability.ToString("P1");
+                    break;
+                case IndustryJobColumn.Runs:
+                    item.Text = job.Runs.ToString();
                     break;
                 default:
                     throw new NotImplementedException();
