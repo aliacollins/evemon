@@ -323,6 +323,14 @@
     <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
     <Compile Include="Serialization\API\SerializableAPIKillLog.cs" />
     <Compile Include="Serialization\API\SerializableAPIMedals.cs" />
+    <Compile Include="Serialization\API\SerializableAPIPlanetaryColonies.cs" />
+    <Compile Include="Serialization\API\SerializableAPIPlanetaryLinks.cs" />
+    <Compile Include="Serialization\API\SerializablePlanetaryLink.cs" />
+    <Compile Include="Serialization\API\SerializablePlanetaryRoute.cs" />
+    <Compile Include="Serialization\API\SerializablePlanetaryColony.cs" />
+    <Compile Include="Serialization\API\SerializableAPIPlanetaryPins.cs" />
+    <Compile Include="Serialization\API\SerializablePlanetaryPin.cs" />
+    <Compile Include="Serialization\API\SerializableAPIPlanetaryRoutes.cs" />
     <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
     <Compile Include="Serialization\API\SerializableAPIUpcomingCalendarEvents.cs" />
     <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
