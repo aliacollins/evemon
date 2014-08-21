@@ -740,6 +740,11 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterKillLogUpdated;
 
         /// <summary>
+        /// Occurs when the text of a character planetary colonies have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryColoniesUpdated;
+
+        /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
         public static event EventHandler<PlanChangedEventArgs> PlanNameChanged;
@@ -1330,6 +1335,17 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterKillLogUpdated - {0}", character.Name);
             if (CharacterKillLogUpdated != null)
                 CharacterKillLogUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character planetary colonies updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterPlanetaryColoniesUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterPlanetaryColoniesUpdated - {0}", character.Name);
+            if (CharacterPlanetaryColoniesUpdated != null)
+                CharacterPlanetaryColoniesUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

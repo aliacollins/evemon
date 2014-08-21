@@ -193,28 +193,6 @@ namespace EVEMon.Common
             QueryMethodAsync(method, callback, postData, RowsetsTransform);
         }
 
-        private static string GetPostDataString(Enum method, long id, string verificationCode, long characterID)
-        {
-            if (method.Equals(APICharacterMethods.CharacterInfo) && id == 0 && string.IsNullOrEmpty(verificationCode))
-            {
-                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly, characterID);
-            }
-
-            if (method.Equals(APICorporationMethods.CorporationSheet) && id == 0 && string.IsNullOrEmpty(verificationCode))
-            {
-                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCorporationIDOnly, characterID);
-            }
-
-            if (method.Equals(APICharacterMethods.WalletJournal) || method.Equals(APICharacterMethods.WalletTransactions))
-            {
-                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndRowCount,
-                                     id, verificationCode, characterID, 2560);
-            }
-
-            return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
-                                 id, verificationCode, characterID);
-        }
-
         /// <summary>
         /// Query a method with the provided arguments for a character messages and contracts.
         /// </summary>
@@ -318,15 +296,52 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the post data string.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="keyId">The key identifier.</param>
+        /// <param name="verificationCode">The verification code.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        private static string GetPostDataString(Enum method, long keyId, string verificationCode, long id)
+        {
+            if (method.Equals(APICharacterMethods.CharacterInfo) && keyId == 0 && string.IsNullOrEmpty(verificationCode))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly, id);
+            }
+
+            if (method.Equals(APICorporationMethods.CorporationSheet) && keyId == 0 && string.IsNullOrEmpty(verificationCode))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCorporationIDOnly, id);
+            }
+
+            if (method.Equals(APICharacterMethods.WalletJournal) || method.Equals(APICharacterMethods.WalletTransactions))
+            {
+                return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndRowCount,
+                                     keyId, verificationCode, id, 2560);
+            }
+
+            return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
+                                 keyId, verificationCode, id);
+        }
+
+        /// <summary>
         /// Gets the post data format.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns></returns>
         private static string GetPostDataFormat(Enum method)
         {
-            return (method.GetType() == typeof(APICharacterMethods))
-                       ? NetworkConstants.PostDataWithCharIDAndIDS
-                       : NetworkConstants.PostDataWithCharIDAndContractID;
+            if (method.GetType() == typeof(APIGenericMethods))
+            {
+                if (method.ToString().Contains("Contract"))
+                    return NetworkConstants.PostDataWithCharIDAndContractID;
+
+                if (method.ToString().Contains("Planetary"))
+                    return NetworkConstants.PostDataWithCharIDAndPlanetID;
+            }
+
+            return NetworkConstants.PostDataWithCharIDAndIDS;
         }
 
         /// <summary>

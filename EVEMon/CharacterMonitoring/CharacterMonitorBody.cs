@@ -64,6 +64,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterWalletJournalUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.IndustryJobsUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterPlanetaryColoniesUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_UpdatePageControls;
@@ -130,6 +131,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterWalletJournalUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterPlanetaryColoniesUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.CharacterEVENotificationsUpdated -= EveMonClient_UpdatePageControls;
@@ -609,9 +611,11 @@ namespace EVEMon.CharacterMonitoring
                                 ToolStripMenuItem tempToolStripMenuItem = null;
                                 try
                                 {
-                                    tempToolStripMenuItem = new ToolStripMenuItem(item.button.Text);
-                                    tempToolStripMenuItem.Checked = IsEnabledFeature(item.button.Text);
-                                    tempToolStripMenuItem.Enabled = item.monitor.Any(monitor => monitor.HasAccess);
+                                    tempToolStripMenuItem = new ToolStripMenuItem(item.button.Text)
+                                    {
+                                        Checked = IsEnabledFeature(item.button.Text),
+                                        Enabled = item.monitor.Any(monitor => monitor.HasAccess)
+                                    };
 
                                     tsmi = tempToolStripMenuItem;
                                     tempToolStripMenuItem = null;
@@ -1424,9 +1428,11 @@ namespace EVEMon.CharacterMonitoring
                             ToolStripButton tempToolStripButton = null;
                             try
                             {
-                                tempToolStripButton = new ToolStripButton(menu.group.GetHeader());
-                                tempToolStripButton.Checked = (list.Grouping.CompareTo(menu.group) == 0);
-                                tempToolStripButton.Tag = menu.grouping;
+                                tempToolStripButton = new ToolStripButton(menu.group.GetHeader())
+                                {
+                                    Checked = (list.Grouping.CompareTo(menu.@group) == 0),
+                                    Tag = menu.grouping
+                                };
 
                                 tsb = tempToolStripButton;
                                 tempToolStripButton = null;
@@ -1524,6 +1530,7 @@ namespace EVEMon.CharacterMonitoring
             walletJournalList.Character = ccpCharacter;
             walletTransactionsList.Character = ccpCharacter;
             jobsList.Character = ccpCharacter;
+            planetaryList.Character = ccpCharacter;
             researchList.Character = ccpCharacter;
             mailMessagesList.Character = ccpCharacter;
             eveNotificationsList.Character = ccpCharacter;
@@ -1534,7 +1541,7 @@ namespace EVEMon.CharacterMonitoring
                                             {
                                                 standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
                                                 killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
-                                                walletTransactionsIcon, jobsIcon, researchIcon, mailMessagesIcon,
+                                                walletTransactionsIcon, jobsIcon, planetaryIcon, researchIcon, mailMessagesIcon,
                                                 eveNotificationsIcon, calendarEventsIcon
                                             });
 
@@ -1579,6 +1586,13 @@ namespace EVEMon.CharacterMonitoring
             if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
             {
                 APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
+                if (ccpCharacter.QueryMonitors[method] != null)
+                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+            }
+
+            if (Enum.IsDefined(typeof(APIGenericMethods), page.Tag))
+            {
+                APIGenericMethods method = (APIGenericMethods)Enum.Parse(typeof(APIGenericMethods), (string)page.Tag);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }

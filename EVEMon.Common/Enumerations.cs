@@ -1232,6 +1232,9 @@ namespace EVEMon.Common
         /// <summary>
         /// A list of the planets on which the character has a command center located.
         /// </summary>
+        [Header("Planetary Colonies")]
+        [Description("The planetary colonies of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
         PlanetaryColonies,
 
         /// <summary>

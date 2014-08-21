@@ -304,6 +304,8 @@
     <Compile Include="Notifications\NotificationPriority.cs" />
     <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs" />
     <Compile Include="PlanEntryComparer.cs" />
+    <Compile Include="PlanetaryColoniesCollection.cs" />
+    <Compile Include="PlanetaryColony.cs" />
     <Compile Include="PlanPrinter.cs" />
     <Compile Include="RemappingResult.cs" />
     <Compile Include="Resources\Skill_Select\IconSettings.Designer.cs">

@@ -807,6 +807,24 @@ namespace EVEMon.Common
             Notify(notification);
         }
 
+        /// <summary>
+        /// Notifies a planetary colonies query error.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="result">The result.</param>
+        internal void NotifyCharacterPlanetaryColoniesError(CCPCharacter character,
+                                                                 APIResult<SerializableAPIPlanetaryColonies> result)
+        {
+            APIErrorNotificationEventArgs notification =
+                new APIErrorNotificationEventArgs(character, result)
+                {
+                    Description = "An error occured while querying the planetary colonies.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
+            Notify(notification);
+        }
+
         #endregion
 
 

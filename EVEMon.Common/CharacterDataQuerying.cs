@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class CharacterDataQuerying
+    internal sealed class CharacterDataQuerying
     {
         #region Fields
 
@@ -27,6 +27,7 @@ namespace EVEMon.Common
         private readonly CharacterQueryMonitor<SerializableAPIMailMessages> m_charEVEMailMessagesMonitor;
         private readonly CharacterQueryMonitor<SerializableAPINotifications> m_charEVENotificationsMonitor;
         private readonly CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents> m_charUpcomingCalendarEventsMonitor;
+        private readonly CharacterQueryMonitor<SerializableAPIPlanetaryColonies> m_charPlanetaryColoniesMonitor;
         private readonly List<IQueryMonitorEx> m_characterQueryMonitors;
         private readonly List<IQueryMonitor> m_basicFeaturesMonitors;
         private readonly CCPCharacter m_ccpCharacter;
@@ -40,7 +41,7 @@ namespace EVEMon.Common
         /// Initializes a new instance of the <see cref="CharacterDataQuerying"/> class.
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
-        public CharacterDataQuerying(CCPCharacter ccpCharacter)
+        internal CharacterDataQuerying(CCPCharacter ccpCharacter)
         {
             // Initializes the query monitors 
             m_ccpCharacter = ccpCharacter;
@@ -48,88 +49,87 @@ namespace EVEMon.Common
 
             m_charSheetMonitor =
                 new CharacterQueryMonitor<SerializableAPICharacterSheet>(ccpCharacter, APICharacterMethods.CharacterSheet,
-                                                                         OnCharacterSheetUpdated);
+                    OnCharacterSheetUpdated);
             m_skillQueueMonitor =
                 new CharacterQueryMonitor<SerializableAPISkillQueue>(ccpCharacter, APICharacterMethods.SkillQueue,
-                                                                     OnSkillQueueUpdated);
+                    OnSkillQueueUpdated);
             m_charStandingsMonitor =
                 new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings,
-                                                                    OnStandingsUpdated) { QueryOnStartup = true };
+                    OnStandingsUpdated) { QueryOnStartup = true };
             m_charContactsMonitor =
                 new CharacterQueryMonitor<SerializableAPIContactList>(ccpCharacter, APICharacterMethods.ContactList,
-                                                                      OnContactsUpdated) { QueryOnStartup = true };
+                    OnContactsUpdated) { QueryOnStartup = true };
             m_charFacWarStatsMonitor =
                 new CharacterQueryMonitor<SerializableAPIFactionalWarfareStats>(ccpCharacter,
-                                                                                APICharacterMethods.FactionalWarfareStats,
-                                                                                OnFactionalWarfareStatsUpdated)
-                    { QueryOnStartup = true };
+                    APICharacterMethods.FactionalWarfareStats, OnFactionalWarfareStatsUpdated) { QueryOnStartup = true };
             m_charMedalsMonitor =
                 new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, APICharacterMethods.Medals,
-                                                                 OnMedalsUpdated) { QueryOnStartup = true };
+                    OnMedalsUpdated) { QueryOnStartup = true };
             m_charKillLogMonitor =
                 new CharacterQueryMonitor<SerializableAPIKillLog>(ccpCharacter, APICharacterMethods.KillLog,
-                                                                  OnKillLogUpdated) { QueryOnStartup = true };
+                    OnKillLogUpdated) { QueryOnStartup = true };
             m_charAssetsMonitor =
                 new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
-                                                                    OnAssetsUpdated) { QueryOnStartup = true };
+                    OnAssetsUpdated) { QueryOnStartup = true };
             m_charMarketOrdersMonitor =
                 new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,
-                                                                       OnMarketOrdersUpdated) { QueryOnStartup = true };
+                    OnMarketOrdersUpdated) { QueryOnStartup = true };
             m_charContractsMonitor =
                 new CharacterQueryMonitor<SerializableAPIContracts>(ccpCharacter, APICharacterMethods.Contracts,
-                                                                    OnContractsUpdated) { QueryOnStartup = true };
+                    OnContractsUpdated) { QueryOnStartup = true };
             m_charWalletJournalMonitor =
                 new CharacterQueryMonitor<SerializableAPIWalletJournal>(ccpCharacter, APICharacterMethods.WalletJournal,
-                                                                        OnWalletJournalUpdated) { QueryOnStartup = true };
+                    OnWalletJournalUpdated) { QueryOnStartup = true };
             m_charWalletTransactionsMonitor =
                 new CharacterQueryMonitor<SerializableAPIWalletTransactions>(ccpCharacter, APICharacterMethods.WalletTransactions,
-                                                                             OnWalletTransactionsUpdated)
-                    { QueryOnStartup = true };
+                    OnWalletTransactionsUpdated){ QueryOnStartup = true };
             m_charIndustryJobsMonitor =
                 new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, APICharacterMethods.IndustryJobs,
-                                                                       OnIndustryJobsUpdated) { QueryOnStartup = true };
+                    OnIndustryJobsUpdated) { QueryOnStartup = true };
             m_charResearchPointsMonitor =
                 new CharacterQueryMonitor<SerializableAPIResearch>(ccpCharacter, APICharacterMethods.ResearchPoints,
-                                                                   OnResearchPointsUpdated) { QueryOnStartup = true };
+                    OnResearchPointsUpdated) { QueryOnStartup = true };
             m_charEVEMailMessagesMonitor =
                 new CharacterQueryMonitor<SerializableAPIMailMessages>(ccpCharacter, APICharacterMethods.MailMessages,
-                                                                       OnEVEMailMessagesUpdated) { QueryOnStartup = true };
+                    OnEVEMailMessagesUpdated) { QueryOnStartup = true };
             m_charEVENotificationsMonitor =
                 new CharacterQueryMonitor<SerializableAPINotifications>(ccpCharacter, APICharacterMethods.Notifications,
-                                                                        OnEVENotificationsUpdated) { QueryOnStartup = true };
+                    OnEVENotificationsUpdated) { QueryOnStartup = true };
             m_charUpcomingCalendarEventsMonitor =
                 new CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents>(ccpCharacter,
-                                                                                 APICharacterMethods.UpcomingCalendarEvents,
-                                                                                 OnUpcomingCalendarEventsUpdated)
-                    { QueryOnStartup = true };
+                    APICharacterMethods.UpcomingCalendarEvents, OnUpcomingCalendarEventsUpdated) { QueryOnStartup = true };
+            m_charPlanetaryColoniesMonitor =
+                new CharacterQueryMonitor<SerializableAPIPlanetaryColonies>(ccpCharacter, APIGenericMethods.PlanetaryColonies,
+                    OnPlanetaryColoniesUpdated) { QueryOnStartup = true };
 
             // Add the monitors in an order as they will appear in the throbber menu
             m_characterQueryMonitors.AddRange(new IQueryMonitorEx[]
-                                              {
-                                                  m_charSheetMonitor,
-                                                  m_skillQueueMonitor,
-                                                  m_charStandingsMonitor,
-                                                  m_charContactsMonitor,
-                                                  m_charFacWarStatsMonitor,
-                                                  m_charMedalsMonitor,
-                                                  m_charKillLogMonitor,
-                                                  m_charAssetsMonitor,
-                                                  m_charMarketOrdersMonitor,
-                                                  m_charContractsMonitor,
-                                                  m_charWalletJournalMonitor,
-                                                  m_charWalletTransactionsMonitor,
-                                                  m_charIndustryJobsMonitor,
-                                                  m_charResearchPointsMonitor,
-                                                  m_charEVEMailMessagesMonitor,
-                                                  m_charEVENotificationsMonitor,
-                                                  m_charUpcomingCalendarEventsMonitor
-                                              });
+            {
+                m_charSheetMonitor,
+                m_skillQueueMonitor,
+                m_charStandingsMonitor,
+                m_charContactsMonitor,
+                m_charFacWarStatsMonitor,
+                m_charMedalsMonitor,
+                m_charKillLogMonitor,
+                m_charAssetsMonitor,
+                m_charMarketOrdersMonitor,
+                m_charContractsMonitor,
+                m_charWalletJournalMonitor,
+                m_charWalletTransactionsMonitor,
+                m_charIndustryJobsMonitor,
+                m_charPlanetaryColoniesMonitor,
+                m_charResearchPointsMonitor,
+                m_charEVEMailMessagesMonitor,
+                m_charEVENotificationsMonitor,
+                m_charUpcomingCalendarEventsMonitor
+            });
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
                 monitor => new { monitor, method = (APICharacterMethods)monitor.Method }).Where(
                     monitor =>
-                    (int)monitor.method == ((int)monitor.method & (int)APIMethodsExtensions.BasicCharacterFeatures)).Select(
-                        basicFeature => basicFeature.monitor).ToList();
+                        (int)monitor.method == ((int)monitor.method & (int)APIMethodsExtensions.BasicCharacterFeatures)).Select(
+                            basicFeature => basicFeature.monitor).ToList();
 
             m_characterQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
 
@@ -834,6 +834,31 @@ namespace EVEMon.Common
 
             // Fires the event regarding upcoming calendar events update
             EveMonClient.OnCharacterUpcomingCalendarEventsUpdated(m_ccpCharacter);
+        }
+
+        /// <summary>
+        /// Processes the queried character's palnetary colonies.
+        /// </summary>
+        /// <param name="result"></param>
+        private void OnPlanetaryColoniesUpdated(APIResult<SerializableAPIPlanetaryColonies> result)
+        {
+            // Character may have been deleted or set to not be monitored since we queried
+            if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
+                return;
+
+            // Notify an error occurred
+            if (m_ccpCharacter.ShouldNotifyError(result, APIGenericMethods.PlanetaryColonies))
+                EveMonClient.Notifications.NotifyCharacterPlanetaryColoniesError(m_ccpCharacter, result);
+
+            // Quits if there is an error
+            if (result.HasError)
+                return;
+
+            // Import the data
+            m_ccpCharacter.PlanetaryColonies.Import(result.Result.Colonies);
+
+            // Fires the event regarding planetary colonies update
+            EveMonClient.OnCharacterPlanetaryColoniesUpdated(m_ccpCharacter);
         }
 
         #endregion
