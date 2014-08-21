@@ -14,7 +14,7 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlArray("routes")]
         [XmlArrayItem("route")]
-        public Collection<SerializablePlanetaryRoute> Colonies
+        public Collection<SerializablePlanetaryRoute> Routes
         {
             get { return m_routes; }
         }

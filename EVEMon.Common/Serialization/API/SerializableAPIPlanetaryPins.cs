@@ -14,7 +14,7 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlArray("pins")]
         [XmlArrayItem("pin")]
-         public Collection<SerializablePlanetaryPin> Colonies
+         public Collection<SerializablePlanetaryPin> Pins
         {
             get { return m_pins; }
         }

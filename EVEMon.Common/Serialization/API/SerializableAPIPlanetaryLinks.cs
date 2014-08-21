@@ -14,7 +14,7 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlArray("links")]
         [XmlArrayItem("link")]
-        public Collection<SerializablePlanetaryLink> Colonies
+        public Collection<SerializablePlanetaryLink> Links
         {
             get { return m_links; }
         }
