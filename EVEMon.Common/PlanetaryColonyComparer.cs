@@ -8,7 +8,7 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class PlanetaryColonyComparer : Comparer<PlanetaryColony>
     {
-        private readonly PlanetaryColumn m_column;
+        private readonly PlanetaryColoniesColumn m_column;
         private readonly bool m_isAscending;
 
         /// <summary>
@@ -16,7 +16,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="column">The column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
-        public PlanetaryColonyComparer(PlanetaryColumn column, bool isAscending)
+        public PlanetaryColonyComparer(PlanetaryColoniesColumn column, bool isAscending)
         {
             m_column = column;
             m_isAscending = isAscending;

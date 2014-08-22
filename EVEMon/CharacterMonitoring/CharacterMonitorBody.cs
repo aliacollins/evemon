@@ -345,6 +345,10 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == jobsPage)
                 toolStripContextual.Enabled = ccpCharacter.IndustryJobs.Any();
 
+            // Enables / Disables the planetary colonies page related controls
+            if (multiPanel.SelectedPage == planetaryPage)
+                toolStripContextual.Enabled = ccpCharacter.PlanetaryColonies.Any();
+
             // Enables / Disables the research points page related controls
             if (multiPanel.SelectedPage == researchPage)
             {

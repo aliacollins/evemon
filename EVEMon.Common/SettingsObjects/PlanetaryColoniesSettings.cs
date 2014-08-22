@@ -43,12 +43,16 @@ namespace EVEMon.Common.SettingsObjects
         {
             get
             {
-                PlanetaryColumn[] defaultColumns =
+                PlanetaryColoniesColumn[] defaultColumns =
                 {
+                    PlanetaryColoniesColumn.PlanetTypeName,
+                    PlanetaryColoniesColumn.PlanetName,
+                    PlanetaryColoniesColumn.SolarSystem,
+                    PlanetaryColoniesColumn.Installations
                 };
 
-                return EnumExtensions.GetValues<PlanetaryColumn>().Where(
-                    column => column != PlanetaryColumn.None).Where(
+                return EnumExtensions.GetValues<PlanetaryColoniesColumn>().Where(
+                    column => column != PlanetaryColoniesColumn.None).Where(
                         column => Columns.All(columnSetting => columnSetting.Column != column)).Select(
                             column => new PlanetaryColumnSettings
                             {
@@ -56,7 +60,6 @@ namespace EVEMon.Common.SettingsObjects
                                 Visible = defaultColumns.Contains(column),
                                 Width = -2
                             });
-
             }
         }
     }

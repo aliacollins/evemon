@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -27,7 +28,7 @@ namespace EVEMon.Common
             Character = ccpCharacter;
             PlanetID = src.PlanetID;
             PlanetName = src.PlanetName;
-            SolarSystemName = src.SolarSystemName;
+            SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
             PlanetTypeName = src.PlanetTypeName;
             LastUpdate = src.LastUpdate;
             UpgradeLevel = src.UpgradeLevel;
@@ -57,14 +58,6 @@ namespace EVEMon.Common
         public long PlanetID { get; private set; }
 
         /// <summary>
-        /// Gets the name of the solar system.
-        /// </summary>
-        /// <value>
-        /// The name of the solar system.
-        /// </value>
-        public string SolarSystemName { get; private set; }
-
-        /// <summary>
         /// Gets the name of the planet.
         /// </summary>
         /// <value>
@@ -79,6 +72,19 @@ namespace EVEMon.Common
         /// The name of the planet type.
         /// </value>
         public string PlanetTypeName { get; private set; }
+
+        /// <summary>
+        /// Gets the solar system where this job is located.
+        /// </summary>
+        public SolarSystem SolarSystem { get; private set; }
+
+        /// <summary>
+        /// Gets the installation full celestrial path.
+        /// </summary>
+        public string FullLocation
+        {
+            get { return String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, PlanetName); }
+        }
 
         /// <summary>
         /// Gets the last update.

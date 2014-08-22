@@ -442,7 +442,7 @@
     <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />
     <Compile Include="SettingsObjects\PlanetaryColoniesSettings.cs" />
-    <Compile Include="SettingsObjects\PlanetaryColumn.cs" />
+    <Compile Include="SettingsObjects\PlanetaryColoniesColumn.cs" />
     <Compile Include="SettingsObjects\PlanetaryColumnSettings.cs" />
     <Compile Include="SettingsObjects\PortableEveInstallationsSettings.cs" />
     <Compile Include="Serialization\Settings\SerializablePortableEveInstallation.cs" />

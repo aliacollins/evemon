@@ -432,11 +432,17 @@ namespace EVEMon.Common.SettingsObjects
         [Header("No group")]
         None = 0,
 
-        [Header("Group by planet")]
-        Planet = 1,
+        [Header("Group by solar system")]
+        SolarSystem = 1,
 
-        [Header("Group by planet (Desc)")]
-        PlanetDesc = 2,
+        [Header("Group by solar system (Desc)")]
+        SolarSystemDesc = 2,
+
+        [Header("Group by planet type")]
+        PlanetType = 3,
+
+        [Header("Group by planet type (Desc)")]
+        PlanetTypeDesc = 4,
     }
 
     #endregion

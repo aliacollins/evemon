@@ -12,13 +12,13 @@ namespace EVEMon.Common.Serialization.API
         public string PlanetName { get; set; }
 
         [XmlAttribute("planetTypeID")]
-        public long PlanetTypeID { get; set; }
+        public int PlanetTypeID { get; set; }
 
         [XmlAttribute("planetTypeName")]
         public string PlanetTypeName { get; set; }
 
         [XmlAttribute("solarSystemID")]
-        public long SolarSystemID { get; set; }
+        public int SolarSystemID { get; set; }
 
         [XmlAttribute("solarSystemName")]
         public string SolarSystemName { get; set; }

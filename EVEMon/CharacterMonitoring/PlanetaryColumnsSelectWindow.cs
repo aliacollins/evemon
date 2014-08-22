@@ -24,7 +24,7 @@ namespace EVEMon.CharacterMonitoring
         /// <returns></returns>
         protected override string GetHeader(int key)
         {
-            return ((PlanetaryColumn)key).GetDescription();
+            return ((PlanetaryColoniesColumn)key).GetDescription();
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace EVEMon.CharacterMonitoring
         {
             get
             {
-                return EnumExtensions.GetValues<PlanetaryColumn>().Where(
-                    x => x != PlanetaryColumn.None).Select(x => (int)x);
+                return EnumExtensions.GetValues<PlanetaryColoniesColumn>().Where(
+                    x => x != PlanetaryColoniesColumn.None).Select(x => (int)x);
             }
         }
 

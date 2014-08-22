@@ -289,6 +289,9 @@ namespace EVEMon.Common
             // Initializes the industry jobs columns or adds missing ones
             UI.MainWindow.IndustryJobs.Columns.AddRange(UI.MainWindow.IndustryJobs.DefaultColumns);
 
+            // Initializes the planetary colonies columns or adds missing ones
+            UI.MainWindow.PlanetaryColonies.Columns.AddRange(UI.MainWindow.PlanetaryColonies.DefaultColumns);
+
             // Initializes the research points columns or adds missing ones
             UI.MainWindow.Research.Columns.AddRange(UI.MainWindow.Research.DefaultColumns);
 

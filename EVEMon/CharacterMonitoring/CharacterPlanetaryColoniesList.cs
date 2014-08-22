@@ -22,7 +22,7 @@ namespace EVEMon.CharacterMonitoring
         private InfiniteDisplayToolTip m_tooltip;
         private Timer m_refreshTimer;
         private PlanetaryColoniesGrouping m_grouping;
-        private PlanetaryColumn m_sortCriteria;
+        private PlanetaryColoniesColumn m_sortCriteria;
 
         private string m_textFilter = String.Empty;
         private bool m_sortAscending = true;
@@ -123,7 +123,7 @@ namespace EVEMon.CharacterMonitoring
                 List<PlanetaryColumnSettings> newColumns = new List<PlanetaryColumnSettings>();
                 foreach (ColumnHeader header in lvPlanetaryColonies.Columns.Cast<ColumnHeader>().OrderBy(x => x.DisplayIndex))
                 {
-                    PlanetaryColumnSettings columnSetting = m_columns.First(x => x.Column == (PlanetaryColumn)header.Tag);
+                    PlanetaryColumnSettings columnSetting = m_columns.First(x => x.Column == (PlanetaryColoniesColumn)header.Tag);
                     if (columnSetting.Width > -1)
                         columnSetting.Width = header.Width;
 
@@ -265,16 +265,13 @@ namespace EVEMon.CharacterMonitoring
                     ColumnHeader header = lvPlanetaryColonies.Columns.Add(column.Column.GetHeader(), column.Width);
                     header.Tag = column.Column;
 
-                    //switch (column.Column)
-                    //{
-                    //    case PlanetaryColumn.CurrentRP:
-                    //    case PlanetaryColumn.PointsPerDay:
-                    //        header.TextAlign = HorizontalAlignment.Right;
-                    //        break;
-                    //    case PlanetaryColumn.Level:
-                    //        header.TextAlign = HorizontalAlignment.Center;
-                    //        break;
-                    //}
+                    switch (column.Column)
+                    {
+                        case PlanetaryColoniesColumn.Installations:
+                        case PlanetaryColoniesColumn.UpgradeLevel:
+                            header.TextAlign = HorizontalAlignment.Center;
+                            break;
+                    }
                 }
 
                 // We update the content
@@ -346,15 +343,25 @@ namespace EVEMon.CharacterMonitoring
                 case PlanetaryColoniesGrouping.None:
                     UpdateNoGroupContent(colonies);
                     break;
-                case PlanetaryColoniesGrouping.Planet:
+                case PlanetaryColoniesGrouping.SolarSystem:
                     IOrderedEnumerable<IGrouping<string, PlanetaryColony>> groups0 =
-                        colonies.GroupBy(x => x.PlanetName).OrderBy(x => x.Key);
+                        colonies.GroupBy(x => x.SolarSystem.Name).OrderBy(x => x.Key);
                     UpdateContent(groups0);
                     break;
-                case PlanetaryColoniesGrouping.PlanetDesc:
+                case PlanetaryColoniesGrouping.SolarSystemDesc:
                     IOrderedEnumerable<IGrouping<string, PlanetaryColony>> groups1 =
-                        colonies.GroupBy(x => x.PlanetName).OrderByDescending(x => x.Key);
+                        colonies.GroupBy(x => x.SolarSystem.Name).OrderByDescending(x => x.Key);
                     UpdateContent(groups1);
+                    break;
+                case PlanetaryColoniesGrouping.PlanetType:
+                    IOrderedEnumerable<IGrouping<string, PlanetaryColony>> groups2 =
+                        colonies.GroupBy(x => x.PlanetTypeName).OrderBy(x => x.Key);
+                    UpdateContent(groups2);
+                    break;
+                case PlanetaryColoniesGrouping.PlanetTypeDesc:
+                    IOrderedEnumerable<IGrouping<string, PlanetaryColony>> groups3 =
+                        colonies.GroupBy(x => x.PlanetTypeName).OrderByDescending(x => x.Key);
+                    UpdateContent(groups3);
                     break;
             }
         }
@@ -434,7 +441,7 @@ namespace EVEMon.CharacterMonitoring
             // Creates the subitems
             for (int i = 0; i < lvPlanetaryColonies.Columns.Count; i++)
             {
-                SetColumn(colony, item.SubItems[i], (PlanetaryColumn)lvPlanetaryColonies.Columns[i].Tag);
+                SetColumn(colony, item.SubItems[i], (PlanetaryColoniesColumn)lvPlanetaryColonies.Columns[i].Tag);
             }
 
             return item;
@@ -509,7 +516,7 @@ namespace EVEMon.CharacterMonitoring
         {
             foreach (ColumnHeader columnHeader in lvPlanetaryColonies.Columns.Cast<ColumnHeader>())
             {
-                PlanetaryColumn column = (PlanetaryColumn)columnHeader.Tag;
+                PlanetaryColoniesColumn column = (PlanetaryColoniesColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
                     columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
                 else
@@ -524,10 +531,35 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="item">The item.</param>
         /// <param name="column">The column.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        private static void SetColumn(PlanetaryColony colony, ListViewItem.ListViewSubItem item, PlanetaryColumn column)
+        private static void SetColumn(PlanetaryColony colony, ListViewItem.ListViewSubItem item, PlanetaryColoniesColumn column)
         {
             switch (column)
             {
+                case PlanetaryColoniesColumn.PlanetName:
+                    item.Text = colony.PlanetName;
+                    break;
+                case PlanetaryColoniesColumn.PlanetTypeName:
+                    item.Text = colony.PlanetTypeName;
+                    break;
+                case PlanetaryColoniesColumn.SolarSystem:
+                    item.Text = colony.SolarSystem.Name;
+                    item.ForeColor = colony.SolarSystem.SecurityLevelColor;
+                    break;
+                case PlanetaryColoniesColumn.Installations:
+                    item.Text = colony.NumberOfPins.ToString();
+                    break;
+                case PlanetaryColoniesColumn.UpgradeLevel:
+                    item.Text = colony.UpgradeLevel.ToString();
+                    break;
+                case PlanetaryColoniesColumn.Location:
+                    item.Text = colony.FullLocation;
+                    break;
+                case PlanetaryColoniesColumn.Region:
+                    item.Text = colony.SolarSystem.Constellation.Region.Name;
+                    break;
+                case PlanetaryColoniesColumn.LastUpdate:
+                    item.Text = colony.LastUpdate.ToLocalTime().ToString();
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -556,7 +588,7 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateTimeToCompletion()
         {
             //const int Pad = 4;
-            //int columnTTCIndex = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == PlanetaryColumn.TTC));
+            //int columnTTCIndex = m_columns.IndexOf(m_columns.FirstOrDefault(x => x.Column == PlanetaryColoniesColumn.TTC));
 
             //foreach (ListViewItem listViewItem in lvPlanetaryColonies.Items.Cast<ListViewItem>())
             //{
@@ -668,7 +700,7 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         private void lvPlanetaryColonies_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            PlanetaryColumn column = (PlanetaryColumn)lvPlanetaryColonies.Columns[e.Column].Tag;
+            PlanetaryColoniesColumn column = (PlanetaryColoniesColumn)lvPlanetaryColonies.Columns[e.Column].Tag;
             if (m_sortCriteria == column)
                 m_sortAscending = !m_sortAscending;
             else
