@@ -613,11 +613,12 @@ namespace EVEMon.Common
             }
 
             // Removes the previous error notification
-            if (m_errorNotifiedMethod.Equals(method))
-            {
-                EveMonClient.Notifications.InvalidateCharacterAPIError(this);
-                m_errorNotifiedMethod = APIMethodsExtensions.None;
-            }
+            if (!m_errorNotifiedMethod.Equals(method))
+                return false;
+
+            EveMonClient.Notifications.InvalidateCharacterAPIError(this);
+            m_errorNotifiedMethod = APIMethodsExtensions.None;
+
             return false;
         }
 

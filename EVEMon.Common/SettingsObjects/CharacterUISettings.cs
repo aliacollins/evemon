@@ -82,6 +82,13 @@ namespace EVEMon.Common.SettingsObjects
         public IndustryJobGrouping JobsGroupBy { get; set; }
 
         /// <summary>
+        /// Gets or sets the planetary group by.
+        /// </summary>
+        /// <value>The planetary group by.</value>
+        [XmlElement("planetaryGroupBy")]
+        public PlanetaryColoniesGrouping PlanetaryGroupBy { get; set; }
+
+        /// <summary>
         /// Gets or sets the EVE mail messages group by.
         /// </summary>
         /// <value>The EVE mail messages group by.</value>

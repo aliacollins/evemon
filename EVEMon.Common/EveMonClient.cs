@@ -745,6 +745,21 @@ namespace EVEMon.Common
         public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryColoniesUpdated;
 
         /// <summary>
+        /// Occurs when the text of a character planetary pins have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryPinsUpdated;
+
+        /// <summary>
+        /// Occurs when the text of a character planetary routes have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryRoutesUpdated;
+
+        /// <summary>
+        /// Occurs when the text of a character planetary links have been updated.
+        /// </summary>
+        public static event EventHandler<CharacterChangedEventArgs> CharacterPlanetaryLinksUpdated;
+
+        /// <summary>
         /// Occurs when a plan's name changed.
         /// </summary>
         public static event EventHandler<PlanChangedEventArgs> PlanNameChanged;
@@ -1346,6 +1361,39 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnCharacterPlanetaryColoniesUpdated - {0}", character.Name);
             if (CharacterPlanetaryColoniesUpdated != null)
                 CharacterPlanetaryColoniesUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character planetary pins updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterPlanetaryPinsUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterPlanetaryPinsUpdated - {0}", character.Name);
+            if (CharacterPlanetaryPinsUpdated != null)
+                CharacterPlanetaryPinsUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character planetary routes updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterPlanetaryRoutesUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterPlanetaryRoutesUpdated - {0}", character.Name);
+            if (CharacterPlanetaryRoutesUpdated != null)
+                CharacterPlanetaryRoutesUpdated(null, new CharacterChangedEventArgs(character));
+        }
+
+        /// <summary>
+        /// Called when the character planetary links updated.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal static void OnCharacterPlanetaryLinksUpdated(Character character)
+        {
+            Trace("EveMonClient.OnCharacterPlanetaryLinksUpdated - {0}", character.Name);
+            if (CharacterPlanetaryLinksUpdated != null)
+                CharacterPlanetaryLinksUpdated(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>

@@ -50,6 +50,7 @@
             this.exportToCSVToolStripMenuItem.Name = "exportToCSVToolStripMenuItem";
             this.exportToCSVToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.exportToCSVToolStripMenuItem.Text = "Export To CSV...";
+            this.exportToCSVToolStripMenuItem.Click += new System.EventHandler(this.exportToCSVToolStripMenuItem_Click);
             // 
             // ilIcons
             // 
@@ -89,8 +90,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.noPlanetaryColoniesLabel);
             this.Controls.Add(this.lvPlanetaryColonies);
+            this.Controls.Add(this.noPlanetaryColoniesLabel);
             this.Name = "CharacterPlanetaryColoniesList";
             this.Size = new System.Drawing.Size(454, 434);
             this.contextMenu.ResumeLayout(false);

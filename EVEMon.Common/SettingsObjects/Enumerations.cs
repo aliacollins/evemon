@@ -419,6 +419,23 @@ namespace EVEMon.Common.SettingsObjects
     }
 
     #endregion
+    #region IndustryJobSettings
+
+    /// <summary>
+    /// Enumeration for the planetary colonies to be group by.
+    /// </summary>
+    /// <remarks>The integer value determines the sort order.</remarks>
+    public enum PlanetaryColoniesGrouping
+    {
+        [Header("Group by planet")]
+        Planet = 0,
+
+        [Header("Group by planet (Desc)")]
+        PlanetDesc = 1,
+
+    }
+
+    #endregion
 
 
     #region EVEMailMessagesSettings

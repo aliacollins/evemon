@@ -229,6 +229,12 @@ namespace EVEMon.Common.SettingsObjects
         public IndustryJobSettings IndustryJobs { get; set; }
 
         /// <summary>
+        /// Gets or sets the planetary colonies.
+        /// </summary>
+        [XmlElement("planetaryColonies")]
+        public PlanetaryColoniesSettings PlanetaryColonies { get; set; }
+
+        /// <summary>
         /// Gets or sets the research.
         /// </summary>
         /// <value>The research.</value>
