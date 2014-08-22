@@ -215,7 +215,7 @@ namespace EVEMon.CharacterMonitoring
 
             PlanetaryColonies = (Character == null ? null : Character.PlanetaryColonies);
             Columns = Settings.UI.MainWindow.PlanetaryColonies.Columns;
-            Grouping = (Character == null ? PlanetaryColoniesGrouping.Planet : Character.UISettings.PlanetaryGroupBy);
+            Grouping = (Character == null ? PlanetaryColoniesGrouping.None : Character.UISettings.PlanetaryGroupBy);
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -300,8 +300,8 @@ namespace EVEMon.CharacterMonitoring
 
             // Store the selected item (if any) to restore it after the update
             int selectedItem = (lvPlanetaryColonies.SelectedItems.Count > 0
-                ? lvPlanetaryColonies.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                                    ? lvPlanetaryColonies.SelectedItems[0].Tag.GetHashCode()
+                                    : 0);
 
             lvPlanetaryColonies.BeginUpdate();
             try
@@ -311,19 +311,7 @@ namespace EVEMon.CharacterMonitoring
 
                 UpdateSort();
 
-                lvPlanetaryColonies.Items.Clear();
-
-                // Add the items
-                lvPlanetaryColonies.Items.AddRange(
-                    colonies.Select(colony => new
-                    {
-                        colony,
-                        item = new ListViewItem(colony.PlanetName)
-                        {
-                            UseItemStyleForSubItems = false,
-                            Tag = colony
-                        }
-                    }).Select(x => CreateSubItems(x.colony, x.item)).ToArray());
+                UpdateContentByGroup(colonies);
 
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
@@ -344,6 +332,88 @@ namespace EVEMon.CharacterMonitoring
             {
                 lvPlanetaryColonies.EndUpdate();
                 lvPlanetaryColonies.SetVerticalScrollBarPosition(scrollBarPosition);
+            }
+        }
+
+        /// <summary>
+        /// Updates the content by group.
+        /// </summary>
+        /// <param name="colonies">The colonies.</param>
+        private void UpdateContentByGroup(IEnumerable<PlanetaryColony> colonies)
+        {
+            switch (m_grouping)
+            {
+                case PlanetaryColoniesGrouping.None:
+                    UpdateNoGroupContent(colonies);
+                    break;
+                case PlanetaryColoniesGrouping.Planet:
+                    IOrderedEnumerable<IGrouping<string, PlanetaryColony>> groups0 =
+                        colonies.GroupBy(x => x.PlanetName).OrderBy(x => x.Key);
+                    UpdateContent(groups0);
+                    break;
+                case PlanetaryColoniesGrouping.PlanetDesc:
+                    IOrderedEnumerable<IGrouping<string, PlanetaryColony>> groups1 =
+                        colonies.GroupBy(x => x.PlanetName).OrderByDescending(x => x.Key);
+                    UpdateContent(groups1);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Updates the content of the listview.
+        /// </summary>
+        private void UpdateNoGroupContent(IEnumerable<PlanetaryColony> colonies)
+        {
+            lvPlanetaryColonies.Items.Clear();
+            lvPlanetaryColonies.Groups.Clear();
+
+            // Add the items
+            lvPlanetaryColonies.Items.AddRange(colonies.Select(
+                colony => new
+                {
+                    colony,
+                    item = new ListViewItem(colony.PlanetName)
+                    {
+                        UseItemStyleForSubItems = false,
+                        Tag = colony
+                    }
+                }).Select(x => CreateSubItems(x.colony, x.item)).ToArray());
+        }
+
+        /// <summary>
+        /// Updates the content of the listview.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="groups"></param>
+        private void UpdateContent<TKey>(IEnumerable<IGrouping<TKey, PlanetaryColony>> groups)
+        {
+            lvPlanetaryColonies.Items.Clear();
+            lvPlanetaryColonies.Groups.Clear();
+
+            // Add the groups
+            foreach (IGrouping<TKey, PlanetaryColony> group in groups)
+            {
+                string groupText;
+                if (group.Key is DateTime)
+                    groupText = ((DateTime)(Object)group.Key).ToShortDateString();
+                else
+                    groupText = group.Key.ToString();
+
+                ListViewGroup listGroup = new ListViewGroup(groupText);
+                lvPlanetaryColonies.Groups.Add(listGroup);
+
+                // Add the items in every group
+                lvPlanetaryColonies.Items.AddRange(
+                    group.Select(colony => new
+                    {
+                        colony,
+                        item = new ListViewItem(colony.PlanetName, listGroup)
+                        {
+                            UseItemStyleForSubItems = false,
+                            Tag = colony
+                        }
+
+                    }).Select(x => CreateSubItems(x.colony, x.item)).ToArray());
             }
         }
 
@@ -375,12 +445,13 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         private void UpdateListVisibility()
         {
-            // Display or hide the "no research points" label
+            // Display or hide the "no planetary colonies" label
             if (!m_init)
                 return;
 
             noPlanetaryColoniesLabel.Visible = lvPlanetaryColonies.Items.Count == 0;
             lvPlanetaryColonies.Visible = !noPlanetaryColoniesLabel.Visible;
+            m_refreshTimer.Enabled = lvPlanetaryColonies.Visible;
         }
 
         /// <summary>
@@ -497,7 +568,7 @@ namespace EVEMon.CharacterMonitoring
             //    if (columnTTCIndex != -1 && m_columns[columnTTCIndex].Visible)
             //    {
             //        if (m_columnTTCDisplayIndex == -1)
-            //            m_columnTTCDisplayIndex = lvJobs.Columns[columnTTCIndex].DisplayIndex;
+            //            m_columnTTCDisplayIndex = lvPlanetaryColonies.Columns[columnTTCIndex].DisplayIndex;
 
             //        listViewItem.SubItems[m_columnTTCDisplayIndex].Text = job.TTC;
 
@@ -507,19 +578,19 @@ namespace EVEMon.CharacterMonitoring
             //        {
             //            // Calculate column header text width with padding
             //            int columnHeaderWidth =
-            //                TextRenderer.MeasureText(lvJobs.Columns[m_columnTTCDisplayIndex].Text, Font).Width + Pad * 2;
+            //                TextRenderer.MeasureText(lvPlanetaryColonies.Columns[m_columnTTCDisplayIndex].Text, Font).Width + Pad * 2;
 
             //            // If there is an image assigned to the header, add its width with padding
             //            if (ilIcons.ImageSize.Width > 0)
             //                columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
-            //            int columnWidth = (lvJobs.Items.Cast<ListViewItem>().Select(
+            //            int columnWidth = (lvPlanetaryColonies.Items.Cast<ListViewItem>().Select(
             //                item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width)).Concat(
             //                    new[] { columnHeaderWidth }).Max() + Pad + 2;
-            //            lvJobs.Columns[m_columnTTCDisplayIndex].Width = columnWidth;
+            //            lvPlanetaryColonies.Columns[m_columnTTCDisplayIndex].Width = columnWidth;
             //        }
             //        else
-            //            lvJobs.AutoResizeColumn(m_columnTTCDisplayIndex, ColumnHeaderAutoResizeStyle.HeaderSize);
+            //            lvPlanetaryColonies.AutoResizeColumn(m_columnTTCDisplayIndex, ColumnHeaderAutoResizeStyle.HeaderSize);
             //    }
 
             //    // Job was pending and its time to start

@@ -1205,15 +1205,13 @@
             // 
             // planetaryList
             // 
-            this.planetaryList.Character = null;
-            this.planetaryList.Columns = null;
             this.planetaryList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.planetaryList.Grouping = null;
+            this.planetaryList.Grouping = EVEMon.Common.SettingsObjects.PlanetaryColoniesGrouping.None;
             this.planetaryList.Location = new System.Drawing.Point(0, 0);
             this.planetaryList.Name = "planetaryList";
             this.planetaryList.Size = new System.Drawing.Size(608, 181);
             this.planetaryList.TabIndex = 0;
-            this.planetaryList.TextFilter = null;
+            this.planetaryList.TextFilter = "";
             // 
             // notificationList
             // 

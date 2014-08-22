@@ -1505,6 +1505,23 @@ namespace EVEMon.Common
     }
 
     /// <summary>
+    /// The status of a planetary pin.
+    /// </summary>
+    public enum PlanetaryPinState
+    {
+        None,
+
+        [Description("Extracting")]
+        Extracting,
+
+        [Description("Processing")]
+        Processing,
+
+        [Description("Idle")]
+        Idle
+    }
+
+    /// <summary>
     /// The status of an EVE mail message.
     /// </summary>
     /// <remarks>The integer value determines the sort order in "Group by...".</remarks>

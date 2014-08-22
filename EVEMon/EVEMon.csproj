@@ -228,6 +228,12 @@
     <Compile Include="CharacterMonitoring\CharacterWalletTransactionsList.Designer.cs">
       <DependentUpon>CharacterWalletTransactionsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="CharacterMonitoring\PlanetaryColumnsSelectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CharacterMonitoring\PlanetaryColumnsSelectWindow.Designer.cs">
+      <DependentUpon>PlanetaryColumnsSelectWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="DetailsWindow\WalletJournalChartWindow.cs">
       <SubType>Form</SubType>
     </Compile>

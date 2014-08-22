@@ -18,6 +18,7 @@ namespace EVEMon.Common.SettingsObjects
             MarketOrders = new MarketOrderSettings();
             Contracts = new ContractSettings();
             IndustryJobs = new IndustryJobSettings();
+            PlanetaryColonies = new PlanetaryColoniesSettings();
             Research = new ResearchSettings();
             EVEMailMessages = new EveMailMessageSettings();
             EVENotifications = new EveNotificationSettings();

@@ -788,6 +788,9 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == jobsPage)
                 CreateGroupMenuList<IndustryJobGrouping, Enum>(jobsList);
 
+            if (multiPanel.SelectedPage == planetaryPage)
+                CreateGroupMenuList<PlanetaryColoniesGrouping, Enum>(planetaryList);
+
             if (multiPanel.SelectedPage == mailMessagesPage)
                 CreateGroupMenuList<EVEMailMessagesGrouping, Enum>(mailMessagesList);
 
@@ -821,6 +824,9 @@ namespace EVEMon.CharacterMonitoring
 
             if (multiPanel.SelectedPage == jobsPage)
                 GroupMenuSetting<IndustryJobGrouping, Enum>(item, jobsList);
+
+            if (multiPanel.SelectedPage == planetaryPage)
+                GroupMenuSetting<PlanetaryColoniesGrouping, Enum>(item, planetaryList);
 
             if (multiPanel.SelectedPage == mailMessagesPage)
                 GroupMenuSetting<EVEMailMessagesGrouping, Enum>(item, mailMessagesList);
@@ -970,7 +976,7 @@ namespace EVEMon.CharacterMonitoring
                 showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
-            if (multiPanel.SelectedPage == researchPage)
+            if (multiPanel.SelectedPage == researchPage || multiPanel.SelectedPage == planetaryPage)
             {
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
@@ -1086,6 +1092,21 @@ namespace EVEMon.CharacterMonitoring
                         jobsList.Columns = f.Columns;
                         Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
                         Settings.UI.MainWindow.IndustryJobs.Columns.AddRange(jobsList.Columns.Cast<IndustryJobColumnSettings>());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == planetaryPage)
+            {
+                using (PlanetaryColumnsSelectWindow f =
+                    new PlanetaryColumnsSelectWindow(planetaryList.Columns.Cast<PlanetaryColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        planetaryList.Columns = f.Columns;
+                        Settings.UI.MainWindow.PlanetaryColonies.Columns.Clear();
+                        Settings.UI.MainWindow.PlanetaryColonies.Columns.AddRange(planetaryList.Columns.Cast<PlanetaryColumnSettings>());
                     }
                 }
             }
@@ -1483,6 +1504,9 @@ namespace EVEMon.CharacterMonitoring
 
             if (obj is IndustryJobGrouping)
                 m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
+
+            if (obj is PlanetaryColoniesGrouping)
+                m_character.UISettings.PlanetaryGroupBy = (PlanetaryColoniesGrouping)grouping;
 
             if (obj is EVEMailMessagesGrouping)
                 m_character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;
