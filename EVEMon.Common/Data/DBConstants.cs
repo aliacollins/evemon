@@ -198,6 +198,15 @@ namespace EVEMon.Common.Data
                 FactionBattleshipsMarketGroupID, FactionCarrierMarketGroupID
             });
 
+        // Group of Extarvtor COntrol Unit Type IDs
+        public static readonly ReadOnlyCollection<int> EcuTypeIDs =
+            new ReadOnlyCollection<int>(new[]
+            {
+                BarrenExtractorControlUnit, GasExtractorControlUnit, IceExtractorControlUnit,
+                LavaExtractorControlUnit, OceanicExtractorControlUnit, PlasmaExtractorControlUnit,
+                StormExtractorControlUnit, TemperateExtractorControlUnit
+            });
+
         #endregion
 
 
@@ -570,6 +579,14 @@ namespace EVEMon.Common.Data
         public const int CharacterAmarrID = 1373;
         public const int CharacterVherokiorID = 1386;
         public const int AdrestiaBlueprintID = 2837;
+        public const int BarrenExtractorControlUnit = 2848;
+        public const int GasExtractorControlUnit = 3060;
+        public const int IceExtractorControlUnit = 3061;
+        public const int LavaExtractorControlUnit = 3062;
+        public const int OceanicExtractorControlUnit = 3063;
+        public const int PlasmaExtractorControlUnit = 3064;
+        public const int StormExtractorControlUnit = 3067;
+        public const int TemperateExtractorControlUnit = 3068; 
         public const int GunnerySkillID = 3300;
         public const int SmallHybridTurretSkillID = 3301;
         public const int SmallProjectileTurretSkillID = 3302;

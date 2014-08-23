@@ -14,7 +14,7 @@ namespace EVEMon.Common
         internal PlanetaryRoute(PlanetaryColony colony, SerializablePlanetaryRoute src)
         {
             Colony = colony;
-            RouteID = src.RouteID;
+            ID = src.RouteID;
             SourcePinID = src.SourcePinID;
             DestinationPinID = src.DestinationPinID;
         }
@@ -38,7 +38,7 @@ namespace EVEMon.Common
         /// <value>
         /// The route identifier.
         /// </value>
-        public long RouteID { get; private set; }
+        public long ID { get; private set; }
 
         /// <summary>
         /// Gets or sets the source pin identifier.

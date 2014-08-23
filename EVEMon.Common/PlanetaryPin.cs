@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -15,15 +18,20 @@ namespace EVEMon.Common
         internal PlanetaryPin(PlanetaryColony colony, SerializablePlanetaryPin src)
         {
             Colony = colony;
+            ID = src.PinID;
+            TypeID = src.TypeID;
             TypeName = src.TypeName;
             SchematicID = src.SchematicID;
             CycleTime = src.CycleTime;
             QuantityPerCycle = src.QuantityPerCycle;
+            ContentTypeID = src.ContentTypeID;
             ContentTypeName = src.ContentTypeName;
-            ContentQuantity = src.ContentQuantity;
             LastLaunchTime = src.LastLaunchTime;
             InstallTime = src.InstallTime;
             ExpiryTime = src.ExpiryTime;
+            ContentQuantity = DBConstants.EcuTypeIDs.Any(x => x == TypeID)
+                ? QuantityPerCycle / CycleTime
+                : src.ContentQuantity;
             State = GetState();
         }
 
@@ -39,6 +47,22 @@ namespace EVEMon.Common
         /// The colony.
         /// </value>
         public PlanetaryColony Colony { get; private set; }
+
+        /// <summary>
+        /// Gets the pin identifier.
+        /// </summary>
+        /// <value>
+        /// The pin identifier.
+        /// </value>
+        public long ID { get; private set; }
+
+        /// <summary>
+        /// Gets the type identifier.
+        /// </summary>
+        /// <value>
+        /// The type identifier.
+        /// </value>
+        public long TypeID { get; private set; }
 
         /// <summary>
         /// Gets or sets the name of the type.
@@ -73,12 +97,37 @@ namespace EVEMon.Common
         public int QuantityPerCycle { get; private set; }
 
         /// <summary>
+        /// Gets the content type identifier.
+        /// </summary>
+        /// <value>
+        /// The content type identifier.
+        /// </value>
+        public int ContentTypeID { get; private set; }
+
+        /// <summary>
         /// Gets or sets the name of the content type.
         /// </summary>
         /// <value>
         /// The name of the content type.
         /// </value>
         public string ContentTypeName { get; private set; }
+
+        /// <summary>
+        /// Gets the content volume.
+        /// </summary>
+        /// <value>
+        /// The content.
+        /// </value>
+        public double ContentVolume
+        {
+            get
+            {
+                Item item = StaticItems.GetItemByID(ContentTypeID);
+                return item.Properties.Any(prop => prop.Property.ID == DBConstants.VolumePropertyID)
+                    ? item.Properties[DBConstants.VolumePropertyID].GetValueOrDefault().DoubleValue
+                    : 0d;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the content quantity.
@@ -127,6 +176,36 @@ namespace EVEMon.Common
                 return State == PlanetaryPinState.Extracting
                     ? ExpiryTime.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
                     : String.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Gets the linked to.
+        /// </summary>
+        /// <value>
+        /// The linked to.
+        /// </value>
+        public IEnumerable<PlanetaryPin> LinkedTo
+        {
+            get
+            {
+                return Colony.Links.Where(link => link.SourcePinID == ID)
+                    .SelectMany(link => Colony.Pins.Where(pin => pin.ID == link.DestinationPinID));
+            }
+        }
+
+        /// <summary>
+        /// Gets the routed to.
+        /// </summary>
+        /// <value>
+        /// The routed to.
+        /// </value>
+        public IEnumerable<PlanetaryPin> RoutedTo
+        {
+            get
+            {
+                return Colony.Routes.Where(route => route.SourcePinID == ID).Distinct()
+                    .SelectMany(route => Colony.Pins.Where(pin => pin.ID == route.DestinationPinID));
             }
         }
 

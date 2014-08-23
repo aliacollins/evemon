@@ -26,6 +26,9 @@ namespace EVEMon.CharacterMonitoring
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CharacterMonitorBody"/> class.
+        /// </summary>
         public CharacterMonitorBody()
         {
             InitializeComponent();
@@ -793,7 +796,7 @@ namespace EVEMon.CharacterMonitoring
                 CreateGroupMenuList<IndustryJobGrouping, Enum>(jobsList);
 
             if (multiPanel.SelectedPage == planetaryPage)
-                CreateGroupMenuList<PlanetaryColoniesGrouping, Enum>(planetaryList);
+                CreateGroupMenuList<PlanetaryGrouping, Enum>(planetaryList);
 
             if (multiPanel.SelectedPage == mailMessagesPage)
                 CreateGroupMenuList<EVEMailMessagesGrouping, Enum>(mailMessagesList);
@@ -830,7 +833,7 @@ namespace EVEMon.CharacterMonitoring
                 GroupMenuSetting<IndustryJobGrouping, Enum>(item, jobsList);
 
             if (multiPanel.SelectedPage == planetaryPage)
-                GroupMenuSetting<PlanetaryColoniesGrouping, Enum>(item, planetaryList);
+                GroupMenuSetting<PlanetaryGrouping, Enum>(item, planetaryList);
 
             if (multiPanel.SelectedPage == mailMessagesPage)
                 GroupMenuSetting<EVEMailMessagesGrouping, Enum>(item, mailMessagesList);
@@ -897,6 +900,7 @@ namespace EVEMon.CharacterMonitoring
         private void preferencesMenu_DropDownOpening(object sender, EventArgs e)
         {
             bool hideInactive = true;
+            autoSizeColumnMenuItem.Enabled = true;
 
             if (multiPanel.SelectedPage == killLogPage)
             {
@@ -919,7 +923,8 @@ namespace EVEMon.CharacterMonitoring
                     item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
                             !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
                             !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
-                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem) &&
+                            !item.Equals(tsPlanetarySeparator) && !item.Equals(showOnlyExtractorMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -935,7 +940,8 @@ namespace EVEMon.CharacterMonitoring
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
-                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem) &&
+                            !item.Equals(tsPlanetarySeparator) && !item.Equals(showOnlyExtractorMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -953,7 +959,8 @@ namespace EVEMon.CharacterMonitoring
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
-                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem) &&
+                            !item.Equals(tsPlanetarySeparator) && !item.Equals(showOnlyExtractorMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -971,7 +978,8 @@ namespace EVEMon.CharacterMonitoring
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(numberAbsFormatMenuItem) && !item.Equals(tsReadingPaneSeparator) &&
                             !item.Equals(readingPaneMenuItem) && !item.Equals(combatLogSeparator) &&
-                            !item.Equals(combatLogMenuItem)))
+                            !item.Equals(combatLogMenuItem) && !item.Equals(tsPlanetarySeparator) &&
+                            !item.Equals(showOnlyExtractorMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -980,7 +988,17 @@ namespace EVEMon.CharacterMonitoring
                 showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
-            if (multiPanel.SelectedPage == researchPage || multiPanel.SelectedPage == planetaryPage)
+            if (multiPanel.SelectedPage == planetaryPage)
+            {
+                preferencesMenu.DropDownItems.Clear();
+                preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
+                preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
+                preferencesMenu.DropDownItems.Add(tsPlanetarySeparator);
+                preferencesMenu.DropDownItems.Add(showOnlyExtractorMenuItem);
+                return;
+            }
+
+            if (multiPanel.SelectedPage == researchPage)
             {
                 preferencesMenu.DropDownItems.Clear();
                 preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
@@ -1424,6 +1442,16 @@ namespace EVEMon.CharacterMonitoring
             UpdatePageControls();
         }
 
+        /// <summary>
+        /// Handles the Click event of the showOnlyExtractorMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showOnlyExtractorMenuItem_Click(object sender, EventArgs e)
+        {
+            planetaryList.ShowOnlyExtractors = showOnlyExtractorMenuItem.Checked;
+        }
+
         #endregion
 
 
@@ -1509,8 +1537,8 @@ namespace EVEMon.CharacterMonitoring
             if (obj is IndustryJobGrouping)
                 m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
 
-            if (obj is PlanetaryColoniesGrouping)
-                m_character.UISettings.PlanetaryGroupBy = (PlanetaryColoniesGrouping)grouping;
+            if (obj is PlanetaryGrouping)
+                m_character.UISettings.PlanetaryGroupBy = (PlanetaryGrouping)grouping;
 
             if (obj is EVEMailMessagesGrouping)
                 m_character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;

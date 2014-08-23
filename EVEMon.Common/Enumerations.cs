@@ -1514,8 +1514,8 @@ namespace EVEMon.Common
         [Description("Extracting")]
         Extracting,
 
-        [Description("Processing")]
-        Processing,
+        [Description("In production")]
+        Producing,
 
         [Description("Idle")]
         Idle

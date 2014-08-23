@@ -49,8 +49,9 @@ namespace EVEMon.Common.SettingsObjects
                     PlanetaryColumn.TTC,
                     PlanetaryColumn.TypeName,
                     PlanetaryColumn.ContentTypeName,
-                    PlanetaryColumn.Quantity,
                     PlanetaryColumn.QuantityPerCycle,
+                    PlanetaryColumn.Quantity,
+                    PlanetaryColumn.Volume,
                 };
 
                 return EnumExtensions.GetValues<PlanetaryColumn>().Where(

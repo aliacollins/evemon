@@ -47,8 +47,8 @@ namespace EVEMon.Common.SettingsObjects
         [Description("Location (Solar System)")]
         SolarSystem = 9,
 
-        [Header("Product")]
-        [Description("Product Name")]
+        [Header("Commodity")]
+        [Description("Commodity Name")]
         ContentTypeName = 10,
 
         [Header("Cycle Time")]
@@ -62,5 +62,9 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Quantity")]
         [Description("Quantity")]
         Quantity = 13,
+
+        [Header("Volume")]
+        [Description("Volume (m³)")]
+        Volume = 14,
     }
 }

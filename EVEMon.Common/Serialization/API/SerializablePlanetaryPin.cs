@@ -9,13 +9,13 @@ namespace EVEMon.Common.Serialization.API
         public long PinID { get; set; }
 
         [XmlAttribute("typeID")]
-        public long TypeID { get; set; }
+        public int TypeID { get; set; }
         
         [XmlAttribute("typeName")]
         public string TypeName { get; set; }
 
         [XmlAttribute("schematicID")]
-        public long SchematicID { get; set; }
+        public int SchematicID { get; set; }
 
         [XmlAttribute("cycleTime")]
         public short CycleTime { get; set; }
@@ -24,7 +24,7 @@ namespace EVEMon.Common.Serialization.API
         public int QuantityPerCycle { get; set; }
 
         [XmlAttribute("contentTypeID")]
-        public long ContentTypeID { get; set; }
+        public int ContentTypeID { get; set; }
 
         [XmlAttribute("contentTypeName")]
         public string ContentTypeName { get; set; }

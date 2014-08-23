@@ -427,7 +427,7 @@ namespace EVEMon.Common.SettingsObjects
     /// Enumeration for the planetary colonies to be group by.
     /// </summary>
     /// <remarks>The integer value determines the sort order.</remarks>
-    public enum PlanetaryColoniesGrouping
+    public enum PlanetaryGrouping
     {
         [Header("No group")]
         None = 0,

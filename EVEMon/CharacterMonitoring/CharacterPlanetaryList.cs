@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Data;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.CharacterMonitoring
@@ -21,7 +22,7 @@ namespace EVEMon.CharacterMonitoring
 
         private InfiniteDisplayToolTip m_tooltip;
         private Timer m_refreshTimer;
-        private PlanetaryColoniesGrouping m_grouping;
+        private PlanetaryGrouping m_grouping;
         private PlanetaryColumn m_sortCriteria;
 
         private string m_textFilter = String.Empty;
@@ -29,6 +30,7 @@ namespace EVEMon.CharacterMonitoring
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
         private bool m_init;
+        private bool m_showOnlyExtractors;
 
         private int m_columnTTCDisplayIndex;
 
@@ -104,7 +106,7 @@ namespace EVEMon.CharacterMonitoring
             get { return m_grouping; }
             set
             {
-                m_grouping = (PlanetaryColoniesGrouping)value;
+                m_grouping = (PlanetaryGrouping)value;
                 if (m_init)
                     UpdateColumns();
             }
@@ -145,6 +147,23 @@ namespace EVEMon.CharacterMonitoring
                 // reset the dipslay index of the TTC column
                 m_columnTTCDisplayIndex = -1;
 
+                if (m_init)
+                    UpdateColumns();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [show only extractors].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [show only extractors]; otherwise, <c>false</c>.
+        /// </value>
+        internal bool ShowOnlyExtractors
+        {
+            get { return m_showOnlyExtractors; }
+            set
+            {
+                m_showOnlyExtractors = value;
                 if (m_init)
                     UpdateColumns();
             }
@@ -219,7 +238,7 @@ namespace EVEMon.CharacterMonitoring
 
             PlanetaryPins = (Character == null ? null : Character.PlanetaryColonies.SelectMany(x => x.Pins));
             Columns = Settings.UI.MainWindow.Planetary.Columns;
-            Grouping = (Character == null ? PlanetaryColoniesGrouping.None : Character.UISettings.PlanetaryGroupBy);
+            Grouping = (Character == null ? PlanetaryGrouping.None : Character.UISettings.PlanetaryGroupBy);
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -272,6 +291,7 @@ namespace EVEMon.CharacterMonitoring
                     switch (column.Column)
                     {
                         case PlanetaryColumn.Quantity:
+                        case PlanetaryColumn.Volume:
                         case PlanetaryColumn.QuantityPerCycle:
                             header.TextAlign = HorizontalAlignment.Right;
                             break;
@@ -313,6 +333,9 @@ namespace EVEMon.CharacterMonitoring
                 string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<PlanetaryPin> pins = m_list.Where(x => IsTextMatching(x, text));
 
+                if (m_showOnlyExtractors)
+                    pins = pins.Where(pin => DBConstants.EcuTypeIDs.Any(id => id == pin.TypeID));
+
                 UpdateSort();
 
                 UpdateContentByGroup(pins);
@@ -347,45 +370,45 @@ namespace EVEMon.CharacterMonitoring
         {
             switch (m_grouping)
             {
-                case PlanetaryColoniesGrouping.None:
+                case PlanetaryGrouping.None:
                     UpdateNoGroupContent(pins);
                     break;
-                case PlanetaryColoniesGrouping.SolarSystem:
+                case PlanetaryGrouping.SolarSystem:
                     IOrderedEnumerable<IGrouping<string, PlanetaryPin>> groups0 =
                         pins.GroupBy(x => x.Colony.SolarSystem.Name).OrderBy(x => x.Key);
                     UpdateContent(groups0);
                     break;
-                case PlanetaryColoniesGrouping.SolarSystemDesc:
+                case PlanetaryGrouping.SolarSystemDesc:
                     IOrderedEnumerable<IGrouping<string, PlanetaryPin>> groups1 =
                         pins.GroupBy(x => x.Colony.SolarSystem.Name).OrderByDescending(x => x.Key);
                     UpdateContent(groups1);
                     break;
-                case PlanetaryColoniesGrouping.PlanetType:
+                case PlanetaryGrouping.PlanetType:
                     IOrderedEnumerable<IGrouping<string, PlanetaryPin>> groups2 =
                         pins.GroupBy(x => x.Colony.PlanetTypeName).OrderBy(x => x.Key);
                     UpdateContent(groups2);
                     break;
-                case PlanetaryColoniesGrouping.PlanetTypeDesc:
+                case PlanetaryGrouping.PlanetTypeDesc:
                     IOrderedEnumerable<IGrouping<string, PlanetaryPin>> groups3 =
                         pins.GroupBy(x => x.Colony.PlanetTypeName).OrderByDescending(x => x.Key);
                     UpdateContent(groups3);
                     break;
-                case PlanetaryColoniesGrouping.Colony:
+                case PlanetaryGrouping.Colony:
                     IOrderedEnumerable<IGrouping<PlanetaryColony, PlanetaryPin>> groups4 =
                         pins.GroupBy(x => x.Colony).OrderBy(x => x.Key.PlanetID);
                     UpdateContent(groups4);
                     break;
-                case PlanetaryColoniesGrouping.ColonyDesc:
+                case PlanetaryGrouping.ColonyDesc:
                     IOrderedEnumerable<IGrouping<PlanetaryColony, PlanetaryPin>> groups5 =
                         pins.GroupBy(x => x.Colony).OrderByDescending(x => x.Key.PlanetID);
                     UpdateContent(groups5);
                     break;
-                case PlanetaryColoniesGrouping.EndDate:
+                case PlanetaryGrouping.EndDate:
                     IOrderedEnumerable<IGrouping<DateTime, PlanetaryPin>> groups6 =
                         pins.GroupBy(x => x.ExpiryTime.ToLocalTime().Date).OrderBy(x => x.Key);
                     UpdateContent(groups6);
                     break;
-                case PlanetaryColoniesGrouping.EndDateDesc:
+                case PlanetaryGrouping.EndDateDesc:
                     IOrderedEnumerable<IGrouping<DateTime, PlanetaryPin>> groups7 =
                         pins.GroupBy(x => x.ExpiryTime.ToLocalTime().Date).OrderByDescending(x => x.Key);
                     UpdateContent(groups7);
@@ -619,6 +642,9 @@ namespace EVEMon.CharacterMonitoring
                 case PlanetaryColumn.CycleTime:
                     item.Text = pin.CycleTime.ToString();
                     break;
+                case PlanetaryColumn.Volume:
+                    item.Text = (pin.ContentQuantity * pin.ContentVolume).ToNumericString(2);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -639,8 +665,17 @@ namespace EVEMon.CharacterMonitoring
         /// </returns>
         private static bool IsTextMatching(PlanetaryPin x, string text)
         {
-            return String.IsNullOrEmpty(text);
+            return String.IsNullOrEmpty(text)
+                   || x.Colony.PlanetName.ToLowerInvariant().Contains(text)
+                   || x.Colony.PlanetTypeName.ToLowerInvariant().Contains(text)
+                   || x.Colony.PlanetTypeName.ToLowerInvariant().Contains(text)
+                   || x.Colony.SolarSystem.Name.ToLowerInvariant().Contains(text)
+                   || x.Colony.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
+                   || x.Colony.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text)
+                   || x.TypeName.ToLowerInvariant().Contains(text)
+                   || x.ContentTypeName.ToLowerInvariant().Contains(text);
         }
+
         /// <summary>
         /// Updates the time to completion.
         /// </summary>
@@ -703,7 +738,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 case PlanetaryPinState.Extracting:
                     return Color.Green;
-                case PlanetaryPinState.Processing:
+                case PlanetaryPinState.Producing:
                     return Color.Orange;
                 case PlanetaryPinState.Idle:
                     return Color.DarkRed;

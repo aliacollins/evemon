@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -62,6 +63,36 @@ namespace EVEMon.Common
         {
             switch (m_column)
             {
+                case PlanetaryColumn.State:
+                    return x.State.CompareTo(y.State);
+                case PlanetaryColumn.TTC:
+                    return x.ExpiryTime.CompareTo(y.ExpiryTime);
+                case PlanetaryColumn.TypeName:
+                    return String.Compare(x.TypeName, y.TypeName, StringComparison.CurrentCulture);
+                case PlanetaryColumn.ContentTypeName:
+                    return String.Compare(x.ContentTypeName, y.ContentTypeName, StringComparison.CurrentCulture);
+                case PlanetaryColumn.InstallTime:
+                    return x.InstallTime.CompareTo(y.InstallTime);
+                case PlanetaryColumn.EndTime:
+                    return x.ExpiryTime.CompareTo(y.ExpiryTime);
+                case PlanetaryColumn.PlanetName:
+                    return String.Compare(x.Colony.PlanetName, y.Colony.PlanetName, StringComparison.CurrentCulture);
+                case PlanetaryColumn.PlanetTypeName:
+                    return String.Compare(x.Colony.PlanetTypeName, y.Colony.PlanetTypeName, StringComparison.CurrentCulture);
+                case PlanetaryColumn.SolarSystem:
+                    return x.Colony.SolarSystem.CompareTo(y.Colony.SolarSystem);
+                case PlanetaryColumn.Location:
+                    return String.Compare(x.Colony.FullLocation, y.Colony.FullLocation, StringComparison.CurrentCulture);
+                case PlanetaryColumn.Region:
+                    return x.Colony.SolarSystem.Constellation.Region.CompareTo(y.Colony.SolarSystem.Constellation.Region);
+                case PlanetaryColumn.Quantity:
+                    return x.ContentQuantity.CompareTo(y.ContentQuantity);
+                case PlanetaryColumn.QuantityPerCycle:
+                    return x.QuantityPerCycle.CompareTo(y.QuantityPerCycle);
+                case PlanetaryColumn.CycleTime:
+                    return x.CycleTime.CompareTo(y.CycleTime);
+                case PlanetaryColumn.Volume:
+                    return (x.ContentQuantity * x.ContentVolume).CompareTo(y.ContentQuantity * y.ContentVolume);
                 default:
                     return 0;
             }

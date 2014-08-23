@@ -86,7 +86,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The planetary group by.</value>
         [XmlElement("planetaryGroupBy")]
-        public PlanetaryColoniesGrouping PlanetaryGroupBy { get; set; }
+        public PlanetaryGrouping PlanetaryGroupBy { get; set; }
 
         /// <summary>
         /// Gets or sets the EVE mail messages group by.

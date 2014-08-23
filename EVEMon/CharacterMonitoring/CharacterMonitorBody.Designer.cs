@@ -74,6 +74,7 @@
             this.walletJournalIcon = new System.Windows.Forms.ToolStripButton();
             this.walletTransactionsIcon = new System.Windows.Forms.ToolStripButton();
             this.jobsIcon = new System.Windows.Forms.ToolStripButton();
+            this.planetaryIcon = new System.Windows.Forms.ToolStripButton();
             this.researchIcon = new System.Windows.Forms.ToolStripButton();
             this.mailMessagesIcon = new System.Windows.Forms.ToolStripButton();
             this.eveNotificationsIcon = new System.Windows.Forms.ToolStripButton();
@@ -86,6 +87,8 @@
             this.toggleSkillsIcon = new System.Windows.Forms.ToolStripButton();
             this.tsToggleSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.filterTimer = new System.Windows.Forms.Timer(this.components);
+            this.tsPlanetarySeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.showOnlyExtractorMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.borderPanel = new EVEMon.Common.Controls.BorderPanel();
             this.corePanel = new System.Windows.Forms.Panel();
             this.multiPanel = new EVEMon.Common.Controls.MultiPanel.MultiPanel();
@@ -106,9 +109,8 @@
             this.contactsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.medalsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.killLogPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.warningLabel = new System.Windows.Forms.Label();
-            this.planetaryIcon = new System.Windows.Forms.ToolStripButton();
             this.planetaryPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
+            this.warningLabel = new System.Windows.Forms.Label();
             this.standingsList = new EVEMon.CharacterMonitoring.CharacterStandingsList();
             this.skillsList = new EVEMon.CharacterMonitoring.CharacterSkillsList();
             this.ordersList = new EVEMon.CharacterMonitoring.CharacterMarketOrdersList();
@@ -204,7 +206,9 @@
             this.tsReadingPaneSeparator,
             this.readingPaneMenuItem,
             this.combatLogSeparator,
-            this.combatLogMenuItem});
+            this.combatLogMenuItem,
+            this.tsPlanetarySeparator,
+            this.showOnlyExtractorMenuItem});
             this.preferencesMenu.Image = ((System.Drawing.Image)(resources.GetObject("preferencesMenu.Image")));
             this.preferencesMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.preferencesMenu.Name = "preferencesMenu";
@@ -651,6 +655,18 @@
             this.jobsIcon.ToolTipText = "Display industry jobs";
             this.jobsIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
             // 
+            // planetaryIcon
+            // 
+            this.planetaryIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.planetaryIcon.Image = ((System.Drawing.Image)(resources.GetObject("planetaryIcon.Image")));
+            this.planetaryIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.planetaryIcon.Name = "planetaryIcon";
+            this.planetaryIcon.Size = new System.Drawing.Size(28, 28);
+            this.planetaryIcon.Tag = "planetaryPage";
+            this.planetaryIcon.Text = "Planetary Colonies";
+            this.planetaryIcon.ToolTipText = "Display planetary colonies";
+            this.planetaryIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
+            // 
             // researchIcon
             // 
             this.researchIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -767,6 +783,19 @@
             // 
             this.filterTimer.Interval = 300;
             this.filterTimer.Tick += new System.EventHandler(this.filterTimer_Tick);
+            // 
+            // tsPlanetarySeparator
+            // 
+            this.tsPlanetarySeparator.Name = "tsPlanetarySeparator";
+            this.tsPlanetarySeparator.Size = new System.Drawing.Size(249, 6);
+            // 
+            // showOnlyExtractorMenuItem
+            // 
+            this.showOnlyExtractorMenuItem.CheckOnClick = true;
+            this.showOnlyExtractorMenuItem.Name = "showOnlyExtractorMenuItem";
+            this.showOnlyExtractorMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.showOnlyExtractorMenuItem.Text = "Show Only Extractor Control Unit";
+            this.showOnlyExtractorMenuItem.Click += new System.EventHandler(this.showOnlyExtractorMenuItem_Click);
             // 
             // borderPanel
             // 
@@ -1009,6 +1038,17 @@
             this.killLogPage.Tag = "KillLog";
             this.killLogPage.Text = "killLogPage";
             // 
+            // planetaryPage
+            // 
+            this.planetaryPage.Controls.Add(this.planetaryList);
+            this.planetaryPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.planetaryPage.Location = new System.Drawing.Point(0, 0);
+            this.planetaryPage.Name = "planetaryPage";
+            this.planetaryPage.Size = new System.Drawing.Size(608, 181);
+            this.planetaryPage.TabIndex = 17;
+            this.planetaryPage.Tag = "PlanetaryColonies";
+            this.planetaryPage.Text = "planetaryPage";
+            // 
             // warningLabel
             // 
             this.warningLabel.AutoEllipsis = true;
@@ -1023,29 +1063,6 @@
             this.warningLabel.TabIndex = 1;
             this.warningLabel.Text = "This character has no associated API key, data won\'t be updated.";
             this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // planetaryIcon
-            // 
-            this.planetaryIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.planetaryIcon.Image = ((System.Drawing.Image)(resources.GetObject("planetaryIcon.Image")));
-            this.planetaryIcon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.planetaryIcon.Name = "planetaryIcon";
-            this.planetaryIcon.Size = new System.Drawing.Size(28, 28);
-            this.planetaryIcon.Tag = "planetaryPage";
-            this.planetaryIcon.Text = "Planetary Colonies";
-            this.planetaryIcon.ToolTipText = "Display planetary colonies";
-            this.planetaryIcon.Click += new System.EventHandler(this.toolbarIcon_Click);
-            // 
-            // planetaryPage
-            // 
-            this.planetaryPage.Controls.Add(this.planetaryList);
-            this.planetaryPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.planetaryPage.Location = new System.Drawing.Point(0, 0);
-            this.planetaryPage.Name = "planetaryPage";
-            this.planetaryPage.Size = new System.Drawing.Size(608, 181);
-            this.planetaryPage.TabIndex = 17;
-            this.planetaryPage.Tag = "PlanetaryColonies";
-            this.planetaryPage.Text = "planetaryPage";
             // 
             // standingsList
             // 
@@ -1206,7 +1223,7 @@
             // planetaryList
             // 
             this.planetaryList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.planetaryList.Grouping = EVEMon.Common.SettingsObjects.PlanetaryColoniesGrouping.None;
+            this.planetaryList.Grouping = EVEMon.Common.SettingsObjects.PlanetaryGrouping.None;
             this.planetaryList.Location = new System.Drawing.Point(0, 0);
             this.planetaryList.Name = "planetaryList";
             this.planetaryList.Size = new System.Drawing.Size(608, 181);
@@ -1363,5 +1380,7 @@
         private System.Windows.Forms.ToolStripButton planetaryIcon;
         private Common.Controls.MultiPanel.MultiPanelPage planetaryPage;
         private CharacterPlanetaryList planetaryList;
+        private System.Windows.Forms.ToolStripSeparator tsPlanetarySeparator;
+        private System.Windows.Forms.ToolStripMenuItem showOnlyExtractorMenuItem;
     }
 }
