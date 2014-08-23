@@ -58,8 +58,8 @@ namespace EVEMon.Common.SettingsObjects
         [Description("Collateral")]
         Collateral = 11,
 
-        [Header("Volume (m³)")]
-        [Description("Volume")]
+        [Header("Volume")]
+        [Description("Volume (m³)")]
         Volume = 12,
 
         [Header("Starting Location")]

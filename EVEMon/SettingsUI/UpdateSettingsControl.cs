@@ -62,10 +62,12 @@ namespace EVEMon.SettingsUI
         {
             get
             {
-                IEnumerable<Enum> apiMethods = APIMethods.Methods.Where(x => x.HasHeader());
+                List<Enum> apiMethods = APIMethods.Methods.Where(x => x.HasHeader()).ToList();
 
                 // Group the methods by usage
-                List<Enum> methods = apiMethods.Where(method => method is APIGenericMethods).ToList();
+                List<Enum> methods =
+                    apiMethods.Where(method => method is APIGenericMethods && !APIGenericMethods.PlanetaryColonies.Equals(method))
+                        .ToList();
 
                 methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
                     method => (int)method == ((int)method & (int)(APIMethodsExtensions.BasicCharacterFeatures))).Cast<Enum>());
@@ -73,6 +75,16 @@ namespace EVEMon.SettingsUI
                 methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
                     method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().
                                      OrderBy(method => method.GetHeader()));
+
+                // Add the planetary colonies method above the research points (a special case as CCP likes to brake patterns)
+                if (apiMethods.Any(method => method is APIGenericMethods && APIGenericMethods.PlanetaryColonies.Equals(method)))
+                {
+                    methods.Insert(
+                        methods.FindIndex(
+                            method => method is APICharacterMethods && APICharacterMethods.ResearchPoints.Equals(method)),
+                        apiMethods.First(
+                            method => method is APIGenericMethods && APIGenericMethods.PlanetaryColonies.Equals(method)));
+                }
 
                 // Uncomment upon implementing an exclicit corporation monitor feature
                 //methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(
@@ -226,6 +238,16 @@ namespace EVEMon.SettingsUI
             {
                 APICharacterMethods apiMethod = (APICharacterMethods)method;
                 if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCharacterFeatures))
+                {
+                    icon = Resources.KeyGold16;
+                    iconToolTip = "This is an advanced feature query.";
+                }
+            }
+
+            if (method is APIGenericMethods)
+            {
+                APIGenericMethods apiGenericMethod = (APIGenericMethods)method;
+                if (APIGenericMethods.PlanetaryColonies.Equals(apiGenericMethod))
                 {
                     icon = Resources.KeyGold16;
                     iconToolTip = "This is an advanced feature query.";

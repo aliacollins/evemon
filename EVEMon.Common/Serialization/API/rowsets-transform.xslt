@@ -92,6 +92,13 @@
           <xsl:with-param name="rowName" select="'medal'" />
         </xsl:call-template>
       </xsl:when>
+      <!-- (colonies, row) are transformed into (colonies, colony) -->
+      <xsl:when test="@name='colonies'">
+        <xsl:call-template name="rowsets">
+          <xsl:with-param name="setName" select="@name" />
+          <xsl:with-param name="rowName" select="'colony'" />
+        </xsl:call-template>
+      </xsl:when>
       <!-- By default behaviour, the rowset is a plural so we just remove the last character to get the row name-->
       <xsl:otherwise>
         <xsl:call-template name="rowsets">

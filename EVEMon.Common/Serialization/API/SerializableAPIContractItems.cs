@@ -5,7 +5,7 @@ namespace EVEMon.Common.Serialization.API
 {
     public sealed class SerializableAPIContractItems
     {
-        private Collection<SerializableContractItemsListItem> m_contractItems;
+        private readonly Collection<SerializableContractItemsListItem> m_contractItems;
         public SerializableAPIContractItems()
         {
             m_contractItems = new Collection<SerializableContractItemsListItem>();

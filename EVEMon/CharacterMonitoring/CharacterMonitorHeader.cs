@@ -530,9 +530,11 @@ namespace EVEMon.CharacterMonitoring
             ToolStripMenuItem tempMenu = null;
             try
             {
-                tempMenu = new ToolStripMenuItem(menuText);
-                tempMenu.Tag = monitor.Method;
-                tempMenu.Enabled = monitor.Enabled && monitor.HasAccess && monitor.CanForceUpdate;
+                tempMenu = new ToolStripMenuItem(menuText)
+                {
+                    Tag = monitor.Method,
+                    Enabled = monitor.Enabled && monitor.HasAccess && monitor.CanForceUpdate
+                };
 
                 menu = tempMenu;
                 tempMenu = null;

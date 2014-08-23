@@ -26,6 +26,9 @@ namespace EVEMon.CharacterMonitoring
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CharacterMonitorBody"/> class.
+        /// </summary>
         public CharacterMonitorBody()
         {
             InitializeComponent();
@@ -64,6 +67,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterWalletJournalUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.CharacterWalletTransactionsUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.IndustryJobsUpdated += EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterPlanetaryColoniesUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.CharacterResearchPointsUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.CharacterEVEMailMessagesUpdated += EveMonClient_UpdatePageControls;
             EveMonClient.CharacterEVENotificationsUpdated += EveMonClient_UpdatePageControls;
@@ -130,6 +134,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterWalletJournalUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.CharacterWalletTransactionsUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.IndustryJobsUpdated -= EveMonClient_UpdatePageControls;
+            EveMonClient.CharacterPlanetaryColoniesUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.CharacterResearchPointsUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.CharacterEVEMailMessagesUpdated -= EveMonClient_UpdatePageControls;
             EveMonClient.CharacterEVENotificationsUpdated -= EveMonClient_UpdatePageControls;
@@ -342,6 +347,10 @@ namespace EVEMon.CharacterMonitoring
             // Enables / Disables the industry jobs page related controls
             if (multiPanel.SelectedPage == jobsPage)
                 toolStripContextual.Enabled = ccpCharacter.IndustryJobs.Any();
+
+            // Enables / Disables the planetary colonies page related controls
+            if (multiPanel.SelectedPage == planetaryPage)
+                toolStripContextual.Enabled = ccpCharacter.PlanetaryColonies.Any();
 
             // Enables / Disables the research points page related controls
             if (multiPanel.SelectedPage == researchPage)
@@ -609,9 +618,11 @@ namespace EVEMon.CharacterMonitoring
                                 ToolStripMenuItem tempToolStripMenuItem = null;
                                 try
                                 {
-                                    tempToolStripMenuItem = new ToolStripMenuItem(item.button.Text);
-                                    tempToolStripMenuItem.Checked = IsEnabledFeature(item.button.Text);
-                                    tempToolStripMenuItem.Enabled = item.monitor.Any(monitor => monitor.HasAccess);
+                                    tempToolStripMenuItem = new ToolStripMenuItem(item.button.Text)
+                                    {
+                                        Checked = IsEnabledFeature(item.button.Text),
+                                        Enabled = item.monitor.Any(monitor => monitor.HasAccess)
+                                    };
 
                                     tsmi = tempToolStripMenuItem;
                                     tempToolStripMenuItem = null;
@@ -784,6 +795,9 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == jobsPage)
                 CreateGroupMenuList<IndustryJobGrouping, Enum>(jobsList);
 
+            if (multiPanel.SelectedPage == planetaryPage)
+                CreateGroupMenuList<PlanetaryGrouping, Enum>(planetaryList);
+
             if (multiPanel.SelectedPage == mailMessagesPage)
                 CreateGroupMenuList<EVEMailMessagesGrouping, Enum>(mailMessagesList);
 
@@ -817,6 +831,9 @@ namespace EVEMon.CharacterMonitoring
 
             if (multiPanel.SelectedPage == jobsPage)
                 GroupMenuSetting<IndustryJobGrouping, Enum>(item, jobsList);
+
+            if (multiPanel.SelectedPage == planetaryPage)
+                GroupMenuSetting<PlanetaryGrouping, Enum>(item, planetaryList);
 
             if (multiPanel.SelectedPage == mailMessagesPage)
                 GroupMenuSetting<EVEMailMessagesGrouping, Enum>(item, mailMessagesList);
@@ -883,6 +900,7 @@ namespace EVEMon.CharacterMonitoring
         private void preferencesMenu_DropDownOpening(object sender, EventArgs e)
         {
             bool hideInactive = true;
+            autoSizeColumnMenuItem.Enabled = true;
 
             if (multiPanel.SelectedPage == killLogPage)
             {
@@ -905,7 +923,8 @@ namespace EVEMon.CharacterMonitoring
                     item => !item.Equals(hideInactiveMenuItem) && !item.Equals(tsOptionsSeparator) &&
                             !item.Equals(showOnlyCharMenuItem) && !item.Equals(showOnlyCorpMenuItem) &&
                             !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
-                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem) &&
+                            !item.Equals(tsPlanetarySeparator) && !item.Equals(showOnlyExtractorMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -921,7 +940,8 @@ namespace EVEMon.CharacterMonitoring
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
-                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem) &&
+                            !item.Equals(tsPlanetarySeparator) && !item.Equals(showOnlyExtractorMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -939,7 +959,8 @@ namespace EVEMon.CharacterMonitoring
                 preferencesMenu.DropDownItems.Clear();
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(tsReadingPaneSeparator) && !item.Equals(readingPaneMenuItem) &&
-                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem)))
+                            !item.Equals(combatLogSeparator) && !item.Equals(combatLogMenuItem) &&
+                            !item.Equals(tsPlanetarySeparator) && !item.Equals(showOnlyExtractorMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
@@ -957,13 +978,24 @@ namespace EVEMon.CharacterMonitoring
                 foreach (ToolStripItem item in m_preferenceMenu.Where(
                     item => !item.Equals(numberAbsFormatMenuItem) && !item.Equals(tsReadingPaneSeparator) &&
                             !item.Equals(readingPaneMenuItem) && !item.Equals(combatLogSeparator) &&
-                            !item.Equals(combatLogMenuItem)))
+                            !item.Equals(combatLogMenuItem) && !item.Equals(tsPlanetarySeparator) &&
+                            !item.Equals(showOnlyExtractorMenuItem)))
                 {
                     preferencesMenu.DropDownItems.Add(item);
                 }
 
                 showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
+            }
+
+            if (multiPanel.SelectedPage == planetaryPage)
+            {
+                preferencesMenu.DropDownItems.Clear();
+                preferencesMenu.DropDownItems.Add(columnSettingsMenuItem);
+                preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
+                preferencesMenu.DropDownItems.Add(tsPlanetarySeparator);
+                preferencesMenu.DropDownItems.Add(showOnlyExtractorMenuItem);
+                return;
             }
 
             if (multiPanel.SelectedPage == researchPage)
@@ -1082,6 +1114,21 @@ namespace EVEMon.CharacterMonitoring
                         jobsList.Columns = f.Columns;
                         Settings.UI.MainWindow.IndustryJobs.Columns.Clear();
                         Settings.UI.MainWindow.IndustryJobs.Columns.AddRange(jobsList.Columns.Cast<IndustryJobColumnSettings>());
+                    }
+                }
+            }
+
+            if (multiPanel.SelectedPage == planetaryPage)
+            {
+                using (PlanetaryColumnsSelectWindow f =
+                    new PlanetaryColumnsSelectWindow(planetaryList.Columns.Cast<PlanetaryColumnSettings>()))
+                {
+                    DialogResult dr = f.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        planetaryList.Columns = f.Columns;
+                        Settings.UI.MainWindow.Planetary.Columns.Clear();
+                        Settings.UI.MainWindow.Planetary.Columns.AddRange(planetaryList.Columns.Cast<PlanetaryColumnSettings>());
                     }
                 }
             }
@@ -1395,6 +1442,16 @@ namespace EVEMon.CharacterMonitoring
             UpdatePageControls();
         }
 
+        /// <summary>
+        /// Handles the Click event of the showOnlyExtractorMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void showOnlyExtractorMenuItem_Click(object sender, EventArgs e)
+        {
+            planetaryList.ShowOnlyExtractors = showOnlyExtractorMenuItem.Checked;
+        }
+
         #endregion
 
 
@@ -1424,9 +1481,11 @@ namespace EVEMon.CharacterMonitoring
                             ToolStripButton tempToolStripButton = null;
                             try
                             {
-                                tempToolStripButton = new ToolStripButton(menu.group.GetHeader());
-                                tempToolStripButton.Checked = (list.Grouping.CompareTo(menu.group) == 0);
-                                tempToolStripButton.Tag = menu.grouping;
+                                tempToolStripButton = new ToolStripButton(menu.group.GetHeader())
+                                {
+                                    Checked = (list.Grouping.CompareTo(menu.@group) == 0),
+                                    Tag = menu.grouping
+                                };
 
                                 tsb = tempToolStripButton;
                                 tempToolStripButton = null;
@@ -1478,6 +1537,9 @@ namespace EVEMon.CharacterMonitoring
             if (obj is IndustryJobGrouping)
                 m_character.UISettings.JobsGroupBy = (IndustryJobGrouping)grouping;
 
+            if (obj is PlanetaryGrouping)
+                m_character.UISettings.PlanetaryGroupBy = (PlanetaryGrouping)grouping;
+
             if (obj is EVEMailMessagesGrouping)
                 m_character.UISettings.EVEMailMessagesGroupBy = (EVEMailMessagesGrouping)grouping;
 
@@ -1524,6 +1586,7 @@ namespace EVEMon.CharacterMonitoring
             walletJournalList.Character = ccpCharacter;
             walletTransactionsList.Character = ccpCharacter;
             jobsList.Character = ccpCharacter;
+            planetaryList.Character = ccpCharacter;
             researchList.Character = ccpCharacter;
             mailMessagesList.Character = ccpCharacter;
             eveNotificationsList.Character = ccpCharacter;
@@ -1534,7 +1597,7 @@ namespace EVEMon.CharacterMonitoring
                                             {
                                                 standingsIcon, contactsIcon, factionalWarfareStatsIcon, medalsIcon,
                                                 killLogIcon, assetsIcon, ordersIcon, contractsIcon, walletJournalIcon,
-                                                walletTransactionsIcon, jobsIcon, researchIcon, mailMessagesIcon,
+                                                walletTransactionsIcon, jobsIcon, planetaryIcon, researchIcon, mailMessagesIcon,
                                                 eveNotificationsIcon, calendarEventsIcon
                                             });
 
@@ -1579,6 +1642,13 @@ namespace EVEMon.CharacterMonitoring
             if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
             {
                 APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
+                if (ccpCharacter.QueryMonitors[method] != null)
+                    monitors.Add(ccpCharacter.QueryMonitors[method]);
+            }
+
+            if (Enum.IsDefined(typeof(APIGenericMethods), page.Tag))
+            {
+                APIGenericMethods method = (APIGenericMethods)Enum.Parse(typeof(APIGenericMethods), (string)page.Tag);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }

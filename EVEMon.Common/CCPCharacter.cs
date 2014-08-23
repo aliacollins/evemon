@@ -64,6 +64,7 @@ namespace EVEMon.Common
             CorporationMedals = new MedalCollection(this);
             UpcomingCalendarEvents = new UpcomingCalendarEventCollection(this);
             KillLog = new KillLogCollection(this);
+            PlanetaryColonies = new PlanetaryColoniesCollection(this);
 
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
@@ -280,6 +281,11 @@ namespace EVEMon.Common
         /// Gets the collection of kill logs.
         /// </summary>
         public KillLogCollection KillLog { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of planetary colonies.
+        /// </summary>
+        public PlanetaryColoniesCollection PlanetaryColonies { get; private set; }
 
         /// <summary>
         /// Gets the query monitors enumeration.
@@ -607,11 +613,12 @@ namespace EVEMon.Common
             }
 
             // Removes the previous error notification
-            if (m_errorNotifiedMethod.Equals(method))
-            {
-                EveMonClient.Notifications.InvalidateCharacterAPIError(this);
-                m_errorNotifiedMethod = APIMethodsExtensions.None;
-            }
+            if (!m_errorNotifiedMethod.Equals(method))
+                return false;
+
+            EveMonClient.Notifications.InvalidateCharacterAPIError(this);
+            m_errorNotifiedMethod = APIMethodsExtensions.None;
+
             return false;
         }
 

@@ -5,7 +5,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class CorporationDataQuerying
+    internal sealed class CorporationDataQuerying
     {
         #region Fields
 
@@ -21,7 +21,7 @@ namespace EVEMon.Common
 
         #region Constructor
 
-        public CorporationDataQuerying(CCPCharacter ccpCharacter)
+        internal CorporationDataQuerying(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;
             m_corporationQueryMonitors = new List<IQueryMonitorEx>();

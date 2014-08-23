@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
@@ -6,24 +6,22 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.SettingsObjects
 {
     /// <summary>
-    /// Settings for Industry Jobs.
+    /// Settings for Planetary Colonies.
     /// </summary>
     /// <remarks>
     /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
     /// Don't use auto-property with private setter for the collections as it does not work with XmlSerializer.
     /// </remarks>
-    public sealed class IndustryJobSettings
+    public sealed class PlanetarySettings
     {
-        private readonly Collection<IndustryJobColumnSettings> m_columns;
+        private readonly Collection<PlanetaryColumnSettings> m_columns;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IndustryJobSettings"/> class.
+        /// Initializes a new instance of the <see cref="PlanetarySettings"/> class.
         /// </summary>
-        public IndustryJobSettings()
+        public PlanetarySettings()
         {
-            m_columns = new Collection<IndustryJobColumnSettings>();
-
-            HideInactiveJobs = true;
+            m_columns = new Collection<PlanetaryColumnSettings>();
         }
 
         /// <summary>
@@ -32,44 +30,39 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The columns.</value>
         [XmlArray("columns")]
         [XmlArrayItem("column")]
-        public Collection<IndustryJobColumnSettings> Columns
+        public Collection<PlanetaryColumnSettings> Columns
         {
             get { return m_columns; }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [hide inactive jobs].
-        /// </summary>
-        /// <value><c>true</c> if [hide inactive jobs]; otherwise, <c>false</c>.</value>
-        [XmlElement("hideInactiveJobs")]
-        public bool HideInactiveJobs { get; set; }
-
-        /// <summary>
         /// Gets the default columns.
         /// </summary>
         /// <value>The default columns.</value>
-        public IEnumerable<IndustryJobColumnSettings> DefaultColumns
+        public IEnumerable<PlanetaryColumnSettings> DefaultColumns
         {
             get
             {
-                IndustryJobColumn[] defaultColumns =
+                PlanetaryColumn[] defaultColumns =
                 {
-                    IndustryJobColumn.State,
-                    IndustryJobColumn.TTC,
-                    IndustryJobColumn.InstalledItem,
-                    IndustryJobColumn.OutputItem
+                    PlanetaryColumn.State,
+                    PlanetaryColumn.TTC,
+                    PlanetaryColumn.TypeName,
+                    PlanetaryColumn.ContentTypeName,
+                    PlanetaryColumn.QuantityPerCycle,
+                    PlanetaryColumn.Quantity,
+                    PlanetaryColumn.Volume,
                 };
 
-                return EnumExtensions.GetValues<IndustryJobColumn>().Where(
-                    column => column != IndustryJobColumn.None).Where(
+                return EnumExtensions.GetValues<PlanetaryColumn>().Where(
+                    column => column != PlanetaryColumn.None).Where(
                         column => Columns.All(columnSetting => columnSetting.Column != column)).Select(
-                            column => new IndustryJobColumnSettings
+                            column => new PlanetaryColumnSettings
                             {
                                 Column = column,
                                 Visible = defaultColumns.Contains(column),
                                 Width = -2
                             });
-
             }
         }
     }

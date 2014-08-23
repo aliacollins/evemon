@@ -18,6 +18,7 @@ namespace EVEMon.Common.SettingsObjects
             MarketOrders = new MarketOrderSettings();
             Contracts = new ContractSettings();
             IndustryJobs = new IndustryJobSettings();
+            Planetary = new PlanetarySettings();
             Research = new ResearchSettings();
             EVEMailMessages = new EveMailMessageSettings();
             EVENotifications = new EveNotificationSettings();
@@ -227,6 +228,12 @@ namespace EVEMon.Common.SettingsObjects
         /// <value>The industry jobs.</value>
         [XmlElement("industryJobs")]
         public IndustryJobSettings IndustryJobs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the planetary.
+        /// </summary>
+        [XmlElement("planetary")]
+        public PlanetarySettings Planetary { get; set; }
 
         /// <summary>
         /// Gets or sets the research.
