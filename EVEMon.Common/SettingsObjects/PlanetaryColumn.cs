@@ -66,5 +66,13 @@ namespace EVEMon.Common.SettingsObjects
         [Header("Volume")]
         [Description("Volume (m³)")]
         Volume = 14,
+
+        [Header("Linked to")]
+        [Description("Linked to")]
+        LinkedTo = 15,
+
+        [Header("Routed to")]
+        [Description("Routed to")]
+        RoutedTo = 16,
     }
 }

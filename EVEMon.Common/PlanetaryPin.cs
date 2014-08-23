@@ -24,14 +24,12 @@ namespace EVEMon.Common
             SchematicID = src.SchematicID;
             CycleTime = src.CycleTime;
             QuantityPerCycle = src.QuantityPerCycle;
+            ContentQuantity = src.ContentQuantity;
             ContentTypeID = src.ContentTypeID;
             ContentTypeName = src.ContentTypeName;
             LastLaunchTime = src.LastLaunchTime;
             InstallTime = src.InstallTime;
             ExpiryTime = src.ExpiryTime;
-            ContentQuantity = DBConstants.EcuTypeIDs.Any(x => x == TypeID)
-                ? QuantityPerCycle / CycleTime
-                : src.ContentQuantity;
             State = GetState();
         }
 

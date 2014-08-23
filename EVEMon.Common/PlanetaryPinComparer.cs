@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common
@@ -93,6 +94,12 @@ namespace EVEMon.Common
                     return x.CycleTime.CompareTo(y.CycleTime);
                 case PlanetaryColumn.Volume:
                     return (x.ContentQuantity * x.ContentVolume).CompareTo(y.ContentQuantity * y.ContentVolume);
+                case PlanetaryColumn.LinkedTo:
+                    return String.Compare(String.Join(", ", x.LinkedTo.Select(z => z.TypeName).Distinct()),
+                        String.Join(", ", y.LinkedTo.Select(z => z.TypeName).Distinct()), StringComparison.CurrentCulture);
+                case PlanetaryColumn.RoutedTo:
+                    return String.Compare(String.Join(", ", x.RoutedTo.Select(z => z.TypeName).Distinct()),
+                        String.Join(", ", y.RoutedTo.Select(z => z.TypeName).Distinct()), StringComparison.CurrentCulture);
                 default:
                     return 0;
             }

@@ -645,6 +645,12 @@ namespace EVEMon.CharacterMonitoring
                 case PlanetaryColumn.Volume:
                     item.Text = (pin.ContentQuantity * pin.ContentVolume).ToNumericString(2);
                     break;
+                case PlanetaryColumn.LinkedTo:
+                    item.Text = String.Join(", ", pin.LinkedTo.Select(x=> x.TypeName).Distinct());
+                    break;
+                case PlanetaryColumn.RoutedTo:
+                    item.Text = String.Join(", ", pin.RoutedTo.Select(x => x.TypeName).Distinct());
+                    break;
                 default:
                     throw new NotImplementedException();
             }
