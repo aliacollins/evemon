@@ -9,7 +9,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value>The column.</value>
         [XmlAttribute("column")]
-        public PlanetaryColoniesColumn Column { get; set; }
+        public PlanetaryColumn Column { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="PlanetaryColumnSettings"/> is visible.

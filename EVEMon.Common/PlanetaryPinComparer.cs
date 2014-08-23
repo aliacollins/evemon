@@ -6,17 +6,17 @@ namespace EVEMon.Common
     /// <summary>
     /// Performs a comparison between two <see cref="IndustryJob" /> types.
     /// </summary>
-    public sealed class PlanetaryColonyComparer : Comparer<PlanetaryColony>
+    public sealed class PlanetaryPinComparer : Comparer<PlanetaryPin>
     {
-        private readonly PlanetaryColoniesColumn m_column;
+        private readonly PlanetaryColumn m_column;
         private readonly bool m_isAscending;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlanetaryColonyComparer"/> class.
+        /// Initializes a new instance of the <see cref="PlanetaryPinComparer"/> class.
         /// </summary>
         /// <param name="column">The column.</param>
         /// <param name="isAscending">Is ascending flag.</param>
-        public PlanetaryColonyComparer(PlanetaryColoniesColumn column, bool isAscending)
+        public PlanetaryPinComparer(PlanetaryColumn column, bool isAscending)
         {
             m_column = column;
             m_isAscending = isAscending;
@@ -36,7 +36,7 @@ namespace EVEMon.Common
         /// Greater than zero
         /// <paramref name="x"/> is greater than <paramref name="y"/>.
         /// </returns>
-        public override int Compare(PlanetaryColony x, PlanetaryColony y)
+        public override int Compare(PlanetaryPin x, PlanetaryPin y)
         {
             if (m_isAscending)
                 return CompareCore(x, y);
@@ -58,7 +58,7 @@ namespace EVEMon.Common
         /// Greater than zero
         /// <paramref name="x"/> is greater than <paramref name="y"/>.
         /// </returns>
-        private int CompareCore(PlanetaryColony x, PlanetaryColony y)
+        private int CompareCore(PlanetaryPin x, PlanetaryPin y)
         {
             switch (m_column)
             {

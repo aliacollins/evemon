@@ -5,7 +5,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class PlanetaryColony
+    public sealed class PlanetaryColony : IComparable, IComparable<PlanetaryColony>
     {
         private readonly List<PlanetaryPin> m_planetaryPins = new List<PlanetaryPin>();
         private readonly List<PlanetaryRoute> m_planetaryRoutes = new List<PlanetaryRoute>();
@@ -76,11 +76,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the solar system where this job is located.
         /// </summary>
+        /// <value>
+        /// The solar system.
+        /// </value>
         public SolarSystem SolarSystem { get; private set; }
 
         /// <summary>
         /// Gets the installation full celestrial path.
         /// </summary>
+        /// <value>
+        /// The full location.
+        /// </value>
         public string FullLocation
         {
             get { return String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, PlanetName); }
@@ -299,7 +305,7 @@ namespace EVEMon.Common
         {
             foreach (SerializablePlanetaryPin item in src)
             {
-                m_planetaryPins.Add(new PlanetaryPin(item));
+                m_planetaryPins.Add(new PlanetaryPin(this, item));
             }
         }
 
@@ -311,7 +317,7 @@ namespace EVEMon.Common
         {
             foreach (SerializablePlanetaryRoute item in src)
             {
-                m_planetaryRoutes.Add(new PlanetaryRoute(item));
+                m_planetaryRoutes.Add(new PlanetaryRoute(this, item));
             }
         }
 
@@ -323,10 +329,21 @@ namespace EVEMon.Common
         {
             foreach (SerializablePlanetaryLink item in src)
             {
-                m_planetaryLinks.Add(new PlanetaryLink(item));
+                m_planetaryLinks.Add(new PlanetaryLink(this, item));
             }
         }
 
         #endregion
+
+
+        public int CompareTo(object obj)
+        {
+            return CompareTo((PlanetaryColony)obj);
+        }
+
+        public int CompareTo(PlanetaryColony other)
+        {
+            return this == other ? 1 : 0;
+        }
     }
 }

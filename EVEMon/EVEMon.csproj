@@ -210,11 +210,11 @@
     <Compile Include="CharacterMonitoring\CharacterMonitorFooter.Designer.cs">
       <DependentUpon>CharacterMonitorFooter.cs</DependentUpon>
     </Compile>
-    <Compile Include="CharacterMonitoring\CharacterPlanetaryColoniesList.cs">
+    <Compile Include="CharacterMonitoring\CharacterPlanetaryList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CharacterMonitoring\CharacterPlanetaryColoniesList.Designer.cs">
-      <DependentUpon>CharacterPlanetaryColoniesList.cs</DependentUpon>
+    <Compile Include="CharacterMonitoring\CharacterPlanetaryList.Designer.cs">
+      <DependentUpon>CharacterPlanetaryList.cs</DependentUpon>
     </Compile>
     <Compile Include="CharacterMonitoring\CharacterWalletJournalList.cs">
       <SubType>UserControl</SubType>
@@ -564,8 +564,8 @@
     <EmbeddedResource Include="CharacterMonitoring\CharacterMonitorFooter.resx">
       <DependentUpon>CharacterMonitorFooter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CharacterMonitoring\CharacterPlanetaryColoniesList.resx">
-      <DependentUpon>CharacterPlanetaryColoniesList.cs</DependentUpon>
+    <EmbeddedResource Include="CharacterMonitoring\CharacterPlanetaryList.resx">
+      <DependentUpon>CharacterPlanetaryList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterWalletJournalList.resx">
       <DependentUpon>CharacterWalletJournalList.cs</DependentUpon>

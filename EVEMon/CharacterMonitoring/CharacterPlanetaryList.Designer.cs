@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterPlanetaryColoniesList
+    partial class CharacterPlanetaryList
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterPlanetaryColoniesList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CharacterPlanetaryList));
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportToCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noPlanetaryColoniesLabel = new System.Windows.Forms.Label();
-            this.lvPlanetaryColonies = new System.Windows.Forms.ListView();
+            this.lvPlanetary = new System.Windows.Forms.ListView();
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,31 +68,31 @@
             this.noPlanetaryColoniesLabel.Name = "noPlanetaryColoniesLabel";
             this.noPlanetaryColoniesLabel.Size = new System.Drawing.Size(454, 434);
             this.noPlanetaryColoniesLabel.TabIndex = 2;
-            this.noPlanetaryColoniesLabel.Text = "No planetary colonies are available.";
+            this.noPlanetaryColoniesLabel.Text = "No planetary info are available.";
             this.noPlanetaryColoniesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lvPlanetaryColonies
             // 
-            this.lvPlanetaryColonies.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvPlanetaryColonies.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvPlanetaryColonies.FullRowSelect = true;
-            this.lvPlanetaryColonies.HideSelection = false;
-            this.lvPlanetaryColonies.Location = new System.Drawing.Point(0, 0);
-            this.lvPlanetaryColonies.MultiSelect = false;
-            this.lvPlanetaryColonies.Name = "lvPlanetaryColonies";
-            this.lvPlanetaryColonies.Size = new System.Drawing.Size(454, 434);
-            this.lvPlanetaryColonies.SmallImageList = this.ilIcons;
-            this.lvPlanetaryColonies.TabIndex = 3;
-            this.lvPlanetaryColonies.UseCompatibleStateImageBehavior = false;
-            this.lvPlanetaryColonies.View = System.Windows.Forms.View.Details;
+            this.lvPlanetary.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvPlanetary.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvPlanetary.FullRowSelect = true;
+            this.lvPlanetary.HideSelection = false;
+            this.lvPlanetary.Location = new System.Drawing.Point(0, 0);
+            this.lvPlanetary.MultiSelect = false;
+            this.lvPlanetary.Name = "lvPlanetary";
+            this.lvPlanetary.Size = new System.Drawing.Size(454, 434);
+            this.lvPlanetary.SmallImageList = this.ilIcons;
+            this.lvPlanetary.TabIndex = 3;
+            this.lvPlanetary.UseCompatibleStateImageBehavior = false;
+            this.lvPlanetary.View = System.Windows.Forms.View.Details;
             // 
-            // CharacterPlanetaryColoniesList
+            // CharacterPlanetaryList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lvPlanetaryColonies);
+            this.Controls.Add(this.lvPlanetary);
             this.Controls.Add(this.noPlanetaryColoniesLabel);
-            this.Name = "CharacterPlanetaryColoniesList";
+            this.Name = "CharacterPlanetaryList";
             this.Size = new System.Drawing.Size(454, 434);
             this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -105,6 +105,6 @@
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.Label noPlanetaryColoniesLabel;
-        private System.Windows.Forms.ListView lvPlanetaryColonies;
+        private System.Windows.Forms.ListView lvPlanetary;
     }
 }

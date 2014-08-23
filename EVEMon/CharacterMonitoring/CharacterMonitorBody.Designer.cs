@@ -126,7 +126,7 @@
             this.contactsList = new EVEMon.CharacterMonitoring.CharacterContactList();
             this.medalsList = new EVEMon.CharacterMonitoring.CharacterMedalsList();
             this.killLogList = new EVEMon.CharacterMonitoring.CharacterKillLogList();
-            this.planetaryList = new EVEMon.CharacterMonitoring.CharacterPlanetaryColoniesList();
+            this.planetaryList = new EVEMon.CharacterMonitoring.CharacterPlanetaryList();
             this.notificationList = new EVEMon.Controls.NotificationList();
             this.toolstripPanel.SuspendLayout();
             this.toolStripContextual.SuspendLayout();
@@ -1362,6 +1362,6 @@
         private System.Windows.Forms.ToolStripButton searchTextDel;
         private System.Windows.Forms.ToolStripButton planetaryIcon;
         private Common.Controls.MultiPanel.MultiPanelPage planetaryPage;
-        private CharacterPlanetaryColoniesList planetaryList;
+        private CharacterPlanetaryList planetaryList;
     }
 }

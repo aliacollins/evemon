@@ -1109,8 +1109,8 @@ namespace EVEMon.CharacterMonitoring
                     if (dr == DialogResult.OK)
                     {
                         planetaryList.Columns = f.Columns;
-                        Settings.UI.MainWindow.PlanetaryColonies.Columns.Clear();
-                        Settings.UI.MainWindow.PlanetaryColonies.Columns.AddRange(planetaryList.Columns.Cast<PlanetaryColumnSettings>());
+                        Settings.UI.MainWindow.Planetary.Columns.Clear();
+                        Settings.UI.MainWindow.Planetary.Columns.AddRange(planetaryList.Columns.Cast<PlanetaryColumnSettings>());
                     }
                 }
             }

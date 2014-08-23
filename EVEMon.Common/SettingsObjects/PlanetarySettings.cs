@@ -12,14 +12,14 @@ namespace EVEMon.Common.SettingsObjects
     /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
     /// Don't use auto-property with private setter for the collections as it does not work with XmlSerializer.
     /// </remarks>
-    public sealed class PlanetaryColoniesSettings
+    public sealed class PlanetarySettings
     {
         private readonly Collection<PlanetaryColumnSettings> m_columns;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlanetaryColoniesSettings"/> class.
+        /// Initializes a new instance of the <see cref="PlanetarySettings"/> class.
         /// </summary>
-        public PlanetaryColoniesSettings()
+        public PlanetarySettings()
         {
             m_columns = new Collection<PlanetaryColumnSettings>();
         }
@@ -43,16 +43,18 @@ namespace EVEMon.Common.SettingsObjects
         {
             get
             {
-                PlanetaryColoniesColumn[] defaultColumns =
+                PlanetaryColumn[] defaultColumns =
                 {
-                    PlanetaryColoniesColumn.PlanetTypeName,
-                    PlanetaryColoniesColumn.PlanetName,
-                    PlanetaryColoniesColumn.SolarSystem,
-                    PlanetaryColoniesColumn.Installations
+                    PlanetaryColumn.State,
+                    PlanetaryColumn.TTC,
+                    PlanetaryColumn.TypeName,
+                    PlanetaryColumn.ContentTypeName,
+                    PlanetaryColumn.Quantity,
+                    PlanetaryColumn.QuantityPerCycle,
                 };
 
-                return EnumExtensions.GetValues<PlanetaryColoniesColumn>().Where(
-                    column => column != PlanetaryColoniesColumn.None).Where(
+                return EnumExtensions.GetValues<PlanetaryColumn>().Where(
+                    column => column != PlanetaryColumn.None).Where(
                         column => Columns.All(columnSetting => columnSetting.Column != column)).Select(
                             column => new PlanetaryColumnSettings
                             {

@@ -306,7 +306,7 @@
     <Compile Include="PlanEntryComparer.cs" />
     <Compile Include="PlanetaryColoniesCollection.cs" />
     <Compile Include="PlanetaryColony.cs" />
-    <Compile Include="PlanetaryColonyComparer.cs" />
+    <Compile Include="PlanetaryPinComparer.cs" />
     <Compile Include="PlanetaryLink.cs" />
     <Compile Include="PlanetaryPin.cs" />
     <Compile Include="PlanetaryRoute.cs" />
@@ -441,8 +441,8 @@
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />
-    <Compile Include="SettingsObjects\PlanetaryColoniesSettings.cs" />
-    <Compile Include="SettingsObjects\PlanetaryColoniesColumn.cs" />
+    <Compile Include="SettingsObjects\PlanetarySettings.cs" />
+    <Compile Include="SettingsObjects\PlanetaryColumn.cs" />
     <Compile Include="SettingsObjects\PlanetaryColumnSettings.cs" />
     <Compile Include="SettingsObjects\PortableEveInstallationsSettings.cs" />
     <Compile Include="Serialization\Settings\SerializablePortableEveInstallation.cs" />
