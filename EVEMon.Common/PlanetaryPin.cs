@@ -8,6 +8,9 @@ namespace EVEMon.Common
 {
     public sealed class PlanetaryPin
     {
+        private readonly EveProperty m_volumeProperty = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
+
+
         #region Constructor
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace EVEMon.Common
             InstallTime = src.InstallTime;
             ExpiryTime = src.ExpiryTime;
             State = GetState();
+            ContentVolume = GetVolume();
         }
 
         #endregion
@@ -116,16 +120,7 @@ namespace EVEMon.Common
         /// <value>
         /// The content.
         /// </value>
-        public double ContentVolume
-        {
-            get
-            {
-                Item item = StaticItems.GetItemByID(ContentTypeID);
-                return item.Properties.Any(prop => prop.Property.ID == DBConstants.VolumePropertyID)
-                    ? item.Properties[DBConstants.VolumePropertyID].GetValueOrDefault().DoubleValue
-                    : 0d;
-            }
-        }
+        public double ContentVolume { get; private set; }
 
         /// <summary>
         /// Gets or sets the content quantity.
@@ -209,6 +204,9 @@ namespace EVEMon.Common
 
         #endregion
 
+
+        #region Helper Methods
+
         /// <summary>
         /// Gets the state.
         /// </summary>
@@ -223,5 +221,19 @@ namespace EVEMon.Common
 
             return PlanetaryPinState.None;
         }
+
+        /// <summary>
+        /// Gets the volume.
+        /// </summary>
+        /// <returns></returns>
+        private double GetVolume()
+        {
+            Item item = StaticItems.GetItemByID(ContentTypeID);
+            return item != null && m_volumeProperty != null
+                ? m_volumeProperty.GetNumericValue(item) * ContentQuantity
+                : 0d;
+        }
+
+        #endregion
     }
 }

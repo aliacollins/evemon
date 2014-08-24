@@ -643,7 +643,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = pin.CycleTime.ToString();
                     break;
                 case PlanetaryColumn.Volume:
-                    item.Text = (pin.ContentQuantity * pin.ContentVolume).ToNumericString(2);
+                    item.Text = pin.ContentVolume.ToNumericString(2);
                     break;
                 case PlanetaryColumn.LinkedTo:
                     item.Text = String.Join(", ", pin.LinkedTo.Select(x=> x.TypeName).Distinct());

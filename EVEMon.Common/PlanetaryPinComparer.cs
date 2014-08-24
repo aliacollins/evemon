@@ -93,7 +93,7 @@ namespace EVEMon.Common
                 case PlanetaryColumn.CycleTime:
                     return x.CycleTime.CompareTo(y.CycleTime);
                 case PlanetaryColumn.Volume:
-                    return (x.ContentQuantity * x.ContentVolume).CompareTo(y.ContentQuantity * y.ContentVolume);
+                    return x.ContentVolume.CompareTo(y.ContentVolume);
                 case PlanetaryColumn.LinkedTo:
                     return String.Compare(String.Join(", ", x.LinkedTo.Select(z => z.TypeName).Distinct()),
                         String.Join(", ", y.LinkedTo.Select(z => z.TypeName).Distinct()), StringComparison.CurrentCulture);

@@ -35,6 +35,13 @@
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noPlanetaryColoniesLabel = new System.Windows.Forms.Label();
             this.lvPlanetary = new System.Windows.Forms.ListView();
+            this.chState = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chTTC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chInstallation = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chCommodity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chQuantityPerCycle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,9 +78,17 @@
             this.noPlanetaryColoniesLabel.Text = "No planetary info are available.";
             this.noPlanetaryColoniesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lvPlanetaryColonies
+            // lvPlanetary
             // 
             this.lvPlanetary.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvPlanetary.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chState,
+            this.chTTC,
+            this.chInstallation,
+            this.chCommodity,
+            this.chQuantityPerCycle,
+            this.chQuantity,
+            this.chVolume});
             this.lvPlanetary.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvPlanetary.FullRowSelect = true;
             this.lvPlanetary.HideSelection = false;
@@ -85,6 +100,38 @@
             this.lvPlanetary.TabIndex = 3;
             this.lvPlanetary.UseCompatibleStateImageBehavior = false;
             this.lvPlanetary.View = System.Windows.Forms.View.Details;
+            // 
+            // chState
+            // 
+            this.chState.Text = "State";
+            // 
+            // chTTC
+            // 
+            this.chTTC.Text = "TTC";
+            this.chTTC.Width = 54;
+            // 
+            // chInstallation
+            // 
+            this.chInstallation.Text = "Installation";
+            this.chInstallation.Width = 62;
+            // 
+            // chCommodity
+            // 
+            this.chCommodity.Text = "Commodity";
+            this.chCommodity.Width = 65;
+            // 
+            // chQuantityPerCycle
+            // 
+            this.chQuantityPerCycle.Text = "Quantity / Cycle";
+            this.chQuantityPerCycle.Width = 92;
+            // 
+            // chQuantity
+            // 
+            this.chQuantity.Text = "Quantity";
+            // 
+            // chVolume
+            // 
+            this.chVolume.Text = "Volume";
             // 
             // CharacterPlanetaryList
             // 
@@ -106,5 +153,12 @@
         private System.Windows.Forms.ImageList ilIcons;
         private System.Windows.Forms.Label noPlanetaryColoniesLabel;
         private System.Windows.Forms.ListView lvPlanetary;
+        private System.Windows.Forms.ColumnHeader chState;
+        private System.Windows.Forms.ColumnHeader chTTC;
+        private System.Windows.Forms.ColumnHeader chInstallation;
+        private System.Windows.Forms.ColumnHeader chCommodity;
+        private System.Windows.Forms.ColumnHeader chQuantityPerCycle;
+        private System.Windows.Forms.ColumnHeader chQuantity;
+        private System.Windows.Forms.ColumnHeader chVolume;
     }
 }
