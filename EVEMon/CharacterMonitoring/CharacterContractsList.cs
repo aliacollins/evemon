@@ -646,27 +646,27 @@ namespace EVEMon.CharacterMonitoring
                 case ContractColumn.Price:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Price, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Price.ToString("N2", CultureConstants.DefaultCulture));
+                                     : contract.Price.ToNumericString(2));
                     break;
                 case ContractColumn.Buyout:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Buyout, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Buyout.ToString("N2", CultureConstants.DefaultCulture));
+                                     : contract.Buyout.ToNumericString(2));
                     break;
                 case ContractColumn.Reward:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Reward, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Reward.ToString("N2", CultureConstants.DefaultCulture));
+                                     : contract.Reward.ToNumericString(2));
                     break;
                 case ContractColumn.Collateral:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Collateral, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Collateral.ToString("N2", CultureConstants.DefaultCulture));
+                                     : contract.Collateral.ToNumericString(2));
                     break;
                 case ContractColumn.Volume:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(contract.Volume, AbbreviationFormat.AbbreviationSymbols)
-                                     : contract.Volume.ToString("N2", CultureConstants.DefaultCulture));
+                                     : contract.Volume.ToNumericString(2));
                     break;
                 case ContractColumn.StartLocation:
                     item.Text = (startOutpost != null

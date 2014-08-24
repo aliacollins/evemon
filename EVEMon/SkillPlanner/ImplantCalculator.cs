@@ -122,7 +122,7 @@ namespace EVEMon.SkillPlanner
                 lblAdjust.Text = adjust.ToString(CultureConstants.DefaultCulture);
             }
 
-            lblEffectiveAttribute.Text = m_characterScratchpad[attrib].EffectiveValue.ToString("N0", CultureConstants.DefaultCulture);
+            lblEffectiveAttribute.Text = m_characterScratchpad[attrib].EffectiveValue.ToNumericString(0);
         }
 
         /// <summary>

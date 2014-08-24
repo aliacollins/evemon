@@ -669,7 +669,7 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.InitialVolume:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture));
+                                     : order.InitialVolume.ToNumericString(0));
                     break;
                 case MarketOrderColumn.Issued:
                     item.Text = order.Issued.ToLocalTime().ToShortDateString();
@@ -691,7 +691,7 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.MinimumVolume:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.MinVolume.ToString("N0", CultureConstants.DefaultCulture));
+                                     : order.MinVolume.ToNumericString(0));
                     break;
                 case MarketOrderColumn.Region:
                     item.Text = order.Station.SolarSystem.Constellation.Region.Name;
@@ -699,7 +699,7 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.RemainingVolume:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture));
+                                     : order.RemainingVolume.ToNumericString(0));
                     break;
                 case MarketOrderColumn.SolarSystem:
                     item.Text = order.Station.SolarSystem.Name;
@@ -713,13 +713,13 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.TotalPrice:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.TotalPrice.ToString("N2", CultureConstants.DefaultCulture));
+                                     : order.TotalPrice.ToNumericString(2));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.UnitaryPrice:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.UnitaryPrice.ToString("N2", CultureConstants.DefaultCulture));
+                                     : order.UnitaryPrice.ToNumericString(2));
                     item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case MarketOrderColumn.Volume:
@@ -727,10 +727,10 @@ namespace EVEMon.CharacterMonitoring
                         CultureConstants.DefaultCulture, "{0} / {1}",
                         (numberFormat
                              ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
-                             : order.RemainingVolume.ToString("N0", CultureConstants.DefaultCulture)),
+                             : order.RemainingVolume.ToNumericString(0)),
                         (numberFormat
                              ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
-                             : order.InitialVolume.ToString("N0", CultureConstants.DefaultCulture)));
+                             : order.InitialVolume.ToNumericString(0)));
                     break;
                 case MarketOrderColumn.LastStateChange:
                     item.Text = order.LastStateChange.ToLocalTime().ToShortDateString();
@@ -744,7 +744,7 @@ namespace EVEMon.CharacterMonitoring
                     {
                         item.Text = (numberFormat
                                          ? FormatHelper.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
-                                         : buyOrder.Escrow.ToString("N2", CultureConstants.DefaultCulture));
+                                         : buyOrder.Escrow.ToNumericString(2));
                         item.ForeColor = Color.DarkBlue;
                     }
                     break;

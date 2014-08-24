@@ -556,13 +556,13 @@ namespace EVEMon.CharacterMonitoring
                 case WalletJournalColumn.Amount:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(walletJournal.Amount, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.Amount.ToString("N2", CultureConstants.DefaultCulture));
+                                     : walletJournal.Amount.ToNumericString(2));
                     item.ForeColor = (walletJournal.Amount < 0 ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case WalletJournalColumn.Balance:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(walletJournal.Balance, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.Balance.ToString("N2", CultureConstants.DefaultCulture));
+                                     : walletJournal.Balance.ToNumericString(2));
                     break;
                 case WalletJournalColumn.Reason:
                     item.Text = walletJournal.Reason;
@@ -579,7 +579,7 @@ namespace EVEMon.CharacterMonitoring
                 case WalletJournalColumn.TaxAmount:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(walletJournal.TaxAmount, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.TaxAmount.ToString("N2", CultureConstants.DefaultCulture));
+                                     : walletJournal.TaxAmount.ToNumericString(2));
                     break;
                 case WalletJournalColumn.ID:
                     item.Text = walletJournal.ID.ToString(CultureConstants.DefaultCulture);

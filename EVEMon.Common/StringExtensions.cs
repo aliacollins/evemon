@@ -137,34 +137,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="number">The number.</param>
         /// <param name="decimals">The decimals.</param>
+        /// <param name="culture">The culture.</param>
         /// <returns></returns>
-        public static string ToNumericString(this int number, int decimals)
+        public static string ToNumericString(this int number, int decimals, CultureInfo culture = null)
         {
-            return ToNumericString(Convert.ToInt64(number), decimals);
-        }
-
-        /// <summary>
-        /// Convert an Int64 number to string with the specified decimals.
-        /// </summary>
-        /// <param name="number">The number.</param>
-        /// <param name="decimals">The decimals.</param>
-        /// <returns></returns>
-        public static string ToNumericString(this long number, int decimals)
-        {
-            string decimalsString = String.Format(CultureConstants.DefaultCulture, "N{0}", decimals);
-            return number.ToString(decimalsString, CultureConstants.DefaultCulture);
-        }
-
-        /// <summary>
-        /// Convert an Double number to string with the specified decimals.
-        /// </summary>
-        /// <param name="number">The number.</param>
-        /// <param name="decimals">The decimals.</param>
-        /// <returns></returns>
-        public static string ToNumericString(this double number, int decimals)
-        {
-            string decimalsString = String.Format(CultureConstants.DefaultCulture, "N{0}", decimals);
-            return number.ToString(decimalsString, CultureConstants.DefaultCulture);
+            return ToNumericString(Convert.ToInt64(number), decimals, culture);
         }
 
         /// <summary>
@@ -172,10 +149,11 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="number">The number.</param>
         /// <param name="decimals">The decimals.</param>
+        /// <param name="culture">The culture.</param>
         /// <returns></returns>
-        public static string ToNumericString(this float number, int decimals)
+        public static string ToNumericString(this float number, int decimals, CultureInfo culture = null)
         {
-            return ToNumericString(Convert.ToDouble(number), decimals);
+            return ToNumericString(Convert.ToDouble(number), decimals, culture);
         }
 
         /// <summary>
@@ -183,10 +161,43 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="number">The number.</param>
         /// <param name="decimals">The decimals.</param>
+        /// <param name="culture">The culture.</param>
         /// <returns></returns>
-        public static string ToNumericString(this decimal number, int decimals)
+        public static string ToNumericString(this decimal number, int decimals, CultureInfo culture = null)
         {
-            return ToNumericString(Convert.ToDouble(number), decimals);
+            return ToNumericString(Convert.ToDouble(number), decimals, culture);
+        }
+
+        /// <summary>
+        /// Convert an Int64 number to string with the specified decimals.
+        /// </summary>
+        /// <param name="number">The number.</param>
+        /// <param name="decimals">The decimals.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns></returns>
+        public static string ToNumericString(this long number, int decimals, CultureInfo culture = null)
+        {
+            if (culture == null)
+                culture = CultureConstants.DefaultCulture;
+
+            string decimalsString = String.Format(culture, "N{0}", decimals);
+            return number.ToString(decimalsString, culture);
+        }
+
+        /// <summary>
+        /// Convert an Double number to string with the specified decimals.
+        /// </summary>
+        /// <param name="number">The number.</param>
+        /// <param name="decimals">The decimals.</param>
+        /// <param name="culture">The culture.</param>
+        /// <returns></returns>
+        public static string ToNumericString(this double number, int decimals, CultureInfo culture = null)
+        {
+            if (culture == null)
+                culture = CultureConstants.DefaultCulture;
+
+            string decimalsString = String.Format(culture, "N{0}", decimals);
+            return number.ToString(decimalsString, culture);
         }
 
         /// <summary>

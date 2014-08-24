@@ -557,17 +557,17 @@ namespace EVEMon.CharacterMonitoring
                 case WalletTransactionColumn.Price:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(walletTransaction.Price, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Price.ToString("N2", CultureConstants.DefaultCulture));
+                                     : walletTransaction.Price.ToNumericString(2));
                     break;
                 case WalletTransactionColumn.Quantity:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(walletTransaction.Quantity, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Quantity.ToString("N0", CultureConstants.DefaultCulture));
+                                     : walletTransaction.Quantity.ToNumericString(0));
                     break;
                 case WalletTransactionColumn.Credit:
                     item.Text = (numberFormat
                                      ? FormatHelper.Format(walletTransaction.Credit, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Credit.ToString("N2", CultureConstants.DefaultCulture));
+                                     : walletTransaction.Credit.ToNumericString(2));
                     item.ForeColor = (walletTransaction.TransactionType == TransactionType.Buy ? Color.DarkRed : Color.DarkGreen);
                     break;
                 case WalletTransactionColumn.Client:

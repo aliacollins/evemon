@@ -155,7 +155,7 @@ namespace EVEMon.SettingsUI
                 case 'n':
                     return character.Name;
                 case 'b':
-                    return character.Balance.ToString("N2", CultureConstants.DefaultCulture);
+                    return character.Balance.ToNumericString(2);
             }
 
             CCPCharacter ccpCharacter = character as CCPCharacter;
