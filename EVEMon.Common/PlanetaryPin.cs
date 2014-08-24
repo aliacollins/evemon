@@ -157,7 +157,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets or sets the jobs state.
         /// </summary>
-        public PlanetaryPinState State { get; private set; }
+        public PlanetaryPinState State { get; set; }
 
         /// <summary>
         /// Gets the estimated time to completion.
@@ -201,6 +201,11 @@ namespace EVEMon.Common
                     .SelectMany(route => Colony.Pins.Where(pin => pin.ID == route.DestinationPinID));
             }
         }
+
+        /// <summary>
+        /// Gets true if we have notified the user.
+        /// </summary>
+        public bool NotificationSend { get; set; }
 
         #endregion
 

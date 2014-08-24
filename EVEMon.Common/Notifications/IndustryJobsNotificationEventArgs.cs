@@ -49,7 +49,7 @@ namespace EVEMon.Common.Notifications
         {
             foreach (IndustryJob job in ((IndustryJobsNotificationEventArgs)other).Jobs)
             {
-                Jobs.Add((job));
+                Jobs.Add(job);
             }
 
             UpdateDescription();

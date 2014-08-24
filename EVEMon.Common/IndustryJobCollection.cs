@@ -12,7 +12,7 @@ namespace EVEMon.Common
     /// </summary>
     public sealed class IndustryJobCollection : ReadonlyCollection<IndustryJob>
     {
-        private readonly CCPCharacter m_character;
+        private readonly CCPCharacter m_ccpCharacter;
 
         /// <summary>
         /// Internal constructor.
@@ -20,7 +20,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         internal IndustryJobCollection(CCPCharacter character)
         {
-            m_character = character;
+            m_ccpCharacter = character;
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
@@ -40,9 +40,9 @@ namespace EVEMon.Common
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            IQueryMonitor charIndustryJobsMonitor = m_character.QueryMonitors[APICharacterMethods.IndustryJobs];
+            IQueryMonitor charIndustryJobsMonitor = m_ccpCharacter.QueryMonitors[APICharacterMethods.IndustryJobs];
             IQueryMonitor corpIndustryJobsMonitor =
-                m_character.QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
+                m_ccpCharacter.QueryMonitors[APICorporationMethods.CorporationIndustryJobs];
 
             if ((charIndustryJobsMonitor == null || !charIndustryJobsMonitor.Enabled) &&
                 (corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled))
@@ -60,7 +60,7 @@ namespace EVEMon.Common
             Items.Clear();
             foreach (SerializableJob srcJob in src)
             {
-                Items.Add(new IndustryJob(srcJob) { InstallerID = m_character.CharacterID });
+                Items.Add(new IndustryJob(srcJob) { InstallerID = m_ccpCharacter.CharacterID });
             }
         }
 
@@ -109,7 +109,7 @@ namespace EVEMon.Common
         /// <remarks>Used to export only the corporation jobs issued by the character.</remarks>
         internal IEnumerable<SerializableJob> ExportOnlyIssuedByCharacter()
         {
-            return Items.Where(job => job.InstallerID == m_character.CharacterID).Select(job => job.Export());
+            return Items.Where(job => job.InstallerID == m_ccpCharacter.CharacterID).Select(job => job.Export());
         }
 
         /// <summary>
@@ -145,16 +145,16 @@ namespace EVEMon.Common
             if (Items.All(job => job.IssuedFor == IssuedFor.Corporation))
             {
                 // Fires the event regarding the corporation industry jobs completion, issued by the character
-                IEnumerable<IndustryJob> characterJobs = jobsCompleted.Where(job => job.InstallerID == m_character.CharacterID);
+                List<IndustryJob> characterJobs = jobsCompleted.Where(job => job.InstallerID == m_ccpCharacter.CharacterID).ToList();
                 if (characterJobs.Any())
-                    EveMonClient.OnCharacterIndustryJobsCompleted(m_character, characterJobs);
+                    EveMonClient.OnCharacterIndustryJobsCompleted(m_ccpCharacter, characterJobs);
 
                 // Fires the event regarding the corporation industry jobs completion
-                EveMonClient.OnCorporationIndustryJobsCompleted(m_character, jobsCompleted);
+                EveMonClient.OnCorporationIndustryJobsCompleted(m_ccpCharacter, jobsCompleted);
             }
             else
                 // Fires the event regarding the character's industry jobs completion
-                EveMonClient.OnCharacterIndustryJobsCompleted(m_character, jobsCompleted);
+                EveMonClient.OnCharacterIndustryJobsCompleted(m_ccpCharacter, jobsCompleted);
         }
     }
 }

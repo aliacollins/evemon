@@ -122,11 +122,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                    {
-                        Description = "An error occurred while querying the conquerable station list.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the conquerable station list.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -138,11 +138,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                    {
-                        Description = "An error occurred while querying the EVE factional warfare statistics.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the EVE factional warfare statistics.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -154,11 +154,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                    {
-                        Description = "An error occurred while querying the ID to Name conversion.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the ID to Name conversion.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -170,11 +170,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                    {
-                        Description = "An error occurred while querying the RefTypes list.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the RefTypes list.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -186,11 +186,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                    {
-                        Description = result.ErrorMessage,
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = result.ErrorMessage,
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -207,11 +207,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
-                    {
-                        Description = "An error occurred while querying the server status.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the server status.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -238,12 +238,12 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
-                    {
-                        Description = String.Format(CultureConstants.DefaultCulture,
-                                                    "An error occurred while querying the character list for API key {0}.", apiKey),
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = String.Format(CultureConstants.DefaultCulture,
+                        "An error occurred while querying the character list for API key {0}.", apiKey),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -270,12 +270,12 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
-                    {
-                        Description = String.Format(CultureConstants.DefaultCulture,
-                                                    "An error occurred while querying the account status for API key {0}.", apiKey),
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = String.Format(CultureConstants.DefaultCulture,
+                        "An error occurred while querying the account status for API key {0}.", apiKey),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -302,11 +302,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the skill in training.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the skill in training.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -319,11 +319,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the character sheet.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the character sheet.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -336,11 +336,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the character info.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the character info.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -353,11 +353,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the skill queue.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the skill queue.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -370,11 +370,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal standings.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal standings.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -384,15 +384,15 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterFactionalWarfareStatsError(CCPCharacter character,
-                                                                APIResult<SerializableAPIFactionalWarfareStats> result)
+            APIResult<SerializableAPIFactionalWarfareStats> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal factional warfare stats.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal factional warfare stats.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -405,11 +405,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal assets list.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal assets list.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -422,11 +422,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal market orders.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal market orders.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -439,11 +439,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the corporation market orders.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the corporation market orders.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -456,11 +456,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal contracts.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal contracts.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -473,11 +473,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the corporation contracts.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the corporation contracts.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -490,11 +490,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying a contract's items.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying a contract's items.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -507,11 +507,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal contract bids.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal contract bids.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -524,11 +524,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the corporation contract bids.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the corporation contract bids.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -541,11 +541,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal wallet journal.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal wallet journal.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -555,15 +555,15 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterWalletTransactionsError(CCPCharacter character,
-                                                             APIResult<SerializableAPIWalletTransactions> result)
+            APIResult<SerializableAPIWalletTransactions> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal wallet transactions.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal wallet transactions.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -576,11 +576,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the personal industry jobs.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the personal industry jobs.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -593,11 +593,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occurred while querying the corporation industry jobs.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occurred while querying the corporation industry jobs.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -610,11 +610,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the research points.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the research points.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -627,11 +627,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the EVE mail messages.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the EVE mail messages.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -644,11 +644,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the EVE mail message body.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the EVE mail message body.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -661,11 +661,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the mailing lists.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the mailing lists.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -678,11 +678,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the EVE notifications.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the EVE notifications.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -695,11 +695,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the EVE notification text.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the EVE notification text.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -712,11 +712,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the personal contacts list.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the personal contacts list.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -729,11 +729,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the personal medals.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the personal medals.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -760,15 +760,15 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterUpcomindCalendarEventsError(CCPCharacter character,
-                                                                 APIResult<SerializableAPIUpcomingCalendarEvents> result)
+            APIResult<SerializableAPIUpcomingCalendarEvents> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the personal upcoming calendar events.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the personal upcoming calendar events.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -778,15 +778,15 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterCalendarEventAttendeesError(CCPCharacter character,
-                                                                 APIResult<SerializableAPICalendarEventAttendees> result)
+            APIResult<SerializableAPICalendarEventAttendees> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the personal calendar event attendees.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the personal calendar event attendees.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -799,11 +799,11 @@ namespace EVEMon.Common
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
-                    {
-                        Description = "An error occured while querying the personal kill log.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = "An error occured while querying the personal kill log.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -813,7 +813,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryColoniesError(CCPCharacter character,
-                                                                 APIResult<SerializableAPIPlanetaryColonies> result)
+            APIResult<SerializableAPIPlanetaryColonies> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -831,7 +831,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryPinsError(CCPCharacter character,
-                                                                 APIResult<SerializableAPIPlanetaryPins> result)
+            APIResult<SerializableAPIPlanetaryPins> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -849,7 +849,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryRoutesError(CCPCharacter character,
-                                                                 APIResult<SerializableAPIPlanetaryRoutes> result)
+            APIResult<SerializableAPIPlanetaryRoutes> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -867,7 +867,7 @@ namespace EVEMon.Common
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryLinksError(CCPCharacter character,
-                                                                 APIResult<SerializableAPIPlanetaryLinks> result)
+            APIResult<SerializableAPIPlanetaryLinks> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -903,13 +903,13 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.APIKeyExpiration)
-                    {
-                        Description = String.Format(CultureConstants.DefaultCulture,
-                                                    "This API key expires in {0}: {1}.",
-                                                    expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = priority
-                    };
+                {
+                    Description = String.Format(CultureConstants.DefaultCulture,
+                        "This API key expires in {0}: {1}.",
+                        expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = priority
+                };
             Notify(notification);
         }
 
@@ -937,13 +937,13 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountExpiration)
-                    {
-                        Description = String.Format(CultureConstants.DefaultCulture,
-                                                    "This account expires in {0}: {1}.",
-                                                    expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = priority
-                    };
+                {
+                    Description = String.Format(CultureConstants.DefaultCulture,
+                        "This account expires in {0}: {1}.",
+                        expireDate.ToRemainingTimeShortDescription(DateTimeKind.Utc), apiKey),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = priority
+                };
             Notify(notification);
         }
 
@@ -969,12 +969,12 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(apiKey, NotificationCategory.AccountNotInTraining)
-                    {
-                        Description = String.Format(CultureConstants.DefaultCulture,
-                                                    "This account has no characters in training: {0}.", apiKey),
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Warning
-                    };
+                {
+                    Description = String.Format(CultureConstants.DefaultCulture,
+                        "This account has no characters in training: {0}.", apiKey),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Warning
+                };
             Notify(notification);
         }
 
@@ -1000,11 +1000,11 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(character, NotificationCategory.InsufficientBalance)
-                    {
-                        Description = "This character has insufficient balance to fulfill its buying orders.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Warning
-                    };
+                {
+                    Description = "This character has insufficient balance to fulfill its buying orders.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Warning
+                };
             Notify(notification);
         }
 
@@ -1030,11 +1030,11 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(character, NotificationCategory.InsufficientClone)
-                    {
-                        Description = "This character has an insufficient clone.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Warning
-                    };
+                {
+                    Description = "This character has an insufficient clone.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Warning
+                };
             Notify(notification);
         }
 
@@ -1052,10 +1052,10 @@ namespace EVEMon.Common
         {
             SkillCompletionNotificationEventArgs notification =
                 new SkillCompletionNotificationEventArgs(character, skillsCompleted)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1081,11 +1081,11 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(character, NotificationCategory.SkillQueueRoomAvailable)
-                    {
-                        Description = "This character has free room in the skill queue.",
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Warning
-                    };
+                {
+                    Description = "This character has free room in the skill queue.",
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Warning
+                };
             Notify(notification);
         }
 
@@ -1130,11 +1130,11 @@ namespace EVEMon.Common
 
             NotificationEventArgs notification =
                 new NotificationEventArgs(null, NotificationCategory.ServerStatusChange)
-                    {
-                        Description = text,
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Description = text,
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1159,12 +1159,12 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(null, NotificationCategory.IgbServiceException)
-                    {
-                        Description = String.Format(CultureConstants.DefaultCulture,
-                                                    "Failed to start the IGB server on port {0}.", port),
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Error
-                    };
+                {
+                    Description = String.Format(CultureConstants.DefaultCulture,
+                        "Failed to start the IGB server on port {0}.", port),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Error
+                };
             Notify(notification);
         }
 
@@ -1182,10 +1182,10 @@ namespace EVEMon.Common
         {
             MarketOrdersNotificationEventArgs notification =
                 new MarketOrdersNotificationEventArgs(character, expiredOrders)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1198,10 +1198,10 @@ namespace EVEMon.Common
         {
             MarketOrdersNotificationEventArgs notification =
                 new MarketOrdersNotificationEventArgs(corporation, expiredOrders)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1219,10 +1219,10 @@ namespace EVEMon.Common
         {
             ContractsNotificationEventArgs notification =
                 new ContractsNotificationEventArgs(character, endedContracts)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1235,10 +1235,10 @@ namespace EVEMon.Common
         {
             ContractsNotificationEventArgs notification =
                 new ContractsNotificationEventArgs(corporation, endedContracts)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1265,14 +1265,14 @@ namespace EVEMon.Common
         {
             NotificationEventArgs notification =
                 new NotificationEventArgs(character, NotificationCategory.ContractsAssigned)
-                    {
-                        Description = String.Format(CultureConstants.DefaultCulture, "{0} assigned contract{1}.",
-                                                    assignedContracts, assignedContracts > 1
-                                                                           ? "s"
-                                                                           : String.Empty),
-                        Behaviour = NotificationBehaviour.Overwrite,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Description = String.Format(CultureConstants.DefaultCulture, "{0} assigned contract{1}.",
+                        assignedContracts, assignedContracts > 1
+                            ? "s"
+                            : String.Empty),
+                    Behaviour = NotificationBehaviour.Overwrite,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1290,10 +1290,10 @@ namespace EVEMon.Common
         {
             IndustryJobsNotificationEventArgs notification =
                 new IndustryJobsNotificationEventArgs(character, jobsCompleted)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1306,12 +1306,34 @@ namespace EVEMon.Common
         {
             IndustryJobsNotificationEventArgs notification =
                 new IndustryJobsNotificationEventArgs(corporation, jobsCompleted)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
+
+        #endregion
+
+
+        #region Planetary Pins expiration
+
+        /// <summary>
+        /// Notify some character planetary pins have ended.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="pinsCompleted">The completed pins.</param>
+        internal void NotifyCharacterPlanetaryPinCompleted(Character character, IEnumerable<PlanetaryPin> pinsCompleted)
+        {
+            PlanetaryPinsNotificationEventArgs notification =
+                new PlanetaryPinsNotificationEventArgs(character, pinsCompleted)
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
+            Notify(notification);
+        }
+
 
         #endregion
 
@@ -1327,10 +1349,10 @@ namespace EVEMon.Common
         {
             NewEveMailMessageNotificationEventArgs notification =
                 new NewEveMailMessageNotificationEventArgs(character, newMessages)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 
@@ -1348,10 +1370,10 @@ namespace EVEMon.Common
         {
             NewEveNotificationEventArgsNotificationEventArgs notification =
                 new NewEveNotificationEventArgsNotificationEventArgs(character, newNotifications)
-                    {
-                        Behaviour = NotificationBehaviour.Merge,
-                        Priority = NotificationPriority.Information
-                    };
+                {
+                    Behaviour = NotificationBehaviour.Merge,
+                    Priority = NotificationPriority.Information
+                };
             Notify(notification);
         }
 

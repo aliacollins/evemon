@@ -223,6 +223,7 @@
     <Compile Include="CustomEventArgs\IndustryJobsEventArgs.cs" />
     <Compile Include="CustomEventArgs\MarketOrdersEventArgs.cs" />
     <Compile Include="CustomEventArgs\PlanChangedEventArgs.cs" />
+    <Compile Include="CustomEventArgs\PlanetaryPinsEventArgs.cs" />
     <Compile Include="CustomEventArgs\QueuedSkillsEventArgs.cs" />
     <Compile Include="CustomEventArgs\SkillClickedEventArgs.cs" />
     <Compile Include="CustomEventArgs\UpdateAvailableEventArgs.cs" />
@@ -302,6 +303,7 @@
     <Compile Include="Notifications\NotificationEventArgs.cs" />
     <Compile Include="Notifications\NotificationInvalidationEventArgs.cs" />
     <Compile Include="Notifications\NotificationPriority.cs" />
+    <Compile Include="Notifications\PlanetaryPinsNotificationEventArgs.cs" />
     <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs" />
     <Compile Include="PlanEntryComparer.cs" />
     <Compile Include="PlanetaryColoniesCollection.cs" />

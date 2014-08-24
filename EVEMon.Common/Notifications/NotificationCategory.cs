@@ -99,6 +99,12 @@ namespace EVEMon.Common.Notifications
         IndustryJobsCompletion,
 
         /// <summary>
+        /// An planetary pin work has been completed.
+        /// </summary>
+        [Header("Planetary pins completed")]
+        PlanetaryPinsCompleted,
+
+        /// <summary>
         /// A new EVE mail message is available.
         /// </summary>
         [Header("New EVE mail message")]
