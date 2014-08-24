@@ -8,7 +8,7 @@ namespace EVEMon.Common
     public sealed class Asset
     {
         private long m_locationID;
-        private readonly EveProperty m_prop = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
+        private readonly EveProperty m_volumeProperty = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
 
 
         #region Constructor
@@ -112,12 +112,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the volume.
         /// </summary>
-        public decimal Volume { get; private set; }
+        public double Volume { get; private set; }
 
         /// <summary>
         /// Gets the total volume.
         /// </summary>
-        public decimal TotalVolume { get; private set; }
+        public double TotalVolume { get; private set; }
 
         /// <summary>
         /// Gets the price.
@@ -152,20 +152,21 @@ namespace EVEMon.Common
         /// <returns></returns>
         private string GetTypeOfBlueprint(int rawQuantity)
         {
-            return Item != null && Item.CategoryName.ToUpperInvariant() == "BLUEPRINT"
-                       ? rawQuantity == -2 ? BlueprintType.Copy.ToString() : BlueprintType.Original.ToString()
-                       : String.Empty;
+            return Item != null && StaticBlueprints.GetBlueprintByID(Item.ID) != null &&
+                   !Item.MarketGroup.BelongsIn(DBConstants.AncientRelicsMarketGroupID)
+                ? rawQuantity == -2 ? BlueprintType.Copy.ToString() : BlueprintType.Original.ToString()
+                : String.Empty;
         }
 
         /// <summary>
         /// Gets the volume.
         /// </summary>
         /// <returns></returns>
-        private decimal GetVolume()
+        private double GetVolume()
         {
-            return Item != null && m_prop != null
-                       ? Convert.ToDecimal(m_prop.GetNumericValue(Item))
-                       : 0M;
+            return Item != null && m_volumeProperty != null
+                       ? m_volumeProperty.GetNumericValue(Item)
+                       : 0d;
         }
 
         /// <summary>

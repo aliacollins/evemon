@@ -69,7 +69,7 @@ namespace EVEMon.Common
                 case AssetColumn.TotalPrice:
                     return x.Cost.CompareTo(y.Cost);
                 case AssetColumn.Volume:
-                    return x.Volume.CompareTo(y.Volume);
+                    return x.TotalVolume.CompareTo(y.TotalVolume);
                 case AssetColumn.BlueprintType:
                     return String.Compare(x.TypeOfBlueprint, y.TypeOfBlueprint, StringComparison.CurrentCulture);
                 case AssetColumn.Group:
