@@ -83,6 +83,7 @@ namespace EVEMon.Common
             EveMonClient.CorporationIndustryJobsUpdated += EveMonClient_CorporationIndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted += EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted += EveMonClient_CorporationIndustryJobsCompleted;
+            EveMonClient.CharacterPlaneteryPinsCompleted += EveMonClient_CharacterPlaneteryPinsCompleted;
             EveMonClient.APIKeyInfoUpdated += EveMonClient_APIKeyInfoUpdated;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
@@ -551,6 +552,7 @@ namespace EVEMon.Common
             EveMonClient.CorporationIndustryJobsUpdated -= EveMonClient_CorporationIndustryJobsUpdated;
             EveMonClient.CharacterIndustryJobsCompleted -= EveMonClient_CharacterIndustryJobsCompleted;
             EveMonClient.CorporationIndustryJobsCompleted -= EveMonClient_CorporationIndustryJobsCompleted;
+            EveMonClient.CharacterPlaneteryPinsCompleted -= EveMonClient_CharacterPlaneteryPinsCompleted;
             EveMonClient.APIKeyInfoUpdated -= EveMonClient_APIKeyInfoUpdated;
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
 
@@ -558,6 +560,7 @@ namespace EVEMon.Common
             SkillQueue.Dispose();
             CharacterIndustryJobs.Dispose();
             CorporationIndustryJobs.Dispose();
+            PlanetaryColonies.Dispose();
 
             // Unsubscribe events
             if (m_characterDataQuerying != null)
@@ -992,6 +995,20 @@ namespace EVEMon.Common
             // Uncomment upon implementing an exclusive corporation monitor
             // Notify completed jobs issued for the corporation
             //EveMonClient.Notifications.NotifyCorporationIndustryJobCompletion(Corporation, e.CompletedJobs);
+        }
+
+        /// <summary>
+        /// Handles the CharacterPlaneteryPinsCompleted event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanetaryPinsEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterPlaneteryPinsCompleted(object sender, PlanetaryPinsEventArgs e)
+        {
+            if (e.Character != this)
+                return;
+
+            // Notify completed pins the character
+            EveMonClient.Notifications.NotifyCharacterPlanetaryPinCompleted(this, e.CompletedPins);
         }
 
         #endregion

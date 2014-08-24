@@ -465,6 +465,18 @@ namespace EVEMon.Controls
                 window.ShowIssuedFor = IssuedFor.All;
                 return;
             }
+
+            // Planetary pins ?
+            PlanetaryPinsNotificationEventArgs pinsNotification = notification as PlanetaryPinsNotificationEventArgs;
+            if (pinsNotification != null)
+            {
+                PlanetaryPinsWindow window =
+                    WindowsFactory.ShowByTag<PlanetaryPinsWindow, PlanetaryPinsNotificationEventArgs>(pinsNotification);
+                window.PlanetaryPins = pinsNotification.PlanetaryPins;
+                window.Columns = Settings.UI.MainWindow.Planetary.Columns;
+                window.Grouping = PlanetaryGrouping.Colony;
+                return;
+            }
         }
 
         /// <summary>
@@ -475,7 +487,7 @@ namespace EVEMon.Controls
             // No details ?
             if (!notification.HasDetails)
             {
-                SetToolTip(false);
+                SetToolTip(active: false);
                 return;
             }
 
@@ -483,7 +495,7 @@ namespace EVEMon.Controls
             APIErrorNotificationEventArgs errorNotification = notification as APIErrorNotificationEventArgs;
             if (errorNotification != null)
             {
-                SetToolTip(true, errorNotification.Result.ErrorMessage);
+                SetToolTip(errorNotification.Result.ErrorMessage);
                 return;
             }
 
@@ -491,7 +503,7 @@ namespace EVEMon.Controls
             SkillCompletionNotificationEventArgs skillNotifications = notification as SkillCompletionNotificationEventArgs;
             if (skillNotifications != null)
             {
-                SetToolTip(true, SkillCompletionMessage(skillNotifications));
+                SetToolTip(SkillCompletionMessage(skillNotifications));
                 return;
             }
 
@@ -499,7 +511,7 @@ namespace EVEMon.Controls
             MarketOrdersNotificationEventArgs ordersNotification = notification as MarketOrdersNotificationEventArgs;
             if (ordersNotification != null)
             {
-                SetToolTip(true, MarketOrdersEndedMessage(ordersNotification));
+                SetToolTip(MarketOrdersEndedMessage(ordersNotification));
                 return;
             }
 
@@ -507,7 +519,7 @@ namespace EVEMon.Controls
             ContractsNotificationEventArgs contractsNotification = notification as ContractsNotificationEventArgs;
             if (contractsNotification != null)
             {
-                SetToolTip(true, ContractsEndedMessage(contractsNotification));
+                SetToolTip(ContractsEndedMessage(contractsNotification));
                 return;
             }
 
@@ -515,7 +527,15 @@ namespace EVEMon.Controls
             IndustryJobsNotificationEventArgs jobsNotification = notification as IndustryJobsNotificationEventArgs;
             if (jobsNotification != null)
             {
-                SetToolTip(true, IndustryJobsCompletedMessage(jobsNotification));
+                SetToolTip(IndustryJobsCompletedMessage(jobsNotification));
+                return;
+            }
+
+            // Planetary pins ?
+            PlanetaryPinsNotificationEventArgs pinsNotification = notification as PlanetaryPinsNotificationEventArgs;
+            if (pinsNotification != null)
+            {
+                SetToolTip(PlanetaryPinsCompletedMessage(pinsNotification));
                 return;
             }
         }
@@ -525,7 +545,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="active">if set to <c>true</c> [active].</param>
-        private void SetToolTip(bool active, string message = null)
+        private void SetToolTip(string message = null, bool active = true)
         {
             toolTip.Active = active;
 
@@ -658,6 +678,23 @@ namespace EVEMon.Controls
                 builder.Append(job.InstalledItem.Name).Append(" at ");
                 builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}",
                                      job.SolarSystem.Name, job.Installation).AppendLine();
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Builds the completed planetary pins message.
+        /// </summary>
+        /// <param name="pinsNotification">The <see cref="EVEMon.Common.Notifications.PlanetaryPinsNotificationEventArgs"/> instance containing the event data.</param>
+        /// <returns></returns>
+        private static String PlanetaryPinsCompletedMessage(PlanetaryPinsNotificationEventArgs pinsNotification)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (PlanetaryPin pin in pinsNotification.PlanetaryPins)
+            {
+                builder.Append(pin.TypeName).Append(" at ");
+                builder.AppendFormat(CultureConstants.DefaultCulture, "{0} > {1}",
+                                     pin.Colony.SolarSystem.Name, pin.Colony.PlanetName).AppendLine();
             }
             return builder.ToString();
         }

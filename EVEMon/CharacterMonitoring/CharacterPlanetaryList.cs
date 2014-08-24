@@ -67,6 +67,16 @@ namespace EVEMon.CharacterMonitoring
         internal CCPCharacter Character { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="lvPlanetary"/> is visible.
+        /// </summary>
+        /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
+        internal bool Visibility
+        {
+            get { return lvPlanetary.Visible; }
+            set { lvPlanetary.Visible = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the text filter.
         /// </summary>
         [Browsable(false)]
@@ -84,7 +94,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Gets or sets the enumeration of planetary colonies to display.
         /// </summary>
-        private IEnumerable<PlanetaryPin> PlanetaryPins
+        internal IEnumerable<PlanetaryPin> PlanetaryPins
         {
             get { return m_list; }
             set
@@ -196,6 +206,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterPlanetaryPinsUpdated += EveMonClient_CharacterPlanetaryPinsUpdated;
             EveMonClient.CharacterPlanetaryRoutesUpdated += EveMonClient_CharacterPlanetaryRoutesUpdated;
             EveMonClient.CharacterPlanetaryLinksUpdated += EveMonClient_CharacterPlanetaryLinksUpdated;
+            EveMonClient.CharacterPlaneteryPinsCompleted += EveMonClient_CharacterPlaneteryPinsCompleted;
             Disposed += OnDisposed;
         }
 
@@ -214,6 +225,7 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterPlanetaryPinsUpdated -= EveMonClient_CharacterPlanetaryPinsUpdated;
             EveMonClient.CharacterPlanetaryRoutesUpdated -= EveMonClient_CharacterPlanetaryRoutesUpdated;
             EveMonClient.CharacterPlanetaryLinksUpdated -= EveMonClient_CharacterPlanetaryLinksUpdated;
+            EveMonClient.CharacterPlaneteryPinsCompleted -= EveMonClient_CharacterPlaneteryPinsCompleted;
             Disposed -= OnDisposed;
         }
 
@@ -270,7 +282,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Updates the columns.
         /// </summary>
-        private void UpdateColumns()
+        internal void UpdateColumns()
         {
             // Returns if not visible
             if (!Visible)
@@ -728,7 +740,8 @@ namespace EVEMon.CharacterMonitoring
                 if (pin.TTC.Length != 0)
                     continue;
 
-                // Pin is not extracting
+                // Pin is idle
+                pin.State = PlanetaryPinState.Idle;
                 UpdateContent();
             }
         }
@@ -919,6 +932,16 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             UpdateColumns();
+        }
+
+        /// <summary>
+        /// Handles the PlanetaryPinsCompleted event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PlanetaryPinsEventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterPlaneteryPinsCompleted(object sender, PlanetaryPinsEventArgs e)
+        {
+            UpdateContent();
         }
 
         # endregion
