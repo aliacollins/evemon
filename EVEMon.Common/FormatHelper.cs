@@ -4,6 +4,43 @@ namespace EVEMon.Common
 {
     public static class FormatHelper
     {
+
+        /// <summary>
+        /// Formats the given value into an abbreviated format string.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="format"></param>
+        /// <param name="truncated"></param>
+        /// <returns></returns>
+        public static string Format(double value, AbbreviationFormat format, bool truncated = true)
+        {
+            return Format(Convert.ToDecimal(value), format, truncated);
+        }
+
+        /// <summary>
+        /// Formats the given value into an abbreviated format string.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="format"></param>
+        /// <param name="truncated"></param>
+        /// <returns></returns>
+        public static string Format(int value, AbbreviationFormat format, bool truncated = true)
+        {
+            return Format(Convert.ToDecimal(value), format, truncated);
+        }
+
+        /// <summary>
+        /// Formats the given value into an abbreviated format string.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="format"></param>
+        /// <param name="truncated"></param>
+        /// <returns></returns>
+        public static string Format(long value, AbbreviationFormat format, bool truncated = true)
+        {
+            return Format(Convert.ToDecimal(value), format, truncated);
+        }
+
         /// <summary>
         /// Formats the given value into an abbreviated format string.
         /// </summary>
