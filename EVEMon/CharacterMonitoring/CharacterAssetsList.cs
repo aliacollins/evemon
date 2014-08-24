@@ -619,10 +619,14 @@ namespace EVEMon.CharacterMonitoring
                                      : asset.Quantity.ToNumericString(0));
                     break;
                 case AssetColumn.UnitaryPrice:
-                    item.Text = asset.Price.ToNumericString(2);
+                    item.Text = (numberFormat
+                        ? FormatHelper.Format(asset.Price, AbbreviationFormat.AbbreviationSymbols)
+                        : asset.Price.ToNumericString(2));
                     break;
                 case AssetColumn.TotalPrice:
-                    item.Text = asset.Cost.ToNumericString(2);
+                    item.Text = (numberFormat
+                        ? FormatHelper.Format(asset.Cost, AbbreviationFormat.AbbreviationSymbols)
+                        : asset.Cost.ToNumericString(2));
                     break;
                 case AssetColumn.Volume:
                     item.Text = (numberFormat
@@ -710,7 +714,7 @@ namespace EVEMon.CharacterMonitoring
 
             List<Asset> selectedAssets = selectedItems.Select(selectedItem => selectedItem.Tag).OfType<Asset>().ToList();
             long sumQuantity = selectedAssets.Sum(selectedAsset => selectedAsset.Quantity);
-            decimal sumVolume = selectedAssets.Sum(selectedAsset => selectedAsset.TotalVolume);
+            double sumVolume = selectedAssets.Sum(selectedAsset => selectedAsset.TotalVolume);
             int uniqueLocations = selectedAssets.Select(asset => asset.Location).Distinct().Count();
             int minJumps = selectedAssets.Min(asset => asset.Jumps);
             int maxJumps = selectedAssets.Max(asset => asset.Jumps);

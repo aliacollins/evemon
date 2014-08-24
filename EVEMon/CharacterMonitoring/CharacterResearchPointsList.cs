@@ -445,10 +445,10 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = researchPoint.Field;
                     break;
                 case ResearchColumn.CurrentRP:
-                    item.Text = researchPoint.CurrentRP.ToString("N2", CultureConstants.DefaultCulture);
+                    item.Text = researchPoint.CurrentRP.ToNumericString(2);
                     break;
                 case ResearchColumn.PointsPerDay:
-                    item.Text = researchPoint.PointsPerDay.ToString("N2", CultureConstants.DefaultCulture);
+                    item.Text = researchPoint.PointsPerDay.ToNumericString(2);
                     break;
                 case ResearchColumn.StartDate:
                     item.Text = researchPoint.StartDate.ToLocalTime().ToString();

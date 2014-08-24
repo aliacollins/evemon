@@ -184,7 +184,7 @@ namespace EVEMon.Common
             OutputCharacter serial = new OutputCharacter
                                          {
                                              Name = character.Name,
-                                             Balance = character.Balance.ToString("N2", CultureConstants.InvariantCulture),
+                                             Balance = character.Balance.ToNumericString(2, CultureConstants.InvariantCulture),
                                              Birthday = character.Birthday.ToString(CultureConstants.InvariantCulture),
                                              CorporationName = character.CorporationName,
                                              CharacterID = character.CharacterID,

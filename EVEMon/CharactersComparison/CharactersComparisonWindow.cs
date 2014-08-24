@@ -196,7 +196,7 @@ namespace EVEMon.CharactersComparison
                 ListViewItem item = new ListViewItem(group) { Text = text.First(), ToolTipText = text.Last() };
 
                 string[] labels = m_selectedCharacters.Select(
-                    character => GetValue(character, text.First()).ToString("N0", CultureConstants.DefaultCulture)).ToArray();
+                    character => GetValue(character, text.First()).ToNumericString(0)).ToArray();
                 long[] values = m_selectedCharacters.Select(character => GetValue(character, text.First())).ToArray();
 
                 AddValueForSelectedCharacters(item, labels, values);

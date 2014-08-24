@@ -681,7 +681,7 @@ namespace EVEMon.SkillPlanner
                 case PlanColumn.PlanType:
                     return entry.Type.ToString();
                 case PlanColumn.SPTotal:
-                    return entry.EstimatedTotalSkillPoints.ToString("N0", CultureConstants.DefaultCulture);
+                    return entry.EstimatedTotalSkillPoints.ToNumericString(0);
                 case PlanColumn.SPPerHour:
                     return entry.SpPerHour.ToString(CultureConstants.DefaultCulture);
                 case PlanColumn.Priority:
@@ -706,7 +706,7 @@ namespace EVEMon.SkillPlanner
                         return entry.CharacterSkill.IsOwned ? "Owned" : entry.Skill.FormattedCost;
                     }
                 case PlanColumn.SkillPointsRequired:
-                    return entry.SkillPointsRequired.ToString("N0", CultureConstants.DefaultCulture);
+                    return entry.SkillPointsRequired.ToNumericString(0);
                 default:
                     throw new NotImplementedException();
             }

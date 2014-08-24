@@ -105,6 +105,8 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
             if (s_queryPending)
                 return;
 
+            EveMonClient.Trace("BCMarketPrices.UpdateFile - begin");
+
             Util.DownloadXmlAsync<SerializableBCItemPrices>(
                 new Uri(
                     String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
@@ -128,6 +130,8 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
 
             // Save the file in cache
             Save(result);
+
+            EveMonClient.Trace("BCMarketPrices.UpdateFile - done");
 
             s_cachedUntil = result.CachedUntil.ToUniversalTime();
             Import(result.ItemPrices);

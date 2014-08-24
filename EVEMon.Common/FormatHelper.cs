@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace EVEMon.Common
 {
@@ -8,91 +9,99 @@ namespace EVEMon.Common
         /// <summary>
         /// Formats the given value into an abbreviated format string.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="format"></param>
-        /// <param name="truncated"></param>
+        /// <param name="value">The value.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="truncated">if set to <c>true</c> [truncated].</param>
+        /// <param name="culture">The culture.</param>
         /// <returns></returns>
-        public static string Format(double value, AbbreviationFormat format, bool truncated = true)
+        public static string Format(double value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
         {
-            return Format(Convert.ToDecimal(value), format, truncated);
+            return Format(Convert.ToDecimal(value), format, truncated, culture);
         }
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="format"></param>
-        /// <param name="truncated"></param>
+        /// <param name="value">The value.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="truncated">if set to <c>true</c> [truncated].</param>
+        /// <param name="culture">The culture.</param>
         /// <returns></returns>
-        public static string Format(int value, AbbreviationFormat format, bool truncated = true)
+        public static string Format(int value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
         {
-            return Format(Convert.ToDecimal(value), format, truncated);
+            return Format(Convert.ToDecimal(value), format, truncated, culture);
         }
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="format"></param>
-        /// <param name="truncated"></param>
+        /// <param name="value">The value.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="truncated">if set to <c>true</c> [truncated].</param>
+        /// <param name="culture">The culture.</param>
         /// <returns></returns>
-        public static string Format(long value, AbbreviationFormat format, bool truncated = true)
+        public static string Format(long value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
         {
-            return Format(Convert.ToDecimal(value), format, truncated);
+            return Format(Convert.ToDecimal(value), format, truncated, culture);
         }
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="format"></param>
-        /// <param name="truncated"></param>
+        /// <param name="value">The value.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="truncated">if set to <c>true</c> [truncated].</param>
+        /// <param name="culture">The culture.</param>
         /// <returns></returns>
-        public static string Format(decimal value, AbbreviationFormat format, bool truncated = true)
+        public static string Format(decimal value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
         {
+            if (culture == null)
+                culture = CultureConstants.DefaultCulture;
+
             decimal abs = Math.Abs(value);
             if (format == AbbreviationFormat.AbbreviationWords)
             {
                 if (abs >= 1E9M)
-                    return Format(" Billions", value / 1E9M, truncated);
+                    return Format(" Billions", value / 1E9M, truncated, culture);
                 if (abs >= 1E6M)
-                    return Format(" Millions", value / 1E6M, truncated);
+                    return Format(" Millions", value / 1E6M, truncated, culture);
 
-                return abs >= 1E3M ? Format(" Thousands", value / 1E3M, truncated) : Format(String.Empty, value, truncated);
+                return abs >= 1E3M ? Format(" Thousands", value / 1E3M, truncated, culture) : Format(String.Empty, value, truncated, culture);
             }
 
             if (abs >= 1E9M)
-                return Format(" B", value / 1E9M, truncated);
+                return Format(" B", value / 1E9M, truncated, culture);
             if (abs >= 1E6M)
-                return Format(" M", value / 1E6M, truncated);
+                return Format(" M", value / 1E6M, truncated, culture);
 
-            return abs >= 1E3M ? Format(" K", value / 1E3M, truncated) : Format(String.Empty, value, truncated);
+            return abs >= 1E3M ? Format(" K", value / 1E3M, truncated, culture) : Format(String.Empty, value, truncated, culture);
         }
 
         /// <summary>
         /// Formats the given value and suffix the way we want.
         /// </summary>
-        /// <param name="suffix"></param>
-        /// <param name="value"></param>
-        /// <param name="truncated"></param>
+        /// <param name="suffix">The suffix.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="truncated">if set to <c>true</c> [truncated].</param>
+        /// <param name="culture">The culture.</param>
         /// <returns></returns>
-        private static string Format(string suffix, decimal value, bool truncated)
+        private static string Format(string suffix, decimal value, bool truncated, CultureInfo culture)
         {
             if (!truncated)
-                return value.ToString("N2", CultureConstants.DefaultCulture) + suffix;
+                return value.ToNumericString(2, culture) + suffix;
 
             // Explanations : 999.99 was displayed as 1000 because only three digits were required
             // So we do the truncation at hand for the number of digits we exactly request
 
             decimal abs = Math.Abs(value);
             if (abs < 1.0M)
-                return (((int)value * 100) / 100M).ToString("0.##", CultureConstants.DefaultCulture) + suffix;
+                return (((int)value * 100) / 100M).ToString("0.##", culture) + suffix;
             if (abs < 10.0M)
-                return (((int)value * 1000) / 1000M).ToString("#.##", CultureConstants.DefaultCulture) + suffix;
+                return (((int)value * 1000) / 1000M).ToString("#.##", culture) + suffix;
             if (abs < 100.0M)
-                return (((int)value * 1000) / 1000M).ToString("##.#", CultureConstants.DefaultCulture) + suffix;
+                return (((int)value * 1000) / 1000M).ToString("##.#", culture) + suffix;
 
-            return (((int)value * 1000) / 1000M).ToString("###", CultureConstants.DefaultCulture) + suffix;
+            return (((int)value * 1000) / 1000M).ToString("###", culture) + suffix;
         }
     }
 }
