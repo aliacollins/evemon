@@ -68,7 +68,7 @@ namespace EVEMon.Common
             {
                 DateTime nextTime = DateTime.MaxValue;
                 IQueryMonitor nextMonitor = null;
-                foreach (IQueryMonitorEx monitor in Items)
+                foreach (IQueryMonitorEx monitor in Items.Cast<IQueryMonitorEx>())
                 {
                     if (monitor.Status != QueryStatus.Pending && monitor.Status != QueryStatus.Updating)
                         continue;
