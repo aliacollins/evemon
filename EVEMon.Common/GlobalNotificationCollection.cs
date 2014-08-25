@@ -1319,6 +1319,15 @@ namespace EVEMon.Common
         #region Planetary Pins expiration
 
         /// <summary>
+        /// Invalidates the notification for completed planetary pins.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        internal void InvalidateCharacterPlanetaryPinCompleted(CCPCharacter character)
+        {
+            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.PlanetaryPinsCompleted));
+        }
+
+        /// <summary>
         /// Notify some character planetary pins have ended.
         /// </summary>
         /// <param name="character">The character.</param>

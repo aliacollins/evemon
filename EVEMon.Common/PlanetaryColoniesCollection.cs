@@ -60,10 +60,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Imports an enumeration of API objects.
         /// </summary>
-        /// <param name="src">The enumeration of serializable kill log from the API.</param>
+        /// <param name="src">The enumeration of serializable planetary colony log from the API.</param>
         internal void Import(IEnumerable<SerializablePlanetaryColony> src)
         {
             Items.Clear();
+
+            EveMonClient.Notifications.InvalidateCharacterPlanetaryPinCompleted(m_ccpCharacter);
 
             // Import the palnetary colony from the API
             foreach (SerializablePlanetaryColony srcColony in src)
