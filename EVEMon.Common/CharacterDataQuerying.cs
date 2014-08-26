@@ -854,6 +854,9 @@ namespace EVEMon.Common
             if (result.HasError)
                 return;
 
+            // Invalidate previous notifications
+            EveMonClient.Notifications.InvalidateCharacterPlanetaryPinCompleted(m_ccpCharacter);
+
             // Import the data
             m_ccpCharacter.PlanetaryColonies.Import(result.Result.Colonies);
 
