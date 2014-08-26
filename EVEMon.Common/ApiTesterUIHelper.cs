@@ -291,17 +291,25 @@ namespace EVEMon.Common
                 if (SelectedItem.ToString().StartsWith("CorporationIndustryJobsHistory", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationIndustryJobs);
 
+                // Find associated API key for corporation blueprints
+                if (SelectedItem.ToString().StartsWith("CorporationBlueprints", StringComparison.Ordinal))
+                    apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationAssetList);
+
                 // Find associated API key for character contracts
                 if (SelectedItem.ToString().StartsWith("Contract", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
 
-                // Find associated API key for character planets
-                if (SelectedItem.ToString().StartsWith("Planetary", StringComparison.Ordinal))
-                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
-
                 // Find associated API key for character industry jobs history
                 if (SelectedItem.ToString().StartsWith("IndustryJobsHistory", StringComparison.Ordinal))
                     apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.IndustryJobs);
+
+                // Find associated API key for character planetary interaction
+                if (SelectedItem.ToString().StartsWith("Planetary", StringComparison.Ordinal))
+                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
+
+                // Find associated API key for character blueprints
+                if (SelectedItem.ToString().StartsWith("Blueprints", StringComparison.Ordinal))
+                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
 
                 // No API key found
                 if (apiKey == null)

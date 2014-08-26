@@ -1261,6 +1261,16 @@ namespace EVEMon.Common
         /// The corporation issued industry jobs history.
         /// </summary>
         CorporationIndustryJobsHistory,
+
+        /// <summary>
+        /// The personal blueprints.
+        /// </summary>
+        Blueprints,
+
+        /// <summary>
+        /// The corporation blueprints.
+        /// </summary>
+        CorporationBlueprints,
     }
 
     public enum QueryStatus

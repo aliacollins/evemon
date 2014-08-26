@@ -59,7 +59,8 @@ namespace EVEMon.Common
                               method == APIGenericMethods.PlanetaryPins ||
                               method == APIGenericMethods.PlanetaryRoutes ||
                               method == APIGenericMethods.PlanetaryLinks ||
-                              method == APIGenericMethods.IndustryJobsHistory).Cast<Enum>();
+                              method == APIGenericMethods.IndustryJobsHistory ||
+                              method == APIGenericMethods.Blueprints).Cast<Enum>();
             }
         }
 
@@ -75,7 +76,8 @@ namespace EVEMon.Common
                     method => method == APIGenericMethods.CorporationContractItems ||
                               method == APIGenericMethods.CorporationContractBids ||
                               method == APIGenericMethods.CorporationCustomsOffices ||
-                              method == APIGenericMethods.CorporationIndustryJobsHistory).Cast<Enum>();
+                              method == APIGenericMethods.CorporationIndustryJobsHistory ||
+                              method == APIGenericMethods.CorporationBlueprints).Cast<Enum>();
             }
         }
 

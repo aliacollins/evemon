@@ -115,6 +115,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /char/Blueprints.xml.aspx.
+        /// </summary>
+        public static string APIBlueprints {
+            get {
+                return ResourceManager.GetString("APIBlueprints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /char/CalendarEventAttendees.xml.aspx.
         /// </summary>
         public static string APICalendarEventAttendees {
@@ -255,6 +264,15 @@ namespace EVEMon.Common {
         public static string APICorporationAssetList {
             get {
                 return ResourceManager.GetString("APICorporationAssetList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /corp/Blueprints.xml.aspx.
+        /// </summary>
+        public static string APICorporationBlueprints {
+            get {
+                return ResourceManager.GetString("APICorporationBlueprints", resourceCulture);
             }
         }
         
