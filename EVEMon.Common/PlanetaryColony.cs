@@ -310,7 +310,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports the planeatry pins to a list.
+        /// Imports the planeatry routes to a list.
         /// </summary>
         /// <param name="src">The source.</param>
         private void Import(IEnumerable<SerializablePlanetaryRoute> src)
@@ -322,7 +322,7 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Imports the planeatry pins to a list.
+        /// Imports the planeatry links to a list.
         /// </summary>
         /// <param name="src">The source.</param>
         private void Import(IEnumerable<SerializablePlanetaryLink> src)
@@ -336,14 +336,28 @@ namespace EVEMon.Common
         #endregion
 
 
+        /// <summary>
+        /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+        /// </summary>
+        /// <param name="obj">An object to compare with this instance.</param>
+        /// <returns>
+        /// A value that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance is less than <paramref name="obj" />. Zero This instance is equal to <paramref name="obj" />. Greater than zero This instance is greater than <paramref name="obj" />.
+        /// </returns>
         public int CompareTo(object obj)
         {
             return CompareTo((PlanetaryColony)obj);
         }
 
+        /// <summary>
+        /// Compares the current object with another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        /// A value that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the <paramref name="other" /> parameter.Zero This object is equal to <paramref name="other" />. Greater than zero This object is greater than <paramref name="other" />.
+        /// </returns>
         public int CompareTo(PlanetaryColony other)
         {
-            return this == other ? 1 : 0;
+            return this == other ? 1 : -1;
         }
     }
 }

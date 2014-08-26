@@ -65,8 +65,6 @@ namespace EVEMon.Common
         {
             Items.Clear();
 
-            EveMonClient.Notifications.InvalidateCharacterPlanetaryPinCompleted(m_ccpCharacter);
-
             // Import the palnetary colony from the API
             foreach (SerializablePlanetaryColony srcColony in src)
             {
