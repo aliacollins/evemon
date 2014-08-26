@@ -11,6 +11,9 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("corporationID")]
         public int CorporationID { get; set; }
 
+        [XmlAttribute("corporationName")]
+        public string CorporationName { get; set; }
+
         [XmlAttribute("startDate")]
         public string StartDateXml
         {
