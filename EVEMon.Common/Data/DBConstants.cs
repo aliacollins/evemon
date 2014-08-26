@@ -251,6 +251,7 @@ namespace EVEMon.Common.Data
         public const int StructureAtributeCategoryID = 4;
         public const int MiscellaneousAttributeCategoryID = 7;
         public const int NullAtributeCategoryID = 9;
+        public const int SpeedAtributeCategoryID = 17;
 
         #endregion
 
@@ -274,6 +275,7 @@ namespace EVEMon.Common.Data
         public const int AgilityPropertyID = 70;
         public const int DurationPropertyID = 73;
         public const int MaxTargetRangePropertyID = 76;
+        public const int ScanSpeedPropertyID = 79;
         public const int ShieldTransferRangePropertyID = 87;
         public const int LauncherSlotsLeftPropertyID = 101;
         public const int TurretSlotsLeftPropertyID = 102;
@@ -281,6 +283,7 @@ namespace EVEMon.Common.Data
         public const int ExplosiveDamagePropertyID = 116;
         public const int KineticDamagePropertyID = 117;
         public const int ThermalDamagePropertyID = 118;
+        public const int UniformityPropertyID = 136;
         public const int LauncherGroupPropertyID = 137;
         public const int CapacitorRechargeRateMultiplierPropertyID = 144;
         public const int VolumePropertyID = 161;
@@ -328,6 +331,9 @@ namespace EVEMon.Common.Data
         public const int MineralNeedResearchBonusPropertyID = 468;
         public const int ShieldRechargeRatePropertyID = 479;
         public const int CapacitorCapacityPropertyID = 482;
+        public const int ShieldUniformityPropertyID = 484;
+        public const int ArmorUniformityPropertyID = 524;
+        public const int StructureUniformityPropertyID = 525;
         public const int SignatureRadiusPropertyID = 552;
         public const int AnchoringDelayPropertyID = 556;
         public const int CloakingTargetingDelayPropertyID = 560;

@@ -46,7 +46,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             // Sort groups
             string[] orderedGroupNames = {
                                              "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
-                                             "Targeting", "Propulsion", "Miscellaneous", "NULL", "AI"
+                                             "Targeting", "Propulsion", "Miscellaneous", "NULL", "AI", "Graphics"
                                          };
 
             // Serialize
@@ -157,8 +157,10 @@ namespace EVEMon.XmlGenerator.Datafiles
             
             // Assign injected properties units
             Database.DgmAttributeTypesTable[DBConstants.ShipWarpSpeedPropertyID].UnitID = warpSpeedUnit.ID;
-
+            
             // Change some display names and default values
+            Database.DgmAttributeCategoriesTable[DBConstants.SpeedAtributeCategoryID].Name = DBConstants.PropulsionCategoryName;
+
             Database.DgmAttributeTypesTable[DBConstants.StructureHitpointsPropertyID].DisplayName = "Structure HP";
             Database.DgmAttributeTypesTable[DBConstants.ShieldHitpointsPropertyID].DisplayName = "Shield HP";
             Database.DgmAttributeTypesTable[DBConstants.ArmorHitpointsPropertyID].DisplayName = "Armor HP";
@@ -213,6 +215,18 @@ namespace EVEMon.XmlGenerator.Datafiles
                 DBConstants.StructureAtributeCategoryID;
             Database.DgmAttributeTypesTable[DBConstants.LowSlotModifierPropertyID].CategoryID =
                 DBConstants.StructureAtributeCategoryID;
+            Database.DgmAttributeTypesTable[DBConstants.ShipWarpSpeedPropertyID].CategoryID =
+                DBConstants.SpeedAtributeCategoryID;
+            Database.DgmAttributeTypesTable[DBConstants.StructureUniformityPropertyID].CategoryID =
+                DBConstants.NullAtributeCategoryID;
+            Database.DgmAttributeTypesTable[DBConstants.ArmorUniformityPropertyID].CategoryID =
+                DBConstants.NullAtributeCategoryID;
+            Database.DgmAttributeTypesTable[DBConstants.ShieldUniformityPropertyID].CategoryID =
+                DBConstants.NullAtributeCategoryID;
+            Database.DgmAttributeTypesTable[DBConstants.UniformityPropertyID].CategoryID =
+                DBConstants.NullAtributeCategoryID;
+            Database.DgmAttributeTypesTable[DBConstants.ScanSpeedPropertyID].CategoryID =
+                DBConstants.NullAtributeCategoryID;
 
             // Changing HigherIsBetter to false (CCP has this wrong?)
             Database.DgmAttributeTypesTable[DBConstants.PGNeedPropertyID].HigherIsBetter = false;
@@ -248,7 +262,6 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Export attribute categories
             List<SerializableProperty> gProperties = new List<SerializableProperty>();
-            List<SerializableProperty> pProperties = new List<SerializableProperty>();
             foreach (DgmAttributeCategories srcCategory in Database.DgmAttributeCategoriesTable)
             {
                 List<SerializableProperty> properties = new List<SerializableProperty>();
@@ -290,7 +303,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     prop.Icon = srcProp.IconID.HasValue ? Database.EveIconsTable[srcProp.IconID.Value].Icon : String.Empty;
 
                     // Reordering some properties
-                    ReorderProperties(pProperties, gProperties, prop, srcProp, properties);
+                    ReorderProperties(gProperties, prop, srcProp, properties);
                 }
 
                 category.Properties.AddRange(properties);
@@ -309,27 +322,17 @@ namespace EVEMon.XmlGenerator.Datafiles
             general.Properties.AddRange(gProperties);
             categories.Insert(0, general);
 
-            SerializablePropertyCategory propulsion = new SerializablePropertyCategory
-                                                          {
-                                                              ID = ++newCategoryID,
-                                                              Name = DBConstants.PropulsionCategoryName,
-                                                              Description = "Navigation attributes for ships"
-                                                          };
-            propulsion.Properties.AddRange(pProperties);
-            categories.Insert(0, propulsion);
-
             return categories;
         }
 
         /// <summary>
         /// Reorders the properties.
         /// </summary>
-        /// <param name="pProperties">The properties in propulsion category.</param>
         /// <param name="gProperties">The properties in general category.</param>
         /// <param name="prop">The prop.</param>
         /// <param name="srcProp">The source prop.</param>
         /// <param name="properties">The properties.</param>
-        private static void ReorderProperties(IList<SerializableProperty> pProperties, IList<SerializableProperty> gProperties,
+        private static void ReorderProperties(IList<SerializableProperty> gProperties,
                                               SerializableProperty prop, IHasID srcProp, IList<SerializableProperty> properties)
         {
             int index = properties.IndexOf(prop);
@@ -354,20 +357,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                     properties.Insert(0, prop);
                     properties.RemoveAt(index + 1);
                     break;
-                case DBConstants.MaxVelocityPropertyID:
-                    pProperties.Insert(0, prop);
-                    properties.RemoveAt(index);
-                    break;
                 case DBConstants.CargoCapacityPropertyID:
                     properties.Insert(1, prop);
                     properties.RemoveAt(index + 1);
                     break;
                 case DBConstants.CPUOutputPropertyID:
                     properties.Insert(0, prop);
-                    properties.RemoveAt(index + 1);
-                    break;
-                case DBConstants.AgilityPropertyID:
-                    properties.Insert(3, prop);
                     properties.RemoveAt(index + 1);
                     break;
                 case DBConstants.VolumePropertyID:
@@ -417,10 +412,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                 case DBConstants.RigSlotsPropertyID:
                     properties.Insert(10, prop);
                     properties.RemoveAt(index + 1);
-                    break;
-                case DBConstants.ShipWarpSpeedPropertyID:
-                    pProperties.Insert(1, prop);
-                    properties.RemoveAt(index);
                     break;
                 case DBConstants.RigSizePropertyID:
                     properties.Insert(11, prop);
