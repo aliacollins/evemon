@@ -64,7 +64,7 @@ namespace EVEMon.Common
             CorporationMedals = new MedalCollection(this);
             UpcomingCalendarEvents = new UpcomingCalendarEventCollection(this);
             KillLog = new KillLogCollection(this);
-            PlanetaryColonies = new PlanetaryColoniesCollection(this);
+            PlanetaryColonies = new PlanetaryColonyCollection(this);
 
             m_endedOrdersForCharacter = new List<MarketOrder>();
             m_endedOrdersForCorporation = new List<MarketOrder>();
@@ -286,7 +286,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the collection of planetary colonies.
         /// </summary>
-        public PlanetaryColoniesCollection PlanetaryColonies { get; private set; }
+        public PlanetaryColonyCollection PlanetaryColonies { get; private set; }
 
         /// <summary>
         /// Gets the query monitors enumeration.

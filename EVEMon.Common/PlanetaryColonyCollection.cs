@@ -6,7 +6,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class PlanetaryColoniesCollection : ReadonlyCollection<PlanetaryColony>
+    public sealed class PlanetaryColonyCollection : ReadonlyCollection<PlanetaryColony>
     {
         private readonly CCPCharacter m_ccpCharacter;
 
@@ -17,7 +17,7 @@ namespace EVEMon.Common
         /// Internal constructor.
         /// </summary>
         /// <param name="ccpCharacter">The CCP character.</param>
-        internal PlanetaryColoniesCollection(CCPCharacter ccpCharacter)
+        internal PlanetaryColonyCollection(CCPCharacter ccpCharacter)
         {
             m_ccpCharacter = ccpCharacter;
 
