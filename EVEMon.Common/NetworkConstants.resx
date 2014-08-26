@@ -538,4 +538,10 @@
   <data name="APIIndustryJobsHistory" xml:space="preserve">
     <value>/char/IndustryJobsHistory.xml.aspx</value>
   </data>
+  <data name="APIBlueprints" xml:space="preserve">
+    <value>/char/Blueprints.xml.aspx</value>
+  </data>
+  <data name="APICorporationBlueprints" xml:space="preserve">
+    <value>/corp/Blueprints.xml.aspx</value>
+  </data>
 </root>
