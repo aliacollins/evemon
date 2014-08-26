@@ -35,7 +35,7 @@ namespace EVEMon.Common
 
             m_character = character;
             m_corporationId = src.CorporationID;
-            m_corporationName = String.IsNullOrWhiteSpace(CorporationName) ? GetIDToName(src.CorporationID) : CorporationName;
+            m_corporationName = String.IsNullOrWhiteSpace(src.CorporationName) ? GetIDToName(src.CorporationID) : src.CorporationName;
             StartDate = src.StartDate;
         }
 
