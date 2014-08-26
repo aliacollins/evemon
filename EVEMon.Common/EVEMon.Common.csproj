@@ -306,8 +306,8 @@
     <Compile Include="Notifications\PlanetaryPinsNotificationEventArgs.cs" />
     <Compile Include="Notifications\SkillCompletionNotificationEventArgs.cs" />
     <Compile Include="PlanEntryComparer.cs" />
-    <Compile Include="PlanetaryColoniesCollection.cs" />
     <Compile Include="PlanetaryColony.cs" />
+    <Compile Include="PlanetaryColonyCollection.cs" />
     <Compile Include="PlanetaryPinComparer.cs" />
     <Compile Include="PlanetaryLink.cs" />
     <Compile Include="PlanetaryPin.cs" />
