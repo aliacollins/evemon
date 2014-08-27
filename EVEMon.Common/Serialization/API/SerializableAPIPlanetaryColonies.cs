@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of planetary colonies. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIPlanetaryColonies
     {
         private readonly Collection<SerializablePlanetaryColony> m_colonies;
