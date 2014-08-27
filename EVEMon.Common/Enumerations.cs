@@ -1109,6 +1109,14 @@ namespace EVEMon.Common
         CharacterList,
 
         /// <summary>
+        /// A list of the planets on which the character has a command center located.
+        /// </summary>
+        [Header("Planetary Colonies")]
+        [Description("The planetary colonies of a character.")]
+        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
+        PlanetaryColonies,
+
+        /// <summary>
         /// The info of the provided API key.
         /// </summary>
         /// <remarks>
@@ -1228,14 +1236,6 @@ namespace EVEMon.Common
         /// Used to convert IDs to character affiliation info.
         /// </summary>
         CharacterAffiliation,
-
-        /// <summary>
-        /// A list of the planets on which the character has a command center located.
-        /// </summary>
-        [Header("Planetary Colonies")]
-        [Description("The planetary colonies of a character.")]
-        [Update(UpdatePeriod.Hours1, UpdatePeriod.Hours1, CacheStyle.Short)]
-        PlanetaryColonies,
 
         /// <summary>
         /// A list of the pins located on the planet of a character.

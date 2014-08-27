@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of planetary routes. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIPlanetaryRoutes
     {
         private readonly Collection<SerializablePlanetaryRoute> m_routes;

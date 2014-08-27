@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of planetary links. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIPlanetaryLinks
     {
         private readonly Collection<SerializablePlanetaryLink> m_links;

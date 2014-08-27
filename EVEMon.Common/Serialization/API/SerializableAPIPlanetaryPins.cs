@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
+    /// <summary>
+    /// Represents a serializable version of planetary pins. Used for querying CCP.
+    /// </summary>
     public sealed class SerializableAPIPlanetaryPins
     {
          private readonly Collection<SerializablePlanetaryPin> m_pins;
