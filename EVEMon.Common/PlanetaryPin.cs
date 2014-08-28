@@ -64,7 +64,7 @@ namespace EVEMon.Common
         /// <value>
         /// The type identifier.
         /// </value>
-        public long TypeID { get; private set; }
+        public int TypeID { get; private set; }
 
         /// <summary>
         /// Gets or sets the name of the type.
@@ -218,11 +218,12 @@ namespace EVEMon.Common
         /// <returns></returns>
         private PlanetaryPinState GetState()
         {
-            if (ExpiryTime == DateTime.MinValue)
-                return PlanetaryPinState.None;
-
-            if (TypeName.Contains("Extractor Control Unit"))
-                return ExpiryTime > DateTime.UtcNow ? PlanetaryPinState.Extracting : PlanetaryPinState.Idle;
+            if (DBConstants.EcuTypeIDs.Contains(TypeID))
+            {
+                return ExpiryTime > DateTime.UtcNow
+                    ? PlanetaryPinState.Extracting
+                    : PlanetaryPinState.Idle;
+            }
 
             return PlanetaryPinState.None;
         }
