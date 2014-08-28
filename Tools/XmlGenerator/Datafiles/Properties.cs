@@ -44,11 +44,15 @@ namespace EVEMon.XmlGenerator.Datafiles
             IEnumerable<SerializablePropertyCategory> categories = ExportAttributeCategories();
 
             // Sort groups
-            string[] orderedGroupNames = {
-                                             "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
-                                             "Targeting", "Propulsion", "Miscellaneous", "NULL", "AI", "Graphics"
-                                         };
-
+            string[] orderedGroupNames =
+            {
+                "General", "Fitting", "Drones", "Structure", "Armor", "Shield", "Capacitor",
+                "Targeting", "Propulsion", "Turrets", "Missile", "Remote Assistance",
+                "EW - Energy Neutralizing", "EW - Remote Electronic Counter Measures",
+                "EW - Sensor Dampening", "EW - Target Jamming", "EW - Target Painting", "EW - Tracking Disruption",
+                "EW - Warp Scrambling", "EW - Webbing", "Loot", "Miscellaneous", "NULL", "AI", "Graphics"
+            };
+        
             // Serialize
             PropertiesDatafile datafile = new PropertiesDatafile();
             datafile.Categories.AddRange(categories.OrderBy(x => orderedGroupNames.IndexOf(x.Name)));
