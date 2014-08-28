@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.XmlGenerator.StaticData;
@@ -158,7 +159,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                                             ? DBConstants.MiscellaneousAttributeCategoryID
                                             : DBConstants.NullAtributeCategoryID);
             }
-            
+
             // Assign injected properties units
             Database.DgmAttributeTypesTable[DBConstants.ShipWarpSpeedPropertyID].UnitID = warpSpeedUnit.ID;
             
@@ -221,16 +222,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                 DBConstants.StructureAtributeCategoryID;
             Database.DgmAttributeTypesTable[DBConstants.ShipWarpSpeedPropertyID].CategoryID =
                 DBConstants.SpeedAtributeCategoryID;
-            Database.DgmAttributeTypesTable[DBConstants.StructureUniformityPropertyID].CategoryID =
-                DBConstants.NullAtributeCategoryID;
-            Database.DgmAttributeTypesTable[DBConstants.ArmorUniformityPropertyID].CategoryID =
-                DBConstants.NullAtributeCategoryID;
-            Database.DgmAttributeTypesTable[DBConstants.ShieldUniformityPropertyID].CategoryID =
-                DBConstants.NullAtributeCategoryID;
-            Database.DgmAttributeTypesTable[DBConstants.UniformityPropertyID].CategoryID =
-                DBConstants.NullAtributeCategoryID;
-            Database.DgmAttributeTypesTable[DBConstants.ScanSpeedPropertyID].CategoryID =
-                DBConstants.NullAtributeCategoryID;
 
             // Changing HigherIsBetter to false (CCP has this wrong?)
             Database.DgmAttributeTypesTable[DBConstants.PGNeedPropertyID].HigherIsBetter = false;
@@ -254,6 +245,23 @@ namespace EVEMon.XmlGenerator.Datafiles
             Database.DgmAttributeTypesTable[DBConstants.OnliningDelayPropertyID].HigherIsBetter = false;
             Database.DgmAttributeTypesTable[DBConstants.IceHarvestCycleBonusPropertyID].HigherIsBetter = false;
             Database.DgmAttributeTypesTable[DBConstants.ModuleReactivationDelayPropertyID].HigherIsBetter = false;
+
+            // Changing the categoryID for those attributes that their names do not start with a capital letter 
+            foreach (DgmAttributeTypes attribute in Database.DgmAttributeTypesTable.Where(x => x.CategoryID != null)
+                .Select(attribute =>
+                    new
+                    {
+                        attribute,
+                        name = String.IsNullOrEmpty(attribute.DisplayName) ? attribute.Name : attribute.DisplayName
+                    })
+                .Where(
+                    att =>
+                        Regex.IsMatch(att.name.Substring(0, 1), "[a-z]", RegexOptions.Compiled | RegexOptions.CultureInvariant) &&
+                        att.attribute.CategoryID != DBConstants.MiscellaneousAttributeCategoryID &&
+                        att.attribute.CategoryID != DBConstants.NullAtributeCategoryID).Select(att => att.attribute))
+            {
+                attribute.CategoryID = DBConstants.NullAtributeCategoryID;
+            }
         }
 
         /// <summary>
