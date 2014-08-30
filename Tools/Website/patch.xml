@@ -1,86 +1,93 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>08 June 2014</date>
-    <version>1.8.9.4357</version>
-    <md5>a87c18bbc7bb3232bf0f43db3a6659e6</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,185000.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.8.9.exe</autopatchurl>
+    <date>30 August 2014</date>
+    <version>1.9.0.4489</version>
+    <md5>9ba3f277a25d1feb92c9d758f9482994</md5>
+    <url>http://forum.battleclinic.com/index.php/topic,185916.html</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.0.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Breaking Changes ==
 
- * Data files extension has been changed due to CDN restrictions that distributes our data files. EVEMon versions prior of 1.8.9 will not be able to get updates of future data files.
+ * Blueprints data files have been changed due to CCP Crius changes. Blueprint browser data for EVEMon version prior to 1.9.0 will not show correct info. 
 
 == Contributors for this version ==
 
  * Jimi
- * Protag
- 
+ * berin
+
+== New Features ==
+
+ * EVEMon now has a character planetary infrastructure monitor.
+
 == Bug Fixes ==
 
- * Fixed a crash bug when creating or updating an outlook calendar entry and the character name contains a (') character.
- * Fixed a crash bug when double-clicking on an "Unknown" skill in the required skills section in Items Browser.
- * Fixed a crash bug when after cancelling selections in any Column Settings window and try to reopen the window.
+ * Fixed a redirect bug to loadout discussion forum topic.
 
 == Enhancements ==
 
- * Switching to general Exception catching for special use cases with Darwine/Wine. Not a best practice but will resolve future issues.
- * Skill planner now does not add a dependency skill level if the dependent skill level is already trained.
- * Added OwnerID and CharacterAffiliation endpoints for API Tester.
- * Added PlanetaryColonies, PlanetaryPins, PlanetaryRoutes, and PlanetaryLinks endpoints to the API Tester.
+ * Added API Corporation CustomsOffices endpoint to API Tester.
+ * Added ability to delete the search text via mouse click in each browser in Skill Planner.
+ * Added ability to delete the search text via mouse click in each feature monitor where applicable.
+ * Adjusted Blueprint browser to Crius changes.
+ * Adjusted Industry jobs monitor to Crius changes.
+ * Added API IndustryJobsHistory endpoint for character and corporation to API Tester.
+ * Added character Employment History corporation name via API. This will reduce further the calls to CharacterName API endpoint. 
+ * Added API Blueprints endpoint for character and corporation to API Tester.
 
 == Misc ==
 
+ * Removed "Known problems and solutions" dead link.
  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>08 June 2014</date>
-      <md5>d6a637e3a7f118f1c451e1e8ab740ad3</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
-      <message><![CDATA[Kronos 1.0 (793961) blueprints data file by the EVEMon Development Team
+      <date>30 August 2014</date>
+      <md5>32c2d9dc78c1ffe92de2a28739796826</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
+      <message><![CDATA[Hyperion 1.0 (820762) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>08 June 2014</date>
+      <date>30 August 2014</date>
       <md5>96524d5fda5e89dcd6fb55caf57d2c42</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
-      <message><![CDATA[Kronos 1.0 (793961) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
+      <message><![CDATA[Hyperion 1.0 (820762) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>08 June 2014</date>
-      <md5>d27f35fc75a9f70e660f31b13419459c</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
-      <message><![CDATA[Kronos 1.0 (793961) items data file by the EVEMon Development Team
+      <date>30 August 2014</date>
+      <md5>d961a8364f78c926afc862ab15a01733</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
+      <message><![CDATA[Hyperion 1.0 (820762) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>08 June 2014</date>
-      <md5>4789af3274c8d7cdc5d53e2b4b5eb54b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
-      <message><![CDATA[Kronos 1.0 (793961) properties data file by the EVEMon Development Team
+      <date>30 August 2014</date>
+      <md5>e076c3082cff747199d59fd193f063f3</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
+      <message><![CDATA[Hyperion 1.0 (820762) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>08 June 2014</date>
-      <md5>2aad2ebbd9bc382fdd81550b3ddd1a5b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
-      <message><![CDATA[Kronos 1.0 (793961) reprocessing data file by the EVEMon Development Team
+      <date>30 August 2014</date>
+      <md5>f881e44d1182670a780df0932753f891</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
+      <message><![CDATA[Hyperion 1.0 (820762) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>08 June 2014</date>
-      <md5>1e10821dd26203c9c7260b626ff1d81f</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Kronos/793961</url>
-      <message><![CDATA[Kronos 1.0 (793961) skills data file by the EVEMon Development Team
+      <date>30 August 2014</date>
+      <md5>f74df450d63f54f3ee490718da348803</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
+      <message><![CDATA[Hyperion 1.0 (820762) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
