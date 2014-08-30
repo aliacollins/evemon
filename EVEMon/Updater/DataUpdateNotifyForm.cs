@@ -13,6 +13,7 @@ namespace EVEMon.Updater
     public partial class DataUpdateNotifyForm : EVEMonForm
     {
         private readonly DataUpdateAvailableEventArgs m_args;
+        private bool m_formClosing;
 
         /// <summary>
         /// Default constructor.
@@ -63,6 +64,9 @@ namespace EVEMon.Updater
 
             while (m_args.ChangedFiles.Count != 0 && result == DialogResult.Yes)
             {
+                if (m_formClosing)
+                    break;
+
                 DownloadUpdates();
 
                 if (m_args.ChangedFiles.Count == 0)
@@ -192,6 +196,23 @@ namespace EVEMon.Updater
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        /// <summary>
+        /// Handles the FormClosing event of the DataUpdateNotifyForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
+        private void DataUpdateNotifyForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!Visible ||
+                (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
+                 e.CloseReason != CloseReason.WindowsShutDown))
+            {
+                return;
+            }
+
+            m_formClosing = true;
         }
     }
 }

@@ -11,7 +11,8 @@ namespace EVEMon.Updater
 {
     public partial class UpdateNotifyForm : EVEMonForm
     {
-        private UpdateAvailableEventArgs m_args;
+        private readonly UpdateAvailableEventArgs m_args;
+        private bool m_formClosing;
 
         /// <summary>
         /// Default constructor.
@@ -96,7 +97,7 @@ namespace EVEMon.Updater
 
             using (UpdateDownloadForm form = new UpdateDownloadForm(m_args.InstallerUrl, localFilename))
             {
-                if (form.ShowDialog() != DialogResult.OK)
+                if (m_formClosing || form.ShowDialog() != DialogResult.OK)
                     return true;
 
                 string downloadedFileMD5Sum = Util.CreateMD5From(localFilename);
@@ -170,28 +171,7 @@ namespace EVEMon.Updater
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UpdateNotifyForm_Shown(object sender, EventArgs e)
-        {
-            UpdateInformation();
-            cbAutoInstall.Checked = m_args.CanAutoInstall;
-            EveMonClient.UpdateAvailable += UpdateNotifyForm_UpdateAvailable;
-        }
-
-        /// <summary>
-        /// When an update is available, we update the informations.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UpdateNotifyForm_UpdateAvailable(object sender, UpdateAvailableEventArgs e)
-        {
-            m_args = e;
-            UpdateInformation();
-        }
-
-        /// <summary>
-        /// Initilizes the contents and state of the controls.
-        /// </summary>
-        private void UpdateInformation()
+        private void UpdateNotifyForm_Load(object sender, EventArgs e)
         {
             // Set the basic update information
             StringBuilder labelText = new StringBuilder();
@@ -210,16 +190,24 @@ namespace EVEMon.Updater
             updateNotesTextBox.Lines = updMessage.Split('\n');
 
             cbAutoInstall.Enabled = m_args.CanAutoInstall;
+            cbAutoInstall.Checked = m_args.CanAutoInstall;
         }
 
         /// <summary>
-        /// On form closed we unsuscribe the event handler.
+        /// Handles the FormClosing event of the UpdateNotifyForm control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UpdateNotifyForm_FormClosed(object sender, FormClosedEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
+        private void UpdateNotifyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            EveMonClient.UpdateAvailable -= UpdateNotifyForm_UpdateAvailable;
+            if (!Visible ||
+                (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
+                 e.CloseReason != CloseReason.WindowsShutDown))
+            {
+                return;
+            }
+
+            m_formClosing = true;
         }
     }
 }
