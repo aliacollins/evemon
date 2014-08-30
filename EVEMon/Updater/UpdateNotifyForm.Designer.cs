@@ -140,9 +140,8 @@ namespace EVEMon.Updater
             this.Name = "UpdateNotifyForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Update Available";
-            this.TopMost = true;
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.UpdateNotifyForm_FormClosed);
-            this.Shown += new System.EventHandler(this.UpdateNotifyForm_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UpdateNotifyForm_FormClosing);
+            this.Load += new System.EventHandler(this.UpdateNotifyForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

@@ -1093,7 +1093,9 @@ namespace EVEMon
                     Close();
                 }
             }
+
             m_isShowingUpdateWindow = false;
+            m_isUpdating = false;
         }
 
         /// <summary>
@@ -1119,7 +1121,9 @@ namespace EVEMon
                 if (f.ShowDialog() == DialogResult.OK)
                     RestartApplication();
             }
+
             m_isShowingDataUpdateWindow = false;
+            m_isUpdatingData = false;
         }
 
         /// <summary>
@@ -1127,7 +1131,7 @@ namespace EVEMon
         /// </summary>
         private void RestartApplication()
         {
-            // Save the settings to make sure we don't loose anything
+            // Save the settings to make sure we don't lose anything
             Settings.SaveImmediate();
 
             // Save settings to BC storage

@@ -312,7 +312,7 @@ namespace EVEMon.Common
                     // Search all the disposed windows or windows with the same tag
                     bool isDisposed = false;
                     TForm formToRemove = null;
-                    foreach (TForm existingWindow in s_taggedWindows.Where(taggedWindow => taggedWindow == form))
+                    foreach (TForm existingWindow in s_taggedWindows.Where(taggedWindow => taggedWindow == form).Cast<TForm>())
                     {
                         try
                         {

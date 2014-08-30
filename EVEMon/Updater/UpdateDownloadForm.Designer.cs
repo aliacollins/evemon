@@ -76,7 +76,7 @@ namespace EVEMon.Updater
             this.Name = "UpdateDownloadForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Downloading Update...";
-            this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UpdateDownloadForm_FormClosing);
             this.Shown += new System.EventHandler(this.UpdateDownloadForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

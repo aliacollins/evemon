@@ -67,8 +67,8 @@ namespace EVEMon.Updater
             if (e.TotalBytesToReceive > 0)
             {
                 ProgressLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                   "Downloading update ({0}%, {1:N0} of {2:N0} bytes received)...",
-                                                   e.ProgressPercentage, e.BytesReceived, e.TotalBytesToReceive);
+                    "Downloading update ({0}%, {1:N0} of {2:N0} bytes received)...",
+                    e.ProgressPercentage, e.BytesReceived, e.TotalBytesToReceive);
                 pbProgress.Style = ProgressBarStyle.Blocks;
                 pbProgress.Minimum = 0;
                 pbProgress.Maximum = 100;
@@ -82,8 +82,8 @@ namespace EVEMon.Updater
             else
             {
                 ProgressLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                   "Downloading update ({0:N0} bytes received)...",
-                                                   e.BytesReceived);
+                    "Downloading update ({0:N0} bytes received)...",
+                    e.BytesReceived);
                 pbProgress.Style = ProgressBarStyle.Marquee;
             }
         }
@@ -141,6 +141,23 @@ namespace EVEMon.Updater
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btCancel_Click(object sender, EventArgs e)
         {
+            if (m_request != null)
+                HttpWebService.CancelRequest(m_request);
+        }
+
+        /// <summary>
+        /// Handles the FormClosing event of the UpdateDownloadForm control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
+        private void UpdateDownloadForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!Visible || (e.CloseReason != CloseReason.ApplicationExitCall && e.CloseReason != CloseReason.TaskManagerClosing &&
+                e.CloseReason != CloseReason.WindowsShutDown))
+            {
+                return;
+            }
+
             if (m_request != null)
                 HttpWebService.CancelRequest(m_request);
         }
