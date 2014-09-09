@@ -1444,7 +1444,7 @@ namespace EVEMon.SkillPlanner
                 miChangePriority.Enabled = true;
                 miShowInSkillBrowser.Enabled = true;
                 miShowInSkillExplorer.Enabled = true;
-                MoveToTopMenuItem.Enabled = true;
+                MoveToTopMenuItem.Enabled = lvSkills.Items.IndexOf(lvSkills.SelectedItems[0]) > 1;
 
                 // "Change note"
                 miChangeNote.Enabled = true;

@@ -162,14 +162,6 @@ namespace EVEMon.Common
         #region General purpose methods
 
         /// <summary>
-        /// Fix the order to ensure prerequisites and priorites are correctly ordered. Also add missing prerequisites.
-        /// </summary>
-        public void Fix()
-        {
-            FixPrerequisites();
-        }
-
-        /// <summary>
         /// Gets the entry matching the given parameters.
         /// </summary>
         /// <param name="skill"></param>
@@ -303,8 +295,11 @@ namespace EVEMon.Common
         /// Adds the missing prerequisites and fix the prerequisites order
         /// </summary>
         /// <remarks>Complexity is O(n²) on the average and O(n^3) on the worst-case.</remarks>
-        protected void FixPrerequisites()
+        public void FixPrerequisites()
         {
+            if (!Items.Any() || Items.Last().CharacterSkill.IsKnown)
+                return;
+
             // Scroll through entries
             for (int i = 0; i < Items.Count; i++)
             {
@@ -636,31 +631,35 @@ namespace EVEMon.Common
 
                 // Let's first add dependencies excluding those that the dependent skill is already trained
                 StaticSkillLevel item = new StaticSkillLevel(itemToAdd);
-                foreach (StaticSkillLevel dependency in item.AllDependencies.Where(
-                    dependency => !entriesSet.Contains(dependency) && dependency.Skill != item.Skill &&
-                                  Character.GetSkillLevel(dependency.Skill) < dependency.Level)
-                    .Select(dependency => new
-                                          {
-                                              dependency,
-                                              depItems = item.AllDependencies.Where(
-                                                  dep => item.Skill != dep.Skill &&
-                                                         dep.Skill.Prerequisites.Any(
-                                                             prereq => prereq.Skill == dependency.Skill))
-                                          })
-                    .Where(dep => !dep.depItems.Any() ||
-                                  !dep.depItems.All(depItem => Character.GetSkillLevel(depItem.Skill) >= depItem.Level))
-                    .Select(dep => dep.dependency))
-                {
-                    // Create an entry (even for existing ones, we will update them later from those new entries)
-                    PlanEntry dependencyEntry = CreateEntryToAdd(dependency.Skill, dependency.Level,
-                        PlanEntryType.Prerequisite, note, ref lowestPrereqPriority);
-                    planEntries.Add(dependencyEntry);
-                    entriesSet.Set(dependencyEntry);
-                }
 
-                // Already in the "entries to add" list ? We skip it (done at this point only because of recursive prereqs)
-                if (entriesSet.Contains(itemToAdd))
-                    continue;
+                if (Character.GetSkillLevel(itemToAdd.Skill) < 1)
+                {
+                    foreach (StaticSkillLevel dependency in item.AllDependencies.Where(
+                        dependency => !entriesSet.Contains(dependency) && dependency.Skill != item.Skill &&
+                                      Character.GetSkillLevel(dependency.Skill) < dependency.Level)
+                        .Select(dependency => new
+                        {
+                            dependency,
+                            depItems = item.AllDependencies.Where(
+                                dep => item.Skill != dep.Skill &&
+                                       dep.Skill.Prerequisites.Any(
+                                           prereq => prereq.Skill == dependency.Skill))
+                        })
+                        .Where(dep => !dep.depItems.Any() ||
+                                      !dep.depItems.All(depItem => Character.GetSkillLevel(depItem.Skill) >= depItem.Level))
+                        .Select(dep => dep.dependency))
+                    {
+                        // Create an entry (even for existing ones, we will update them later from those new entries)
+                        PlanEntry dependencyEntry = CreateEntryToAdd(dependency.Skill, dependency.Level,
+                            PlanEntryType.Prerequisite, note, ref lowestPrereqPriority);
+                        planEntries.Add(dependencyEntry);
+                        entriesSet.Set(dependencyEntry);
+                    }
+
+                    // Already in the "entries to add" list ? We skip it (done at this point only because of recursive prereqs)
+                    if (entriesSet.Contains(itemToAdd))
+                        continue;
+                }
 
                 // Then add the item itself
                 PlanEntry entry = CreateEntryToAdd(itemToAdd.Skill, itemToAdd.Level,
