@@ -102,7 +102,7 @@ namespace EVEMon.SkillPlanner
         {
             PlanScratchpad plan = new PlanScratchpad(m_operation.Plan.Character);
             plan.RebuildPlanFrom(items.Select(x => new PlanEntry(x.Skill, x.Level)));
-            plan.Fix();
+            plan.FixPrerequisites();
 
             listBox.Items.Clear();
             foreach (PlanEntry entry in plan)

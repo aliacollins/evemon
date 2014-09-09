@@ -389,7 +389,7 @@ namespace EVEMon.SkillPlanner
                 Plan plan = cps.TargetPlan;
 
                 // Adds and fixes the prerequisites order
-                plan.Fix();
+                plan.FixPrerequisites();
 
                 // Prompt the user for the new plan's name
                 using (NewPlanWindow f = new NewPlanWindow())
