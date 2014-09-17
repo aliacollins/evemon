@@ -9,6 +9,7 @@ namespace EVEMon.Common
     public sealed class PlanetaryPin
     {
         private readonly EveProperty m_volumeProperty = StaticProperties.GetPropertyByID(DBConstants.VolumePropertyID);
+        private readonly char[] m_baseString = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 
 
         #region Constructor
@@ -23,7 +24,7 @@ namespace EVEMon.Common
             Colony = colony;
             ID = src.PinID;
             TypeID = src.TypeID;
-            TypeName = src.TypeName;
+            TypeName = GetPinName(src.TypeName);
             SchematicID = src.SchematicID;
             CycleTime = src.CycleTime;
             QuantityPerCycle = src.QuantityPerCycle;
@@ -182,8 +183,10 @@ namespace EVEMon.Common
         {
             get
             {
-                return Colony.Links.Where(link => link.SourcePinID == ID)
-                    .SelectMany(link => Colony.Pins.Where(pin => pin.ID == link.DestinationPinID));
+                return Colony.Links.Where(link => link.SourcePinID == ID || link.DestinationPinID == ID)
+                    .SelectMany(
+                        link => Colony.Pins.Where(
+                            pin => pin.ID != ID && (pin.ID == link.SourcePinID || pin.ID == link.DestinationPinID)));
             }
         }
 
@@ -197,8 +200,11 @@ namespace EVEMon.Common
         {
             get
             {
-                return Colony.Routes.Where(route => route.SourcePinID == ID).Distinct()
-                    .SelectMany(route => Colony.Pins.Where(pin => pin.ID == route.DestinationPinID));
+                return Colony.Routes.Where(route => route.SourcePinID == ID || route.DestinationPinID == ID)
+                    .SelectMany(
+                        route =>
+                            Colony.Pins.Where(
+                                pin => pin.ID != ID && (pin.ID == route.SourcePinID || pin.ID == route.DestinationPinID)));
             }
         }
 
@@ -211,6 +217,25 @@ namespace EVEMon.Common
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Gets the name of the pin.
+        /// </summary>
+        /// <param name="typeName">Name of the type.</param>
+        /// <returns></returns>
+        private string GetPinName(string typeName)
+        {
+            int lenght = m_baseString.Length - 1;
+            string pinNameID = String.Empty;
+
+            for (int i = 0; i < 5; i++)
+            {
+                pinNameID += m_baseString[(int)(ID / Math.Pow(lenght, i) % lenght)];
+            }
+
+            return String.Format(CultureConstants.InvariantCulture, "{0} {1}-{2}", typeName,
+                pinNameID.Substring(0, 2), pinNameID.Substring(2, 3));
+        }
 
         /// <summary>
         /// Gets the state.
