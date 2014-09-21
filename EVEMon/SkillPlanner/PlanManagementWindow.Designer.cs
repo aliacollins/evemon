@@ -60,8 +60,8 @@ namespace EVEMon.SkillPlanner
             this.NewPlanToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.miImportPlanFromFile = new System.Windows.Forms.ToolStripMenuItem();
             this.miImportPlanFromCharacter = new System.Windows.Forms.ToolStripMenuItem();
-            this.miExportPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportExportPlanToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.miExportPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.miExportCharacterSkillsAsPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.ExportCharAsPlanToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.miRestorePlans = new System.Windows.Forms.ToolStripMenuItem();
@@ -358,6 +358,11 @@ namespace EVEMon.SkillPlanner
             this.miImportPlanFromCharacter.Text = "Import Plan from &Character…";
             this.miImportPlanFromCharacter.Click += new System.EventHandler(this.miImportPlanFromCharacter_Click);
             // 
+            // ImportExportPlanToolStripSeparator
+            // 
+            this.ImportExportPlanToolStripSeparator.Name = "ImportExportPlanToolStripSeparator";
+            this.ImportExportPlanToolStripSeparator.Size = new System.Drawing.Size(236, 6);
+            // 
             // miExportPlan
             // 
             this.miExportPlan.Image = ((System.Drawing.Image)(resources.GetObject("miExportPlan.Image")));
@@ -365,11 +370,6 @@ namespace EVEMon.SkillPlanner
             this.miExportPlan.Size = new System.Drawing.Size(239, 22);
             this.miExportPlan.Text = "&Export Plan...";
             this.miExportPlan.Click += new System.EventHandler(this.miExportPlan_Click);
-            // 
-            // ImportExportPlanToolStripSeparator
-            // 
-            this.ImportExportPlanToolStripSeparator.Name = "ImportExportPlanToolStripSeparator";
-            this.ImportExportPlanToolStripSeparator.Size = new System.Drawing.Size(236, 6);
             // 
             // miExportCharacterSkillsAsPlan
             // 
@@ -440,7 +440,6 @@ namespace EVEMon.SkillPlanner
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PlanManagementWindow";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Manage Plans";
             this.Load += new System.EventHandler(this.PlanSelectWindow_Load);
