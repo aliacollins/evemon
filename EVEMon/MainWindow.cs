@@ -525,14 +525,14 @@ namespace EVEMon
         private void UpdateControlsOnTabSelectionChange()
         {
             // Collext the menu buttons that get enabled by a character
-            ToolStripItem[] characterEnabledMenuItems = new ToolStripItem[]
-                                                            {
-                                                                hideCharacterMenu, miImportPlanFromFile,
-                                                                skillsPieChartMenu, deleteCharacterMenu, showOwnedSkillbooksMenu,
-                                                                exportCharacterMenu, implantsMenu, skillsPieChartTbMenu,
-                                                                manageCharacterTbMenu, tsbManagePlans, plansTbMenu,
-                                                                tsbImplantGroups, tsbShowOwned
-                                                            };
+            ToolStripItem[] characterEnabledMenuItems =
+            {
+                hideCharacterMenu, miImportPlanFromFile,
+                skillsPieChartMenu, deleteCharacterMenu, showOwnedSkillbooksMenu,
+                exportCharacterMenu, implantsMenu, skillsPieChartTbMenu,
+                manageCharacterTbMenu, tsbManagePlans, plansTbMenu,
+                tsbImplantGroups, tsbShowOwned
+            };
 
             // Enable or disable the menu buttons
             foreach (ToolStripItem item in characterEnabledMenuItems)
@@ -1671,16 +1671,6 @@ namespace EVEMon
             {
                 form.ShowDialog(this);
             }
-        }
-
-        /// <summary>
-        /// Help > Known problems and solutions.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void knownProblemsMenu_Click(object sender, EventArgs e)
-        {
-            Util.OpenURL(new Uri(NetworkConstants.EVEMonKnownProblems));
         }
 
         /// <summary>
