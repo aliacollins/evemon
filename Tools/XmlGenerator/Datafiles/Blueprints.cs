@@ -357,6 +357,10 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="item">The item.</param>
         private static void SetMarketGroupFromMetaGroup(InvTypes item)
         {
+            // Guard in case an item of blueprint type is not contained in the blueprints table (glorious CCP)
+            if (Database.InvBlueprintTypesTable.All(x => x.ID != item.ID))
+                return;
+
             int relation = Database.InvMetaTypesTable.Where(
                 x => x.ItemID == Database.InvBlueprintTypesTable[item.ID].ProductTypeID).Select(
                     x => x.MetaGroupID).FirstOrDefault();
@@ -390,6 +394,10 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static void CreateBlueprint(InvTypes srcBlueprint, ICollection<SerializableBlueprint> blueprintsGroup)
         {
             Util.UpdatePercentDone(Database.BlueprintsTotalCount);
+
+            // Guard in case an item of blueprint type is not contained in the blueprints table (glorious CCP)
+            if (Database.InvBlueprintTypesTable.All(x => x.ID != srcBlueprint.ID))
+                return;
 
             InvBlueprintTypes blueprintType = Database.InvBlueprintTypesTable[srcBlueprint.ID];
 
