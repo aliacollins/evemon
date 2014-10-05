@@ -44,50 +44,50 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>30 August 2014</date>
-      <md5>32c2d9dc78c1ffe92de2a28739796826</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
-      <message><![CDATA[Hyperion 1.0 (820762) blueprints data file by the EVEMon Development Team
+      <date>05 October 2014</date>
+      <md5>6b3709676115fb2c6575b83ed7400956</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
+      <message><![CDATA[Oceanus 1.0 (830205) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>30 August 2014</date>
+      <date>05 October 2014</date>
       <md5>96524d5fda5e89dcd6fb55caf57d2c42</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
-      <message><![CDATA[Hyperion 1.0 (820762) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
+      <message><![CDATA[Oceanus 1.0 (830205) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>30 August 2014</date>
-      <md5>d961a8364f78c926afc862ab15a01733</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
-      <message><![CDATA[Hyperion 1.0 (820762) items data file by the EVEMon Development Team
+      <date>05 October 2014</date>
+      <md5>2c66aae914f54fb7a9d41492da0fff4d</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
+      <message><![CDATA[Oceanus 1.0 (830205) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>30 August 2014</date>
-      <md5>e076c3082cff747199d59fd193f063f3</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
-      <message><![CDATA[Hyperion 1.0 (820762) properties data file by the EVEMon Development Team
+      <date>05 October 2014</date>
+      <md5>e268acb316e45ac232da3ebb9de4bbc4</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
+      <message><![CDATA[Oceanus 1.0 (830205) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>30 August 2014</date>
-      <md5>f881e44d1182670a780df0932753f891</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
-      <message><![CDATA[Hyperion 1.0 (820762) reprocessing data file by the EVEMon Development Team
+      <date>05 October 2014</date>
+      <md5>0c5f5298810d0ca8be2b59f1d4bb0997</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
+      <message><![CDATA[Oceanus 1.0 (830205) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>30 August 2014</date>
-      <md5>f74df450d63f54f3ee490718da348803</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Hyperion/820762</url>
-      <message><![CDATA[Hyperion 1.0 (820762) skills data file by the EVEMon Development Team
+      <date>05 October 2014</date>
+      <md5>6751f8bd3bd5782380a1864835c72c25</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
+      <message><![CDATA[Oceanus 1.0 (830205) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
