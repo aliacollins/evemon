@@ -139,25 +139,37 @@ namespace EVEMon.Common
         /// Imports data from an API serialization object provided by CCP.
         /// </summary>
         /// <param name="serial"></param>
-        internal void Import(SerializableImplantSet serial)
+        internal void Import<T>(T serial)
         {
+            var set = serial as SerializableImplantSet;
+            var newSet = serial as Collection<SerializableNewImplant>;
+            if (set == null && newSet == null)
+                return;
+            
             // Search whether the api infos are different from the ones currently stored
-            ImplantSet newSet = new ImplantSet(m_owner, "temp");
-            newSet.Import(serial);
+            ImplantSet tempSet = new ImplantSet(m_owner, "temp");
+
+            if (set != null)
+                tempSet.Import(set);
+            else
+                tempSet.Import(newSet);
 
             bool isDifferent = false;
             Implant[] oldArray = API.ToArray();
-            Implant[] newArray = newSet.ToArray();
+            Implant[] newArray = tempSet.ToArray();
             for (int i = 0; i < oldArray.Length; i++)
             {
-                isDifferent |= (oldArray[i] != newArray[i]);
+                isDifferent |= (oldArray[i].Name != newArray[i].Name);
             }
 
             // Imports the API and make a backup
             if (isDifferent)
                 OldAPI.Import(API.Export(), false);
 
-            API.Import(serial);
+            if (set != null)
+                API.Import(set);
+            else
+                API.Import(newSet);
 
             EveMonClient.OnCharacterImplantSetCollectionChanged();
         }

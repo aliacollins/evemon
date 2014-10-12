@@ -116,7 +116,7 @@ namespace EVEMon.Common
         /// </summary>
         public void QueryEverything()
         {
-            foreach (IQueryMonitorEx monitor in Items.Where(monitor => monitor.HasAccess))
+            foreach (IQueryMonitorEx monitor in Items.Where(monitor => monitor.HasAccess).Cast<IQueryMonitorEx>())
             {
                 monitor.ForceUpdate();
             }

@@ -192,6 +192,18 @@ namespace EVEMon.Common
         public int CloneSkillPoints { get; private set; }
 
         /// <summary>
+        /// Gets the jump clone creation date.
+        /// </summary>
+        public DateTime JumpCloneCreationDate { get; private set; }
+
+
+        public DateTime LastRespecDate { get; private set; }
+
+
+        public DateTime LastTimedRespec { get; private set; }
+
+
+        /// <summary>
         /// Gets the current character's wallet balance.
         /// </summary>
         public decimal Balance { get; private set; }
@@ -429,7 +441,10 @@ namespace EVEMon.Common
             serial.CloneSkillPoints = CloneSkillPoints;
             serial.CloneName = CloneName;
             serial.Balance = Balance;
-
+            serial.CloneJumpDate = JumpCloneCreationDate;
+            serial.LastRespecDate = LastRespecDate;
+            serial.LastTimedRespec = LastTimedRespec;
+            
             // Info
             serial.ShipName = ShipName;
             serial.ShipTypeName = ShipTypeName;
@@ -451,7 +466,6 @@ namespace EVEMon.Common
 
             // Skills
             serial.Skills.AddRange(Skills.Export());
-
         }
 
         /// <summary>
@@ -488,7 +502,11 @@ namespace EVEMon.Common
             Import((SerializableCharacterSheetBase)serial);
 
             // Implants
-            ImplantSets.Import(serial.Implants);
+            if (serial.OldImplants != null && !serial.OldImplants.Deprecated)
+                ImplantSets.Import(serial.OldImplants);
+
+            if (serial.NewImplants.Any())
+                ImplantSets.Import(serial.NewImplants);
         }
 
         /// <summary>
@@ -527,6 +545,9 @@ namespace EVEMon.Common
             AllianceID = serial.AllianceID;
             CloneName = serial.CloneName;
             CloneSkillPoints = serial.CloneSkillPoints;
+            JumpCloneCreationDate = serial.CloneJumpDate;
+            LastRespecDate = serial.LastRespecDate;
+            LastTimedRespec = serial.LastTimedRespec;
 
             if (serial is SerializableSettingsCharacter)
             {

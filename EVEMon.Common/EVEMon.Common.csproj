@@ -333,6 +333,9 @@
     <Compile Include="Serialization\API\SerializableAPIMedals.cs" />
     <Compile Include="Serialization\API\SerializableAPIPlanetaryColonies.cs" />
     <Compile Include="Serialization\API\SerializableAPIPlanetaryLinks.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterJumpClone.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterJumpCloneImplant.cs" />
+    <Compile Include="Serialization\API\SerializableNewImplant.cs" />
     <Compile Include="Serialization\API\SerializablePlanetaryLink.cs" />
     <Compile Include="Serialization\API\SerializablePlanetaryRoute.cs" />
     <Compile Include="Serialization\API\SerializablePlanetaryColony.cs" />

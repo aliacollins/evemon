@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
@@ -17,6 +18,7 @@ namespace EVEMon.Common
         private string m_name;
         private readonly Character m_owner;
         private readonly Implant[] m_values;
+        private const int SlotNumbers = 10;
 
         /// <summary>
         /// Default constructor.
@@ -28,8 +30,8 @@ namespace EVEMon.Common
             m_name = name;
             m_owner = owner;
 
-            m_values = new Implant[10];
-            for (int i = 0; i < 10; i++)
+            m_values = new Implant[SlotNumbers];
+            for (int i = 0; i < SlotNumbers; i++)
             {
                 m_values[i] = Implant.None;
             }
@@ -172,6 +174,19 @@ namespace EVEMon.Common
             Import(ImplantSlots.Willpower, serial.Willpower);
             Import(ImplantSlots.Charisma, serial.Charisma);
             Import(ImplantSlots.Memory, serial.Memory);
+        }
+
+        /// <summary>
+        /// Imports data from an API serialization object.
+        /// </summary>
+        /// <param name="src">The source.</param>
+        internal void Import(IEnumerable<SerializableNewImplant> src)
+        {
+            for (int i = 0; i < SlotNumbers; i++)
+            {
+                m_values[i] = StaticItems.GetImplants((ImplantSlots)i).FirstOrDefault(x => src.Any(y => y.Name == x.Name)) ??
+                              Implant.None;
+            }
         }
 
         /// <summary>
