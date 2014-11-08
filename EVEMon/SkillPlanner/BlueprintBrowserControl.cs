@@ -40,7 +40,6 @@ namespace EVEMon.SkillPlanner
             lblNoItemME.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemTE.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             lblNoItemInvention.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
-            lblNoItemReverseEngineering.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
             m_gbManufOriginalLocation = gbManufacturing.Location;
             m_gbResearchingOriginalLocation = gbResearching.Location;
@@ -212,9 +211,6 @@ namespace EVEMon.SkillPlanner
             if (m_hasInvention)
                 tabControl.TabPages.Add(tpInvention);
 
-            if (!m_hasCopying && !m_hasResearchingMaterialEfficiency && !m_hasResearchingTimeEfficiency && !m_hasInvention)
-                tabControl.TabPages.Add(tpReverseEngineering);
-
             // Restore the index of the previous selected tab,
             // if the index doesn't exist it smartly selects
             // the first one by its own
@@ -258,7 +254,7 @@ namespace EVEMon.SkillPlanner
             // Manufacturing base time
             double activityTime = (int)(m_blueprint.ProductionTime *
                                         GetTimeEfficiencyModifier(BlueprintActivity.Manufacturing)) *
-                                  GetFacilityMultiplier();
+                                  GetFacilityManufacturingAndMaterialMultiplier();
             lblProductionBaseTime.Text = BaseActivityTime(activityTime);
 
             // Manufacturing character time
@@ -268,7 +264,7 @@ namespace EVEMon.SkillPlanner
             // Researching material efficiency base time
             activityTime = (int)(m_blueprint.ResearchMaterialTime *
                                  GetTimeEfficiencyModifier(BlueprintActivity.ResearchingMaterialEfficiency)) *
-                           GetFacilityMultiplier(BlueprintActivity.ResearchingMaterialEfficiency);
+                           GetFacilityResearchTimeMultiplier(BlueprintActivity.ResearchingMaterialEfficiency);
             lblResearchMEBaseTime.Text = BaseActivityTime(activityTime);
 
             // Researching material efficiency character time
@@ -278,7 +274,7 @@ namespace EVEMon.SkillPlanner
             // Researching copy base time
             activityTime = (int)(m_blueprint.ResearchCopyTime *
                                  GetTimeEfficiencyModifier(BlueprintActivity.Copying)) *
-                           GetFacilityMultiplier(BlueprintActivity.Copying);
+                           GetFacilityResearchTimeMultiplier(BlueprintActivity.Copying);
             lblResearchCopyBaseTime.Text = BaseActivityTime(activityTime);
 
             // Researching copy character time
@@ -288,7 +284,7 @@ namespace EVEMon.SkillPlanner
             // Researching time efficiency base time
             activityTime = (int)(m_blueprint.ResearchProductivityTime *
                                  GetTimeEfficiencyModifier(BlueprintActivity.ResearchingTimeEfficiency)) *
-                           GetFacilityMultiplier(BlueprintActivity.ResearchingTimeEfficiency);
+                           GetFacilityResearchTimeMultiplier(BlueprintActivity.ResearchingTimeEfficiency);
             lblResearchTEBaseTime.Text = BaseActivityTime(activityTime);
 
             // Researching time efficiency character time
@@ -300,25 +296,17 @@ namespace EVEMon.SkillPlanner
                 ? m_gbResearchingOriginalLocation
                 : m_gbManufOriginalLocation;
             gbResearching.Visible = m_hasCopying || m_hasResearchingMaterialEfficiency || m_hasResearchingTimeEfficiency;
-            gbInvention.Text = (gbResearching.Visible ? "INVENTION" : "REVERSE ENGINEERING");
-            lblInventionTime.Text = (gbResearching.Visible ? "Invention Time:" : "Reverse Engineering Time:");
-            lblInvention.Text = (gbResearching.Visible ? "Invents:" : "Reverse Engineers:");
             gbInvention.Location = (gbResearching.Visible ? m_gbInventionOriginalLocation : gbResearching.Location);
             gbInvention.Visible = (!gbResearching.Visible || m_hasInvention);
 
             if (!gbInvention.Visible)
                 return;
 
-            // Invention or Reverse Engineering time base time
-            activityTime = (m_hasInvention
-                ? m_blueprint.ResearchInventionTime
-                : m_blueprint.ReverseEngineeringTime) *
-                  GetFacilityMultiplier(m_hasInvention
-                      ? BlueprintActivity.Invention
-                      : BlueprintActivity.ReverseEngineering);
+            // Invention time base time
+            activityTime = m_blueprint.ResearchInventionTime * GetFacilityResearchTimeMultiplier(BlueprintActivity.Invention);
             lblInventionBaseTime.Text = BaseActivityTime(activityTime);
 
-            // Invention or Reverse Engineering character time
+            // Invention character time
             activityTime *= 1d;
             lblInventionCharTime.Text = CharacterActivityTime(activityTime);
         }
@@ -733,9 +721,6 @@ namespace EVEMon.SkillPlanner
                 case "Invention":
                     PropertiesList = lvInvention;
                     return BlueprintActivity.Invention;
-                case "Reverse Engineering":
-                    PropertiesList = lvReverseEngineering;
-                    return BlueprintActivity.ReverseEngineering;
                 default:
                     PropertiesList = lvManufacturing;
                     return BlueprintActivity.Manufacturing;
@@ -762,7 +747,7 @@ namespace EVEMon.SkillPlanner
         /// Gets the manufacturing time and material multiplier of a facility.
         /// </summary>
         /// <returns></returns>
-        private double GetFacilityMultiplier()
+        private double GetFacilityManufacturingAndMaterialMultiplier()
         {
             string text = cbFacility.Text;
             m_materialFacilityMultiplier = 1.0d;
@@ -795,11 +780,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Gets the research time multiplier of a facility.
+        /// Gets the research time multiplier of a facility by their activity.
         /// </summary>
         /// <param name="activity"></param>
         /// <returns></returns>
-        private double GetFacilityMultiplier(BlueprintActivity activity)
+        private double GetFacilityResearchTimeMultiplier(BlueprintActivity activity)
         {
             string text = cbFacility.Text;
 
