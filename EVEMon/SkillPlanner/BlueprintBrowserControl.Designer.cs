@@ -57,10 +57,6 @@ namespace EVEMon.SkillPlanner
             this.gbInvBoM = new System.Windows.Forms.GroupBox();
             this.lvInvention = new System.Windows.Forms.ListView();
             this.lblNoItemInvention = new System.Windows.Forms.Label();
-            this.tpReverseEngineering = new System.Windows.Forms.TabPage();
-            this.gbResearchBoM = new System.Windows.Forms.GroupBox();
-            this.lvReverseEngineering = new System.Windows.Forms.ListView();
-            this.lblNoItemReverseEngineering = new System.Windows.Forms.Label();
             this.tlpModifiers = new System.Windows.Forms.TableLayoutPanel();
             this.flpUpper = new System.Windows.Forms.FlowLayoutPanel();
             this.lblMaterialEfficiency = new System.Windows.Forms.Label();
@@ -127,8 +123,6 @@ namespace EVEMon.SkillPlanner
             this.gbCopyBoM.SuspendLayout();
             this.tpInvention.SuspendLayout();
             this.gbInvBoM.SuspendLayout();
-            this.tpReverseEngineering.SuspendLayout();
-            this.gbResearchBoM.SuspendLayout();
             this.tlpModifiers.SuspendLayout();
             this.flpUpper.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudME)).BeginInit();
@@ -219,7 +213,6 @@ namespace EVEMon.SkillPlanner
             this.tabControl.Controls.Add(this.tpResearchTE);
             this.tabControl.Controls.Add(this.tpCopying);
             this.tabControl.Controls.Add(this.tpInvention);
-            this.tabControl.Controls.Add(this.tpReverseEngineering);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.HotTrack = true;
             this.tabControl.Location = new System.Drawing.Point(0, 65);
@@ -498,52 +491,6 @@ namespace EVEMon.SkillPlanner
             this.lblNoItemInvention.TabIndex = 5;
             this.lblNoItemInvention.Text = "No item required.";
             this.lblNoItemInvention.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // tpReverseEngineering
-            // 
-            this.tpReverseEngineering.Controls.Add(this.gbResearchBoM);
-            this.tpReverseEngineering.Location = new System.Drawing.Point(4, 22);
-            this.tpReverseEngineering.Name = "tpReverseEngineering";
-            this.tpReverseEngineering.Padding = new System.Windows.Forms.Padding(3);
-            this.tpReverseEngineering.Size = new System.Drawing.Size(230, 199);
-            this.tpReverseEngineering.TabIndex = 5;
-            this.tpReverseEngineering.Text = "Reverse Engineering";
-            this.tpReverseEngineering.UseVisualStyleBackColor = true;
-            // 
-            // gbResearchBoM
-            // 
-            this.gbResearchBoM.Controls.Add(this.lvReverseEngineering);
-            this.gbResearchBoM.Controls.Add(this.lblNoItemReverseEngineering);
-            this.gbResearchBoM.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbResearchBoM.Location = new System.Drawing.Point(3, 3);
-            this.gbResearchBoM.Name = "gbResearchBoM";
-            this.gbResearchBoM.Size = new System.Drawing.Size(224, 193);
-            this.gbResearchBoM.TabIndex = 2;
-            this.gbResearchBoM.TabStop = false;
-            this.gbResearchBoM.Text = "Bill of Materials";
-            // 
-            // lvReverseEngineering
-            // 
-            this.lvReverseEngineering.ContextMenuStrip = this.ActivityContextMenu;
-            this.lvReverseEngineering.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvReverseEngineering.Location = new System.Drawing.Point(3, 16);
-            this.lvReverseEngineering.MultiSelect = false;
-            this.lvReverseEngineering.Name = "lvReverseEngineering";
-            this.lvReverseEngineering.Size = new System.Drawing.Size(218, 174);
-            this.lvReverseEngineering.TabIndex = 3;
-            this.lvReverseEngineering.UseCompatibleStateImageBehavior = false;
-            this.lvReverseEngineering.View = System.Windows.Forms.View.Details;
-            // 
-            // lblNoItemReverseEngineering
-            // 
-            this.lblNoItemReverseEngineering.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoItemReverseEngineering.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblNoItemReverseEngineering.Location = new System.Drawing.Point(3, 16);
-            this.lblNoItemReverseEngineering.Name = "lblNoItemReverseEngineering";
-            this.lblNoItemReverseEngineering.Size = new System.Drawing.Size(218, 174);
-            this.lblNoItemReverseEngineering.TabIndex = 2;
-            this.lblNoItemReverseEngineering.Text = "No item required.";
-            this.lblNoItemReverseEngineering.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tlpModifiers
             // 
@@ -1061,8 +1008,6 @@ namespace EVEMon.SkillPlanner
             this.gbCopyBoM.ResumeLayout(false);
             this.tpInvention.ResumeLayout(false);
             this.gbInvBoM.ResumeLayout(false);
-            this.tpReverseEngineering.ResumeLayout(false);
-            this.gbResearchBoM.ResumeLayout(false);
             this.tlpModifiers.ResumeLayout(false);
             this.tlpModifiers.PerformLayout();
             this.flpUpper.ResumeLayout(false);
@@ -1140,16 +1085,12 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblInventionBaseTime;
         private System.Windows.Forms.Label lblNoItemTE;
         private System.Windows.Forms.Label lblNoItemME;
-        private System.Windows.Forms.TabPage tpReverseEngineering;
-        private System.Windows.Forms.GroupBox gbResearchBoM;
-        private System.Windows.Forms.Label lblNoItemReverseEngineering;
         private System.Windows.Forms.ContextMenuStrip ActivityContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader chManufQuantityBase;
         private System.Windows.Forms.ColumnHeader chManufQuantityYou;
         private System.Windows.Forms.Label lblInventionCharTime;
         private System.Windows.Forms.Label lblNoItemCopy;
-        private System.Windows.Forms.ListView lvReverseEngineering;
         private System.Windows.Forms.Label lblSuccessProbability;
         private System.Windows.Forms.Label lblProbability;
         private System.Windows.Forms.Label lblNoItemManufacturing;
