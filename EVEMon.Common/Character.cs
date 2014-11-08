@@ -53,6 +53,8 @@ namespace EVEMon.Common
             Skills = new SkillCollection(this);
 
             EmploymentHistory = new EmploymentRecordCollection(this);
+            JumpClones = new JumpCloneCollection(this);
+            JumpCloneImplants = new JumpCloneImplantCollection(this);
             ImplantSets = new ImplantSetCollection(this);
             Plans = new PlanCollection(this);
 
@@ -111,6 +113,11 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets the home station identifier.
+        /// </summary>
+        public long HomeStationID { get; private set; }
+
+        /// <summary>
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
         public virtual string AdornedName
@@ -152,32 +159,32 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the id of the character's corporation.
         /// </summary>
-        public long CorporationID { get; set; }
+        public long CorporationID { get; internal set; }
 
         /// <summary>
         /// Gets the name of the character's corporation.
         /// </summary>
-        public string CorporationName { get; set; }
+        public string CorporationName { get; internal set; }
 
         /// <summary>
         /// Gets the name of the character's alliance.
         /// </summary>
-        public string AllianceName { get; set; }
+        public string AllianceName { get; internal set; }
 
         /// <summary>
         /// Gets the id of the character's alliance.
         /// </summary>
-        public long AllianceID { get; set; }
+        public long AllianceID { get; internal set; }
 
         /// <summary>
         /// Gets the name of the character's warfare faction.
         /// </summary>
-        public string FactionName { get; set; }
+        public string FactionName { get; internal set; }
 
         /// <summary>
         /// Gets the id of the character's warfare faction.
         /// </summary>
-        public int FactionID { get; set; }
+        public int FactionID { get; internal set; }
 
         /// <summary>
         /// Gets the name of the clone.
@@ -192,16 +199,60 @@ namespace EVEMon.Common
         public int CloneSkillPoints { get; private set; }
 
         /// <summary>
+        /// Gets the free skill points.
+        /// </summary>
+        public int FreeSkillPoints { get; private set; }
+        
+        /// <summary>
         /// Gets the jump clone creation date.
         /// </summary>
-        public DateTime JumpCloneCreationDate { get; private set; }
+        public DateTime JumpCloneLastJumpDate { get; private set; }
+
+        /// <summary>
+        /// Gets the available remaps.
+        /// </summary>
+        public short AvailableReMaps { get; private set; }
+        
+        /// <summary>
+        /// Gets the last remap date.
+        /// </summary>
+        public DateTime LastReMapDate { get; private set; }
 
 
-        public DateTime LastRespecDate { get; private set; }
+        /// <summary>
+        /// Gets the last remap timed.
+        /// </summary>
+        public DateTime LastReMapTimed { get; private set; }
 
+        /// <summary>
+        /// Gets the remote station date.
+        /// </summary>
+        public DateTime RemoteStationDate { get; private set; }
 
-        public DateTime LastTimedRespec { get; private set; }
+        /// <summary>
+        /// Gets the jump clones.
+        /// </summary>
+        public JumpCloneCollection JumpClones { get; private set; }
 
+        /// <summary>
+        /// Gets the jump clone implants.
+        /// </summary>
+        public JumpCloneImplantCollection JumpCloneImplants { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the jump activation date.
+        /// </summary>
+        public DateTime JumpActivationDate { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the jump fatigue date.
+        /// </summary>
+        public DateTime JumpFatigueDate { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the jump last update date.
+        /// </summary>
+        public DateTime JumpLastUpdateDate { get; private set; }
 
         /// <summary>
         /// Gets the current character's wallet balance.
@@ -429,22 +480,35 @@ namespace EVEMon.Common
             serial.Guid = Guid;
             serial.ID = Identity.CharacterID;
             serial.Name = m_name;
+            serial.HomeStationID = HomeStationID;
             serial.Birthday = Birthday;
             serial.Race = Race;
+            serial.BloodLine = Bloodline;
             serial.Ancestry = Ancestry;
             serial.Gender = Gender;
-            serial.BloodLine = Bloodline;
             serial.CorporationName = CorporationName;
             serial.CorporationID = CorporationID;
             serial.AllianceName = AllianceName;
             serial.AllianceID = AllianceID;
-            serial.CloneSkillPoints = CloneSkillPoints;
             serial.CloneName = CloneName;
+            serial.CloneSkillPoints = CloneSkillPoints;
+            serial.FreeSkillPoints = FreeSkillPoints;
+            serial.FreeRespecs = AvailableReMaps;
+            serial.CloneJumpDate = JumpCloneLastJumpDate;
+            serial.LastRespecDate = LastReMapDate;
+            serial.LastTimedRespec = LastReMapTimed;
+            serial.RemoteStationDate = RemoteStationDate;
+            serial.JumpActivationDate = JumpActivationDate;
+            serial.JumpFatigueDate = JumpFatigueDate;
+            serial.JumpLastUpdateDate = JumpLastUpdateDate;
             serial.Balance = Balance;
-            serial.CloneJumpDate = JumpCloneCreationDate;
-            serial.LastRespecDate = LastRespecDate;
-            serial.LastTimedRespec = LastTimedRespec;
-            
+
+            // JumpClones
+            serial.JumpClones.AddRange(JumpClones.Export());
+
+            // JumpCloneImplants
+            serial.JumpCloneImplants.AddRange(JumpCloneImplants.Export());
+
             // Info
             serial.ShipName = ShipName;
             serial.ShipTypeName = ShipTypeName;
@@ -533,21 +597,34 @@ namespace EVEMon.Common
         {
             // Bio
             m_name = serial.Name;
-            Balance = serial.Balance;
-            Gender = serial.Gender;
+            HomeStationID = serial.HomeStationID;
+            Birthday = serial.Birthday;
             Race = serial.Race;
             Bloodline = serial.BloodLine;
             Ancestry = serial.Ancestry;
-            Birthday = serial.Birthday;
+            Gender = serial.Gender;
             CorporationName = serial.CorporationName;
             CorporationID = serial.CorporationID;
             AllianceName = serial.AllianceName;
             AllianceID = serial.AllianceID;
             CloneName = serial.CloneName;
             CloneSkillPoints = serial.CloneSkillPoints;
-            JumpCloneCreationDate = serial.CloneJumpDate;
-            LastRespecDate = serial.LastRespecDate;
-            LastTimedRespec = serial.LastTimedRespec;
+            FreeSkillPoints = serial.FreeSkillPoints;
+            AvailableReMaps = serial.FreeRespecs;
+            JumpCloneLastJumpDate = serial.CloneJumpDate;
+            LastReMapDate = serial.LastRespecDate;
+            LastReMapTimed = serial.LastTimedRespec;
+            RemoteStationDate = serial.RemoteStationDate;
+            JumpActivationDate = serial.JumpActivationDate;
+            JumpFatigueDate = serial.JumpFatigueDate;
+            JumpLastUpdateDate = serial.JumpLastUpdateDate;
+            Balance = serial.Balance;
+
+            // JumpClones
+            JumpClones.Import(serial.JumpClones);
+
+            // JumpCloneImplants
+            JumpCloneImplants.Import(serial.JumpCloneImplants);
 
             if (serial is SerializableSettingsCharacter)
             {

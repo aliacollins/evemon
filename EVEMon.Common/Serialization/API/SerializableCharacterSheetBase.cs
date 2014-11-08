@@ -33,6 +33,9 @@ namespace EVEMon.Common.Serialization.API
             set { Name = value == null ? String.Empty : value.HtmlDecode(); }
         }
 
+        [XmlElement("homeStationID")]
+        public long HomeStationID { get; set; }
+
         [XmlElement("DoB")]
         public string BirthdayXml
         {
@@ -91,6 +94,9 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("freeSkillPoints")]
         public int FreeSkillPoints { get; set; }
 
+        [XmlElement("freeRespecs")]
+        public short FreeRespecs { get; set; }
+
         [XmlElement("cloneJumpDate")]
         public string CloneJumpDateXml
         {
@@ -124,6 +130,17 @@ namespace EVEMon.Common.Serialization.API
             }
         }
 
+        [XmlElement("remoteStationDate")]
+        public string RemoteStationDateXml
+        {
+            get { return RemoteStationDate.DateTimeToTimeString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    RemoteStationDate = value.TimeStringToDateTime();
+            }
+        }
+
         [XmlArray("jumpClones")]
         [XmlArrayItem("jumpClone")]
         public Collection<SerializableCharacterJumpClone> JumpClones
@@ -136,6 +153,39 @@ namespace EVEMon.Common.Serialization.API
         public Collection<SerializableCharacterJumpCloneImplant> JumpCloneImplants
         {
             get { return m_jumpCloneImplants; }
+        }
+
+        [XmlElement("jumpActivation")]
+        public string JumpActivationDateXml
+        {
+            get { return JumpActivationDate.DateTimeToTimeString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    JumpActivationDate = value.TimeStringToDateTime();
+            }
+        }
+
+        [XmlElement("jumpFatigue")]
+        public string JumpFatigueDateXml
+        {
+            get { return JumpFatigueDate.DateTimeToTimeString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    JumpFatigueDate = value.TimeStringToDateTime();
+            }
+        }
+
+        [XmlElement("jumpLastUpdate")]
+        public string JumpLastUpdateDateXml
+        {
+            get { return JumpLastUpdateDate.DateTimeToTimeString(); }
+            set
+            {
+                if (!String.IsNullOrEmpty(value))
+                    JumpLastUpdateDate = value.TimeStringToDateTime();
+            }
         }
 
         [XmlElement("balance")]
@@ -170,12 +220,21 @@ namespace EVEMon.Common.Serialization.API
             get { return m_skills; }
         }
 
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
         [XmlIgnore]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the corporation.
+        /// </summary>
         [XmlIgnore]
         public string CorporationName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the alliance.
+        /// </summary>
         [XmlIgnore]
         public string AllianceName { get; set; }
 
@@ -192,15 +251,39 @@ namespace EVEMon.Common.Serialization.API
         public DateTime CloneJumpDate { get; set; }
 
         /// <summary>
-        /// The date and time the jump clone.
+        /// The date and time of the last remap.
         /// </summary>
         [XmlIgnore]
         public DateTime LastRespecDate { get; set; }
 
         /// <summary>
-        /// The date and time the jump clone.
+        /// The date and time of the last remap.
         /// </summary>
         [XmlIgnore]
         public DateTime LastTimedRespec { get; set; }
+
+        /// <summary>
+        /// The date and time of the last remap.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime RemoteStationDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the jump activation date.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime JumpActivationDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the jump fatigue date.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime JumpFatigueDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the jump last update date.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime JumpLastUpdateDate { get; set; }
     }
 }

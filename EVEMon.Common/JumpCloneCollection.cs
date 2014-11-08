@@ -5,7 +5,7 @@ using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
 {
-    public sealed class EmploymentRecordCollection : ReadonlyCollection<EmploymentRecord>
+    public sealed class JumpCloneCollection : ReadonlyCollection<JumpClone>
     {
         private readonly Character m_character;
 
@@ -16,7 +16,7 @@ namespace EVEMon.Common
         /// Internal constructor.
         /// </summary>
         /// <param name="character">The character.</param>
-        internal EmploymentRecordCollection(Character character)
+        internal JumpCloneCollection(Character character)
         {
             m_character = character;
         }
@@ -30,14 +30,14 @@ namespace EVEMon.Common
         /// Imports an enumeration of API objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable objects from the API.</param>
-        internal void Import(IEnumerable<SerializableEmploymentHistoryListItem> src)
+        internal void Import(IEnumerable<SerializableCharacterJumpClone> src)
         {
             Items.Clear();
 
-            // Import the employment history from the API
-            foreach (SerializableEmploymentHistoryListItem srcEmploymentRecord in src)
+            // Import the jump clones from the API
+            foreach (SerializableCharacterJumpClone srcJumpClone in src)
             {
-                Items.Add(new EmploymentRecord(m_character, srcEmploymentRecord));
+                Items.Add(new JumpClone(srcJumpClone));
             }
         }
 
@@ -45,23 +45,23 @@ namespace EVEMon.Common
         /// Imports an enumeration of serialization objects.
         /// </summary>
         /// <param name="src">The enumeration of serializable objects from the settings file.</param>
-        internal void Import(IEnumerable<SerializableEmploymentHistory> src)
-        {
-            Items.Clear();
+        //internal void Import(IEnumerable<SerializableJumpClone> src)
+        //{
+        //    Items.Clear();
 
-            foreach (SerializableEmploymentHistory srcEmploymentRecord in src)
-            {
-                Items.Add(new EmploymentRecord(m_character, srcEmploymentRecord));
-            }
-        }
+        //    foreach (SerializableCharacterJumpClone srcJumpClone in src)
+        //    {
+        //        Items.Add(new JumpClone(srcJumpClone));
+        //    }
+        //}
 
         /// <summary>
         /// Exports the serialization object for the settings file.
         /// </summary>
-        /// <returns>List of serializable employment records.</returns>
-        internal IEnumerable<SerializableEmploymentHistory> Export()
+        /// <returns>List of serializable jump clones.</returns>
+        internal IEnumerable<SerializableCharacterJumpClone> Export()
         {
-            return Items.Select(employmentRecord => employmentRecord.Export());
+            return Items.Select(jumpClone => jumpClone.Export());
         }
 
         #endregion
