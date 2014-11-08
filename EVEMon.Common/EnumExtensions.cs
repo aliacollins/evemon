@@ -64,7 +64,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static TAttribute GetAttribute<TAttribute>(this Enum item)
+        private static TAttribute GetAttribute<TAttribute>(this Enum item)
             where TAttribute : Attribute
         {
             if (item == null)
