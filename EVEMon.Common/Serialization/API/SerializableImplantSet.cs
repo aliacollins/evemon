@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.API
 {
@@ -21,5 +22,11 @@ namespace EVEMon.Common.Serialization.API
 
         [XmlElement("charismaBonus")]
         public SerializableImplant Charisma { get; set; }
+
+        [XmlElement("deprecated")]
+        public string DeprecatedXml { get; set; }
+
+        [XmlIgnore]
+        public bool Deprecated { get { return DeprecatedXml != null; } }
     }
 }

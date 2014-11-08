@@ -283,6 +283,10 @@
     <Compile Include="IPlanOrderPluggable.cs" />
     <Compile Include="IQueryMonitorEx.cs" />
     <Compile Include="ISkillLevel.cs" />
+    <Compile Include="JumpClone.cs" />
+    <Compile Include="JumpCloneCollection.cs" />
+    <Compile Include="JumpCloneImplant.cs" />
+    <Compile Include="JumpCloneImplantCollection.cs" />
     <Compile Include="KillLog.cs" />
     <Compile Include="KillLogCollection.cs" />
     <Compile Include="KillLogComparer.cs" />
@@ -333,6 +337,9 @@
     <Compile Include="Serialization\API\SerializableAPIMedals.cs" />
     <Compile Include="Serialization\API\SerializableAPIPlanetaryColonies.cs" />
     <Compile Include="Serialization\API\SerializableAPIPlanetaryLinks.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterJumpClone.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterJumpCloneImplant.cs" />
+    <Compile Include="Serialization\API\SerializableNewImplant.cs" />
     <Compile Include="Serialization\API\SerializablePlanetaryLink.cs" />
     <Compile Include="Serialization\API\SerializablePlanetaryRoute.cs" />
     <Compile Include="Serialization\API\SerializablePlanetaryColony.cs" />
