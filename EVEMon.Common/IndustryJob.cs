@@ -428,10 +428,9 @@ namespace EVEMon.Common
                     return JobState.Canceled;
                     // Failed States
                 case CCPJobCompletedStatus.Reverted:
-                case CCPJobCompletedStatus.Failed:
                     return JobState.Failed;
                     // Delivered States
-                case CCPJobCompletedStatus.Succeeded:
+                case CCPJobCompletedStatus.Delivered:
                     return JobState.Delivered;
                     // Paused States
                 case CCPJobCompletedStatus.Paused:
