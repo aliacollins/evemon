@@ -12,7 +12,7 @@ namespace EVEMon.Common
         /// <summary>
         /// The maximum number of days after job ended. Beyond this limit, we do not import jobs anymore.
         /// </summary>
-        public const int MaxEndedDays = 7;
+        internal const int MaxEndedDays = 7;
 
 
         #region Constructor
@@ -143,6 +143,11 @@ namespace EVEMon.Common
         /// Gets the job runs.
         /// </summary>
         public double Probability { get; private set; }
+
+        /// <summary>
+        /// Gets the successful runs.
+        /// </summary>
+        public int SuccessfulRuns { get; private set; }
 
         /// <summary>
         /// Gets the job activity.
@@ -324,6 +329,7 @@ namespace EVEMon.Common
             SolarSystem = StaticGeography.GetSolarSystemByID(src.SolarSystemID);
             Cost = src.Cost;
             Probability = src.Probability;
+            SuccessfulRuns = src.SuccessfulRuns;
             //InstalledTime = src.InstallTime;
             //InstalledME = src.InstalledItemMaterialLevel;
             //InstalledPE = src.InstalledItemProductivityLevel;

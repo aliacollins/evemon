@@ -74,6 +74,9 @@ namespace EVEMon.Common.Serialization.API
         [XmlAttribute("completedCharacterID")]
         public long CompletedCharacterID { get; set; }
 
+        [XmlAttribute("successfulRuns")]
+        public int SuccessfulRuns { get; set; }
+
         [XmlAttribute("startDate")]
         public string StartDateXml
         {
