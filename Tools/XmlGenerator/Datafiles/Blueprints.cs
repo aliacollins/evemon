@@ -170,9 +170,9 @@ namespace EVEMon.XmlGenerator.Datafiles
                 },
                 new InvMarketGroups
                 {
-                    Name = "Reverse Engineerable",
-                    Description = "Items that can be reverse engineered to a blueprint not in EVE market",
-                    ID = DBConstants.RevereseEngineerableNonMarketGroupID,
+                    Name = "Research Equipment",
+                    Description = "Items that can be invented to a Tech III blueprint not in EVE market",
+                    ID = DBConstants.ResearchEquipmentNonMarketGroupID,
                     ParentID = DBConstants.BlueprintRootNonMarketGroupID,
                     IconID = DBConstants.UnknownBlueprintBackdropIconID
                 }
@@ -182,11 +182,11 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(item => item.MarketGroupID == null &&
                                Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.BlueprintCategoryID).ToList();
 
-            // Set ancient relics to reverse engineerable custom market group
+            // Set ancient relics to research equipment custom market group
             Database.InvTypesTable
                 .Where(item => Database.InvGroupsTable[item.GroupID].CategoryID == DBConstants.AncientRelicsCategoryID)
                 .ToList()
-                .ForEach(x => x.MarketGroupID = DBConstants.RevereseEngineerableNonMarketGroupID);
+                .ForEach(x => x.MarketGroupID = DBConstants.ResearchEquipmentNonMarketGroupID);
 
             // Set the market group of the blueprints with NULL MarketGroupID to custom market groups
             foreach (InvTypes item in s_nullMarketBlueprints)

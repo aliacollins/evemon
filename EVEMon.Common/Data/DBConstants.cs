@@ -543,7 +543,7 @@ namespace EVEMon.Common.Data
         public const int BlueprintFactionNonMarketGroupID = 21004;
         public const int BlueprintOfficerNonMarketGroupID = 21005;
         public const int BlueprintTechIIINonMarketGroupID = 21014;
-        public const int RevereseEngineerableNonMarketGroupID = 21100;
+        public const int ResearchEquipmentNonMarketGroupID = 21100;
 
         #endregion
 
