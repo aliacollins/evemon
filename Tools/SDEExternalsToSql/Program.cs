@@ -19,10 +19,10 @@ namespace EVEMon.SDEExternalsToSql
 
             if (Database.SqlConnection != null)
             {
-                InvTypes.Import();
-                EveGraphics.Import();
-                EveIcons.Import();
-                Certificates.Import();
+                //InvTypes.Import();
+                //EveGraphics.Import();
+                //EveIcons.Import();
+                //Certificates.Import();
                 Blueprints.Import();
             }
 
@@ -34,18 +34,18 @@ namespace EVEMon.SDEExternalsToSql
             {
                 Database.UniverseDataContext = new UniverseDataEntities();
 
-                MapCelestialStatisticsTable.Import();
-                MapConstellationJumpsTable.Import();
-                MapConstellationsTable.Import();
-                MapDenormalizeTable.Import();
-                MapJumpsTable.Import();
-                MapLandmarksTable.Import();
-                MapLocationScenesTable.Import();
-                MapLocationWormholeClassesTable.Import();
-                MapRegionJumpsTable.Import();
-                MapRegionTable.Import();
-                MapSolarSystemJumpsTable.Import();
-                MapSolarSystemsTable.Import();
+                //MapCelestialStatisticsTable.Import();
+                //MapConstellationJumpsTable.Import();
+                //MapConstellationsTable.Import();
+                //MapDenormalizeTable.Import();
+                //MapJumpsTable.Import();
+                //MapLandmarksTable.Import();
+                //MapLocationScenesTable.Import();
+                //MapLocationWormholeClassesTable.Import();
+                //MapRegionJumpsTable.Import();
+                //MapRegionTable.Import();
+                //MapSolarSystemJumpsTable.Import();
+                //MapSolarSystemsTable.Import();
             }
 
             if (Database.SqliteConnection != null)

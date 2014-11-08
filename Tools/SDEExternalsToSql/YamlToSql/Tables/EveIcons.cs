@@ -73,12 +73,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[IconIDText] = pair.Key.ToString();
                         parameters[IconFileText] = cNode.Children.Keys.Any(key => key.ToString() == IconFileText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
+                                cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", Database.StringApostrophe))
+                            : Database.StringApostrophe;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
+                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringApostrophe))
+                            : Database.StringApostrophe;
 
                         command.CommandText = Database.SqlInsertCommandText(EveIconsTableName, parameters);
                         command.ExecuteNonQuery();

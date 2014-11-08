@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
@@ -139,9 +140,14 @@ namespace EVEMon.SDEExternalsToSql
         {
             return String.IsNullOrWhiteSpace(text)
                 ? Database.Null
-                : String.Format("'{0}'", text.Replace("'", Database.StringEmpty));
+                : String.Format("'{0}'", text.Replace("'", Database.StringApostrophe));
         }
 
+        /// <summary>
+        /// Handles the exception.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="e">The e.</param>
         internal static void HandleException(IDbCommand command, Exception e)
         {
             Console.WriteLine();
@@ -149,7 +155,72 @@ namespace EVEMon.SDEExternalsToSql
             Console.WriteLine(e.Message);
             Console.ReadLine();
             Environment.Exit(-1);
+        }
 
+        /// <summary>
+        /// Gets the description.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
+        internal static string GetDescription(this Enum item)
+        {
+            return GetAttribute<DescriptionAttribute>(item).Description;
+        }
+
+        /// <summary>
+        /// Gets the attribute associated to the given enumeration item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static TAttribute GetAttribute<TAttribute>(this Enum item)
+            where TAttribute : Attribute
+        {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
+            MemberInfo[] members = item.GetType().GetMember(item.ToString());
+            if (members.Length <= 0)
+                return null;
+
+            object[] attrs = members[0].GetCustomAttributes(typeof(TAttribute), false);
+            if (attrs.Length > 0)
+                return (TAttribute)attrs[0];
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the value from description.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="description">The description.</param>
+        /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException"></exception>
+        public static T GetValueFromDescription<T>(string description)
+        {
+            var type = typeof(T);
+
+            if (!type.IsEnum)
+                throw new InvalidOperationException();
+
+            foreach (var field in type.GetFields())
+            {
+                var attribute = Attribute.GetCustomAttribute(field,
+                    typeof(DescriptionAttribute)) as DescriptionAttribute;
+
+                if (attribute != null)
+                {
+                    if (attribute.Description == description)
+                        return (T)field.GetValue(type);
+                }
+                else
+                {
+                    if (field.Name == description)
+                        return (T)field.GetValue(type);
+                }
+            }
+
+            return default(T);
         }
     }
 }

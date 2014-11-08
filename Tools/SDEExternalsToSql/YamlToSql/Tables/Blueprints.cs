@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -11,13 +12,29 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
     internal enum Activity
     {
         None = 0,
+
+        [Description("manufacturing")]
         Manufacturing = 1,
+
+        [Description("research_technology")]
         ResearchingTechnology = 2,
+
+        [Description("research_time")]
         ResearchingTimeEfficiency = 3,
+
+        [Description("research_material")]
         ResearchingMaterialEfficiency = 4,
+
+        [Description("copying")]
         Copying = 5,
+
+        [Description("duplicating")]
         Duplicating = 6,
+
+        [Description("reverse_engineering")]
         ReverseEngineering = 7,
+
+        [Description("invention")]
         Invention = 8
     }
 
@@ -103,18 +120,18 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 IDbCommand command = new SqlCommand { Connection = Database.SqlConnection, Transaction = tx };
                 try
                 {
-                    YamlNode manActivity = new YamlScalarNode(((int)Activity.Manufacturing).ToString(CultureInfo.InvariantCulture));
+                    YamlNode manActivity = new YamlScalarNode(Activity.Manufacturing.GetDescription());
                     YamlNode rteActivity =
-                        new YamlScalarNode(((int)Activity.ResearchingTechnology).ToString(CultureInfo.InvariantCulture));
+                        new YamlScalarNode(Activity.ResearchingTechnology.GetDescription());
                     YamlNode rtpActivity =
-                        new YamlScalarNode(((int)Activity.ResearchingTimeEfficiency).ToString(CultureInfo.InvariantCulture));
+                        new YamlScalarNode(Activity.ResearchingTimeEfficiency.GetDescription());
                     YamlNode rmpActivity =
-                        new YamlScalarNode(((int)Activity.ResearchingMaterialEfficiency).ToString(CultureInfo.InvariantCulture));
-                    YamlNode copActivity = new YamlScalarNode(((int)Activity.Copying).ToString(CultureInfo.InvariantCulture));
-                    YamlNode dupActivity = new YamlScalarNode(((int)Activity.Duplicating).ToString(CultureInfo.InvariantCulture));
+                        new YamlScalarNode(Activity.ResearchingMaterialEfficiency.GetDescription());
+                    YamlNode copActivity = new YamlScalarNode(Activity.Copying.GetDescription());
+                    YamlNode dupActivity = new YamlScalarNode(Activity.Duplicating.GetDescription());
                     YamlNode renActivity =
-                        new YamlScalarNode(((int)Activity.ReverseEngineering).ToString(CultureInfo.InvariantCulture));
-                    YamlNode invActivity = new YamlScalarNode(((int)Activity.Invention).ToString(CultureInfo.InvariantCulture));
+                        new YamlScalarNode(Activity.ReverseEngineering.GetDescription());
+                    YamlNode invActivity = new YamlScalarNode(Activity.Invention.GetDescription());
 
                     foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
                     {
@@ -158,9 +175,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                 if (activity.Key.Equals(manActivity))
                                 {
                                     if (actNode.Children.Keys.Any(key => key.ToString() == ProductsText))
+                                    {
                                         productTypeIDText =
-                                            ((YamlMappingNode)actNode.Children[new YamlScalarNode(ProductsText)]).Children.First()
-                                                .Key.ToString();
+                                            ((YamlMappingNode)
+                                                ((YamlSequenceNode)actNode.Children[new YamlScalarNode(ProductsText)]).Children
+                                                    .First()).Children[new YamlScalarNode(TypeIDText)].ToString();
+                                    }
 
                                     if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
                                         productionTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
@@ -261,22 +281,22 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (!actNode.Children.ContainsKey(productsNode))
                 return;
 
-            YamlMappingNode prodsNode = actNode.Children[productsNode] as YamlMappingNode;
+            YamlSequenceNode prodsNode = actNode.Children[productsNode] as YamlSequenceNode;
 
             if (prodsNode == null)
                 return;
 
-            foreach (KeyValuePair<YamlNode, YamlNode> product in prodsNode)
+            foreach (YamlNode product in prodsNode)
             {
-                YamlMappingNode prodNode = product.Value as YamlMappingNode;
+                YamlMappingNode prodNode = product as YamlMappingNode;
 
                 if (prodNode == null)
                     continue;
 
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters[TypeIDText] = blueprintTypeIDText;
-                parameters[ActivityIDText] = activity.Key.ToString();
-                parameters[RequiredTypeIDText] = product.Key.ToString();
+                parameters[ActivityIDText] = ((int)Util.GetValueFromDescription<Activity>(activity.Key.ToString())).ToString(CultureInfo.InvariantCulture);
+                parameters[RequiredTypeIDText] = prodNode.Children[new YamlScalarNode(TypeIDText)].ToString();
                 parameters[RtrQuantityText] = prodNode.Children.Keys.Any(key => key.ToString() == QuantityText)
                     ? prodNode.Children[new YamlScalarNode(QuantityText)].ToString()
                     : Database.Null;
@@ -307,22 +327,22 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (!actNode.Children.ContainsKey(materialsNode))
                 return;
 
-            YamlMappingNode matsNode = actNode.Children[materialsNode] as YamlMappingNode;
+            YamlSequenceNode matsNode = actNode.Children[materialsNode] as YamlSequenceNode;
 
             if (matsNode == null)
                 return;
 
-            foreach (KeyValuePair<YamlNode, YamlNode> material in matsNode)
+            foreach (YamlNode material in matsNode)
             {
-                YamlMappingNode matNode = material.Value as YamlMappingNode;
+                YamlMappingNode matNode = material as YamlMappingNode;
 
                 if (matNode == null)
                     continue;
 
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters[TypeIDText] = productTypeIDText;
-                parameters[ActivityIDText] = activity.Key.ToString();
-                parameters[RequiredTypeIDText] = material.Key.ToString();
+                parameters[ActivityIDText] = ((int)Util.GetValueFromDescription<Activity>(activity.Key.ToString())).ToString(CultureInfo.InvariantCulture);
+                parameters[RequiredTypeIDText] = matNode.Children[new YamlScalarNode(TypeIDText)].ToString();
                 parameters[RtrQuantityText] = matNode.Children.Keys.Any(key => key.ToString() == QuantityText)
                     ? matNode.Children[new YamlScalarNode(QuantityText)].ToString()
                     : Database.Null;
@@ -330,6 +350,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     ? Convert.ToByte(Convert.ToBoolean(matNode.Children[new YamlScalarNode(ConsumeText)].ToString()))
                         .ToString(CultureInfo.InvariantCulture)
                     : Database.Null;
+                    
 
                 command.CommandText = Database.SqlInsertCommandText(RamTypeRequirementsTableName, parameters);
                 command.ExecuteNonQuery();
@@ -350,22 +371,22 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (!actNode.Children.ContainsKey(skillsNode))
                 return;
 
-            YamlMappingNode sksNode = actNode.Children[skillsNode] as YamlMappingNode;
+            YamlSequenceNode sksNode = actNode.Children[skillsNode] as YamlSequenceNode;
 
             if (sksNode == null)
                 return;
 
-            foreach (KeyValuePair<YamlNode, YamlNode> skill in sksNode)
+            foreach (YamlNode skill in sksNode)
             {
-                YamlMappingNode skillNode = skill.Value as YamlMappingNode;
+                YamlMappingNode skillNode = skill as YamlMappingNode;
 
                 if (skillNode == null)
                     continue;
 
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters[TypeIDText] = productTypeIDText;
-                parameters[ActivityIDText] = activity.Key.ToString();
-                parameters[RequiredTypeIDText] = skill.Key.ToString();
+                parameters[ActivityIDText] = ((int)Util.GetValueFromDescription<Activity>(activity.Key.ToString())).ToString(CultureInfo.InvariantCulture);
+                parameters[RequiredTypeIDText] = skillNode.Children[new YamlScalarNode(TypeIDText)].ToString();
                 parameters[RtrLevelText] = skillNode.Children.Keys.Any(key => key.ToString() == LevelText)
                     ? skillNode.Children[new YamlScalarNode(LevelText)].ToString()
                     : Database.Null;
