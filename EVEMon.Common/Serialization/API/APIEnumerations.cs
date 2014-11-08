@@ -66,10 +66,9 @@ namespace EVEMon.Common.Serialization.API
         Paused = 2,
         Ready = 3,
 
+        Delivered = 101,
         Canceled = 102,
         Reverted = 103,
-        Succeeded = 104,
-        Failed = 105,
     }
 
     #endregion
