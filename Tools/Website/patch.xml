@@ -1,93 +1,76 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>30 August 2014</date>
-    <version>1.9.0.4489</version>
-    <md5>9ba3f277a25d1feb92c9d758f9482994</md5>
-    <url>http://forum.battleclinic.com/index.php/topic,185916.html</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.0.exe</autopatchurl>
+    <date>09 November 2014</date>
+    <version>1.9.1.4527</version>
+    <md5>55004b2258d9d740bfab77060a4beb81</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=186708.0</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.1.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[== Breaking Changes ==
-
- * Blueprints data files have been changed due to CCP Crius changes. Blueprint browser data for EVEMon version prior to 1.9.0 will not show correct info. 
-
-== Contributors for this version ==
+    <message><![CDATA[== Contributors for this version ==
 
  * Jimi
- * berin
-
-== New Features ==
-
- * EVEMon now has a character planetary infrastructure monitor.
-
-== Bug Fixes ==
-
- * Fixed a redirect bug to loadout discussion forum topic.
 
 == Enhancements ==
 
- * Added API Corporation CustomsOffices endpoint to API Tester.
- * Added ability to delete the search text via mouse click in each browser in Skill Planner.
- * Added ability to delete the search text via mouse click in each feature monitor where applicable.
- * Adjusted Blueprint browser to Crius changes.
- * Adjusted Industry jobs monitor to Crius changes.
- * Added API IndustryJobsHistory endpoint for character and corporation to API Tester.
- * Added character Employment History corporation name via API. This will reduce further the calls to CharacterName API endpoint. 
- * Added API Blueprints endpoint for character and corporation to API Tester.
+ * Prerequisites of an already known skill will no longer be included in the skill plan.
+ * Added identification names to planetary pins.
+ * Implementation of new implants API format and jump clones info.
+ * Added additional API info of the IndustryJobs endpoint.
 
 == Misc ==
 
- * Removed "Known problems and solutions" dead link.
+ * Plan management window now shows in Taskbar.
  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>05 October 2014</date>
-      <md5>6b3709676115fb2c6575b83ed7400956</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
-      <message><![CDATA[Oceanus 1.0 (830205) blueprints data file by the EVEMon Development Team
+      <date>08 November 2014</date>
+      <md5>33d342a02ecbf80bd26a005c8d1e0f3b</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
+      <message><![CDATA[Phoebe 1.0 (840934) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>05 October 2014</date>
+      <date>08 November 2014</date>
       <md5>96524d5fda5e89dcd6fb55caf57d2c42</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
-      <message><![CDATA[Oceanus 1.0 (830205) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
+      <message><![CDATA[Phoebe 1.0 (840934) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>05 October 2014</date>
-      <md5>2c66aae914f54fb7a9d41492da0fff4d</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
-      <message><![CDATA[Oceanus 1.0 (830205) items data file by the EVEMon Development Team
+      <date>08 November 2014</date>
+      <md5>b0abf335720e71af3d85d65d40b63a5d</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
+      <message><![CDATA[Phoebe 1.0 (840934) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>05 October 2014</date>
-      <md5>e268acb316e45ac232da3ebb9de4bbc4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
-      <message><![CDATA[Oceanus 1.0 (830205) properties data file by the EVEMon Development Team
+      <date>08 November 2014</date>
+      <md5>7d1eb75a09c9b05b11a5bb8d043d55c5</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
+      <message><![CDATA[Phoebe 1.0 (840934) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>05 October 2014</date>
-      <md5>0c5f5298810d0ca8be2b59f1d4bb0997</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
-      <message><![CDATA[Oceanus 1.0 (830205) reprocessing data file by the EVEMon Development Team
+      <date>08 November 2014</date>
+      <md5>ce1a9e2ede61824e9895ad9cb1661f94</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
+      <message><![CDATA[Phoebe 1.0 (840934) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>05 October 2014</date>
-      <md5>6751f8bd3bd5782380a1864835c72c25</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Oceanus/830205</url>
-      <message><![CDATA[Oceanus 1.0 (830205) skills data file by the EVEMon Development Team
+      <date>08 November 2014</date>
+      <md5>70640bdb46abaa251bc5b4f74cf117f8</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
+      <message><![CDATA[Phoebe 1.0 (840934) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
