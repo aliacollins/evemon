@@ -354,6 +354,10 @@ namespace EVEMon.MarketUnifiedUploader
             // Upload to the selected endpoints
             foreach (EndPoint endPoint in endPoints)
             {
+                // Exclude HistoryOrders for EMDR
+                if (endPoint.Name == "EVE Market Data Relay" && ReferenceEquals(jsonObj["resultType"], "history"))
+                    continue;
+
                 string postdata = GetPostDataFormat(endPoint.Method, data);
 
                 Status = UploaderStatus.Uploading;
