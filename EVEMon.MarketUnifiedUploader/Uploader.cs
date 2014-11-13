@@ -212,7 +212,7 @@ namespace EVEMon.MarketUnifiedUploader
                         {
                             Status = UploaderStatus.Disabled;
                             nextRun = GetNextRun(TimeSpan.FromSeconds(1));
-                            Console.WriteLine("Network Unavailable. Next run at: {0}", nextRun);
+                            Console.WriteLine(@"Network Unavailable. Next run at: {0}", nextRun);
                         }
                         continue;
                     }
@@ -221,7 +221,7 @@ namespace EVEMon.MarketUnifiedUploader
                     if (s_endPoints.All(endPoint => !endPoint.Enabled || endPoint.NextUploadTimeUtc >= DateTime.UtcNow))
                     {
                         nextRun = GetNextRun(TimeSpan.FromMinutes(1));
-                        Console.WriteLine("Disabled Endpoints. Next run at: {0}", nextRun);
+                        Console.WriteLine(@"Disabled Endpoints. Next run at: {0}", nextRun);
                         continue;
                     }
 
@@ -229,7 +229,7 @@ namespace EVEMon.MarketUnifiedUploader
 
                     Status = UploaderStatus.Idle;
                     nextRun = GetNextRun(TimeSpan.FromMinutes(1));
-                    Console.WriteLine("Next run at: {0}", nextRun);
+                    Console.WriteLine(@"Next run at: {0}", nextRun);
                 }
             }
             catch (Exception ex)
@@ -494,7 +494,7 @@ namespace EVEMon.MarketUnifiedUploader
 
             try
             {
-                Console.WriteLine("Deleting cache file.");
+                Console.WriteLine(@"Deleting cache file.");
                 cachedfile.Delete();
             }
             catch (IOException ex)

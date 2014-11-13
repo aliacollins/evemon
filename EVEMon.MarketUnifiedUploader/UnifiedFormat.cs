@@ -89,6 +89,10 @@ namespace EVEMon.MarketUnifiedUploader
                     return s_data;
             }
 
+            // No data to upload
+            if (rows.Count == 0)
+                return s_data;
+
             // Rowsets
             ArrayList rowsets = new ArrayList
                                     {
