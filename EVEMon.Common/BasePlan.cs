@@ -297,7 +297,7 @@ namespace EVEMon.Common
         /// <remarks>Complexity is O(n²) on the average and O(n^3) on the worst-case.</remarks>
         public void FixPrerequisites()
         {
-            if (!Items.Any() || Items.Last().CharacterSkill.IsKnown)
+            if (!Items.Any() || (Items.Last().CharacterSkill != null && Items.Last().CharacterSkill.IsKnown))
                 return;
 
             // Scroll through entries
@@ -307,8 +307,7 @@ namespace EVEMon.Common
                 bool jumpBack = false;
 
                 // Scroll through prerequisites
-                if (
-                    entry.Skill.Prerequisites.Any(
+                if (entry.Skill.Prerequisites.Any(
                         prereq => !EnsurePrerequisiteExistBefore(prereq.Skill, prereq.Level, i, entry.Priority)))
                 {
                     jumpBack = true;
