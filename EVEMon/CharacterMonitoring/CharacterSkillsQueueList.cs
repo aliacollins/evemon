@@ -261,7 +261,7 @@ namespace EVEMon.CharacterMonitoring
                                   new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width + skillNameSize.Width, e.Bounds.Top + PadTop,
                                                 rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
             TextRenderer.DrawText(g, spText, m_skillsQueueFont,
-                                  new Rectangle(e.Bounds.Left + PadLeft,
+                                  new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width,
                                                 e.Bounds.Top + PadTop + skillNameSize.Height,
                                                 spTextSize.Width + PadLeft, spTextSize.Height), highlightColor);
 
