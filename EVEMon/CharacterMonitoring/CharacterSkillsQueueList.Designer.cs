@@ -2,7 +2,7 @@
 
 namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterSkillsQueueList
+    internal sealed partial class CharacterSkillsQueueList
     {
         /// <summary> 
         /// Required designer variable.
