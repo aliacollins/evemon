@@ -12,7 +12,7 @@ using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterSkillsQueueList : UserControl
+    internal sealed partial class CharacterSkillsQueueList : UserControl
     {
         #region Fields
 
@@ -231,6 +231,7 @@ namespace EVEMon.CharacterMonitoring
             if (skill.Skill != null && skill.Level > skill.Skill.Level + 1)
                 skillPoints = skill.CurrentSP;
 
+            string indexText = String.Format(CultureConstants.DefaultCulture, "{0}. ", e.Index + 1);
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})",
                                             (skill.Skill == null ? 0 : skill.Rank));
             string spText = String.Format(CultureConstants.DefaultCulture, "SP: {0:N0}/{1:N0}", skillPoints,
@@ -238,6 +239,7 @@ namespace EVEMon.CharacterMonitoring
             string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
             string pctText = String.Format(CultureConstants.DefaultCulture, "{0}% Done", Math.Floor(percentCompleted));
 
+            Size indexTextSize = TextRenderer.MeasureText(g, indexText, m_boldSkillsQueueFont, Size.Empty, Format);
             Size skillNameSize = TextRenderer.MeasureText(g, skill.SkillName, m_boldSkillsQueueFont, Size.Empty, Format);
             Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsQueueFont, Size.Empty, Format);
             Size levelTextSize = TextRenderer.MeasureText(g, levelText, m_skillsQueueFont, Size.Empty, Format);
@@ -248,11 +250,15 @@ namespace EVEMon.CharacterMonitoring
             // Draw texts
             Color highlightColor = Color.Black;
 
+            TextRenderer.DrawText(g, indexText, m_boldSkillsQueueFont,
+                      new Rectangle(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop,
+                                    indexTextSize.Width + PadLeft, indexTextSize.Height), highlightColor);
+
             TextRenderer.DrawText(g, skill.SkillName, m_boldSkillsQueueFont,
-                                  new Rectangle(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop,
+                                  new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width, e.Bounds.Top + PadTop,
                                                 skillNameSize.Width + PadLeft, skillNameSize.Height), highlightColor);
             TextRenderer.DrawText(g, rankText, m_skillsQueueFont,
-                                  new Rectangle(e.Bounds.Left + PadLeft + skillNameSize.Width, e.Bounds.Top + PadTop,
+                                  new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width + skillNameSize.Width, e.Bounds.Top + PadTop,
                                                 rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
             TextRenderer.DrawText(g, spText, m_skillsQueueFont,
                                   new Rectangle(e.Bounds.Left + PadLeft,
