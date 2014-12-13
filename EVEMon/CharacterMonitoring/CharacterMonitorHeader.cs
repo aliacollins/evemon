@@ -22,6 +22,7 @@ namespace EVEMon.CharacterMonitoring
 
         private Character m_character;
         private Int64 m_spAtLastRedraw;
+        private String m_nextCloneJumpAtLastRedraw;
 
         #endregion
 
@@ -119,12 +120,15 @@ namespace EVEMon.CharacterMonitoring
                 RefreshThrobber();
 
                 // Only update the skill summary when the skill points change
+                // or we have a timer on the next clone jump
                 var totalSkillPoints = GetTotalSkillPoints();
+                var nextCloneJumpAvailable = GetNextCloneJumpTime();
 
-                if (m_spAtLastRedraw != totalSkillPoints)
+                if (m_spAtLastRedraw != totalSkillPoints || m_nextCloneJumpAtLastRedraw != nextCloneJumpAvailable)
                     SkillSummaryLabel.Text = FormatSkillSummary();
 
                 m_spAtLastRedraw = totalSkillPoints;
+                m_nextCloneJumpAtLastRedraw = nextCloneJumpAvailable;
             }
             finally
             {
@@ -148,6 +152,18 @@ namespace EVEMon.CharacterMonitoring
                 totalSkillPoints += queuedSkill.CurrentSP - queuedSkill.StartSP;
             }
             return totalSkillPoints;
+        }
+
+        /// <summary>
+        /// Gets the next clone jump time.
+        /// </summary>
+        /// <returns></returns>
+        private string GetNextCloneJumpTime()
+        {
+            var nextCloneJumpAvailable = m_character.JumpCloneLastJumpDate.AddHours(23);
+            return nextCloneJumpAvailable > DateTime.UtcNow
+                ? nextCloneJumpAvailable.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
+                : "Now";
         }
 
         /// <summary>
@@ -580,14 +596,10 @@ namespace EVEMon.CharacterMonitoring
             output.AppendFormat(CultureConstants.DefaultCulture, "Bonus Remaps Available: {0}",
                 m_character.AvailableReMaps).AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Neural Remap Available: {0}",
-                m_character.LastReMapDate.AddYears(1) < DateTime.UtcNow
-                    ? "Now"
-                    : m_character.LastReMapDate.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture))
-                .AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Jump Available: {0}",
-                m_character.JumpCloneLastJumpDate.AddHours(23) < DateTime.UtcNow
-                    ? "Now"
-                    : m_character.JumpCloneLastJumpDate.AddHours(23).ToLocalTime().ToString(CultureConstants.DefaultCulture));
+                m_character.LastReMapDate.AddYears(1) > DateTime.UtcNow
+                    ? m_character.LastReMapDate.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                    : "Now").AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Jump Available: {0}", GetNextCloneJumpTime());
 
             return output.ToString();
         }
