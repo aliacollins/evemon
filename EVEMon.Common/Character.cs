@@ -187,18 +187,6 @@ namespace EVEMon.Common
         public int FactionID { get; internal set; }
 
         /// <summary>
-        /// Gets the name of the clone.
-        /// </summary>
-        /// <value>The name of the clone.</value>
-        public string CloneName { get; private set; }
-
-        /// <summary>
-        /// Gets the clone's capacity.
-        /// </summary>
-        /// <value>The clone skill points.</value>
-        public int CloneSkillPoints { get; private set; }
-
-        /// <summary>
         /// Gets the free skill points.
         /// </summary>
         public int FreeSkillPoints { get; private set; }
@@ -490,8 +478,6 @@ namespace EVEMon.Common
             serial.CorporationID = CorporationID;
             serial.AllianceName = AllianceName;
             serial.AllianceID = AllianceID;
-            serial.CloneName = CloneName;
-            serial.CloneSkillPoints = CloneSkillPoints;
             serial.FreeSkillPoints = FreeSkillPoints;
             serial.FreeRespecs = AvailableReMaps;
             serial.CloneJumpDate = JumpCloneLastJumpDate;
@@ -607,8 +593,6 @@ namespace EVEMon.Common
             CorporationID = serial.CorporationID;
             AllianceName = serial.AllianceName;
             AllianceID = serial.AllianceID;
-            CloneName = serial.CloneName;
-            CloneSkillPoints = serial.CloneSkillPoints;
             FreeSkillPoints = serial.FreeSkillPoints;
             AvailableReMaps = serial.FreeRespecs;
             JumpCloneLastJumpDate = serial.CloneJumpDate;
