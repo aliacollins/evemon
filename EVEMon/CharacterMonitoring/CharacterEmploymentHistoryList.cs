@@ -7,7 +7,7 @@ using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterEmploymentHistoryList : UserControl
+    internal sealed partial class CharacterEmploymentHistoryList : UserControl
     {
         #region Fields
 

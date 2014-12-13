@@ -17,7 +17,7 @@ namespace EVEMon.CharacterMonitoring
     /// <summary>
     /// Displays a list of market orders.
     /// </summary>
-    public partial class CharacterMarketOrdersList : UserControl, IListView
+    internal sealed partial class CharacterMarketOrdersList : UserControl, IListView
     {
         #region Fields
 

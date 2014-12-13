@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterIndustryJobsList
+    internal sealed partial class CharacterIndustryJobsList
     {
         /// <summary> 
         /// Required designer variable.

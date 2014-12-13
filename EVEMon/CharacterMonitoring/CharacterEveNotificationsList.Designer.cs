@@ -2,7 +2,7 @@
 
 namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterEveNotificationsList
+    internal sealed partial class CharacterEveNotificationsList
     {
         /// <summary> 
         /// Required designer variable.

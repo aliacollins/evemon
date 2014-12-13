@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterFactionalWarfareStatsList
+    internal sealed partial class CharacterFactionalWarfareStatsList
     {
         /// <summary> 
         /// Required designer variable.

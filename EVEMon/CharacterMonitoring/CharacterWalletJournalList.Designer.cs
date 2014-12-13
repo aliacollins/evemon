@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterWalletJournalList
+    internal sealed partial class CharacterWalletJournalList
     {
         /// <summary> 
         /// Required designer variable.

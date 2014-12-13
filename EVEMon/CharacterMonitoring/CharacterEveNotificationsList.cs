@@ -15,7 +15,7 @@ using EVEMon.DetailsWindow;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterEveNotificationsList : UserControl, IListView
+    internal sealed partial class CharacterEveNotificationsList : UserControl, IListView
     {
         #region Fields
 

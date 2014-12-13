@@ -8,7 +8,7 @@ namespace EVEMon.CharacterMonitoring
     /// <summary>
     /// Implements the content of each of the character tabs.
     /// </summary>
-    public sealed partial class CharacterMonitor : UserControl
+    internal sealed partial class CharacterMonitor : UserControl
     {
         #region Constructor
 

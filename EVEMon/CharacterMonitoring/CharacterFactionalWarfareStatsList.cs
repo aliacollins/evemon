@@ -9,7 +9,7 @@ using EVEMon.Common.Data;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterFactionalWarfareStatsList : UserControl
+    internal sealed partial class CharacterFactionalWarfareStatsList : UserControl
     {
         #region Fields
 

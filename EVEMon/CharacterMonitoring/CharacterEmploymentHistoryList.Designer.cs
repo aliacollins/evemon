@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterEmploymentHistoryList
+    internal sealed partial class CharacterEmploymentHistoryList
     {
         /// <summary> 
         /// Required designer variable.
