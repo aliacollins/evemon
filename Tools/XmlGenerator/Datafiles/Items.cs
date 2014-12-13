@@ -246,10 +246,11 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             string skillBonusesText = String.Empty;
             string roleBonusesText = String.Empty;
+            string miscBonusesText = String.Empty;
 
             // Find the skill bonuses
             foreach (IGrouping<int, DgmTypeTraits> bonuses in Database.DgmTypeTraitsTable
-                .Where(x => x.ItemID == srcItem.ID && x.ParentItemID != -1)
+                .Where(x => x.ItemID == srcItem.ID && x.ParentItemID > 0)
                 .GroupBy(x => x.ParentItemID))
             {
                 skillBonusesText += String.Format("{0} bonuses (per skill level):{1}", Database.InvTypesTable[bonuses.Key].Name,
@@ -285,9 +286,30 @@ namespace EVEMon.XmlGenerator.Datafiles
                 }
             }
 
+            // Find the misc bonuses
+            foreach (IGrouping<int, DgmTypeTraits> bonuses in Database.DgmTypeTraitsTable
+                .Where(x => x.ItemID == srcItem.ID && x.ParentItemID == -2)
+                .GroupBy(x => x.ParentItemID))
+            {
+                miscBonusesText += String.Format("Misc bonus:{0}", Environment.NewLine);
+
+                foreach (DgmTypeTraits bonus in bonuses)
+                {
+                    DgmTraits trait = Database.DgmTraitsTable[bonus.TraitID];
+
+                    miscBonusesText += String.Format(CultureConstants.DefaultCulture, "{0}{1} {2}{3}",
+                        bonus.Bonus.HasValue ? bonus.Bonus.ToString() : String.Empty,
+                        trait.UnitID.HasValue ? Database.EveUnitsTable[trait.UnitID.Value].DisplayName : String.Empty,
+                        Database.DgmTraitsTable[trait.ID].BonusText, Environment.NewLine).TrimStart();
+                }
+            }
+
             // Skip if no bonuses
-            if (String.IsNullOrWhiteSpace(skillBonusesText) && String.IsNullOrWhiteSpace(roleBonusesText))
+            if (String.IsNullOrWhiteSpace(skillBonusesText) && String.IsNullOrWhiteSpace(roleBonusesText) &&
+                String.IsNullOrWhiteSpace(miscBonusesText))
+            {
                 return;
+            }
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine().AppendLine();
