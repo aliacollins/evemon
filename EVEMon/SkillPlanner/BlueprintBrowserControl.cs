@@ -763,7 +763,7 @@ namespace EVEMon.SkillPlanner
 
             if (text.StartsWith("Thukker Component", StringComparison.Ordinal))
             {
-                m_materialFacilityMultiplier = 0.9d;
+                m_materialFacilityMultiplier = 0.85d;
                 return 0.75d;
             }
 
