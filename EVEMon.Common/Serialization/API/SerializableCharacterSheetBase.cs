@@ -85,12 +85,6 @@ namespace EVEMon.Common.Serialization.API
         [XmlElement("factionID")]
         public int FactionID { get; set; }
 
-        [XmlElement("cloneName")]
-        public string CloneName { get; set; }
-
-        [XmlElement("cloneSkillPoints")]
-        public int CloneSkillPoints { get; set; }
-
         [XmlElement("freeSkillPoints")]
         public int FreeSkillPoints { get; set; }
 

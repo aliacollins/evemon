@@ -1011,36 +1011,6 @@ namespace EVEMon.Common
         #endregion
 
 
-        #region Insufficient clone
-
-        /// <summary>
-        /// Invalidates the notification for an insufficient clone.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        internal void InvalidateInsufficientClone(CCPCharacter character)
-        {
-            Invalidate(new NotificationInvalidationEventArgs(character, NotificationCategory.InsufficientClone));
-        }
-
-        /// <summary>
-        /// Notifies an account has an insufficient clone.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        internal void NotifyInsufficientClone(CCPCharacter character)
-        {
-            NotificationEventArgs notification =
-                new NotificationEventArgs(character, NotificationCategory.InsufficientClone)
-                {
-                    Description = "This character has an insufficient clone.",
-                    Behaviour = NotificationBehaviour.Overwrite,
-                    Priority = NotificationPriority.Warning
-                };
-            Notify(notification);
-        }
-
-        #endregion
-
-
         #region Skill completion
 
         /// <summary>

@@ -573,9 +573,10 @@ namespace EVEMon.CharacterMonitoring
                                 m_character.GetSkillCountAtLevel(5)).AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:N0}",
                                 GetTotalSkillPoints()).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Limit: {0:N0}",
-                                m_character.CloneSkillPoints).AppendLine();
-            output.Append(m_character.CloneName);
+            output.AppendFormat(CultureConstants.DefaultCulture, "Free SP: {0:N0}",
+                                m_character.FreeSkillPoints).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Available Remaps: {0:N0}",
+                                m_character.AvailableReMaps);
 
             return output.ToString();
         }

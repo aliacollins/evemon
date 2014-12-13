@@ -305,12 +305,6 @@ namespace EVEMon.Common
 
             // Notify for insufficient balance
             m_ccpCharacter.NotifyInsufficientBalance();
-
-            // Check the character has a sufficient clone or send a notification
-            if (m_ccpCharacter.Monitored && (m_ccpCharacter.CloneSkillPoints < m_ccpCharacter.SkillPoints))
-                EveMonClient.Notifications.NotifyInsufficientClone(m_ccpCharacter);
-            else
-                EveMonClient.Notifications.InvalidateInsufficientClone(m_ccpCharacter);
         }
 
         /// <summary>

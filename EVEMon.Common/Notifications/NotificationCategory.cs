@@ -53,7 +53,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// A character has not enough skill points on his clone.
         /// </summary>
-        [Header("Insufficient clone")]
+        [Obsolete]
         InsufficientClone,
 
         /// <summary>
