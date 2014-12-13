@@ -13,7 +13,7 @@ using EVEMon.DetailsWindow;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public sealed partial class CharacterMonitorBody : UserControl
+    internal sealed partial class CharacterMonitorBody : UserControl
     {
         #region Fields
 
@@ -110,7 +110,7 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnVisibleChanged(e);
 
-            if (!Visible)
+            if (DesignMode || this.IsDesignModeHosted() || !Visible)
                 return;
 
             UpdateFrequentControls();

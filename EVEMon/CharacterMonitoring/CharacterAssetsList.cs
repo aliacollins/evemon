@@ -16,7 +16,7 @@ using Region = EVEMon.Common.Data.Region;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterAssetsList : UserControl, IListView
+    internal sealed partial class CharacterAssetsList : UserControl, IListView
     {
         #region Fields
 

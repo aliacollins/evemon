@@ -12,7 +12,7 @@ using EVEMon.SkillPlanner;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterSkillsList : UserControl
+    internal sealed partial class CharacterSkillsList : UserControl
     {
         #region Fields
 

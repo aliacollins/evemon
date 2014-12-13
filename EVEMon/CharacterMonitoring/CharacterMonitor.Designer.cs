@@ -3,7 +3,7 @@ using EVEMon.Common.Controls.MultiPanel;
 
 namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterMonitor
+    internal partial class CharacterMonitor
     {
         /// <summary> 
         /// Required designer variable.

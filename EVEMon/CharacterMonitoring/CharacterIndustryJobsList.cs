@@ -14,7 +14,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterIndustryJobsList : UserControl, IListView
+    internal sealed partial class CharacterIndustryJobsList : UserControl, IListView
     {
         #region Fields
 

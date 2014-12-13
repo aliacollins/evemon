@@ -12,7 +12,7 @@ using EVEMon.Common.Properties;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterStandingsList : UserControl
+    internal sealed partial class CharacterStandingsList : UserControl
     {
         #region Fields
 

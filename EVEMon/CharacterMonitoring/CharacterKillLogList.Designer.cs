@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterKillLogList
+    internal sealed partial class CharacterKillLogList
     {
         /// <summary> 
         /// Required designer variable.

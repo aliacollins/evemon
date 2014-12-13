@@ -12,7 +12,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterWalletJournalList : UserControl, IListView
+    internal sealed partial class CharacterWalletJournalList : UserControl, IListView
     {
         #region Fields
 

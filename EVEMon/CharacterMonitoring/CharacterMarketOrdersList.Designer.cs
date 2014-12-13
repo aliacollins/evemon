@@ -2,7 +2,7 @@
 
 namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterMarketOrdersList
+    internal sealed partial class CharacterMarketOrdersList
     {
         /// <summary> 
         /// Required designer variable.

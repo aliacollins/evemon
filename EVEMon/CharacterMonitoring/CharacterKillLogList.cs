@@ -15,7 +15,10 @@ using EVEMon.DetailsWindow;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterKillLogList : UserControl, IListView
+    /// <summary>
+    /// Displays a list of kill logs.
+    /// </summary>
+    internal sealed partial class CharacterKillLogList : UserControl, IListView
     {
         #region Fields
 

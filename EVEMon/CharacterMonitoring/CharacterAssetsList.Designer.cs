@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterAssetsList
+    internal sealed partial class CharacterAssetsList
     {
         /// <summary> 
         /// Required designer variable.

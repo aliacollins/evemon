@@ -1,6 +1,6 @@
 namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterResearchPointsList
+    internal sealed partial class CharacterResearchPointsList
     {
         /// <summary> 
         /// Required designer variable.

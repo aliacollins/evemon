@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterPlanetaryList
+    internal sealed partial class CharacterPlanetaryList
     {
         /// <summary> 
         /// Required designer variable.

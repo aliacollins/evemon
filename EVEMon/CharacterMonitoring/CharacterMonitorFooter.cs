@@ -8,7 +8,7 @@ using EVEMon.Common.Scheduling;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public sealed partial class CharacterMonitorFooter : UserControl
+    internal sealed partial class CharacterMonitorFooter : UserControl
     {
         private Character m_character;
 
@@ -67,7 +67,7 @@ namespace EVEMon.CharacterMonitoring
         {
             base.OnVisibleChanged(e);
 
-            if (!Visible)
+            if (DesignMode || this.IsDesignModeHosted() || !Visible)
                 return;
 
             UpdateFrequentControls();

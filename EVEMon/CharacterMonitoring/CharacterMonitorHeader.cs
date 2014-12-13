@@ -16,7 +16,7 @@ namespace EVEMon.CharacterMonitoring
     /// <summary>
     /// Implements the header component of the main character monitor user interface.
     /// </summary>
-    public sealed partial class CharacterMonitorHeader : UserControl
+    internal sealed partial class CharacterMonitorHeader : UserControl
     {
         #region Fields
 
@@ -73,7 +73,9 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e"></param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            if (!Visible)
+            base.OnVisibleChanged(e);
+
+            if (DesignMode || this.IsDesignModeHosted() || !Visible)
                 return;
 
             UpdateFrequentControls();

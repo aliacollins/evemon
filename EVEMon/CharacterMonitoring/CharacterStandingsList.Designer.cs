@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterStandingsList
+    internal sealed partial class CharacterStandingsList
     {
         /// <summary> 
         /// Required designer variable.

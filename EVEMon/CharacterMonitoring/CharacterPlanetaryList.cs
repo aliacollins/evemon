@@ -13,7 +13,7 @@ using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.CharacterMonitoring
 {
-    public partial class CharacterPlanetaryList : UserControl, IListView
+    internal sealed partial class CharacterPlanetaryList : UserControl, IListView
     {
         #region Fields
 

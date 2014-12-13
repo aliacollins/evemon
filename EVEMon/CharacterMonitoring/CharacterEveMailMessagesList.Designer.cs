@@ -2,7 +2,7 @@ using EVEMon.Controls;
 
 namespace EVEMon.CharacterMonitoring
 {
-    partial class CharacterEveMailMessagesList
+    internal sealed partial class CharacterEveMailMessagesList
     {
         /// <summary> 
         /// Required designer variable.
