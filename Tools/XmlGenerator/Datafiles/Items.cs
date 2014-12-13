@@ -316,6 +316,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             sb.AppendLine("Traits");
             sb.Append(skillBonusesText);
             sb.Append(roleBonusesText);
+            sb.Append(miscBonusesText);
 
             // Add to item description
             item.Description += sb.ToString();
