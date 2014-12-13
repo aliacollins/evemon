@@ -249,7 +249,7 @@ namespace EVEMon.CharacterMonitoring
 
                 PaidUntilLabel.Text = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
                                           ? String.Empty
-                                          : apiKey.AccountExpires.ToLocalTime().ToString();
+                                          : apiKey.AccountExpires.ToLocalTime().ToString(CultureConstants.DefaultCulture);
             }
             finally
             {
@@ -572,13 +572,22 @@ namespace EVEMon.CharacterMonitoring
 
             output.AppendFormat(CultureConstants.DefaultCulture, "Known Skills: {0}", m_character.KnownSkillCount).AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Skills at Level V: {0}",
-                                m_character.GetSkillCountAtLevel(5)).AppendLine();
+                m_character.GetSkillCountAtLevel(5)).AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Total SP: {0:N0}",
-                                GetTotalSkillPoints()).AppendLine();
+                GetTotalSkillPoints()).AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Free SP: {0:N0}",
-                                m_character.FreeSkillPoints).AppendLine();
-            output.AppendFormat(CultureConstants.DefaultCulture, "Available Remaps: {0:N0}",
-                                m_character.AvailableReMaps);
+                m_character.FreeSkillPoints).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Bonus Remaps Available: {0}",
+                m_character.AvailableReMaps).AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Neural Remap Available: {0}",
+                m_character.LastReMapDate.AddYears(1) < DateTime.UtcNow
+                    ? "Now"
+                    : m_character.LastReMapDate.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture))
+                .AppendLine();
+            output.AppendFormat(CultureConstants.DefaultCulture, "Clone Jump Available: {0}",
+                m_character.JumpCloneLastJumpDate.AddHours(23) < DateTime.UtcNow
+                    ? "Now"
+                    : m_character.JumpCloneLastJumpDate.AddHours(23).ToLocalTime().ToString(CultureConstants.DefaultCulture));
 
             return output.ToString();
         }

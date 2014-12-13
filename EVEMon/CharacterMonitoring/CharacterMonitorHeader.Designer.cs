@@ -105,7 +105,7 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(502, 169);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(502, 189);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // CharacterPortrait
@@ -339,7 +339,7 @@
             this.SkillSummaryPanel.Name = "SkillSummaryPanel";
             this.SkillSummaryPanel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.MainTableLayoutPanel.SetRowSpan(this.SkillSummaryPanel, 3);
-            this.SkillSummaryPanel.Size = new System.Drawing.Size(366, 78);
+            this.SkillSummaryPanel.Size = new System.Drawing.Size(366, 98);
             this.SkillSummaryPanel.TabIndex = 4;
             // 
             // tlpAttributes
@@ -367,7 +367,7 @@
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpAttributes.Size = new System.Drawing.Size(89, 73);
+            this.tlpAttributes.Size = new System.Drawing.Size(89, 93);
             this.tlpAttributes.TabIndex = 5;
             // 
             // lblMEMAttribute
@@ -475,13 +475,13 @@
             this.SkillSummaryLabel.AutoSize = true;
             this.SkillSummaryLabel.BackColor = System.Drawing.Color.Transparent;
             this.SkillSummaryLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.SkillSummaryLabel.Location = new System.Drawing.Point(262, 5);
+            this.SkillSummaryLabel.Location = new System.Drawing.Point(217, 5);
             this.SkillSummaryLabel.Margin = new System.Windows.Forms.Padding(0);
             this.SkillSummaryLabel.Name = "SkillSummaryLabel";
-            this.SkillSummaryLabel.Size = new System.Drawing.Size(104, 65);
+            this.SkillSummaryLabel.Size = new System.Drawing.Size(149, 91);
             this.SkillSummaryLabel.TabIndex = 1;
-            this.SkillSummaryLabel.Text = "Known Skills: 0\r\nSkills at Level V: 0\r\nTotal SP: 0\r\nFree SP: 0\r\nAvailable Remaps:" +
-    " 0";
+            this.SkillSummaryLabel.Text = "Known Skills: 0\r\nSkills at Level V: 0\r\nTotal SP: 0\r\nFree SP: 0\r\nBonus Remaps Avai" +
+    "lable: 0\r\nNeural Remap Available: Now\r\nClone Jump Available: Now";
             this.SkillSummaryLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.SkillSummaryLabel.MouseHover += new System.EventHandler(this.SkillSummaryLabel_MouseHover);
             // 
@@ -551,7 +551,7 @@
             this.AutoSize = true;
             this.Controls.Add(this.MainTableLayoutPanel);
             this.Name = "CharacterMonitorHeader";
-            this.Size = new System.Drawing.Size(502, 169);
+            this.Size = new System.Drawing.Size(502, 189);
             this.Resize += new System.EventHandler(this.CharacterMonitorHeader_Resize);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();
