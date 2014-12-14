@@ -79,8 +79,11 @@ namespace EVEMon.ImplantControls
 
             // Sets the grid rows
             setsGrid.Rows.Clear();
-            AddRow(m_sets.API);
-            AddRow(m_sets.OldAPI);
+            AddRow(m_sets.ActiveClone);
+            foreach (SerializableSettingsImplantSet set in m_sets.JumpClones)
+            {
+                AddRow(set);
+            }
             foreach (SerializableSettingsImplantSet set in m_sets.CustomSets)
             {
                 AddRow(set);
@@ -223,7 +226,7 @@ namespace EVEMon.ImplantControls
             }
 
             // Scroll through comboboxes
-            bool isReadOnly = (set == m_sets.API || set == m_sets.OldAPI);
+            bool isReadOnly = (set == m_sets.ActiveClone || m_sets.JumpClones.Any(x => x == set));
             foreach (DropDownMouseMoveComboBox combo in Controls.OfType<DropDownMouseMoveComboBox>())
             {
                 // Enable the combo with the <None> implant
@@ -327,13 +330,9 @@ namespace EVEMon.ImplantControls
         private void setsGrid_SelectionChanged(object sender, EventArgs e)
         {
             // Enable/disable the top buttons
-            if (setsGrid.SelectedRows.Count == 0)
-                importButton.Enabled = false;
-            else
-            {
-                importButton.Enabled = true;
-                setsGrid.AllowUserToDeleteRows = (setsGrid.SelectedRows[0].Index >= 2);
-            }
+            if (setsGrid.SelectedRows.Count > 0)
+                setsGrid.AllowUserToDeleteRows = (setsGrid.SelectedRows[0].Index >= m_sets.JumpClones.Count + 1);
+
             UpdateSlots();
         }
 
@@ -345,10 +344,13 @@ namespace EVEMon.ImplantControls
         private void setsGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             DataGridViewRow row = setsGrid.Rows[e.RowIndex];
-            string text = (e.FormattedValue == null ? String.Empty : e.FormattedValue.ToString());
+            string text = e.FormattedValue == null ? String.Empty : e.FormattedValue.ToString();
 
-            // If the user forgets the edition and there is no bound set, we replace <New set> by an empty value
-            if (row.Tag == null && text == PhantomSetName)
+            // If the user forgets the edition and there is no bound set
+            // or the given name exceeds 255 characters
+            // or the name is empty,
+            // we replace <New set> by an empty value
+            if ((row.Tag == null && text == PhantomSetName) || text.Length > 255 || String.IsNullOrWhiteSpace(text))
             {
                 row.Cells[0].Value = String.Empty;
                 return;
@@ -358,6 +360,7 @@ namespace EVEMon.ImplantControls
             EnsureRowSetInitialized(row);
             if (row.Tag == null)
                 return;
+
             SerializableSettingsImplantSet set = (SerializableSettingsImplantSet)row.Tag;
             if (e.FormattedValue != null)
                 set.Name = e.FormattedValue.ToString();
@@ -408,33 +411,10 @@ namespace EVEMon.ImplantControls
         private void btnOK_Click(object sender, EventArgs e)
         {
             SerializableSettingsImplantSet set = GetSelectedSet();
-            if (set != null && !String.IsNullOrEmpty(set.Name))
+            if (set != null && !String.IsNullOrWhiteSpace(set.Name))
                 m_character.ImplantSets.Import(m_sets);
 
             Close();
-        }
-
-        /// <summary>
-        /// On import button, we replace the implants of the set with the ones from the implants preivously queried from the API.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void importButton_Click(object sender, EventArgs e)
-        {
-            SerializableSettingsImplantSet set = GetSelectedSet();
-            if (set == null)
-                return;
-            set.Intelligence = m_sets.OldAPI.Intelligence;
-            set.Perception = m_sets.OldAPI.Perception;
-            set.Willpower = m_sets.OldAPI.Willpower;
-            set.Charisma = m_sets.OldAPI.Charisma;
-            set.Memory = m_sets.OldAPI.Memory;
-            set.Slot6 = m_sets.OldAPI.Slot6;
-            set.Slot7 = m_sets.OldAPI.Slot7;
-            set.Slot8 = m_sets.OldAPI.Slot8;
-            set.Slot9 = m_sets.OldAPI.Slot9;
-            set.Slot10 = m_sets.OldAPI.Slot10;
-            UpdateSlots();
         }
 
         /// <summary>

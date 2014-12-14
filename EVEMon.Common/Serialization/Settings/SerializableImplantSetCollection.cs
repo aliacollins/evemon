@@ -12,16 +12,16 @@ namespace EVEMon.Common.Serialization.Settings
 
         public SerializableImplantSetCollection()
         {
-            API = new SerializableSettingsImplantSet();
-            OldAPI = new SerializableSettingsImplantSet();
+            ActiveClone = new SerializableSettingsImplantSet();
+            JumpClones = new Collection<SerializableSettingsImplantSet>();
             m_customSets = new Collection<SerializableSettingsImplantSet>();
         }
 
-        [XmlElement("api")]
-        public SerializableSettingsImplantSet API { get; set; }
+        [XmlElement("activeCloneSet")]
+        public SerializableSettingsImplantSet ActiveClone { get; set; }
 
-        [XmlElement("oldApi")]
-        public SerializableSettingsImplantSet OldAPI { get; set; }
+        [XmlElement("jumpCloneSet")]
+        public Collection<SerializableSettingsImplantSet> JumpClones { get; set; }
 
         [XmlElement("customSet")]
         public Collection<SerializableSettingsImplantSet> CustomSets

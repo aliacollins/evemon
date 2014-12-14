@@ -283,10 +283,6 @@
     <Compile Include="IPlanOrderPluggable.cs" />
     <Compile Include="IQueryMonitorEx.cs" />
     <Compile Include="ISkillLevel.cs" />
-    <Compile Include="JumpClone.cs" />
-    <Compile Include="JumpCloneCollection.cs" />
-    <Compile Include="JumpCloneImplant.cs" />
-    <Compile Include="JumpCloneImplantCollection.cs" />
     <Compile Include="KillLog.cs" />
     <Compile Include="KillLogCollection.cs" />
     <Compile Include="KillLogComparer.cs" />
@@ -535,7 +531,6 @@
     <Compile Include="Serialization\API\SerializableAPINotificationTexts.cs" />
     <Compile Include="Serialization\API\SerializableCharacterNameListItem.cs" />
     <Compile Include="Serialization\API\SerializableNotificationsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableImplant.cs" />
     <Compile Include="Serialization\API\SerializableAPIIndustryJobs.cs" />
     <Compile Include="Serialization\API\SerializableAPIMarketOrders.cs" />
     <Compile Include="Serialization\API\SerializableAPIResearch.cs" />
@@ -833,7 +828,6 @@
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutFeed.cs" />
     <Compile Include="Serialization\API\SerializableAPICharacterSheet.cs" />
     <Compile Include="Serialization\API\SerializableCharacterAttributes.cs" />
-    <Compile Include="Serialization\API\SerializableImplantSet.cs" />
     <Compile Include="Serialization\Settings\SerializableRecurringScheduleEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableScheduleEntry.cs" />
     <Compile Include="SettingsObjects\CalendarSettings.cs" />

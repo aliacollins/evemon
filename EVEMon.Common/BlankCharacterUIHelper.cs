@@ -138,13 +138,8 @@ namespace EVEMon.Common
                 },
                 ImplantSets = new SerializableImplantSetCollection
                 {
-                    API =
-                        new SerializableSettingsImplantSet
-                        { Name = "Implants from API" },
-                    OldAPI = new SerializableSettingsImplantSet
-                    {
-                        Name = "Previous implants from the API"
-                    },
+                    ActiveClone = new SerializableSettingsImplantSet
+                    { Name = "Active Clone" },
                 },
             };
 

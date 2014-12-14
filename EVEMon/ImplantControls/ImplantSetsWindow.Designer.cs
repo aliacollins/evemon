@@ -57,21 +57,20 @@ namespace EVEMon.ImplantControls
             this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ImplantSetsLabel = new System.Windows.Forms.Label();
             this.ImplantsLabel = new System.Windows.Forms.Label();
-            this.importButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.setsGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // headerLabel
             // 
-            this.headerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.headerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.headerLabel.AutoSize = true;
             this.headerLabel.Location = new System.Drawing.Point(14, 172);
             this.headerLabel.Name = "headerLabel";
             this.headerLabel.Size = new System.Drawing.Size(207, 26);
             this.headerLabel.TabIndex = 1;
             this.headerLabel.Text = "{0} has the skill for {1} Jump Clones\r\n(plus 1 for the implants in your active bo" +
-                "dy)";
+    "dy)";
             // 
             // btnCancel
             // 
@@ -98,8 +97,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot10
             // 
-            this.cbSlot10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot10.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot10.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot10.DropDownHeight = 1;
@@ -115,8 +114,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot9
             // 
-            this.cbSlot9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot9.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot9.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot9.DropDownHeight = 1;
@@ -132,8 +131,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot8
             // 
-            this.cbSlot8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot8.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot8.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot8.DropDownHeight = 1;
@@ -149,8 +148,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot7
             // 
-            this.cbSlot7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot7.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot7.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot7.DropDownHeight = 1;
@@ -166,8 +165,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot6
             // 
-            this.cbSlot6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot6.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot6.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot6.DropDownHeight = 1;
@@ -183,8 +182,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot5
             // 
-            this.cbSlot5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot5.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot5.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot5.DropDownHeight = 1;
@@ -200,8 +199,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot4
             // 
-            this.cbSlot4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot4.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot4.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot4.DropDownHeight = 1;
@@ -217,8 +216,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot3
             // 
-            this.cbSlot3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot3.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot3.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot3.DropDownHeight = 1;
@@ -234,8 +233,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot2
             // 
-            this.cbSlot2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot2.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot2.DropDownHeight = 1;
@@ -251,8 +250,8 @@ namespace EVEMon.ImplantControls
             // 
             // cbSlot1
             // 
-            this.cbSlot1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSlot1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSlot1.Cursor = System.Windows.Forms.Cursors.Default;
             this.cbSlot1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbSlot1.DropDownHeight = 1;
@@ -268,8 +267,8 @@ namespace EVEMon.ImplantControls
             // 
             // label8
             // 
-            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(14, 504);
             this.label8.Name = "label8";
@@ -280,8 +279,8 @@ namespace EVEMon.ImplantControls
             // 
             // label7
             // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(14, 477);
             this.label7.Name = "label7";
@@ -292,8 +291,8 @@ namespace EVEMon.ImplantControls
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(14, 450);
             this.label6.Name = "label6";
@@ -304,8 +303,8 @@ namespace EVEMon.ImplantControls
             // 
             // label5
             // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(14, 423);
             this.label5.Name = "label5";
@@ -316,8 +315,8 @@ namespace EVEMon.ImplantControls
             // 
             // label4
             // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(14, 396);
             this.label4.Name = "label4";
@@ -328,8 +327,8 @@ namespace EVEMon.ImplantControls
             // 
             // label3
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(14, 369);
             this.label3.Name = "label3";
@@ -340,8 +339,8 @@ namespace EVEMon.ImplantControls
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(14, 342);
             this.label2.Name = "label2";
@@ -352,8 +351,8 @@ namespace EVEMon.ImplantControls
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(14, 315);
             this.label1.Name = "label1";
@@ -364,8 +363,8 @@ namespace EVEMon.ImplantControls
             // 
             // lblImplant2
             // 
-            this.lblImplant2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblImplant2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblImplant2.AutoSize = true;
             this.lblImplant2.Location = new System.Drawing.Point(14, 288);
             this.lblImplant2.Name = "lblImplant2";
@@ -376,8 +375,8 @@ namespace EVEMon.ImplantControls
             // 
             // lblImplant1
             // 
-            this.lblImplant1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblImplant1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblImplant1.AutoSize = true;
             this.lblImplant1.Location = new System.Drawing.Point(14, 262);
             this.lblImplant1.Name = "lblImplant1";
@@ -390,9 +389,9 @@ namespace EVEMon.ImplantControls
             // 
             this.setsGrid.AllowUserToResizeColumns = false;
             this.setsGrid.AllowUserToResizeRows = false;
-            this.setsGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.setsGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.setsGrid.BackgroundColor = System.Drawing.SystemColors.ControlLight;
             this.setsGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.setsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -426,8 +425,8 @@ namespace EVEMon.ImplantControls
             // 
             // ImplantsLabel
             // 
-            this.ImplantsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ImplantsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ImplantsLabel.AutoSize = true;
             this.ImplantsLabel.ForeColor = System.Drawing.SystemColors.Highlight;
             this.ImplantsLabel.Location = new System.Drawing.Point(13, 227);
@@ -435,17 +434,6 @@ namespace EVEMon.ImplantControls
             this.ImplantsLabel.Size = new System.Drawing.Size(46, 13);
             this.ImplantsLabel.TabIndex = 10;
             this.ImplantsLabel.Text = "Implants";
-            // 
-            // importButton
-            // 
-            this.importButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.importButton.Location = new System.Drawing.Point(352, 172);
-            this.importButton.Name = "importButton";
-            this.importButton.Size = new System.Drawing.Size(181, 23);
-            this.importButton.TabIndex = 31;
-            this.importButton.Text = "Import from previous API results";
-            this.importButton.UseVisualStyleBackColor = true;
-            this.importButton.Click += new System.EventHandler(this.importButton_Click);
             // 
             // ImplantSetsWindow
             // 
@@ -457,7 +445,6 @@ namespace EVEMon.ImplantControls
             this.ClientSize = new System.Drawing.Size(546, 568);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.importButton);
             this.Controls.Add(this.cbSlot10);
             this.Controls.Add(this.ImplantsLabel);
             this.Controls.Add(this.cbSlot9);
@@ -522,6 +509,5 @@ namespace EVEMon.ImplantControls
         private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
         private System.Windows.Forms.Label ImplantSetsLabel;
         private System.Windows.Forms.Label ImplantsLabel;
-        private System.Windows.Forms.Button importButton;
     }
 }

@@ -132,9 +132,9 @@ namespace EVEMon.Common
         /// Imports data from a settings serialization object.
         /// </summary>
         /// <param name="serial"></param>
-        /// <param name="importName"></param>
-        internal void Import(SerializableSettingsImplantSet serial, bool importName)
+        internal void Import(SerializableSettingsImplantSet serial)
         {
+            m_name = serial.Name;
             Import(ImplantSlots.Intelligence, serial.Intelligence);
             Import(ImplantSlots.Perception, serial.Perception);
             Import(ImplantSlots.Willpower, serial.Willpower);
@@ -145,9 +145,6 @@ namespace EVEMon.Common
             Import(ImplantSlots.Slot8, serial.Slot8);
             Import(ImplantSlots.Slot9, serial.Slot9);
             Import(ImplantSlots.Slot10, serial.Slot10);
-
-            if (importName)
-                m_name = serial.Name;
         }
 
         /// <summary>
@@ -166,19 +163,6 @@ namespace EVEMon.Common
         /// <summary>
         /// Imports data from an API serialization object.
         /// </summary>
-        /// <param name="serial"></param>
-        internal void Import(SerializableImplantSet serial)
-        {
-            Import(ImplantSlots.Intelligence, serial.Intelligence);
-            Import(ImplantSlots.Perception, serial.Perception);
-            Import(ImplantSlots.Willpower, serial.Willpower);
-            Import(ImplantSlots.Charisma, serial.Charisma);
-            Import(ImplantSlots.Memory, serial.Memory);
-        }
-
-        /// <summary>
-        /// Imports data from an API serialization object.
-        /// </summary>
         /// <param name="src">The source.</param>
         internal void Import(IEnumerable<SerializableNewImplant> src)
         {
@@ -187,22 +171,6 @@ namespace EVEMon.Common
                 m_values[i] = StaticItems.GetImplants((ImplantSlots)i).FirstOrDefault(x => src.Any(y => y.Name == x.Name)) ??
                               Implant.None;
             }
-        }
-
-        /// <summary>
-        /// Updates the given slot with the provided implant's name.
-        /// </summary>
-        /// <param name="slot"></param>
-        /// <param name="src"></param>
-        private void Import(ImplantSlots slot, SerializableImplant src)
-        {
-            if (src == null)
-            {
-                m_values[(int)slot] = Implant.None;
-                return;
-            }
-
-            m_values[(int)slot] = StaticItems.GetImplants(slot)[src.Name] ?? Implant.None;
         }
     }
 }

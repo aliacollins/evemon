@@ -53,8 +53,6 @@ namespace EVEMon.Common
             Skills = new SkillCollection(this);
 
             EmploymentHistory = new EmploymentRecordCollection(this);
-            JumpClones = new JumpCloneCollection(this);
-            JumpCloneImplants = new JumpCloneImplantCollection(this);
             ImplantSets = new ImplantSetCollection(this);
             Plans = new PlanCollection(this);
 
@@ -220,12 +218,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the jump clones.
         /// </summary>
-        public JumpCloneCollection JumpClones { get; private set; }
+        //public JumpCloneCollection JumpClones { get; private set; }
 
         /// <summary>
         /// Gets the jump clone implants.
         /// </summary>
-        public JumpCloneImplantCollection JumpCloneImplants { get; private set; }
+        //public JumpCloneImplantCollection JumpCloneImplants { get; private set; }
 
         /// <summary>
         /// Gets or sets the jump activation date.
@@ -489,12 +487,6 @@ namespace EVEMon.Common
             serial.JumpLastUpdateDate = JumpLastUpdateDate;
             serial.Balance = Balance;
 
-            // JumpClones
-            serial.JumpClones.AddRange(JumpClones.Export());
-
-            // JumpCloneImplants
-            serial.JumpCloneImplants.AddRange(JumpCloneImplants.Export());
-
             // Info
             serial.ShipName = ShipName;
             serial.ShipTypeName = ShipTypeName;
@@ -552,11 +544,8 @@ namespace EVEMon.Common
             Import((SerializableCharacterSheetBase)serial);
 
             // Implants
-            if (serial.OldImplants != null && !serial.OldImplants.Deprecated)
-                ImplantSets.Import(serial.OldImplants);
-
-            if (serial.NewImplants.Any())
-                ImplantSets.Import(serial.NewImplants);
+            if (serial.Implants.Any() || serial.JumpClones.Any())
+                ImplantSets.Import(serial);
         }
 
         /// <summary>
@@ -604,11 +593,11 @@ namespace EVEMon.Common
             JumpLastUpdateDate = serial.JumpLastUpdateDate;
             Balance = serial.Balance;
 
-            // JumpClones
-            JumpClones.Import(serial.JumpClones);
+            //// JumpClones
+            //JumpClones.Import(serial.JumpClones);
 
-            // JumpCloneImplants
-            JumpCloneImplants.Import(serial.JumpCloneImplants);
+            //// JumpCloneImplants
+            //JumpCloneImplants.Import(serial.JumpCloneImplants);
 
             if (serial is SerializableSettingsCharacter)
             {
