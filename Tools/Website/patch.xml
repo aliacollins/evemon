@@ -1,76 +1,82 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>09 November 2014</date>
-    <version>1.9.1.4527</version>
-    <md5>55004b2258d9d740bfab77060a4beb81</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=186708.0</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.1.exe</autopatchurl>
+    <date>14 December 2014</date>
+    <version>1.9.2.4570</version>
+    <md5>5d07984c9ff01ec997194f94438ce53b</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=187014.0</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.2.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
 
  * Jimi
+ 
+== Bug Fixes ==
+
+ * Fixed a crash bug in Attribute Optimizer when selecting optimization of a characters entire trained skills.
+ * Corrected Thukker Component Assembly Array facility material bonus.
 
 == Enhancements ==
 
- * Prerequisites of an already known skill will no longer be included in the skill plan.
- * Added identification names to planetary pins.
- * Implementation of new implants API format and jump clones info.
- * Added additional API info of the IndustryJobs endpoint.
+ * Added position number in skill queue list.
+ * Added clone jump and neural availability indicators.
+ * Added jump clones implants info of a character in Implant Groups tool.
 
 == Misc ==
 
- * Plan management window now shows in Taskbar.
+ * Excluded history orders from being uploaded to EMDR from EMUU after request from EMDR owner.
+ * EMUU will no longer upload data if there is no data to upload.
+ * Removed Clone Grade/SP/Notification.
  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>08 November 2014</date>
-      <md5>33d342a02ecbf80bd26a005c8d1e0f3b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
-      <message><![CDATA[Phoebe 1.0 (840934) blueprints data file by the EVEMon Development Team
+      <date>14 December 2014</date>
+      <md5>d68cecd80dcfb212ca2ffb8307d81191</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
+      <message><![CDATA[Rhea 1.0 (851318) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>08 November 2014</date>
-      <md5>96524d5fda5e89dcd6fb55caf57d2c42</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
-      <message><![CDATA[Phoebe 1.0 (840934) geography data file by the EVEMon Development Team
+      <date>14 December 2014</date>
+      <md5>c7f55ef78fc64d64bb591141ecd75d5b</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
+      <message><![CDATA[Rhea 1.0 (851318) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>08 November 2014</date>
-      <md5>b0abf335720e71af3d85d65d40b63a5d</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
-      <message><![CDATA[Phoebe 1.0 (840934) items data file by the EVEMon Development Team
+      <date>14 December 2014</date>
+      <md5>06c9c750a89227c670dc3816381ed684</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
+      <message><![CDATA[Rhea 1.0 (851318) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>08 November 2014</date>
-      <md5>7d1eb75a09c9b05b11a5bb8d043d55c5</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
-      <message><![CDATA[Phoebe 1.0 (840934) properties data file by the EVEMon Development Team
+      <date>14 December 2014</date>
+      <md5>0d2f2fe16b77b1aab6cdade4c57da3f6</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
+      <message><![CDATA[Rhea 1.0 (851318) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>08 November 2014</date>
-      <md5>ce1a9e2ede61824e9895ad9cb1661f94</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
-      <message><![CDATA[Phoebe 1.0 (840934) reprocessing data file by the EVEMon Development Team
+      <date>14 December 2014</date>
+      <md5>da0f1debfde93fe36d3982b0a55b5803</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
+      <message><![CDATA[Rhea 1.0 (851318) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>08 November 2014</date>
-      <md5>70640bdb46abaa251bc5b4f74cf117f8</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Phoebe/840934</url>
-      <message><![CDATA[Phoebe 1.0 (840934) skills data file by the EVEMon Development Team
+      <date>14 December 2014</date>
+      <md5>71435419260a499098b5ea34e69c9ff4</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
+      <message><![CDATA[Rhea 1.0 (851318) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
