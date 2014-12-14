@@ -21,7 +21,7 @@ namespace EVEMon.SkillPlanner
     /// <summary>
     /// The main control of the plan editor window, the list of plan entries.
     /// </summary>
-    public partial class PlanEditorControl : UserControl
+    public sealed partial class PlanEditorControl : UserControl
     {
         #region Fields
 
@@ -330,6 +330,10 @@ namespace EVEMon.SkillPlanner
             {
                 cbChooseImplantSet.Items.Add(set);
             }
+
+            var maxWidth = Math.Min(m_character.ImplantSets.Max(x =>
+                TextRenderer.MeasureText(x.Name, cbChooseImplantSet.Font).Width), 500);
+            cbChooseImplantSet.Size = new Size(Math.Max(maxWidth, cbChooseImplantSet.Size.Width), cbChooseImplantSet.Size.Height);
         }
 
         /// <summary>

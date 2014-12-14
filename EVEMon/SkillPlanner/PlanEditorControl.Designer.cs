@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.SkillPlanner
 {
-    partial class PlanEditorControl
+    sealed partial class PlanEditorControl
     {
         /// <summary> 
         /// Required designer variable.

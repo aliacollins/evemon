@@ -11,16 +11,12 @@ namespace EVEMon.Common.Serialization.API
     {
         private readonly Collection<SerializableCharacterSkill> m_skills;
         private readonly Collection<SerializableEmploymentHistory> m_employmentHistory;
-        private readonly Collection<SerializableCharacterJumpClone> m_jumpClones;
-        private readonly Collection<SerializableCharacterJumpCloneImplant> m_jumpCloneImplants;
 
         protected SerializableCharacterSheetBase()
         {
             Attributes = new SerializableCharacterAttributes();
             m_skills = new Collection<SerializableCharacterSkill>();
             m_employmentHistory = new Collection<SerializableEmploymentHistory>();
-            m_jumpClones = new Collection<SerializableCharacterJumpClone>();
-            m_jumpCloneImplants = new Collection<SerializableCharacterJumpCloneImplant>();
         }
 
         [XmlElement("characterID")]
@@ -133,20 +129,6 @@ namespace EVEMon.Common.Serialization.API
                 if (!String.IsNullOrEmpty(value))
                     RemoteStationDate = value.TimeStringToDateTime();
             }
-        }
-
-        [XmlArray("jumpClones")]
-        [XmlArrayItem("jumpClone")]
-        public Collection<SerializableCharacterJumpClone> JumpClones
-        {
-            get { return m_jumpClones; }
-        }
-
-        [XmlArray("jumpCloneImplants")]
-        [XmlArrayItem("jumpCloneImplant")]
-        public Collection<SerializableCharacterJumpCloneImplant> JumpCloneImplants
-        {
-            get { return m_jumpCloneImplants; }
         }
 
         [XmlElement("jumpActivation")]

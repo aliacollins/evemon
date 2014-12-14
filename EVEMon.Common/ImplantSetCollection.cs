@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.Settings;
 
@@ -14,6 +13,7 @@ namespace EVEMon.Common
     public sealed class ImplantSetCollection : ReadonlyVirtualCollection<ImplantSet>
     {
         private readonly Character m_owner;
+        private readonly List<ImplantSet> m_cloneSets;
         private readonly List<ImplantSet> m_customSets;
         private ImplantSet m_current;
 
@@ -25,14 +25,15 @@ namespace EVEMon.Common
         {
             m_owner = owner;
             m_customSets = new List<ImplantSet>();
-            OldAPI = new ImplantSet(owner, "Previous implants from the API");
-            API = new ImplantSet(owner, "Implants from API");
+            m_cloneSets = new List<ImplantSet>();
+            ActiveClone = new ImplantSet(owner, "Active Clone");
             None = new ImplantSet(owner, "None");
-            m_current = API;
+            m_current = ActiveClone;
         }
 
         /// <summary>
-        /// Gets the implant set by its index. First items are <see cref="API"/>, <see cref="OldAPI"/>, then the custom sets.
+        /// Gets the implant set by its index.
+        /// First items are <see cref="ActiveClone"/> then the jump clones then the custom sets.
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
@@ -49,12 +50,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the implants retrieved from the API.
         /// </summary>
-        public ImplantSet API { get; private set; }
-
-        /// <summary>
-        /// Gets the implants previously retrieved from the API.
-        /// </summary>
-        public ImplantSet OldAPI { get; private set; }
+        public ImplantSet ActiveClone { get; private set; }
 
         /// <summary>
         /// Gets or sets the current implant set.
@@ -101,8 +97,13 @@ namespace EVEMon.Common
         /// <returns></returns>
         protected override IEnumerable<ImplantSet> Enumerate()
         {
-            yield return API;
-            yield return OldAPI;
+            yield return ActiveClone;
+
+            foreach (ImplantSet set in m_cloneSets)
+            {
+                yield return set;
+            }
+
             foreach (ImplantSet set in m_customSets)
             {
                 yield return set;
@@ -118,14 +119,21 @@ namespace EVEMon.Common
             if (serial == null)
                 return;
 
-            API.Import(serial.API, false);
-            OldAPI.Import(serial.API, false);
+            ActiveClone.Import(serial.ActiveClone);
+
+            m_cloneSets.Clear();
+            foreach (SerializableSettingsImplantSet serialSet in serial.JumpClones)
+            {
+                ImplantSet set = new ImplantSet(m_owner, serialSet.Name);
+                set.Import(serialSet);
+                m_cloneSets.Add(set);
+            }
 
             m_customSets.Clear();
             foreach (SerializableSettingsImplantSet serialSet in serial.CustomSets)
             {
                 ImplantSet set = new ImplantSet(m_owner, serialSet.Name);
-                set.Import(serialSet, true);
+                set.Import(serialSet);
                 m_customSets.Add(set);
             }
 
@@ -139,37 +147,29 @@ namespace EVEMon.Common
         /// Imports data from an API serialization object provided by CCP.
         /// </summary>
         /// <param name="serial"></param>
-        internal void Import<T>(T serial)
+        internal void Import(SerializableAPICharacterSheet serial)
         {
-            var set = serial as SerializableImplantSet;
-            var newSet = serial as Collection<SerializableNewImplant>;
-            if (set == null && newSet == null)
+            if (serial == null)
                 return;
-            
-            // Search whether the api infos are different from the ones currently stored
-            ImplantSet tempSet = new ImplantSet(m_owner, "temp");
 
-            if (set != null)
-                tempSet.Import(set);
-            else
-                tempSet.Import(newSet);
+            // Import the active clone implants
+            ActiveClone.Import(serial.Implants);
 
-            bool isDifferent = false;
-            Implant[] oldArray = API.ToArray();
-            Implant[] newArray = tempSet.ToArray();
-            for (int i = 0; i < oldArray.Length; i++)
+            m_cloneSets.Clear();
+            foreach (SerializableCharacterJumpClone jumpClone in serial.JumpClones)
             {
-                isDifferent |= (oldArray[i].Name != newArray[i].Name);
+                List<SerializableNewImplant> cloneImplants =
+                    serial.JumpCloneImplants.Where(x => x.JumpCloneID == jumpClone.JumpCloneID)
+                        .Select(cloneImplant => new SerializableNewImplant
+                        {
+                            ID = cloneImplant.TypeID,
+                            Name = cloneImplant.TypeName
+                        }).ToList();
+
+                ImplantSet set = new ImplantSet(m_owner, jumpClone.CloneName);
+                set.Import(cloneImplants);
+                m_cloneSets.Add(set);
             }
-
-            // Imports the API and make a backup
-            if (isDifferent)
-                OldAPI.Import(API.Export(), false);
-
-            if (set != null)
-                API.Import(set);
-            else
-                API.Import(newSet);
 
             EveMonClient.OnCharacterImplantSetCollectionChanged();
         }
@@ -180,8 +180,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public SerializableImplantSetCollection Export()
         {
-            SerializableImplantSetCollection serial = new SerializableImplantSetCollection
-                                                          { API = API.Export(), OldAPI = OldAPI.Export() };
+            SerializableImplantSetCollection serial = new SerializableImplantSetCollection { ActiveClone = ActiveClone.Export() };
+            serial.JumpClones.AddRange(m_cloneSets.Select(x => x.Export()));
             serial.CustomSets.AddRange(m_customSets.Select(x => x.Export()));
             serial.SelectedIndex = Enumerate().IndexOf(m_current);
             return serial;
