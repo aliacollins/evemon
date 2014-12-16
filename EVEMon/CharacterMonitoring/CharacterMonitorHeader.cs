@@ -160,7 +160,9 @@ namespace EVEMon.CharacterMonitoring
         /// <returns></returns>
         private string GetNextCloneJumpTime()
         {
-            var nextCloneJumpAvailable = m_character.JumpCloneLastJumpDate.AddHours(23);
+            var nextCloneJumpAvailable = m_character.JumpCloneLastJumpDate
+                .AddHours(24 - m_character.Skills[DBConstants.InfomorphSynchronizingSkillID].Level);
+
             return nextCloneJumpAvailable > DateTime.UtcNow
                 ? nextCloneJumpAvailable.ToRemainingTimeDigitalDescription(DateTimeKind.Utc)
                 : "Now";
@@ -596,8 +598,8 @@ namespace EVEMon.CharacterMonitoring
             output.AppendFormat(CultureConstants.DefaultCulture, "Bonus Remaps Available: {0}",
                 m_character.AvailableReMaps).AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Neural Remap Available: {0}",
-                m_character.LastReMapDate.AddYears(1) > DateTime.UtcNow
-                    ? m_character.LastReMapDate.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                m_character.LastReMapTimed.AddYears(1) > DateTime.UtcNow
+                    ? m_character.LastReMapTimed.AddYears(1).ToLocalTime().ToString(CultureConstants.DefaultCulture)
                     : "Now").AppendLine();
             output.AppendFormat(CultureConstants.DefaultCulture, "Clone Jump Available: {0}", GetNextCloneJumpTime());
 
