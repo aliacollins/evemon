@@ -50,7 +50,8 @@ namespace EVEMon.ImplantControls
 
             m_character = character;
             m_sets = character.ImplantSets.Export();
-            m_maxJumpClones = character.Skills[DBConstants.InfomorphPsychologySkillID].Level;
+            m_maxJumpClones = character.Skills[DBConstants.InfomorphPsychologySkillID].Level +
+                              character.Skills[DBConstants.AdvancedInfomorphPsychologySkillID].Level;
         }
 
         /// <summary>
