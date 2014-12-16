@@ -775,6 +775,7 @@ namespace EVEMon.Common.Data
         public const int StormMBlueprintID = 12782;
         public const int StormSBlueprintID = 12628;
         public const int TalismanAlphaBlueprintID = 11074;
+        public const int AdvancedInfomorphPsychologySkillID = 33407;
 
 
         #endregion
