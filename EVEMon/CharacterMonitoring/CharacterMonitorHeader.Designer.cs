@@ -105,7 +105,7 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(502, 189);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(502, 194);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // CharacterPortrait
@@ -339,7 +339,7 @@
             this.SkillSummaryPanel.Name = "SkillSummaryPanel";
             this.SkillSummaryPanel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.MainTableLayoutPanel.SetRowSpan(this.SkillSummaryPanel, 3);
-            this.SkillSummaryPanel.Size = new System.Drawing.Size(366, 98);
+            this.SkillSummaryPanel.Size = new System.Drawing.Size(366, 103);
             this.SkillSummaryPanel.TabIndex = 4;
             // 
             // tlpAttributes
@@ -367,7 +367,7 @@
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpAttributes.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpAttributes.Size = new System.Drawing.Size(89, 93);
+            this.tlpAttributes.Size = new System.Drawing.Size(89, 98);
             this.tlpAttributes.TabIndex = 5;
             // 
             // lblMEMAttribute
@@ -551,7 +551,7 @@
             this.AutoSize = true;
             this.Controls.Add(this.MainTableLayoutPanel);
             this.Name = "CharacterMonitorHeader";
-            this.Size = new System.Drawing.Size(502, 189);
+            this.Size = new System.Drawing.Size(502, 194);
             this.Resize += new System.EventHandler(this.CharacterMonitorHeader_Resize);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();
