@@ -57,6 +57,7 @@ namespace EVEMon.ImplantControls
             this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ImplantSetsLabel = new System.Windows.Forms.Label();
             this.ImplantsLabel = new System.Windows.Forms.Label();
+            this.deleteRowInfo = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.setsGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,12 +66,12 @@ namespace EVEMon.ImplantControls
             this.headerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.headerLabel.AutoSize = true;
-            this.headerLabel.Location = new System.Drawing.Point(14, 172);
+            this.headerLabel.Location = new System.Drawing.Point(14, 198);
             this.headerLabel.Name = "headerLabel";
-            this.headerLabel.Size = new System.Drawing.Size(207, 26);
+            this.headerLabel.Size = new System.Drawing.Size(377, 13);
             this.headerLabel.TabIndex = 1;
-            this.headerLabel.Text = "{0} has the skill for {1} Jump Clones\r\n(plus 1 for the implants in your active bo" +
-    "dy)";
+            this.headerLabel.Text = "{0} has the skill for {1} Jump Clones (plus 1 for the implants in your active bod" +
+    "y)";
             // 
             // btnCancel
             // 
@@ -435,6 +436,18 @@ namespace EVEMon.ImplantControls
             this.ImplantsLabel.TabIndex = 10;
             this.ImplantsLabel.Text = "Implants";
             // 
+            // deleteRowInfo
+            // 
+            this.deleteRowInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.deleteRowInfo.AutoSize = true;
+            this.deleteRowInfo.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.deleteRowInfo.Location = new System.Drawing.Point(14, 169);
+            this.deleteRowInfo.Name = "deleteRowInfo";
+            this.deleteRowInfo.Size = new System.Drawing.Size(361, 13);
+            this.deleteRowInfo.TabIndex = 30;
+            this.deleteRowInfo.Text = "* to delete a custom set select it and press the \"Del\" key on your keyboard.";
+            // 
             // ImplantSetsWindow
             // 
             this.AcceptButton = this.btnOK;
@@ -443,6 +456,7 @@ namespace EVEMon.ImplantControls
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(546, 568);
+            this.Controls.Add(this.deleteRowInfo);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.cbSlot10);
@@ -509,5 +523,6 @@ namespace EVEMon.ImplantControls
         private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
         private System.Windows.Forms.Label ImplantSetsLabel;
         private System.Windows.Forms.Label ImplantsLabel;
+        private System.Windows.Forms.Label deleteRowInfo;
     }
 }
