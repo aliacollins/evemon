@@ -89,10 +89,13 @@ namespace EVEMon.ImplantControls
             {
                 AddRow(set);
             }
-            setsGrid.Rows[0].ReadOnly = true;
-            setsGrid.Rows[1].ReadOnly = true;
-            setsGrid.Rows[0].Cells[0].Style.ForeColor = SystemColors.GrayText;
-            setsGrid.Rows[1].Cells[0].Style.ForeColor = SystemColors.GrayText;
+
+            for (var i = 0; i <= m_sets.JumpClones.Count; i++)
+            {
+                setsGrid.Rows[i].ReadOnly = true;
+                setsGrid.Rows[i].Cells[0].Style.ForeColor = SystemColors.GrayText;
+            }
+
             setsGrid.Rows[0].Selected = true;
 
             // Update the texts
