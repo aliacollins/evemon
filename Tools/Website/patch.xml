@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>14 December 2014</date>
-    <version>1.9.2.4570</version>
-    <md5>5d07984c9ff01ec997194f94438ce53b</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=187014.0</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.2.exe</autopatchurl>
+    <date>21 December 2014</date>
+    <version>1.9.3.4595</version>
+    <md5>045f83baa9f0ea8ea71e620657b4153a</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=187072.0</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.3.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
@@ -14,20 +14,19 @@
  
 == Bug Fixes ==
 
- * Fixed a crash bug in Attribute Optimizer when selecting optimization of a characters entire trained skills.
- * Corrected Thukker Component Assembly Array facility material bonus.
+ * Fixed an issue where jump clones in clone vat bays were not recognized correctly causing character info not to be fully displayed.
+ * Fixed an issue where jump clone names after the first were not immutable in Implants window.
+ * Fixed an crash bug when removing implant sets.
+ * Fixed a visual issue when using large fonts in character header info section.
 
 == Enhancements ==
 
- * Added position number in skill queue list.
- * Added clone jump and neural availability indicators.
- * Added jump clones implants info of a character in Implant Groups tool.
+ * Added bonus for the Advanced Infomorph Psychology skill.
+ * Added bonus for the Infomorph Synchronizing skill.
+ * Added info on how to delete a custom set row in Implants window.
 
 == Misc ==
 
- * Excluded history orders from being uploaded to EMDR from EMUU after request from EMDR owner.
- * EMUU will no longer upload data if there is no data to upload.
- * Removed Clone Grade/SP/Notification.
  * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
