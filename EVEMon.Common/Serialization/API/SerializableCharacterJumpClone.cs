@@ -13,7 +13,7 @@ namespace EVEMon.Common.Serialization.API
         public int TypeID { get; set; }
 
         [XmlAttribute("locationID")]
-        public int LocationID { get; set; }
+        public long LocationID { get; set; }
 
         [XmlAttribute("cloneName")]
         public string CloneNameXml
@@ -24,7 +24,13 @@ namespace EVEMon.Common.Serialization.API
                 if (!String.IsNullOrEmpty(value))
                     CloneName = value;
 
-                CloneName = String.Format("Clone in {0}", Station.GetByID(LocationID).Name);
+                var station = LocationID != 0 && LocationID <= Int32.MaxValue
+                    ? Station.GetByID(Convert.ToInt32(LocationID))
+                    : null;
+
+                CloneName = String.Format("Clone in {0}", station != null
+                    ? station.Name
+                    : String.Format("Clone Vat Bay ({0})", LocationID));
             }
         }
 
