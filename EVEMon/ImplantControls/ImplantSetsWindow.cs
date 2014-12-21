@@ -377,7 +377,7 @@ namespace EVEMon.ImplantControls
         /// <param name="e"></param>
         private void setsGrid_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            int index = e.RowIndex - 2;
+            int index = e.RowIndex - 1 - m_sets.JumpClones.Count;
             if (index >= 0)
                 m_sets.CustomSets.RemoveAt(index);
         }
