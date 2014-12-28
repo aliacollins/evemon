@@ -13,7 +13,7 @@ namespace EVEMon.ImplantControls
     /// <summary>
     /// This is the implant groups UI
     /// </summary>
-    public partial class ImplantSetsWindow : EVEMonForm
+    public sealed partial class ImplantSetsWindow : EVEMonForm
     {
         private const string PhantomSetName = "<New set>";
 
@@ -354,7 +354,9 @@ namespace EVEMon.ImplantControls
             // or the given name exceeds 255 characters
             // or the name is empty,
             // we replace <New set> by an empty value
-            if ((row.Tag == null && text == PhantomSetName) || text.Length > 255 || String.IsNullOrWhiteSpace(text))
+            if ((row.Tag == null && text == PhantomSetName) ||
+                text.Length > EVEMonConstants.ImplantSetNameMaxLength || 
+                String.IsNullOrWhiteSpace(text))
             {
                 row.Cells[0].Value = String.Empty;
                 return;

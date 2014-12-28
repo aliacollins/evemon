@@ -331,8 +331,9 @@ namespace EVEMon.SkillPlanner
                 cbChooseImplantSet.Items.Add(set);
             }
 
-            var maxWidth = Math.Min(m_character.ImplantSets.Max(x =>
-                TextRenderer.MeasureText(x.Name, cbChooseImplantSet.Font).Width), 500);
+            int maxWidth = Math.Min(m_character.ImplantSets.Max(x =>
+                TextRenderer.MeasureText(x.Name, cbChooseImplantSet.Font).Width),
+                (int)(cbChooseImplantSet.Font.Size * EVEMonConstants.ImplantSetNameMaxLength));
             cbChooseImplantSet.Size = new Size(Math.Max(maxWidth, cbChooseImplantSet.Size.Width), cbChooseImplantSet.Size.Height);
         }
 

@@ -96,7 +96,7 @@ namespace EVEMon.SkillPlanner
             this.gbAttributes.TabStop = false;
             this.gbAttributes.Text = "Attributes of \"Implant Set Name\"";
             // 
-            // panel1
+            // AtrributesPanel
             // 
             this.AtrributesPanel.Controls.Add(this.lblEffectiveWillpower);
             this.AtrributesPanel.Controls.Add(this.nudIntelligence);
@@ -120,17 +120,19 @@ namespace EVEMon.SkillPlanner
             this.AtrributesPanel.Controls.Add(this.lblAdjustPerception);
             this.AtrributesPanel.Controls.Add(this.lblAdjustIntelligence);
             this.AtrributesPanel.Controls.Add(this.lblImplants);
-            this.AtrributesPanel.Location = new System.Drawing.Point(12, 20);
-            this.AtrributesPanel.Name = "panel1";
-            this.AtrributesPanel.Size = new System.Drawing.Size(231, 157);
+            this.AtrributesPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.AtrributesPanel.Location = new System.Drawing.Point(3, 28);
+            this.AtrributesPanel.Name = "AtrributesPanel";
+            this.AtrributesPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.AtrributesPanel.Size = new System.Drawing.Size(243, 157);
             this.AtrributesPanel.TabIndex = 5;
             // 
             // lblEffectiveWillpower
             // 
             this.lblEffectiveWillpower.AutoSize = true;
-            this.lblEffectiveWillpower.Location = new System.Drawing.Point(174, 107);
+            this.lblEffectiveWillpower.Location = new System.Drawing.Point(177, 110);
             this.lblEffectiveWillpower.Name = "lblEffectiveWillpower";
-            this.lblEffectiveWillpower.Size = new System.Drawing.Size(35, 13);
+            this.lblEffectiveWillpower.Size = new System.Drawing.Size(34, 13);
             this.lblEffectiveWillpower.TabIndex = 17;
             this.lblEffectiveWillpower.Text = "22.14";
             // 
@@ -148,7 +150,7 @@ namespace EVEMon.SkillPlanner
             0,
             0});
             this.nudIntelligence.Name = "nudIntelligence";
-            this.nudIntelligence.Size = new System.Drawing.Size(39, 21);
+            this.nudIntelligence.Size = new System.Drawing.Size(39, 20);
             this.nudIntelligence.TabIndex = 3;
             this.nudIntelligence.Tag = "0";
             this.nudIntelligence.Value = new decimal(new int[] {
@@ -161,27 +163,27 @@ namespace EVEMon.SkillPlanner
             // lblEffectiveMemory
             // 
             this.lblEffectiveMemory.AutoSize = true;
-            this.lblEffectiveMemory.Location = new System.Drawing.Point(174, 134);
+            this.lblEffectiveMemory.Location = new System.Drawing.Point(177, 137);
             this.lblEffectiveMemory.Name = "lblEffectiveMemory";
-            this.lblEffectiveMemory.Size = new System.Drawing.Size(35, 13);
+            this.lblEffectiveMemory.Size = new System.Drawing.Size(34, 13);
             this.lblEffectiveMemory.TabIndex = 21;
             this.lblEffectiveMemory.Text = "22.14";
             // 
             // lblIntelligence
             // 
             this.lblIntelligence.AutoSize = true;
-            this.lblIntelligence.Location = new System.Drawing.Point(-1, 26);
+            this.lblIntelligence.Location = new System.Drawing.Point(2, 29);
             this.lblIntelligence.Name = "lblIntelligence";
-            this.lblIntelligence.Size = new System.Drawing.Size(66, 13);
+            this.lblIntelligence.Size = new System.Drawing.Size(64, 13);
             this.lblIntelligence.TabIndex = 2;
             this.lblIntelligence.Text = "Intelligence:";
             // 
             // lblEffectivePerception
             // 
             this.lblEffectivePerception.AutoSize = true;
-            this.lblEffectivePerception.Location = new System.Drawing.Point(174, 53);
+            this.lblEffectivePerception.Location = new System.Drawing.Point(177, 56);
             this.lblEffectivePerception.Name = "lblEffectivePerception";
-            this.lblEffectivePerception.Size = new System.Drawing.Size(35, 13);
+            this.lblEffectivePerception.Size = new System.Drawing.Size(34, 13);
             this.lblEffectivePerception.TabIndex = 9;
             this.lblEffectivePerception.Text = "22.14";
             // 
@@ -199,7 +201,7 @@ namespace EVEMon.SkillPlanner
             0,
             0});
             this.nudCharisma.Name = "nudCharisma";
-            this.nudCharisma.Size = new System.Drawing.Size(39, 21);
+            this.nudCharisma.Size = new System.Drawing.Size(39, 20);
             this.nudCharisma.TabIndex = 11;
             this.nudCharisma.Tag = "2";
             this.nudCharisma.Value = new decimal(new int[] {
@@ -223,7 +225,7 @@ namespace EVEMon.SkillPlanner
             0,
             0});
             this.nudPerception.Name = "nudPerception";
-            this.nudPerception.Size = new System.Drawing.Size(39, 21);
+            this.nudPerception.Size = new System.Drawing.Size(39, 20);
             this.nudPerception.TabIndex = 7;
             this.nudPerception.Tag = "1";
             this.nudPerception.Value = new decimal(new int[] {
@@ -236,36 +238,36 @@ namespace EVEMon.SkillPlanner
             // lblMemory
             // 
             this.lblMemory.AutoSize = true;
-            this.lblMemory.Location = new System.Drawing.Point(-1, 134);
+            this.lblMemory.Location = new System.Drawing.Point(2, 137);
             this.lblMemory.Name = "lblMemory";
-            this.lblMemory.Size = new System.Drawing.Size(49, 13);
+            this.lblMemory.Size = new System.Drawing.Size(47, 13);
             this.lblMemory.TabIndex = 18;
             this.lblMemory.Text = "Memory:";
             // 
             // lblCharisma
             // 
             this.lblCharisma.AutoSize = true;
-            this.lblCharisma.Location = new System.Drawing.Point(-1, 80);
+            this.lblCharisma.Location = new System.Drawing.Point(2, 83);
             this.lblCharisma.Name = "lblCharisma";
-            this.lblCharisma.Size = new System.Drawing.Size(55, 13);
+            this.lblCharisma.Size = new System.Drawing.Size(53, 13);
             this.lblCharisma.TabIndex = 10;
             this.lblCharisma.Text = "Charisma:";
             // 
             // lblAdjustMemory
             // 
             this.lblAdjustMemory.AutoSize = true;
-            this.lblAdjustMemory.Location = new System.Drawing.Point(128, 134);
+            this.lblAdjustMemory.Location = new System.Drawing.Point(131, 137);
             this.lblAdjustMemory.Name = "lblAdjustMemory";
-            this.lblAdjustMemory.Size = new System.Drawing.Size(21, 13);
+            this.lblAdjustMemory.Size = new System.Drawing.Size(19, 13);
             this.lblAdjustMemory.TabIndex = 20;
             this.lblAdjustMemory.Text = "+0";
             // 
             // lblEffectiveCharisma
             // 
             this.lblEffectiveCharisma.AutoSize = true;
-            this.lblEffectiveCharisma.Location = new System.Drawing.Point(174, 80);
+            this.lblEffectiveCharisma.Location = new System.Drawing.Point(177, 83);
             this.lblEffectiveCharisma.Name = "lblEffectiveCharisma";
-            this.lblEffectiveCharisma.Size = new System.Drawing.Size(35, 13);
+            this.lblEffectiveCharisma.Size = new System.Drawing.Size(34, 13);
             this.lblEffectiveCharisma.TabIndex = 13;
             this.lblEffectiveCharisma.Text = "22.14";
             // 
@@ -283,7 +285,7 @@ namespace EVEMon.SkillPlanner
             0,
             0});
             this.nudMemory.Name = "nudMemory";
-            this.nudMemory.Size = new System.Drawing.Size(39, 21);
+            this.nudMemory.Size = new System.Drawing.Size(39, 20);
             this.nudMemory.TabIndex = 19;
             this.nudMemory.Tag = "4";
             this.nudMemory.Value = new decimal(new int[] {
@@ -296,54 +298,54 @@ namespace EVEMon.SkillPlanner
             // lblEffectiveIntelligence
             // 
             this.lblEffectiveIntelligence.AutoSize = true;
-            this.lblEffectiveIntelligence.Location = new System.Drawing.Point(174, 26);
+            this.lblEffectiveIntelligence.Location = new System.Drawing.Point(177, 29);
             this.lblEffectiveIntelligence.Name = "lblEffectiveIntelligence";
-            this.lblEffectiveIntelligence.Size = new System.Drawing.Size(35, 13);
+            this.lblEffectiveIntelligence.Size = new System.Drawing.Size(34, 13);
             this.lblEffectiveIntelligence.TabIndex = 5;
             this.lblEffectiveIntelligence.Text = "22.14";
             // 
             // lbWillpower
             // 
             this.lbWillpower.AutoSize = true;
-            this.lbWillpower.Location = new System.Drawing.Point(-1, 107);
+            this.lbWillpower.Location = new System.Drawing.Point(2, 110);
             this.lbWillpower.Name = "lbWillpower";
-            this.lbWillpower.Size = new System.Drawing.Size(57, 13);
+            this.lbWillpower.Size = new System.Drawing.Size(56, 13);
             this.lbWillpower.TabIndex = 14;
             this.lbWillpower.Text = "Willpower:";
             // 
             // lblAdjustCharisma
             // 
             this.lblAdjustCharisma.AutoSize = true;
-            this.lblAdjustCharisma.Location = new System.Drawing.Point(128, 80);
+            this.lblAdjustCharisma.Location = new System.Drawing.Point(131, 83);
             this.lblAdjustCharisma.Name = "lblAdjustCharisma";
-            this.lblAdjustCharisma.Size = new System.Drawing.Size(21, 13);
+            this.lblAdjustCharisma.Size = new System.Drawing.Size(19, 13);
             this.lblAdjustCharisma.TabIndex = 12;
             this.lblAdjustCharisma.Text = "+0";
             // 
             // lblEffective
             // 
             this.lblEffective.AutoSize = true;
-            this.lblEffective.Location = new System.Drawing.Point(168, 2);
+            this.lblEffective.Location = new System.Drawing.Point(171, 5);
             this.lblEffective.Name = "lblEffective";
-            this.lblEffective.Size = new System.Drawing.Size(50, 13);
+            this.lblEffective.Size = new System.Drawing.Size(49, 13);
             this.lblEffective.TabIndex = 1;
             this.lblEffective.Text = "Effective";
             // 
             // lblAdjustWillpower
             // 
             this.lblAdjustWillpower.AutoSize = true;
-            this.lblAdjustWillpower.Location = new System.Drawing.Point(128, 107);
+            this.lblAdjustWillpower.Location = new System.Drawing.Point(131, 110);
             this.lblAdjustWillpower.Name = "lblAdjustWillpower";
-            this.lblAdjustWillpower.Size = new System.Drawing.Size(21, 13);
+            this.lblAdjustWillpower.Size = new System.Drawing.Size(19, 13);
             this.lblAdjustWillpower.TabIndex = 16;
             this.lblAdjustWillpower.Text = "+0";
             // 
             // lblPerception
             // 
             this.lblPerception.AutoSize = true;
-            this.lblPerception.Location = new System.Drawing.Point(-1, 53);
+            this.lblPerception.Location = new System.Drawing.Point(2, 56);
             this.lblPerception.Name = "lblPerception";
-            this.lblPerception.Size = new System.Drawing.Size(62, 13);
+            this.lblPerception.Size = new System.Drawing.Size(61, 13);
             this.lblPerception.TabIndex = 6;
             this.lblPerception.Text = "Perception:";
             // 
@@ -361,7 +363,7 @@ namespace EVEMon.SkillPlanner
             0,
             0});
             this.nudWillpower.Name = "nudWillpower";
-            this.nudWillpower.Size = new System.Drawing.Size(39, 21);
+            this.nudWillpower.Size = new System.Drawing.Size(39, 20);
             this.nudWillpower.TabIndex = 15;
             this.nudWillpower.Tag = "3";
             this.nudWillpower.Value = new decimal(new int[] {
@@ -374,27 +376,27 @@ namespace EVEMon.SkillPlanner
             // lblAdjustPerception
             // 
             this.lblAdjustPerception.AutoSize = true;
-            this.lblAdjustPerception.Location = new System.Drawing.Point(128, 53);
+            this.lblAdjustPerception.Location = new System.Drawing.Point(131, 56);
             this.lblAdjustPerception.Name = "lblAdjustPerception";
-            this.lblAdjustPerception.Size = new System.Drawing.Size(21, 13);
+            this.lblAdjustPerception.Size = new System.Drawing.Size(19, 13);
             this.lblAdjustPerception.TabIndex = 8;
             this.lblAdjustPerception.Text = "+0";
             // 
             // lblAdjustIntelligence
             // 
             this.lblAdjustIntelligence.AutoSize = true;
-            this.lblAdjustIntelligence.Location = new System.Drawing.Point(128, 26);
+            this.lblAdjustIntelligence.Location = new System.Drawing.Point(131, 29);
             this.lblAdjustIntelligence.Name = "lblAdjustIntelligence";
-            this.lblAdjustIntelligence.Size = new System.Drawing.Size(21, 13);
+            this.lblAdjustIntelligence.Size = new System.Drawing.Size(19, 13);
             this.lblAdjustIntelligence.TabIndex = 4;
             this.lblAdjustIntelligence.Text = "+0";
             // 
             // lblImplants
             // 
             this.lblImplants.AutoSize = true;
-            this.lblImplants.Location = new System.Drawing.Point(117, 2);
+            this.lblImplants.Location = new System.Drawing.Point(120, 5);
             this.lblImplants.Name = "lblImplants";
-            this.lblImplants.Size = new System.Drawing.Size(48, 13);
+            this.lblImplants.Size = new System.Drawing.Size(46, 13);
             this.lblImplants.TabIndex = 0;
             this.lblImplants.Text = "Implants";
             // 
@@ -414,7 +416,7 @@ namespace EVEMon.SkillPlanner
             this.lblBaseDate.AutoSize = true;
             this.lblBaseDate.Location = new System.Drawing.Point(6, 30);
             this.lblBaseDate.Name = "lblBaseDate";
-            this.lblBaseDate.Size = new System.Drawing.Size(96, 13);
+            this.lblBaseDate.Size = new System.Drawing.Size(94, 13);
             this.lblBaseDate.TabIndex = 1;
             this.lblBaseDate.Text = "Current Base Date";
             // 
@@ -423,7 +425,7 @@ namespace EVEMon.SkillPlanner
             this.lblBaseSpan.AutoSize = true;
             this.lblBaseSpan.Location = new System.Drawing.Point(6, 17);
             this.lblBaseSpan.Name = "lblBaseSpan";
-            this.lblBaseSpan.Size = new System.Drawing.Size(97, 13);
+            this.lblBaseSpan.Size = new System.Drawing.Size(96, 13);
             this.lblBaseSpan.TabIndex = 0;
             this.lblBaseSpan.Text = "Current Base Span";
             // 
@@ -443,7 +445,7 @@ namespace EVEMon.SkillPlanner
             this.lblCurrentDate.AutoSize = true;
             this.lblCurrentDate.Location = new System.Drawing.Point(6, 30);
             this.lblCurrentDate.Name = "lblCurrentDate";
-            this.lblCurrentDate.Size = new System.Drawing.Size(70, 13);
+            this.lblCurrentDate.Size = new System.Drawing.Size(67, 13);
             this.lblCurrentDate.TabIndex = 1;
             this.lblCurrentDate.Text = "Current Date";
             // 
@@ -452,7 +454,7 @@ namespace EVEMon.SkillPlanner
             this.lblCurrentSpan.AutoSize = true;
             this.lblCurrentSpan.Location = new System.Drawing.Point(6, 17);
             this.lblCurrentSpan.Name = "lblCurrentSpan";
-            this.lblCurrentSpan.Size = new System.Drawing.Size(71, 13);
+            this.lblCurrentSpan.Size = new System.Drawing.Size(69, 13);
             this.lblCurrentSpan.TabIndex = 0;
             this.lblCurrentSpan.Text = "Current Span";
             // 
@@ -474,7 +476,7 @@ namespace EVEMon.SkillPlanner
             this.lblComparedToCurrent.AutoSize = true;
             this.lblComparedToCurrent.Location = new System.Drawing.Point(6, 56);
             this.lblComparedToCurrent.Name = "lblComparedToCurrent";
-            this.lblComparedToCurrent.Size = new System.Drawing.Size(105, 13);
+            this.lblComparedToCurrent.Size = new System.Drawing.Size(102, 13);
             this.lblComparedToCurrent.TabIndex = 3;
             this.lblComparedToCurrent.Text = "Compare To Current";
             // 
@@ -483,7 +485,7 @@ namespace EVEMon.SkillPlanner
             this.lblComparedToBase.AutoSize = true;
             this.lblComparedToBase.Location = new System.Drawing.Point(6, 43);
             this.lblComparedToBase.Name = "lblComparedToBase";
-            this.lblComparedToBase.Size = new System.Drawing.Size(131, 13);
+            this.lblComparedToBase.Size = new System.Drawing.Size(129, 13);
             this.lblComparedToBase.TabIndex = 2;
             this.lblComparedToBase.Text = "Compare To Current Base";
             // 
@@ -492,7 +494,7 @@ namespace EVEMon.SkillPlanner
             this.lblThisDate.AutoSize = true;
             this.lblThisDate.Location = new System.Drawing.Point(6, 30);
             this.lblThisDate.Name = "lblThisDate";
-            this.lblThisDate.Size = new System.Drawing.Size(52, 13);
+            this.lblThisDate.Size = new System.Drawing.Size(53, 13);
             this.lblThisDate.TabIndex = 1;
             this.lblThisDate.Text = "This Date";
             // 
@@ -501,7 +503,7 @@ namespace EVEMon.SkillPlanner
             this.lblThisSpan.AutoSize = true;
             this.lblThisSpan.Location = new System.Drawing.Point(6, 17);
             this.lblThisSpan.Name = "lblThisSpan";
-            this.lblThisSpan.Size = new System.Drawing.Size(53, 13);
+            this.lblThisSpan.Size = new System.Drawing.Size(55, 13);
             this.lblThisSpan.TabIndex = 0;
             this.lblThisSpan.Text = "This Span";
             // 
@@ -563,7 +565,7 @@ namespace EVEMon.SkillPlanner
             this.lblNotice.ForeColor = System.Drawing.Color.Red;
             this.lblNotice.Location = new System.Drawing.Point(18, 216);
             this.lblNotice.Name = "lblNotice";
-            this.lblNotice.Size = new System.Drawing.Size(300, 13);
+            this.lblNotice.Size = new System.Drawing.Size(294, 13);
             this.lblNotice.TabIndex = 6;
             this.lblNotice.Text = "Notice! This is not the active \"Implant Set\" of your character.";
             // 

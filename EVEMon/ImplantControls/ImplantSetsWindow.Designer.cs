@@ -2,7 +2,7 @@ using EVEMon.Common.Controls;
 
 namespace EVEMon.ImplantControls
 {
-    partial class ImplantSetsWindow
+    sealed partial class ImplantSetsWindow
     {
         /// <summary>
         /// Required designer variable.
