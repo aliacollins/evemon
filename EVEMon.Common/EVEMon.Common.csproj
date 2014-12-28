@@ -262,6 +262,7 @@
     <Compile Include="EveFlag.cs" />
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
+    <Compile Include="EVEMonConstants.cs" />
     <Compile Include="EveNotificationType.cs" />
     <Compile Include="CalendarEventAttendee.cs" />
     <Compile Include="EveRefType.cs" />
