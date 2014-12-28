@@ -188,6 +188,10 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             QueuedSkill item = lbSkillsQueue.Items[e.Index] as QueuedSkill;
+
+            if (item == null)
+                return;
+
             DrawItem(item, e);
         }
 
@@ -220,11 +224,13 @@ namespace EVEMon.CharacterMonitoring
             // Measure texts
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
 
-            Int64 skillPoints = (skill.Skill == null || skill.Skill == Skill.UnknownSkill ? skill.StartSP : skill.Skill.SkillPoints);
+            Int64 skillPoints = (skill.Skill == null || skill.Skill == Skill.UnknownSkill
+                ? skill.StartSP
+                : skill.Skill.SkillPoints);
             Int64 skillPointsToNextLevel = (skill.Skill == null || skill.Skill == Skill.UnknownSkill
-                                              ? skill.EndSP
-                                              : skill.Skill.StaticData.GetPointsRequiredForLevel(
-                                                  Math.Min(skill.Level, 5)));
+                ? skill.EndSP
+                : skill.Skill.StaticData.GetPointsRequiredForLevel(
+                    Math.Min(skill.Level, 5)));
 
             double percentCompleted = skill.PercentCompleted;
 
@@ -233,9 +239,9 @@ namespace EVEMon.CharacterMonitoring
 
             string indexText = String.Format(CultureConstants.DefaultCulture, "{0}. ", e.Index + 1);
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})",
-                                            (skill.Skill == null ? 0 : skill.Rank));
+                (skill.Skill == null ? 0 : skill.Rank));
             string spText = String.Format(CultureConstants.DefaultCulture, "SP: {0:N0}/{1:N0}", skillPoints,
-                                          skillPointsToNextLevel);
+                skillPointsToNextLevel);
             string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
             string pctText = String.Format(CultureConstants.DefaultCulture, "{0}% Done", Math.Floor(percentCompleted));
 
@@ -251,19 +257,19 @@ namespace EVEMon.CharacterMonitoring
             Color highlightColor = Color.Black;
 
             TextRenderer.DrawText(g, indexText, m_boldSkillsQueueFont,
-                      new Rectangle(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop,
-                                    indexTextSize.Width + PadLeft, indexTextSize.Height), highlightColor);
+                new Rectangle(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop,
+                    indexTextSize.Width + PadLeft, indexTextSize.Height), highlightColor);
 
             TextRenderer.DrawText(g, skill.SkillName, m_boldSkillsQueueFont,
-                                  new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width, e.Bounds.Top + PadTop,
-                                                skillNameSize.Width + PadLeft, skillNameSize.Height), highlightColor);
+                new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width, e.Bounds.Top + PadTop,
+                    skillNameSize.Width + PadLeft, skillNameSize.Height), highlightColor);
             TextRenderer.DrawText(g, rankText, m_skillsQueueFont,
-                                  new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width + skillNameSize.Width, e.Bounds.Top + PadTop,
-                                                rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
+                new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width + skillNameSize.Width, e.Bounds.Top + PadTop,
+                    rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
             TextRenderer.DrawText(g, spText, m_skillsQueueFont,
-                                  new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width,
-                                                e.Bounds.Top + PadTop + skillNameSize.Height,
-                                                spTextSize.Width + PadLeft, spTextSize.Height), highlightColor);
+                new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width,
+                    e.Bounds.Top + PadTop + skillNameSize.Height,
+                    spTextSize.Width + PadLeft, spTextSize.Height), highlightColor);
 
 
             // Boxes
@@ -275,20 +281,20 @@ namespace EVEMon.CharacterMonitoring
 
             // Draw level and percent texts
             TextRenderer.DrawText(g, levelText, m_skillsQueueFont,
-                                  new Rectangle(
-                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
-                                      levelTextSize.Width,
-                                      e.Bounds.Top + PadTop,
-                                      levelTextSize.Width + PadRight,
-                                      levelTextSize.Height), Color.Black);
+                new Rectangle(
+                    e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
+                    levelTextSize.Width,
+                    e.Bounds.Top + PadTop,
+                    levelTextSize.Width + PadRight,
+                    levelTextSize.Height), Color.Black);
 
             TextRenderer.DrawText(g, pctText, m_skillsQueueFont,
-                                  new Rectangle(
-                                      e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
-                                      pctTextSize.Width,
-                                      e.Bounds.Top + PadTop + levelTextSize.Height,
-                                      pctTextSize.Width + PadRight,
-                                      pctTextSize.Height), Color.Black);
+                new Rectangle(
+                    e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
+                    pctTextSize.Width,
+                    e.Bounds.Top + PadTop + levelTextSize.Height,
+                    pctTextSize.Width + PadRight,
+                    pctTextSize.Height), Color.Black);
 
             // Draw the queue color bar
             DrawQueueColorBar(skill, e);
@@ -304,12 +310,12 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             g.DrawRectangle(Pens.Black,
-                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
-                                          e.Bounds.Top + PadTop + BoxHeight + BoxVPad, BoxWidth, LowerBoxHeight));
+                new Rectangle(e.Bounds.Right - BoxWidth - PadRight,
+                    e.Bounds.Top + PadTop + BoxHeight + BoxVPad, BoxWidth, LowerBoxHeight));
 
             Rectangle pctBarRect = new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2,
-                                                 e.Bounds.Top + PadTop + BoxHeight + BoxVPad + 2,
-                                                 BoxWidth - 3, LowerBoxHeight - 3);
+                e.Bounds.Top + PadTop + BoxHeight + BoxVPad + 2,
+                BoxWidth - 3, LowerBoxHeight - 3);
 
             g.FillRectangle(Brushes.DarkGray, pctBarRect);
             int fillWidth = (int)(pctBarRect.Width * (percentCompleted / 100));
@@ -331,15 +337,15 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             g.DrawRectangle(Pens.Black,
-                            new Rectangle(e.Bounds.Right - BoxWidth - PadRight, e.Bounds.Top + PadTop, BoxWidth,
-                                          BoxHeight));
+                new Rectangle(e.Bounds.Right - BoxWidth - PadRight, e.Bounds.Top + PadTop, BoxWidth,
+                    BoxHeight));
 
             const int LevelBoxWidth = (BoxWidth - 4 - 3) / 5;
             for (int level = 1; level <= 5; level++)
             {
                 Rectangle brect =
                     new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2 + (LevelBoxWidth * (level - 1)) + (level - 1),
-                                  e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
+                        e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
 
                 // Box color
                 g.FillRectangle(skill.Skill != null && level < skill.Level ? Brushes.Black : Brushes.DarkGray, brect);
@@ -388,7 +394,7 @@ namespace EVEMon.CharacterMonitoring
             g.FillRectangle(Brushes.DimGray, qBarRect);
             Rectangle skillRect = SkillQueueControl.GetSkillRect(skill, qBarRect.Width, LowerBoxHeight - 1);
             g.FillRectangle(brush,
-                            new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
+                new Rectangle(skillRect.X, GetItemHeight - LowerBoxHeight, skillRect.Width, skillRect.Height));
 
             // If we have more than one skill level in queue, we need to redraw them only every (24h / width in pixels)
             if (e.Index == 1)
@@ -576,13 +582,12 @@ namespace EVEMon.CharacterMonitoring
                             String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
 
                         Character.Plans.AddTo(tempMenuLevel.DropDownItems,
-                                              (menuPlanItem, plan) =>
-                                                  {
-                                                      menuPlanItem.Click += menuPlanItem_Click;
-                                                      menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
-                                                                                                            new SkillLevel(skill,
-                                                                                                                           level));
-                                                  });
+                            (menuPlanItem, plan) =>
+                            {
+                                menuPlanItem.Click += menuPlanItem_Click;
+                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
+                                    new SkillLevel(skill, level));
+                            });
 
                         ToolStripMenuItem menuLevel = tempMenuLevel;
                         tempMenuLevel = null;
@@ -606,6 +611,26 @@ namespace EVEMon.CharacterMonitoring
             {
                 if (tempMenuItem != null)
                     tempMenuItem.Dispose();
+            }
+
+            // Add a separator
+            contextMenuStripPlanPopup.Items.Add(new ToolStripSeparator());
+            ToolStripMenuItem tempCreatePlanMenuItem = null;
+            try
+            {
+                tempCreatePlanMenuItem = new ToolStripMenuItem("Create Plan from Skill Queue...");
+                tempCreatePlanMenuItem.Click += tempCreatePlanMenuItem_Click;
+
+                ToolStripMenuItem tmCreatePlan = tempCreatePlanMenuItem;
+                tempCreatePlanMenuItem = null;
+
+                // Add to the context menu
+                contextMenuStripPlanPopup.Items.Add(tmCreatePlan);
+            }
+            finally
+            {
+                if (tempCreatePlanMenuItem != null)
+                    tempCreatePlanMenuItem.Dispose();
             }
         }
 
@@ -754,7 +779,64 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
-        /// Handler for a plan item click on the plan's context menu.
+        /// Handler for a context menu item click on a skill.
+        /// Add the entire skill queue to a plan.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void tempCreatePlanMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Character == null)
+                return;
+
+            // Ask the user for a new name
+            string planName,
+                planDescription;
+            using (NewPlanWindow npw = new NewPlanWindow { PlanName = "Current Skill Queue" })
+            {
+                DialogResult dr = npw.ShowDialog();
+                if (dr == DialogResult.Cancel)
+                    return;
+
+                planName = npw.PlanName;
+                planDescription = npw.PlanDescription;
+            }
+
+            // Create a new plan
+            Plan newPlan = new Plan(Character) { Name = planName, Description = planDescription };
+
+            if (Character.Plans.Any(x => x.Name == newPlan.Name))
+            {
+                MessageBox.Show("There is already a plan with the same name in the characters' Plans.",
+                    "Plan Creation Failure",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            // Add skill queue in plan
+            foreach (QueuedSkill qSkill in Character.SkillQueue)
+            {
+                newPlan.PlanTo(qSkill.Skill, qSkill.Level);
+            }
+
+            // Check if there is already a plan with the same skills
+            if (Character.Plans.Any(plan => !newPlan.Except(plan, new PlanEntryComparer()).Any()))
+            {
+                MessageBox.Show("There is already a plan with the same skills in the characters' Plans.",
+                    "Plan Creation Failure",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            // Add plan and save
+            Character.Plans.Insert(0, newPlan);
+
+            // Show the editor for this plan
+            WindowsFactory.ShowByTag<PlanWindow, Plan>(newPlan);
+        }
+
+        /// <summary>
+        /// Handler for a context menu item click on a skill.
         /// Add a skill to the plan.
         /// </summary>
         /// <param name="sender"></param>
@@ -769,6 +851,7 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// Handler for a context menu item click on a skill.
         /// Shows the selected skill in Skill Explorer
         /// </summary>
         /// <param name="sender"></param>
