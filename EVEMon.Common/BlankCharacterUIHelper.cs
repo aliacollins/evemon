@@ -18,9 +18,9 @@ namespace EVEMon.Common
 
         private static readonly Dictionary<int, int> s_allRaceSkills = new Dictionary<int, int>
         {
-            { DBConstants.ElectronicsSkillID, 3 },
-            { DBConstants.EngineeringSkillID, 3 },
-            { DBConstants.ShieldOperationSkillID, 2 },
+            { DBConstants.CPUManagementSkillID, 3 },
+            { DBConstants.PowerGridManagementSkillID, 3 },
+            { DBConstants.AstrometricsSkillID, 1 },
             { DBConstants.GunnerySkillID, 2 },
             { DBConstants.MiningSkillID, 2 },
             { DBConstants.MechanicSkillID, 2 },

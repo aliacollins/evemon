@@ -613,9 +613,9 @@ namespace EVEMon.Common.Data
         public const int ResearchSkillID = 3403;
         public const int LaboratoryOperationSkillID = 3406;
         public const int MetallurgySkillID = 3409;
-        public const int EngineeringSkillID = 3413;
-        public const int ShieldOperationSkillID = 3416;
-        public const int ElectronicsSkillID = 3426;
+        public const int AstrometricsSkillID = 3412;
+        public const int PowerGridManagementSkillID = 3413;
+        public const int CPUManagementSkillID = 3426;
         public const int TradeSkillID = 3443;
         public const int RetailSkillID = 3444;
         public const int BrokerRelationsSkillID = 3446;
