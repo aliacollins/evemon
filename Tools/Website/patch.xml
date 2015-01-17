@@ -32,50 +32,50 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>14 December 2014</date>
-      <md5>d68cecd80dcfb212ca2ffb8307d81191</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
-      <message><![CDATA[Rhea 1.0 (851318) blueprints data file by the EVEMon Development Team
+      <date>17 January 2015</date>
+      <md5>5e78a4bd0a4daa4ae58958e2d818bbf9</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
+      <message><![CDATA[Proteus 1.0 (855117) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>14 December 2014</date>
+      <date>17 January 2015</date>
       <md5>c7f55ef78fc64d64bb591141ecd75d5b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
-      <message><![CDATA[Rhea 1.0 (851318) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
+      <message><![CDATA[Proteus 1.0 (855117) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>14 December 2014</date>
-      <md5>06c9c750a89227c670dc3816381ed684</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
-      <message><![CDATA[Rhea 1.0 (851318) items data file by the EVEMon Development Team
+      <date>17 January 2015</date>
+      <md5>3ccf52daaba5cb73fff4e9adcbf1d7c7</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
+      <message><![CDATA[Proteus 1.0 (855117) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>14 December 2014</date>
-      <md5>0d2f2fe16b77b1aab6cdade4c57da3f6</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
-      <message><![CDATA[Rhea 1.0 (851318) properties data file by the EVEMon Development Team
+      <date>17 January 2015</date>
+      <md5>c8b921b0f9a6864d5e66632aa60da66f</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
+      <message><![CDATA[Proteus 1.0 (855117) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>14 December 2014</date>
-      <md5>da0f1debfde93fe36d3982b0a55b5803</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
-      <message><![CDATA[Rhea 1.0 (851318) reprocessing data file by the EVEMon Development Team
+      <date>17 January 2015</date>
+      <md5>1e5a32d7c59f6dd2a04b49340f588a3b</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
+      <message><![CDATA[Proteus 1.0 (855117) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>14 December 2014</date>
+      <date>17 January 2015</date>
       <md5>71435419260a499098b5ea34e69c9ff4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Rhea/851318</url>
-      <message><![CDATA[Rhea 1.0 (851318) skills data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
+      <message><![CDATA[Proteus 1.0 (855117) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
