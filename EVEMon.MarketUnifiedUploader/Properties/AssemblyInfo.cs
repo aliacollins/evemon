@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EVEMon.MarketUnifiedUploader")]
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 4595 Repository URL: https://bitbucket.org/BattleClinic/evemon")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 4609 Repository URL: https://bitbucket.org/BattleClinic/evemon")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
-[assembly: AssemblyCopyright("Copyright © 2012-2014, EVEMon Development Team")]
+[assembly: AssemblyCopyright("Copyright © 2012-2015, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.9.3.4595")]
+[assembly: AssemblyVersion("1.9.4.4609")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]

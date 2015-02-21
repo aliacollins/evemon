@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <newest>
-    <date>21 December 2014</date>
-    <version>1.9.3.4595</version>
-    <md5>045f83baa9f0ea8ea71e620657b4153a</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=187072.0</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.3.exe</autopatchurl>
+    <date>21 February 2015</date>
+    <version>1.9.4.4609</version>
+    <md5>e872e2cac81f137da1ecf952bd43a489</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=187645.0</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.4.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
@@ -14,68 +14,60 @@
  
 == Bug Fixes ==
 
- * Fixed an issue where jump clones in clone vat bays were not recognized correctly causing character info not to be fully displayed.
- * Fixed an issue where jump clone names after the first were not immutable in Implants window.
- * Fixed an crash bug when removing implant sets.
- * Fixed a visual issue when using large fonts in character header info section.
+ * Corrected the starter skills for a blank character.
 
 == Enhancements ==
 
- * Added bonus for the Advanced Infomorph Psychology skill.
- * Added bonus for the Infomorph Synchronizing skill.
- * Added info on how to delete a custom set row in Implants window.
-
-== Misc ==
-
- * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
+ * Added ability to create a plan from the characters' skill queue.
+ * Adjusted the implant name in Implant Calculator tool.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>17 January 2015</date>
-      <md5>5e78a4bd0a4daa4ae58958e2d818bbf9</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
-      <message><![CDATA[Proteus 1.0 (855117) blueprints data file by the EVEMon Development Team
+      <date>21 February 2015</date>
+      <md5>f21a7556f66d0139d98ba14557c2ab7d</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Tiamat/862956</url>
+      <message><![CDATA[Tiamat 1.0 (862956) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>17 January 2015</date>
+      <date>21 February 2015</date>
       <md5>c7f55ef78fc64d64bb591141ecd75d5b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
-      <message><![CDATA[Proteus 1.0 (855117) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Tiamat/862956</url>
+      <message><![CDATA[Tiamat 1.0 (862956) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>17 January 2015</date>
-      <md5>3ccf52daaba5cb73fff4e9adcbf1d7c7</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
-      <message><![CDATA[Proteus 1.0 (855117) items data file by the EVEMon Development Team
+      <date>21 February 2015</date>
+      <md5>cbec03e00d9e5895372569ae7dd85b7d</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Tiamat/862956</url>
+      <message><![CDATA[Tiamat 1.0 (862956) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>17 January 2015</date>
-      <md5>c8b921b0f9a6864d5e66632aa60da66f</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
-      <message><![CDATA[Proteus 1.0 (855117) properties data file by the EVEMon Development Team
+      <date>21 February 2015</date>
+      <md5>992203a331a90a8ad38b12bf95c30b5c</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Tiamat/862956</url>
+      <message><![CDATA[Tiamat 1.0 (862956) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>17 January 2015</date>
-      <md5>1e5a32d7c59f6dd2a04b49340f588a3b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
-      <message><![CDATA[Proteus 1.0 (855117) reprocessing data file by the EVEMon Development Team
+      <date>21 February 2015</date>
+      <md5>9bd508671ccb68f8a878f93390aed5a7</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Tiamat/862956</url>
+      <message><![CDATA[Tiamat 1.0 (862956) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>17 January 2015</date>
-      <md5>71435419260a499098b5ea34e69c9ff4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Proteus/855117</url>
-      <message><![CDATA[Proteus 1.0 (855117) skills data file by the EVEMon Development Team
+      <date>21 February 2015</date>
+      <md5>2e57136e8731f97243c7bbff2ff2d847</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Tiamat/862956</url>
+      <message><![CDATA[Tiamat 1.0 (862956) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
