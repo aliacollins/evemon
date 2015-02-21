@@ -253,7 +253,6 @@ namespace EVEMon.NotificationWindow
             this.Name = "TimeCheckNotification";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Time Synchronisation Problem";
-            this.TopMost = true;
             this.uxButtonPanel.ResumeLayout(false);
             this.uxTitlePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.uxWarningIconPictureBox)).EndInit();

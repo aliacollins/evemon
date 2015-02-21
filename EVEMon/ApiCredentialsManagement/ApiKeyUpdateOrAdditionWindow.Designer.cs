@@ -550,7 +550,6 @@ namespace EVEMon.ApiCredentialsManagement
             this.MinimizeBox = false;
             this.Name = "ApiKeyUpdateOrAdditionWindow";
             this.Text = "API Key Importation";
-            this.TopMost = true;
             this.MultiPanel.ResumeLayout(false);
             this.CredentialsPage.ResumeLayout(false);
             this.CredentialsPage.PerformLayout();

@@ -341,7 +341,6 @@
             this.MinimizeBox = false;
             this.Name = "EVEMonFeaturesWindow";
             this.Text = "Which Access Mask do you need ?";
-            this.TopMost = true;
             this.MainFlowLayoutPanel.ResumeLayout(false);
             this.MainFlowLayoutPanel.PerformLayout();
             this.basicFeaturesflowLayoutPanel.ResumeLayout(false);

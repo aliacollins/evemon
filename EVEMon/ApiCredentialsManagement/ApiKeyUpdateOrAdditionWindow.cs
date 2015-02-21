@@ -328,7 +328,10 @@ namespace EVEMon.ApiCredentialsManagement
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void FeaturesLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            WindowsFactory.ShowUnique<EVEMonFeaturesWindow>();
+            using (EVEMonFeaturesWindow window = new EVEMonFeaturesWindow())
+            {
+                window.ShowDialog(this);
+            }
         }
 
         /// <summary>
