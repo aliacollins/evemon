@@ -162,7 +162,7 @@ namespace EVEMon
         /// <summary>
         /// Check for time synchronization, or reschedule it for later if no connection is available.
         /// </summary>
-        private static void CheckTimeSynchronization()
+        private void CheckTimeSynchronization()
         {
             // Do it now if network available
             if (NetworkMonitor.IsNetworkAvailable)
@@ -277,14 +277,14 @@ namespace EVEMon
         /// <param name="isSynchronised"></param>
         /// <param name="serverTime"></param>
         /// <param name="localTime"></param>
-        private static void TimeCheckCallback(bool isSynchronised, DateTime serverTime, DateTime localTime)
+        private void TimeCheckCallback(bool isSynchronised, DateTime serverTime, DateTime localTime)
         {
             if (!Settings.Updates.CheckTimeOnStartup || isSynchronised)
                 return;
 
             using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))
             {
-                timeDialog.ShowDialog();
+                timeDialog.ShowDialog(this);
             }
         }
 
