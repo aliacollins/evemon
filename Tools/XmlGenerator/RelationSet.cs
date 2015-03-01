@@ -29,25 +29,27 @@ namespace EVEMon.XmlGenerator
         /// Determines whether [contains] [the specified left].
         /// </summary>
         /// <param name="left">The left.</param>
+        /// <param name="center">The center.</param>
         /// <param name="right">The right.</param>
         /// <returns>
-        /// 	<c>true</c> if [contains] [the specified left]; otherwise, <c>false</c>.
+        ///   <c>true</c> if [contains] [the specified left]; otherwise, <c>false</c>.
         /// </returns>
-        public bool Contains(int left, int right)
+        public bool Contains(int left, int center, int right)
         {
-            return m_dictionary.ContainsKey(GetKey(left, right));
+            return m_dictionary.ContainsKey(GetKey(left, center, right));
         }
 
         /// <summary>
         /// Gets the specified left.
         /// </summary>
         /// <param name="left">The left.</param>
+        /// <param name="center">The center.</param>
         /// <param name="right">The right.</param>
         /// <returns></returns>
-        public T Get(int left, int right)
+        public T Get(int left, int center, int right)
         {
             T value;
-            m_dictionary.TryGetValue(GetKey(left, right), out value);
+            m_dictionary.TryGetValue(GetKey(left, center, right), out value);
             return value;
         }
 
@@ -58,18 +60,19 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         private static long GetKey(IRelation relation)
         {
-            return GetKey(relation.Left, relation.Right);
+            return GetKey(relation.Left, relation.Center, relation.Right);
         }
 
         /// <summary>
         /// Gets the key.
         /// </summary>
         /// <param name="left">The left.</param>
+        /// <param name="center">The center.</param>
         /// <param name="right">The right.</param>
         /// <returns></returns>
-        private static long GetKey(long left, long right)
+        private static long GetKey(long left, long center, long right)
         {
-            return (left << 32) | (uint)right;
+            return Math.Abs(left) << 32 | Math.Abs(center) << 16 | Math.Abs(right) << 8;
         }
 
         /// <summary>

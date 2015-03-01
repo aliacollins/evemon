@@ -67,7 +67,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             {
                 var blueprintIds = groups.Values.SelectMany(x => x.Blueprints).Select(y => y.ID).ToList();
                 var diff = Database.InvBlueprintTypesTable.Where(blueprint => !blueprintIds.Contains(blueprint.ID)).ToList();
-                Console.WriteLine("{0} blueprints were not generated.", diff.Count);
+
+                if (diff.Any())
+                    Console.WriteLine("{0} blueprints were not generated.", diff.Count);
             }
 
             Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);

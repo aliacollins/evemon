@@ -801,7 +801,7 @@ namespace EVEMon.XmlGenerator
                                      ItemID = typeAttribute.typeID,
                                      ValueFloat = typeAttribute.valueFloat,
                                      ValueInt64 = typeAttribute.valueInt
-                                 });
+                                 }).ToList();
 
             return new RelationSet<DgmTypeAttributes>(list);
         }
