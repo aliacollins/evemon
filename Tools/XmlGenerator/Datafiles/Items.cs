@@ -71,7 +71,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             {
                 var itemids = groups.Values.SelectMany(x => x.Items).Select(y => y.ID).ToList();
                 var diff = Database.InvTypesTable.Where(item => !itemids.Contains(item.ID)).ToList();
-                Console.WriteLine("{0} items were not generated.", diff.Count);
+
+                if (diff.Any())
+                    Console.WriteLine("{0} items were not generated.", diff.Count);
             }
 
             Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
@@ -199,11 +201,11 @@ namespace EVEMon.XmlGenerator.Datafiles
             AddMetaGroup(srcItem, item);
 
             // Look for slots
-            if (Database.DgmTypeEffectsTable.Contains(srcItem.ID, DBConstants.LowSlotEffectID))
+            if (Database.DgmTypeEffectsTable.Contains(srcItem.ID, 0, DBConstants.LowSlotEffectID))
                 item.Slot = ItemSlot.Low;
-            else if (Database.DgmTypeEffectsTable.Contains(srcItem.ID, DBConstants.MedSlotEffectID))
+            else if (Database.DgmTypeEffectsTable.Contains(srcItem.ID, 0, DBConstants.MedSlotEffectID))
                 item.Slot = ItemSlot.Medium;
-            else if (Database.DgmTypeEffectsTable.Contains(srcItem.ID, DBConstants.HiSlotEffectID))
+            else if (Database.DgmTypeEffectsTable.Contains(srcItem.ID, 0, DBConstants.HiSlotEffectID))
                 item.Slot = ItemSlot.High;
             else
                 item.Slot = ItemSlot.NoSlot;

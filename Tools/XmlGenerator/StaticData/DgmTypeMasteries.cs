@@ -23,6 +23,17 @@ namespace EVEMon.XmlGenerator.StaticData
         }
 
         /// <summary>
+        /// Gets the center column value.
+        /// </summary>
+        /// <value>
+        /// The center.
+        /// </value>
+        public int Center
+        {
+            get { return 0; }
+        }
+
+        /// <summary>
         /// Gets the right column value.
         /// </summary>
         /// <value>The right.</value>

@@ -29,6 +29,17 @@ namespace EVEMon.XmlGenerator.StaticData
         }
 
         /// <summary>
+        /// Gets the center column value.
+        /// </summary>
+        /// <value>
+        /// The center.
+        /// </value>
+        int IRelation.Center
+        {
+            get { return ParentItemID; }
+        }
+
+        /// <summary>
         /// Gets the right column value.
         /// </summary>
         /// <value>The right.</value>
