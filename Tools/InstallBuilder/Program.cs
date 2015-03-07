@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip;
 
@@ -11,18 +12,18 @@ namespace EVEMon.InstallBuilder
 {
     internal static class Program
     {
-        private static readonly string s_sourceFilesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Release");
-        private static readonly string s_installerDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer");
-        private static readonly string s_snapshotDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Snapshot");
-        private static readonly string s_binariesDir = Path.GetFullPath(@"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Binaries");
-
+        private static string s_sourceFilesDir;
+        private static string s_outputPath;
+        private static string s_installerDir;
+        private static string s_snapshotDir;
+        private static string s_binariesDir;
+        private static string s_solutionDir;
         private static string s_projectDir;
+        private static string s_nsisExe;
+        private static bool s_isSnapshot;
+
         private static Version s_fullVersion;
         private static string s_version;
-        private static string s_nsisExe;
-        
-        private static bool s_isSnapshot;
-        private static bool s_isDebug;
 
         /// <summary>
         /// The main entry point for the application.
@@ -32,11 +33,12 @@ namespace EVEMon.InstallBuilder
         [STAThread]
         private static int Main(string[] args)
         {
-            CheckIsDebug();
             CheckIsSnapshot();
 
             if (!HasVersion())
                 return 1;
+
+            s_version = String.Format("{0}.{1}.{2}", s_fullVersion.Major, s_fullVersion.Minor, s_fullVersion.Build);
 
             if (args.Any())
             {
@@ -55,11 +57,11 @@ namespace EVEMon.InstallBuilder
 
             try
             {
-                if (CheckNsisPresent(args) && !s_isSnapshot)
+                if (CheckNsisPresent() && !s_isSnapshot)
                 {
                     // Create the appropriate folder if it doesn't exist
-                    if (!Directory.Exists(s_installerDir))
-                        Directory.CreateDirectory(s_installerDir);
+                    if (!Directory.Exists(GetInstallerDirectory()))
+                        Directory.CreateDirectory(GetInstallerDirectory());
 
                     // Create an installer in the appropriate folder
                     Console.WriteLine("Starting Installer creation.");
@@ -70,7 +72,7 @@ namespace EVEMon.InstallBuilder
                 }
 
                 // Create the appropriate folder if it doesn't exist
-                string directory = s_isSnapshot ? s_snapshotDir : s_binariesDir;
+                string directory = s_isSnapshot ? GetSnapshotDirectory() : GetBinariesDirectory(); 
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
 
@@ -99,12 +101,109 @@ namespace EVEMon.InstallBuilder
         }
 
         /// <summary>
-        /// Checks the configuration is Debug.
+        /// Gets the solution directory.
         /// </summary>
-        [Conditional("DEBUG")]
-        private static void CheckIsDebug()
+        /// <returns></returns>
+        private static string GetSolutionDirectory()
         {
-            s_isDebug = true;
+            if (String.IsNullOrWhiteSpace(s_solutionDir))
+            {
+                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
+                                            RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+            }
+            return s_solutionDir;
+        }
+
+        /// <summary>
+        /// Gets the project directory.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetProjectDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_projectDir))
+            {
+                s_projectDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=bin)",
+                                            RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+            }
+            return s_projectDir;
+        }
+
+        /// <summary>
+        /// Gets the output path.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetOutputPath()
+        {
+            if (String.IsNullOrWhiteSpace(s_outputPath))
+            {
+                s_outputPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.Remove(0, GetProjectDirectory().Length);
+            }
+            return s_outputPath;
+        }
+
+        /// <summary>
+        /// Gets the source files directory.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetSourceFilesDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_sourceFilesDir))
+            {
+                s_sourceFilesDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory(), @"EVEMon\", GetOutputPath()));
+            }
+            return s_sourceFilesDir;
+        }
+
+        /// <summary>
+        /// Gets the installer directory.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetInstallerDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_installerDir))
+            {
+                s_installerDir = GetInstallbuilderDirectory("Installer");
+            }
+            return s_installerDir;
+        }
+
+        /// <summary>
+        /// Gets the snapshot directory.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetSnapshotDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_snapshotDir))
+            {
+                s_snapshotDir = GetInstallbuilderDirectory("Snapshot");
+            }
+            return s_snapshotDir;
+        }
+
+        /// <summary>
+        /// Gets the binaries directory.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetBinariesDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_binariesDir))
+            {
+                s_binariesDir = GetInstallbuilderDirectory("Binaries");
+            }
+            return s_binariesDir;
+        }
+
+        /// <summary>
+        /// Gets the installbuilder directory.
+        /// </summary>
+        /// <param name="directory">The directory.</param>
+        /// <returns></returns>
+        private static string GetInstallbuilderDirectory(string directory)
+        {
+            return
+                Path.GetFullPath(Regex.Replace(GetSourceFilesDirectory(), "Debug|Release",
+                                               Path.Combine("Installbuilder", directory),
+                                               RegexOptions.Compiled | RegexOptions.IgnoreCase));
         }
 
         /// <summary>
@@ -119,8 +218,7 @@ namespace EVEMon.InstallBuilder
         /// <summary>
         /// Checks that NSIS is present.
         /// </summary>
-        /// <param name="args">The args.</param>
-        private static bool CheckNsisPresent(string[] args)
+        private static bool CheckNsisPresent()
         {
             s_nsisExe = FindMakeNsisExe();
             Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe)
@@ -129,15 +227,14 @@ namespace EVEMon.InstallBuilder
 
             Console.WriteLine();
 
-            s_projectDir = args.Length == 0 ? Path.GetFullPath(@"..\..\..") : String.Join(" ", args);
-            Console.WriteLine("Project directory : {0}", s_projectDir);
-            Console.WriteLine("Source directory : {0}", s_sourceFilesDir);
+            Console.WriteLine("Project directory : {0}", GetProjectDirectory());
+            Console.WriteLine("Source directory : {0}", GetSourceFilesDirectory());
             if (s_isSnapshot)
-                Console.WriteLine("Snapshot directory : {0}", s_snapshotDir);
+                Console.WriteLine("Snapshot directory : {0}", GetSnapshotDirectory());
             else
             {
-                Console.WriteLine("Installer directory : {0}", s_installerDir);
-                Console.WriteLine("Binaries directory : {0}", s_binariesDir);
+                Console.WriteLine("Installer directory : {0}", GetInstallerDirectory());
+                Console.WriteLine("Binaries directory : {0}", GetBinariesDirectory());
             }
             Console.WriteLine();
 
@@ -161,8 +258,7 @@ namespace EVEMon.InstallBuilder
         {
             try
             {
-                s_fullVersion = AssemblyName.GetAssemblyName(@"..\..\..\..\..\EVEMon\bin\x86\Release\EVEMon.exe").Version;
-                s_version = String.Format("{0}.{1}.{2}", s_fullVersion.Major, s_fullVersion.Minor, s_fullVersion.Build);
+                s_fullVersion = AssemblyName.GetAssemblyName(Path.Combine(GetSourceFilesDirectory(), "EVEMon.exe")).Version;
             }
             catch (Exception)
             {
@@ -179,7 +275,7 @@ namespace EVEMon.InstallBuilder
         /// </summary>
         private static int BuildZip()
         {
-            string directory = s_isSnapshot ? s_snapshotDir : s_binariesDir;
+            string directory = s_isSnapshot ? GetSnapshotDirectory() : GetBinariesDirectory();
 
             // Delete any existing files in directory
             DeleteFiles(directory);
@@ -191,7 +287,7 @@ namespace EVEMon.InstallBuilder
 
             string zipFileName = Path.Combine(directory, filename);
 
-            string[] filenames = Directory.GetFiles(s_sourceFilesDir, "*", SearchOption.AllDirectories);
+            string[] filenames = Directory.GetFiles(GetSourceFilesDirectory(), "*", SearchOption.AllDirectories);
 
             Stream stream = null;
             try
@@ -208,8 +304,8 @@ namespace EVEMon.InstallBuilder
 
                     foreach (string file in filenames.Where(file => !file.Contains("vshost") && !file.Contains(".config")))
                     {
-                        string entryName = String.Format(CultureInfo.InvariantCulture, "EVEMon{0}",
-                                                         file.Remove(0, s_sourceFilesDir.Length));
+                        string entryName = String.Format(CultureInfo.InvariantCulture, "EVEMon\\{0}",
+                                                         file.Remove(0, GetSourceFilesDirectory().Length));
                         Console.WriteLine("Zipping {0}", entryName);
                         ZipEntry entry = new ZipEntry(entryName) { DateTime = DateTime.Now };
 
@@ -248,13 +344,13 @@ namespace EVEMon.InstallBuilder
         private static int BuildInstaller()
         {
             // Delete any existing files in directory
-            DeleteFiles(s_installerDir);
+            DeleteFiles(GetInstallerDirectory());
 
             int exitCode;
             try
             {
-                string nsisScript = Path.Combine(s_projectDir, String.Format(@"bin\x86\{0}\EVEMonInstallerScript.nsi",
-                    s_isDebug ? "Debug" : "Release"));
+                string nsisScript = Path.Combine(GetProjectDirectory(), GetOutputPath(), "EVEMonInstallerScript.nsi");
+                string resourcesDir = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Resources");
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 string appCopyright =
                     ((AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute)))
@@ -269,17 +365,19 @@ namespace EVEMon.InstallBuilder
                 string description = String.Format(CultureInfo.InvariantCulture, "/DDESCRIPTION=\"{0}\"", appDescription);
                 string version = String.Format(CultureInfo.InvariantCulture, "/DVERSION={0}", s_version);
                 string fullVersion = String.Format(CultureInfo.InvariantCulture, "/DFULLVERSION={0}", s_fullVersion);
-                string installerDir = String.Format(CultureInfo.InvariantCulture, "/DOUTDIR={0}", s_installerDir);
+                string installerDir = String.Format(CultureInfo.InvariantCulture, "/DOUTDIR={0}", GetInstallerDirectory());
+                string sourceDir = String.Format(CultureInfo.InvariantCulture, "/DSOURCEDIR={0}", GetSourceFilesDirectory());
+                string resourceDir = String.Format(CultureInfo.InvariantCulture, "/DRESOURCESDIR={0}", resourcesDir);
 
-                string param = String.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3} {4} {5} {6} {7}",
-                    productName, companyName, copyright, description, version, fullVersion, installerDir, nsisScript);
+                string param = String.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}",
+                    productName, companyName, copyright, description, version, fullVersion, installerDir, sourceDir, resourceDir, nsisScript);
 
                 Console.WriteLine("NSIS script : {0}", nsisScript);
-                Console.WriteLine("Output directory : {0}", s_installerDir);
+                Console.WriteLine("Output directory : {0}", GetInstallerDirectory());
 
                 ProcessStartInfo psi = new ProcessStartInfo(s_nsisExe, param)
                                        {
-                                           WorkingDirectory = s_projectDir,
+                                           WorkingDirectory = GetProjectDirectory(),
                                            UseShellExecute = false,
                                            RedirectStandardOutput = true
                                        };

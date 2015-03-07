@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
@@ -18,6 +19,10 @@ namespace EVEMon.XmlGenerator
         private static int s_counter;
         private static int s_tablesCount;
         private static int s_percentOld;
+        private static string s_solutionDir;
+
+        private static String s_outputPath;
+        private static String s_projectDir;
 
         /// <summary>
         /// Deserializes an XML, returning null when exceptions occur.
@@ -124,10 +129,10 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename">The filename.</param>
         internal static void SerializeXML<T>(T datafile, string filename)
         {
-            string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Resources", filename);
+            string path = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Resources", filename);
 
             FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write);
-            
+
             using (GZipStream zstream = new GZipStream(stream, CompressionMode.Compress))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T));
@@ -140,14 +145,11 @@ namespace EVEMon.XmlGenerator
             Console.WriteLine("-----------------------------------------------");
 
             // As long as EVEMon.Common is not rebuilt, files are not updated in output directories
-            Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon.Common\bin\x86\Debug\Resources", filename));
-            Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon.Common\bin\x86\Release\Resources", filename));
-            Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon\bin\x86\Debug\Resources", filename));
-            Copy(path, Path.Combine(@"..\..\..\..\..\EVEMon\bin\x86\Release\Resources", filename));
-
+            Copy(path, Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\", GetOutputPath(), "Resources", filename));
+            
             // Update the file in the settings directory
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            Copy(path, Path.Combine(appData, Path.Combine("EVEMon", filename)));
+            Copy(path, Path.Combine(appData, "EVEMon", filename));
 
             Console.WriteLine();
         }
@@ -161,7 +163,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="filename">The filename.</param>
         internal static void SerializeXMLTo<T>(T serial, string xmlRootName, string filename)
         {
-            string path = Path.Combine(@"..\..\..\..\..\EVEMon.Common\Serialization", filename);
+            string path = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Serialization", filename); 
             using (FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(xmlRootName));
@@ -184,12 +186,12 @@ namespace EVEMon.XmlGenerator
 
             Console.WriteLine();
 
-            const string ResourcesPath = @"..\..\..\..\..\EVEMon.Common\Resources";
-            string md5SumsFileFullPath = Path.Combine(ResourcesPath, filename);
+            string resourcesPath = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Resources");
+            string md5SumsFileFullPath = Path.Combine(resourcesPath, filename);
 
             using (StreamWriter md5SumsFile = File.CreateText(md5SumsFileFullPath))
             {
-                foreach (string file in Datafile.GetFilesFrom(ResourcesPath, Datafile.DatafilesExtension))
+                foreach (string file in Datafile.GetFilesFrom(resourcesPath, Datafile.DatafilesExtension))
                 {
                     FileInfo datafile = new FileInfo(file);
                     if (!datafile.Exists)
@@ -241,6 +243,44 @@ namespace EVEMon.XmlGenerator
 
         #region Helper Methods
 
+        /// <summary>
+        /// Gets the solution directory.
+        /// </summary>
+        /// <returns></returns>
+        private static String GetSolutionDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_solutionDir))
+                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
+                                            RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+            return s_solutionDir;
+        }
+
+        /// <summary>
+        /// Gets the project directory.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetProjectDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_projectDir))
+            {
+                s_projectDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=bin)",
+                                            RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+            }
+            return s_projectDir;
+        }
+
+        /// <summary>
+        /// Gets the output path.
+        /// </summary>
+        private static String GetOutputPath()
+        {
+            if (String.IsNullOrWhiteSpace(s_outputPath))
+            {
+                s_outputPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.Remove(0, GetProjectDirectory().Length);
+            }
+            return s_outputPath;
+        }
+        
         /// <summary>
         /// Writes the exception.
         /// </summary>

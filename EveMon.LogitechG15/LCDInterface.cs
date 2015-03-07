@@ -31,6 +31,22 @@ namespace lgLcdClassLibrary
         private static NativeMethods.LgLcdOnConfigureCB s_configCallback;
         private static NativeMethods.LgLcdOnSoftButtonsCB s_buttonCallback;
 
+        private static readonly ILgLcd s_lgLcd;
+
+        #region Static Constructor
+
+        /// <summary>
+        /// Initializes the <see cref="LCDInterface"/> class.
+        /// </summary>
+        static LCDInterface()
+        {
+            if (Environment.Is64BitProcess)
+                s_lgLcd = new LgLcdx64();
+            else
+                s_lgLcd = new LgLcdx86();
+        }
+
+        #endregion
 
         #region Public Methods
 
@@ -78,7 +94,7 @@ namespace lgLcdClassLibrary
                     if (!s_lcdInterfaceInitialized)
                     {
                         // Initialize the library
-                        s_result = NativeMethods.lgLcdInit();
+                        s_result = s_lgLcd.lgLcdInit();
 
                         s_connectContext.appFriendlyName = appName;
                         s_connectContext.isAutostartable = isAutoStartAble;
@@ -92,14 +108,14 @@ namespace lgLcdClassLibrary
                         s_connectContext.connection = NativeMethods.LGLcdInvalidConnection;
 
                         // Connect
-                        s_result = NativeMethods.lgLcdConnect(ref s_connectContext);
+                        s_result = s_lgLcd.lgLcdConnect(ref s_connectContext);
 
                         s_lcdInterfaceInitialized = true;
                     }
 
                     // Is an LCD available?
                     NativeMethods.LgLcdDeviceDesc deviceDescription;
-                    s_result = NativeMethods.lgLcdEnumerate(s_connectContext.connection, 0, out deviceDescription);
+                    s_result = s_lgLcd.lgLcdEnumerate(s_connectContext.connection, 0, out deviceDescription);
                     if (s_result == 0)
                     {
                         // Open it
@@ -112,7 +128,7 @@ namespace lgLcdClassLibrary
 
                         // The "device" member will be returned upon return
                         s_openContext.device = NativeMethods.LGLcdInvalidDevice;
-                        s_result = NativeMethods.lgLcdOpen(ref s_openContext);
+                        s_result = s_lgLcd.lgLcdOpen(ref s_openContext);
 
                         if (s_result == 0)
                             s_lcdAvailable = true;
@@ -138,13 +154,13 @@ namespace lgLcdClassLibrary
             try
             {
                 // Let's close the device again
-                s_result = NativeMethods.lgLcdClose(s_openContext.device);
+                s_result = s_lgLcd.lgLcdClose(s_openContext.device);
 
                 // Take down the connection
-                s_result = NativeMethods.lgLcdDisconnect(s_connectContext.connection);
+                s_result = s_lgLcd.lgLcdDisconnect(s_connectContext.connection);
 
                 // Shutdown the library
-                s_result = NativeMethods.lgLcdDeInit();
+                s_result = s_lgLcd.lgLcdDeInit();
 
                 s_lcdAvailable = false;
                 s_lcdInterfaceInitialized = false;
@@ -179,13 +195,13 @@ namespace lgLcdClassLibrary
                 {
                     s_lcdBitmap.hdr.Format = NativeMethods.LGLcdBmpFormat160X43X1;
                     s_lcdBitmap.pixels = sampleBitmap;
-                    s_result = NativeMethods.lgLcdUpdateBitmap(s_openContext.device, ref s_lcdBitmap, priority);
+                    s_result = s_lgLcd.lgLcdUpdateBitmap(s_openContext.device, ref s_lcdBitmap, priority);
 
                     // Has the LCD been disconnected?
                     if (s_result != 0)
                     {
                         // Close the device
-                        s_result = NativeMethods.lgLcdClose(s_openContext.device);
+                        s_result = s_lgLcd.lgLcdClose(s_openContext.device);
                         s_lcdAvailable = false;
                     }
                 }
@@ -213,13 +229,13 @@ namespace lgLcdClassLibrary
                 // Display bitmap if LCD is found
                 if (s_lcdAvailable)
                 {
-                    s_result = NativeMethods.lgLcdReadSoftButtons(s_openContext.device, out buttons);
+                    s_result = s_lgLcd.lgLcdReadSoftButtons(s_openContext.device, out buttons);
 
                     // Has the LCD been disconnected?
                     if (s_result != 0)
                     {
                         // Close the device
-                        s_result = NativeMethods.lgLcdClose(s_openContext.device);
+                        s_result = s_lgLcd.lgLcdClose(s_openContext.device);
                         s_lcdAvailable = false;
                     }
                 }
