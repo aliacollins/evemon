@@ -4,7 +4,7 @@ using EVEMon.Common;
 
 namespace EVEMon.LogitechG15
 {
-    public class LineProcess
+    internal sealed class LineProcess
     {
         private readonly double m_percentage;
         private readonly string m_text;
@@ -27,7 +27,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         /// <param name="percentage">The percentage.</param>
         /// <param name="font">The font.</param>
-        public LineProcess(double percentage, Font font)
+        internal LineProcess(double percentage, Font font)
             : this(font)
         {
             m_percentage = percentage;
@@ -38,7 +38,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="font">The font.</param>
-        public LineProcess(string text, Font font)
+        internal LineProcess(string text, Font font)
             : this(font)
         {
             m_text = text;

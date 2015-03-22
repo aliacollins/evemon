@@ -4,16 +4,17 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Linq;
+using System.Timers;
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
-using lgLcdClassLibrary;
+using LogitechLcd.NET;
 
 namespace EVEMon.LogitechG15
 {
-    public class LcdDisplay : IDisposable
+    internal sealed class LcdDisplay : IDisposable
     {
-        internal const int G15Width = (int)NativeMethods.LGLcdBmpWidth;
-        private const int G15Height = (int)NativeMethods.LGLcdBmpHeight;
+        internal const int G15Width = LogitechLcdConstants.LogiLCDMonoWidth;
+        private const int G15Height = LogitechLcdConstants.LogiLCDMonoHeight;
         private const float G15DpiX = 46;
         private const float G15DpiY = 46;
 
@@ -26,6 +27,7 @@ namespace EVEMon.LogitechG15
         private readonly Graphics m_lcdOverlay;
         private readonly List<LineProcess> m_lcdLines = new List<LineProcess>();
         private readonly Object m_lock = new Object();
+        private readonly Timer m_timer;
 
         private CCPCharacter m_currentCharacter;
         private CCPCharacter m_refreshCharacter;
@@ -89,15 +91,18 @@ namespace EVEMon.LogitechG15
             ShowSystemTime = false;
             CycleSkillQueueTime = false;
 
-            LCDInterface.AssignButtonDelegate(OnButtonsPressed);
-            LCDInterface.Open("EVEMon", false);
+            m_timer = new Timer { Interval = 300 };
+            m_timer.Elapsed += TimerOnElapsed;
+            m_timer.Start();
+
+            LCDInterface.Open("EVEMon");
         }
 
         /// <summary>
         /// Instances this instance.
         /// </summary>
         /// <returns></returns>
-        public static LcdDisplay Instance()
+        internal static LcdDisplay Instance()
         {
             return s_singleInstance ?? (s_singleInstance = new LcdDisplay());
         }
@@ -111,25 +116,25 @@ namespace EVEMon.LogitechG15
         /// Gets or sets a value indicating whether to cycle the displayed info.
         /// </summary>
         /// <value><c>true</c> if set to cycle; otherwise, <c>false</c>.</value>
-        public bool Cycle { get; set; }
+        internal bool Cycle { private get; set; }
 
         /// <summary>
         /// Gets or sets the cycle interval.
         /// </summary>
         /// <value>The cycle interval.</value>
-        public int CycleInterval { get; set; }
+        internal int CycleInterval { private get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the system's time.
         /// </summary>
         /// <value><c>true</c> if set to show the system's time; otherwise, <c>false</c>.</value>
-        public bool ShowSystemTime { get; set; }
+        internal bool ShowSystemTime { private get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the EVE's time.
         /// </summary>
         /// <value><c>true</c> if set to show the EVE's time; otherwise, <c>false</c>.</value>
-        public bool ShowEVETime { get; set; }
+        internal bool ShowEVETime { private get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to cycle the skill queue time.
@@ -137,35 +142,32 @@ namespace EVEMon.LogitechG15
         /// <value>
         /// 	<c>true</c> if set to cycle skill queue time; otherwise, <c>false</c>.
         /// </value>
-        public bool CycleSkillQueueTime { get; set; }
+        internal bool CycleSkillQueueTime { private get; set; }
 
         /// <summary>
         /// Gets or sets the cycle completion interval.
         /// </summary>
         /// <value>The cycle completion interval.</value>
-        public int CycleCompletionInterval { get; set; }
+        internal int CycleCompletionInterval { private get; set; }
 
         /// <summary>
         /// Gets or sets the first character to complete skill.
         /// </summary>
         /// <value>The first character to complete skill.</value>
-        public CCPCharacter FirstCharacterToCompleteSkill { get; set; }
+        internal CCPCharacter FirstCharacterToCompleteSkill { private get; set; }
 
         /// <summary>
         /// Gets or sets the current character.
         /// </summary>
         /// <value>The current character.</value>
-        public CCPCharacter CurrentCharacter
+        internal CCPCharacter CurrentCharacter
         {
-            get
+            private get
             {
                 return MonitoredCharacters.Contains(m_currentCharacter) ? m_currentCharacter : null;
             }
             set
             {
-                if (m_currentCharacter == value)
-                    return;
-
                 m_currentCharacter = value;
             }
         }
@@ -216,6 +218,8 @@ namespace EVEMon.LogitechG15
                 if (isDisposing || s_singleInstance != null)
                     LCDInterface.Close();
 
+                m_timer.Stop();
+                m_timer.Dispose();
                 m_bmpLCD.Dispose();
                 m_bmpLCDX.Dispose();
                 s_singleInstance = null;
@@ -231,7 +235,7 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// Performs the repainting of the screen.
         /// </summary>
-        public void Paint()
+        internal void Paint()
         {
             TimeSpan test = TimeSpan.FromTicks(m_paintTime.Ticks - DateTime.Now.Ticks);
             if (test.TotalMilliseconds > 0)
@@ -493,7 +497,7 @@ namespace EVEMon.LogitechG15
                                                                skillCount == 1 ? String.Empty : "s"), m_defaultFont));
 
             RenderLines();
-            UpdateLcdDisplay(NativeMethods.LGLcdPriorityAlert);
+            UpdateLcdDisplay();
         }
 
         /// <summary>
@@ -599,7 +603,7 @@ namespace EVEMon.LogitechG15
                 int left = (G15Width / 2) - (splashLogo.Width / 2);
                 int top = (G15Height / 2) - (splashLogo.Height / 2);
                 m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
-                UpdateLcdDisplay(NativeMethods.LGLcdPriorityAlert);
+                UpdateLcdDisplay();
             }
         }
 
@@ -643,9 +647,7 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// Fetches the content of the <see cref="Graphics"/> object to the G15 screen.
         /// </summary>
-        /// <param name="priority"></param>
-        /// <remarks>The default priority is <see cref="NativeMethods.LGLcdPriorityNormal"/></remarks>
-        private unsafe void UpdateLcdDisplay(uint priority = NativeMethods.LGLcdPriorityNormal)
+        private unsafe void UpdateLcdDisplay()
         {
             // Locking should not be necessary but i'll keep it here
             lock (m_lock)
@@ -696,7 +698,7 @@ namespace EVEMon.LogitechG15
                 }
 
                 // Fetches the buffer to the LCD screen
-                LCDInterface.DisplayBitmap(ref buffer, priority);
+                LCDInterface.DisplayBitmap(ref buffer);
             }
         }
 
@@ -741,7 +743,7 @@ namespace EVEMon.LogitechG15
 
                 SizeF size = m_lcdCanvas.MeasureString(balance, m_defaultFont);
                 newWidth = size.Width;
-            } while (width < newWidth);
+            } while (newWidth > width);
 
             return balance;
         }
@@ -754,28 +756,39 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// Occurs when some of the G15 screen buttons are pressed.
         /// </summary>
-        /// <param name="device"></param>
-        /// <param name="pressedButtons"></param>
-        /// <param name="context"></param>
         /// <returns></returns>
-        private int OnButtonsPressed(int device, int pressedButtons, IntPtr context)
+        private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
+            var pressedButtons = 0;
+
+            if (LCDInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button0))
+                pressedButtons |= (int)LogitechLcdConstants.LogiLcdMonoButton.Button0;
+
+            if (LCDInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button1))
+                pressedButtons |= (int)LogitechLcdConstants.LogiLcdMonoButton.Button1;
+
+            if (LCDInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button2))
+                pressedButtons |= (int)LogitechLcdConstants.LogiLcdMonoButton.Button2;
+
+            if (LCDInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button3))
+                pressedButtons |= (int)LogitechLcdConstants.LogiLcdMonoButton.Button3;
+
             if (m_oldButtonState == pressedButtons)
-                return 0;
+                return;
 
             // Gets all buttons who haven't been pressed last time
             int press = (m_oldButtonState ^ pressedButtons) & pressedButtons;
 
             // Displays the characters' list or move to the next char if the list is already displayed.
-            if ((press & NativeMethods.LGLcdButton0) != 0)
+            if ((press & (int)LogitechLcdConstants.LogiLcdMonoButton.Button0) != 0)
                 DisplayCharactersList();
 
             // Move to the first character to complete his training
-            if ((press & NativeMethods.LGLcdButton1) != 0)
+            if ((press & (int)LogitechLcdConstants.LogiLcdMonoButton.Button1) != 0)
             {
                 // Select next skill ready char
                 if (!MonitoredCharacters.Any())
-                    return 0;
+                    return;
 
                 CurrentCharacter = FirstCharacterToCompleteSkill;
 
@@ -786,7 +799,7 @@ namespace EVEMon.LogitechG15
             }
 
             // Forces a refresh from CCP
-            if ((press & NativeMethods.LGLcdButton2) != 0)
+            if ((press & (int)LogitechLcdConstants.LogiLcdMonoButton.Button2) != 0)
             {
                 if (m_state == LcdState.Character || m_state == LcdState.CharacterList)
                 {
@@ -799,7 +812,7 @@ namespace EVEMon.LogitechG15
             }
 
             // Switch autocycle ON/OFF
-            if ((press & NativeMethods.LGLcdButton3) != 0)
+            if ((press & (int)LogitechLcdConstants.LogiLcdMonoButton.Button3) != 0)
             {
                 // Switch autocycle on/off
                 SwitchCycle();
@@ -812,7 +825,6 @@ namespace EVEMon.LogitechG15
             }
 
             m_oldButtonState = pressedButtons;
-            return 0;
         }
 
         /// <summary>
@@ -839,7 +851,7 @@ namespace EVEMon.LogitechG15
         /// Switches the state and updates some of the internal times variables.
         /// </summary>
         /// <param name="state"></param>
-        public void SwitchState(LcdState state)
+        internal void SwitchState(LcdState state)
         {
             m_state = state;
             m_paintTime = DateTime.Now;
@@ -867,7 +879,7 @@ namespace EVEMon.LogitechG15
         /// <summary>
         /// On skill completion, switch to the display of the proper message.
         /// </summary>
-        public void SkillCompleted(Character character, int skillCount)
+        internal void SkillCompleted(Character character, int skillCount)
         {
             CurrentCharacter = character as CCPCharacter;
             m_completedSkills = skillCount;

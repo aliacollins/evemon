@@ -1,6 +1,6 @@
 ﻿namespace EVEMon.LogitechG15
 {
-    public enum LcdState
+    internal enum LcdState
     {
         SplashScreen = 0,
         CharacterList = 1,
