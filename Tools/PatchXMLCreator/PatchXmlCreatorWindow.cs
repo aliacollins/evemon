@@ -25,8 +25,8 @@ namespace EVEMon.PatchXmlCreator
         internal const string Caption = "Patch Xml File Creator";
         internal const string EVEMonExecFilename = "EVEMon.exe";
         internal const string EVEMonExecDir = @"..\..\..\..\..\EVEMon\bin\x86\Release";
-        internal const string InstallerDir = @"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer";
-        internal const string InstallerFilename = "EVEMon-install-{0}.exe";
+        private const string InstallerDir = @"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer";
+        private const string InstallerFilename = "EVEMon-install-{0}.exe";
 
         private const string DateTimeFormat = "dd MMMM yyyy";
         private const string DatafilesMessageFormat = "{0} {1} ({2}) {3} data file by the EVEMon Development Team";
@@ -146,9 +146,8 @@ namespace EVEMon.PatchXmlCreator
         /// Gets EVEMon's assembly version without revision.
         /// </summary>
         /// <returns></returns>
-        private static string GetAssemblyVersionWithoutRevision()
+        private static string GetAssemblyVersionWithoutRevision(string version)
         {
-            var version = GetAssemblyVersion();
             return version.Remove(version.LastIndexOf(".", StringComparison.Ordinal));
         }
 
@@ -177,7 +176,7 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         internal static FileInfo GetInstallerPath()
         {
-            string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersionWithoutRevision());
+            string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersionWithoutRevision(GetAssemblyVersion()));
             string installerPath = String.Format(CultureConstants.InvariantCulture, "{1}{0}{2}", Path.DirectorySeparatorChar,
                 InstallerDir, installerFile);
             return new FileInfo(installerPath);
@@ -535,10 +534,10 @@ namespace EVEMon.PatchXmlCreator
         private void ExportRelease(SerializableRelease serialRelease)
         {
             serialRelease.Date = dtpRelease.Value.ToString(DateTimeFormat, s_enUsCulture);
-            serialRelease.Version = GetAssemblyVersion();
+            serialRelease.Version = lblEVEMonVersion.Text;
             serialRelease.TopicAddress = rtbTopicUrl.Text;
             serialRelease.PatchAddress = String.Concat(rtbReleaseUrl.Text,
-                String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersionWithoutRevision()));
+                String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersionWithoutRevision(lblEVEMonVersion.Text)));
             serialRelease.MD5Sum = lblMD5Sum.Text;
             serialRelease.InstallerArgs = InstallerArgs;
             serialRelease.AdditionalArgs = AdditionalArgs;
