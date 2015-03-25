@@ -129,7 +129,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                 if (certNode == null)
                                     continue;
 
-                                foreach (YamlNode certificate in certNode)
+                                foreach (YamlNode certificate in certNode.Distinct())
                                 {
                                     masteryId++;
                                     parameters = new Dictionary<string, string>();

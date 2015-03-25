@@ -286,7 +286,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (prodsNode == null)
                 return;
 
-            foreach (YamlNode product in prodsNode)
+            foreach (YamlNode product in prodsNode.Distinct())
             {
                 YamlMappingNode prodNode = product as YamlMappingNode;
 
@@ -332,7 +332,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (matsNode == null)
                 return;
 
-            foreach (YamlNode material in matsNode)
+            foreach (YamlNode material in matsNode.Distinct())
             {
                 YamlMappingNode matNode = material as YamlMappingNode;
 
@@ -376,7 +376,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (sksNode == null)
                 return;
 
-            foreach (YamlNode skill in sksNode)
+            foreach (YamlNode skill in sksNode.Distinct())
             {
                 YamlMappingNode skillNode = skill as YamlMappingNode;
 

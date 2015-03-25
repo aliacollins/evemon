@@ -139,7 +139,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             if (recNode == null)
                                 continue;
 
-                            foreach (YamlNode recommendation in recNode)
+                            foreach (YamlNode recommendation in recNode.Distinct())
                             {
                                 parameters = new Dictionary<string, string>();
                                 parameters[ShipTypeIDText] = recommendation.ToString();
