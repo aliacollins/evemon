@@ -24,50 +24,50 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>25 March 2015</date>
-      <md5>3c07662425b274cdf87e10207fe4f68b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Scylla/871567</url>
-      <message><![CDATA[Scylla 1.0 (871567) blueprints data file by the EVEMon Development Team
+      <date>04 May 2015</date>
+      <md5>ab26f9862980a65705032af74c1943ff</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
+      <message><![CDATA[Mosaic 1.2 (879104) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>25 March 2015</date>
+      <date>04 May 2015</date>
       <md5>08ea8d2f949b05eafb3a504212f11deb</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Scylla/871567</url>
-      <message><![CDATA[Scylla 1.0 (871567) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
+      <message><![CDATA[Mosaic 1.2 (879104) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>25 March 2015</date>
-      <md5>3422a5803293564f0b7d8f003ed3f6e4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Scylla/871567</url>
-      <message><![CDATA[Scylla 1.0 (871567) items data file by the EVEMon Development Team
+      <date>04 May 2015</date>
+      <md5>83d21cd47028d7812cbc4db425581b36</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
+      <message><![CDATA[Mosaic 1.2 (879104) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>25 March 2015</date>
-      <md5>0daf595c04927b5de7a6c9eec8519676</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Scylla/871567</url>
-      <message><![CDATA[Scylla 1.0 (871567) properties data file by the EVEMon Development Team
+      <date>04 May 2015</date>
+      <md5>ae3f954efb433550452bbbe044f63ea6</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
+      <message><![CDATA[Mosaic 1.2 (879104) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>25 March 2015</date>
-      <md5>89bbe3fd2c0b98d8207c28776c5a1795</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Scylla/871567</url>
-      <message><![CDATA[Scylla 1.0 (871567) reprocessing data file by the EVEMon Development Team
+      <date>04 May 2015</date>
+      <md5>22ddb1aef42ee87bde389bd50e75bfbf</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
+      <message><![CDATA[Mosaic 1.2 (879104) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>25 March 2015</date>
+      <date>04 May 2015</date>
       <md5>d2d00c59fa9f932324cce207e735f7dd</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Scylla/871567</url>
-      <message><![CDATA[Scylla 1.0 (871567) skills data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
+      <message><![CDATA[Mosaic 1.2 (879104) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
