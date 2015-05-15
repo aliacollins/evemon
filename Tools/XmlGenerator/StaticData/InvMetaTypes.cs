@@ -31,7 +31,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// <value>
         /// The center.
         /// </value>
-        public int Center
+        int IRelation.Center
         {
             get { return ParentItemID; }
         }
