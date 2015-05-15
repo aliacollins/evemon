@@ -23,9 +23,9 @@ namespace EVEMon.XmlGenerator.StaticData
         /// </summary>
         /// <returns></returns>
         [XmlIgnore]
-        public Int64 GetInt64Value
+        internal Int64 GetInt64Value
         {
-            get { return ValueInt64.HasValue ? ValueInt64.Value : ValueFloat.HasValue ? Convert.ToInt64(ValueFloat.Value) : 0; }
+            get { return ValueFloat.HasValue ? Convert.ToInt64(ValueFloat.Value) : ValueInt64.HasValue ? ValueInt64.Value : 0; }
         }
 
 
@@ -46,7 +46,7 @@ namespace EVEMon.XmlGenerator.StaticData
         /// <value>
         /// The center.
         /// </value>
-        public int Center
+        int IRelation.Center
         {
             get { return 0; }
         }

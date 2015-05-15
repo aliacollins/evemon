@@ -98,15 +98,12 @@ namespace EVEMon.XmlGenerator
             if (property == null)
                 throw new ArgumentNullException("property");
 
-            if (property.ValueInt64.HasValue)
-                return property.ValueInt64.ToString();
-
             // Is it actually an integer stored as a float?
             if (property.ValueFloat.HasValue &&
                 Math.Abs(Math.Truncate(property.ValueFloat.Value) - property.ValueFloat.Value) < float.Epsilon)
                 return Convert.ToInt64(property.ValueFloat.Value).ToString(CultureInfo.InvariantCulture);
 
-            return property.ValueFloat.ToString();
+            return property.ValueInt64.HasValue ? property.ValueInt64.ToString() : property.ValueFloat.ToString();
         }
 
         /// <summary>
