@@ -193,10 +193,14 @@ namespace EVEMon.About
         /// <returns></returns>
         private string GetVersionText()
         {
+            // Adds environment process info
+            VersionLabel.Text += String.Format(CultureConstants.InvariantCulture, " ({0} bit)",
+                Environment.Is64BitProcess ? "64" : "32");
+
             // Returns the product version if the build is in SNAPSHOT
             if (EveMonClient.IsSnapshotBuild)
                 return String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, Application.ProductVersion);
-
+            
             // Adds " (Debug)" to the version number if the build is in DEBUG
             if (EveMonClient.IsDebugBuild)
                 return String.Format(CultureConstants.DefaultCulture, VersionLabel.Text + " (Debug)", Application.ProductVersion);
