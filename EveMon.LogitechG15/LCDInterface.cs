@@ -1,10 +1,9 @@
 using System;
-using System.Runtime.InteropServices;
 using LogitechLcd.NET;
 
 namespace EVEMon.LogitechG15
 {
-    internal static class LCDInterface
+    internal static class LcdInterface
     {
         private static bool s_lcdAvailable;
         private static bool s_lcdInterfaceInitialized;
@@ -15,9 +14,9 @@ namespace EVEMon.LogitechG15
         #region Static Constructor
 
         /// <summary>
-        /// Initializes the <see cref="LCDInterface"/> class.
+        /// Initializes the <see cref="LcdInterface"/> class.
         /// </summary>
-        static LCDInterface()
+        static LcdInterface()
         {
             s_lgLcd = LogitechLcd.NET.LogitechLcd.Instance;
         }

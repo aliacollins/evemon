@@ -126,7 +126,7 @@
     <Compile Include="CycleEventArgs.cs" />
     <Compile Include="G15Handler.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="LCDInterface.cs">
+    <Compile Include="LcdInterface.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -136,7 +136,7 @@
     </Compile>
     <Compile Include="LcdDisplay.cs" />
     <Compile Include="LcdState.cs" />
-    <Compile Include="LineProcess.cs" />
+    <Compile Include="LcdLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

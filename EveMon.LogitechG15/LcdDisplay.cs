@@ -25,9 +25,10 @@ namespace EVEMon.LogitechG15
         private readonly Bitmap m_bmpLCDX;
         private readonly Graphics m_lcdCanvas;
         private readonly Graphics m_lcdOverlay;
-        private readonly List<LineProcess> m_lcdLines = new List<LineProcess>();
+        private readonly List<LcdLine> m_lcdLines = new List<LcdLine>();
         private readonly Object m_lock = new Object();
-        private readonly Timer m_timer;
+        private readonly Timer m_buttonPressedCheckTimer;
+        private readonly float m_defaultOffset;
 
         private CCPCharacter m_currentCharacter;
         private CCPCharacter m_refreshCharacter;
@@ -87,15 +88,17 @@ namespace EVEMon.LogitechG15
             m_cycleQueueInfoTime = DateTime.Now.AddSeconds(5);
             m_showingCycledQueueInfo = false;
 
+            m_defaultOffset = Environment.Is64BitProcess ? -2f : 0f;
+
             Cycle = false;
             ShowSystemTime = false;
             CycleSkillQueueTime = false;
 
-            m_timer = new Timer { Interval = 300 };
-            m_timer.Elapsed += TimerOnElapsed;
-            m_timer.Start();
+            m_buttonPressedCheckTimer = new Timer { Interval = 300 };
+            m_buttonPressedCheckTimer.Elapsed += ButtonPressedCheckTimerOnElapsed;
+            m_buttonPressedCheckTimer.Start();
 
-            LCDInterface.Open("EVEMon");
+            LcdInterface.Open("EVEMon");
         }
 
         /// <summary>
@@ -216,10 +219,10 @@ namespace EVEMon.LogitechG15
             if (!m_disposed)
             {
                 if (isDisposing || s_singleInstance != null)
-                    LCDInterface.Close();
+                    LcdInterface.Close();
 
-                m_timer.Stop();
-                m_timer.Dispose();
+                m_buttonPressedCheckTimer.Stop();
+                m_buttonPressedCheckTimer.Dispose();
                 m_bmpLCD.Dispose();
                 m_bmpLCDX.Dispose();
                 s_singleInstance = null;
@@ -310,7 +313,7 @@ namespace EVEMon.LogitechG15
 
             if (!MonitoredCharacters.Any())
             {
-                m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
+                m_lcdLines.Add(new LcdLine("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
                 UpdateLcdDisplay();
                 return;
@@ -328,7 +331,7 @@ namespace EVEMon.LogitechG15
             if (CurrentCharacter == null)
                 return;
 
-            m_lcdLines.Add(new LineProcess(CurrentCharacter.AdornedName, m_defaultFont));
+            m_lcdLines.Add(new LcdLine(CurrentCharacter.AdornedName, m_defaultFont));
 
             QueuedSkill skill = CurrentCharacter.SkillQueue.CurrentlyTraining;
             if (CurrentCharacter.SkillQueue.IsTraining)
@@ -341,47 +344,47 @@ namespace EVEMon.LogitechG15
                     if (freeTime)
                     {
                         // Place holder for skill queue free room rendering
-                        m_lcdLines.Add(new LineProcess(" ", m_defaultFont));
+                        m_lcdLines.Add(new LcdLine(" ", m_defaultFont));
                     }
                     else if (CurrentCharacter.SkillQueue.Count > 1)
                     {
                         // If more then one skill is in queue, show queue finish time
                         string time = skillQueueEndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                             DescriptiveTextOptions.SpaceBetween);
-                        m_lcdLines.Add(new LineProcess(
+                        m_lcdLines.Add(new LcdLine(
                                            String.Format(CultureConstants.DefaultCulture, "Queue finishes in: {0}", time),
                                            m_defaultFont));
                     }
                     else
                     {
                         // Show the skill in training
-                        m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
+                        m_lcdLines.Add(new LcdLine(skill.ToString(), m_defaultFont));
                     }
                 }
                 else
                 {
                     // Show the skill in training
-                    m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
+                    m_lcdLines.Add(new LcdLine(skill.ToString(), m_defaultFont));
                 }
 
-                m_lcdLines.Add(new LineProcess(skill.EndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
+                m_lcdLines.Add(new LcdLine(skill.EndTime.Subtract(DateTime.UtcNow).ToDescriptiveText(
                     DescriptiveTextOptions.SpaceBetween), m_defaultFont));
             }
             else
             {
                 if (CurrentCharacter.SkillQueue.IsPaused)
                 {
-                    m_lcdLines.Add(new LineProcess(skill.ToString(), m_defaultFont));
-                    m_lcdLines.Add(new LineProcess("Skill Training Is Paused", m_defaultFont));
+                    m_lcdLines.Add(new LcdLine(skill.ToString(), m_defaultFont));
+                    m_lcdLines.Add(new LcdLine("Skill Training Is Paused", m_defaultFont));
                 }
                 else
                 {
-                    m_lcdLines.Add(new LineProcess("No Skill In Training", m_defaultFont));
-                    m_lcdLines.Add(new LineProcess("Skill Queue Is Empty", m_defaultFont));
+                    m_lcdLines.Add(new LcdLine("No Skill In Training", m_defaultFont));
+                    m_lcdLines.Add(new LcdLine("Skill Queue Is Empty", m_defaultFont));
                 }
             }
 
-            m_lcdLines.Add(new LineProcess((skill != null ? skill.FractionCompleted : 0), m_defaultFont));
+            m_lcdLines.Add(new LcdLine((skill != null ? skill.FractionCompleted : 0).ToString(CultureConstants.DefaultCulture), m_defaultFont));
 
             RenderLines();
             RenderWalletBalance();
@@ -398,11 +401,11 @@ namespace EVEMon.LogitechG15
         {
             ClearGraphics();
 
-            float offset = 0;
+            float offset = m_defaultOffset;
 
-            foreach (LineProcess lcdLine in m_lcdLines)
+            foreach (LcdLine lcdLine in m_lcdLines)
             {
-                lcdLine.Render(m_lcdCanvas, m_lcdOverlay, offset);
+                lcdLine.Render(m_lcdCanvas, m_lcdOverlay, offset, m_defaultOffset);
                 offset += lcdLine.Height;
             }
         }
@@ -424,7 +427,7 @@ namespace EVEMon.LogitechG15
                 balanceSize = m_lcdCanvas.MeasureString(walletBalance, m_defaultFont);
             }
 
-            RectangleF line = new RectangleF(new PointF(G15Width - balanceSize.Width, 0f), balanceSize);
+            RectangleF line = new RectangleF(new PointF(G15Width - balanceSize.Width, 0f + m_defaultOffset), balanceSize);
             using (Brush brush = new SolidBrush(Color.Black))
             {
                 m_lcdCanvas.DrawString(walletBalance, m_defaultFont, brush, line);
@@ -455,7 +458,7 @@ namespace EVEMon.LogitechG15
                                                           completionDateTime.ToShortDateString(),
                                                           completionDateTime.ToShortTimeString());
             SizeF completionDateTimeSize = m_lcdCanvas.MeasureString(completionDateTimeText, m_defaultFont);
-            RectangleF timeLine = new RectangleF(new PointF(G15Width - completionDateTimeSize.Width, 22f), completionDateTimeSize);
+            RectangleF timeLine = new RectangleF(new PointF(G15Width - completionDateTimeSize.Width, 22f + m_defaultOffset), completionDateTimeSize);
             using (Brush brush = new SolidBrush(Color.Black))
             {
                 m_lcdCanvas.DrawString(completionDateTimeText, m_defaultFont, brush, timeLine);
@@ -471,7 +474,7 @@ namespace EVEMon.LogitechG15
 
             if (!MonitoredCharacters.Any())
             {
-                m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
+                m_lcdLines.Add(new LcdLine("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
                 UpdateLcdDisplay();
                 return;
@@ -480,19 +483,19 @@ namespace EVEMon.LogitechG15
             if (CurrentCharacter == null || CurrentCharacter.SkillQueue.LastCompleted == null)
                 return;
 
-            m_lcdLines.Add(new LineProcess(CurrentCharacter.AdornedName, m_defaultFont));
-            m_lcdLines.Add(new LineProcess("has finished training", m_defaultFont));
+            m_lcdLines.Add(new LcdLine(CurrentCharacter.AdornedName, m_defaultFont));
+            m_lcdLines.Add(new LcdLine("has finished training", m_defaultFont));
 
             m_lcdLines.Add(m_completedSkills > 1
-                               ? new LineProcess(String.Format(CultureConstants.DefaultCulture, "{0} skills", m_completedSkills),
+                               ? new LcdLine(String.Format(CultureConstants.DefaultCulture, "{0} skills", m_completedSkills),
                                                  m_defaultFont)
-                               : new LineProcess(CurrentCharacter.SkillQueue.LastCompleted.ToString(), m_defaultFont));
+                               : new LcdLine(CurrentCharacter.SkillQueue.LastCompleted.ToString(), m_defaultFont));
 
             int skillCount = CurrentCharacter.SkillQueue.Count;
 
             m_lcdLines.Add(skillCount == 0
-                               ? new LineProcess("NO SKILLS IN QUEUE", m_defaultFont)
-                               : new LineProcess(String.Format(CultureConstants.DefaultCulture,
+                               ? new LcdLine("NO SKILLS IN QUEUE", m_defaultFont)
+                               : new LcdLine(String.Format(CultureConstants.DefaultCulture,
                                                                "{0} more skill{1} in queue", skillCount,
                                                                skillCount == 1 ? String.Empty : "s"), m_defaultFont));
 
@@ -509,7 +512,7 @@ namespace EVEMon.LogitechG15
 
             if (!MonitoredCharacters.Any())
             {
-                m_lcdLines.Add(new LineProcess("No CCP Characters To Display", m_defaultFont));
+                m_lcdLines.Add(new LcdLine("No CCP Characters To Display", m_defaultFont));
                 RenderLines();
                 UpdateLcdDisplay();
                 return;
@@ -534,7 +537,7 @@ namespace EVEMon.LogitechG15
 
             foreach (CCPCharacter character in charList)
             {
-                m_lcdLines.Add(new LineProcess(character.AdornedName, m_defaultFont));
+                m_lcdLines.Add(new LcdLine(character.AdornedName, m_defaultFont));
             }
 
             RenderLines();
@@ -563,10 +566,10 @@ namespace EVEMon.LogitechG15
 
             string status = Cycle ? "on" : "off";
             string statusMsg = String.Format(CultureConstants.DefaultCulture, "Autocycle is now {0}", status);
-            m_lcdLines.Add(new LineProcess(statusMsg, m_defaultFont));
+            m_lcdLines.Add(new LcdLine(statusMsg, m_defaultFont));
 
             string cycleMsg = String.Format(CultureConstants.DefaultCulture, "Cycle Time is: {0}s", CycleInterval);
-            m_lcdLines.Add(new LineProcess(cycleMsg, m_defaultFont));
+            m_lcdLines.Add(new LcdLine(cycleMsg, m_defaultFont));
 
             RenderLines();
             UpdateLcdDisplay();
@@ -580,9 +583,9 @@ namespace EVEMon.LogitechG15
             ClearGraphics();
             m_lcdLines.Clear();
 
-            m_lcdLines.Add(new LineProcess("Refreshing Character Information", m_defaultFont));
-            m_lcdLines.Add(new LineProcess("of", m_defaultFont));
-            m_lcdLines.Add(new LineProcess(m_refreshCharacter.AdornedName, m_defaultFont));
+            m_lcdLines.Add(new LcdLine("Refreshing Character Information", m_defaultFont));
+            m_lcdLines.Add(new LcdLine("of", m_defaultFont));
+            m_lcdLines.Add(new LcdLine(m_refreshCharacter.AdornedName, m_defaultFont));
 
             RenderLines();
             UpdateLcdDisplay();
@@ -636,7 +639,7 @@ namespace EVEMon.LogitechG15
             string skillQueueFreemRoom = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue",
                                                        timeLeftText);
             SizeF size = m_lcdCanvas.MeasureString(skillQueueFreemRoom, m_defaultFont);
-            RectangleF line = new RectangleF(new PointF(0f, 11f), size);
+            RectangleF line = new RectangleF(new PointF(0f, 11f + m_defaultOffset), size);
             using (Brush brush = new SolidBrush(Color.Black))
             {
                 m_lcdCanvas.FillRectangle(brush, line.Left, line.Top, G15Width, size.Height - 1);
@@ -652,10 +655,8 @@ namespace EVEMon.LogitechG15
             // Locking should not be necessary but i'll keep it here
             lock (m_lock)
             {
-                int width = m_bmpLCD.Width;
-                int height = m_bmpLCD.Height;
-                byte[] buffer = new byte[width * height];
-                Rectangle rect = new Rectangle(0, 0, width, height);
+                byte[] buffer = new byte[m_bmpLCD.Width * m_bmpLCD.Height];
+                Rectangle rect = new Rectangle(0, 0, m_bmpLCD.Width, m_bmpLCD.Height);
 
                 BitmapData bmData = m_bmpLCD.LockBits(rect, ImageLockMode.ReadOnly, m_bmpLCD.PixelFormat);
                 try
@@ -664,8 +665,7 @@ namespace EVEMon.LogitechG15
                     try
                     {
                         // Extract bits per pixel and length infos
-                        int stride = bmData.Stride;
-                        int bpp = stride / width;
+                        int bpp = bmData.Stride / m_bmpLCD.Width;
 
                         // Copy the content of the bitmap to our buffers 
                         // Unsafe code removes the boundaries checks - a lot faster.
@@ -675,9 +675,9 @@ namespace EVEMon.LogitechG15
                             byte* inputX = (byte*)bmDataX.Scan0.ToPointer();
                             byte* input = (byte*)bmData.Scan0.ToPointer();
 
-                            for (int i = 0; i < height; i++)
+                            for (int i = 0; i < m_bmpLCD.Height; i++)
                             {
-                                for (int j = 0; j < width; j++)
+                                for (int j = 0; j < m_bmpLCD.Width; j++)
                                 {
                                     *output = (byte)((*input) ^ (*inputX));
                                     inputX += bpp;
@@ -698,7 +698,7 @@ namespace EVEMon.LogitechG15
                 }
 
                 // Fetches the buffer to the LCD screen
-                LCDInterface.DisplayBitmap(ref buffer);
+                LcdInterface.DisplayBitmap(ref buffer);
             }
         }
 
@@ -757,20 +757,20 @@ namespace EVEMon.LogitechG15
         /// Occurs when some of the G15 screen buttons are pressed.
         /// </summary>
         /// <returns></returns>
-        private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void ButtonPressedCheckTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
             var pressedButtons = 0;
 
-            if (LCDInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button0))
+            if (LcdInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button0))
                 pressedButtons |= (int)LogitechLcdConstants.LogiLcdMonoButton.Button0;
 
-            if (LCDInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button1))
+            if (LcdInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button1))
                 pressedButtons |= (int)LogitechLcdConstants.LogiLcdMonoButton.Button1;
 
-            if (LCDInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button2))
+            if (LcdInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button2))
                 pressedButtons |= (int)LogitechLcdConstants.LogiLcdMonoButton.Button2;
 
-            if (LCDInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button3))
+            if (LcdInterface.ReadSoftButton((int)LogitechLcdConstants.LogiLcdMonoButton.Button3))
                 pressedButtons |= (int)LogitechLcdConstants.LogiLcdMonoButton.Button3;
 
             if (m_oldButtonState == pressedButtons)
