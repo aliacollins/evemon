@@ -17,7 +17,7 @@ namespace EVEMon.SDEExternalsToSql
     internal static class Database
     {
         private static string s_text;
-        internal const string StringApostrophe = "''";
+        internal const string StringEmpty = "''";
         internal const string Null = "NULL";
 
         /// <summary>

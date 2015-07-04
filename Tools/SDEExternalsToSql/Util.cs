@@ -140,7 +140,7 @@ namespace EVEMon.SDEExternalsToSql
         {
             return String.IsNullOrWhiteSpace(text)
                 ? Database.Null
-                : String.Format("'{0}'", text.Replace("'", Database.StringApostrophe));
+                : String.Format("'{0}'", text.Replace("'", Database.StringEmpty));
         }
 
         /// <summary>

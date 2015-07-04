@@ -24,6 +24,9 @@ namespace EVEMon.SDEExternalsToSql
                 EveIcons.Import();
                 Certificates.Import();
                 Blueprints.Import();
+                Skins.Import();
+                SkinMaterials.Import();
+                SkinLicenses.Import();
             }
 
             Console.WriteLine();

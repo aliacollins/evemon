@@ -129,6 +129,15 @@
   <data name="iconIDS" xml:space="preserve">
     <value>iconIDs.yaml</value>
   </data>
+  <data name="skinLicenses" xml:space="preserve">
+    <value>skinLicenses.yaml</value>
+  </data>
+  <data name="skinMaterials" xml:space="preserve">
+    <value>skinMaterials.yaml</value>
+  </data>
+  <data name="skins" xml:space="preserve">
+    <value>skins.yaml</value>
+  </data>
   <data name="typeIDs" xml:space="preserve">
     <value>typeIDs.yaml</value>
   </data>
