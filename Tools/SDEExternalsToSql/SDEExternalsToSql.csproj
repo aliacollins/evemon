@@ -153,6 +153,9 @@
     <Compile Include="YamlToSql\Tables\EveGraphics.cs" />
     <Compile Include="YamlToSql\Tables\EveIcons.cs" />
     <Compile Include="YamlToSql\Tables\InvTypes.cs" />
+    <Compile Include="YamlToSql\Tables\SkinLicenses.cs" />
+    <Compile Include="YamlToSql\Tables\SkinMaterials.cs" />
+    <Compile Include="YamlToSql\Tables\Skins.cs" />
     <Compile Include="YamlToSql\YamlFilesConstants.Designer.cs">
       <DependentUpon>YamlFilesConstants.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -224,6 +227,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Scripts\invBlueprintTypes.table.sql" />
     <EmbeddedResource Include="Scripts\ramTypeRequirements.table.sql" />
+    <EmbeddedResource Include="Scripts\sknSkins.table.sql" />
+    <EmbeddedResource Include="Scripts\sknMaterials.table.sql" />
+    <EmbeddedResource Include="Scripts\sknLicenses.table.sql" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -81,18 +81,18 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[GraphicIDText] = pair.Key.ToString();
                         parameters[GraphicFileText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicFileText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicFileText)].ToString().Replace("'", Database.StringApostrophe))
-                            : Database.StringApostrophe;
+                                cNode.Children[new YamlScalarNode(GraphicFileText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringApostrophe))
-                            : Database.StringApostrophe;
+                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                         parameters[ObsoleteText] = cNode.Children.Keys.Any(key => key.ToString() == ObsoleteText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(ObsoleteText)].ToString())).ToString()
                             : "0";
                         parameters[GraphicTypeText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicTypeText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicTypeText)].ToString().Replace("'", Database.StringApostrophe))
+                                cNode.Children[new YamlScalarNode(GraphicTypeText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.Null;
                         parameters[DirectoryIDText] = cNode.Children.Keys.Any(key => key.ToString() == DirectoryIDText)
                             ? cNode.Children[new YamlScalarNode(DirectoryIDText)].ToString()
@@ -102,19 +102,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             : Database.Null;
                         parameters[GraphicNameText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicNameText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicNameText)].ToString().Replace("'", Database.StringApostrophe))
-                            : Database.StringApostrophe;
+                                cNode.Children[new YamlScalarNode(GraphicNameText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                         parameters[GfxRaceIDText] = cNode.Children.Keys.Any(key => key.ToString() == GfxRaceIDText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GfxRaceIDText)].ToString().Replace("'", Database.StringApostrophe))
+                                cNode.Children[new YamlScalarNode(GfxRaceIDText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.Null;
                         parameters[ColorSchemeText] = cNode.Children.Keys.Any(key => key.ToString() == ColorSchemeText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(ColorSchemeText)].ToString().Replace("'", Database.StringApostrophe))
+                                cNode.Children[new YamlScalarNode(ColorSchemeText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.Null;
                         parameters[SofHullNameText] = cNode.Children.Keys.Any(key => key.ToString() == SofHullNameText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(SofHullNameText)].ToString().Replace("'", Database.StringApostrophe))
+                                cNode.Children[new YamlScalarNode(SofHullNameText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.Null;
 
                         command.CommandText = Database.SqlInsertCommandText(EveGraphicsTableName, parameters);

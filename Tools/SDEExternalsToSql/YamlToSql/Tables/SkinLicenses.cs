@@ -7,23 +7,23 @@ using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class EveIcons
+    internal static class SkinLicenses
     {
-        private const string EveIconsTableName = "eveIcons";
+        private const string SknLicensesTableName = "sknLicenses";
 
-        private const string IconIDText = "iconID";
-        private const string IconFileText = "iconFile";
-        private const string DescriptionText = "description";
+        private const string LicenseTypeIDText = "licenseTypeID";
+        private const string SkinIDText = "skinID";
+        private const string DurationText = "duration";
 
         /// <summary>
-        /// Imports the icon ids.
+        /// Imports the skin licenses.
         /// </summary>
         internal static void Import()
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.iconIDS;
+            var yamlFile = YamlFilesConstants.skinLicenses;
             var filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
@@ -40,7 +40,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(EveIconsTableName);
+            Database.CreateTable(SknLicensesTableName);
 
             ImportData(rNode);
 
@@ -70,17 +70,15 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             continue;
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters[IconIDText] = pair.Key.ToString();
-                        parameters[IconFileText] = cNode.Children.Keys.Any(key => key.ToString() == IconFileText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
-                        parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
+                        parameters[LicenseTypeIDText] = pair.Key.ToString();
+                        parameters[SkinIDText] = cNode.Children.Keys.Any(key => key.ToString() == SkinIDText)
+                            ? cNode.Children[new YamlScalarNode(SkinIDText)].ToString()
+                            : Database.Null;
+                        parameters[DurationText] = cNode.Children.Keys.Any(key => key.ToString() == DurationText)
+                            ? cNode.Children[new YamlScalarNode(DurationText)].ToString()
+                            : "-1";
 
-                        command.CommandText = Database.SqlInsertCommandText(EveIconsTableName, parameters);
+                        command.CommandText = Database.SqlInsertCommandText(SknLicensesTableName, parameters);
                         command.ExecuteNonQuery();
                     }
 

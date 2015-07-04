@@ -120,12 +120,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
                             parameters[ClassNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringApostrophe))
-                            : Database.StringApostrophe;
+                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
                             parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringApostrophe))
-                            : Database.StringApostrophe;
+                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
 
                             command.CommandText = Database.SqlInsertCommandText(CrtClassesTableName, parameters);
                             command.ExecuteNonQuery();
@@ -189,8 +189,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringApostrophe))
-                            : Database.StringApostrophe;
+                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
+                            : Database.StringEmpty;
 
                         command.CommandText = Database.SqlInsertCommandText(CrtCertificateTableName, parameters);
                         command.ExecuteNonQuery();
