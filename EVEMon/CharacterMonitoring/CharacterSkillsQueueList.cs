@@ -232,7 +232,9 @@ namespace EVEMon.CharacterMonitoring
                 : skill.Skill.StaticData.GetPointsRequiredForLevel(
                     Math.Min(skill.Level, 5)));
 
-            double percentCompleted = skill.PercentCompleted;
+            double percentCompleted = e.Index == 0 || skill.Skill != Skill.UnknownSkill
+                ? skill.PercentCompleted
+                : 0d;
 
             if (skill.Skill != null && skill.Level > skill.Skill.Level + 1)
                 skillPoints = skill.CurrentSP;
