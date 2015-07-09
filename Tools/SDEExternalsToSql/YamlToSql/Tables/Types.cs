@@ -8,7 +8,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class InvTypes
+    internal static class Types
     {
         private const string InvTypesTableName = "invTypes";
         private const string DgmMasteriesTableName = "dgmMasteries";
@@ -16,16 +16,33 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         private const string DgmTraitsTableName = "dgmTraits";
         private const string DgmTypeTraitsTableName = "dgmTypeTraits";
 
+        private const string MasteriesText = "masteries";
+        private const string TraitsText = "traits";
+        private const string NameText = "name";
+
+        private const string EnglishLanguageIDText = "en";
+
+        // Types
+        private const string TypeIDText = "typeID";
+        private const string GroupIDText = "groupID";
+        private const string TypeNameText = "typeName";
+        private const string DescriptionText = "description";
+        private const string MassText = "mass";
+        private const string VolumeText = "volume";
+        private const string CapacityText = "capacity";
+        private const string PortionSizeText = "portionSize";
+        private const string RaceIDText = "raceID";
+        private const string BasePriceText = "basePrice";
+        private const string PublishedText = "published";
+        private const string MarketGroupIDText = "marketGroupID";
+        private const string ChanceOfDuplicatingText = "chanceOfDuplicating";
         private const string FactionIDText = "factionID";
         private const string GraphicIDText = "graphicID";
         private const string IconIDText = "iconID";
         private const string RadiusText = "radius";
         private const string SoundIDText = "soundID";
-        private const string MasteriesText = "masteries";
-        private const string TraitsText = "traits";
 
         // Masteries
-        private const string TypeIDText = "typeID";
         private const string GradeText = "grade";
         private const string CertificateIDText = "certificateID";
 
@@ -66,19 +83,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateColumns(InvTypesTableName, new Dictionary<string, string>
-                                                                  {
-                                                                      { FactionIDText, "int" },
-                                                                      { GraphicIDText, "int" },
-                                                                      { IconIDText, "int" },
-                                                                      { RadiusText, "float" },
-                                                                      { SoundIDText, "int" },
-                                                                  });
-
+            Database.CreateTable(InvTypesTableName);
             Database.CreateTable(DgmMasteriesTableName);
             Database.CreateTable(DgmTypeMasteriesTableName);
             Database.CreateTable(DgmTraitsTableName);
             Database.CreateTable(DgmTypeTraitsTableName);
+            Database.CreateColumns(InvTypesTableName, new Dictionary<string, string>
+            {
+                { FactionIDText, "int" },
+                { GraphicIDText, "int" },
+                { IconIDText, "int" },
+                { RadiusText, "float" },
+                { SoundIDText, "int" },
+            });
 
             ImportData(rNode);
 
@@ -141,17 +158,20 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                     param[TypeIDText] = pair.Key.ToString();
 
                                     var value = new Dictionary<string, string>
-                                                               {
-                                                                   {
-                                                                       mastery.Key.ToString(), certificate.ToString()
-                                                                   }
-                                                               };
+                                    {
+                                        {
+                                            mastery.Key.ToString(), certificate.ToString()
+                                        }
+                                    };
 
                                     if (masteriesDict.Values.Any(
                                         x => x.Any(y => y.Key == mastery.Key.ToString()
                                                         && y.Value == certificate.ToString())))
                                     {
-                                        param[MasteryIDText] = masteriesDict.First(x => value.Any(y => x.Value.ContainsKey(y.Key) && x.Value.ContainsValue(y.Value))).Key.ToString(CultureInfo.InvariantCulture);
+                                        param[MasteryIDText] =
+                                            masteriesDict.First(
+                                                x => value.Any(y => x.Value.ContainsKey(y.Key) && x.Value.ContainsValue(y.Value)))
+                                                .Key.ToString(CultureInfo.InvariantCulture);
 
                                         command.CommandText = Database.SqlInsertCommandText(DgmTypeMasteriesTableName, param);
                                         command.ExecuteNonQuery();
@@ -190,17 +210,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                         .Select(bonuses => bonusesNode.Children[bonuses.Key])
                                         .OfType<YamlMappingNode>())
                                     {
+                                        var bonusTextNodes = bonusNode.Children[new YamlScalarNode(BonusTextText)] as YamlMappingNode;
+
                                         traitId++;
                                         parameters = new Dictionary<string, string>();
                                         parameters[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
-                                        parameters[BonusTextText] = String.Format("'{0}'",
-                                            bonusNode.Children[new YamlScalarNode(BonusTextText)]
-                                                .ToString()
-                                                .Replace("'", "''"));
+                                        parameters[BonusTextText] = String.Format("'{0}'", (bonusTextNodes == null
+                                            ? bonusNode.Children[new YamlScalarNode(BonusTextText)].ToString()
+                                            : bonusTextNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString())
+                                            .Replace("'", Database.StringEmpty));
                                         parameters[UnitIDText] = bonusNode.Children.Keys.Any(key => key.ToString() == UnitIDText)
                                             ? bonusNode.Children[new YamlScalarNode(UnitIDText)].ToString()
                                             : Database.Null;
-                                        
+
                                         Dictionary<string, string> pars = new Dictionary<string, string>();
                                         pars[TypeIDText] = pair.Key.ToString();
                                         pars[ParentTypeIDText] = trait.Key.ToString();
@@ -209,10 +231,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
                                         if (traitsDict.ContainsValue(value))
                                         {
-                                            pars[TraitIDText] = traitsDict.First(x => x.Value == value).Key.ToString(CultureInfo.InvariantCulture);
+                                            pars[TraitIDText] =
+                                                traitsDict.First(x => x.Value == value).Key.ToString(CultureInfo.InvariantCulture);
                                             pars[BonusText] = bonusNode.Children.Keys.Any(key => key.ToString() == BonusText)
-                                            ? bonusNode.Children[new YamlScalarNode(BonusText)].ToString()
-                                            : Database.Null;
+                                                ? bonusNode.Children[new YamlScalarNode(BonusText)].ToString()
+                                                : Database.Null;
 
                                             command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
                                             command.ExecuteNonQuery();
@@ -233,8 +256,6 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                         command.CommandText = Database.SqlInsertCommandText(DgmTraitsTableName, parameters);
                                         command.ExecuteNonQuery();
                                     }
-
-
                                 }
                             }
                         }
@@ -260,7 +281,10 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             : Database.Null;
 
                         command.CommandText = Database.SqlUpdateCommandText(InvTypesTableName, parameters);
-                        command.ExecuteNonQuery();
+                        if (command.ExecuteNonQuery() != 0)
+                            continue;
+
+                        InsertRow(parameters, cNode, pair, command);
                     }
 
                     tx.Commit();
@@ -271,6 +295,79 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     Util.HandleException(command, e);
                 }
             }
+        }
+
+        /// <summary>
+        /// Inserts a row.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="cNode">The c node.</param>
+        /// <param name="pair">The pair.</param>
+        /// <param name="command">The command.</param>
+        private static void InsertRow(IDictionary<string, string> parameters, YamlMappingNode cNode,
+            KeyValuePair<YamlNode, YamlNode> pair, IDbCommand command)
+        {
+            parameters.Remove("id");
+            parameters.Remove("columnFilter");
+
+            var typeNameNodes = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+                ? cNode.Children[new YamlScalarNode(NameText)] as YamlMappingNode
+                : null;
+            var descriptionNodes = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
+                ? cNode.Children[new YamlScalarNode(DescriptionText)] as YamlMappingNode
+                : null;
+
+            parameters[TypeIDText] = pair.Key.ToString();
+            parameters[GroupIDText] = cNode.Children.Keys.Any(key => key.ToString() == GroupIDText)
+                ? cNode.Children[new YamlScalarNode(GroupIDText)].ToString()
+                : Database.Null;
+            parameters[TypeNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+                ? String.Format("'{0}'", (typeNameNodes == null
+                    ? cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty)
+                    : typeNameNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
+                        ? typeNameNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
+                            .Replace("'", Database.StringEmpty)
+                        : String.Empty))
+                : Database.StringEmpty;
+            parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
+                ? String.Format("'{0}'", (descriptionNodes == null
+                    ? cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty)
+                    : descriptionNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
+                        ? descriptionNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
+                            .Replace("'", Database.StringEmpty)
+                        : String.Empty))
+                : Database.StringEmpty;
+            parameters[MassText] = cNode.Children.Keys.Any(key => key.ToString() == MassText)
+                ? cNode.Children[new YamlScalarNode(MassText)].ToString()
+                : "0";
+            parameters[VolumeText] = cNode.Children.Keys.Any(key => key.ToString() == VolumeText)
+                ? cNode.Children[new YamlScalarNode(VolumeText)].ToString()
+                : "0";
+            parameters[CapacityText] = cNode.Children.Keys.Any(key => key.ToString() == CapacityText)
+                ? cNode.Children[new YamlScalarNode(CapacityText)].ToString()
+                : "0";
+            parameters[PortionSizeText] = cNode.Children.Keys.Any(key => key.ToString() == PortionSizeText)
+                ? cNode.Children[new YamlScalarNode(PortionSizeText)].ToString()
+                : Database.Null;
+            parameters[RaceIDText] = cNode.Children.Keys.Any(key => key.ToString() == RaceIDText)
+                ? cNode.Children[new YamlScalarNode(RaceIDText)].ToString()
+                : Database.Null;
+            parameters[BasePriceText] = cNode.Children.Keys.Any(key => key.ToString() == BasePriceText)
+                ? cNode.Children[new YamlScalarNode(BasePriceText)].ToString()
+                : "0.00";
+            parameters[PublishedText] = cNode.Children.Keys.Any(key => key.ToString() == PublishedText)
+                ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(PublishedText)].ToString()))
+                    .ToString()
+                : "0";
+            parameters[MarketGroupIDText] = cNode.Children.Keys.Any(key => key.ToString() == MarketGroupIDText)
+                ? cNode.Children[new YamlScalarNode(MarketGroupIDText)].ToString()
+                : Database.Null;
+            parameters[ChanceOfDuplicatingText] = cNode.Children.Keys.Any(key => key.ToString() == ChanceOfDuplicatingText)
+                ? cNode.Children[new YamlScalarNode(ChanceOfDuplicatingText)].ToString()
+                : "0";
+
+            command.CommandText = Database.SqlInsertCommandText(InvTypesTableName, parameters);
+            command.ExecuteNonQuery();
         }
     }
 }

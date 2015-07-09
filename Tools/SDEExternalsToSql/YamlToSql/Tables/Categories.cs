@@ -7,23 +7,29 @@ using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class EveIcons
+    internal static class Categories
     {
-        private const string EveIconsTableName = "eveIcons";
+        private const string InvCategoriesTableName = "invCategories";
 
-        private const string IconIDText = "iconID";
-        private const string IconFileText = "iconFile";
+        private const string CategoryIDText = "categoryID";
+        private const string CategoryNameText = "categoryName";
         private const string DescriptionText = "description";
+        private const string IconIDText = "iconID";
+        private const string PublishedText = "published";
+
+        private const string NameText = "name";
+
+        private const string EnglishLanguageIDText = "en";
 
         /// <summary>
-        /// Imports the icon ids.
+        /// Imports the categories ids.
         /// </summary>
         internal static void Import()
         {
             DateTime startTime = DateTime.Now;
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.iconIDS;
+            var yamlFile = YamlFilesConstants.categoryIDs;
             var filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
@@ -40,7 +46,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Console.WriteLine();
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(EveIconsTableName);
+            Database.CreateTable(InvCategoriesTableName);
 
             ImportData(rNode);
 
@@ -69,18 +75,33 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         if (cNode == null)
                             continue;
 
+                        var categoriesNameNodes = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+                            ? cNode.Children[new YamlScalarNode(NameText)] as YamlMappingNode
+                            : null;
+
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters[IconIDText] = pair.Key.ToString();
-                        parameters[IconFileText] = cNode.Children.Keys.Any(key => key.ToString() == IconFileText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
+                        parameters[CategoryIDText] = pair.Key.ToString();
+                        parameters[CategoryNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+                            ? String.Format("'{0}'", (categoriesNameNodes == null
+                                ? cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty)
+                                : categoriesNameNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
+                                    ? categoriesNameNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
+                                        .Replace("'", Database.StringEmpty)
+                                    : Database.Null))
+                            : Database.Null;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("'{0}'",
                                 cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
+                            : Database.Null;
+                        parameters[IconIDText] = cNode.Children.Keys.Any(key => key.ToString() == IconIDText)
+                            ? cNode.Children[new YamlScalarNode(IconIDText)].ToString()
+                            : Database.Null;
+                        parameters[PublishedText] = cNode.Children.Keys.Any(key => key.ToString() == PublishedText)
+                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(PublishedText)].ToString()))
+                                .ToString()
+                            : Database.Null;
 
-                        command.CommandText = Database.SqlInsertCommandText(EveIconsTableName, parameters);
+                        command.CommandText = Database.SqlInsertCommandText(InvCategoriesTableName, parameters);
                         command.ExecuteNonQuery();
                     }
 
