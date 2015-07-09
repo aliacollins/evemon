@@ -70,6 +70,15 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to categoryIDs.yaml.
+        /// </summary>
+        internal static string categoryIDs {
+            get {
+                return ResourceManager.GetString("categoryIDs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to certificates.yaml.
         /// </summary>
         internal static string certificates {
@@ -84,6 +93,15 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql {
         internal static string graphicsIDs {
             get {
                 return ResourceManager.GetString("graphicsIDs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to groupIDs.yaml.
+        /// </summary>
+        internal static string groupIDs {
+            get {
+                return ResourceManager.GetString("groupIDs", resourceCulture);
             }
         }
         

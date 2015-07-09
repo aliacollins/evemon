@@ -7,7 +7,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class EveGraphics
+    internal static class Graphics
     {
         private const string EveGraphicsTableName = "eveGraphics";
 

@@ -19,9 +19,11 @@ namespace EVEMon.SDEExternalsToSql
 
             if (Database.SqlConnection != null)
             {
-                InvTypes.Import();
-                EveGraphics.Import();
-                EveIcons.Import();
+                Categories.Import();
+                Groups.Import();
+                Types.Import();
+                Graphics.Import();
+                Icons.Import();
                 Certificates.Import();
                 Blueprints.Import();
                 Skins.Import();

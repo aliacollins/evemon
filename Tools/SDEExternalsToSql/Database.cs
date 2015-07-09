@@ -100,7 +100,9 @@ namespace EVEMon.SDEExternalsToSql
             catch (Exception ex)
             {
                 Console.WriteLine(@"Disconnection from {0} Database: Failed", databaseTypeName);
+                Console.WriteLine();
                 Console.WriteLine(@"Reason was: {0}", ex.Message);
+                Console.WriteLine();
                 Console.Write(@"Press any key to exit.");
                 Console.ReadLine();
                 Environment.Exit(-1);

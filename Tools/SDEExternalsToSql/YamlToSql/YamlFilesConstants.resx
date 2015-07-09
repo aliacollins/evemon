@@ -120,11 +120,17 @@
   <data name="blueprints" xml:space="preserve">
     <value>blueprints.yaml</value>
   </data>
+  <data name="categoryIDs" xml:space="preserve">
+    <value>categoryIDs.yaml</value>
+  </data>
   <data name="certificates" xml:space="preserve">
     <value>certificates.yaml</value>
   </data>
   <data name="graphicsIDs" xml:space="preserve">
     <value>graphicIDs.yaml</value>
+  </data>
+  <data name="groupIDs" xml:space="preserve">
+    <value>groupIDs.yaml</value>
   </data>
   <data name="iconIDS" xml:space="preserve">
     <value>iconIDs.yaml</value>
