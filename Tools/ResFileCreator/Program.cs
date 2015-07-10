@@ -11,25 +11,16 @@ namespace EVEMon.ResFileCreator
 {
     internal static class Program
     {
-        private static readonly string[] s_programFilesFolders;
-        private static readonly string[] s_sdkVersions;
-        private static readonly Dictionary<string, object> s_dictionary;
+        private static readonly string[] s_programFilesFolders =
+        {
+            "Program Files",
+            "Program Files (x86)"
+        };
+
+        private static readonly string[] s_sdkVersions = { "8.0A", "8.0", "7.1A", "7.1", "7.0A", "7.0" };
+        private static readonly Dictionary<string, object> s_dictionary = new Dictionary<string, object>();
         private static string s_filePath;
         private static string s_rcexe;
-
-        /// <summary>
-        /// Initializes the <see cref="Program"/> class.
-        /// </summary>
-        static Program()
-        {
-            s_programFilesFolders = new[]
-            {
-                "Program Files",
-                "Program Files (x86)"
-            };
-            s_sdkVersions = new[] { "8.0A", "8.0", "7.1A", "7.1", "7.0A", "7.0" };
-            s_dictionary = new Dictionary<string, object>();
-        }
 
         /// <summary>
         /// The main entry point for the application.
