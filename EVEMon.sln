@@ -46,6 +46,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResFileCreator", "Tools\Res
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDEExternalsToSql", "Tools\SDEExternalsToSql\SDEExternalsToSql.csproj", "{1720C71D-5718-4A87-8F78-DB48FE4F7400}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7AC1A9C-97FC-4937-A8CA-684650A99D01}"
+	ProjectSection(SolutionItems) = preProject
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
+		SharedAssemblyInfo.template.cs = SharedAssemblyInfo.template.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

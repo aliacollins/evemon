@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMonXmlGenerator")]
-[assembly: AssemblyCopyright("Copyright © 2009-2014, EVEMon Development Team")]
+[assembly: AssemblyCopyright("Copyright © 2009-2015, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

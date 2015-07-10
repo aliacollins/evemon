@@ -58,6 +58,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="BattleclinicParser.cs" />
     <Compile Include="CXIParser.cs" />
     <Compile Include="EveAddictsParser.cs" />
@@ -85,7 +88,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="app.config" />
-    <None Include="Properties\AssemblyInfo.template.cs" />
     <EmbeddedResource Include="MineralTile.resx">
       <DependentUpon>MineralTile.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -147,15 +149,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets. -->
-  <UsingTask TaskName="GitVersionFile" AssemblyFile="..\Tools\MSBuildVersioning\MSBuildVersioning.dll" />
-  <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)' == 'Snapshot' ">
-    <GitVersionFile TemplateFile="Properties\AssemblyInfo.template.cs" DestinationFile="Properties\AssemblyInfo.cs" />
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
+  -->
 </Project>

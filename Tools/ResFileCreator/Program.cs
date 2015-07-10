@@ -10,14 +10,14 @@ namespace EVEMon.ResFileCreator
 {
     internal static class Program
     {
-        private static readonly string[] s_programFilesFolders = new[]
-                                                                     {
-                                                                         "Program Files",
-                                                                         "Program Files (x86)"
-                                                                     };
-        private static readonly string[] s_sdkVersions = new [] { "8.0A", "8.0", "7.1A", "7.1", "7.0A", "7.0" };
+        private static readonly string[] s_programFilesFolders =
+        {
+            "Program Files",
+            "Program Files (x86)"
+        };
+
+        private static readonly string[] s_sdkVersions = { "8.0A", "8.0", "7.1A", "7.1", "7.0A", "7.0" };
         private static readonly Dictionary<string, object> s_dictionary = new Dictionary<string, object>();
-        private static string s_assemblyInfoFileContent;
         private static string s_filePath;
         private static string s_rcexe;
 
@@ -51,26 +51,29 @@ namespace EVEMon.ResFileCreator
         /// </summary>
         private static void ParserAssemblyInfo()
         {
-            s_assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"EVEMon\Properties\AssemblyInfo.cs"));
-            s_dictionary["AssemblyTitle"] = GetValueOf("AssemblyTitle");
-            s_dictionary["AssemblyCompany"] = GetValueOf("AssemblyCompany");
-            s_dictionary["AssemblyProduct"] = GetValueOf("AssemblyProduct");
-            s_dictionary["AssemblyCopyright"] = GetValueOf("AssemblyCopyright");
-            s_dictionary["AssemblyVersion"] = new Version(GetValueOf("AssemblyVersion"));
+            var assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"EVEMon\Properties\AssemblyInfo.cs"));
+            s_dictionary["AssemblyTitle"] = GetValueOf(assemblyInfoFileContent, "AssemblyTitle");
+
+            assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"SharedAssemblyInfo.cs"));
+            s_dictionary["AssemblyCompany"] = GetValueOf(assemblyInfoFileContent, "AssemblyCompany");
+            s_dictionary["AssemblyProduct"] = GetValueOf(assemblyInfoFileContent, "AssemblyProduct");
+            s_dictionary["AssemblyCopyright"] = GetValueOf(assemblyInfoFileContent, "AssemblyCopyright");
+            s_dictionary["AssemblyVersion"] = new Version(GetValueOf(assemblyInfoFileContent, "AssemblyVersion"));
         }
 
         /// <summary>
         /// Gets the value of the specified key.
         /// </summary>
+        /// <param name="assemblyInfoFileContent">Content of the assembly information file.</param>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        private static string GetValueOf(string key)
+        private static string GetValueOf(string assemblyInfoFileContent, string key)
         {
-            int index = s_assemblyInfoFileContent.IndexOf(key, StringComparison.InvariantCulture) + key.Length;
-            string substring = s_assemblyInfoFileContent.Substring(index);
+            int index = assemblyInfoFileContent.IndexOf(key, StringComparison.InvariantCulture) + key.Length;
+            string substring = assemblyInfoFileContent.Substring(index);
             int length = substring.IndexOf(")", StringComparison.InvariantCulture) - 1;
-            string value = s_assemblyInfoFileContent.Substring(index, length).Replace("(\"", String.Empty).Replace("\")",
-                                                                                                                   String.Empty);
+            string value = assemblyInfoFileContent.Substring(index, length)
+                .Replace("(\"", String.Empty).Replace("\")", String.Empty);
             return value;
         }
 
@@ -221,7 +224,9 @@ namespace EVEMon.ResFileCreator
                 exitCode = makeResProcess.ExitCode;
             }
 
-            Console.Write(exitCode != 0 ? "Resourse Compiler exited with errors." : "Resource file compiled successfully.");
+            Console.Write(exitCode != 0
+                ? "Resourse Compiler exited with errors."
+                : "Resource file compiled successfully.");
         }
 
         /// <summary>
