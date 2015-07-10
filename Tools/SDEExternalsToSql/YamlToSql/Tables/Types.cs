@@ -215,7 +215,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                         traitId++;
                                         parameters = new Dictionary<string, string>();
                                         parameters[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
-                                        parameters[BonusTextText] = String.Format("'{0}'", (bonusTextNodes == null
+                                        parameters[BonusTextText] = String.Format("N'{0}'", (bonusTextNodes == null
                                             ? bonusNode.Children[new YamlScalarNode(BonusTextText)].ToString()
                                             : bonusTextNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString())
                                             .Replace("'", Database.StringEmpty));
@@ -322,7 +322,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 ? cNode.Children[new YamlScalarNode(GroupIDText)].ToString()
                 : Database.Null;
             parameters[TypeNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                ? String.Format("'{0}'", (typeNameNodes == null
+                ? String.Format("N'{0}'", (typeNameNodes == null
                     ? cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty)
                     : typeNameNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
                         ? typeNameNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
@@ -330,7 +330,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         : String.Empty))
                 : Database.StringEmpty;
             parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                ? String.Format("'{0}'", (descriptionNodes == null
+                ? String.Format("N'{0}'", (descriptionNodes == null
                     ? cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty)
                     : descriptionNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
                         ? descriptionNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
