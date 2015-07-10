@@ -4,9 +4,8 @@ using EVEMon.Common;
 
 namespace EVEMon.LogitechG15
 {
-    public class LineProcess
+    internal sealed class LcdLine
     {
-        private readonly double m_percentage;
         private readonly string m_text;
         private readonly Font m_font;
 
@@ -14,34 +13,14 @@ namespace EVEMon.LogitechG15
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LineProcess"/> class.
-        /// </summary>
-        /// <param name="font">The font.</param>
-        private LineProcess(Font font)
-        {
-            m_font = font;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LineProcess"/> class.
-        /// </summary>
-        /// <param name="percentage">The percentage.</param>
-        /// <param name="font">The font.</param>
-        public LineProcess(double percentage, Font font)
-            : this(font)
-        {
-            m_percentage = percentage;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LineProcess"/> class.
+        /// Initializes a new instance of the <see cref="LcdLine"/> class.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="font">The font.</param>
-        public LineProcess(string text, Font font)
-            : this(font)
+        internal LcdLine(string text, Font font)
         {
             m_text = text;
+            m_font = font;
         }
 
         #endregion
@@ -61,10 +40,12 @@ namespace EVEMon.LogitechG15
         /// <param name="canvas">The canvas.</param>
         /// <param name="overlay">The overlay.</param>
         /// <param name="offset">The offset.</param>
-        internal void Render(Graphics canvas, Graphics overlay, float offset)
+        /// <param name="defaultOffset">The default offset.</param>
+        internal void Render(Graphics canvas, Graphics overlay, float offset, float defaultOffset)
         {
-            if (m_text == null)
-                RenderProgressLine(canvas, overlay, offset);
+            double percentage;
+            if (double.TryParse(m_text, out percentage))
+                RenderProgressLine(canvas, overlay, offset, defaultOffset, percentage);
             else
                 RenderTextLine(canvas, offset);
         }
@@ -91,10 +72,10 @@ namespace EVEMon.LogitechG15
         /// <param name="canvas">The canvas.</param>
         /// <param name="overlay">The overlay.</param>
         /// <param name="offset">The offset.</param>
-        private void RenderProgressLine(Graphics canvas, Graphics overlay, float offset)
+        /// <param name="defaultOffset">The default offset.</param>
+        /// <param name="percentage">The percentage.</param>
+        private void RenderProgressLine(Graphics canvas, Graphics overlay, float offset, float defaultOffset, double percentage)
         {
-            string text = m_percentage.ToString("P2", CultureConstants.DefaultCulture);
-            SizeF textSize = canvas.MeasureString(text, m_font);
             int left = 0;
             int width = LcdDisplay.G15Width - 1;
             const int Pad = 2;
@@ -124,12 +105,14 @@ namespace EVEMon.LogitechG15
                     canvas.DrawString(systemTime, m_font, brush, systemTimeRect);
                 }
             }
-            
-            RectangleF barRect = new RectangleF(new PointF(left, offset - 1), new SizeF(width, textSize.Height - 1));
+
+            string text = percentage.ToString("P2", CultureConstants.DefaultCulture);
+            SizeF textSize = canvas.MeasureString(text, m_font);
+            RectangleF barRect = new RectangleF(new PointF(left, offset - defaultOffset - (Environment.Is64BitProcess ? 0 : 1)), new SizeF(width, textSize.Height - 1));
             float textLeft = (barRect.Width - textSize.Width) / 2;
             RectangleF textRect = new RectangleF(new PointF(left + textLeft, offset), textSize);
 
-            int barFill = Convert.ToInt16(m_percentage * width - Pad);
+            int barFill = Convert.ToInt16(percentage * width - Pad);
 
             using (Pen pen = new Pen(Color.Black))
             {

@@ -2,13 +2,13 @@
 
 namespace EVEMon.LogitechG15
 {
-    public sealed class CycleEventArgs : EventArgs
+    internal sealed class CycleEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CycleEventArgs"/> class.
         /// </summary>
         /// <param name="cycle">if set to <c>true</c> [cycle].</param>
-        public CycleEventArgs(bool cycle)
+        internal CycleEventArgs(bool cycle)
         {
             Cycle = cycle;
         }
@@ -17,6 +17,6 @@ namespace EVEMon.LogitechG15
         /// Gets or sets a value indicating whether this <see cref="CycleEventArgs"/> is cycle.
         /// </summary>
         /// <value><c>true</c> if cycle; otherwise, <c>false</c>.</value>
-        public bool Cycle { get; set; }
+        internal bool Cycle { get; private set; }
     }
 }

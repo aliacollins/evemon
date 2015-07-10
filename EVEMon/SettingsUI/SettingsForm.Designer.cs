@@ -813,7 +813,7 @@ namespace EVEMon.SettingsUI
             this.lblG15Page.Name = "lblG15Page";
             this.lblG15Page.Size = new System.Drawing.Size(341, 13);
             this.lblG15Page.TabIndex = 5;
-            this.lblG15Page.Text = "EVEMon supports the LCD display of the Logitech G15/G19 keyboard.";
+            this.lblG15Page.Text = "EVEMon supports the LCD display of the Logitech G15/G510 keyboard.";
             // 
             // lblCycleTrainingSeconds
             // 
@@ -2213,7 +2213,7 @@ namespace EVEMon.SettingsUI
             this.g15CheckBox.Name = "g15CheckBox";
             this.g15CheckBox.Size = new System.Drawing.Size(130, 17);
             this.g15CheckBox.TabIndex = 0;
-            this.g15CheckBox.Text = "Use G15/G19 Display";
+            this.g15CheckBox.Text = "Use G15/G510 Display";
             this.g15CheckBox.UseVisualStyleBackColor = true;
             this.g15CheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 

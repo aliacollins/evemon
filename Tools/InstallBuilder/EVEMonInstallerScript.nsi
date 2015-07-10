@@ -32,11 +32,11 @@ Var STARTMENU_FOLDER
 Var MUI_TEMP
 
 !define MUI_ABORTWARNING
-!define MUI_ICON "..\..\..\..\..\EVEMon.Common\Resources\Icons\EVEMon.ico"
-!define MUI_UNICON "..\..\..\..\..\EVEMon.Common\Resources\Icons\EVEMon.ico"
+!define MUI_ICON "${RESOURCESDIR}\Icons\EVEMon.ico"
+!define MUI_UNICON "${RESOURCESDIR}\Icons\EVEMon.ico"
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "..\..\..\..\..\EVEMon.Common\Resources\License\gpl.txt"
+!insertmacro MUI_PAGE_LICENSE "${RESOURCESDIR}\License\gpl.txt"
 !insertmacro MUI_PAGE_DIRECTORY
 
 # Start menu folder page configuration
@@ -275,7 +275,7 @@ Section "Install EVEMon"
 
 	lbl_noLegacyUninstall:
 	SetOutPath "$INSTDIR"
-	File /r /x *vshost* /x *.config "..\..\..\..\..\EVEMon\bin\x86\Release\*.*" 
+	File /r /x *vshost* /x *.config "${SOURCEDIR}\*.*" 
 
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 

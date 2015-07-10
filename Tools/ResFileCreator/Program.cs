@@ -5,21 +5,31 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EVEMon.ResFileCreator
 {
     internal static class Program
     {
-        private static readonly string[] s_programFilesFolders =
-        {
-            "Program Files",
-            "Program Files (x86)"
-        };
-
-        private static readonly string[] s_sdkVersions = { "8.0A", "8.0", "7.1A", "7.1", "7.0A", "7.0" };
-        private static readonly Dictionary<string, object> s_dictionary = new Dictionary<string, object>();
+        private static readonly string[] s_programFilesFolders;
+        private static readonly string[] s_sdkVersions;
+        private static readonly Dictionary<string, object> s_dictionary;
         private static string s_filePath;
         private static string s_rcexe;
+
+        /// <summary>
+        /// Initializes the <see cref="Program"/> class.
+        /// </summary>
+        static Program()
+        {
+            s_programFilesFolders = new[]
+            {
+                "Program Files",
+                "Program Files (x86)"
+            };
+            s_sdkVersions = new[] { "8.0A", "8.0", "7.1A", "7.1", "7.0A", "7.0" };
+            s_dictionary = new Dictionary<string, object>();
+        }
 
         /// <summary>
         /// The main entry point for the application.
@@ -28,7 +38,10 @@ namespace EVEMon.ResFileCreator
         [STAThread]
         private static void Main()
         {
-            Directory.SetCurrentDirectory(@"..\..\..\..\..");
+            String solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
+                RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+
+            Directory.SetCurrentDirectory(solutionDir);
 
             s_rcexe = FindRcExe();
             if (String.IsNullOrEmpty(s_rcexe))
@@ -208,12 +221,12 @@ namespace EVEMon.ResFileCreator
         private static void CreateResFile()
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
-                                             {
-                                                 FileName = s_rcexe,
-                                                 Arguments = String.Format("/v /nologo /r {0} ", s_filePath),
-                                                 UseShellExecute = false,
-                                                 RedirectStandardOutput = true
-                                             };
+            {
+                FileName = s_rcexe,
+                Arguments = String.Format("/v /nologo /r {0} ", s_filePath),
+                UseShellExecute = false,
+                RedirectStandardOutput = true
+            };
             int exitCode;
             using (Process makeResProcess = new Process())
             {
@@ -238,11 +251,14 @@ namespace EVEMon.ResFileCreator
             // Lookup for 'RC.exe' in all possible folders and sdk version paths
             IEnumerable<string> locations = Directory.GetLogicalDrives()
                 .SelectMany(drive => s_programFilesFolders,
-                            (drive, programFilesFolder) => new { drive, programFilesFolder })
-                .SelectMany(programFilesFolder => s_sdkVersions,
-                            (programFilesFolder, sdkVersion) =>
-                            String.Format(CultureInfo.InvariantCulture, @"{0}{1}\Microsoft SDKs\Windows\v{2}\Bin\RC.exe",
-                                          programFilesFolder.drive, programFilesFolder.programFilesFolder, sdkVersion))
+                    (drive, programFilesFolder) => new { drive, programFilesFolder })
+                .SelectMany(driveAndProgramFilesFolder => s_sdkVersions,
+                    (driveAndProgramFilesFolder, sdkVersion) =>
+                        String.Format(CultureInfo.InvariantCulture,
+                            @"{0}{1}\Microsoft SDKs\Windows\v{2}\Bin\RC.exe",
+                            driveAndProgramFilesFolder.drive,
+                            driveAndProgramFilesFolder.programFilesFolder,
+                            sdkVersion))
                 .Where(File.Exists);
 
 
