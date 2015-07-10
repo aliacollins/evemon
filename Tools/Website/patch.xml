@@ -1,73 +1,79 @@
 ﻿<?xml version="1.0"?>
-<evemon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>21 February 2015</date>
-    <version>1.9.4.4609</version>
-    <md5>e872e2cac81f137da1ecf952bd43a489</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=187645.0</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-1.9.4.exe</autopatchurl>
+    <date>10 July 2015</date>
+    <version>2.0.0.3758</version>
+    <md5>67e65acb31dd9ecdcbf80f3ab73475cd</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=188517.0</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-2.0.0.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[== Contributors for this version ==
+    <message><![CDATA[== Breaking Changes ==
+
+ * EVEMon repository changed from Mercurial to Git.
+ * EVEMon from now on will be compiled to target ANY CPU. This means that it will run as 64bit on 64bit OS and as 32bit on 32bit OS.
+
+== Contributors for this version ==
 
  * Jimi
  
 == Bug Fixes ==
 
- * Corrected the starter skills for a blank character.
+ * Fixed a bug when generating the data files.
+ * Fixed a visual bug for unknown skill complete percentage.
+ 
+== Misc ==
 
-== Enhancements ==
-
- * Added ability to create a plan from the characters' skill queue.
- * Adjusted the implant name in Implant Calculator tool.]]></message>
+ * Changed any window that was showing on top of all windows to modal.
+ * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>04 May 2015</date>
-      <md5>ab26f9862980a65705032af74c1943ff</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
-      <message><![CDATA[Mosaic 1.2 (879104) blueprints data file by the EVEMon Development Team
+      <date>10 July 2015</date>
+      <md5>9bef2f34da03fd3a7c7d9b35e8c25413</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
+      <message><![CDATA[Aegis 1.1.1 (913581) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>04 May 2015</date>
-      <md5>08ea8d2f949b05eafb3a504212f11deb</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
-      <message><![CDATA[Mosaic 1.2 (879104) geography data file by the EVEMon Development Team
+      <date>10 July 2015</date>
+      <md5>34eceb9d1d86b3e030e3e40deb86cc8a</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
+      <message><![CDATA[Aegis 1.1.1 (913581) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>04 May 2015</date>
-      <md5>83d21cd47028d7812cbc4db425581b36</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
-      <message><![CDATA[Mosaic 1.2 (879104) items data file by the EVEMon Development Team
+      <date>10 July 2015</date>
+      <md5>6b241dfdbedc3ed3b3e00631dc12300a</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
+      <message><![CDATA[Aegis 1.1.1 (913581) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>04 May 2015</date>
-      <md5>ae3f954efb433550452bbbe044f63ea6</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
-      <message><![CDATA[Mosaic 1.2 (879104) properties data file by the EVEMon Development Team
+      <date>10 July 2015</date>
+      <md5>d0627abc2926b8b95a47a6476ee60976</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
+      <message><![CDATA[Aegis 1.1.1 (913581) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>04 May 2015</date>
-      <md5>22ddb1aef42ee87bde389bd50e75bfbf</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
-      <message><![CDATA[Mosaic 1.2 (879104) reprocessing data file by the EVEMon Development Team
+      <date>10 July 2015</date>
+      <md5>d14e04146f98cae328401030ac8a3ced</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
+      <message><![CDATA[Aegis 1.1.1 (913581) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>04 May 2015</date>
-      <md5>d2d00c59fa9f932324cce207e735f7dd</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Mosaic/879104</url>
-      <message><![CDATA[Mosaic 1.2 (879104) skills data file by the EVEMon Development Team
+      <date>10 July 2015</date>
+      <md5>3beba3ca81db5694332f77db824a3668</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
+      <message><![CDATA[Aegis 1.1.1 (913581) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
