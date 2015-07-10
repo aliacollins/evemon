@@ -135,12 +135,13 @@ namespace EVEMon.SDEExternalsToSql
         /// Gets the text or default string.
         /// </summary>
         /// <param name="text">The text.</param>
+        /// <param name="isUnicode">if set to <c>true</c> [is unicode].</param>
         /// <returns></returns>
-        internal static string GetTextOrDefaultString(this string text)
+        internal static string GetTextOrDefaultString(this string text, bool isUnicode = false)
         {
             return String.IsNullOrWhiteSpace(text)
                 ? Database.Null
-                : String.Format("'{0}'", text.Replace("'", Database.StringEmpty));
+                : String.Format("{0}'{1}'", isUnicode ? "N" : String.Empty, text.Replace("'", Database.StringEmpty));
         }
 
         /// <summary>

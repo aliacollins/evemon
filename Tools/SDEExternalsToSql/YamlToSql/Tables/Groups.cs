@@ -92,7 +92,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             ? cNode.Children[new YamlScalarNode(CategoryIDText)].ToString()
                             : Database.Null;
                         parameters[GroupNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                            ? String.Format("'{0}'", (groupNameNodes == null
+                            ? String.Format("N'{0}'", (groupNameNodes == null
                                 ? cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty)
                                 : groupNameNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
                                     ? groupNameNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
@@ -100,7 +100,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                     : Database.Null))
                             : Database.Null;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                            ? String.Format("'{0}'",
+                            ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.Null;
                         parameters[IconIDText] = cNode.Children.Keys.Any(key => key.ToString() == IconIDText)

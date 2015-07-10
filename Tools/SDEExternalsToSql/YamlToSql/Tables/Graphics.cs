@@ -84,7 +84,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                 cNode.Children[new YamlScalarNode(GraphicFileText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                            ? String.Format("'{0}'",
+                            ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;
                         parameters[ObsoleteText] = cNode.Children.Keys.Any(key => key.ToString() == ObsoleteText)
@@ -101,7 +101,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(CollidableText)].ToString())).ToString()
                             : Database.Null;
                         parameters[GraphicNameText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicNameText)
-                            ? String.Format("'{0}'",
+                            ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(GraphicNameText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;
                         parameters[GfxRaceIDText] = cNode.Children.Keys.Any(key => key.ToString() == GfxRaceIDText)

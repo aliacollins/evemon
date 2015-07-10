@@ -76,7 +76,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                 cNode.Children[new YamlScalarNode(IconFileText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                            ? String.Format("'{0}'",
+                            ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;
 

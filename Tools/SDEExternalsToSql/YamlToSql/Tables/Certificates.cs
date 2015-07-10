@@ -119,11 +119,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             parameters = new Dictionary<string, string>();
                             parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
                             parameters[ClassNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                            ? String.Format("'{0}'",
+                            ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;
                             parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                            ? String.Format("'{0}'",
+                            ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;
 
@@ -188,7 +188,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             : Database.Null;
                         parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                            ? String.Format("'{0}'",
+                            ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;
 

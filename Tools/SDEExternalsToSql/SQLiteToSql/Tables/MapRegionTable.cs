@@ -60,7 +60,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters["regionID"] = mRegion.regionID.ToString(CultureInfo.InvariantCulture);
-                        parameters["regionName"] = mRegion.regionName.GetTextOrDefaultString();
+                        parameters["regionName"] = mRegion.regionName.GetTextOrDefaultString(isUnicode: true);
                         parameters["x"] = mRegion.x.GetValueOrDefaultString();
                         parameters["y"] = mRegion.y.GetValueOrDefaultString();
                         parameters["z"] = mRegion.z.GetValueOrDefaultString();

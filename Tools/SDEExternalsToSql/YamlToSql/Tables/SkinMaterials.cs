@@ -76,7 +76,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters[SkinMaterialIDText] = pair.Key.ToString();
                         parameters[MaterialText] = cNode.Children.Keys.Any(key => key.ToString() == MaterialText)
-                            ? String.Format("'{0}'",
+                            ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(MaterialText)].ToString()
                                     .Replace("'", Database.StringEmpty))
                             : Database.StringEmpty;

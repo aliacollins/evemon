@@ -63,7 +63,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         parameters["constellationID"] =
                             mSolarSystem.constellationID.GetValueOrDefaultString();
                         parameters["solarSystemID"] = mSolarSystem.solarSystemID.ToString(CultureInfo.InvariantCulture);
-                        parameters["solarSystemName"] = mSolarSystem.solarSystemName.GetTextOrDefaultString();
+                        parameters["solarSystemName"] = mSolarSystem.solarSystemName.GetTextOrDefaultString(isUnicode: true);
                         parameters["x"] = mSolarSystem.x.GetValueOrDefaultString();
                         parameters["y"] = mSolarSystem.y.GetValueOrDefaultString();
                         parameters["z"] = mSolarSystem.z.GetValueOrDefaultString();
