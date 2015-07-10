@@ -22,17 +22,9 @@ namespace EVEMon.PatchXmlCreator
         private static readonly List<Datafile> s_datafiles = new List<Datafile>();
         private static readonly CultureInfo s_enUsCulture = new CultureInfo("en-US");
 
-        internal const string Caption = "Patch Xml File Creator";
-        internal const string EVEMonExecFilename = "EVEMon.exe";
-        internal const string EVEMonExecDir = @"..\..\..\..\..\EVEMon\bin\x86\Release";
-        private const string InstallerDir = @"..\..\..\..\..\EVEMon\bin\x86\Installbuilder\Installer";
         private const string InstallerFilename = "EVEMon-install-{0}.exe";
-
         private const string DateTimeFormat = "dd MMMM yyyy";
         private const string DatafilesMessageFormat = "{0} {1} ({2}) {3} data file by the EVEMon Development Team";
-        private const string PatchFilename = "patch.xml";
-        private const string PatchDir = @"..\..\..\..\Website";
-        private const string DatafileDir = @"..\..\..\..\..\EVEMon.Common\Resources";
         private const string DatafileHeader = "eve-";
         private const string InstallerArgs = "/S /AUTORUN /SKIPDOTNET";
         private const string AdditionalArgs = "/D=%EVEMON_EXECUTABLE_PATH%";
@@ -68,7 +60,7 @@ namespace EVEMon.PatchXmlCreator
             lblInstallerUrl.Font = FontFactory.GetFont("Tahoma");
             rtbTopicUrl.Font = FontFactory.GetFont("Tahoma");
             lblForumUrl.Font = FontFactory.GetFont("Tahoma");
-            gbDatafiles.Font =FontFactory.GetFont("Tahoma", FontStyle.Bold);
+            gbDatafiles.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
             lblExpVersion.Font = FontFactory.GetFont("Tahoma");
             tbExpVersion.Font = FontFactory.GetFont("Tahoma");
             btnDatafilesClear.Font = FontFactory.GetFont("Tahoma");
@@ -90,7 +82,6 @@ namespace EVEMon.PatchXmlCreator
         {
             m_action = action;
         }
-
 
         #endregion
 
@@ -139,7 +130,9 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private static string GetAssemblyVersion()
         {
-            return AssemblyName.GetAssemblyName(Path.Combine(EVEMonExecDir, EVEMonExecFilename)).Version.ToString();
+            return
+                AssemblyName.GetAssemblyName(Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename))
+                    .Version.ToString();
         }
 
         /// <summary>
@@ -176,9 +169,10 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         internal static FileInfo GetInstallerPath()
         {
-            string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersionWithoutRevision(GetAssemblyVersion()));
+            string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename,
+                GetAssemblyVersionWithoutRevision(GetAssemblyVersion()));
             string installerPath = String.Format(CultureConstants.InvariantCulture, "{1}{0}{2}", Path.DirectorySeparatorChar,
-                InstallerDir, installerFile);
+                Helper.GetSourceFilesDirectory.Replace("Release", "Installbuilder\\Installer"), installerFile);
             return new FileInfo(installerPath);
         }
 
@@ -187,7 +181,7 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         private static void InitDatafiles()
         {
-            DirectoryInfo di = new DirectoryInfo(DatafileDir);
+            DirectoryInfo di = new DirectoryInfo(Helper.GetDataFilesDirectory);
             var filename = String.Format(CultureConstants.InvariantCulture, "{0}*-{1}{2}",
                 DatafileHeader, s_enUsCulture.Name, Datafile.DatafilesExtension);
             FileInfo[] directoryFiles = di.GetFiles(filename);
@@ -255,7 +249,7 @@ namespace EVEMon.PatchXmlCreator
         private static void UpdateDatafileInfo(DatafileControl control, Datafile datafile)
         {
             // Data file info
-            FileInfo fileInfo = new FileInfo(Path.Combine(DatafileDir, datafile.Filename));
+            FileInfo fileInfo = new FileInfo(Path.Combine(Helper.GetDataFilesDirectory, datafile.Filename));
 
             // Assign info
             control.gbDatafile.Text = datafile.Filename;
@@ -300,8 +294,8 @@ namespace EVEMon.PatchXmlCreator
 
             // Remove any existing header and text that is before the header
             control.Text = (control.Text.Contains("\n")
-                                ? control.Text.Remove(0, control.Text.IndexOf("\n", StringComparison.OrdinalIgnoreCase) + 1)
-                                : control.Text.Remove(0, control.Text.LastIndexOf("m", StringComparison.Ordinal) + 1));
+                ? control.Text.Remove(0, control.Text.IndexOf("\n", StringComparison.OrdinalIgnoreCase) + 1)
+                : control.Text.Remove(0, control.Text.LastIndexOf("m", StringComparison.Ordinal) + 1));
 
             // Create the new header text
             string headerText = String.Format(s_enUsCulture, DatafilesMessageFormat, tbExpansion.Text, tbExpVersion.Text,
@@ -362,7 +356,7 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         private void UpdateDatafilesControls()
         {
-            if(m_action == Action.ReleaseOnly)
+            if (m_action == Action.ReleaseOnly)
             {
                 LoadDatafilesInfoFromFile();
                 return;
@@ -504,9 +498,11 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private static SerializablePatch TryDeserializePatchXml()
         {
-            FileInfo file = new FileInfo(Path.Combine(PatchDir, PatchFilename));
+            FileInfo file = new FileInfo(Helper.GetPatchFilePath);
 
-            SerializablePatch xmlDoc = File.Exists(file.FullName) ? Util.DeserializeXmlFromFile<SerializablePatch>(file.FullName) : null;
+            SerializablePatch xmlDoc = File.Exists(file.FullName)
+                ? Util.DeserializeXmlFromFile<SerializablePatch>(file.FullName)
+                : null;
 
             return xmlDoc;
         }
@@ -537,7 +533,8 @@ namespace EVEMon.PatchXmlCreator
             serialRelease.Version = lblEVEMonVersion.Text;
             serialRelease.TopicAddress = rtbTopicUrl.Text;
             serialRelease.PatchAddress = String.Concat(rtbReleaseUrl.Text,
-                String.Format(CultureConstants.InvariantCulture, InstallerFilename, GetAssemblyVersionWithoutRevision(lblEVEMonVersion.Text)));
+                String.Format(CultureConstants.InvariantCulture, InstallerFilename,
+                    GetAssemblyVersionWithoutRevision(lblEVEMonVersion.Text)));
             serialRelease.MD5Sum = lblMD5Sum.Text;
             serialRelease.InstallerArgs = InstallerArgs;
             serialRelease.AdditionalArgs = AdditionalArgs;
@@ -554,7 +551,7 @@ namespace EVEMon.PatchXmlCreator
             const string CompatibilityMessage = "\nNOT COMPATIBLE with EVEMon prior to version 1.8.9";
 
             string url = String.Format(CultureConstants.InvariantCulture, "{1}{2}{0}{3}",
-                                       Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
+                Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
 
             foreach (Datafile datafile in s_datafiles)
             {
@@ -582,26 +579,26 @@ namespace EVEMon.PatchXmlCreator
         private void SaveFile()
         {
             string patch = ExportPatchXml();
-            string filenamePath = Path.Combine(PatchDir, PatchFilename);
+            string filenamePath = Helper.GetPatchFilePath;
 
             try
             {
                 FileHelper.OverwriteOrWarnTheUser(filenamePath,
-                                                  fs =>
-                                                      {
-                                                          using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
-                                                          {
-                                                              sw.Write(patch);
-                                                              sw.Flush();
-                                                              fs.Flush();
-                                                          }
-                                                          return true;
-                                                      });
+                    fs =>
+                    {
+                        using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                        {
+                            sw.Write(patch);
+                            sw.Flush();
+                            fs.Flush();
+                        }
+                        return true;
+                    });
             }
             finally
             {
                 const string MsgText = "The file was created successfully.";
-                MessageBox.Show(MsgText, Caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(MsgText, Helper.Caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -643,7 +640,7 @@ namespace EVEMon.PatchXmlCreator
                                          (expansionName.Length + 1);
             string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
             string version = message.Remove((message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1),
-                                            (message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1)));
+                (message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1)));
 
             foreach (SerializableDatafile datafile in patch.Datafiles)
             {
