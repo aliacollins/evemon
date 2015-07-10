@@ -28,6 +28,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             Console.WriteLine();
             Console.Write(@"Generating items datafile... ");
 
+            // Move non existing makret group to custom market group
+            ConfigureNonExistingMarketGroupItems();
+
             // Create custom market groups that don't exist in EVE
             ConfigureNullMarketItems();
 
@@ -148,6 +151,20 @@ namespace EVEMon.XmlGenerator.Datafiles
                         srcItem.RaceID = (int)Race.All;
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Configures the non existing market group items.
+        /// </summary>
+        private static void ConfigureNonExistingMarketGroupItems()
+        {
+            var items = Database.InvTypesTable.Where(
+                x => x.MarketGroupID != null && Database.InvMarketGroupsTable.All(y => y.ID != x.MarketGroupID)).ToList();
+
+            foreach (var item in items)
+            {
+                item.MarketGroupID = DBConstants.RootNonMarketGroupID;
             }
         }
 
