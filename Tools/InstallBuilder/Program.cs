@@ -247,7 +247,7 @@ namespace EVEMon.InstallBuilder
         /// <returns></returns>
         private static string FindMakeNsisExe()
         {
-            string path = Path.GetFullPath(@"..\..\..\NSIS\makensis.exe");
+            string path = Path.Combine(GetProjectDirectory(), @"NSIS\makensis.exe");
             return File.Exists(path) ? path : String.Empty;
         }
 

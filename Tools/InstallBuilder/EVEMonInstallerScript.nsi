@@ -26,6 +26,7 @@ VIAddVersionKey "CompanyName" "${COMPANYNAME}"
 VIAddVersionKey "LegalCopyright" "${COPYRIGHT}"
 VIAddVersionKey "FileDescription" "${DESCRIPTION}"
 VIAddVersionKey "ProductVersion" "${VERSION}"
+VIAddVersionKey "FileVersion" "${VERSION}"
 VIProductVersion "${FULLVERSION}"
 
 Var STARTMENU_FOLDER
