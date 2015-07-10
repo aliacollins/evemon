@@ -108,6 +108,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="APIKeyQueryMonitor.cs" />
     <Compile Include="APIMethods.cs" />
     <Compile Include="ApiTesterUIHelper.cs" />
@@ -490,7 +493,6 @@
     <Compile Include="WinFormsExtensionMethods.cs" />
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Properties\AssemblyInfo.template.cs" />
     <Compile Include="BuyOrder.cs" />
     <Compile Include="Datafile.cs" />
     <Compile Include="APIProvider.cs" />
@@ -1030,13 +1032,9 @@
   </Target>
   <UsingTask TaskName="GitVersionFile" AssemblyFile="..\Tools\MSBuildVersioning\MSBuildVersioning.dll" />
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)' == 'Snapshot' ">
-    <GitVersionFile TemplateFile="Properties\AssemblyInfo.template.cs" DestinationFile="Properties\AssemblyInfo.cs" />
+    <GitVersionFile TemplateFile="..\SharedAssemblyInfo.template.cs" DestinationFile="..\SharedAssemblyInfo.cs" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="GenerateSerializationAssembliesForAllTypes">
   </Target>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
 </Project>
