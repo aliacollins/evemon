@@ -58,7 +58,7 @@ namespace EVEMon.Common.Notifications
         /// </summary>
         private void UpdateDescription()
         {
-            Description = String.Format(CultureConstants.DefaultCulture, "{0} contract{1} finished or need attention.",
+            Description = String.Format(CultureConstants.DefaultCulture, "{0} contract{1} finished or needs attention.",
                                         Contracts.Count, (Contracts.Count > 1 ? "s" : String.Empty));
         }
     }

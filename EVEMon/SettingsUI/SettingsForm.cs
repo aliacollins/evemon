@@ -14,6 +14,7 @@ using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.ExternalCalendar;
+using EVEMon.Common.MarketPricer;
 using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
@@ -183,6 +184,9 @@ namespace EVEMon.SettingsUI
 
             // API providers
             InitializeAPIProvidersDropDown();
+
+            // Market Price providers
+            InitilizeMarketPriceProviderDropDown();
 
             m_isLoading = false;
 
@@ -448,6 +452,9 @@ namespace EVEMon.SettingsUI
             if (!marketUnifiedUploaderCheckBox.Checked)
                 marketUnifiedUploaderControl.ShowInfoLabel();
 
+            // Market Price Provider
+            m_settings.MarketPricer.ProviderName = cbProvidersList.SelectedItem.ToString();
+
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
             m_settings.UI.MainWindow.TitleFormat = (MainWindowTitleFormat)cbWindowsTitleList.SelectedIndex + 1;
@@ -597,6 +604,28 @@ namespace EVEMon.SettingsUI
             {
                 cbGoogleReminder.Items.Add(char.ToUpper(text[0], CultureConstants.DefaultCulture) + text.Substring(1));
             }
+        }
+
+        /// <summary>
+        /// Populates the combobox for the market price providers.
+        /// </summary>
+        private void InitilizeMarketPriceProviderDropDown()
+        {
+            cbProvidersList.Items.Clear();
+
+            cbProvidersList.Items.AddRange(ItemPricer.Providers
+                .Select(pricer => pricer.Name)
+                .Cast<object>()
+                .ToArray());
+
+            var selectedItem = cbProvidersList.Items.Cast<string>()
+                .FirstOrDefault(item => item == m_settings.MarketPricer.ProviderName);
+
+            if (selectedItem != null)
+                cbProvidersList.SelectedIndex = cbProvidersList.Items.IndexOf(selectedItem);
+
+            if (cbProvidersList.SelectedIndex == -1)
+                cbProvidersList.SelectedIndex = 0;
         }
 
         #endregion

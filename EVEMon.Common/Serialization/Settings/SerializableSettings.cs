@@ -23,8 +23,9 @@ namespace EVEMon.Common.Serialization.Settings
             m_monitoredCharacters = new Collection<MonitoredCharacterSettings>();
             PortableEveInstallations = new PortableEveInstallationsSettings();
             MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
-            APIProviders = new APIProvidersSettings();
             Notifications = new NotificationSettings();
+            APIProviders = new APIProvidersSettings();
+            MarketPricer = new MarketPricerSettings(); 
             Exportation = new ExportationSettings();
             Scheduler = new SchedulerSettings();
             Calendar = new CalendarSettings();
@@ -47,8 +48,7 @@ namespace EVEMon.Common.Serialization.Settings
         {
             get { return m_apiKeys; }
         }
-
-
+        
         [XmlArray("characters")]
         [XmlArrayItem("ccp", typeof(SerializableCCPCharacter))]
         [XmlArrayItem("uri", typeof(SerializableUriCharacter))]
@@ -56,24 +56,21 @@ namespace EVEMon.Common.Serialization.Settings
         {
             get { return m_characters; }
         }
-
-
+        
         [XmlArray("plans")]
         [XmlArrayItem("plan")]
         public Collection<SerializablePlan> Plans
         {
             get { return m_plans; }
         }
-
-
+        
         [XmlArray("monitoredCharacters")]
         [XmlArrayItem("character")]
         public Collection<MonitoredCharacterSettings> MonitoredCharacters
         {
             get { return m_monitoredCharacters; }
         }
-
-
+        
         [XmlElement("apiProviders")]
         public APIProvidersSettings APIProviders { get; set; }
 
@@ -97,6 +94,9 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlElement("marketUnifiedUploader")]
         public MarketUnifiedUploaderSettings MarketUnifiedUploader { get; set; }
+
+        [XmlElement("marketpricer")]
+        public MarketPricerSettings MarketPricer { get; set; }
 
         [XmlElement("portableEveInstallations")]
         public PortableEveInstallationsSettings PortableEveInstallations { get; set; }

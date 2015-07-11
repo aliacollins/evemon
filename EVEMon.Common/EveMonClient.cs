@@ -24,6 +24,7 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public static class EveMonClient
     {
+
         #region Fields
 
         private static StreamWriter s_traceStream;
@@ -285,12 +286,12 @@ namespace EVEMon.Common
                     catch (UnauthorizedAccessException exc)
                     {
                         string msg = String.Format(CultureConstants.DefaultCulture,
-                                                   "An error occurred while EVEMon was looking for its data directory. " +
-                                                   "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
-                                                   Environment.NewLine, exc.Message);
+                            "An error occurred while EVEMon was looking for its data directory. " +
+                            "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
+                            Environment.NewLine, exc.Message);
 
                         DialogResult result = MessageBox.Show(msg, "EVEMon Error", MessageBoxButtons.RetryCancel,
-                                                              MessageBoxIcon.Error);
+                            MessageBoxIcon.Error);
 
                         if (result != DialogResult.Cancel)
                             continue;
@@ -352,7 +353,7 @@ namespace EVEMon.Common
         {
             string localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             EVEApplicationDataDir = String.Format(CultureConstants.InvariantCulture, "{1}{0}CCP{0}EVE",
-                                                  Path.DirectorySeparatorChar, localApplicationData);
+                Path.DirectorySeparatorChar, localApplicationData);
 
             // Check folder exists
             if (!Directory.Exists(EVEApplicationDataDir))
@@ -369,9 +370,9 @@ namespace EVEMon.Common
                 return;
 
             s_defaultEvePortraitCacheFolders = tranquilityFolders.Select(
-                    traquilityFolder => String.Format(
-                        CultureConstants.InvariantCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
-                        Path.DirectorySeparatorChar, traquilityFolder.Name, EVEApplicationDataDir)).Where(Directory.Exists);
+                traquilityFolder => String.Format(
+                    CultureConstants.InvariantCulture, "{2}{0}{1}{0}cache{0}Pictures{0}Characters",
+                    Path.DirectorySeparatorChar, traquilityFolder.Name, EVEApplicationDataDir)).Where(Directory.Exists);
 
             EvePortraitCacheFolders = s_defaultEvePortraitCacheFolders;
         }
@@ -1529,15 +1530,15 @@ namespace EVEMon.Common
         /// <param name="canAutoInstall">if set to <c>true</c> [can auto install].</param>
         /// <param name="installArgs">The install args.</param>
         internal static void OnUpdateAvailable(Uri forumUrl, Uri installerUrl, string updateMessage,
-                                               Version currentVersion, Version newestVersion, string md5Sum,
-                                               bool canAutoInstall, string installArgs)
+            Version currentVersion, Version newestVersion, string md5Sum,
+            bool canAutoInstall, string installArgs)
         {
             Trace("EveMonClient.OnUpdateAvailable({0} -> {1}, {2}, {3})",
-                  currentVersion, newestVersion, canAutoInstall, installArgs);
+                currentVersion, newestVersion, canAutoInstall, installArgs);
             if (UpdateAvailable != null)
             {
                 UpdateAvailable(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage, currentVersion,
-                                                                   newestVersion, md5Sum, canAutoInstall, installArgs));
+                    newestVersion, md5Sum, canAutoInstall, installArgs));
             }
         }
 
@@ -1579,7 +1580,7 @@ namespace EVEMon.Common
             string message = String.Format(CultureConstants.DefaultCulture, format, args);
             TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
             string timeStr = String.Format(CultureConstants.DefaultCulture,
-                                           "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
+                "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
 
             System.Diagnostics.Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0}{1}", timeStr, message));
         }
@@ -1638,9 +1639,9 @@ namespace EVEMon.Common
             catch (IOException e)
             {
                 string text = String.Format(CultureConstants.DefaultCulture,
-                                            "EVEMon has encountered an error and needs to terminate.{0}" +
-                                            "The error message is:{0}{0}\"{1}\"",
-                                            Environment.NewLine, e.Message);
+                    "EVEMon has encountered an error and needs to terminate.{0}" +
+                    "The error message is:{0}{0}\"{1}\"",
+                    Environment.NewLine, e.Message);
                 MessageBox.Show(text, "EVEMon Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }

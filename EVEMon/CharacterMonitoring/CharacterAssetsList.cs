@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Serialization.BattleClinic.MarketPrices;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using Region = EVEMon.Common.Data.Region;
@@ -22,14 +21,14 @@ namespace EVEMon.CharacterMonitoring
 
         private readonly List<AssetColumnSettings> m_columns = new List<AssetColumnSettings>();
         private readonly List<Asset> m_list = new List<Asset>();
- 
+
         private InfiniteDisplayToolTip m_tooltip;
         private AssetGrouping m_grouping;
         private AssetColumn m_sortCriteria;
 
         private string m_textFilter = String.Empty;
         private string m_totalCostLabelDefaultText;
-        
+
         private bool m_sortAscending = true;
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
@@ -182,7 +181,8 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterAssetsUpdated += EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterInfoUpdated += EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated += EveMonClient_ConquerableStationListUpdated;
-            BCItemPrices.BCItemPricesUpdated += BCItemPrices_BCItemPricesUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            Settings.MarketPricer.Pricer.ItemPricesUpdated += ItemPricer_ItemPricesUpdated;
             Disposed += OnDisposed;
         }
 
@@ -199,7 +199,8 @@ namespace EVEMon.CharacterMonitoring
             EveMonClient.CharacterAssetsUpdated -= EveMonClient_CharacterAssetsUpdated;
             EveMonClient.CharacterInfoUpdated -= EveMonClient_CharacterInfoUpdated;
             EveMonClient.ConquerableStationListUpdated -= EveMonClient_ConquerableStationListUpdated;
-            BCItemPrices.BCItemPricesUpdated -= BCItemPrices_BCItemPricesUpdated;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            Settings.MarketPricer.Pricer.ItemPricesUpdated -= ItemPricer_ItemPricesUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -246,10 +247,10 @@ namespace EVEMon.CharacterMonitoring
         public void AutoResizeColumns()
         {
             m_columns.ForEach(column =>
-                                  {
-                                      if (column.Visible)
-                                          column.Width = -2;
-                                  });
+            {
+                if (column.Visible)
+                    column.Width = -2;
+            });
 
             UpdateColumns();
         }
@@ -309,8 +310,8 @@ namespace EVEMon.CharacterMonitoring
 
             // Store the selected item (if any) to restore it after the update
             int selectedItem = (lvAssets.SelectedItems.Count > 0
-                                    ? lvAssets.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+                ? lvAssets.SelectedItems[0].Tag.GetHashCode()
+                : 0);
 
             lvAssets.BeginUpdate();
             try
@@ -352,19 +353,12 @@ namespace EVEMon.CharacterMonitoring
         /// Updates the items cost.
         /// </summary>
         /// <param name="assets">The assets.</param>
-        private void UpdateItemsCost(IEnumerable<Asset> assets)
+        private void UpdateItemsCost(IList<Asset> assets)
         {
-            bool unknownPrice = false;
-            double totalCost = 0d;
-            foreach (Asset asset in assets)
-            {
-                double price = asset.Price;
-                unknownPrice |= Math.Abs(price) < double.Epsilon;
-                totalCost += price * asset.Quantity;
-            }
+            lblTotalCost.Text = String.Format(CultureConstants.DefaultCulture, m_totalCostLabelDefaultText,
+                assets.Sum(asset => asset.Price * asset.Quantity));
 
-            lblTotalCost.Text = String.Format(CultureConstants.DefaultCulture, m_totalCostLabelDefaultText, totalCost);
-            noPricesFoundLabel.Visible = unknownPrice;
+            noPricesFoundLabel.Visible = assets.Any(asset => Math.Abs(asset.Price) < double.Epsilon);
         }
 
         /// <summary>
@@ -466,14 +460,14 @@ namespace EVEMon.CharacterMonitoring
             // Add the items
             lvAssets.Items.AddRange(
                 assets.Select(asset => new
-                                           {
-                                               asset,
-                                               item = new ListViewItem(asset.Item.Name)
-                                                          {
-                                                              UseItemStyleForSubItems = false,
-                                                              Tag = asset
-                                                          }
-                                           }).Select(x => CreateSubItems(x.asset, x.item)).ToArray());
+                {
+                    asset,
+                    item = new ListViewItem(asset.Item.Name)
+                    {
+                        UseItemStyleForSubItems = false,
+                        Tag = asset
+                    }
+                }).Select(x => CreateSubItems(x.asset, x.item)).ToArray());
         }
 
         /// <summary>
@@ -502,14 +496,14 @@ namespace EVEMon.CharacterMonitoring
                 // Add the items in every group
                 lvAssets.Items.AddRange(
                     group.Select(asset => new
-                                              {
-                                                  asset,
-                                                  item = new ListViewItem(asset.Item.Name, listGroup)
-                                                             {
-                                                                 UseItemStyleForSubItems = false,
-                                                                 Tag = asset
-                                                             }
-                                              }).Select(x => CreateSubItems(x.asset, x.item)).ToArray());
+                    {
+                        asset,
+                        item = new ListViewItem(asset.Item.Name, listGroup)
+                        {
+                            UseItemStyleForSubItems = false,
+                            Tag = asset
+                        }
+                    }).Select(x => CreateSubItems(x.asset, x.item)).ToArray());
             }
         }
 
@@ -615,8 +609,8 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case AssetColumn.Quantity:
                     item.Text = (numberFormat
-                                     ? FormatHelper.Format(asset.Quantity, AbbreviationFormat.AbbreviationSymbols)
-                                     : asset.Quantity.ToNumericString(0));
+                        ? FormatHelper.Format(asset.Quantity, AbbreviationFormat.AbbreviationSymbols)
+                        : asset.Quantity.ToNumericString(0));
                     break;
                 case AssetColumn.UnitaryPrice:
                     item.Text = (numberFormat
@@ -630,8 +624,8 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case AssetColumn.Volume:
                     item.Text = (numberFormat
-                                     ? FormatHelper.Format(asset.TotalVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : asset.TotalVolume.ToNumericString(2));
+                        ? FormatHelper.Format(asset.TotalVolume, AbbreviationFormat.AbbreviationSymbols)
+                        : asset.TotalVolume.ToNumericString(2));
                     break;
                 case AssetColumn.BlueprintType:
                     item.Text = asset.TypeOfBlueprint;
@@ -725,15 +719,15 @@ namespace EVEMon.CharacterMonitoring
             builder.AppendFormat(CultureConstants.DefaultCulture, "{0} ({1:N2} m³)", item.Text, selectedAssets.First().Volume).
                 AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Total Quantity: {0:N0} in {1:N0} {2}location{3}", sumQuantity,
-                                 uniqueLocations,
-                                 uniqueLocations > 1 ? "different " : String.Empty,
-                                 uniqueLocations > 1 ? "s" : String.Empty).AppendLine();
+                uniqueLocations,
+                uniqueLocations > 1 ? "different " : String.Empty,
+                uniqueLocations > 1 ? "s" : String.Empty).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Total Volume: {0:N2} m³", sumVolume).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Closest Location: {0} ({1})", closestAsset.Location,
-                                 closestAsset.JumpsText).AppendLine();
+                closestAsset.JumpsText).AppendLine();
             if (closestAsset.Location != farthestAsset.Location)
                 builder.AppendFormat(CultureConstants.DefaultCulture, "Farthest Location: {0} ({1})", farthestAsset.Location,
-                                     farthestAsset.JumpsText);
+                    farthestAsset.JumpsText);
 
             return builder.ToString();
         }
@@ -746,13 +740,13 @@ namespace EVEMon.CharacterMonitoring
             // Invoke it to a background thread cause it may be time intensive
             // if character owns many stuff in several locations
             Dispatcher.BackgroundInvoke(() =>
-                                            {
-                                                Character.Assets.UpdateLocation();
-                                                Assets = Character.Assets;
+            {
+                Character.Assets.UpdateLocation();
+                Assets = Character.Assets;
 
-                                                // Return to the UI thread
-                                                Dispatcher.Invoke(UpdateColumns);
-                                            });
+                // Return to the UI thread
+                Dispatcher.Invoke(UpdateColumns);
+            });
         }
 
         #endregion
@@ -929,11 +923,25 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// Handles the SettingsChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            // No need to do this if control is not visible
+            if (!Visible)
+                return;
+           
+            UpdateContent();
+        }
+
+        /// <summary>
         /// Handles the BCItemPricesUpdated event of the BCItemPrices control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void BCItemPrices_BCItemPricesUpdated(object sender, EventArgs e)
+        private void ItemPricer_ItemPricesUpdated(object sender, EventArgs e)
         {
             UpdateContent();
         }

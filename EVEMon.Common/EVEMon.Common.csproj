@@ -346,6 +346,7 @@
     <Compile Include="KillLogComparer.cs" />
     <Compile Include="KillLogExporter.cs" />
     <Compile Include="KillLogItem.cs" />
+    <Compile Include="MarketPricer\ItemPricer.cs" />
     <Compile Include="Medal.cs" />
     <Compile Include="MedalCollection.cs" />
     <Compile Include="MedalComparer.cs" />
@@ -444,9 +445,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>BCAPISettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\BattleClinic\MarketPrices\BCItemPrices.cs" />
-    <Compile Include="Serialization\BattleClinic\MarketPrices\SerializableBCItemPrice.cs" />
-    <Compile Include="Serialization\BattleClinic\MarketPrices\SerializableBCItemPrices.cs" />
+    <Compile Include="MarketPricer\BattleClinic\BCItemPricer.cs" />
+    <Compile Include="Serialization\BattleClinic\MarketPricer\SerializableBCItemPrice.cs" />
+    <Compile Include="Serialization\BattleClinic\MarketPricer\SerializableBCItemPrices.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
     <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
@@ -482,6 +483,9 @@
     <Compile Include="Serialization\Datafiles\SerializableSkillPrerequisite.cs" />
     <Compile Include="Serialization\Datafiles\SerializableSolarSystem.cs" />
     <Compile Include="Serialization\Datafiles\SerializableStation.cs" />
+    <Compile Include="MarketPricer\EveAddicts\EAItemPricer.cs" />
+    <Compile Include="Serialization\EVEAddicts\MarketPricer\SerializableEAItemPrice.cs" />
+    <Compile Include="Serialization\EVEAddicts\MarketPricer\SerializableEAItemPrices.cs" />
     <Compile Include="Serialization\Exportation\OutputAttributeEnhancer.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />
@@ -504,6 +508,7 @@
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />
+    <Compile Include="SettingsObjects\MarketPricerSettings.cs" />
     <Compile Include="SettingsObjects\PlanetarySettings.cs" />
     <Compile Include="SettingsObjects\PlanetaryColumn.cs" />
     <Compile Include="SettingsObjects\PlanetaryColumnSettings.cs" />

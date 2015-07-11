@@ -544,4 +544,10 @@
   <data name="EVEImageServerCDN" xml:space="preserve">
     <value>https://imageserver.eveonline.com</value>
   </data>
+  <data name="EVEAddictsAPIItemPrices" xml:space="preserve">
+    <value>api/prices.php?getAll=true</value>
+  </data>
+  <data name="EVEAddictsBaseUrl" xml:space="preserve">
+    <value>http://eve.addicts.nl/</value>
+  </data>
 </root>

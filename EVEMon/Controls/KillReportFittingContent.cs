@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.BattleClinic.MarketPrices;
 
 namespace EVEMon.Controls
 {
@@ -71,6 +70,27 @@ namespace EVEMon.Controls
                 if (!DesignMode || this.IsDesignModeHosted())
                     UpdateContent();
             }
+        }
+
+        #endregion
+
+
+        #region Inherited Events
+
+        /// <summary>
+        /// On load subscribe the events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            Settings.MarketPricer.Pricer.ItemPricesUpdated += ItemPricer_ItemPricesUpdated;
+            Disposed += OnDisposed;
         }
 
         #endregion
@@ -159,7 +179,7 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private string GetTotalCost()
         {
-            double shipCost = BCItemPrices.GetPriceByTypeID(m_killLog.Victim.ShipTypeID);
+            double shipCost = Settings.MarketPricer.Pricer.GetPriceByTypeID(m_killLog.Victim.ShipTypeID);
             bool unknownCost = m_killLog.Victim.ShipTypeID != DBConstants.CapsuleID && Math.Abs(shipCost) < double.Epsilon;
             double totalCost = shipCost;
 
@@ -177,7 +197,7 @@ namespace EVEMon.Controls
         /// <param name="items">The items.</param>
         /// <param name="totalCost">The total cost.</param>
         /// <returns></returns>
-        private static bool GetItemsCost(IEnumerable<KillLogItem>items, out double totalCost)
+        private static bool GetItemsCost(IEnumerable<KillLogItem> items, out double totalCost)
         {
             bool unknownCost = false;
             double itemCost = 0d;
@@ -197,26 +217,6 @@ namespace EVEMon.Controls
             totalCost = itemCost;
 
             return unknownCost;
-        }
-
-        #endregion
-
-
-        #region Inherited Events
-
-        /// <summary>
-        /// On load subscribe the events.
-        /// </summary>
-        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            if (DesignMode || this.IsDesignModeHosted())
-                return;
-
-            BCItemPrices.BCItemPricesUpdated += BCItemPrices_BCItemPricesUpdated;
-            Disposed += OnDisposed;
         }
 
         #endregion
@@ -287,11 +287,11 @@ namespace EVEMon.Controls
             Size itemQtyTextSize = TextRenderer.MeasureText(g, itemQty.ToNumericString(0), m_fittingFont);
 
             Rectangle itemTextRect = new Rectangle(e.Bounds.Left + inContainerPad + PadLeft * 2 + ItemImageSize,
-                                                   e.Bounds.Top + ((e.Bounds.Height - itemTextSize.Height) / 2),
-                                                   itemTextSize.Width + PadRight, itemTextSize.Height);
+                e.Bounds.Top + ((e.Bounds.Height - itemTextSize.Height) / 2),
+                itemTextSize.Width + PadRight, itemTextSize.Height);
             Rectangle itemQtyTextRect = new Rectangle(e.Bounds.Right - itemQtyTextSize.Width - PadRight,
-                                                      e.Bounds.Top + ((e.Bounds.Height - itemTextSize.Height) / 2),
-                                                      itemQtyTextSize.Width + PadRight, itemQtyTextSize.Height);
+                e.Bounds.Top + ((e.Bounds.Height - itemTextSize.Height) / 2),
+                itemQtyTextSize.Width + PadRight, itemQtyTextSize.Height);
 
             // Draw texts
             TextRenderer.DrawText(g, item.Name, m_fittingFont, itemTextRect, Color.Black);
@@ -302,8 +302,8 @@ namespace EVEMon.Controls
                 return;
 
             g.DrawImage(item.ItemImage, new Rectangle(e.Bounds.Left + inContainerPad + PadLeft * 2,
-                                                      e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
-                                                      ItemImageSize, ItemImageSize));
+                e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
+                ItemImageSize, ItemImageSize));
         }
 
         /// <summary>
@@ -316,9 +316,9 @@ namespace EVEMon.Controls
             Graphics g = e.Graphics;
 
             using (Brush brush = Settings.UI.SafeForWork
-                                     ? new SolidBrush(Color.FromArgb(75, 75, 75))
-                                     : (Brush)new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, FittingDetailHeight),
-                                                                      Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
+                ? new SolidBrush(Color.FromArgb(75, 75, 75))
+                : (Brush)new LinearGradientBrush(new PointF(0F, 0F), new PointF(0F, FittingDetailHeight),
+                    Color.FromArgb(75, 75, 75), Color.FromArgb(25, 25, 25)))
             {
                 g.FillRectangle(brush, e.Bounds);
             }
@@ -330,10 +330,10 @@ namespace EVEMon.Controls
 
             Size fittingGroupTextSize = TextRenderer.MeasureText(g, group.GetDescription(), m_fittingBoldFont, Size.Empty, Format);
             Rectangle fittingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft / 3 + ItemImageSize,
-                                                           e.Bounds.Top +
-                                                           ((e.Bounds.Height - fittingGroupTextSize.Height) / 2),
-                                                           fittingGroupTextSize.Width + PadRight,
-                                                           fittingGroupTextSize.Height);
+                e.Bounds.Top +
+                ((e.Bounds.Height - fittingGroupTextSize.Height) / 2),
+                fittingGroupTextSize.Width + PadRight,
+                fittingGroupTextSize.Height);
 
             TextRenderer.DrawText(g, group.GetDescription(), m_fittingBoldFont, fittingGroupTextRect, Color.White);
 
@@ -342,8 +342,8 @@ namespace EVEMon.Controls
                 return;
 
             Rectangle fittingGroupImageRect = new Rectangle(e.Bounds.Left + PadLeft / 3,
-                                                            e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
-                                                            ItemImageSize, ItemImageSize);
+                e.Bounds.Top + ((e.Bounds.Height - ItemImageSize) / 2),
+                ItemImageSize, ItemImageSize);
 
             g.DrawImage(GetGroupImage(group), fittingGroupImageRect);
         }
@@ -417,7 +417,7 @@ namespace EVEMon.Controls
                     if (FittingContentListBox.TopIndex - i >= 0)
                         item = FittingContentListBox.Items[FittingContentListBox.TopIndex - i];
                 }
-                // Going down
+                    // Going down
                 else
                 {
                     // Compute the height of the items from current the topindex (included)
@@ -480,7 +480,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void BCItemPrices_BCItemPricesUpdated(object sender, EventArgs e)
+        private void ItemPricer_ItemPricesUpdated(object sender, EventArgs e)
         {
             ItemsCostLabel.Text = GetTotalCost();
         }
@@ -492,8 +492,28 @@ namespace EVEMon.Controls
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            BCItemPrices.BCItemPricesUpdated -= BCItemPrices_BCItemPricesUpdated;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            Settings.MarketPricer.Pricer.ItemPricesUpdated -= ItemPricer_ItemPricesUpdated;
             Disposed -= OnDisposed;
+        }
+
+        #endregion
+
+
+        #region Global Events
+
+        /// <summary>
+        /// Handles the SettingsChanged event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            // No need to do this if control is not visible
+            if (!Visible)
+                return;
+
+            UpdateContent();
         }
 
         #endregion

@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
+namespace EVEMon.Common.Serialization.BattleClinic.MarketPricer
 {
     public class SerializableBCItemPrice
     {
