@@ -72,6 +72,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
+            var text = String.Format("Parsing {0}... ", yamlFile);
+            Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
             if (rNode == null)
@@ -80,22 +82,29 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 return;
             }
 
-            Console.WriteLine();
+            Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(InvTypesTableName);
+            DataTable dataTable = Database.SqlConnection.GetSchema("columns");
+
+            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", InvTypesTableName)).Length == 0)
+                Database.CreateTable(InvTypesTableName);
+            else
+            {
+                Database.CreateColumns(InvTypesTableName, new Dictionary<string, string>
+                {
+                    { FactionIDText, "int" },
+                    { GraphicIDText, "int" },
+                    { IconIDText, "int" },
+                    { RadiusText, "float" },
+                    { SoundIDText, "int" },
+                });
+            }
+
             Database.CreateTable(DgmMasteriesTableName);
             Database.CreateTable(DgmTypeMasteriesTableName);
             Database.CreateTable(DgmTraitsTableName);
             Database.CreateTable(DgmTypeTraitsTableName);
-            Database.CreateColumns(InvTypesTableName, new Dictionary<string, string>
-            {
-                { FactionIDText, "int" },
-                { GraphicIDText, "int" },
-                { IconIDText, "int" },
-                { RadiusText, "float" },
-                { SoundIDText, "int" },
-            });
 
             ImportData(rNode);
 
@@ -115,9 +124,10 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Dictionary<int, Dictionary<string, string>> masteriesDict = new Dictionary<int, Dictionary<string, string>>();
             Dictionary<int, string> traitsDict = new Dictionary<int, string>();
 
-            using (SqlTransaction tx = Database.SqlConnection.BeginTransaction())
+            using(IDbCommand command = new SqlCommand { Connection = Database.SqlConnection })
             {
-                IDbCommand command = new SqlCommand { Connection = Database.SqlConnection, Transaction = tx };
+                command.Transaction = Database.SqlConnection.BeginTransaction();
+
                 try
                 {
                     foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
@@ -287,11 +297,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         InsertRow(parameters, cNode, pair, command);
                     }
 
-                    tx.Commit();
+                    command.Transaction.Commit();
                 }
                 catch (SqlException e)
                 {
-                    tx.Rollback();
+                    command.Transaction.Rollback();
                     Util.HandleException(command, e);
                 }
             }

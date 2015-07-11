@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
@@ -47,11 +48,10 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
         /// </summary>
         private static void ImportData()
         {
-            SqlCommand command = new SqlCommand { Connection = Database.SqlConnection };
-
-            using (var tx = Database.SqlConnection.BeginTransaction())
+            using (IDbCommand command = new SqlCommand { Connection = Database.SqlConnection })
             {
-                command.Transaction = tx;
+                command.Transaction = Database.SqlConnection.BeginTransaction();
+
                 try
                 {
                     foreach (mapCelestialStatistics mCelStat in Database.UniverseDataContext.mapCelestialStatistics)
@@ -84,11 +84,11 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         command.ExecuteNonQuery();
                     }
 
-                    tx.Commit();
+                    command.Transaction.Commit();
                 }
                 catch (SqlException e)
                 {
-                    tx.Rollback();
+                    command.Transaction.Rollback();
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
