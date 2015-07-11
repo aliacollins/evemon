@@ -17,8 +17,28 @@ namespace EVEMon.SDEExternalsToSql
     internal static class Database
     {
         private static string s_text;
-        internal const string StringEmpty = "''";
-        internal const string Null = "NULL";
+
+        /// <summary>
+        /// Gets a DB string empty representation.
+        /// </summary>
+        /// <value>
+        /// The string empty.
+        /// </value>
+        internal static String StringEmpty
+        {
+            get { return "''"; }
+        }
+
+        /// <summary>
+        /// Gets a DB null representation.
+        /// </summary>
+        /// <value>
+        /// The null.
+        /// </value>
+        internal static String Null
+        {
+            get { return "NULL"; }
+        }
 
         /// <summary>
         /// Gets or sets the SQL connection.
@@ -213,52 +233,22 @@ namespace EVEMon.SDEExternalsToSql
         /// <summary>
         /// Drops the table.
         /// </summary>
-        /// <param name="command">The command.</param>
         /// <param name="tableName">Name of the table.</param>
-        private static void DropTable(IDbCommand command, string tableName)
+        private static void DropTable(String tableName)
         {
-            using (var tx = SqlConnection.BeginTransaction())
+            using (IDbCommand command = new SqlCommand { Connection = SqlConnection })
             {
-                command.Transaction = tx;
+                command.Transaction = SqlConnection.BeginTransaction();
                 command.CommandText = String.Format("DROP TABLE {0}", tableName);
 
                 try
                 {
                     command.ExecuteNonQuery();
-                    tx.Commit();
+                    command.Transaction.Commit();
                 }
                 catch (SqlException e)
                 {
-                    tx.Rollback();
-                    Console.WriteLine();
-                    Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
-                    Console.WriteLine(e.Message);
-                    Console.ReadLine();
-                    Environment.Exit(-1);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Creates the table.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="tableName">Name of the table.</param>
-        private static void CreateTable(IDbCommand command, String tableName)
-        {
-            using (var tx = SqlConnection.BeginTransaction())
-            {
-                command.Transaction = tx;
-                command.CommandText = Util.GetScriptFor(tableName);
-
-                try
-                {
-                    command.ExecuteNonQuery();
-                    tx.Commit();
-                }
-                catch (SqlException e)
-                {
-                    tx.Rollback();
+                    command.Transaction.Rollback();
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
@@ -274,15 +264,30 @@ namespace EVEMon.SDEExternalsToSql
         /// <param name="tableName">Name of the table.</param>
         internal static void CreateTable(String tableName)
         {
-            var command = new SqlCommand { Connection = SqlConnection };
             DataTable dataTable = SqlConnection.GetSchema("columns");
 
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length == 0)
-                CreateTable(command, tableName);
-            else
+            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length != 0)
+                DropTable(tableName);
+
+            using (IDbCommand command = new SqlCommand { Connection = SqlConnection })
             {
-                DropTable(command, tableName);
-                CreateTable(command, tableName);
+                command.Transaction = SqlConnection.BeginTransaction();
+                command.CommandText = Util.GetScriptFor(tableName);
+
+                try
+                {
+                    command.ExecuteNonQuery();
+                    command.Transaction.Commit();
+                }
+                catch (SqlException e)
+                {
+                    command.Transaction.Rollback();
+                    Console.WriteLine();
+                    Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
+                    Console.WriteLine(e.Message);
+                    Console.ReadLine();
+                    Environment.Exit(-1);
+                }
             }
         }
 
@@ -290,29 +295,27 @@ namespace EVEMon.SDEExternalsToSql
         /// Creates the column.
         /// </summary>
         /// <param name="dataTable">The data table.</param>
-        /// <param name="command">The command.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="columnName">Name of the column.</param>
         /// <param name="columnType">Type of the column.</param>
-        private static void CreateColumn(DataTable dataTable, IDbCommand command,
-            String tableName, String columnName, String columnType)
+        private static void CreateColumn(DataTable dataTable, String tableName, String columnName, String columnType)
         {
-            if (dataTable.Select(String.Format("COLUMN_NAME = '{0}' AND TABLE_NAME = '{1}'", columnName, tableName)).Length != 0)
+            if (dataTable.Select(String.Format("TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tableName, columnName)).Length != 0)
                 return;
 
-            using (var tx = SqlConnection.BeginTransaction())
+            using (IDbCommand command = new SqlCommand { Connection = SqlConnection })
             {
-                command.Transaction = tx;
+                command.Transaction = SqlConnection.BeginTransaction();
                 command.CommandText = String.Format("ALTER TABLE {0} ADD {1} {2} null", tableName, columnName, columnType);
 
                 try
                 {
                     command.ExecuteNonQuery();
-                    tx.Commit();
+                    command.Transaction.Commit();
                 }
                 catch (SqlException e)
                 {
-                    tx.Rollback();
+                    command.Transaction.Rollback();
                     Console.WriteLine();
                     Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
                     Console.WriteLine(e.Message);
@@ -329,7 +332,6 @@ namespace EVEMon.SDEExternalsToSql
         /// <param name="columns">The columns.</param>
         internal static void CreateColumns(String tableName, IEnumerable<KeyValuePair<string, string>> columns)
         {
-            var command = new SqlCommand { Connection = SqlConnection };
             DataTable dataTable = SqlConnection.GetSchema("columns");
 
             if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length == 0)
@@ -341,7 +343,7 @@ namespace EVEMon.SDEExternalsToSql
 
             foreach (KeyValuePair<string, string> column in columns)
             {
-                CreateColumn(dataTable, command, tableName, column.Key, column.Value);
+                CreateColumn(dataTable, tableName, column.Key, column.Value);
             }
         }
     }

@@ -37,6 +37,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
+            var text = String.Format("Parsing {0}... ", yamlFile);
+            Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
             if (rNode == null)
@@ -45,7 +47,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 return;
             }
 
-            Console.WriteLine();
+            Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
             Console.Write(@"Importing {0}... ", yamlFile);
 
             Database.CreateTable(EveGraphicsTableName);
@@ -63,9 +65,10 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// <param name="rNode">The r node.</param>
         private static void ImportData(YamlMappingNode rNode)
         {
-            using (SqlTransaction tx = Database.SqlConnection.BeginTransaction())
+            using (IDbCommand command = new SqlCommand { Connection = Database.SqlConnection })
             {
-                IDbCommand command = new SqlCommand { Connection = Database.SqlConnection, Transaction = tx };
+                command.Transaction = Database.SqlConnection.BeginTransaction();
+
                 try
                 {
                     foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
@@ -121,11 +124,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         command.ExecuteNonQuery();
                     }
 
-                    tx.Commit();
+                    command.Transaction.Commit();
                 }
                 catch (SqlException e)
                 {
-                    tx.Rollback();
+                    command.Transaction.Rollback();
                     Util.HandleException(command, e);
                 }
             }
