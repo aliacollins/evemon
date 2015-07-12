@@ -47,7 +47,7 @@ namespace EVEMon.Sales
         public static IEnumerable<MineralPrice> Prices(string source)
         {
             if (!s_parsers.ContainsKey(source))
-                throw new ArgumentException("That is not a registered mineraldatasource.", "source");
+                throw new ArgumentException(@"That is not a registered mineral datasource.", "source");
 
             IMineralParser parser = s_parsers[source];
             return GetPrices(parser);
@@ -61,7 +61,7 @@ namespace EVEMon.Sales
         public static string GetCourtesyText(string source)
         {
             if (!s_parsers.ContainsKey(source))
-                throw new ArgumentException("That is not a registered mineraldatasource.", "source");
+                throw new ArgumentException(@"That is not a registered mineral datasource.", "source");
 
             IMineralParser p = s_parsers[source];
             return p.CourtesyText;
@@ -75,7 +75,7 @@ namespace EVEMon.Sales
         public static Uri GetCourtesyUrl(string source)
         {
             if (!s_parsers.ContainsKey(source))
-                throw new ArgumentException("That is not a registered mineraldatasource.", "source");
+                throw new ArgumentException(@"That is not a registered mineral datasource.", "source");
 
             IMineralParser p = s_parsers[source];
             return p.CourtesyUrl;
@@ -92,7 +92,7 @@ namespace EVEMon.Sales
             {
                 content = HttpWebService.DownloadString(parser.URL);
             }
-            catch(HttpWebServiceException ex)
+            catch (HttpWebServiceException ex)
             {
                 ExceptionHandler.LogException(ex, false);
             }
@@ -101,20 +101,20 @@ namespace EVEMon.Sales
             MatchCollection mc = parser.Tokenizer.Matches(content);
 
             return mc.Cast<Match>().Select(match =>
-                                               {
-                                                   int typeID;
-                                                   string name = Int32.TryParse(match.Groups["name"].Value, out typeID)
-                                                                     ? StaticItems.GetItemByID(typeID).Name
-                                                                     : match.Groups["name"].Value;
+            {
+                int typeID;
+                string name = Int32.TryParse(match.Groups["name"].Value, out typeID)
+                    ? StaticItems.GetItemByID(typeID).Name
+                    : match.Groups["name"].Value;
 
-                                                   return new MineralPrice
-                                                              {
-                                                                  Name = name,
-                                                                  Price = Decimal.Parse(match.Groups["price"].Value,
-                                                                                        NumberStyles.Currency,
-                                                                                        CultureInfo.InvariantCulture)
-                                                              };
-                                               });
+                return new MineralPrice
+                {
+                    Name = name,
+                    Price = Decimal.Parse(match.Groups["price"].Value,
+                        NumberStyles.Currency,
+                        CultureInfo.InvariantCulture)
+                };
+            });
         }
     }
 }

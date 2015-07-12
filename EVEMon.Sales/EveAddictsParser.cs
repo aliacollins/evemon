@@ -13,8 +13,7 @@ namespace EVEMon.Sales
         {
             get { return "eveaddicts"; }
         }
-
-
+        
         /// <summary>
         /// Gets the title.
         /// </summary>

@@ -13,8 +13,7 @@ namespace EVEMon.Sales
         {
             get { return "battleclinic"; }
         }
-
-
+        
         /// <summary>
         /// Gets the title.
         /// </summary>
@@ -50,12 +49,13 @@ namespace EVEMon.Sales
         {
             get
             {
-                return new Regex(@"<name>(?<name>.+?)</name>.+?<price>(?<price>.+?)</price>",
-                                 RegexOptions.Compiled
-                                 | RegexOptions.IgnorePatternWhitespace
-                                 | RegexOptions.Singleline
-                                 | RegexOptions.Multiline
-                                 | RegexOptions.IgnoreCase);
+                return new Regex(@"<name>(?<name>.+?)</name>\s*<price>(?<price>.+?)</price>",
+                    RegexOptions.Compiled
+                    | RegexOptions.IgnorePatternWhitespace
+                    | RegexOptions.Singleline
+                    | RegexOptions.Multiline
+                    | RegexOptions.IgnoreCase
+                    | RegexOptions.CultureInvariant);
             }
         }
 
