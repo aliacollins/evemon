@@ -14,7 +14,6 @@ namespace EVEMon.Sales
             get { return "evecentral"; }
         }
 
-
         /// <summary>
         /// Gets the title.
         /// </summary>
@@ -50,7 +49,7 @@ namespace EVEMon.Sales
         {
             get
             {
-                return new Regex(@"<name>(?<name>.+?)</name>.+?<price>(?<price>.+?)</price>",
+                return new Regex(@"<name>(?<name>.+?)</name>\s*<price>(?<price>.+?)</price>",
                                  RegexOptions.Compiled
                                  | RegexOptions.IgnorePatternWhitespace
                                  | RegexOptions.Singleline
