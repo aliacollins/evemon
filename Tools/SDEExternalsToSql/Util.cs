@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql
@@ -62,10 +62,10 @@ namespace EVEMon.SDEExternalsToSql
         /// <returns></returns>
         internal static string GetScriptFor(string tableName)
         {
-            var resourceName = String.Format(@"EVEMon.SDEExternalsToSql.Scripts.{0}.table.sql", tableName);
+            var resourceName = String.Format(@"{0}.Scripts.{1}.table.sql", typeof(Program).Namespace, tableName);
 
             string result = null;
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            using (Stream stream = typeof(Program).Assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream != null)
                 {
@@ -79,7 +79,7 @@ namespace EVEMon.SDEExternalsToSql
             if (!String.IsNullOrWhiteSpace(result))
                 return result;
 
-            throw new SettingsPropertyNotFoundException(String.Format("{0}.table.sql resource file does not exists!", tableName));
+            throw new MissingManifestResourceException(String.Format("{0}.table.sql resource file does not exists!", tableName));
         }
 
         /// <summary>
