@@ -135,5 +135,9 @@
     <row refTypeID="128" refTypeName="Character Application Accept Message" />
     <row refTypeID="129" refTypeName="Character Application Reject Message" />
     <row refTypeID="130" refTypeName="Character Application Withdraw Message" />
+    <row refTypeID="147" refTypeName="Structure being captured" />
+    <row refTypeID="148" refTypeName="Station service has been enabled" />
+    <row refTypeID="149" refTypeName="Station service has been disabled" />
+    <row refTypeID="160" refTypeName="Structure has entered reinforced" />
   </rowset>
 </NotificationRefTypeIDs>
