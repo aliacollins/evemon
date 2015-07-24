@@ -73,42 +73,57 @@ namespace EVEMon.Controls
             AllianceNameLabel.Text = m_attacker.AllianceID == 0 ? String.Empty : m_attacker.AllianceName;
 
             DamageDoneLabel.Text = String.Format(CultureConstants.DefaultCulture, DamageDoneLabel.Text, m_attacker.DamageDone,
-                                                 (m_attacker.DamageDone / (double)TotalDamageDone));
+                (m_attacker.DamageDone / (double)TotalDamageDone));
         }
 
         /// <summary>
         /// Gets the image for the specified picture box.
         /// </summary>
         /// <param name="pictureBox">The picture box.</param>
-        private void GetImageFor(PictureBox pictureBox)
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        private void GetImageFor(PictureBox pictureBox, bool useFallbackUri = false)
         {
-            string url = null;
+            ImageService.GetImageAsync(GetImageUrl(pictureBox, useFallbackUri), img =>
+            {
+                if (img == null)
+                {
+                    GetImageFor(pictureBox, true);
+                    return;
+                }
+
+                pictureBox.Image = img;
+            });
+        }
+
+        /// <summary>
+        /// Gets the image URL.
+        /// </summary>
+        /// <param name="pictureBox">The picture box.</param>
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        /// <returns></returns>
+        private Uri GetImageUrl(PictureBox pictureBox, bool useFallbackUri)
+        {
+            string path = String.Empty;
 
             if (pictureBox.Equals(CharacterPictureBox))
             {
-                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                    String.Format(CultureConstants.InvariantCulture,
-                        NetworkConstants.CCPPortraits, m_attacker.ID, (int)EveImageSize.x64));
+                path = String.Format(CultureConstants.InvariantCulture,
+                    NetworkConstants.CCPPortraits, m_attacker.ID, (int)EveImageSize.x64);
             }
 
             if (pictureBox.Equals(ShipPictureBox) || pictureBox.Equals(WeaponPictureBox))
             {
-                int typeId = pictureBox.Equals(ShipPictureBox) ? m_attacker.ShipTypeID : m_attacker.WeaponTypeID;
-                url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                    String.Format(CultureConstants.InvariantCulture,
-                        NetworkConstants.CCPIconsFromImageServer, "type", typeId, (int)EveImageSize.x32));
+                int typeId = pictureBox.Equals(ShipPictureBox)
+                    ? m_attacker.ShipTypeID
+                    : m_attacker.WeaponTypeID;
+
+                path = String.Format(CultureConstants.InvariantCulture,
+                    NetworkConstants.CCPIconsFromImageServer, "type", typeId, (int)EveImageSize.x32);
             }
 
-            if (!String.IsNullOrEmpty(url))
-            {
-                ImageService.GetImageAsync(new Uri(url), img =>
-                                                             {
-                                                                 if (img == null)
-                                                                     return;
-
-                                                                 pictureBox.Image = img;
-                                                             });
-            }
+            return useFallbackUri
+                ? ImageService.GetImageServerBaseUri(path)
+                : ImageService.GetImageServerCdnUri(path);
         }
 
         #endregion

@@ -17,17 +17,47 @@ namespace EVEMon.Common
         private static readonly Object s_syncLock = new object();
 
         /// <summary>
+        /// Gets the image server CDN URI.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        public static Uri GetImageServerCdnUri(string path)
+        {
+            return new Uri(
+                String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageServerCDN, path));
+        }
+
+        /// <summary>
+        /// Gets the image server base URI.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        public static Uri GetImageServerBaseUri(string path)
+        {
+            return new Uri(
+                String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageServerBase, path));
+        }
+
+        /// <summary>
         /// Asynchronously downloads a character portrait from its ID.
         /// </summary>
         /// <param name="charId"></param>
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
-        public static void GetCharacterImageAsync(long charId, GetImageCallback callback)
+        internal static void GetCharacterImageAsync(long charId, GetImageCallback callback)
         {
-            GetImageAsync(
-                new Uri(
-                    String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                        String.Format(CultureConstants.InvariantCulture,
-                            NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128))), callback, false);
+            string path = String.Format(CultureConstants.InvariantCulture,
+                NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128);
+
+            GetImageAsync(GetImageServerCdnUri(path), (img =>
+            {
+                if (img == null)
+                {
+                    GetImageAsync(GetImageServerBaseUri(path), callback, false);
+                    return;
+                }
+
+                callback(img);
+            }), false);
         }
 
         /// <summary>
@@ -37,16 +67,30 @@ namespace EVEMon.Common
         /// <param name="allianceID">The alliance ID.</param>
         public static void GetAllianceImage(PictureBox pictureBox, long allianceID)
         {
-            Uri url =
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                        "alliance", allianceID, pictureBox.Width)));
+            string path = String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
+                "alliance", allianceID, pictureBox.Width);
 
-            GetImageAsync(url, (img =>
-                                    {
-                                        pictureBox.Image = img ?? pictureBox.InitialImage;
-                                        pictureBox.Update();
-                                    }));
+            GetImageAsync(GetImageServerCdnUri(path), (img =>
+            {
+                if (img == null)
+                {
+                    GetImageAsync(GetImageServerBaseUri(path), (image => OnDownload(pictureBox, image)));
+                    return;
+                }
+
+                OnDownload(pictureBox, img);
+            }));
+        }
+
+        /// <summary>
+        /// Called when image gets downloaded.
+        /// </summary>
+        /// <param name="pictureBox">The picture box.</param>
+        /// <param name="image">The image.</param>
+        private static void OnDownload(PictureBox pictureBox, Image image)
+        {
+            pictureBox.Image = image ?? pictureBox.InitialImage;
+            pictureBox.Update();
         }
 
         /// <summary>
@@ -56,16 +100,24 @@ namespace EVEMon.Common
         /// <param name="corporationID">The corporation ID.</param>
         public static void GetCorporationImage(PictureBox pictureBox, long corporationID)
         {
-            Uri url =
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                        "corporation", corporationID, pictureBox.Width)));
+            string path = String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
+                "corporation", corporationID, pictureBox.Width);
 
-            GetImageAsync(url, (img =>
-                                    {
-                                        pictureBox.Image = img ?? pictureBox.InitialImage;
-                                        pictureBox.Update();
-                                    }));
+            GetImageAsync(GetImageServerCdnUri(path), (img =>
+            {
+                if (img == null)
+                {
+                    GetImageAsync(GetImageServerBaseUri(path), (image =>
+                    {
+                        pictureBox.Image = image ?? pictureBox.InitialImage;
+                        pictureBox.Update();
+                    }));
+                    return;
+                }
+
+                pictureBox.Image = img;
+                pictureBox.Update();
+            }));
         }
 
         /// <summary>
@@ -124,13 +176,13 @@ namespace EVEMon.Common
 
             // Downloads the image and adds it to cache
             HttpWebService.DownloadImageAsync(url, GotImage,
-                                              (GetImageCallback)(img =>
-                                                                     {
-                                                                         if (img != null)
-                                                                             AddImageToCache(url, img);
+                (GetImageCallback)(img =>
+                {
+                    if (img != null)
+                        AddImageToCache(url, img);
 
-                                                                         callback(img);
-                                                                     }));
+                    callback(img);
+                }));
         }
 
         /// <summary>
@@ -149,16 +201,16 @@ namespace EVEMon.Common
                     EveMonClient.EnsureCacheDirInit();
                     string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName,
-                                                      fs =>
-                                                          {
-                                                              // We need to create a copy of the image because GDI+ is locking it
-                                                              using (Image newImage = new Bitmap(image))
-                                                              {
-                                                                  newImage.Save(fs, ImageFormat.Png);
-                                                                  fs.Flush();
-                                                              }
-                                                              return true;
-                                                          });
+                        fs =>
+                        {
+                            // We need to create a copy of the image because GDI+ is locking it
+                            using (Image newImage = new Bitmap(image))
+                            {
+                                newImage.Save(fs, ImageFormat.Png);
+                                fs.Flush();
+                            }
+                            return true;
+                        });
                 }
                 catch (Exception ex)
                 {
@@ -193,6 +245,7 @@ namespace EVEMon.Common
         private static void GotImage(DownloadImageAsyncResult e, object state)
         {
             GetImageCallback callback = (GetImageCallback)state;
+
             if (e.Error == null)
             {
                 // Invokes on the UI thread

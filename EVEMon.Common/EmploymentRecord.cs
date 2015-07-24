@@ -35,7 +35,9 @@ namespace EVEMon.Common
 
             m_character = character;
             m_corporationId = src.CorporationID;
-            m_corporationName = String.IsNullOrWhiteSpace(src.CorporationName) ? GetIDToName(src.CorporationID) : src.CorporationName;
+            m_corporationName = String.IsNullOrWhiteSpace(src.CorporationName)
+                ? GetIDToName(src.CorporationID)
+                : src.CorporationName;
             StartDate = src.StartDate;
         }
 
@@ -69,8 +71,8 @@ namespace EVEMon.Common
             get
             {
                 return m_corporationName == "Unknown"
-                           ? m_corporationName = GetIDToName(m_corporationId)
-                           : m_corporationName;
+                    ? m_corporationName = GetIDToName(m_corporationId)
+                    : m_corporationName;
 
             }
         }
@@ -125,35 +127,41 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the corporation image.
         /// </summary>
-        private void GetImage()
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        private void GetImage(bool useFallbackUri = false)
         {
             m_image = Properties.Resources.DefaultCorporationImage32;
-            ImageService.GetImageAsync(GetImageUrl(), img =>
-                                                          {
-                                                              if (img == null)
-                                                                  return;
+            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+            {
+                if (img == null)
+                {
+                    GetImage(true);
+                    return;
+                }
 
-                                                              m_image = img;
+                m_image = img;
 
-                                                              // Notify the subscriber that we got the image
-                                                              // Note that if the image is in cache the event doesn't get fired
-                                                              // as the event object is null
-                                                              if (EmploymentRecordImageUpdated != null)
-                                                                  EmploymentRecordImageUpdated(this, EventArgs.Empty);
-                                                          });
+                // Notify the subscriber that we got the image
+                // Note that if the image is in cache the event doesn't get fired
+                // as the event object is null
+                if (EmploymentRecordImageUpdated != null)
+                    EmploymentRecordImageUpdated(this, EventArgs.Empty);
+            });
         }
 
         /// <summary>
         /// Gets the image URL.
         /// </summary>
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
         /// <returns></returns>
-        private Uri GetImageUrl()
+        private Uri GetImageUrl(bool useFallbackUri)
         {
-            return
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                    String.Format(CultureConstants.InvariantCulture,
-                        NetworkConstants.CCPIconsFromImageServer, "corporation", m_corporationId,
-                        (int)EveImageSize.x32)));
+            string path = String.Format(CultureConstants.InvariantCulture,
+                NetworkConstants.CCPIconsFromImageServer, "corporation", m_corporationId, (int)EveImageSize.x32);
+
+            return useFallbackUri
+                ? ImageService.GetImageServerBaseUri(path)
+                : ImageService.GetImageServerCdnUri(path);
         }
 
 
@@ -168,11 +176,11 @@ namespace EVEMon.Common
         public SerializableEmploymentHistory Export()
         {
             SerializableEmploymentHistory serial = new SerializableEmploymentHistory
-                                                       {
-                                                           CorporationID = m_corporationId,
-                                                           CorporationName = CorporationName,
-                                                           StartDate = StartDate
-                                                       };
+            {
+                CorporationID = m_corporationId,
+                CorporationName = CorporationName,
+                StartDate = StartDate
+            };
             return serial;
         }
 
