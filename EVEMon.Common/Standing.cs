@@ -83,8 +83,8 @@ namespace EVEMon.Common
             get
             {
                 Int64 skillLevel = (StandingValue < 0
-                                      ? m_character.Skills[DBConstants.DiplomacySkillID]
-                                      : m_character.Skills[DBConstants.ConnectionsSkillID]).LastConfirmedLvl;
+                    ? m_character.Skills[DBConstants.DiplomacySkillID]
+                    : m_character.Skills[DBConstants.ConnectionsSkillID]).LastConfirmedLvl;
                 return StandingValue + (10 - StandingValue) * (skillLevel * 0.04);
             }
         }
@@ -95,16 +95,16 @@ namespace EVEMon.Common
         /// <value>The status.</value>
         public static StandingStatus Status(double standing)
         {
-                if (standing <= -5.5)
-                    return StandingStatus.Terrible;
+            if (standing <= -5.5)
+                return StandingStatus.Terrible;
 
-                if (standing <= -0.5)
-                    return StandingStatus.Bad;
+            if (standing <= -0.5)
+                return StandingStatus.Bad;
 
-                if (standing < 0.5)
-                    return StandingStatus.Neutral;
+            if (standing < 0.5)
+                return StandingStatus.Neutral;
 
-                return standing < 5.5 ? StandingStatus.Good : StandingStatus.Excellent;
+            return standing < 5.5 ? StandingStatus.Good : StandingStatus.Excellent;
         }
 
         /// <summary>
@@ -134,20 +134,24 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the entity image.
         /// </summary>
-        private void GetImage()
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        private void GetImage(bool useFallbackUri = false)
         {
             m_image = GetDefaultImage();
-            ImageService.GetImageAsync(GetImageUrl(), img =>
-                                                          {
-                                                              if (img == null)
-                                                                  return;
+            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+            {
+                if (img == null)
+                {
+                    GetImage(true);
+                    return;
+                }
 
-                                                              m_image = img;
+                m_image = img;
 
-                                                              // Notify the subscriber that we got the image
-                                                              if (StandingImageUpdated != null)
-                                                                  StandingImageUpdated(this, EventArgs.Empty);
-                                                          });
+                // Notify the subscriber that we got the image
+                if (StandingImageUpdated != null)
+                    StandingImageUpdated(this, EventArgs.Empty);
+            });
         }
 
         /// <summary>
@@ -171,20 +175,22 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the image URL.
         /// </summary>
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
         /// <returns></returns>
-        private Uri GetImageUrl()
+        private Uri GetImageUrl(bool useFallbackUri)
         {
-            if (Group == StandingGroup.Agents)
-                return
-                    new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                        String.Format(CultureConstants.InvariantCulture,
-                            NetworkConstants.CCPPortraits, m_entityID, (int)EveImageSize.x32)));
+            string path = Group == StandingGroup.Agents
+                ? String.Format(CultureConstants.InvariantCulture,
+                    NetworkConstants.CCPPortraits,
+                    m_entityID, (int)EveImageSize.x32)
+                : String.Format(CultureConstants.InvariantCulture,
+                    NetworkConstants.CCPIconsFromImageServer,
+                    (Group == StandingGroup.Factions ? "alliance" : "corporation"),
+                    m_entityID, (int)EveImageSize.x32);
 
-            return
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                        (Group == StandingGroup.Factions ? "alliance" : "corporation"),
-                        m_entityID, (int)EveImageSize.x32)));
+            return useFallbackUri
+                ? ImageService.GetImageServerBaseUri(path)
+                : ImageService.GetImageServerCdnUri(path);
         }
 
         #endregion

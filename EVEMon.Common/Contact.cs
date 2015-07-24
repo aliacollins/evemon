@@ -80,7 +80,7 @@ namespace EVEMon.Common
             {
                 if (m_image == null)
                     GetImage();
-                
+
                 return m_image;
             }
         }
@@ -93,20 +93,24 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the entity image.
         /// </summary>
-        private void GetImage()
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        private void GetImage(bool useFallbackUri = false)
         {
             m_image = GetDefaultImage();
-            ImageService.GetImageAsync(GetImageUrl(), img =>
-                                                          {
-                                                              if (img == null)
-                                                                  return;
+            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+            {
+                if (img == null)
+                {
+                    GetImage(true);
+                    return;
+                }
 
-                                                              m_image = img;
+                m_image = img;
 
-                                                              // Notify the subscriber that we got the image
-                                                              if (ContactImageUpdated != null)
-                                                                  ContactImageUpdated(this, EventArgs.Empty);
-                                                          });
+                // Notify the subscriber that we got the image
+                if (ContactImageUpdated != null)
+                    ContactImageUpdated(this, EventArgs.Empty);
+            });
         }
 
         /// <summary>
@@ -130,20 +134,22 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the image URL.
         /// </summary>
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
         /// <returns></returns>
-        private Uri GetImageUrl()
+        private Uri GetImageUrl(bool useFallbackUri)
         {
-            if (m_contactType == ContactType.Character)
-                return
-                    new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                        String.Format(CultureConstants.InvariantCulture,
-                            NetworkConstants.CCPPortraits, m_contactID, (int)EveImageSize.x32)));
+            string path = m_contactType == ContactType.Character
+                ? String.Format(CultureConstants.InvariantCulture,
+                    NetworkConstants.CCPPortraits,
+                    m_contactID, (int)EveImageSize.x32)
+                : String.Format(CultureConstants.InvariantCulture,
+                    NetworkConstants.CCPIconsFromImageServer,
+                    (m_contactType == ContactType.Alliance ? "alliance" : "corporation"),
+                    m_contactID, (int)EveImageSize.x32);
 
-            return
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
-                        (m_contactType == ContactType.Alliance ? "alliance" : "corporation"),
-                        m_contactID, (int)EveImageSize.x32)));
+            return useFallbackUri
+                ? ImageService.GetImageServerBaseUri(path)
+                : ImageService.GetImageServerCdnUri(path);
         }
 
         #endregion

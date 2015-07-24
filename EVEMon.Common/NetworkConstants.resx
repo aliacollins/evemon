@@ -147,9 +147,6 @@
   <data name="EVEMonUpdates" xml:space="preserve">
     <value>/updates/patch.xml</value>
   </data>
-  <data name="CCPIcons" xml:space="preserve">
-    <value>http://eve.no-ip.de/{0}/{1}/{2}.png</value>
-  </data>
   <data name="CCPPortraits" xml:space="preserve">
     <value>/character/{0}_{1}.jpg</value>
     <comment>New web address for portraits as part of Incursion 1.1.0</comment>
@@ -505,7 +502,7 @@
   <data name="EVECommunityBase" xml:space="preserve">
     <value>https://community.eveonline.com</value>
   </data>
-  <data name="EVEImageBase" xml:space="preserve">
+  <data name="EVEImageServerBase" xml:space="preserve">
     <value>https://image.eveonline.com</value>
   </data>
   <data name="APICharacterAffiliation" xml:space="preserve">
@@ -543,5 +540,8 @@
   </data>
   <data name="APICorporationBlueprints" xml:space="preserve">
     <value>/corp/Blueprints.xml.aspx</value>
+  </data>
+  <data name="EVEImageServerCDN" xml:space="preserve">
+    <value>https://imageserver.eveonline.com</value>
   </data>
 </root>

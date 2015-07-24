@@ -144,6 +144,7 @@ namespace EVEMon.Common
 
         #endregion
 
+
         #region Helper Methods
 
         /// <summary>
@@ -217,20 +218,24 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the item image.
         /// </summary>
-        private void GetItemImage()
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        private void GetItemImage(bool useFallbackUri = false)
         {
             m_image = GetDefaultImage();
-            ImageService.GetImageAsync(GetImageUrl(), img =>
-                                                          {
-                                                              if (img == null)
-                                                                  return;
+            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+            {
+                if (img == null)
+                {
+                    GetItemImage(true);
+                    return;
+                }
 
-                                                              m_image = img;
+                m_image = img;
 
-                                                              // Notify the subscriber that we got the image
-                                                              if (KillLogItemImageUpdated != null)
-                                                                  KillLogItemImageUpdated(this, EventArgs.Empty);
-                                                          });
+                // Notify the subscriber that we got the image
+                if (KillLogItemImageUpdated != null)
+                    KillLogItemImageUpdated(this, EventArgs.Empty);
+            });
         }
 
         /// <summary>
@@ -245,14 +250,17 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the image URL.
         /// </summary>
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
         /// <returns></returns>
-        private Uri GetImageUrl()
+        private Uri GetImageUrl(bool useFallbackUri)
         {
-            return
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageBase,
-                    String.Format(CultureConstants.InvariantCulture,
-                        NetworkConstants.CCPIconsFromImageServer, "type", m_typeID,
-                        (int)EveImageSize.x32)));
+            string path = String.Format(CultureConstants.InvariantCulture,
+                NetworkConstants.CCPIconsFromImageServer, "type", m_typeID,
+                (int)EveImageSize.x32);
+
+            return useFallbackUri
+                ? ImageService.GetImageServerBaseUri(path)
+                : ImageService.GetImageServerCdnUri(path);
         }
 
         #endregion
