@@ -1033,6 +1033,24 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/prices.php?getAll=true.
+        /// </summary>
+        public static string EVEAddictsAPIItemPrices {
+            get {
+                return ResourceManager.GetString("EVEAddictsAPIItemPrices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://eve.addicts.nl/.
+        /// </summary>
+        public static string EVEAddictsBaseUrl {
+            get {
+                return ResourceManager.GetString("EVEAddictsBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://community.eveonline.com.
         /// </summary>
         public static string EVECommunityBase {

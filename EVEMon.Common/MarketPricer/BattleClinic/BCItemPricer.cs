@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
+using EVEMon.Common.Serialization.BattleClinic.MarketPricer;
 
-namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
+namespace EVEMon.Common.MarketPricer.BattleClinic
 {
-    public static class BCItemPrices
+    public class BCItemPricer : ItemPricer
     {
         /// <summary>
         /// Occurs when BattleClinic item prices updated.
         /// </summary>
-        public static event EventHandler BCItemPricesUpdated;
+        public override event EventHandler ItemPricesUpdated;
 
 
         #region Fields
 
         private static readonly Dictionary<int, double> s_priceByItemID = new Dictionary<int, double>();
-        private static readonly string s_file = LocalXmlCache.GetFile("xml_item_prices").FullName;
 
-        private static bool s_loaded;
         private static bool s_queryPending;
 
         private static DateTime s_cachedUntil;
@@ -26,14 +26,18 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
         #endregion
 
 
-        #region Public Finders
+        public override string Name
+        {
+            get { return "BattleClinic"; }
+        }
+
 
         /// <summary>
         /// Gets the price by type ID.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public static double GetPriceByTypeID(int id)
+        public override double GetPriceByTypeID(int id)
         {
             // Ensure list importation
             EnsureImportation();
@@ -43,39 +47,43 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
             return result;
         }
 
-        #endregion
-
 
         #region Importation - Exportation Methods
 
         /// <summary>
         /// Ensures the list has been imported.
         /// </summary>
-        private static void EnsureImportation()
+        private void EnsureImportation()
         {
+            string file = LocalXmlCache.GetFile("bc_item_prices").FullName;
+
             // Update the file if we don't have it or the data have expired
-            if (!File.Exists(s_file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
+            if (!File.Exists(file) || (s_priceByItemID.Any() && s_cachedUntil < DateTime.UtcNow))
             {
                 UpdateFile();
                 return;
             }
 
             // Exit if we have already imported the list
-            if (s_loaded)
+            if (s_priceByItemID.Any())
                 return;
+            
+            SerializableBCItemPrices result = null;
 
             // Deserialize the xml file
-            SerializableBCItemPrices result = Util.DeserializeXmlFromFile<SerializableBCItemPrices>(s_file);
+            if (s_cachedUntil == DateTime.MinValue)
+                result = Util.DeserializeXmlFromFile<SerializableBCItemPrices>(file);
+
+            s_cachedUntil = result != null ? result.CachedUntil.ToUniversalTime() : s_cachedUntil;
 
             // In case the file has an error or it's an old one, we try to get a fresh copy
-            if (result == null || result.CachedUntil.ToUniversalTime() < DateTime.UtcNow)
+            if (result == null || s_cachedUntil < DateTime.UtcNow)
             {
                 UpdateFile();
                 return;
             }
 
             // Import the data
-            s_cachedUntil = result.CachedUntil.ToUniversalTime();
             Import(result.ItemPrices);
         }
 
@@ -84,7 +92,7 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
         /// </summary>
         private static void Import(IEnumerable<SerializableBCItemPrice> itemPrices)
         {
-            EveMonClient.Trace("BCMarketPrices.Import - begin");
+            EveMonClient.Trace("BCItemPricer.Import - begin");
 
             s_priceByItemID.Clear();
             foreach (SerializableBCItemPrice item in itemPrices)
@@ -92,25 +100,28 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
                 s_priceByItemID[item.ID] = item.Price;
             }
 
-            s_loaded = true;
-            EveMonClient.Trace("BCMarketPrices.Import - done");
+            // Reset query pending flag
+            s_queryPending = false;
+
+            EveMonClient.Trace("BCItemPricer.Import - done");
         }
 
         /// <summary>
         /// Downloads the item prices list.
         /// </summary>
-        private static void UpdateFile()
+        private void UpdateFile()
         {
             // Quit if query is pending
             if (s_queryPending)
                 return;
 
-            EveMonClient.Trace("BCMarketPrices.UpdateFile - begin");
+            EveMonClient.Trace("BCItemPricer.UpdateFile - begin");
 
-            Util.DownloadXmlAsync<SerializableBCItemPrices>(
-                new Uri(
-                    String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
-                        NetworkConstants.BattleClinicItemPrices)), OnDownloaded, true);
+            var url = new Uri(
+                String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
+                    NetworkConstants.BattleClinicItemPrices));
+
+            Util.DownloadXmlAsync<SerializableBCItemPrices>(url, OnDownloaded, true);
 
             s_queryPending = true;
         }
@@ -120,10 +131,13 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="errormessage">The errormessage.</param>
-        private static void OnDownloaded(SerializableBCItemPrices result, string errormessage)
+        private void OnDownloaded(SerializableBCItemPrices result, string errormessage)
         {
             if (!String.IsNullOrEmpty(errormessage))
             {
+                // Reset query pending flag
+                s_queryPending = false;
+
                 EveMonClient.Trace(errormessage);
                 return;
             }
@@ -131,13 +145,13 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
             // Save the file in cache
             Save(result);
 
-            EveMonClient.Trace("BCMarketPrices.UpdateFile - done");
+            EveMonClient.Trace("BCItemPricer.UpdateFile - done");
 
             s_cachedUntil = result.CachedUntil.ToUniversalTime();
             Import(result.ItemPrices);
 
-            if (BCItemPricesUpdated != null)
-                BCItemPricesUpdated(null, EventArgs.Empty);
+            if (ItemPricesUpdated != null)
+                ItemPricesUpdated(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -147,14 +161,14 @@ namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
         private static void Save(SerializableBCItemPrices result)
         {
             EveMonClient.EnsureCacheDirInit();
-            FileHelper.OverwriteOrWarnTheUser(s_file,
-                                              fs =>
-                                                  {
-                                                      XmlSerializer xs = new XmlSerializer(typeof(SerializableBCItemPrices));
-                                                      xs.Serialize(fs, result);
-                                                      fs.Flush();
-                                                      return true;
-                                                  });
+            FileHelper.OverwriteOrWarnTheUser(LocalXmlCache.GetFile("bc_item_prices").FullName,
+                fs =>
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(SerializableBCItemPrices));
+                    xs.Serialize(fs, result);
+                    fs.Flush();
+                    return true;
+                });
         }
 
         #endregion

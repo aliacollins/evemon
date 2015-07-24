@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Serialization.BattleClinic.MarketPrices;
 
 namespace EVEMon.Common
 {
@@ -94,7 +93,7 @@ namespace EVEMon.Common
         /// </summary>
         public double Price
         {
-            get { return BCItemPrices.GetPriceByTypeID(m_typeID); }
+            get { return Settings.MarketPricer.Pricer.GetPriceByTypeID(m_typeID); }
         }
 
         /// <summary>

@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.BattleClinic.MarketPrices
+namespace EVEMon.Common.Serialization.BattleClinic.MarketPricer
 {
     [XmlRoot("itemValues")]
     public sealed class SerializableBCItemPrices

@@ -1,7 +1,6 @@
 using System;
 using EVEMon.Common.Data;
 using EVEMon.Common.Serialization.API;
-using EVEMon.Common.Serialization.BattleClinic.MarketPrices;
 
 namespace EVEMon.Common
 {
@@ -127,7 +126,7 @@ namespace EVEMon.Common
             get
             {
                 return TypeOfBlueprint != BlueprintType.Copy.ToString()
-                           ? BCItemPrices.GetPriceByTypeID(Item.ID)
+                           ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
                            : 0;
             }
         }

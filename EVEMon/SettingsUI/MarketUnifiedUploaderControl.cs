@@ -9,9 +9,6 @@ using EVEMon.MarketUnifiedUploader;
 
 namespace EVEMon.SettingsUI
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class MarketUnifiedUploaderControl : UserControl
     {
         private MarketUnifiedUploaderSettings m_marketUnifiedUploaderSettings;
