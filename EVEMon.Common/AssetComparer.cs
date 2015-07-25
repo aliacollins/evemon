@@ -89,7 +89,7 @@ namespace EVEMon.Common
                 case AssetColumn.SolarSystem:
                     return x.SolarSystem.CompareTo(y.SolarSystem);
                 case AssetColumn.Jumps:
-                    return String.Compare(x.JumpsText, y.JumpsText, StringComparison.CurrentCulture);
+                    return x.Jumps.CompareTo(y.Jumps);
                 default:
                     return 0;
             }
