@@ -60,14 +60,17 @@ namespace EVEMon.Common
         public static string ToRemainingTimeShortDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
             DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
-
-            // Small chance that the function could cross over the
-            // second boundry, and have an inconsistent result.
             StringBuilder sb = new StringBuilder();
             if (t <= now)
                 return "Done";
 
-            TimeSpan ts = t.Subtract(now);
+
+            // Fixing the small chance that the method could cross over the
+            // second boundary, and have an inconsistent result.
+            double factor = Math.Pow(10, 7);
+            long roundedTicks = (long)Math.Round(t.Subtract(now).Ticks / factor) * (int)factor;
+            TimeSpan ts = new TimeSpan(roundedTicks);
+
             if (ts.Days > 0)
             {
                 sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
