@@ -739,7 +739,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // We've completed all the skill points for the current level
-            if (!skill.Skill.IsPartiallyTrained && skill.Level != 5)
+            if (!skill.Skill.IsPartiallyTrained && skill.Level <= 5)
             {
                 StringBuilder levelCompleteToolTip = new StringBuilder();
                 levelCompleteToolTip.AppendFormat(CultureConstants.DefaultCulture,
