@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c5d18a0a5b6d4ac8b736e4b322a2620f" Name="Diagram1">
+      <Diagram DiagramId="9cab746de4ec476cbd967a8c6256ea03" Name="Diagram1">
         <EntityTypeShape EntityType="universeDataDxModel.mapCelestialStatistics" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="universeDataDxModel.mapConstellationJumps" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="universeDataDxModel.mapConstellations" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
