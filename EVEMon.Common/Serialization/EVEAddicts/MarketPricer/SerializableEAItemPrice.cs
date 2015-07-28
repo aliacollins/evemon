@@ -1,6 +1,7 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.EVEAddicts.MarketPricer
+namespace EVEMon.Common.Serialization.EveAddicts.MarketPricer
 {
     public sealed class SerializableEAItemPrice
     {
@@ -16,7 +17,16 @@ namespace EVEMon.Common.Serialization.EVEAddicts.MarketPricer
         [XmlIgnore]
         public double Price
         {
-            get { return (BuyPrice + SellPrice) / 2; }
+            get
+            {
+                if (Math.Abs(BuyPrice) <= Double.Epsilon)
+                    return SellPrice;
+
+                if (Math.Abs(SellPrice) <= Double.Epsilon)
+                    return BuyPrice;
+               
+                return (BuyPrice + SellPrice) / 2;
+            }
         }
     }
 }

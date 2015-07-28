@@ -170,7 +170,7 @@
     <comment>{0} - the host name of the request. {1} - the WebExceptionStatus returned.</comment>
   </data>
   <data name="XmlException" xml:space="preserve">
-    <value>A Xml request to {0} failed because the server did not return a valid Xml document</value>
+    <value>An Xml request to {0} failed because the server did not return a valid Xml document</value>
     <comment>{0} - the host name of the request</comment>
   </data>
 </root>
