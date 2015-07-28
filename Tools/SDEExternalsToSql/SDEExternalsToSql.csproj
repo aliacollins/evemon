@@ -177,19 +177,19 @@
     <Compile Include="SQLiteToSql\Tables\MapSolarSystemJumpsTable.cs" />
     <Compile Include="SQLiteToSql\Tables\MapSolarSystemsTable.cs" />
     <Compile Include="SQLiteToSql\UniverseData.Context.cs">
-      <DependentUpon>UniverseData.Context.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>UniverseData.Context.tt</DependentUpon>
     </Compile>
     <Compile Include="SQLiteToSql\UniverseData.cs">
-      <DependentUpon>UniverseData.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>UniverseData.tt</DependentUpon>
     </Compile>
     <Compile Include="SQLiteToSql\UniverseData.Designer.cs">
-      <DependentUpon>UniverseData.edmx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>UniverseData.edmx</DependentUpon>
     </Compile>
     <Compile Include="Util.cs" />
     <Compile Include="YamlToSql\Tables\Blueprints.cs" />
@@ -209,7 +209,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
+    <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
