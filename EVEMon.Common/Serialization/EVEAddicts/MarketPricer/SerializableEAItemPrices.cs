@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.EVEAddicts.MarketPricer
+namespace EVEMon.Common.Serialization.EveAddicts.MarketPricer
 {
     [XmlRoot("prices")]
     public sealed class SerializableEAItemPrices

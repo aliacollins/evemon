@@ -484,8 +484,11 @@
     <Compile Include="Serialization\Datafiles\SerializableSolarSystem.cs" />
     <Compile Include="Serialization\Datafiles\SerializableStation.cs" />
     <Compile Include="MarketPricer\EveAddicts\EAItemPricer.cs" />
-    <Compile Include="Serialization\EVEAddicts\MarketPricer\SerializableEAItemPrice.cs" />
-    <Compile Include="Serialization\EVEAddicts\MarketPricer\SerializableEAItemPrices.cs" />
+    <Compile Include="Serialization\EveAddicts\MarketPricer\SerializableEAItemPrice.cs" />
+    <Compile Include="Serialization\EveAddicts\MarketPricer\SerializableEAItemPrices.cs" />
+    <Compile Include="Serialization\EveMarketData\MarketPricer\SerializableEMDItemPriceList.cs" />
+    <Compile Include="Serialization\EveMarketData\MarketPricer\SerializableEMDItemPriceListItem.cs" />
+    <Compile Include="Serialization\EveMarketData\MarketPricer\SerializableEMDItemPrices.cs" />
     <Compile Include="Serialization\Exportation\OutputAttributeEnhancer.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />

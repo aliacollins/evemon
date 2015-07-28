@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.Serialization.BattleClinic.MarketPricer;
 
 namespace EVEMon.Common.MarketPricer.BattleClinic
 {
-    public class BCItemPricer : ItemPricer
+    public sealed class BCItemPricer : ItemPricer
     {
         /// <summary>
         /// Occurs when BattleClinic item prices updated.
@@ -20,6 +19,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         private static readonly Dictionary<int, double> s_priceByItemID = new Dictionary<int, double>();
 
         private static bool s_queryPending;
+        private static bool s_loaded;
 
         private static DateTime s_cachedUntil;
 
@@ -58,14 +58,14 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
             string file = LocalXmlCache.GetFile("bc_item_prices").FullName;
 
             // Update the file if we don't have it or the data have expired
-            if (!File.Exists(file) || (s_priceByItemID.Any() && s_cachedUntil < DateTime.UtcNow))
+            if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
             {
                 UpdateFile();
                 return;
             }
 
             // Exit if we have already imported the list
-            if (s_priceByItemID.Any())
+            if (s_loaded)
                 return;
             
             SerializableBCItemPrices result = null;
@@ -99,6 +99,8 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
             {
                 s_priceByItemID[item.ID] = item.Price;
             }
+
+            s_loaded = true;
 
             // Reset query pending flag
             s_queryPending = false;

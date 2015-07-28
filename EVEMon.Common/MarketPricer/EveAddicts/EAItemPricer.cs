@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
-using EVEMon.Common.Serialization.EVEAddicts.MarketPricer;
+using EVEMon.Common.Serialization.EveAddicts.MarketPricer;
 
 namespace EVEMon.Common.MarketPricer.EveAddicts
 {
-    public class EAItemPricer : ItemPricer
+    public sealed class EAItemPricer : ItemPricer
     {
         /// <summary>
         /// Occurs when EVE Addicts item prices updated.
@@ -20,6 +19,7 @@ namespace EVEMon.Common.MarketPricer.EveAddicts
         private static readonly Dictionary<int, double> s_priceByItemID = new Dictionary<int, double>();
 
         private static bool s_queryPending;
+        private static bool s_loaded;
 
         private static DateTime s_cachedUntil;
 
@@ -57,14 +57,14 @@ namespace EVEMon.Common.MarketPricer.EveAddicts
             string file = LocalXmlCache.GetFile("ea_item_prices").FullName;
 
             // Update the file if we don't have it or the data have expired
-            if (!File.Exists(file) || (s_priceByItemID.Any() && s_cachedUntil < DateTime.UtcNow))
+            if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
             {
                 UpdateFile();
                 return;
             }
 
             // Exit if we have already imported the list
-            if (s_priceByItemID.Any())
+            if (s_loaded)
                 return;
 
             s_cachedUntil = File.GetLastWriteTimeUtc(file).AddDays(1);
@@ -95,6 +95,8 @@ namespace EVEMon.Common.MarketPricer.EveAddicts
             {
                 s_priceByItemID[item.ID] = item.Price;
             }
+
+            s_loaded = true;
 
             // Reset query pending flag
             s_queryPending = false;
@@ -155,7 +157,7 @@ namespace EVEMon.Common.MarketPricer.EveAddicts
         /// Saves the specified result.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void Save(SerializableEAItemPrices result)
+        private static void Save(SerializableEAItemPrices result)
         {
             EveMonClient.EnsureCacheDirInit();
             FileHelper.OverwriteOrWarnTheUser(LocalXmlCache.GetFile("ea_item_prices").FullName,
