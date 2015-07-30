@@ -48,10 +48,11 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
         /// </summary>
         private static void ImportData()
         {
-            using (IDbCommand command = new SqlCommand { Connection = Database.SqlConnection })
+            using (IDbCommand command = new SqlCommand(
+                String.Empty,
+                Database.SqlConnection,
+                Database.SqlConnection.BeginTransaction()))
             {
-                command.Transaction = Database.SqlConnection.BeginTransaction();
-
                 try
                 {
                     foreach (mapLocationWormholeClasses mLocWormClass in Database.UniverseDataContext.mapLocationWormholeClasses)

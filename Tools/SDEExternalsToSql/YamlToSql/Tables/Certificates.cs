@@ -98,10 +98,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         {
             int classId = 0;
 
-            using (IDbCommand command = new SqlCommand { Connection = Database.SqlConnection })
+            using (IDbCommand command = new SqlCommand(
+                String.Empty,
+                Database.SqlConnection,
+                Database.SqlConnection.BeginTransaction()))
             {
-                command.Transaction = Database.SqlConnection.BeginTransaction();
-
                 try
                 {
                     foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)

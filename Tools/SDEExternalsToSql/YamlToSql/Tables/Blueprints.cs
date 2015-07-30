@@ -117,10 +117,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
         private static void ImportData(YamlMappingNode rNode)
         {
-            using (IDbCommand command = new SqlCommand { Connection = Database.SqlConnection })
+            using (IDbCommand command = new SqlCommand(
+                String.Empty,
+                Database.SqlConnection,
+                Database.SqlConnection.BeginTransaction()))
             {
-                command.Transaction = Database.SqlConnection.BeginTransaction();
-
                 try
                 {
                     YamlNode manActivity = new YamlScalarNode(Activity.Manufacturing.GetDescription());
