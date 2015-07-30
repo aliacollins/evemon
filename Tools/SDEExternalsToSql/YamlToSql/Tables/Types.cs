@@ -124,10 +124,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Dictionary<int, Dictionary<string, string>> masteriesDict = new Dictionary<int, Dictionary<string, string>>();
             Dictionary<int, string> traitsDict = new Dictionary<int, string>();
 
-            using(IDbCommand command = new SqlCommand { Connection = Database.SqlConnection })
+            using (IDbCommand command = new SqlCommand(
+                String.Empty,
+                Database.SqlConnection,
+                Database.SqlConnection.BeginTransaction()))
             {
-                command.Transaction = Database.SqlConnection.BeginTransaction();
-
                 try
                 {
                     foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
@@ -220,7 +221,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                         .Select(bonuses => bonusesNode.Children[bonuses.Key])
                                         .OfType<YamlMappingNode>())
                                     {
-                                        var bonusTextNodes = bonusNode.Children[new YamlScalarNode(BonusTextText)] as YamlMappingNode;
+                                        var bonusTextNodes =
+                                            bonusNode.Children[new YamlScalarNode(BonusTextText)] as YamlMappingNode;
 
                                         traitId++;
                                         parameters = new Dictionary<string, string>();
