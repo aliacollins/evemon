@@ -2,7 +2,7 @@
 using EVEMon.Common;
 using Xunit;
 
-namespace Tests.EVEMon.Common
+namespace Tests.EVEMon
 {
     public static class TimeExtensionsTests
     {
