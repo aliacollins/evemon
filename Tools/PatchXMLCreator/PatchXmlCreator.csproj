@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EVEMon.PatchXmlCreator</RootNamespace>
     <AssemblyName>EVEMonPatchXMLCreator</AssemblyName>

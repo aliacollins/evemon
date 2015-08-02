@@ -82,7 +82,10 @@ namespace EVEMon.Watchdog
 
             // If 'EVEMon.exe' doesn't exist we don't have anything to do
             if (!File.Exists(executable))
+            {
                 Application.Exit();
+                return;
+            }
 
             StartProcess(executable, m_args);
         }
