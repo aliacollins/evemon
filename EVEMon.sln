@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.WindowsApi", "EVEMon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.Watchdog", "EVEMon.Watchdog\EVEMon.Watchdog.csproj", "{8C4A87A0-780E-4765-ADD0-146091FE26F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatchXmlCreator", "Tools\PatchXMLCreator\PatchXmlCreator.csproj", "{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatchXmlCreator", "Tools\PatchXmlCreator\PatchXmlCreator.csproj", "{E6907BAD-CDF4-4B3C-AF2E-E854D2E2D959}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.MarketUnifiedUploader", "EVEMon.MarketUnifiedUploader\EVEMon.MarketUnifiedUploader.csproj", "{4E359DE3-6C0D-4F87-A48A-82F059D7CF66}"
 EndProject
