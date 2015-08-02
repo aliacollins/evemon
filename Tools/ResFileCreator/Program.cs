@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,16 +10,11 @@ namespace EVEMon.ResFileCreator
 {
     internal static class Program
     {
-        private static readonly string[] s_programFilesFolders =
-        {
-            "Program Files",
-            "Program Files (x86)"
-        };
-
-        private static readonly string[] s_sdkVersions = { "8.0A", "8.0", "7.1A", "7.1", "7.0A", "7.0" };
         private static readonly Dictionary<string, object> s_dictionary = new Dictionary<string, object>();
-        private static string s_filePath;
+        private static string s_resScriptfile;
         private static string s_rcexe;
+        private static string s_solutionDir;
+        private static string s_projectDir;
 
         /// <summary>
         /// The main entry point for the application.
@@ -29,11 +23,6 @@ namespace EVEMon.ResFileCreator
         [STAThread]
         private static void Main()
         {
-            String solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
-                RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
-
-            Directory.SetCurrentDirectory(solutionDir);
-
             s_rcexe = FindRcExe();
             if (String.IsNullOrEmpty(s_rcexe))
             {
@@ -47,7 +36,7 @@ namespace EVEMon.ResFileCreator
                 return;
 
             CreateResFile();
-            File.Delete(s_filePath);
+            File.Delete(s_resScriptfile);
         }
 
         /// <summary>
@@ -55,6 +44,8 @@ namespace EVEMon.ResFileCreator
         /// </summary>
         private static void ParserAssemblyInfo()
         {
+            Directory.SetCurrentDirectory(GetSolutionDirectory());
+
             var assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"EVEMon\Properties\AssemblyInfo.cs"));
             s_dictionary["AssemblyTitle"] = GetValueOf(assemblyInfoFileContent, "AssemblyTitle");
 
@@ -87,7 +78,7 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static bool GenerateRcFile()
         {
-            s_filePath = Path.GetFullPath(String.Format(@"EVEMon\{0}.rc", s_dictionary["AssemblyTitle"]));
+            s_resScriptfile = Path.GetFullPath(String.Format(@"EVEMon\{0}.rc", s_dictionary["AssemblyTitle"]));
 
             StringBuilder sb = new StringBuilder();
 
@@ -97,7 +88,7 @@ namespace EVEMon.ResFileCreator
 
             try
             {
-                File.WriteAllText(s_filePath, sb.ToString(), Encoding.Default);
+                File.WriteAllText(s_resScriptfile, sb.ToString(), Encoding.Default);
             }
             catch (IOException ex)
             {
@@ -105,7 +96,8 @@ namespace EVEMon.ResFileCreator
                 return false;
             }
 
-            Console.WriteLine("Resource Compiler file created successfully.");
+            Console.WriteLine("Resource script file created successfully.");
+            Console.WriteLine();
             return true;
         }
 
@@ -214,7 +206,7 @@ namespace EVEMon.ResFileCreator
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = s_rcexe,
-                Arguments = String.Format("/v /nologo /r {0} ", s_filePath),
+                Arguments = String.Format("/v /nologo /r {0} ", s_resScriptfile),
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };
@@ -229,7 +221,7 @@ namespace EVEMon.ResFileCreator
             }
 
             Console.Write(exitCode != 0
-                ? "Resourse Compiler exited with errors."
+                ? "Resource Compiler exited with errors."
                 : "Resource file compiled successfully.");
         }
 
@@ -239,21 +231,40 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static string FindRcExe()
         {
-            // Lookup for 'RC.exe' in all possible folders and sdk version paths
-            IEnumerable<string> locations = Directory.GetLogicalDrives()
-                .SelectMany(drive => s_programFilesFolders,
-                    (drive, programFilesFolder) => new { drive, programFilesFolder })
-                .SelectMany(driveAndProgramFilesFolder => s_sdkVersions,
-                    (driveAndProgramFilesFolder, sdkVersion) =>
-                        String.Format(CultureInfo.InvariantCulture,
-                            @"{0}{1}\Microsoft SDKs\Windows\v{2}\Bin\RC.exe",
-                            driveAndProgramFilesFolder.drive,
-                            driveAndProgramFilesFolder.programFilesFolder,
-                            sdkVersion))
-                .Where(File.Exists);
 
+            // Lookup for 'RC.exe' for the particular process architexture
+            string architexture = Environment.Is64BitProcess ? "x64" : "x86";
+            string file = Path.Combine(GetProjectDirectory(), @"Dependencies\ResCompiler\", architexture, "rc.exe");
 
-            return locations.FirstOrDefault();
+            return File.Exists(file) ? file : null;
+        }
+
+        /// <summary>
+        /// Gets the solution directory.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetSolutionDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_solutionDir))
+            {
+                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
+                                            RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+            }
+            return s_solutionDir;
+        }
+
+        /// <summary>
+        /// Gets the project directory.
+        /// </summary>
+        /// <returns></returns>
+        private static string GetProjectDirectory()
+        {
+            if (String.IsNullOrWhiteSpace(s_projectDir))
+            {
+                s_projectDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=bin)",
+                                            RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+            }
+            return s_projectDir;
         }
     }
 }
