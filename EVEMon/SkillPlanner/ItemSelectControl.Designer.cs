@@ -264,7 +264,7 @@ namespace EVEMon.SkillPlanner
             0,
             0});
             this.numCPU.Minimum = new decimal(new int[] {
-            1,
+            0,
             0,
             0,
             0});
@@ -300,7 +300,7 @@ namespace EVEMon.SkillPlanner
             0,
             0});
             this.numPowergrid.Minimum = new decimal(new int[] {
-            1,
+            0,
             0,
             0,
             0});
