@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity.Core;
-using System.Data.Entity.Core.EntityClient;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using EVEMon.Common.Data;
+using EVEMon.XmlGenerator.Models;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator
 {
     public static class Database
     {
-        private static readonly EveStaticDataEntities s_context = new EveStaticDataEntities();
+        private static readonly EveStaticData s_context = new EveStaticData();
 
         private static DateTime s_startTime;
         private static string s_text = String.Empty;
@@ -265,8 +265,8 @@ namespace EVEMon.XmlGenerator
             s_text = "Connecting to SQL Database... ";
             Console.Write(s_text);
 
-            // Initialize the EntityConnection
-            EntityConnection connection = GetEntityConnection("EveStaticDataEntities");
+            // Initialize the SQL Connection
+            SqlConnection connection = GetConnection("EveStaticData");
 
             try
             {
@@ -276,10 +276,11 @@ namespace EVEMon.XmlGenerator
                 Console.WriteLine(@"Connection to SQL Database: Successful");
                 Console.WriteLine();
             }
-            catch (EntityException)
+            catch (Exception ex)
             {
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
                 Console.WriteLine(@"Connection to SQL Database: Failed");
+                Console.WriteLine(@"Reason: {0}", ex.Message);
                 Console.Write(@"Press any key to exit.");
                 Console.ReadLine();
                 Environment.Exit(-1);
@@ -287,15 +288,15 @@ namespace EVEMon.XmlGenerator
         }
 
         /// <summary>
-        /// Gets the entity connection.
+        /// Gets the connection.
         /// </summary>
         /// <param name="connectionName">Name of the connection.</param>
         /// <returns></returns>
-        private static EntityConnection GetEntityConnection(string connectionName)
+        private static SqlConnection GetConnection(string connectionName)
         {
             ConnectionStringSettings connectionStringSetting = ConfigurationManager.ConnectionStrings[connectionName];
             if (connectionStringSetting != null)
-                return new EntityConnection(connectionStringSetting.ConnectionString);
+                return new SqlConnection(connectionStringSetting.ConnectionString);
 
             Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
             Console.WriteLine(@"Can not find conection string with name: {0}", connectionName);
@@ -1161,7 +1162,7 @@ namespace EVEMon.XmlGenerator
             foreach (InvNames item in s_context.invNames.Select(
                 name => new InvNames
                         {
-                            ID = name.itemID,
+                            ID = (int)name.itemID,
                             Name = name.itemName
                         }))
             {
