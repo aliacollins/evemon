@@ -343,7 +343,7 @@ namespace EVEMon.XmlGenerator
         /// <returns></returns>
         internal static int GetCountOfTypesInNamespace(string nameSpace)
         {
-            return Assembly.GetExecutingAssembly().GetTypes().Count(type => type.Namespace == nameSpace);
+            return typeof(Program).Assembly.GetTypes().Count(type => type.Namespace == nameSpace);
         }
 
         /// <summary>
