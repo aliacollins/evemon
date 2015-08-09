@@ -34,7 +34,6 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
 
             Database.CreateTable(TableName);
 
-            Console.WriteLine();
             Console.Write(@"Importing {0}... ", TableName);
 
             ImportData();
