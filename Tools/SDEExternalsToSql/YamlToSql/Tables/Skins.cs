@@ -87,7 +87,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             : Database.StringEmpty;
                         parameters[SkinMaterialIDText] = cNode.Children.Keys.Any(key => key.ToString() == SkinMaterialIDText)
                             ? cNode.Children[new YamlScalarNode(SkinMaterialIDText)].ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[AllowCCPDevsText] = cNode.Children.Keys.Any(key => key.ToString() == AllowCCPDevsText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AllowCCPDevsText)].ToString()))
                                 .ToString()
@@ -112,8 +112,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             parameters[TypeIDText] = typeIDsNode != null
                                 ? typeIDsNode.Count() == 1
                                     ? typeIDsNode.Children.First().ToString()
-                                    : Database.Null
-                                : Database.Null;
+                                    : Database.DbNull
+                                : Database.DbNull;
                         }
 
                         command.CommandText = Database.SqlInsertCommandText(SknSkinsTableName, parameters);

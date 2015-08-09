@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
-using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using EVEMon.SDEExternalsToSql.SQLiteToSql;
+using EVEMon.SDEExternalsToSql.SQLiteToSql.Models;
 
 namespace EVEMon.SDEExternalsToSql
 {
@@ -35,7 +35,7 @@ namespace EVEMon.SDEExternalsToSql
         /// <value>
         /// The null.
         /// </value>
-        internal static String Null
+        internal static String DbNull
         {
             get { return "NULL"; }
         }
@@ -54,7 +54,7 @@ namespace EVEMon.SDEExternalsToSql
         /// <value>
         /// The sqlite connection.
         /// </value>
-        internal static EntityConnection SqliteConnection { get; set; }
+        internal static SQLiteConnection SqliteConnection { get; set; }
 
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace EVEMon.SDEExternalsToSql
         /// <value>
         /// The context.
         /// </value>
-        internal static UniverseDataEntities UniverseDataContext { get; set; }
+        internal static UniverseData UniverseDataContext { get; set; }
 
         /// <summary>
         /// Connects the database.

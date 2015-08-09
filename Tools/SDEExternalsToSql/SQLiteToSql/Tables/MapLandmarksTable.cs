@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using EVEMon.SDEExternalsToSql.SQLiteToSql.Models;
 
 namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
 {
@@ -27,7 +28,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
             catch (Exception e)
             {
                 Console.WriteLine();
-                Console.WriteLine(e.InnerException.Message);
+                Console.WriteLine(Util.GetExceptionMessage(e));
                 return;
             }
 
@@ -67,9 +68,9 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
                         parameters["x"] = mLandmark.x.GetValueOrDefaultString();
                         parameters["y"] = mLandmark.y.GetValueOrDefaultString();
                         parameters["z"] = mLandmark.z.GetValueOrDefaultString();
-                        parameters["radius"] = Database.Null;
+                        parameters["radius"] = Database.DbNull;
                         parameters["iconID"] = mLandmark.iconID.GetValueOrDefaultString();
-                        parameters["importance"] = Database.Null;
+                        parameters["importance"] = Database.DbNull;
 
                         command.CommandText = Database.SqlInsertCommandText(TableName, parameters);
                         command.ExecuteNonQuery();

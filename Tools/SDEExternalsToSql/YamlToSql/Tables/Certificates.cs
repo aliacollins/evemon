@@ -189,7 +189,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[CertificateIDText] = pair.Key.ToString();
                         parameters[GroupIDText] = cNode.Children.Keys.Any(key => key.ToString() == GroupIDText)
                             ? cNode.Children[new YamlScalarNode(GroupIDText)].ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("N'{0}'",

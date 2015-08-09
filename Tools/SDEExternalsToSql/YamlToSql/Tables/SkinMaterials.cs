@@ -86,27 +86,27 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             : Database.StringEmpty;
                         parameters[DisplayNameIDText] = cNode.Children.Keys.Any(key => key.ToString() == DisplayNameIDText)
                             ? cNode.Children[new YamlScalarNode(DisplayNameIDText)].ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[ColorHullText] = cNode.Children.Keys.Any(key => key.ToString() == ColorHullText)
                             ? String.Format("'{0}'",
                                 cNode.Children[new YamlScalarNode(ColorHullText)].ToString()
                                     .Replace("'", Database.StringEmpty))
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[ColorWindowText] = cNode.Children.Keys.Any(key => key.ToString() == ColorWindowText)
                             ? String.Format("'{0}'",
                                 cNode.Children[new YamlScalarNode(ColorWindowText)].ToString()
                                     .Replace("'", Database.StringEmpty))
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[ColorPrimaryText] = cNode.Children.Keys.Any(key => key.ToString() == ColorPrimaryText)
                             ? String.Format("'{0}'",
                                 cNode.Children[new YamlScalarNode(ColorPrimaryText)].ToString()
                                     .Replace("'", Database.StringEmpty))
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[ColorSecondaryText] = cNode.Children.Keys.Any(key => key.ToString() == ColorSecondaryText)
                             ? String.Format("'{0}'",
                                 cNode.Children[new YamlScalarNode(ColorSecondaryText)].ToString()
                                     .Replace("'", Database.StringEmpty))
-                            : Database.Null;
+                            : Database.DbNull;
 
                         command.CommandText = Database.SqlInsertCommandText(SknMaterialsTableName, parameters);
                         command.ExecuteNonQuery();

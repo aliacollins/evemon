@@ -77,7 +77,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[LicenseTypeIDText] = pair.Key.ToString();
                         parameters[SkinIDText] = cNode.Children.Keys.Any(key => key.ToString() == SkinIDText)
                             ? cNode.Children[new YamlScalarNode(SkinIDText)].ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[DurationText] = cNode.Children.Keys.Any(key => key.ToString() == DurationText)
                             ? cNode.Children[new YamlScalarNode(DurationText)].ToString()
                             : "-1";

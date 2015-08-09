@@ -128,7 +128,7 @@ namespace EVEMon.SDEExternalsToSql
                 ? obj is Boolean
                     ? Convert.ToByte(obj.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture)
                     : obj.Value.ToString()
-                : Database.Null;
+                : Database.DbNull;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace EVEMon.SDEExternalsToSql
         internal static string GetTextOrDefaultString(this string text, bool isUnicode = false)
         {
             return String.IsNullOrWhiteSpace(text)
-                ? Database.Null
+                ? Database.DbNull
                 : String.Format("{0}'{1}'", isUnicode ? "N" : String.Empty, text.Replace("'", Database.StringEmpty));
         }
 
@@ -222,6 +222,21 @@ namespace EVEMon.SDEExternalsToSql
             }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// Gets the exception message.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns></returns>
+        internal static string GetExceptionMessage(Exception e)
+        {
+            while (e.InnerException != null)
+            {
+                e = e.InnerException;
+            }
+
+            return e.Message;
         }
     }
 }

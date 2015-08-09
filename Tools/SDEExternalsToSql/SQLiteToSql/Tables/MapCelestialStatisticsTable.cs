@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using EVEMon.SDEExternalsToSql.SQLiteToSql.Models;
 
 namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
 {
@@ -27,7 +28,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
             catch (Exception e)
             {
                 Console.WriteLine();
-                Console.WriteLine(e.InnerException.Message);
+                Console.WriteLine(Util.GetExceptionMessage(e));
                 return;
             }
 

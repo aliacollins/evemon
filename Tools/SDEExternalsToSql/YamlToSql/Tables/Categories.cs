@@ -91,19 +91,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                 : categoriesNameNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
                                     ? categoriesNameNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
                                         .Replace("'", Database.StringEmpty)
-                                    : Database.Null))
-                            : Database.Null;
+                                    : Database.DbNull))
+                            : Database.DbNull;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[IconIDText] = cNode.Children.Keys.Any(key => key.ToString() == IconIDText)
                             ? cNode.Children[new YamlScalarNode(IconIDText)].ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[PublishedText] = cNode.Children.Keys.Any(key => key.ToString() == PublishedText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(PublishedText)].ToString()))
                                 .ToString()
-                            : Database.Null;
+                            : Database.DbNull;
 
                         command.CommandText = Database.SqlInsertCommandText(InvCategoriesTableName, parameters);
                         command.ExecuteNonQuery();

@@ -141,15 +141,15 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        String productTypeIDText = Database.Null;
-                        String productionTimeText = Database.Null;
-                        String researchTechTimeText = Database.Null;
-                        String researchProductivityTimeText = Database.Null;
-                        String researchMaterialTimeText = Database.Null;
-                        String researchCopyTimeText = Database.Null;
-                        String duplicatingTimeText = Database.Null;
-                        String reverseEngeneeringTimeText = Database.Null;
-                        String inventionTimeText = Database.Null;
+                        String productTypeIDText = Database.DbNull;
+                        String productionTimeText = Database.DbNull;
+                        String researchTechTimeText = Database.DbNull;
+                        String researchProductivityTimeText = Database.DbNull;
+                        String researchMaterialTimeText = Database.DbNull;
+                        String researchCopyTimeText = Database.DbNull;
+                        String duplicatingTimeText = Database.DbNull;
+                        String reverseEngeneeringTimeText = Database.DbNull;
+                        String inventionTimeText = Database.DbNull;
 
                         YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
 
@@ -254,7 +254,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[IbtMaxProductionLimitText] =
                             cNode.Children.Keys.Any(key => key.ToString() == MaxProductionLimitText)
                                 ? cNode.Children[new YamlScalarNode(MaxProductionLimitText)].ToString()
-                                : Database.Null;
+                                : Database.DbNull;
 
                         command.CommandText = Database.SqlInsertCommandText(InvBlueprintTypesTableName, parameters);
                         command.ExecuteNonQuery();
@@ -273,7 +273,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         private static void ImportProducts(IDbCommand command, KeyValuePair<YamlNode, YamlNode> activity,
             String blueprintTypeIDText)
         {
-            if (String.IsNullOrWhiteSpace(blueprintTypeIDText) || blueprintTypeIDText == Database.Null)
+            if (String.IsNullOrWhiteSpace(blueprintTypeIDText) || blueprintTypeIDText == Database.DbNull)
                 return;
 
             YamlMappingNode actNode = activity.Value as YamlMappingNode;
@@ -303,13 +303,13 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 parameters[RequiredTypeIDText] = prodNode.Children[new YamlScalarNode(TypeIDText)].ToString();
                 parameters[RtrQuantityText] = prodNode.Children.Keys.Any(key => key.ToString() == QuantityText)
                     ? prodNode.Children[new YamlScalarNode(QuantityText)].ToString()
-                    : Database.Null;
+                    : Database.DbNull;
                 parameters[RtrProbabilityText] = prodNode.Children.Keys.Any(key => key.ToString() == ProbabilityText)
                     ? prodNode.Children[new YamlScalarNode(ProbabilityText)].ToString()
-                    : Database.Null;
+                    : Database.DbNull;
                 parameters[RtrRaceIDText] = prodNode.Children.Keys.Any(key => key.ToString() == RaceIDText)
                     ? prodNode.Children[new YamlScalarNode(RaceIDText)].ToString()
-                    : Database.Null;
+                    : Database.DbNull;
 
                 command.CommandText = Database.SqlInsertCommandText(RamTypeRequirementsTableName, parameters);
                 command.ExecuteNonQuery();
@@ -319,7 +319,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         private static void ImportMaterials(IDbCommand command, KeyValuePair<YamlNode, YamlNode> activity,
             String productTypeIDText)
         {
-            if (String.IsNullOrWhiteSpace(productTypeIDText) || productTypeIDText == Database.Null)
+            if (String.IsNullOrWhiteSpace(productTypeIDText) || productTypeIDText == Database.DbNull)
                 return;
 
             YamlMappingNode actNode = activity.Value as YamlMappingNode;
@@ -349,11 +349,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 parameters[RequiredTypeIDText] = matNode.Children[new YamlScalarNode(TypeIDText)].ToString();
                 parameters[RtrQuantityText] = matNode.Children.Keys.Any(key => key.ToString() == QuantityText)
                     ? matNode.Children[new YamlScalarNode(QuantityText)].ToString()
-                    : Database.Null;
+                    : Database.DbNull;
                 parameters[RtrConsumeText] = matNode.Children.Keys.Any(key => key.ToString() == ConsumeText)
                     ? Convert.ToByte(Convert.ToBoolean(matNode.Children[new YamlScalarNode(ConsumeText)].ToString()))
                         .ToString(CultureInfo.InvariantCulture)
-                    : Database.Null;
+                    : Database.DbNull;
                     
 
                 command.CommandText = Database.SqlInsertCommandText(RamTypeRequirementsTableName, parameters);
@@ -363,7 +363,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
         private static void ImportSkills(IDbCommand command, KeyValuePair<YamlNode, YamlNode> activity, String productTypeIDText)
         {
-            if (String.IsNullOrWhiteSpace(productTypeIDText) || productTypeIDText == Database.Null)
+            if (String.IsNullOrWhiteSpace(productTypeIDText) || productTypeIDText == Database.DbNull)
                 return;
 
             YamlMappingNode actNode = activity.Value as YamlMappingNode;
@@ -393,7 +393,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 parameters[RequiredTypeIDText] = skillNode.Children[new YamlScalarNode(TypeIDText)].ToString();
                 parameters[RtrLevelText] = skillNode.Children.Keys.Any(key => key.ToString() == LevelText)
                     ? skillNode.Children[new YamlScalarNode(LevelText)].ToString()
-                    : Database.Null;
+                    : Database.DbNull;
 
                 command.CommandText = Database.SqlInsertCommandText(RamTypeRequirementsTableName, parameters);
                 command.ExecuteNonQuery();
