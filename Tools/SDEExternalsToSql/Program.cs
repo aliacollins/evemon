@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Globalization;
 using System.Threading;
-using EVEMon.SDEExternalsToSql.SQLiteToSql;
+using EVEMon.SDEExternalsToSql.SQLiteToSql.Models;
 using EVEMon.SDEExternalsToSql.SQLiteToSql.Tables;
 using EVEMon.SDEExternalsToSql.YamlToSql.Tables;
 
@@ -33,11 +33,11 @@ namespace EVEMon.SDEExternalsToSql
 
             Console.WriteLine();
 
-            Database.SqliteConnection = Database.Connect<EntityConnection>("UniverseDataEntities");
+            Database.SqliteConnection = Database.Connect<SQLiteConnection>("UniverseData");
 
             if (Database.SqlConnection != null && Database.SqliteConnection != null)
             {
-                Database.UniverseDataContext = new UniverseDataEntities();
+                Database.UniverseDataContext = new UniverseData();
 
                 MapCelestialStatisticsTable.Import();
                 MapConstellationJumpsTable.Import();

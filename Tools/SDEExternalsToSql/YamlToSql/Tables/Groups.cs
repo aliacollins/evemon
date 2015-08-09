@@ -94,52 +94,52 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[GroupIDText] = pair.Key.ToString();
                         parameters[CategoryIDText] = cNode.Children.Keys.Any(key => key.ToString() == CategoryIDText)
                             ? cNode.Children[new YamlScalarNode(CategoryIDText)].ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[GroupNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
                             ? String.Format("N'{0}'", (groupNameNodes == null
                                 ? cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty)
                                 : groupNameNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
                                     ? groupNameNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
                                         .Replace("'", Database.StringEmpty)
-                                    : Database.Null))
-                            : Database.Null;
+                                    : Database.DbNull))
+                            : Database.DbNull;
                         parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                             ? String.Format("N'{0}'",
                                 cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[IconIDText] = cNode.Children.Keys.Any(key => key.ToString() == IconIDText)
                             ? cNode.Children[new YamlScalarNode(IconIDText)].ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[UseBasePriceText] = cNode.Children.Keys.Any(key => key.ToString() == UseBasePriceText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(UseBasePriceText)].ToString()))
                                 .ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[AllowManufactureText] = cNode.Children.Keys.Any(key => key.ToString() == AllowManufactureText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AllowManufactureText)].ToString()))
                                 .ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[AllowRecyclerText] = cNode.Children.Keys.Any(key => key.ToString() == AllowRecyclerText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AllowRecyclerText)].ToString()))
                                 .ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[AnchoredText] = cNode.Children.Keys.Any(key => key.ToString() == AnchoredText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AnchoredText)].ToString()))
                                 .ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[AnchorableText] = cNode.Children.Keys.Any(key => key.ToString() == AnchorableText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AnchorableText)].ToString()))
                                 .ToString()
-                            : Database.Null;
+                            : Database.DbNull;
                         parameters[FittableNonSingletonText] =
                             cNode.Children.Keys.Any(key => key.ToString() == FittableNonSingletonText)
                                 ? Convert.ToByte(
                                     Convert.ToBoolean(cNode.Children[new YamlScalarNode(FittableNonSingletonText)].ToString()))
                                     .ToString()
-                                : Database.Null;
+                                : Database.DbNull;
                         parameters[PublishedText] = cNode.Children.Keys.Any(key => key.ToString() == PublishedText)
                             ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(PublishedText)].ToString()))
                                 .ToString()
-                            : Database.Null;
+                            : Database.DbNull;
 
                         command.CommandText = Database.SqlInsertCommandText(InvGroupsTableName, parameters);
                         command.ExecuteNonQuery();
