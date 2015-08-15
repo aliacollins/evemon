@@ -73,36 +73,21 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
+                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
                         if (cNode == null)
                             continue;
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters[SkinIDText] = pair.Key.ToString();
-                        parameters[InternalNameText] = cNode.Children.Keys.Any(key => key.ToString() == InternalNameText)
-                            ? String.Format("N'{0}'",
-                                cNode.Children[new YamlScalarNode(InternalNameText)].ToString()
-                                    .Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
-                        parameters[SkinMaterialIDText] = cNode.Children.Keys.Any(key => key.ToString() == SkinMaterialIDText)
-                            ? cNode.Children[new YamlScalarNode(SkinMaterialIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[AllowCCPDevsText] = cNode.Children.Keys.Any(key => key.ToString() == AllowCCPDevsText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AllowCCPDevsText)].ToString()))
-                                .ToString()
-                            : "0";
-                        parameters[VisibleSerenityText] = cNode.Children.Keys.Any(key => key.ToString() == VisibleSerenityText)
-                            ? Convert.ToByte(
-                                Convert.ToBoolean(cNode.Children[new YamlScalarNode(VisibleSerenityText)].ToString()))
-                                .ToString()
-                            : "0";
-                        parameters[VisibleTranquilityText] =
-                            cNode.Children.Keys.Any(key => key.ToString() == VisibleTranquilityText)
-                                ? Convert.ToByte(
-                                    Convert.ToBoolean(cNode.Children[new YamlScalarNode(VisibleTranquilityText)].ToString()))
-                                    .ToString()
-                                : "0";
+                        parameters[InternalNameText] = cNode.Children.GetTextOrDefaultString(InternalNameText,
+                            defaultValue: Database.StringEmpty, isUnicode: true);
+                        parameters[SkinMaterialIDText] = cNode.Children.GetTextOrDefaultString(SkinMaterialIDText);
+                        parameters[AllowCCPDevsText] = cNode.Children.GetTextOrDefaultString(AllowCCPDevsText, defaultValue: "0");
+                        parameters[VisibleSerenityText] = cNode.Children.GetTextOrDefaultString(VisibleSerenityText,
+                            defaultValue: "0");
+                        parameters[VisibleTranquilityText] = cNode.Children.GetTextOrDefaultString(VisibleTranquilityText,
+                            defaultValue: "0");
 
                         YamlNode typesNode = new YamlScalarNode(TypesText);
                         if (cNode.Children.ContainsKey(typesNode))

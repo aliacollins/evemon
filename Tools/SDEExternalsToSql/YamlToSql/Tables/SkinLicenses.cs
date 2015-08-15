@@ -68,19 +68,15 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
+                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
                         if (cNode == null)
                             continue;
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters[LicenseTypeIDText] = pair.Key.ToString();
-                        parameters[SkinIDText] = cNode.Children.Keys.Any(key => key.ToString() == SkinIDText)
-                            ? cNode.Children[new YamlScalarNode(SkinIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[DurationText] = cNode.Children.Keys.Any(key => key.ToString() == DurationText)
-                            ? cNode.Children[new YamlScalarNode(DurationText)].ToString()
-                            : "-1";
+                        parameters[SkinIDText] = cNode.Children.GetTextOrDefaultString(SkinIDText);
+                        parameters[DurationText] = cNode.Children.GetTextOrDefaultString(DurationText, defaultValue: "-1");
 
                         command.CommandText = Database.SqlInsertCommandText(SknLicensesTableName, parameters);
                         command.ExecuteNonQuery();

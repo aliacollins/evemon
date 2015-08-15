@@ -72,41 +72,20 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
+                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
                         if (cNode == null)
                             continue;
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters[SkinMaterialIDText] = pair.Key.ToString();
-                        parameters[MaterialText] = cNode.Children.Keys.Any(key => key.ToString() == MaterialText)
-                            ? String.Format("N'{0}'",
-                                cNode.Children[new YamlScalarNode(MaterialText)].ToString()
-                                    .Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
-                        parameters[DisplayNameIDText] = cNode.Children.Keys.Any(key => key.ToString() == DisplayNameIDText)
-                            ? cNode.Children[new YamlScalarNode(DisplayNameIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[ColorHullText] = cNode.Children.Keys.Any(key => key.ToString() == ColorHullText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(ColorHullText)].ToString()
-                                    .Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
-                        parameters[ColorWindowText] = cNode.Children.Keys.Any(key => key.ToString() == ColorWindowText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(ColorWindowText)].ToString()
-                                    .Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
-                        parameters[ColorPrimaryText] = cNode.Children.Keys.Any(key => key.ToString() == ColorPrimaryText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(ColorPrimaryText)].ToString()
-                                    .Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
-                        parameters[ColorSecondaryText] = cNode.Children.Keys.Any(key => key.ToString() == ColorSecondaryText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(ColorSecondaryText)].ToString()
-                                    .Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
+                        parameters[MaterialText] = cNode.Children.GetTextOrDefaultString(MaterialText,
+                            defaultValue: Database.StringEmpty, isUnicode: true);
+                        parameters[DisplayNameIDText] = cNode.Children.GetTextOrDefaultString(DisplayNameIDText);
+                        parameters[ColorHullText] = cNode.Children.GetTextOrDefaultString(ColorHullText);
+                        parameters[ColorWindowText] = cNode.Children.GetTextOrDefaultString(ColorWindowText);
+                        parameters[ColorPrimaryText] = cNode.Children.GetTextOrDefaultString(ColorPrimaryText);
+                        parameters[ColorSecondaryText] = cNode.Children.GetTextOrDefaultString(ColorSecondaryText);
 
                         command.CommandText = Database.SqlInsertCommandText(SknMaterialsTableName, parameters);
                         command.ExecuteNonQuery();
@@ -121,6 +100,5 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 }
             }
         }
-
     }
 }

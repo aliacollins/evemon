@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
@@ -141,6 +140,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
+                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
+
+                        if (cNode == null)
+                            continue;
+
                         String productTypeIDText = Database.DbNull;
                         String productionTimeText = Database.DbNull;
                         String researchTechTimeText = Database.DbNull;
@@ -151,15 +155,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         String reverseEngeneeringTimeText = Database.DbNull;
                         String inventionTimeText = Database.DbNull;
 
-                        YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
-
-                        if (cNode == null)
-                            continue;
-
                         String blueprintTypeIDText = pair.Key.ToString();
                         YamlNode blueprintTypeIDNode = cNode.Children[new YamlScalarNode(BlueprintTypeIDText)];
+
                         if (blueprintTypeIDText != blueprintTypeIDNode.ToString())
-                            throw new Exception("Key differs from " + BlueprintTypeIDText);
+                            throw new Exception(String.Format("Key [{0}] differs from {1}", blueprintTypeIDText, BlueprintTypeIDText));
 
                         YamlNode activitiesNode = new YamlScalarNode(ActivitiesText);
                         if (cNode.Children.ContainsKey(activitiesNode))
@@ -169,70 +169,54 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             if (activityNode == null)
                                 continue;
 
+                            if (activityNode.Children.ContainsKey(manActivity))
+                            {
+                                YamlMappingNode actNode = (YamlMappingNode)activityNode.Children[manActivity];
+
+                                if (actNode.Children.Keys.Any(key => key.ToString() == ProductsText))
+                                {
+                                    productTypeIDText =
+                                        ((YamlMappingNode)
+                                            ((YamlSequenceNode)actNode.Children[new YamlScalarNode(ProductsText)]).Children
+                                                .First()).Children[new YamlScalarNode(TypeIDText)].ToString();
+                                }
+                            }
+
+                            productionTimeText = activityNode.Children.ContainsKey(manActivity)
+                                ? ((YamlMappingNode)activityNode.Children[manActivity]).Children.GetTextOrDefaultString(TimeText)
+                                : Database.DbNull;
+
+                            researchTechTimeText = activityNode.Children.ContainsKey(rteActivity)
+                                ? ((YamlMappingNode)activityNode.Children[rteActivity]).Children.GetTextOrDefaultString(TimeText)
+                                : Database.DbNull;
+
+                            researchProductivityTimeText = activityNode.Children.ContainsKey(rtpActivity)
+                                ? ((YamlMappingNode)activityNode.Children[rtpActivity]).Children.GetTextOrDefaultString(TimeText)
+                                : Database.DbNull;
+
+                            researchMaterialTimeText = activityNode.Children.ContainsKey(rmpActivity)
+                                ? ((YamlMappingNode)activityNode.Children[rmpActivity]).Children.GetTextOrDefaultString(TimeText)
+                                : Database.DbNull;
+
+                            researchCopyTimeText = activityNode.Children.ContainsKey(copActivity)
+                                ? ((YamlMappingNode)activityNode.Children[copActivity]).Children.GetTextOrDefaultString(TimeText)
+                                : Database.DbNull;
+
+                            duplicatingTimeText = activityNode.Children.ContainsKey(dupActivity)
+                                ? ((YamlMappingNode)activityNode.Children[dupActivity]).Children.GetTextOrDefaultString(TimeText)
+                                : Database.DbNull;
+
+                            reverseEngeneeringTimeText = activityNode.Children.ContainsKey(renActivity)
+                                ? ((YamlMappingNode)activityNode.Children[renActivity]).Children.GetTextOrDefaultString(TimeText)
+                                : Database.DbNull;
+
+                            inventionTimeText = activityNode.Children.ContainsKey(invActivity)
+                                ? ((YamlMappingNode)activityNode.Children[invActivity]).Children.GetTextOrDefaultString(TimeText)
+                                : Database.DbNull;
+
                             foreach (KeyValuePair<YamlNode, YamlNode> activity in activityNode)
                             {
-                                YamlMappingNode actNode = activity.Value as YamlMappingNode;
-
-                                if (actNode == null)
-                                    continue;
-
-                                if (activity.Key.Equals(manActivity))
-                                {
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == ProductsText))
-                                    {
-                                        productTypeIDText =
-                                            ((YamlMappingNode)
-                                                ((YamlSequenceNode)actNode.Children[new YamlScalarNode(ProductsText)]).Children
-                                                    .First()).Children[new YamlScalarNode(TypeIDText)].ToString();
-                                    }
-
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
-                                        productionTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-                                }
-
-                                if (activity.Key.Equals(rteActivity))
-                                {
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
-                                        researchTechTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-                                }
-
-                                if (activity.Key.Equals(rtpActivity))
-                                {
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
-                                        researchProductivityTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-                                }
-
-                                if (activity.Key.Equals(rmpActivity))
-                                {
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
-                                        researchMaterialTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-                                }
-
-                                if (activity.Key.Equals(copActivity))
-                                {
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
-                                        researchCopyTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-                                }
-
-                                if (activity.Key.Equals(dupActivity))
-                                {
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
-                                        duplicatingTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-                                }
-
-                                if (activity.Key.Equals(renActivity))
-                                {
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
-                                        reverseEngeneeringTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-                                }
-
-                                if (activity.Key.Equals(invActivity))
-                                {
-                                    if (actNode.Children.Keys.Any(key => key.ToString() == TimeText))
-                                        inventionTimeText = actNode.Children[new YamlScalarNode(TimeText)].ToString();
-                                }
-
-                                if (!activity.Key.Equals(manActivity))
+                                if (!activityNode.Children.ContainsKey(manActivity))
                                     ImportProducts(command, activity, blueprintTypeIDText);
 
                                 ImportMaterials(command, activity, blueprintTypeIDText);
@@ -251,10 +235,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[DuplicatingTimeText] = duplicatingTimeText;
                         parameters[ReverseEngineeringTimeText] = reverseEngeneeringTimeText;
                         parameters[InventionTimeText] = inventionTimeText;
-                        parameters[IbtMaxProductionLimitText] =
-                            cNode.Children.Keys.Any(key => key.ToString() == MaxProductionLimitText)
-                                ? cNode.Children[new YamlScalarNode(MaxProductionLimitText)].ToString()
-                                : Database.DbNull;
+                        parameters[IbtMaxProductionLimitText] = cNode.Children.GetTextOrDefaultString(MaxProductionLimitText);
 
                         command.CommandText = Database.SqlInsertCommandText(InvBlueprintTypesTableName, parameters);
                         command.ExecuteNonQuery();
@@ -299,17 +280,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters[TypeIDText] = blueprintTypeIDText;
-                parameters[ActivityIDText] = ((int)Util.GetValueFromDescription<Activity>(activity.Key.ToString())).ToString(CultureInfo.InvariantCulture);
+                parameters[ActivityIDText] = activity.Key.GetValueOrDefaultString<Activity>();
                 parameters[RequiredTypeIDText] = prodNode.Children[new YamlScalarNode(TypeIDText)].ToString();
-                parameters[RtrQuantityText] = prodNode.Children.Keys.Any(key => key.ToString() == QuantityText)
-                    ? prodNode.Children[new YamlScalarNode(QuantityText)].ToString()
-                    : Database.DbNull;
-                parameters[RtrProbabilityText] = prodNode.Children.Keys.Any(key => key.ToString() == ProbabilityText)
-                    ? prodNode.Children[new YamlScalarNode(ProbabilityText)].ToString()
-                    : Database.DbNull;
-                parameters[RtrRaceIDText] = prodNode.Children.Keys.Any(key => key.ToString() == RaceIDText)
-                    ? prodNode.Children[new YamlScalarNode(RaceIDText)].ToString()
-                    : Database.DbNull;
+                parameters[RtrQuantityText] = prodNode.Children.GetTextOrDefaultString(QuantityText);
+                parameters[RtrProbabilityText] = prodNode.Children.GetTextOrDefaultString(ProbabilityText);
+                parameters[RtrRaceIDText] = prodNode.Children.GetTextOrDefaultString(RaceIDText);
 
                 command.CommandText = Database.SqlInsertCommandText(RamTypeRequirementsTableName, parameters);
                 command.ExecuteNonQuery();
@@ -345,16 +320,10 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters[TypeIDText] = productTypeIDText;
-                parameters[ActivityIDText] = ((int)Util.GetValueFromDescription<Activity>(activity.Key.ToString())).ToString(CultureInfo.InvariantCulture);
+                parameters[ActivityIDText] = activity.Key.GetValueOrDefaultString<Activity>();
                 parameters[RequiredTypeIDText] = matNode.Children[new YamlScalarNode(TypeIDText)].ToString();
-                parameters[RtrQuantityText] = matNode.Children.Keys.Any(key => key.ToString() == QuantityText)
-                    ? matNode.Children[new YamlScalarNode(QuantityText)].ToString()
-                    : Database.DbNull;
-                parameters[RtrConsumeText] = matNode.Children.Keys.Any(key => key.ToString() == ConsumeText)
-                    ? Convert.ToByte(Convert.ToBoolean(matNode.Children[new YamlScalarNode(ConsumeText)].ToString()))
-                        .ToString(CultureInfo.InvariantCulture)
-                    : Database.DbNull;
-                    
+                parameters[RtrQuantityText] = matNode.Children.GetTextOrDefaultString(QuantityText);
+                parameters[RtrConsumeText] = matNode.Children.GetTextOrDefaultString(ConsumeText);
 
                 command.CommandText = Database.SqlInsertCommandText(RamTypeRequirementsTableName, parameters);
                 command.ExecuteNonQuery();
@@ -389,11 +358,9 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
                 parameters[TypeIDText] = productTypeIDText;
-                parameters[ActivityIDText] = ((int)Util.GetValueFromDescription<Activity>(activity.Key.ToString())).ToString(CultureInfo.InvariantCulture);
+                parameters[ActivityIDText] = activity.Key.GetValueOrDefaultString<Activity>();
                 parameters[RequiredTypeIDText] = skillNode.Children[new YamlScalarNode(TypeIDText)].ToString();
-                parameters[RtrLevelText] = skillNode.Children.Keys.Any(key => key.ToString() == LevelText)
-                    ? skillNode.Children[new YamlScalarNode(LevelText)].ToString()
-                    : Database.DbNull;
+                parameters[RtrLevelText] = skillNode.Children.GetTextOrDefaultString(LevelText);
 
                 command.CommandText = Database.SqlInsertCommandText(RamTypeRequirementsTableName, parameters);
                 command.ExecuteNonQuery();

@@ -76,50 +76,26 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
+                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
                         if (cNode == null)
                             continue;
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters[GraphicIDText] = pair.Key.ToString();
-                        parameters[GraphicFileText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicFileText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicFileText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
-                        parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                            ? String.Format("N'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
-                        parameters[ObsoleteText] = cNode.Children.Keys.Any(key => key.ToString() == ObsoleteText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(ObsoleteText)].ToString())).ToString()
-                            : "0";
-                        parameters[GraphicTypeText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicTypeText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicTypeText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
-                        parameters[DirectoryIDText] = cNode.Children.Keys.Any(key => key.ToString() == DirectoryIDText)
-                            ? cNode.Children[new YamlScalarNode(DirectoryIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[CollidableText] = cNode.Children.Keys.Any(key => key.ToString() == CollidableText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(CollidableText)].ToString())).ToString()
-                            : Database.DbNull;
-                        parameters[GraphicNameText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicNameText)
-                            ? String.Format("N'{0}'",
-                                cNode.Children[new YamlScalarNode(GraphicNameText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
-                        parameters[GfxRaceIDText] = cNode.Children.Keys.Any(key => key.ToString() == GfxRaceIDText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(GfxRaceIDText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
-                        parameters[ColorSchemeText] = cNode.Children.Keys.Any(key => key.ToString() == ColorSchemeText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(ColorSchemeText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
-                        parameters[SofHullNameText] = cNode.Children.Keys.Any(key => key.ToString() == SofHullNameText)
-                            ? String.Format("'{0}'",
-                                cNode.Children[new YamlScalarNode(SofHullNameText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
+                        parameters[GraphicFileText] = cNode.Children.GetTextOrDefaultString(GraphicFileText,
+                            defaultValue: Database.StringEmpty);
+                        parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(DescriptionText,
+                            defaultValue: Database.StringEmpty, isUnicode: true);
+                        parameters[ObsoleteText] = cNode.Children.GetTextOrDefaultString(ObsoleteText, defaultValue: "0");
+                        parameters[GraphicTypeText] = cNode.Children.GetTextOrDefaultString(GraphicTypeText);
+                        parameters[DirectoryIDText] = cNode.Children.GetTextOrDefaultString(DirectoryIDText);
+                        parameters[CollidableText] = cNode.Children.GetTextOrDefaultString(CollidableText);
+                        parameters[GraphicNameText] = cNode.Children.GetTextOrDefaultString(GraphicNameText,
+                            defaultValue: Database.StringEmpty, isUnicode: true);
+                        parameters[GfxRaceIDText] = cNode.Children.GetTextOrDefaultString(GfxRaceIDText);
+                        parameters[ColorSchemeText] = cNode.Children.GetTextOrDefaultString(ColorSchemeText);
+                        parameters[SofHullNameText] = cNode.Children.GetTextOrDefaultString(SofHullNameText);
 
                         command.CommandText = Database.SqlInsertCommandText(EveGraphicsTableName, parameters);
                         command.ExecuteNonQuery();

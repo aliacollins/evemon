@@ -227,13 +227,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                         traitId++;
                                         parameters = new Dictionary<string, string>();
                                         parameters[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
-                                        parameters[BonusTextText] = String.Format("N'{0}'", (bonusTextNodes == null
-                                            ? bonusNode.Children[new YamlScalarNode(BonusTextText)].ToString()
-                                            : bonusTextNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString())
-                                            .Replace("'", Database.StringEmpty));
-                                        parameters[UnitIDText] = bonusNode.Children.Keys.Any(key => key.ToString() == UnitIDText)
-                                            ? bonusNode.Children[new YamlScalarNode(UnitIDText)].ToString()
-                                            : Database.DbNull;
+                                        parameters[BonusTextText] = bonusTextNodes == null
+                                            ? bonusNode.Children.GetTextOrDefaultString(BonusTextText, isUnicode: true)
+                                            : bonusTextNodes.Children.GetTextOrDefaultString(EnglishLanguageIDText,
+                                                isUnicode: true);
+                                        parameters[UnitIDText] = bonusNode.Children.GetTextOrDefaultString(UnitIDText);
 
                                         Dictionary<string, string> pars = new Dictionary<string, string>();
                                         pars[TypeIDText] = pair.Key.ToString();
@@ -245,9 +243,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                         {
                                             pars[TraitIDText] =
                                                 traitsDict.First(x => x.Value == value).Key.ToString(CultureInfo.InvariantCulture);
-                                            pars[BonusText] = bonusNode.Children.Keys.Any(key => key.ToString() == BonusText)
-                                                ? bonusNode.Children[new YamlScalarNode(BonusText)].ToString()
-                                                : Database.DbNull;
+                                            pars[BonusText] = bonusNode.Children.GetTextOrDefaultString(BonusText);
 
                                             command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
                                             command.ExecuteNonQuery();
@@ -258,9 +254,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                         traitsDict[traitId] = value;
 
                                         pars[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
-                                        pars[BonusText] = bonusNode.Children.Keys.Any(key => key.ToString() == BonusText)
-                                            ? bonusNode.Children[new YamlScalarNode(BonusText)].ToString()
-                                            : Database.DbNull;
+                                        pars[BonusText] = bonusNode.Children.GetTextOrDefaultString(BonusText);
 
                                         command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
                                         command.ExecuteNonQuery();
@@ -276,21 +270,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters["id"] = pair.Key.ToString();
                         parameters["columnFilter"] = TypeIDText;
 
-                        parameters[FactionIDText] = cNode.Children.Keys.Any(key => key.ToString() == FactionIDText)
-                            ? cNode.Children[new YamlScalarNode(FactionIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[GraphicIDText] = cNode.Children.Keys.Any(key => key.ToString() == GraphicIDText)
-                            ? cNode.Children[new YamlScalarNode(GraphicIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[IconIDText] = cNode.Children.Keys.Any(key => key.ToString() == IconIDText)
-                            ? cNode.Children[new YamlScalarNode(IconIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[RadiusText] = cNode.Children.Keys.Any(key => key.ToString() == RadiusText)
-                            ? cNode.Children[new YamlScalarNode(RadiusText)].ToString()
-                            : Database.DbNull;
-                        parameters[SoundIDText] = cNode.Children.Keys.Any(key => key.ToString() == SoundIDText)
-                            ? cNode.Children[new YamlScalarNode(SoundIDText)].ToString()
-                            : Database.DbNull;
+                        parameters[FactionIDText] = cNode.Children.GetTextOrDefaultString(FactionIDText);
+                        parameters[GraphicIDText] = cNode.Children.GetTextOrDefaultString(GraphicIDText);
+                        parameters[IconIDText] = cNode.Children.GetTextOrDefaultString(IconIDText);
+                        parameters[RadiusText] = cNode.Children.GetTextOrDefaultString(RadiusText);
+                        parameters[SoundIDText] = cNode.Children.GetTextOrDefaultString(SoundIDText);
 
                         command.CommandText = Database.SqlUpdateCommandText(InvTypesTableName, parameters);
                         if (command.ExecuteNonQuery() != 0)
@@ -330,53 +314,24 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 : null;
 
             parameters[TypeIDText] = pair.Key.ToString();
-            parameters[GroupIDText] = cNode.Children.Keys.Any(key => key.ToString() == GroupIDText)
-                ? cNode.Children[new YamlScalarNode(GroupIDText)].ToString()
-                : Database.DbNull;
-            parameters[TypeNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                ? String.Format("N'{0}'", (typeNameNodes == null
-                    ? cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty)
-                    : typeNameNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
-                        ? typeNameNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
-                            .Replace("'", Database.StringEmpty)
-                        : String.Empty))
-                : Database.StringEmpty;
-            parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                ? String.Format("N'{0}'", (descriptionNodes == null
-                    ? cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty)
-                    : descriptionNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
-                        ? descriptionNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
-                            .Replace("'", Database.StringEmpty)
-                        : String.Empty))
-                : Database.StringEmpty;
-            parameters[MassText] = cNode.Children.Keys.Any(key => key.ToString() == MassText)
-                ? cNode.Children[new YamlScalarNode(MassText)].ToString()
-                : "0";
-            parameters[VolumeText] = cNode.Children.Keys.Any(key => key.ToString() == VolumeText)
-                ? cNode.Children[new YamlScalarNode(VolumeText)].ToString()
-                : "0";
-            parameters[CapacityText] = cNode.Children.Keys.Any(key => key.ToString() == CapacityText)
-                ? cNode.Children[new YamlScalarNode(CapacityText)].ToString()
-                : "0";
-            parameters[PortionSizeText] = cNode.Children.Keys.Any(key => key.ToString() == PortionSizeText)
-                ? cNode.Children[new YamlScalarNode(PortionSizeText)].ToString()
-                : Database.DbNull;
-            parameters[RaceIDText] = cNode.Children.Keys.Any(key => key.ToString() == RaceIDText)
-                ? cNode.Children[new YamlScalarNode(RaceIDText)].ToString()
-                : Database.DbNull;
-            parameters[BasePriceText] = cNode.Children.Keys.Any(key => key.ToString() == BasePriceText)
-                ? cNode.Children[new YamlScalarNode(BasePriceText)].ToString()
-                : "0.00";
-            parameters[PublishedText] = cNode.Children.Keys.Any(key => key.ToString() == PublishedText)
-                ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(PublishedText)].ToString()))
-                    .ToString()
-                : "0";
-            parameters[MarketGroupIDText] = cNode.Children.Keys.Any(key => key.ToString() == MarketGroupIDText)
-                ? cNode.Children[new YamlScalarNode(MarketGroupIDText)].ToString()
-                : Database.DbNull;
-            parameters[ChanceOfDuplicatingText] = cNode.Children.Keys.Any(key => key.ToString() == ChanceOfDuplicatingText)
-                ? cNode.Children[new YamlScalarNode(ChanceOfDuplicatingText)].ToString()
-                : "0";
+            parameters[GroupIDText] = cNode.Children.GetTextOrDefaultString(GroupIDText);
+            parameters[TypeNameText] = typeNameNodes == null
+                ? cNode.Children.GetTextOrDefaultString(NameText, defaultValue: Database.StringEmpty, isUnicode: true)
+                : typeNameNodes.Children.GetTextOrDefaultString(EnglishLanguageIDText, defaultValue: Database.StringEmpty,
+                    isUnicode: true);
+            parameters[DescriptionText] = descriptionNodes == null
+                ? cNode.Children.GetTextOrDefaultString(DescriptionText, defaultValue: Database.StringEmpty, isUnicode: true)
+                : descriptionNodes.Children.GetTextOrDefaultString(EnglishLanguageIDText, defaultValue: Database.StringEmpty,
+                    isUnicode: true);
+            parameters[MassText] = cNode.Children.GetTextOrDefaultString(MassText, defaultValue: "0");
+            parameters[VolumeText] = cNode.Children.GetTextOrDefaultString(VolumeText, defaultValue: "0");
+            parameters[CapacityText] = cNode.Children.GetTextOrDefaultString(CapacityText, defaultValue: "0");
+            parameters[PortionSizeText] = cNode.Children.GetTextOrDefaultString(PortionSizeText);
+            parameters[RaceIDText] = cNode.Children.GetTextOrDefaultString(RaceIDText);
+            parameters[BasePriceText] = cNode.Children.GetTextOrDefaultString(BasePriceText, defaultValue: "0.00");
+            parameters[PublishedText] = cNode.Children.GetTextOrDefaultString(PublishedText, defaultValue: "0");
+            parameters[MarketGroupIDText] = cNode.Children.GetTextOrDefaultString(MarketGroupIDText);
+            parameters[ChanceOfDuplicatingText] = cNode.Children.GetTextOrDefaultString(ChanceOfDuplicatingText, defaultValue: "0");
 
             command.CommandText = Database.SqlInsertCommandText(InvTypesTableName, parameters);
             command.ExecuteNonQuery();
