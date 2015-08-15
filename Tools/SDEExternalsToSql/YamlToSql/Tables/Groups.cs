@@ -81,7 +81,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
+                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
                         if (cNode == null)
                             continue;
@@ -92,54 +92,20 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters[GroupIDText] = pair.Key.ToString();
-                        parameters[CategoryIDText] = cNode.Children.Keys.Any(key => key.ToString() == CategoryIDText)
-                            ? cNode.Children[new YamlScalarNode(CategoryIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[GroupNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                            ? String.Format("N'{0}'", (groupNameNodes == null
-                                ? cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty)
-                                : groupNameNodes.Children.Keys.Any(key => key.ToString() == EnglishLanguageIDText)
-                                    ? groupNameNodes.Children[new YamlScalarNode(EnglishLanguageIDText)].ToString()
-                                        .Replace("'", Database.StringEmpty)
-                                    : Database.DbNull))
-                            : Database.DbNull;
-                        parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                            ? String.Format("N'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.DbNull;
-                        parameters[IconIDText] = cNode.Children.Keys.Any(key => key.ToString() == IconIDText)
-                            ? cNode.Children[new YamlScalarNode(IconIDText)].ToString()
-                            : Database.DbNull;
-                        parameters[UseBasePriceText] = cNode.Children.Keys.Any(key => key.ToString() == UseBasePriceText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(UseBasePriceText)].ToString()))
-                                .ToString()
-                            : Database.DbNull;
-                        parameters[AllowManufactureText] = cNode.Children.Keys.Any(key => key.ToString() == AllowManufactureText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AllowManufactureText)].ToString()))
-                                .ToString()
-                            : Database.DbNull;
-                        parameters[AllowRecyclerText] = cNode.Children.Keys.Any(key => key.ToString() == AllowRecyclerText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AllowRecyclerText)].ToString()))
-                                .ToString()
-                            : Database.DbNull;
-                        parameters[AnchoredText] = cNode.Children.Keys.Any(key => key.ToString() == AnchoredText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AnchoredText)].ToString()))
-                                .ToString()
-                            : Database.DbNull;
-                        parameters[AnchorableText] = cNode.Children.Keys.Any(key => key.ToString() == AnchorableText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(AnchorableText)].ToString()))
-                                .ToString()
-                            : Database.DbNull;
+                        parameters[CategoryIDText] = cNode.Children.GetTextOrDefaultString(CategoryIDText);
+                        parameters[GroupNameText] = groupNameNodes == null
+                            ? cNode.Children.GetTextOrDefaultString(NameText, isUnicode: true)
+                            : groupNameNodes.Children.GetTextOrDefaultString(EnglishLanguageIDText);
+                        parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(DescriptionText, isUnicode: true);
+                        parameters[IconIDText] = cNode.Children.GetTextOrDefaultString(IconIDText);
+                        parameters[UseBasePriceText] = cNode.Children.GetTextOrDefaultString(UseBasePriceText);
+                        parameters[AllowManufactureText] = cNode.Children.GetTextOrDefaultString(AllowManufactureText);
+                        parameters[AllowRecyclerText] = cNode.Children.GetTextOrDefaultString(AllowRecyclerText);
+                        parameters[AnchoredText] = cNode.Children.GetTextOrDefaultString(AnchoredText);
+                        parameters[AnchorableText] = cNode.Children.GetTextOrDefaultString(AnchorableText);
                         parameters[FittableNonSingletonText] =
-                            cNode.Children.Keys.Any(key => key.ToString() == FittableNonSingletonText)
-                                ? Convert.ToByte(
-                                    Convert.ToBoolean(cNode.Children[new YamlScalarNode(FittableNonSingletonText)].ToString()))
-                                    .ToString()
-                                : Database.DbNull;
-                        parameters[PublishedText] = cNode.Children.Keys.Any(key => key.ToString() == PublishedText)
-                            ? Convert.ToByte(Convert.ToBoolean(cNode.Children[new YamlScalarNode(PublishedText)].ToString()))
-                                .ToString()
-                            : Database.DbNull;
+                            cNode.Children.GetTextOrDefaultString(FittableNonSingletonText);
+                        parameters[PublishedText] = cNode.Children.GetTextOrDefaultString(PublishedText);
 
                         command.CommandText = Database.SqlInsertCommandText(InvGroupsTableName, parameters);
                         command.ExecuteNonQuery();

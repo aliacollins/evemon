@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
@@ -145,6 +146,27 @@ namespace EVEMon.SDEExternalsToSql
         }
 
         /// <summary>
+        /// Gets the text or default string.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="text">The text.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <param name="isUnicode">if set to <c>true</c> [is unicode].</param>
+        /// <returns></returns>
+        internal static string GetTextOrDefaultString(this IDictionary<YamlNode, YamlNode> node, string text, string defaultValue = "NULL",
+            bool isUnicode = false)
+        {
+            if (node == null || String.IsNullOrWhiteSpace(text) || !node.ContainsKey(new YamlScalarNode(text)))
+                return defaultValue;
+
+            string nodeText = node[new YamlScalarNode(text)].ToString();
+            return String.Equals(nodeText, "false", StringComparison.InvariantCultureIgnoreCase) ||
+                   String.Equals(nodeText, "true", StringComparison.InvariantCultureIgnoreCase)
+                ? Convert.ToByte(Convert.ToBoolean(nodeText)).ToString()
+                : String.Format("{0}'{1}'", isUnicode ? "N" : String.Empty, nodeText.Replace("'", Database.StringEmpty));
+        }
+
+        /// <summary>
         /// Handles the exception.
         /// </summary>
         /// <param name="command">The command.</param>
@@ -197,7 +219,7 @@ namespace EVEMon.SDEExternalsToSql
         /// <param name="description">The description.</param>
         /// <returns></returns>
         /// <exception cref="System.InvalidOperationException"></exception>
-        public static T GetValueFromDescription<T>(string description)
+        internal static T GetValueFromDescription<T>(this string description)
         {
             var type = typeof(T);
 
@@ -222,6 +244,22 @@ namespace EVEMon.SDEExternalsToSql
             }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// Gets the value or default string.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node">The node.</param>
+        /// <returns></returns>
+        internal static string GetValueOrDefaultString<T>(this YamlNode node)
+        {
+            if (node == null || !typeof(T).IsEnum)
+                return Database.DbNull;
+
+            var value = (int)Enum.ToObject(typeof(T), node.ToString().GetValueFromDescription<T>());
+
+            return value.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>

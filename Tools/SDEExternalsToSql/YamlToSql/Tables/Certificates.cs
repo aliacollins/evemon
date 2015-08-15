@@ -111,7 +111,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
                         Dictionary<string, string> parameters;
 
-                        YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
+                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
                         if (cNode == null)
                             continue;
@@ -122,14 +122,10 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                             classId++;
                             parameters = new Dictionary<string, string>();
                             parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
-                            parameters[ClassNameText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                            ? String.Format("N'{0}'",
-                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
-                            parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                            ? String.Format("N'{0}'",
-                                cNode.Children[new YamlScalarNode(NameText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
+                            parameters[ClassNameText] = cNode.Children.GetTextOrDefaultString(NameText,
+                                defaultValue: Database.StringEmpty, isUnicode: true);
+                            parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(NameText,
+                                defaultValue: Database.StringEmpty, isUnicode: true);
 
                             command.CommandText = Database.SqlInsertCommandText(CrtClassesTableName, parameters);
                             command.ExecuteNonQuery();
@@ -187,14 +183,10 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
                         parameters = new Dictionary<string, string>();
                         parameters[CertificateIDText] = pair.Key.ToString();
-                        parameters[GroupIDText] = cNode.Children.Keys.Any(key => key.ToString() == GroupIDText)
-                            ? cNode.Children[new YamlScalarNode(GroupIDText)].ToString()
-                            : Database.DbNull;
+                        parameters[GroupIDText] = cNode.Children.GetTextOrDefaultString(GroupIDText);
                         parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
-                        parameters[DescriptionText] = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
-                            ? String.Format("N'{0}'",
-                                cNode.Children[new YamlScalarNode(DescriptionText)].ToString().Replace("'", Database.StringEmpty))
-                            : Database.StringEmpty;
+                        parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(DescriptionText,
+                            defaultValue: Database.StringEmpty, isUnicode: true);
 
                         command.CommandText = Database.SqlInsertCommandText(CrtCertificateTableName, parameters);
                         command.ExecuteNonQuery();
