@@ -227,7 +227,7 @@ namespace EVEMon.Common
                 if (result != DialogResult.OK)
                     return;
 
-                XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializableCCPCharacter), serial);
+                XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(serial);
                 string content = Util.GetXmlStringRepresentation(xmlDoc);
                 FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
                     fs =>

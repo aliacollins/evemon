@@ -202,7 +202,7 @@ namespace EVEMon.Common
             CompleteSerialization(character, plan, serial);
 
             // Serializes to XML and apply a XSLT to generate the HTML doc
-            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(OutputCharacter), serial);
+            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial);
 
             XslCompiledTransform xslt = Util.LoadXslt(Properties.Resources.XmlToHtmlXslt);
             XmlDocument htmlDoc = (XmlDocument)Util.Transform(doc, xslt);
@@ -302,7 +302,7 @@ namespace EVEMon.Common
                     skill => GetMergedSkill(plan, skill)));
             }
 
-            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial.GetType(), serial);
+            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial);
             return doc != null ? Util.GetXmlStringRepresentation(doc) : null;
         }
 

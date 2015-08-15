@@ -18,6 +18,8 @@ namespace EVEMon.Common.MarketPricer.EveAddicts
 
         private static readonly Dictionary<int, double> s_priceByItemID = new Dictionary<int, double>();
 
+        private const string Filename = "ea_item_prices";
+
         private static bool s_queryPending;
         private static bool s_loaded;
 
@@ -54,7 +56,7 @@ namespace EVEMon.Common.MarketPricer.EveAddicts
         /// </summary>
         private void EnsureImportation()
         {
-            string file = LocalXmlCache.GetFile("ea_item_prices").FullName;
+            string file = LocalXmlCache.GetFile(Filename).FullName;
 
             // Update the file if we don't have it or the data have expired
             if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
@@ -141,7 +143,7 @@ namespace EVEMon.Common.MarketPricer.EveAddicts
             }
 
             // Save the file in cache
-            Save(result);
+            Save(Filename, Util.SerializeToXmlDocument(result));
 
             EveMonClient.Trace("EAItemPricer.UpdateFile - done");
 
@@ -151,23 +153,6 @@ namespace EVEMon.Common.MarketPricer.EveAddicts
 
             if (ItemPricesUpdated != null)
                 ItemPricesUpdated(null, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Saves the specified result.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private static void Save(SerializableEAItemPrices result)
-        {
-            EveMonClient.EnsureCacheDirInit();
-            FileHelper.OverwriteOrWarnTheUser(LocalXmlCache.GetFile("ea_item_prices").FullName,
-                fs =>
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(SerializableEAItemPrices));
-                    xs.Serialize(fs, result);
-                    fs.Flush();
-                    return true;
-                });
         }
 
         #endregion

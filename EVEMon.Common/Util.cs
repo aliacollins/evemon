@@ -651,15 +651,14 @@ namespace EVEMon.Common
         /// <summary>
         /// Serializes the given object to a XML document, dealt as the provided type.
         /// </summary>
-        /// <param name="serializationType">The type to pass to the <see cref="XmlSerializer"/></param>
         /// <param name="data">The object to serialize.</param>
         /// <returns>The Xml document representing the given object.</returns>
-        public static IXPathNavigable SerializeToXmlDocument(Type serializationType, object data)
+        public static IXPathNavigable SerializeToXmlDocument(object data)
         {
             using (MemoryStream memStream = new MemoryStream())
             {
                 // Serializes to the stream
-                XmlSerializer serializer = new XmlSerializer(serializationType);
+                XmlSerializer serializer = new XmlSerializer(data.GetType());
                 serializer.Serialize(memStream, data);
 
                 // Creates a XML doc from the stream
