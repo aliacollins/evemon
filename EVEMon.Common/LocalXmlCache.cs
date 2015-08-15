@@ -24,7 +24,7 @@ namespace EVEMon.Common
             {
                 EveMonClient.EnsureCacheDirInit();
                 return new FileInfo(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                                                 String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename)));
+                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename)));
             }
         }
 
@@ -40,7 +40,7 @@ namespace EVEMon.Common
                 XmlDocument doc = new XmlDocument();
                 EveMonClient.EnsureCacheDirInit();
                 doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                                      String.Format(CultureConstants.DefaultCulture, "{0}.xml", charName)));
+                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", charName)));
                 return doc;
             }
         }
@@ -48,9 +48,9 @@ namespace EVEMon.Common
         /// <summary>
         /// The preferred way to save - this should be a <see cref="System.Xml.XmlDocument"/> straight from CCP.
         /// </summary>
-        /// <param name="key">The key.</param>
+        /// <param name="filename">The filename.</param>
         /// <param name="xdoc">The xml to save.</param>
-        public static void Save(string key, IXPathNavigable xdoc)
+        public static void Save(string filename, IXPathNavigable xdoc)
         {
             if (xdoc == null)
                 throw new ArgumentNullException("xdoc");
@@ -59,24 +59,24 @@ namespace EVEMon.Common
             {
                 XmlDocument xmlDoc = (XmlDocument)xdoc;
                 XmlNode characterNode = xmlDoc.SelectSingleNode("//name");
-                string name = (characterNode == null ? key : characterNode.InnerText);
+                filename = (characterNode == null ? filename : characterNode.InnerText);
 
                 // Writes in the target file
                 EveMonClient.EnsureCacheDirInit();
                 string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                                               String.Format(CultureConstants.DefaultCulture, "{0}.xml", name));
+                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename));
                 string content = Util.GetXmlStringRepresentation(xdoc);
                 FileHelper.OverwriteOrWarnTheUser(fileName,
-                                                  fs =>
-                                                      {
-                                                          using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                                                          {
-                                                              writer.Write(content);
-                                                              writer.Flush();
-                                                              fs.Flush();
-                                                          }
-                                                          return true;
-                                                      });
+                    fs =>
+                    {
+                        using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
+                        {
+                            writer.Write(content);
+                            writer.Flush();
+                            fs.Flush();
+                        }
+                        return true;
+                    });
             }
         }
 
@@ -85,13 +85,14 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="characterName"></param>
         /// <returns></returns>
+        [Obsolete]
         internal static Uri GetCharacterUri(string characterName)
         {
             lock (s_syncLock)
             {
                 EveMonClient.EnsureCacheDirInit();
                 return new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                                            String.Format(CultureConstants.DefaultCulture, "{0}.xml", characterName)));
+                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", characterName)));
             }
         }
 

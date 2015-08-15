@@ -518,7 +518,7 @@ namespace EVEMon.PatchXmlCreator
             ExportRelease(serial.Release);
             ExportDatafiles(serial.Datafiles);
 
-            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(typeof(SerializablePatch), serial);
+            XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial);
             return (doc != null ? Util.GetXmlStringRepresentation(doc) : String.Empty);
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.XPath;
 
 namespace EVEMon.Common.MarketPricer
 {
@@ -42,6 +43,16 @@ namespace EVEMon.Common.MarketPricer
                     type => typeof(ItemPricer).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null).Select(
                         type => Activator.CreateInstance(type) as ItemPricer).OrderBy(pricer => pricer.Name);
             }
+        }
+
+        /// <summary>
+        /// Saves the xml document to the specified filename.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <param name="xdoc">The xdoc.</param>
+        protected static void Save(string filename, IXPathNavigable xdoc)
+        {
+            LocalXmlCache.Save(filename, xdoc);
         }
     }
 }
