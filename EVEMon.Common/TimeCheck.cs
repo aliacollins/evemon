@@ -1,5 +1,6 @@
 using System;
 using EVEMon.Common.Net;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common
 {
@@ -36,17 +37,17 @@ namespace EVEMon.Common
         /// <param name="userState"></param>
         private static void SyncDownloadCompleted(DownloadStringAsyncResult e, object userState)
         {
-            DateTime localTime = DateTime.Now;
             SyncState state = (SyncState)userState;
             bool isSynchronised = true;
             DateTime serverTime = DateTime.MinValue;
+            DateTime localTime = DateTime.Now;
             if (!String.IsNullOrEmpty(e.Result))
             {
                 serverTime = e.Result.TimeStringToDateTime().ToLocalTime();
                 double timediff = Math.Abs(serverTime.Subtract(localTime).TotalSeconds);
                 isSynchronised = timediff < 60;
             }
-            state.Callback(isSynchronised, serverTime, localTime);
+            Dispatcher.Invoke(() => state.Callback(isSynchronised, serverTime, localTime));
         }
 
         /// <summary>

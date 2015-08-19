@@ -2055,23 +2055,23 @@ namespace EVEMon
                                 || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
                                     WindowState == FormWindowState.Minimized));
 
-            // Update manager configuration
-            UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
-
             // Enable/Disable Uploader
             if (Settings.MarketUnifiedUploader.Enabled)
                 Uploader.Start();
             else
                 Uploader.Stop();
 
-            if (Settings.Updates.CheckEVEMonVersion && !m_isUpdateEventsSubscribed)
+            // Update manager configuration
+            UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
+
+            if (UpdateManager.Enabled && !m_isUpdateEventsSubscribed)
             {
                 EveMonClient.UpdateAvailable += OnUpdateAvailable;
                 EveMonClient.DataUpdateAvailable += OnDataUpdateAvailable;
                 m_isUpdateEventsSubscribed = true;
             }
 
-            if (!Settings.Updates.CheckEVEMonVersion && m_isUpdateEventsSubscribed)
+            if (!UpdateManager.Enabled && m_isUpdateEventsSubscribed)
             {
                 EveMonClient.UpdateAvailable -= OnUpdateAvailable;
                 EveMonClient.DataUpdateAvailable -= OnDataUpdateAvailable;
