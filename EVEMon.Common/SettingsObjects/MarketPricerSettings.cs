@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Serialization;
-using EVEMon.Common.Data;
 using EVEMon.Common.MarketPricer;
 
 namespace EVEMon.Common.SettingsObjects
@@ -17,12 +14,12 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         public MarketPricerSettings()
         {
-            ProviderName = "EveAddicts";
-
             foreach (ItemPricer pricer in ItemPricer.Providers)
             {
                 s_pricer[pricer.Name] = pricer;
             }
+
+            ProviderName = s_pricer.First().Key;
         }
 
         /// <summary>
@@ -43,7 +40,14 @@ namespace EVEMon.Common.SettingsObjects
         [XmlIgnore]
         public ItemPricer Pricer
         {
-            get { return s_pricer[ProviderName]; }
+            get
+            {
+                if (s_pricer.ContainsKey(ProviderName))
+                    return s_pricer[ProviderName];
+
+                ProviderName = s_pricer.First().Key;
+                return s_pricer.First().Value;
+            }
         }
     }
 }
