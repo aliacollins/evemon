@@ -27,22 +27,22 @@ namespace EVEMon.XmlGenerator
 
             // Generate datafiles
             Properties.GenerateDatafile();
-            Items.GenerateDatafile(); // Requires GenerateProperties()
             Skills.GenerateDatafile();
             //Certificates.GenerateDatafile();
-            Blueprints.GenerateDatafile();
             Geography.GenerateDatafile();
+            Blueprints.GenerateDatafile();
+            Items.GenerateDatafile(); // Requires GenerateProperties()
             Reprocessing.GenerateDatafile(); // Requires GenerateItems()
 
             // Generate MD5 Sums file
             Util.CreateMD5SumsFile("MD5Sums.txt");
 
             // Generate support xml files
-            Flags.GenerateXMLfile();
+            Flags.GenerateXmlfile();
 
             Console.WriteLine();
             Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating files completed in {0}",
-                                            DateTime.Now.Subtract(startTime)).TrimEnd('0'));
+                                            DateTime.Now.Subtract(startTime)));
             Console.WriteLine();
             Console.Write(@"Press any key to exit.");
             Console.ReadLine();
