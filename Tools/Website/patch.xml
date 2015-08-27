@@ -1,79 +1,82 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>10 July 2015</date>
-    <version>2.0.0.3758</version>
-    <md5>67e65acb31dd9ecdcbf80f3ab73475cd</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=188517.0</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-2.0.0.exe</autopatchurl>
+    <date>27 August 2015</date>
+    <version>2.1.0.3828</version>
+    <md5>d8b5c9b297d2336c00683ca98df4ba13</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=188782.0</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-2.1.0.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[== Breaking Changes ==
-
- * EVEMon repository changed from Mercurial to Git.
- * EVEMon from now on will be compiled to target ANY CPU. This means that it will run as 64bit on 64bit OS and as 32bit on 32bit OS.
-
-== Contributors for this version ==
+    <message><![CDATA[== Contributors for this version ==
 
  * Jimi
- 
+ * Vincent Pitoscia
+
+== New Features ==
+
+ * Added support to chose a market price provider for item prices.
+
 == Bug Fixes ==
 
- * Fixed a bug when generating the data files.
- * Fixed a visual bug for unknown skill complete percentage.
- 
+ * Fixed a bug with the mineral price fetcher.
+ * Fixed a visual bug when sorting assets by jumps.
+ * Fixed a visual bug in the tooltip when queued skill is of level 5.
+ * Fixed a bug where thread crossing occurred while checking time sync on startup.
+
 == Misc ==
 
- * Changed any window that was showing on top of all windows to modal.
- * Several improvements have been done to the base code to make EVEMon a better application.]]></message>
+ * Added support of CCP's image server CDN.
+ * Removing EVEAddicts as a mineral price feeder as it's out of business.
+ * Several improvements have been done to the codebase to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>10 July 2015</date>
-      <md5>9bef2f34da03fd3a7c7d9b35e8c25413</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
-      <message><![CDATA[Aegis 1.1.1 (913581) blueprints data file by the EVEMon Development Team
+      <date>27 August 2015</date>
+      <md5>83bdafe61147b78ce36a51e388920f14</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
+      <message><![CDATA[Galatea 1.0 (957210) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>10 July 2015</date>
-      <md5>34eceb9d1d86b3e030e3e40deb86cc8a</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
-      <message><![CDATA[Aegis 1.1.1 (913581) geography data file by the EVEMon Development Team
+      <date>27 August 2015</date>
+      <md5>502a201f4e4e2f4f2dd2cca0fe950151</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
+      <message><![CDATA[Galatea 1.0 (957210) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>10 July 2015</date>
-      <md5>6b241dfdbedc3ed3b3e00631dc12300a</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
-      <message><![CDATA[Aegis 1.1.1 (913581) items data file by the EVEMon Development Team
+      <date>27 August 2015</date>
+      <md5>4d680c2eda809cd9a884b5ac12f16f01</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
+      <message><![CDATA[Galatea 1.0 (957210) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>10 July 2015</date>
-      <md5>d0627abc2926b8b95a47a6476ee60976</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
-      <message><![CDATA[Aegis 1.1.1 (913581) properties data file by the EVEMon Development Team
+      <date>27 August 2015</date>
+      <md5>b97ec828ca1d86574be30c7af969a26f</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
+      <message><![CDATA[Galatea 1.0 (957210) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>10 July 2015</date>
-      <md5>d14e04146f98cae328401030ac8a3ced</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
-      <message><![CDATA[Aegis 1.1.1 (913581) reprocessing data file by the EVEMon Development Team
+      <date>27 August 2015</date>
+      <md5>d6e3e3e35e76e4615ff8db6ef2c7b7ea</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
+      <message><![CDATA[Galatea 1.0 (957210) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>10 July 2015</date>
-      <md5>3beba3ca81db5694332f77db824a3668</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Aegis/913581</url>
-      <message><![CDATA[Aegis 1.1.1 (913581) skills data file by the EVEMon Development Team
+      <date>27 August 2015</date>
+      <md5>a34a3d13dcc23b45a8e139ba8112415f</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
+      <message><![CDATA[Galatea 1.0 (957210) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
