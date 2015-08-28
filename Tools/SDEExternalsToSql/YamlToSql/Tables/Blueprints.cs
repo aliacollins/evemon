@@ -216,7 +216,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
                             foreach (KeyValuePair<YamlNode, YamlNode> activity in activityNode)
                             {
-                                if (!activityNode.Children.ContainsKey(manActivity))
+                                if (!activity.Key.Equals(manActivity))
                                     ImportProducts(command, activity, blueprintTypeIDText);
 
                                 ImportMaterials(command, activity, blueprintTypeIDText);
