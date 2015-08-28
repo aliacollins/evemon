@@ -33,50 +33,50 @@
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>27 August 2015</date>
-      <md5>83bdafe61147b78ce36a51e388920f14</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
-      <message><![CDATA[Galatea 1.0 (957210) blueprints data file by the EVEMon Development Team
+      <date>28 August 2015</date>
+      <md5>e6968fe72f2dca89684d27c38d083c32</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/958315</url>
+      <message><![CDATA[Galatea 1.0 (958315) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>27 August 2015</date>
+      <date>28 August 2015</date>
       <md5>502a201f4e4e2f4f2dd2cca0fe950151</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
-      <message><![CDATA[Galatea 1.0 (957210) geography data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/958315</url>
+      <message><![CDATA[Galatea 1.0 (958315) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>27 August 2015</date>
+      <date>28 August 2015</date>
       <md5>4d680c2eda809cd9a884b5ac12f16f01</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
-      <message><![CDATA[Galatea 1.0 (957210) items data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/958315</url>
+      <message><![CDATA[Galatea 1.0 (958315) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>27 August 2015</date>
+      <date>28 August 2015</date>
       <md5>b97ec828ca1d86574be30c7af969a26f</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
-      <message><![CDATA[Galatea 1.0 (957210) properties data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/958315</url>
+      <message><![CDATA[Galatea 1.0 (958315) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>27 August 2015</date>
+      <date>28 August 2015</date>
       <md5>d6e3e3e35e76e4615ff8db6ef2c7b7ea</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
-      <message><![CDATA[Galatea 1.0 (957210) reprocessing data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/958315</url>
+      <message><![CDATA[Galatea 1.0 (958315) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>27 August 2015</date>
+      <date>28 August 2015</date>
       <md5>a34a3d13dcc23b45a8e139ba8112415f</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/957210</url>
-      <message><![CDATA[Galatea 1.0 (957210) skills data file by the EVEMon Development Team
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Galatea/958315</url>
+      <message><![CDATA[Galatea 1.0 (958315) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
     </datafile>
   </datafiles>
