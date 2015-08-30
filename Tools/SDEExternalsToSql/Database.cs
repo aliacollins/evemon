@@ -72,7 +72,7 @@ namespace EVEMon.SDEExternalsToSql
         /// <returns></returns>
         internal static T Connect<T>(String connectionName) where T : DbConnection
         {
-            String databaseTypeName = typeof(T) == typeof(SqlConnection) ? "SQL" : "SQLite";
+            String databaseTypeName = typeof(T) == typeof(SqlConnection) ? "MSSQL" : "SQLite";
             s_text = String.Format("Connecting to {0} Database... ", databaseTypeName);
             Console.Write(s_text);
 
@@ -105,11 +105,12 @@ namespace EVEMon.SDEExternalsToSql
         /// <summary>
         /// Disconnects the database.
         /// </summary>
+        /// <param name="connection">The connection.</param>
         internal static void Disconnect(DbConnection connection)
         {
             Console.WriteLine();
 
-            string databaseTypeName = connection is SqlConnection ? "SQL" : "SQLite";
+            string databaseTypeName = connection is SqlConnection ? "MSSQL" : "SQLite";
 
             try
             {
@@ -214,7 +215,10 @@ namespace EVEMon.SDEExternalsToSql
         internal static string SqlUpdateCommandText(String tableName, IDictionary<string, string> parameters)
         {
             StringBuilder sb = new StringBuilder();
-            Dictionary<string, string> pars = parameters.Where(par => par.Key != "columnFilter" && par.Key != "id")
+            Dictionary<string, string> pars = parameters
+                .Where(par =>
+                    !par.Key.StartsWith("columnFilter", StringComparison.OrdinalIgnoreCase) &&
+                    !par.Key.StartsWith("id", StringComparison.OrdinalIgnoreCase))
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
             foreach (var parameter in pars)
@@ -225,7 +229,25 @@ namespace EVEMon.SDEExternalsToSql
             }
 
             if (!String.IsNullOrWhiteSpace(parameters["columnFilter"]) && !String.IsNullOrWhiteSpace(parameters["id"]))
+            {
                 sb.AppendFormat(" WHERE {0} = {1}", parameters["columnFilter"], parameters["id"]);
+
+                if (parameters.ContainsKey("columnFilter2") &&
+                    parameters.ContainsKey("id2") &&
+                    !String.IsNullOrWhiteSpace(parameters["columnFilter2"]) &&
+                    !String.IsNullOrWhiteSpace(parameters["id2"]))
+                {
+                    sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter2"], parameters["id2"]);
+                }
+
+                if (parameters.ContainsKey("columnFilter3") &&
+                 parameters.ContainsKey("id3") &&
+                 !String.IsNullOrWhiteSpace(parameters["columnFilter3"]) &&
+                 !String.IsNullOrWhiteSpace(parameters["id3"]))
+                {
+                    sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter3"], parameters["id3"]);
+                }
+            }
 
             return String.Format("UPDATE {0} SET {1}", tableName, sb);
         }
@@ -264,16 +286,14 @@ namespace EVEMon.SDEExternalsToSql
         /// <param name="tableName">Name of the table.</param>
         internal static void CreateTable(String tableName)
         {
-            DataTable dataTable = SqlConnection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length != 0)
+            if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length != 0)
                 DropTable(tableName);
 
-            using (IDbCommand command = new SqlCommand { Connection = SqlConnection })
+            using (IDbCommand command = new SqlCommand(
+                Util.GetScriptFor(tableName),
+                SqlConnection,
+                SqlConnection.BeginTransaction()))
             {
-                command.Transaction = SqlConnection.BeginTransaction();
-                command.CommandText = Util.GetScriptFor(tableName);
-
                 try
                 {
                     command.ExecuteNonQuery();
@@ -294,20 +314,21 @@ namespace EVEMon.SDEExternalsToSql
         /// <summary>
         /// Creates the column.
         /// </summary>
-        /// <param name="dataTable">The data table.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="columnName">Name of the column.</param>
         /// <param name="columnType">Type of the column.</param>
-        private static void CreateColumn(DataTable dataTable, String tableName, String columnName, String columnType)
+        private static void CreateColumn(String tableName, String columnName, String columnType)
         {
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tableName, columnName)).Length != 0)
+            if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tableName, columnName)).Length != 0)
                 return;
 
-            using (IDbCommand command = new SqlCommand { Connection = SqlConnection })
-            {
-                command.Transaction = SqlConnection.BeginTransaction();
-                command.CommandText = String.Format("ALTER TABLE {0} ADD {1} {2} null", tableName, columnName, columnType);
+            var commandText = String.Format("ALTER TABLE {0} ADD {1} {2} null", tableName, columnName, columnType);
 
+            using (IDbCommand command = new SqlCommand(
+                commandText,
+                SqlConnection,
+                SqlConnection.BeginTransaction()))
+            {
                 try
                 {
                     command.ExecuteNonQuery();
@@ -326,15 +347,43 @@ namespace EVEMon.SDEExternalsToSql
         }
 
         /// <summary>
+        /// Creates the table.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="columns">The columns.</param>
+        internal static void CreateTableOrColumns(string tableName, IDictionary<string, string> columns)
+        {
+            var tableColumns = SqlConnection.GetSchema("columns");
+            var queryTableText = String.Format("TABLE_NAME = '{0}'", tableName);
+            var builder = new StringBuilder();
+
+            builder.Append(queryTableText);
+            builder.Append(" AND (");
+            foreach (KeyValuePair<string, string> column in columns)
+            {
+                builder.AppendFormat("COLUMN_NAME = '{0}'", column.Key);
+                builder.Append(!columns.Last().Equals(column) ? " OR " : ")");
+            }
+
+            if (tableColumns.Select(queryTableText).Length == 0
+                || tableColumns.Select(builder.ToString()).Length != 0)
+            {
+                CreateTable(tableName);
+            }
+            else
+            {
+                CreateColumns(tableName, columns);
+            }
+        }
+
+        /// <summary>
         /// Creates the columns.
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="columns">The columns.</param>
-        internal static void CreateColumns(String tableName, IEnumerable<KeyValuePair<string, string>> columns)
+        private static void CreateColumns(String tableName, IDictionary<string, string> columns)
         {
-            DataTable dataTable = SqlConnection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length == 0)
+            if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length == 0)
             {
                 Console.WriteLine(@"Can't find table '{0}'.", tableName);
                 Console.ReadLine();
@@ -343,7 +392,7 @@ namespace EVEMon.SDEExternalsToSql
 
             foreach (KeyValuePair<string, string> column in columns)
             {
-                CreateColumn(dataTable, tableName, column.Key, column.Value);
+                CreateColumn(tableName, column.Key, column.Value);
             }
         }
     }
