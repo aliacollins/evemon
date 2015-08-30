@@ -11,15 +11,15 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
     {
         private const string InvCategoriesTableName = "invCategories";
 
+        private const string NameText = "name";
+        
+        // invCategories
         private const string CategoryIDText = "categoryID";
         private const string CategoryNameText = "categoryName";
         private const string DescriptionText = "description";
         private const string IconIDText = "iconID";
         private const string PublishedText = "published";
 
-        private const string NameText = "name";
-
-        private const string EnglishLanguageIDText = "en";
 
         /// <summary>
         /// Imports the categories ids.
@@ -34,6 +34,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
             if (String.IsNullOrEmpty(filePath))
                 return;
+
+            ImportTranslations();
 
             var text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
@@ -87,10 +89,13 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[CategoryIDText] = pair.Key.ToString();
                         parameters[CategoryNameText] = categoriesNameNodes == null
                             ? cNode.Children.GetTextOrDefaultString(NameText, isUnicode: true)
-                            : categoriesNameNodes.Children.GetTextOrDefaultString(EnglishLanguageIDText, isUnicode: true);
+                            : categoriesNameNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText, isUnicode: true);
                         parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(DescriptionText, isUnicode: true);
                         parameters[IconIDText] = cNode.Children.GetTextOrDefaultString(IconIDText);
                         parameters[PublishedText] = cNode.Children.GetTextOrDefaultString(PublishedText);
+
+                        if (categoriesNameNodes != null)
+                            Translations.InsertTranslations(command, Translations.TranslationCategoriesID, pair.Key, categoriesNameNodes);
 
                         command.CommandText = Database.SqlInsertCommandText(InvCategoriesTableName, parameters);
                         command.ExecuteNonQuery();
@@ -104,6 +109,37 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     Util.HandleException(command, e);
                 }
             }
+        }
+
+        /// <summary>
+        /// Imports the translations.
+        /// </summary>
+        private static void ImportTranslations()
+        {
+            const string TableText = "dbo." + InvCategoriesTableName;
+            var baseParameters = new Dictionary<string, string>();
+            baseParameters[Translations.TcGroupIDText] = Translations.TranslationCategoriesGroupID;
+            baseParameters[Translations.TcIDText] = Translations.TranslationCategoriesID;
+
+            var parameters = new Dictionary<string, string>(baseParameters);
+            parameters[Translations.SourceTableText] = "inventory.categoriesTx".GetTextOrDefaultString();
+            parameters[Translations.DestinationTableText] = TableText.GetTextOrDefaultString();
+            parameters[Translations.TranslatedKeyText] = CategoryNameText.GetTextOrDefaultString();
+            parameters["id"] = parameters[Translations.SourceTableText];
+            parameters["id2"] = parameters[Translations.TranslatedKeyText];
+            parameters["columnFilter"] = Translations.SourceTableText;
+            parameters["columnFilter2"] = Translations.TranslatedKeyText;
+
+            Translations.ImportData(Translations.TranslationTableName, parameters);
+
+            parameters = new Dictionary<string, string>(baseParameters);
+            parameters[Translations.TableNameText] = TableText.GetTextOrDefaultString();
+            parameters[Translations.ColumnNameText] = CategoryNameText.GetTextOrDefaultString();
+            parameters[Translations.MasterIDText] = CategoryIDText.GetTextOrDefaultString();
+            parameters["id"] = parameters[Translations.TcIDText];
+            parameters["columnFilter"] = Translations.TcIDText;
+
+            Translations.ImportData(Translations.TrnTranslationColumnsTableName, parameters);
         }
     }
 }

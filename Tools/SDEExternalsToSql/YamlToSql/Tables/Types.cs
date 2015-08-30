@@ -20,8 +20,6 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         private const string TraitsText = "traits";
         private const string NameText = "name";
 
-        private const string EnglishLanguageIDText = "en";
-
         // Types
         private const string TypeIDText = "typeID";
         private const string GroupIDText = "groupID";
@@ -72,6 +70,8 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
+            ImportTranslations();
+
             var text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
@@ -85,21 +85,15 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            DataTable dataTable = Database.SqlConnection.GetSchema("columns");
-
-            if (dataTable.Select(String.Format("TABLE_NAME = '{0}'", InvTypesTableName)).Length == 0)
-                Database.CreateTable(InvTypesTableName);
-            else
+            var columns = new Dictionary<string, string>
             {
-                Database.CreateColumns(InvTypesTableName, new Dictionary<string, string>
-                {
-                    { FactionIDText, "int" },
-                    { GraphicIDText, "int" },
-                    { IconIDText, "int" },
-                    { RadiusText, "float" },
-                    { SoundIDText, "int" },
-                });
-            }
+                { FactionIDText, "int" },
+                { GraphicIDText, "int" },
+                { IconIDText, "int" },
+                { RadiusText, "float" },
+                { SoundIDText, "int" }
+            };
+            Database.CreateTableOrColumns(InvTypesTableName, columns);
 
             Database.CreateTable(DgmMasteriesTableName);
             Database.CreateTable(DgmTypeMasteriesTableName);
@@ -229,7 +223,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                                         parameters[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
                                         parameters[BonusTextText] = bonusTextNodes == null
                                             ? bonusNode.Children.GetTextOrDefaultString(BonusTextText, isUnicode: true)
-                                            : bonusTextNodes.Children.GetTextOrDefaultString(EnglishLanguageIDText,
+                                            : bonusTextNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText,
                                                 isUnicode: true);
                                         parameters[UnitIDText] = bonusNode.Children.GetTextOrDefaultString(UnitIDText);
 
@@ -317,11 +311,11 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             parameters[GroupIDText] = cNode.Children.GetTextOrDefaultString(GroupIDText);
             parameters[TypeNameText] = typeNameNodes == null
                 ? cNode.Children.GetTextOrDefaultString(NameText, defaultValue: Database.StringEmpty, isUnicode: true)
-                : typeNameNodes.Children.GetTextOrDefaultString(EnglishLanguageIDText, defaultValue: Database.StringEmpty,
+                : typeNameNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText, defaultValue: Database.StringEmpty,
                     isUnicode: true);
             parameters[DescriptionText] = descriptionNodes == null
                 ? cNode.Children.GetTextOrDefaultString(DescriptionText, defaultValue: Database.StringEmpty, isUnicode: true)
-                : descriptionNodes.Children.GetTextOrDefaultString(EnglishLanguageIDText, defaultValue: Database.StringEmpty,
+                : descriptionNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText, defaultValue: Database.StringEmpty,
                     isUnicode: true);
             parameters[MassText] = cNode.Children.GetTextOrDefaultString(MassText, defaultValue: "0");
             parameters[VolumeText] = cNode.Children.GetTextOrDefaultString(VolumeText, defaultValue: "0");
@@ -333,8 +327,62 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             parameters[MarketGroupIDText] = cNode.Children.GetTextOrDefaultString(MarketGroupIDText);
             parameters[ChanceOfDuplicatingText] = cNode.Children.GetTextOrDefaultString(ChanceOfDuplicatingText, defaultValue: "0");
 
+            if (typeNameNodes != null)
+                Translations.InsertTranslations(command, Translations.TranslationTypesTypeNameID, pair.Key, typeNameNodes);
+
+            if (descriptionNodes != null)
+                Translations.InsertTranslations(command, Translations.TranslationTypesDescriptionID, pair.Key, descriptionNodes);
+
             command.CommandText = Database.SqlInsertCommandText(InvTypesTableName, parameters);
             command.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Imports the translations.
+        /// </summary>
+        private static void ImportTranslations()
+        {
+            const string TableText = "dbo." + InvTypesTableName;
+            var baseParameters = new Dictionary<string, string>();
+            baseParameters[Translations.TcGroupIDText] = Translations.TranslationTypesGroupID;
+
+            var parameters = new Dictionary<string, string>(baseParameters);
+            parameters[Translations.SourceTableText] = "inventory.typesTx".GetTextOrDefaultString();
+            parameters[Translations.DestinationTableText] = TableText.GetTextOrDefaultString();
+            parameters[Translations.TranslatedKeyText] = DescriptionText.GetTextOrDefaultString();
+            parameters[Translations.TcIDText] = Translations.TranslationTypesDescriptionID;
+            parameters["id"] = parameters[Translations.SourceTableText];
+            parameters["id2"] = parameters[Translations.TranslatedKeyText];
+            parameters["columnFilter"] = Translations.SourceTableText;
+            parameters["columnFilter2"] = Translations.TranslatedKeyText;
+
+            Translations.ImportData(Translations.TranslationTableName, parameters);
+
+            parameters[Translations.TranslatedKeyText] = TypeNameText.GetTextOrDefaultString();
+            parameters[Translations.TcIDText] = Translations.TranslationTypesTypeNameID;
+            parameters["id"] = parameters[Translations.SourceTableText];
+            parameters["id2"] = parameters[Translations.TranslatedKeyText];
+            parameters["columnFilter"] = Translations.SourceTableText;
+            parameters["columnFilter2"] = Translations.TranslatedKeyText;
+
+            Translations.ImportData(Translations.TranslationTableName, parameters);
+
+            parameters = new Dictionary<string, string>(baseParameters);
+            parameters[Translations.TcIDText] = Translations.TranslationTypesTypeNameID;
+            parameters[Translations.TableNameText] = TableText.GetTextOrDefaultString();
+            parameters[Translations.ColumnNameText] = TypeNameText.GetTextOrDefaultString();
+            parameters[Translations.MasterIDText] = TypeIDText.GetTextOrDefaultString();
+            parameters["id"] = parameters[Translations.TcIDText];
+            parameters["columnFilter"] = Translations.TcIDText;
+
+            Translations.ImportData(Translations.TrnTranslationColumnsTableName, parameters);
+
+            parameters[Translations.TcIDText] = Translations.TranslationTypesDescriptionID;
+            parameters[Translations.ColumnNameText] = DescriptionText.GetTextOrDefaultString();
+            parameters["id"] = parameters[Translations.TcIDText];
+            parameters["columnFilter"] = Translations.TcIDText;
+
+            Translations.ImportData(Translations.TrnTranslationColumnsTableName, parameters);
         }
     }
 }

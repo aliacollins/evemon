@@ -118,6 +118,7 @@
     <Compile Include="YamlToSql\Tables\Graphics.cs" />
     <Compile Include="YamlToSql\Tables\Groups.cs" />
     <Compile Include="YamlToSql\Tables\Icons.cs" />
+    <Compile Include="YamlToSql\Tables\Translations.cs" />
     <Compile Include="YamlToSql\Tables\Types.cs" />
     <Compile Include="YamlToSql\Tables\SkinLicenses.cs" />
     <Compile Include="YamlToSql\Tables\SkinMaterials.cs" />
