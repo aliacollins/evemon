@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using EVEMon.SDEExternalsToSql.SQLiteToSql.Models;
@@ -13,6 +14,8 @@ namespace EVEMon.SDEExternalsToSql
     {
         private static void Main()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
             Database.SqlConnection = Database.Connect<SqlConnection>("EveStaticData");
@@ -58,6 +61,10 @@ namespace EVEMon.SDEExternalsToSql
 
             if (Database.SqlConnection != null)
                 Database.Disconnect(Database.SqlConnection);
+
+            Console.WriteLine();
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Importing files completed in {0}",
+                                stopwatch.Elapsed.ToString("g")));
 
             Console.WriteLine();
             Console.Write(@"Press any key to exit.");

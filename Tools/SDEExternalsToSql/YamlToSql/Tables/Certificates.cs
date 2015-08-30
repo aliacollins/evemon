@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
@@ -56,7 +57,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// </summary>
         public static void Import()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
             var yamlFile = YamlFilesConstants.certificates;
@@ -85,7 +86,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
             ImportData(rNode);
 
-            Util.DisplayEndTime(startTime);
+            Util.DisplayEndTime(stopwatch);
 
             Console.WriteLine();
         }

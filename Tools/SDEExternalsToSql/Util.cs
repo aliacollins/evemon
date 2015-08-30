@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace EVEMon.SDEExternalsToSql
         internal static void UpdatePercentDone(int total)
         {
             s_counter++;
-            int percent = (s_counter * 100 / total);
+            int percent = total > 0 ? (s_counter * 100 / total) : 0;
 
             if (s_counter != 1 && s_percentOld >= percent)
                 return;
@@ -40,10 +41,10 @@ namespace EVEMon.SDEExternalsToSql
         /// <summary>
         /// Displays the end time.
         /// </summary>
-        /// <param name="startTime">The start time.</param>
-        internal static void DisplayEndTime(DateTime startTime)
+        /// <param name="stopwatch">The stopwatch.</param>
+        internal static void DisplayEndTime(Stopwatch stopwatch)
         {
-            Console.WriteLine(@" in {0}", DateTime.Now.Subtract(startTime).ToString("g"));
+            Console.WriteLine(@" in {0}", stopwatch.Elapsed.ToString("g"));
         }
 
         /// <summary>

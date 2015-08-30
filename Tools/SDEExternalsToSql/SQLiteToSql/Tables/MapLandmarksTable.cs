@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using EVEMon.SDEExternalsToSql.SQLiteToSql.Models;
@@ -18,7 +19,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
         /// </summary>
         public static void Import()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
             try
@@ -38,7 +39,7 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Tables
 
             ImportData();
 
-            Util.DisplayEndTime(startTime);
+            Util.DisplayEndTime(stopwatch);
 
             Console.WriteLine();
         }
