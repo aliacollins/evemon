@@ -273,13 +273,13 @@ namespace EVEMon.XmlGenerator
                 connection.Open();
 
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                Console.WriteLine(@"Connection to SQL Database: Successful");
+                Console.WriteLine(@"Connection to MSSQL Database: Successful");
                 Console.WriteLine();
             }
             catch (Exception ex)
             {
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                Console.WriteLine(@"Connection to SQL Database: Failed");
+                Console.WriteLine(@"Connection to MSSQL Database: Failed");
                 Console.WriteLine(@"Reason: {0}", ex.Message);
                 Console.Write(@"Press any key to exit.");
                 Console.ReadLine();
@@ -321,9 +321,11 @@ namespace EVEMon.XmlGenerator
             CreateConnection();
 
             // Data dumps are available from CCP
-            Console.Write(@"Loading Data from SQL Server... ");
+            Console.Write(@"Loading Data from Database... ");
 
             s_startTime = DateTime.Now;
+
+            Util.UpdatePercentDone(0);
 
             AgtAgentsTable = Agents();
             Util.UpdateProgress();

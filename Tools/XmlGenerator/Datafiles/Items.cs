@@ -22,7 +22,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         internal static void GenerateDatafile()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -67,7 +67,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             ItemsDatafile datafile = new ItemsDatafile();
             datafile.MarketGroups.AddRange(rootGroups);
 
-            Util.DisplayEndTime(startTime);
+            Util.DisplayEndTime(stopwatch);
 
             // DEBUG: Find which items have not been generated
             if (Debugger.IsAttached)
@@ -79,7 +79,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     Console.WriteLine("{0} items were not generated.", diff.Count);
             }
 
-            Util.SerializeXML(datafile, DatafileConstants.ItemsDatafile);
+            Util.SerializeXml(datafile, DatafileConstants.ItemsDatafile);
         }
 
         /// <summary>

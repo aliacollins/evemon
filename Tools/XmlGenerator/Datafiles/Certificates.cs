@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using EVEMon.Common;
@@ -16,11 +17,11 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>        
         internal static void GenerateDatafile()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
             Console.WriteLine();
-            Console.Write("Generating certificates datafile... ");
+            Console.Write(@"Generating certificates datafile... ");
 
             // Export certificates groups
             List<SerializableCertificateGroup> listOfCertGroups = new List<SerializableCertificateGroup>();
@@ -46,9 +47,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             CertificatesDatafile datafile = new CertificatesDatafile();
             datafile.Groups.AddRange(listOfCertGroups);
 
-            Util.DisplayEndTime(startTime);
+            Util.DisplayEndTime(stopwatch);
 
-            Util.SerializeXML(datafile, DatafileConstants.CertificatesDatafile);
+            Util.SerializeXml(datafile, DatafileConstants.CertificatesDatafile);
         }
 
         /// <summary>

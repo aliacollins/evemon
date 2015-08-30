@@ -81,7 +81,7 @@ namespace EVEMon.XmlGenerator
             Assembly asm = Assembly.GetExecutingAssembly();
             XslCompiledTransform xslt = new XslCompiledTransform();
             Stream input = asm.GetManifestResourceStream(String.Format(CultureConstants.DefaultCulture,
-                                                                       "{0}.Zofu.MySQLDumpImport.xslt", asm.GetName().Name));
+                "{0}.Zofu.MySQLDumpImport.xslt", asm.GetName().Name));
             if (input != null)
             {
                 using (XmlReader reader = XmlReader.Create(input))
@@ -127,7 +127,7 @@ namespace EVEMon.XmlGenerator
         /// <typeparam name="T"></typeparam>
         /// <param name="datafile">The datafile.</param>
         /// <param name="filename">The filename.</param>
-        internal static void SerializeXML<T>(T datafile, string filename)
+        internal static void SerializeXml<T>(T datafile, string filename)
         {
             string path = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Resources", filename);
 
@@ -146,7 +146,7 @@ namespace EVEMon.XmlGenerator
 
             // As long as EVEMon.Common is not rebuilt, files are not updated in output directories
             Copy(path, Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\", GetOutputPath(), "Resources", filename));
-            
+
             // Update the file in the settings directory
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             Copy(path, Path.Combine(appData, "EVEMon", filename));
@@ -161,9 +161,9 @@ namespace EVEMon.XmlGenerator
         /// <param name="serial">The serial.</param>
         /// <param name="xmlRootName">Name of the xml root.</param>
         /// <param name="filename">The filename.</param>
-        internal static void SerializeXMLTo<T>(T serial, string xmlRootName, string filename)
+        internal static void SerializeXmlTo<T>(T serial, string xmlRootName, string filename)
         {
-            string path = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Serialization", filename); 
+            string path = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Serialization", filename);
             using (FileStream stream = Common.Util.GetFileStream(path, FileMode.Create, FileAccess.Write))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(xmlRootName));
@@ -198,7 +198,7 @@ namespace EVEMon.XmlGenerator
                         throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", file));
 
                     string line = String.Format(CultureConstants.DefaultCulture, "{0} *{1}", Common.Util.CreateMD5From(file),
-                                                datafile.Name);
+                        datafile.Name);
                     md5SumsFile.WriteLine(line);
                 }
             }
@@ -224,19 +224,21 @@ namespace EVEMon.XmlGenerator
                 {
                     File.Copy(srcFile, destFile, true);
                     Console.WriteLine(@"*** {0}\{1}\{2}", fi.Directory.Parent.Parent.Name, fi.Directory.Parent.Name,
-                                      fi.Directory.Name);
+                        fi.Directory.Name);
                 }
                 else
+                {
                     Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0} doesn't exist, copy failed",
-                                                  fi.Directory.FullName));
+                        fi.Directory.FullName));
+                }
             }
             catch (IOException exc)
             {
-                WriteException(exc);
+                Trace.WriteLine(exc);
             }
             catch (UnauthorizedAccessException exc)
             {
-                WriteException(exc);
+                Trace.WriteLine(exc);
             }
         }
 
@@ -251,7 +253,7 @@ namespace EVEMon.XmlGenerator
         {
             if (String.IsNullOrWhiteSpace(s_solutionDir))
                 s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
-                                            RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
             return s_solutionDir;
         }
 
@@ -264,7 +266,7 @@ namespace EVEMon.XmlGenerator
             if (String.IsNullOrWhiteSpace(s_projectDir))
             {
                 s_projectDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=bin)",
-                                            RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
             }
             return s_projectDir;
         }
@@ -280,15 +282,6 @@ namespace EVEMon.XmlGenerator
             }
             return s_outputPath;
         }
-        
-        /// <summary>
-        /// Writes the exception.
-        /// </summary>
-        /// <param name="exc">The exc.</param>
-        private static void WriteException(Exception exc)
-        {
-            Trace.WriteLine(exc.ToString());
-        }
 
         /// <summary>
         /// Resets the counters.
@@ -297,7 +290,7 @@ namespace EVEMon.XmlGenerator
         {
             if (Debugger.IsAttached)
                 Console.WriteLine(s_counter);
-            
+
             s_counter = 0;
             s_percentOld = 0;
             s_text = String.Empty;
@@ -310,7 +303,7 @@ namespace EVEMon.XmlGenerator
         internal static void UpdatePercentDone(int total)
         {
             s_counter++;
-            int percent = (s_counter * 100 / total);
+            int percent = total > 0 ? (s_counter * 100 / total) : 0;
 
             if (s_counter != 1 && s_percentOld >= percent)
                 return;
@@ -349,11 +342,12 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// Displays the end time.
         /// </summary>
-        /// <param name="startTime">The start time.</param>
-        internal static void DisplayEndTime(DateTime startTime)
+        /// <param name="stopwatch">The stopwatch.</param>
+        internal static void DisplayEndTime(Stopwatch stopwatch)
         {
-            Console.WriteLine(" in {0}", DateTime.Now.Subtract(startTime).ToString("g"));
+            Console.WriteLine(@" in {0}", stopwatch.Elapsed.ToString("g"));
         }
+
         #endregion
     }
 }

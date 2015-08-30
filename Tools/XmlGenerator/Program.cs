@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using EVEMon.XmlGenerator.Datafiles;
@@ -15,7 +16,7 @@ namespace EVEMon.XmlGenerator
         [STAThread]
         private static void Main()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             // Setting a standard format for the generated files
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
@@ -40,9 +41,8 @@ namespace EVEMon.XmlGenerator
             // Generate support xml files
             Flags.GenerateXmlfile();
 
-            Console.WriteLine();
             Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating files completed in {0}",
-                                            DateTime.Now.Subtract(startTime)));
+                                            stopwatch.Elapsed.ToString("g")));
             Console.WriteLine();
             Console.Write(@"Press any key to exit.");
             Console.ReadLine();

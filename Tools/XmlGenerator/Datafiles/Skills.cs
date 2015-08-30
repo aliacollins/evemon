@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.Data;
@@ -16,7 +17,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         internal static void GenerateDatafile()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -45,9 +46,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             SkillsDatafile datafile = new SkillsDatafile();
             datafile.SkillGroups.AddRange(listOfSkillGroups);
 
-            Util.DisplayEndTime(startTime);
+            Util.DisplayEndTime(stopwatch);
 
-            Util.SerializeXML(datafile, DatafileConstants.SkillsDatafile);
+            Util.SerializeXml(datafile, DatafileConstants.SkillsDatafile);
         }
 
         /// <summary>

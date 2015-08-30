@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -13,7 +14,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         internal static void GenerateDatafile()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -48,9 +49,9 @@ namespace EVEMon.XmlGenerator.Datafiles
             datafile.Regions.AddRange(regions.OrderBy(x => x.Name));
             datafile.Jumps.AddRange(jumps);
 
-            Util.DisplayEndTime(startTime);
+            Util.DisplayEndTime(stopwatch);
 
-            Util.SerializeXML(datafile, DatafileConstants.GeographyDatafile);
+            Util.SerializeXml(datafile, DatafileConstants.GeographyDatafile);
         }
 
         /// <summary>
