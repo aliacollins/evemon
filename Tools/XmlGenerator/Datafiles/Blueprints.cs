@@ -20,7 +20,7 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// </summary>
         internal static void GenerateDatafile()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
             Console.WriteLine();
@@ -60,7 +60,7 @@ namespace EVEMon.XmlGenerator.Datafiles
             BlueprintsDatafile datafile = new BlueprintsDatafile();
             datafile.MarketGroups.AddRange(blueprintGroups);
 
-            Util.DisplayEndTime(startTime);
+            Util.DisplayEndTime(stopwatch);
 
             // DEBUG: Find which blueprints have not been generated
             if (Debugger.IsAttached)
@@ -72,7 +72,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                     Console.WriteLine("{0} blueprints were not generated.", diff.Count);
             }
 
-            Util.SerializeXML(datafile, DatafileConstants.BlueprintsDatafile);
+            Util.SerializeXml(datafile, DatafileConstants.BlueprintsDatafile);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using EVEMon.XmlGenerator.Xmlfiles.Serialization;
 
@@ -9,10 +10,10 @@ namespace EVEMon.XmlGenerator.Xmlfiles
     {
         internal static void GenerateXmlfile()
         {
-            DateTime startTime = DateTime.Now;
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             Console.WriteLine();
-            Console.Write("Generating Flags Xml file ");
+            Console.Write(@"Generating Flags Xml file");
 
             SerializableRoot<SerializableInvFlagsRow> flags = new SerializableRoot<SerializableInvFlagsRow>
             {
@@ -32,10 +33,11 @@ namespace EVEMon.XmlGenerator.Xmlfiles
                     Text = flag.Text
                 }));
 
-            Util.DisplayEndTime(startTime);
+            Util.DisplayEndTime(stopwatch);
+            Console.WriteLine();
 
             // Serialize
-            Util.SerializeXMLTo(flags, "invFlags", "Flags.xml");
+            Util.SerializeXmlTo(flags, "invFlags", "Flags.xml");
         }
     }
 }
