@@ -1,6 +1,7 @@
 namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Models
 {
     using System;
+    using System.Data.Common;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
@@ -9,6 +10,11 @@ namespace EVEMon.SDEExternalsToSql.SQLiteToSql.Models
     {
         public UniverseData()
             : base("name=UniverseData")
+        {
+        }
+
+        public UniverseData(DbConnection connection)
+            : base(connection, true)
         {
         }
 

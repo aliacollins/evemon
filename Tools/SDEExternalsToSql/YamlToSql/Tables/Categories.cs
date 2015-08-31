@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class Categories
+    internal class Categories
     {
         private const string InvCategoriesTableName = "invCategories";
 
@@ -21,24 +21,29 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         private const string IconIDText = "iconID";
         private const string PublishedText = "published";
 
+        // Translations
+        private const string TranslationCategoriesGroupID = "4";
+        private const string TranslationCategoriesID = "6";
+
 
         /// <summary>
         /// Imports the categories ids.
         /// </summary>
         internal static void Import()
         {
+            if (Program.IsClosing)
+                return;
+
             Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.categoryIDs;
-            var filePath = Util.CheckYamlFileExists(yamlFile);
+            string yamlFile = YamlFilesConstants.categoryIDs;
+            string filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            ImportTranslations();
-
-            var text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -48,12 +53,23 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 return;
             }
 
+            Translations.InsertTranslationsStaticData(new TranslationsParameters
+            {
+                TableName = InvCategoriesTableName,
+                SourceTable = "inventory.categoriesTx",
+                ColumnName = CategoryNameText,
+                MasterID = CategoryIDText,
+                TcGroupID = TranslationCategoriesGroupID,
+                TcID = TranslationCategoriesID
+            });
+
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
+
             Console.Write(@"Importing {0}... ", yamlFile);
 
             Database.CreateTable(InvCategoriesTableName);
 
-            ImportData(rNode);
+            ImportDataBulk(rNode);
 
             Util.DisplayEndTime(stopwatch);
 
@@ -61,86 +77,65 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Imports the data.
+        /// Imports the data bulk.
         /// </summary>
         /// <param name="rNode">The r node.</param>
-        private static void ImportData(YamlMappingNode rNode)
+        private static void ImportDataBulk(YamlMappingNode rNode)
         {
-            using (IDbCommand command = new SqlCommand(
-                String.Empty,
-                Database.SqlConnection,
-                Database.SqlConnection.BeginTransaction()))
+            Util.UpdatePercentDone(0);
+
+            DataTable invCategoriesTable = new DataTable();
+            invCategoriesTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(CategoryIDText, typeof(SqlInt32)),
+                    new DataColumn(CategoryNameText, typeof(SqlString)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                    new DataColumn(IconIDText, typeof(SqlInt32)),
+                    new DataColumn(PublishedText, typeof(SqlBoolean)),
+                });
+
+            DataTable trnTranslationsTable = Translations.GetTrnTranslationsDataTable();
+
+            int total = rNode.Count();
+            total = (int)Math.Ceiling(total + (total * 0.01));
+
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
             {
-                try
-                {
-                    foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
-                    {
-                        Util.UpdatePercentDone(rNode.Count());
+                Util.UpdatePercentDone(total);
 
-                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
-                        if (cNode == null)
-                            continue;
+                if (cNode == null)
+                    continue;
 
-                        var categoriesNameNodes = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                            ? cNode.Children[new YamlScalarNode(NameText)] as YamlMappingNode
-                            : null;
+                YamlMappingNode categoriesNameNodes = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+                    ? cNode.Children[new YamlScalarNode(NameText)] as YamlMappingNode
+                    : null;
 
-                        Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters[CategoryIDText] = pair.Key.ToString();
-                        parameters[CategoryNameText] = categoriesNameNodes == null
-                            ? cNode.Children.GetTextOrDefaultString(NameText, isUnicode: true)
-                            : categoriesNameNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText, isUnicode: true);
-                        parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(DescriptionText, isUnicode: true);
-                        parameters[IconIDText] = cNode.Children.GetTextOrDefaultString(IconIDText);
-                        parameters[PublishedText] = cNode.Children.GetTextOrDefaultString(PublishedText);
+                DataRow row = invCategoriesTable.NewRow();
+                row[CategoryIDText] = SqlInt32.Parse(pair.Key.ToString());
+                row[CategoryNameText] = categoriesNameNodes == null
+                    ? cNode.Children.GetSqlTypeOrDefault<SqlString>(CategoryNameText)
+                    : categoriesNameNodes.Children.GetSqlTypeOrDefault<SqlString>(Translations.EnglishLanguageIDText);
+                row[DescriptionText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(DescriptionText);
+                row[IconIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(IconIDText);
+                row[PublishedText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(PublishedText);
 
-                        if (categoriesNameNodes != null)
-                            Translations.InsertTranslations(command, Translations.TranslationCategoriesID, pair.Key, categoriesNameNodes);
+                invCategoriesTable.Rows.Add(row);
 
-                        command.CommandText = Database.SqlInsertCommandText(InvCategoriesTableName, parameters);
-                        command.ExecuteNonQuery();
-                    }
-
-                    command.Transaction.Commit();
-                }
-                catch (SqlException e)
-                {
-                    command.Transaction.Rollback();
-                    Util.HandleException(command, e);
-                }
+                if (categoriesNameNodes != null)
+                    Translations.InsertTranslations(TranslationCategoriesID, pair.Key, categoriesNameNodes, trnTranslationsTable);
             }
-        }
+            if (trnTranslationsTable.Rows.Count > 0)
+            {
+                Translations.DeleteTranslations(TranslationCategoriesID);
+                Translations.ImportDataBulk(trnTranslationsTable);
+            }
 
-        /// <summary>
-        /// Imports the translations.
-        /// </summary>
-        private static void ImportTranslations()
-        {
-            const string TableText = "dbo." + InvCategoriesTableName;
-            var baseParameters = new Dictionary<string, string>();
-            baseParameters[Translations.TcGroupIDText] = Translations.TranslationCategoriesGroupID;
-            baseParameters[Translations.TcIDText] = Translations.TranslationCategoriesID;
+            Database.ImportDataBulk(InvCategoriesTableName, invCategoriesTable);
 
-            var parameters = new Dictionary<string, string>(baseParameters);
-            parameters[Translations.SourceTableText] = "inventory.categoriesTx".GetTextOrDefaultString();
-            parameters[Translations.DestinationTableText] = TableText.GetTextOrDefaultString();
-            parameters[Translations.TranslatedKeyText] = CategoryNameText.GetTextOrDefaultString();
-            parameters["id"] = parameters[Translations.SourceTableText];
-            parameters["id2"] = parameters[Translations.TranslatedKeyText];
-            parameters["columnFilter"] = Translations.SourceTableText;
-            parameters["columnFilter2"] = Translations.TranslatedKeyText;
-
-            Translations.ImportData(Translations.TranslationTableName, parameters);
-
-            parameters = new Dictionary<string, string>(baseParameters);
-            parameters[Translations.TableNameText] = TableText.GetTextOrDefaultString();
-            parameters[Translations.ColumnNameText] = CategoryNameText.GetTextOrDefaultString();
-            parameters[Translations.MasterIDText] = CategoryIDText.GetTextOrDefaultString();
-            parameters["id"] = parameters[Translations.TcIDText];
-            parameters["columnFilter"] = Translations.TcIDText;
-
-            Translations.ImportData(Translations.TrnTranslationColumnsTableName, parameters);
+            Util.UpdatePercentDone(invCategoriesTable.Rows.Count);
         }
     }
 }

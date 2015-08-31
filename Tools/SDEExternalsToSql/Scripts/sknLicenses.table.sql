@@ -6,7 +6,7 @@ SET ANSI_PADDING ON
 
 CREATE TABLE [dbo].[sknLicenses](
 	[licenseTypeID] [int] NOT NULL,
-	[skinID] [int] NULL,
+	[skinID] [int] NOT NULL,
 	[duration] [int] NOT NULL,
  CONSTRAINT [sknLicenses_PK] PRIMARY KEY CLUSTERED 
 (

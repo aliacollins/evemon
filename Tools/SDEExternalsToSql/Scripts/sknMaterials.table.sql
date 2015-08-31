@@ -6,8 +6,10 @@ SET ANSI_PADDING ON
 
 CREATE TABLE [dbo].[sknMaterials](
 	[skinMaterialID] [int] NOT NULL,
+	[materialSetID] [int] NOT NULL,
+	[displayNameID] [int] NOT NULL,
+	-- Obsolete columns since Galatea 1.0
 	[material] [nvarchar](255) NOT NULL,
-	[displayNameID] [int] NULL,
 	[colorHull] [nvarchar](6) NULL,
 	[colorWindow] [nvarchar](6) NULL,
 	[colorPrimary] [nvarchar](6) NULL,
@@ -22,3 +24,7 @@ CREATE TABLE [dbo].[sknMaterials](
 SET ANSI_PADDING OFF
 
 ALTER TABLE [dbo].[sknMaterials] ADD  DEFAULT ('') FOR [material]
+
+ALTER TABLE [dbo].[sknMaterials] ADD  DEFAULT ((0)) FOR [materialSetID]
+
+ALTER TABLE [dbo].[sknMaterials] ADD  DEFAULT ((0)) FOR [displayNameID]

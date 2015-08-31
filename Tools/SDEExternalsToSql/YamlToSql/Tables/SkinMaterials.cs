@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class SkinMaterials
+    internal class SkinMaterials
     {
         private const string SknMaterialsTableName = "sknMaterials";
 
         private const string SkinMaterialIDText = "skinMaterialID";
-        private const string MaterialText = "material";
+        private const string MaterialSetIDText = "materialSetID";
         private const string DisplayNameIDText = "displayNameID";
+
+        // Obsolete since Galatea 1.0
+        private const string MaterialText = "material";
         private const string ColorHullText = "colorHull";
         private const string ColorWindowText = "colorWindow";
         private const string ColorPrimaryText = "colorPrimary";
@@ -25,16 +28,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// </summary>
         internal static void Import()
         {
+            if (Program.IsClosing)
+                return;
+
             Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.skinMaterials;
-            var filePath = Util.CheckYamlFileExists(yamlFile);
+            string yamlFile = YamlFilesConstants.skinMaterials;
+            string filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            var text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -45,11 +51,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             }
 
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
+
             Console.Write(@"Importing {0}... ", yamlFile);
 
             Database.CreateTable(SknMaterialsTableName);
 
-            ImportData(rNode);
+            ImportDataBulk(rNode);
 
             Util.DisplayEndTime(stopwatch);
 
@@ -57,49 +64,59 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Imports the data.
+        /// Imports the data bulk.
         /// </summary>
         /// <param name="rNode">The r node.</param>
-        private static void ImportData(YamlMappingNode rNode)
+        private static void ImportDataBulk(YamlMappingNode rNode)
         {
-            using (IDbCommand command = new SqlCommand(
-                String.Empty,
-                Database.SqlConnection,
-                Database.SqlConnection.BeginTransaction()))
+            Util.UpdatePercentDone(0);
+
+            DataTable sknMaterialsTable = new DataTable();
+            sknMaterialsTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(SkinMaterialIDText, typeof(SqlInt32)),
+                    new DataColumn(MaterialSetIDText, typeof(SqlInt32)),
+                    new DataColumn(DisplayNameIDText, typeof(SqlInt32)),
+                    
+                    // Obsolete since Galatea 1.0
+                    new DataColumn(MaterialText, typeof(SqlString)),
+                    new DataColumn(ColorHullText, typeof(SqlString)),
+                    new DataColumn(ColorWindowText, typeof(SqlString)),
+                    new DataColumn(ColorPrimaryText, typeof(SqlString)),
+                    new DataColumn(ColorSecondaryText, typeof(SqlString)),
+                });
+
+            int total = rNode.Count();
+            total = (int)Math.Ceiling(total + (total * 0.01));
+
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
             {
-                try
-                {
-                    foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
-                    {
-                        Util.UpdatePercentDone(rNode.Count());
+                Util.UpdatePercentDone(total);
 
-                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
-                        if (cNode == null)
-                            continue;
+                if (cNode == null)
+                    continue;
 
-                        Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters[SkinMaterialIDText] = pair.Key.ToString();
-                        parameters[MaterialText] = cNode.Children.GetTextOrDefaultString(MaterialText,
-                            defaultValue: Database.StringEmpty, isUnicode: true);
-                        parameters[DisplayNameIDText] = cNode.Children.GetTextOrDefaultString(DisplayNameIDText);
-                        parameters[ColorHullText] = cNode.Children.GetTextOrDefaultString(ColorHullText);
-                        parameters[ColorWindowText] = cNode.Children.GetTextOrDefaultString(ColorWindowText);
-                        parameters[ColorPrimaryText] = cNode.Children.GetTextOrDefaultString(ColorPrimaryText);
-                        parameters[ColorSecondaryText] = cNode.Children.GetTextOrDefaultString(ColorSecondaryText);
+                DataRow row = sknMaterialsTable.NewRow();
+                row[SkinMaterialIDText] = SqlInt32.Parse(pair.Key.ToString());
+                row[MaterialSetIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(MaterialSetIDText, defaultValue: "0");
+                row[DisplayNameIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(DisplayNameIDText, defaultValue: "0");
 
-                        command.CommandText = Database.SqlInsertCommandText(SknMaterialsTableName, parameters);
-                        command.ExecuteNonQuery();
-                    }
+                // Obsolete since Galatea 1.0
+                row[MaterialText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(MaterialText, defaultValue: "");
+                row[ColorHullText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(ColorHullText);
+                row[ColorWindowText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(ColorWindowText);
+                row[ColorPrimaryText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(ColorPrimaryText);
+                row[ColorSecondaryText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(ColorSecondaryText);
 
-                    command.Transaction.Commit();
-                }
-                catch (SqlException e)
-                {
-                    command.Transaction.Rollback();
-                    Util.HandleException(command, e);
-                }
+                sknMaterialsTable.Rows.Add(row);
             }
+
+            Database.ImportDataBulk(SknMaterialsTableName, sknMaterialsTable);
+
+            Util.UpdatePercentDone(sknMaterialsTable.Rows.Count);
         }
     }
 }
