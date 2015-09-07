@@ -18,7 +18,7 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string RemoveProjectLocalPath(this string text)
         {
-            return Regex.Replace(text, @"[a-zA-Z]+:.*\\(?=EVEMon)",
+            return Regex.Replace(text, @"[a-zA-Z]+:\\.*\\(?=EVEMon)",
                 String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 

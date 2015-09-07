@@ -47,7 +47,7 @@ namespace EVEMon.SDEExternalsToSql
             }
             catch (Exception ex)
             {
-                Trace.WriteLine(ex);
+                Trace.WriteLine(ex.GetRecursiveStackTrace());
                 Util.PressAnyKey(-1);
             }
 

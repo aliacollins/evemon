@@ -206,8 +206,7 @@ namespace EVEMon.ExceptionHandling
             {
                 ex = ex.InnerException;
 
-                stackTraceBuilder.AppendLine();
-                stackTraceBuilder.Append(ex).AppendLine();
+                stackTraceBuilder.AppendLine().Append(ex).AppendLine();
             }
 
             // Remove project local path from message
