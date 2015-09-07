@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using YamlDotNet.RepresentationModel;
 
@@ -136,7 +138,7 @@ namespace EVEMon.SDEExternalsToSql
                 }
                 catch(Exception ex)
                 {
-                    Trace.WriteLine(ex);
+                    Trace.WriteLine(ex.GetRecursiveStackTrace());
                 }
             }
         }
@@ -571,6 +573,40 @@ namespace EVEMon.SDEExternalsToSql
             StreamWriter traceStream = File.CreateText("trace.txt");
             TextWriterTraceListener traceListener = new TextWriterTraceListener(traceStream);
             Trace.Listeners.Add(traceListener);
+        }
+
+        /// <summary>
+        /// Gets the recursive stack trace.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <returns></returns>
+        /// <value>The recursive stack trace.</value>
+        internal static string GetRecursiveStackTrace(this Exception exception)
+        {
+            StringBuilder stackTraceBuilder = new StringBuilder();
+            Exception ex = exception;
+
+            stackTraceBuilder.Append(ex).AppendLine();
+
+            while (ex.InnerException != null)
+            {
+                ex = ex.InnerException;
+                stackTraceBuilder.AppendLine().Append(ex).AppendLine();
+            }
+
+            // Remove project local path from message
+            return stackTraceBuilder.ToString().RemoveProjectLocalPath();
+        }
+
+        /// <summary>
+        /// Removes the project local path from the text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        private static string RemoveProjectLocalPath(this string text)
+        {
+            return Regex.Replace(text, @"[a-zA-Z]+:\\.*\\(?=SDEExternalsToSql)",
+                String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
     }
 }
