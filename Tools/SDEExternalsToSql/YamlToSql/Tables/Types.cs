@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class Types
+    internal class Types
     {
         private const string InvTypesTableName = "invTypes";
         private const string DgmMasteriesTableName = "dgmMasteries";
@@ -57,23 +57,31 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         // TypeMasteries
         private const string MasteryIDText = "masteryID";
 
+        // Translations
+        private const string TranslationTypesGroupID= "5";
+        private const string TranslationTypesDescriptionID = "33";
+        private const string TranslationTypesTypeNameID = "8";
+        private const string TranslationTraitsGroupID = "90";
+        private const string TranslationTraitsBonusTextID = "140";
+
         /// <summary>
         /// Imports the type ids.
         /// </summary>
         internal static void Import()
         {
+            if (Program.IsClosing)
+                return;
+
             Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.typeIDs;
-            var filePath = Util.CheckYamlFileExists(yamlFile);
+            string yamlFile = YamlFilesConstants.typeIDs;
+            string filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            ImportTranslations();
-
-            var text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -84,6 +92,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             }
 
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
+
             Console.Write(@"Importing {0}... ", yamlFile);
 
             var columns = new Dictionary<string, string>
@@ -94,18 +103,82 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 { RadiusText, "float" },
                 { SoundIDText, "int" }
             };
-            Database.CreateTableOrColumns(InvTypesTableName, columns);
 
-            Database.CreateTable(DgmMasteriesTableName);
-            Database.CreateTable(DgmTypeMasteriesTableName);
-            Database.CreateTable(DgmTraitsTableName);
-            Database.CreateTable(DgmTypeTraitsTableName);
+            bool tableIsEmpty = Database.CreateTableOrColumns(rNode, "name", InvTypesTableName, columns);
 
-            ImportData(rNode);
+            Database.CreateTable(rNode, "masteries", DgmMasteriesTableName);
+            Database.CreateTable(rNode, "masteries", DgmTypeMasteriesTableName);
+
+            bool traitsAdded = Database.CreateTable(rNode, "traits", DgmTraitsTableName);
+            Database.CreateTable(rNode, "traits", DgmTypeTraitsTableName);
+
+            if (tableIsEmpty)
+                ImportTranslationsStaticData(traitsAdded);
+
+            if (tableIsEmpty)
+                ImportDataBulk(rNode);
+            else
+                ImportData(rNode);
 
             Util.DisplayEndTime(stopwatch);
 
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Imports the data bulk.
+        /// </summary>
+        /// <param name="rNode">The r node.</param>
+        private static void ImportDataBulk(YamlMappingNode rNode)
+        {
+            Util.UpdatePercentDone(0);
+
+            DataTable invTypesTable = GetInvTypesDataTable();
+            DataTable dgmMasteriesTable = GetDgmMasteriesDataTable();
+            DataTable dgmTypeMasteriesTable = GetDgmTypeMasteriesDataTable();
+            DataTable dgmTraitsTable = GetDgmTraitsDataTable();
+            DataTable dgmTypeTraitsTable = GetDgmTypeTraitsDataTable();
+            DataTable trnTranslationsTable = Translations.GetTrnTranslationsDataTable();
+
+            int total = rNode.Count();
+            total = (int)Math.Ceiling(total + (total * 0.01));
+
+            int masteryId = 0;
+            int traitId = 0;
+            Dictionary<int, Dictionary<string, string>> masteriesDict = new Dictionary<int, Dictionary<string, string>>();
+            Dictionary<int, string> traitsDict = new Dictionary<int, string>();
+
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
+            {
+                Util.UpdatePercentDone(total);
+
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
+
+                if (cNode == null)
+                    continue;
+
+                // Masteries
+                ImportMasteries(cNode, dgmMasteriesTable, dgmTypeMasteriesTable, pair, masteriesDict, ref masteryId);
+
+                //Traits
+                ImportTraits(cNode, dgmTraitsTable, dgmTypeTraitsTable, trnTranslationsTable, pair, traitsDict, ref traitId);
+
+                // Types
+                ImportTypes(cNode, invTypesTable, pair, trnTranslationsTable);
+            }
+
+            Translations.DeleteTranslations(TranslationTypesDescriptionID);
+            Translations.DeleteTranslations(TranslationTypesTypeNameID);
+            Translations.DeleteTranslations(TranslationTraitsBonusTextID);
+            Translations.ImportDataBulk(trnTranslationsTable);
+
+            Database.ImportDataBulk(InvTypesTableName, invTypesTable);
+            Database.ImportDataBulk(DgmMasteriesTableName, dgmMasteriesTable);
+            Database.ImportDataBulk(DgmTypeMasteriesTableName, dgmTypeMasteriesTable);
+            Database.ImportDataBulk(DgmTraitsTableName, dgmTraitsTable);
+            Database.ImportDataBulk(DgmTypeTraitsTableName, dgmTypeTraitsTable);
+
+            Util.UpdatePercentDone(invTypesTable.Rows.Count);
         }
 
         /// <summary>
@@ -114,6 +187,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// <param name="rNode">The r node.</param>
         private static void ImportData(YamlMappingNode rNode)
         {
+            DataTable dgmMasteriesTable = GetDgmMasteriesDataTable();
+            DataTable dgmTypeMasteriesTable = GetDgmTypeMasteriesDataTable();
+            DataTable dgmTraitsTable = GetDgmTraitsDataTable();
+            DataTable dgmTypeTraitsTable = GetDgmTypeTraitsDataTable();
+            DataTable trnTranslationsTable = Translations.GetTrnTranslationsDataTable();
+
             int masteryId = 0;
             int traitId = 0;
             Dictionary<int, Dictionary<string, string>> masteriesDict = new Dictionary<int, Dictionary<string, string>>();
@@ -130,138 +209,16 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                     {
                         Util.UpdatePercentDone(rNode.Count());
 
-                        Dictionary<string, string> parameters;
-
                         YamlMappingNode cNode = rNode.Children[pair.Key] as YamlMappingNode;
 
                         if (cNode == null)
                             continue;
 
-                        YamlNode masteriesNode = new YamlScalarNode(MasteriesText);
-                        if (cNode.Children.ContainsKey(masteriesNode))
-                        {
-                            YamlMappingNode mastNode = cNode.Children[masteriesNode] as YamlMappingNode;
+                        ImportMasteries(cNode, dgmMasteriesTable, dgmTypeMasteriesTable, pair, masteriesDict, ref masteryId);
 
-                            if (mastNode == null)
-                                continue;
+                        ImportTraits(cNode, dgmTraitsTable, dgmTypeTraitsTable, trnTranslationsTable, pair, traitsDict, ref traitId);
 
-                            foreach (KeyValuePair<YamlNode, YamlNode> mastery in mastNode)
-                            {
-                                YamlSequenceNode certNode = mastNode.Children[mastery.Key] as YamlSequenceNode;
-
-                                if (certNode == null)
-                                    continue;
-
-                                foreach (YamlNode certificate in certNode.Distinct())
-                                {
-                                    masteryId++;
-                                    parameters = new Dictionary<string, string>();
-                                    parameters[MasteryIDText] = masteryId.ToString(CultureInfo.InvariantCulture);
-                                    parameters[GradeText] = mastery.Key.ToString();
-                                    parameters[CertificateIDText] = certificate.ToString();
-
-                                    var param = new Dictionary<string, string>();
-                                    param[TypeIDText] = pair.Key.ToString();
-
-                                    var value = new Dictionary<string, string>
-                                    {
-                                        {
-                                            mastery.Key.ToString(), certificate.ToString()
-                                        }
-                                    };
-
-                                    if (masteriesDict.Values.Any(
-                                        x => x.Any(y => y.Key == mastery.Key.ToString()
-                                                        && y.Value == certificate.ToString())))
-                                    {
-                                        param[MasteryIDText] =
-                                            masteriesDict.First(
-                                                x => value.Any(y => x.Value.ContainsKey(y.Key) && x.Value.ContainsValue(y.Value)))
-                                                .Key.ToString(CultureInfo.InvariantCulture);
-
-                                        command.CommandText = Database.SqlInsertCommandText(DgmTypeMasteriesTableName, param);
-                                        command.ExecuteNonQuery();
-
-                                        continue;
-                                    }
-
-                                    masteriesDict[masteryId] = value;
-
-                                    param[MasteryIDText] = masteryId.ToString(CultureInfo.InvariantCulture);
-
-                                    command.CommandText = Database.SqlInsertCommandText(DgmTypeMasteriesTableName, param);
-                                    command.ExecuteNonQuery();
-
-                                    command.CommandText = Database.SqlInsertCommandText(DgmMasteriesTableName, parameters);
-                                    command.ExecuteNonQuery();
-                                }
-                            }
-
-                            YamlNode traitsNode = new YamlScalarNode(TraitsText);
-                            if (cNode.Children.ContainsKey(traitsNode))
-                            {
-                                YamlMappingNode traitNode = cNode.Children[traitsNode] as YamlMappingNode;
-
-                                if (traitNode == null)
-                                    continue;
-
-                                foreach (KeyValuePair<YamlNode, YamlNode> trait in traitNode)
-                                {
-                                    YamlMappingNode bonusesNode = traitNode.Children[trait.Key] as YamlMappingNode;
-
-                                    if (bonusesNode == null)
-                                        continue;
-
-                                    foreach (YamlMappingNode bonusNode in bonusesNode
-                                        .Select(bonuses => bonusesNode.Children[bonuses.Key])
-                                        .OfType<YamlMappingNode>())
-                                    {
-                                        var bonusTextNodes =
-                                            bonusNode.Children[new YamlScalarNode(BonusTextText)] as YamlMappingNode;
-
-                                        traitId++;
-                                        parameters = new Dictionary<string, string>();
-                                        parameters[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
-                                        parameters[BonusTextText] = bonusTextNodes == null
-                                            ? bonusNode.Children.GetTextOrDefaultString(BonusTextText, isUnicode: true)
-                                            : bonusTextNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText,
-                                                isUnicode: true);
-                                        parameters[UnitIDText] = bonusNode.Children.GetTextOrDefaultString(UnitIDText);
-
-                                        Dictionary<string, string> pars = new Dictionary<string, string>();
-                                        pars[TypeIDText] = pair.Key.ToString();
-                                        pars[ParentTypeIDText] = trait.Key.ToString();
-
-                                        String value = parameters[BonusTextText];
-
-                                        if (traitsDict.ContainsValue(value))
-                                        {
-                                            pars[TraitIDText] =
-                                                traitsDict.First(x => x.Value == value).Key.ToString(CultureInfo.InvariantCulture);
-                                            pars[BonusText] = bonusNode.Children.GetTextOrDefaultString(BonusText);
-
-                                            command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
-                                            command.ExecuteNonQuery();
-
-                                            continue;
-                                        }
-
-                                        traitsDict[traitId] = value;
-
-                                        pars[TraitIDText] = traitId.ToString(CultureInfo.InvariantCulture);
-                                        pars[BonusText] = bonusNode.Children.GetTextOrDefaultString(BonusText);
-
-                                        command.CommandText = Database.SqlInsertCommandText(DgmTypeTraitsTableName, pars);
-                                        command.ExecuteNonQuery();
-
-                                        command.CommandText = Database.SqlInsertCommandText(DgmTraitsTableName, parameters);
-                                        command.ExecuteNonQuery();
-                                    }
-                                }
-                            }
-                        }
-
-                        parameters = new Dictionary<string, string>();
+                        Dictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters["id"] = pair.Key.ToString();
                         parameters["columnFilter"] = TypeIDText;
 
@@ -272,118 +229,399 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                         parameters[SoundIDText] = cNode.Children.GetTextOrDefaultString(SoundIDText);
 
                         command.CommandText = Database.SqlUpdateCommandText(InvTypesTableName, parameters);
-                        if (command.ExecuteNonQuery() != 0)
-                            continue;
-
-                        InsertRow(parameters, cNode, pair, command);
+                        command.ExecuteNonQuery();
                     }
 
                     command.Transaction.Commit();
+
+                    if (trnTranslationsTable.Rows.Count > 0)
+                    {
+                        Translations.DeleteTranslations(TranslationTraitsBonusTextID);
+                        Translations.ImportDataBulk(trnTranslationsTable);
+                    }
+
+                    Database.ImportDataBulk(DgmMasteriesTableName, dgmMasteriesTable);
+                    Database.ImportDataBulk(DgmTypeMasteriesTableName, dgmTypeMasteriesTable);
+                    Database.ImportDataBulk(DgmTraitsTableName, dgmTraitsTable);
+                    Database.ImportDataBulk(DgmTypeTraitsTableName, dgmTypeTraitsTable);
                 }
                 catch (SqlException e)
                 {
                     command.Transaction.Rollback();
-                    Util.HandleException(command, e);
+                    Util.HandleExceptionForCommand(command, e);
                 }
             }
         }
 
         /// <summary>
-        /// Inserts a row.
+        /// Imports the types.
         /// </summary>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="cNode">The c node.</param>
+        /// <param name="cNode">The yaml node.</param>
+        /// <param name="invTypesTable">The invTypes datatable.</param>
         /// <param name="pair">The pair.</param>
-        /// <param name="command">The command.</param>
-        private static void InsertRow(IDictionary<string, string> parameters, YamlMappingNode cNode,
-            KeyValuePair<YamlNode, YamlNode> pair, IDbCommand command)
+        /// <param name="trnTranslationsTable">The trnTranslations datatable.</param>
+        private static void ImportTypes(YamlMappingNode cNode, DataTable invTypesTable, KeyValuePair<YamlNode, YamlNode> pair,
+            DataTable trnTranslationsTable)
         {
-            parameters.Remove("id");
-            parameters.Remove("columnFilter");
-
-            var typeNameNodes = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+            YamlMappingNode typeNameNodes = cNode.Children.Keys.Any(key => key.ToString() == NameText)
                 ? cNode.Children[new YamlScalarNode(NameText)] as YamlMappingNode
                 : null;
-            var descriptionNodes = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
+            YamlMappingNode descriptionNodes = cNode.Children.Keys.Any(key => key.ToString() == DescriptionText)
                 ? cNode.Children[new YamlScalarNode(DescriptionText)] as YamlMappingNode
                 : null;
 
-            parameters[TypeIDText] = pair.Key.ToString();
-            parameters[GroupIDText] = cNode.Children.GetTextOrDefaultString(GroupIDText);
-            parameters[TypeNameText] = typeNameNodes == null
-                ? cNode.Children.GetTextOrDefaultString(NameText, defaultValue: Database.StringEmpty, isUnicode: true)
-                : typeNameNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText, defaultValue: Database.StringEmpty,
-                    isUnicode: true);
-            parameters[DescriptionText] = descriptionNodes == null
-                ? cNode.Children.GetTextOrDefaultString(DescriptionText, defaultValue: Database.StringEmpty, isUnicode: true)
-                : descriptionNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText, defaultValue: Database.StringEmpty,
-                    isUnicode: true);
-            parameters[MassText] = cNode.Children.GetTextOrDefaultString(MassText, defaultValue: "0");
-            parameters[VolumeText] = cNode.Children.GetTextOrDefaultString(VolumeText, defaultValue: "0");
-            parameters[CapacityText] = cNode.Children.GetTextOrDefaultString(CapacityText, defaultValue: "0");
-            parameters[PortionSizeText] = cNode.Children.GetTextOrDefaultString(PortionSizeText);
-            parameters[RaceIDText] = cNode.Children.GetTextOrDefaultString(RaceIDText);
-            parameters[BasePriceText] = cNode.Children.GetTextOrDefaultString(BasePriceText, defaultValue: "0.00");
-            parameters[PublishedText] = cNode.Children.GetTextOrDefaultString(PublishedText, defaultValue: "0");
-            parameters[MarketGroupIDText] = cNode.Children.GetTextOrDefaultString(MarketGroupIDText);
-            parameters[ChanceOfDuplicatingText] = cNode.Children.GetTextOrDefaultString(ChanceOfDuplicatingText, defaultValue: "0");
+            DataRow row = invTypesTable.NewRow();
+            row[TypeIDText] = SqlInt32.Parse(pair.Key.ToString());
+            row[GroupIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(GroupIDText);
+            row[TypeNameText] = typeNameNodes == null
+                ? cNode.Children.GetSqlTypeOrDefault<SqlString>(NameText, defaultValue: "")
+                : typeNameNodes.Children.GetSqlTypeOrDefault<SqlString>(Translations.EnglishLanguageIDText, defaultValue: "");
+            row[DescriptionText] = descriptionNodes == null
+                ? cNode.Children.GetSqlTypeOrDefault<SqlString>(DescriptionText, defaultValue: "")
+                : descriptionNodes.Children.GetSqlTypeOrDefault<SqlString>(Translations.EnglishLanguageIDText,
+                    defaultValue: "");
+            row[MassText] = cNode.Children.GetSqlTypeOrDefault<SqlDouble>(MassText, defaultValue: "0");
+            row[VolumeText] = cNode.Children.GetSqlTypeOrDefault<SqlDouble>(VolumeText, defaultValue: "0");
+            row[CapacityText] = cNode.Children.GetSqlTypeOrDefault<SqlDouble>(CapacityText, defaultValue: "0");
+            row[PortionSizeText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(PortionSizeText);
+            row[RaceIDText] = cNode.Children.GetSqlTypeOrDefault<SqlByte>(RaceIDText);
+            row[BasePriceText] = cNode.Children.GetSqlTypeOrDefault<SqlMoney>(BasePriceText, defaultValue: "0.00");
+            row[PublishedText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(PublishedText, defaultValue: "0");
+            row[MarketGroupIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(MarketGroupIDText);
+            row[ChanceOfDuplicatingText] = cNode.Children.GetSqlTypeOrDefault<SqlDouble>(ChanceOfDuplicatingText,
+                defaultValue: "0");
+            row[FactionIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(FactionIDText);
+            row[GraphicIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(GraphicIDText);
+            row[IconIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(IconIDText);
+            row[RadiusText] = cNode.Children.GetSqlTypeOrDefault<SqlDouble>(RadiusText);
+            row[SoundIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(SoundIDText);
+
+            invTypesTable.Rows.Add(row);
 
             if (typeNameNodes != null)
-                Translations.InsertTranslations(command, Translations.TranslationTypesTypeNameID, pair.Key, typeNameNodes);
+            {
+                Translations.InsertTranslations(TranslationTypesTypeNameID, pair.Key, typeNameNodes, trnTranslationsTable);
+            }
 
             if (descriptionNodes != null)
-                Translations.InsertTranslations(command, Translations.TranslationTypesDescriptionID, pair.Key, descriptionNodes);
-
-            command.CommandText = Database.SqlInsertCommandText(InvTypesTableName, parameters);
-            command.ExecuteNonQuery();
+            {
+                Translations.InsertTranslations(TranslationTypesDescriptionID, pair.Key, descriptionNodes,
+                    trnTranslationsTable);
+            }
         }
 
         /// <summary>
-        /// Imports the translations.
+        /// Imports the traits.
         /// </summary>
-        private static void ImportTranslations()
+        /// <param name="cNode">The yaml node.</param>
+        /// <param name="dgmTraitsTable">The dgmTraits datatable.</param>
+        /// <param name="dgmTypeTraitsTable">The dgmTypeTraits datatable.</param>
+        /// <param name="trnTranslationsTable">The trnTranslations datatable.</param>
+        /// <param name="pair">The pair.</param>
+        /// <param name="traitsDict">The traits dictionary.</param>
+        /// <param name="traitId">The trait identifier.</param>
+        private static void ImportTraits(YamlMappingNode cNode, DataTable dgmTraitsTable, DataTable dgmTypeTraitsTable,
+            DataTable trnTranslationsTable, KeyValuePair<YamlNode, YamlNode> pair, Dictionary<int, string> traitsDict,
+            ref int traitId)
         {
-            const string TableText = "dbo." + InvTypesTableName;
-            var baseParameters = new Dictionary<string, string>();
-            baseParameters[Translations.TcGroupIDText] = Translations.TranslationTypesGroupID;
+            YamlNode traitsNode = new YamlScalarNode(TraitsText);
+            if (cNode.Children.ContainsKey(traitsNode))
+            {
+                YamlMappingNode traitNode = cNode.Children[traitsNode] as YamlMappingNode;
 
-            var parameters = new Dictionary<string, string>(baseParameters);
-            parameters[Translations.SourceTableText] = "inventory.typesTx".GetTextOrDefaultString();
-            parameters[Translations.DestinationTableText] = TableText.GetTextOrDefaultString();
-            parameters[Translations.TranslatedKeyText] = DescriptionText.GetTextOrDefaultString();
-            parameters[Translations.TcIDText] = Translations.TranslationTypesDescriptionID;
-            parameters["id"] = parameters[Translations.SourceTableText];
-            parameters["id2"] = parameters[Translations.TranslatedKeyText];
-            parameters["columnFilter"] = Translations.SourceTableText;
-            parameters["columnFilter2"] = Translations.TranslatedKeyText;
+                if (traitNode == null)
+                    return;
 
-            Translations.ImportData(Translations.TranslationTableName, parameters);
+                foreach (KeyValuePair<YamlNode, YamlNode> trait in traitNode)
+                {
+                    YamlMappingNode bonusesNode = traitNode.Children[trait.Key] as YamlMappingNode;
 
-            parameters[Translations.TranslatedKeyText] = TypeNameText.GetTextOrDefaultString();
-            parameters[Translations.TcIDText] = Translations.TranslationTypesTypeNameID;
-            parameters["id"] = parameters[Translations.SourceTableText];
-            parameters["id2"] = parameters[Translations.TranslatedKeyText];
-            parameters["columnFilter"] = Translations.SourceTableText;
-            parameters["columnFilter2"] = Translations.TranslatedKeyText;
+                    if (bonusesNode == null)
+                        continue;
 
-            Translations.ImportData(Translations.TranslationTableName, parameters);
+                    foreach (YamlMappingNode bonusNode in bonusesNode
+                        .Select(bonuses => bonusesNode.Children[bonuses.Key])
+                        .OfType<YamlMappingNode>())
+                    {
+                        YamlMappingNode bonusTextNodes = bonusNode.Children.Keys.Any(key => key.ToString() == BonusTextText)
+                            ? bonusNode.Children[new YamlScalarNode(BonusTextText)] as YamlMappingNode
+                            : null;
 
-            parameters = new Dictionary<string, string>(baseParameters);
-            parameters[Translations.TcIDText] = Translations.TranslationTypesTypeNameID;
-            parameters[Translations.TableNameText] = TableText.GetTextOrDefaultString();
-            parameters[Translations.ColumnNameText] = TypeNameText.GetTextOrDefaultString();
-            parameters[Translations.MasterIDText] = TypeIDText.GetTextOrDefaultString();
-            parameters["id"] = parameters[Translations.TcIDText];
-            parameters["columnFilter"] = Translations.TcIDText;
+                        // dgmTraits
+                        traitId++;
+                        DataRow row = dgmTraitsTable.NewRow();
+                        row[TraitIDText] = SqlInt32.Parse(traitId.ToString());
+                        row[BonusTextText] = bonusTextNodes == null
+                            ? bonusNode.Children.GetSqlTypeOrDefault<SqlString>(BonusTextText)
+                            : bonusTextNodes.Children.GetSqlTypeOrDefault<SqlString>(Translations.EnglishLanguageIDText);
+                        row[UnitIDText] = bonusNode.Children.GetSqlTypeOrDefault<SqlByte>(UnitIDText);
 
-            Translations.ImportData(Translations.TrnTranslationColumnsTableName, parameters);
+                        if (!dgmTraitsTable.Rows.OfType<DataRow>()
+                            .Select(x => x.ItemArray)
+                            .Any(x => x[1].ToString() == row[BonusTextText].ToString() &&
+                                      x[2].ToString() == row[UnitIDText].ToString()
+                            ))
+                        {
+                            dgmTraitsTable.Rows.Add(row);
 
-            parameters[Translations.TcIDText] = Translations.TranslationTypesDescriptionID;
-            parameters[Translations.ColumnNameText] = DescriptionText.GetTextOrDefaultString();
-            parameters["id"] = parameters[Translations.TcIDText];
-            parameters["columnFilter"] = Translations.TcIDText;
+                            if (bonusTextNodes != null)
+                            {
+                                Translations.InsertTranslations(TranslationTraitsBonusTextID,
+                                    new YamlScalarNode(traitId.ToString()),
+                                    bonusTextNodes, trnTranslationsTable);
+                            }
+                        }
 
-            Translations.ImportData(Translations.TrnTranslationColumnsTableName, parameters);
+                        // dgmTypeTraits
+                        string value = row[BonusTextText].ToString();
+                        row = dgmTypeTraitsTable.NewRow();
+                        row[TypeIDText] = SqlInt32.Parse(pair.Key.ToString());
+                        row[ParentTypeIDText] = SqlInt32.Parse(trait.Key.ToString());
+
+                        if (traitsDict.ContainsValue(value))
+                        {
+                            row[TraitIDText] = SqlInt32.Parse(
+                                traitsDict.First(x => x.Value == value).Key.ToString());
+                            row[BonusText] = bonusNode.Children.GetSqlTypeOrDefault<SqlDouble>(BonusText);
+
+                            if (!dgmTypeTraitsTable.Rows.OfType<DataRow>()
+                                .Select(x => x.ItemArray)
+                                .Any(x =>
+                                    x[0].ToString() == row[TypeIDText].ToString() &&
+                                    x[1].ToString() == row[ParentTypeIDText].ToString() &&
+                                    x[2].ToString() == row[TraitIDText].ToString()))
+                                dgmTypeTraitsTable.Rows.Add(row);
+
+                            continue;
+                        }
+
+                        traitsDict[traitId] = value;
+
+                        row[TraitIDText] = SqlInt32.Parse(traitId.ToString());
+                        row[BonusText] = bonusNode.Children.GetSqlTypeOrDefault<SqlDouble>(BonusText);
+
+                        dgmTypeTraitsTable.Rows.Add(row);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Imports the masteries.
+        /// </summary>
+        /// <param name="cNode">The yaml node.</param>
+        /// <param name="dgmMasteriesTable">The dgmMasteries datatable.</param>
+        /// <param name="dgmTypeMasteriesTable">The dgmTypeMasteries datatable.</param>
+        /// <param name="pair">The pair.</param>
+        /// <param name="masteriesDict">The masteries dictionary.</param>
+        /// <param name="masteryId">The mastery identifier.</param>
+        private static void ImportMasteries(YamlMappingNode cNode, DataTable dgmMasteriesTable, DataTable dgmTypeMasteriesTable,
+            KeyValuePair<YamlNode, YamlNode> pair, Dictionary<int, Dictionary<string, string>> masteriesDict, ref int masteryId)
+        {
+            YamlNode masteriesNode = new YamlScalarNode(MasteriesText);
+            if (cNode.Children.ContainsKey(masteriesNode))
+            {
+                YamlMappingNode mastNode = cNode.Children[masteriesNode] as YamlMappingNode;
+
+                if (mastNode == null)
+                    return;
+
+                foreach (KeyValuePair<YamlNode, YamlNode> mastery in mastNode)
+                {
+                    YamlSequenceNode certNode = mastNode.Children[mastery.Key] as YamlSequenceNode;
+
+                    if (certNode == null)
+                        continue;
+
+                    foreach (YamlNode certificate in certNode.Distinct())
+                    {
+                        // dgmMasteries
+                        masteryId++;
+                        DataRow row = dgmMasteriesTable.NewRow();
+                        row[MasteryIDText] = SqlInt32.Parse(masteryId.ToString());
+                        row[CertificateIDText] = SqlInt32.Parse(certificate.ToString());
+                        row[GradeText] = SqlByte.Parse(mastery.Key.ToString());
+
+                        if (!dgmMasteriesTable.Rows.OfType<DataRow>()
+                            .Select(x => x.ItemArray)
+                            .Any(x => x[1].ToString() == row[CertificateIDText].ToString() &&
+                                      x[2].ToString() == row[GradeText].ToString()
+                            ))
+                        {
+                            dgmMasteriesTable.Rows.Add(row);
+                        }
+
+                        // dgmTypeMasteries
+                        row = dgmTypeMasteriesTable.NewRow();
+                        row[TypeIDText] = SqlInt32.Parse(pair.Key.ToString());
+
+                        Dictionary<string, string> value = new Dictionary<string, string>
+                        {
+                            { mastery.Key.ToString(), certificate.ToString() }
+                        };
+
+                        if (masteriesDict.Values.Any(
+                            x => x.Any(y => y.Key == mastery.Key.ToString()
+                                            && y.Value == certificate.ToString())))
+                        {
+                            row[MasteryIDText] = SqlInt16.Parse(
+                                masteriesDict.First(
+                                    x => value.Any(y => x.Value.ContainsKey(y.Key) && x.Value.ContainsValue(y.Value)))
+                                    .Key.ToString());
+
+                            dgmTypeMasteriesTable.Rows.Add(row);
+
+                            continue;
+                        }
+
+                        masteriesDict[masteryId] = value;
+
+                        row[MasteryIDText] = SqlInt16.Parse(masteryId.ToString());
+
+                        dgmTypeMasteriesTable.Rows.Add(row);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the data table for the dgmTypeTraits table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetDgmTypeTraitsDataTable()
+        {
+            DataTable dgmTypeTraits = new DataTable();
+            dgmTypeTraits.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(TypeIDText, typeof(SqlInt32)),
+                    new DataColumn(ParentTypeIDText, typeof(SqlInt32)),
+                    new DataColumn(TraitIDText, typeof(SqlInt32)),
+                    new DataColumn(BonusText, typeof(SqlDouble)),
+                });
+            return dgmTypeTraits;
+        }
+
+        /// <summary>
+        /// Gets the data table for the dgmTraits table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetDgmTraitsDataTable()
+        {
+            DataTable dgmTraits = new DataTable();
+            dgmTraits.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(TraitIDText, typeof(SqlInt32)),
+                    new DataColumn(BonusTextText, typeof(SqlString)),
+                    new DataColumn(UnitIDText, typeof(SqlByte)),
+                });
+            return dgmTraits;
+        }
+
+        /// <summary>
+        /// Gets the data table for the dgmTypeMasteries table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetDgmTypeMasteriesDataTable()
+        {
+            DataTable dgmTypeMasteries = new DataTable();
+            dgmTypeMasteries.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(TypeIDText, typeof(SqlInt32)),
+                    new DataColumn(MasteryIDText, typeof(SqlInt16)),
+                });
+            return dgmTypeMasteries;
+        }
+
+        /// <summary>
+        /// Gets the data table for the dgmMsteries table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetDgmMasteriesDataTable()
+        {
+            DataTable dgmMasteries = new DataTable();
+            dgmMasteries.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(MasteryIDText, typeof(SqlInt32)),
+                    new DataColumn(CertificateIDText, typeof(SqlInt32)),
+                    new DataColumn(GradeText, typeof(SqlByte)),
+                });
+            return dgmMasteries;
+        }
+
+        /// <summary>
+        /// Gets the data table for the invTypes table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetInvTypesDataTable()
+        {
+            DataTable invTypesTable = new DataTable();
+            invTypesTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(TypeIDText, typeof(SqlInt32)),
+                    new DataColumn(GroupIDText, typeof(SqlInt32)),
+                    new DataColumn(TypeNameText, typeof(SqlString)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                    new DataColumn(MassText, typeof(SqlDouble)),
+                    new DataColumn(VolumeText, typeof(SqlDouble)),
+                    new DataColumn(CapacityText, typeof(SqlDouble)),
+                    new DataColumn(PortionSizeText, typeof(SqlInt32)),
+                    new DataColumn(RaceIDText, typeof(SqlByte)),
+                    new DataColumn(BasePriceText, typeof(SqlMoney)),
+                    new DataColumn(PublishedText, typeof(SqlBoolean)),
+                    new DataColumn(MarketGroupIDText, typeof(SqlInt32)),
+                    new DataColumn(ChanceOfDuplicatingText, typeof(SqlDouble)),
+                    new DataColumn(FactionIDText, typeof(SqlInt32)),
+                    new DataColumn(GraphicIDText, typeof(SqlInt32)),
+                    new DataColumn(IconIDText, typeof(SqlInt32)),
+                    new DataColumn(RadiusText, typeof(SqlDouble)),
+                    new DataColumn(SoundIDText, typeof(SqlInt32)),
+                });
+            return invTypesTable;
+        }
+
+        /// <summary>
+        /// Imports the translations static data.
+        /// </summary>
+        /// <param name="addTraitsRecords">if set to <c>true</c> [add traits records].</param>
+        private static void ImportTranslationsStaticData(bool addTraitsRecords)
+        {
+            Translations.InsertTranslationsStaticData(new TranslationsParameters
+            {
+                TableName = InvTypesTableName,
+                SourceTable = "inventory.typesTx",
+                ColumnName = DescriptionText,
+                MasterID = TypeIDText,
+                TcGroupID = TranslationTypesGroupID,
+                TcID = TranslationTypesDescriptionID
+            });
+
+            Translations.InsertTranslationsStaticData(new TranslationsParameters
+            {
+                TableName = InvTypesTableName,
+                SourceTable = "inventory.typesTx",
+                ColumnName = TypeNameText,
+                MasterID = TypeIDText,
+                TcGroupID = TranslationTypesGroupID,
+                TcID = TranslationTypesTypeNameID
+            });
+
+            if (!addTraitsRecords)
+                return;
+
+            Translations.InsertTranslationsStaticData(new TranslationsParameters
+            {
+                TableName = DgmTraitsTableName,
+                SourceTable = "dogma.traitsTx",
+                ColumnName = BonusTextText,
+                MasterID = TraitIDText,
+                TcGroupID = TranslationTraitsGroupID,
+                TcID = TranslationTraitsBonusTextID
+            });
         }
     }
 }

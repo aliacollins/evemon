@@ -4,41 +4,34 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using EVEMon.SDEExternalsToSql.SQLiteToSql.Models;
+using EVEMon.SDEExternalsToSql.YamlToSql.Tables;
+using Microsoft.SqlServer.Management.Common;
+using Microsoft.SqlServer.Management.Smo;
+using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql
 {
-    internal static class Database
+    internal class Database
     {
         private static string s_text;
 
-        /// <summary>
-        /// Gets a DB string empty representation.
-        /// </summary>
-        /// <value>
-        /// The string empty.
-        /// </value>
-        internal static String StringEmpty
-        {
-            get { return "''"; }
-        }
 
         /// <summary>
-        /// Gets a DB null representation.
+        /// Gets or sets the server restore.
         /// </summary>
         /// <value>
-        /// The null.
+        /// The server restore.
         /// </value>
-        internal static String DbNull
-        {
-            get { return "NULL"; }
-        }
+        internal static Restore ServerRestore { get; private set; }
 
         /// <summary>
         /// Gets or sets the SQL connection.
@@ -46,7 +39,7 @@ namespace EVEMon.SDEExternalsToSql
         /// <value>
         /// The SQL connection.
         /// </value>
-        internal static SqlConnection SqlConnection { get; set; }
+        internal static SqlConnection SqlConnection { get; private set; }
 
         /// <summary>
         /// Gets or sets the sqlite connection.
@@ -54,49 +47,202 @@ namespace EVEMon.SDEExternalsToSql
         /// <value>
         /// The sqlite connection.
         /// </value>
-        internal static SQLiteConnection SqliteConnection { get; set; }
+        internal static SQLiteConnection SqliteConnection { get; private set; }
 
 
         /// <summary>
-        /// Gets or sets the context.
+        /// Imports the SDE files.
         /// </summary>
-        /// <value>
-        /// The context.
-        /// </value>
-        internal static UniverseData UniverseDataContext { get; set; }
-
-        /// <summary>
-        /// Connects the database.
-        /// </summary>
-        /// <param name="connectionName">Name of the connection.</param>
-        /// <returns></returns>
-        internal static T Connect<T>(String connectionName) where T : DbConnection
+        /// <param name="args">The arguments.</param>
+        internal static void ImportSDEFiles(IList<string> args)
         {
-            String databaseTypeName = typeof(T) == typeof(SqlConnection) ? "MSSQL" : "SQLite";
-            s_text = String.Format("Connecting to {0} Database... ", databaseTypeName);
+            if (!args.Any() || args.All(x => x != "-norestore"))
+                RestoreSqlServerDataDump();
+
+            if (!args.Any() || args.All(x => x != "-noyaml"))
+                ImportYamlFiles();
+
+            if (!args.Any() || args.All(x => x != "-nosqlite"))
+                ImportSQLiteFiles();
+
+            if (SqlConnection != null)
+            {
+                Disconnect(SqlConnection);
+                Console.WriteLine();
+
+                if (SqliteConnection == null)
+                    Console.WriteLine();
+            }
+        }
+
+        /// <summary>
+        /// Imports the sqlite files.
+        /// </summary>
+        private static void ImportSQLiteFiles()
+        {
+            if (Program.IsClosing)
+                return;
+
+            if (SqlConnection == null)
+                SqlConnection = CreateConnection<SqlConnection>("name=EveStaticData");
+
+            if (SqlConnection == null)
+                return;
+
+            Console.WriteLine();
+
+            string connectionString = @"data source=SDEFiles\universeDataDx.db";
+            SqliteConnection = CreateConnection<SQLiteConnection>(connectionString);
+
+            if (SqliteConnection == null)
+                return;
+
+            using (var universeDataContext = new UniverseData(SqliteConnection))
+            {
+                if (Debugger.IsAttached)
+                    Import(universeDataContext.mapRegions);
+                else
+                {
+                    typeof(UniverseData).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                        .ToList()
+                        .ForEach(property => Import(property.GetValue(universeDataContext, null) as IQueryable<object>));
+                }
+
+                if (SqliteConnection == null)
+                    return;
+
+                Disconnect(SqliteConnection);
+            }
+        }
+
+        /// <summary>
+        /// Imports the yaml files.
+        /// </summary>
+        private static void ImportYamlFiles()
+        {
+            if (Program.IsClosing)
+                return;
+
+            SqlConnection = CreateConnection<SqlConnection>("name=EveStaticData");
+
+            if (SqlConnection == null)
+                return;
+
+            Categories.Import();
+
+            if (Debugger.IsAttached)
+                return;
+
+            Groups.Import();
+            Graphics.Import();
+            Icons.Import();
+            Skins.Import();
+            SkinMaterials.Import();
+            SkinLicenses.Import();
+            Types.Import();
+            Certificates.Import();
+            Blueprints.Import();
+        }
+
+        /// <summary>
+        /// Restores the SQL server data dump.
+        /// </summary>
+        private static void RestoreSqlServerDataDump()
+        {
+            if (Program.IsClosing)
+                return;
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            Util.ResetCounters();
+
+            string filePath = Util.CheckDataDumpExists().Single();
+            DbConnection connection = GetConnection<SqlConnection>("name=EveStaticData");
+
+            s_text = String.Format(@"Restoring data dump to '{0}' Database... ", connection.Database);
             Console.Write(s_text);
 
-            DbConnection connection = GetConnection<T>(connectionName);
+            try
+            {
+                ServerConnection serverConnection = new ServerConnection(connection.DataSource);
+                Server server = new Server(serverConnection);
+
+                string defaultDataPath = String.IsNullOrEmpty(server.Settings.DefaultFile)
+                    ? server.MasterDBPath
+                    : server.Settings.DefaultFile;
+                string defaultLogPath = String.IsNullOrEmpty(server.Settings.DefaultLog)
+                    ? server.MasterDBLogPath
+                    : server.Settings.DefaultLog;
+
+                Restore restore = new Restore
+                {
+                    Database = connection.Database,
+                    ReplaceDatabase = true,
+                    PercentCompleteNotification = 1,
+                };
+                restore.PercentComplete += Restore_PercentComplete;
+                restore.Devices.AddDevice(filePath, DeviceType.File);
+                restore.RelocateFiles.AddRange(
+                    new[]
+                    {
+                        new RelocateFile("ebs_DATADUMP", String.Format("{0}{1}.mdf", defaultDataPath, restore.Database)),
+                        new RelocateFile("ebs_DATADUMP_log", String.Format("{0}{1}_log.ldf", defaultLogPath, restore.Database))
+                    });
+
+                ServerRestore = restore;
+                restore.SqlRestore(server);
+
+                Util.DisplayEndTime(stopwatch);
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+            catch (Exception ex)
+            {
+                string text = String.Format("Restoring data dump to '{0}' Database: Failed\n{1}", connection.Database,
+                    ex.Message);
+                Util.HandleExceptionWithReason(s_text, text, ex.InnerException.Message);
+            }
+        }
+
+        /// <summary>
+        /// Handles the PercentComplete event of the Restore control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="PercentCompleteEventArgs"/> instance containing the event data.</param>
+        private static void Restore_PercentComplete(object sender, PercentCompleteEventArgs e)
+        {
+            Util.UpdatePercentDone(100);
+        }
+
+        /// <summary>
+        /// Creates the connection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nameOrConnectionString">The name or connection string.</param>
+        /// <returns></returns>
+        private static T CreateConnection<T>(String nameOrConnectionString) where T : DbConnection
+        {
+            DbConnection connection = GetConnection<T>(nameOrConnectionString);
 
             if (connection == null)
                 return null;
+
+            string databaseTypeName = connection is SqlConnection ? "SQL Server" : "SQLite";
+
+            s_text = String.Format("Connecting to {0} '{1}' Database... ", databaseTypeName, connection.Database);
+            Console.Write(s_text);
 
             try
             {
                 connection.Open();
 
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                Console.WriteLine(@"Connection to {0} Database: Successful", databaseTypeName);
+                Console.WriteLine(@"Connection to {0} '{1}' Database: Successful", databaseTypeName, connection.Database);
                 Console.WriteLine();
             }
             catch (Exception ex)
             {
-                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                Console.WriteLine(@"Connection to {0} Database: Failed", databaseTypeName);
-                Console.WriteLine(@"Reason was: {0}", ex.Message);
-                Console.Write(@"Press any key to exit.");
-                Console.ReadLine();
-                Environment.Exit(-1);
+                string text = String.Format("Connection to {0} '{1}' Database: Failed", databaseTypeName, connection.Database);
+                Util.HandleExceptionWithReason(s_text, text, ex.Message);
             }
 
             return (T)connection;
@@ -110,72 +256,101 @@ namespace EVEMon.SDEExternalsToSql
         {
             Console.WriteLine();
 
-            string databaseTypeName = connection is SqlConnection ? "MSSQL" : "SQLite";
+            string databaseTypeName = connection is SqlConnection ? "SQL Server" : "SQLite";
+
+            s_text = String.Format("Disconnecting from {0} '{1}' Database... ", databaseTypeName, connection.Database);
+            Console.Write(s_text);
 
             try
             {
                 connection.Close();
 
-                Console.WriteLine(@"Disconnection from {0} Database: Successful", databaseTypeName);
+                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+                Console.WriteLine(@"Disconnection from {0} '{1}' Database: Successful", databaseTypeName,
+                    connection.Database);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(@"Disconnection from {0} Database: Failed", databaseTypeName);
-                Console.WriteLine();
-                Console.WriteLine(@"Reason was: {0}", ex.Message);
-                Console.WriteLine();
-                Console.Write(@"Press any key to exit.");
-                Console.ReadLine();
-                Environment.Exit(-1);
+                string text = String.Format("Disconnection from {0} '{1}' Database: Failed", databaseTypeName,
+                    connection.Database);
+                Util.HandleExceptionWithReason(s_text, text, ex.Message);
+            }
+            finally
+            {
+                connection.Dispose();
+
+                if (connection is SQLiteConnection)
+                    SqliteConnection = null;
+                else
+                    SqlConnection = null;
             }
         }
 
         /// <summary>
-        /// Gets the SQL connection.
+        /// Gets the database connection.
         /// </summary>
-        /// <param name="connectionName">Name of the connection.</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nameOrConnectionString">The name or connection string.</param>
         /// <returns></returns>
-        private static DbConnection GetConnection<T>(String connectionName) where T : DbConnection
+        private static DbConnection GetConnection<T>(String nameOrConnectionString) where T : DbConnection
         {
-            ConnectionStringSettings connectionStringSetting = ConfigurationManager.ConnectionStrings[connectionName];
+            if (String.IsNullOrWhiteSpace(nameOrConnectionString))
+                throw new ArgumentNullException("nameOrConnectionString");
+
+            if (nameOrConnectionString.StartsWith("name=", StringComparison.OrdinalIgnoreCase))
+                nameOrConnectionString = nameOrConnectionString.Replace("name=", String.Empty);
+
+            ConnectionStringSettings connectionStringSetting = ConfigurationManager.ConnectionStrings[nameOrConnectionString];
+
+            string connectionString = connectionStringSetting == null
+                ? nameOrConnectionString
+                : connectionStringSetting.ConnectionString;
 
             if (typeof(T) != typeof(SqlConnection))
             {
-                var match = Regex.Match(connectionStringSetting.ConnectionString, "data source=(.*)",
+                var match = Regex.Match(connectionString, "data source=(.*)",
                     RegexOptions.Compiled | RegexOptions.IgnoreCase).Groups;
 
                 if (match.Count != 2 || !File.Exists(match[1].Value.TrimEnd(new[] { '\"' })))
                 {
-                    Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+                    if (Console.CursorLeft > 0)
+                    {
+                        var position = Console.CursorLeft - s_text.Length;
+                        Console.SetCursorPosition(position > -1 ? position : 0, Console.CursorTop);
+                    }
+
                     Console.WriteLine(@"Database {0}file does not exists!",
                         match.Count != 2
                             ? String.Empty
-                            : String.Format("{0} ", match[1].Value.TrimEnd(new[] { '\"' }).Replace("SQLiteFiles\\", String.Empty)));
+                            : String.Format("{0} ", match[1].Value.TrimEnd(new[] { '\"' }).Replace("SDEFiles\\", String.Empty)));
+
+                    Console.WriteLine();
+                    Console.WriteLine();
+
                     return null;
                 }
             }
 
-            if (connectionStringSetting != null)
+            if (String.IsNullOrWhiteSpace(connectionString))
             {
-                ConstructorInfo ci = typeof(T).GetConstructor(new[]
-                {
-                    typeof(string)
-                });
-
-                if (ci != null)
-                {
-                    return (T)ci.Invoke(new object[]
-                    {
-                        connectionStringSetting.ConnectionString
-                    });
-                }
+                Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
+                Console.WriteLine(@"Can not find connection string: {0}", nameOrConnectionString);
+                Util.PressAnyKey(-1);
             }
 
-            Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-            Console.WriteLine(@"Can not find connection string with name: {0}", connectionName);
-            Console.Write(@"Press any key to exit.");
-            Console.ReadLine();
-            Environment.Exit(-1);
+            ConstructorInfo ci = typeof(T).GetConstructor(new[]
+            {
+                typeof(string)
+            });
+
+            if (ci != null)
+            {
+                return (T)ci.Invoke(new object[]
+                {
+                    connectionString
+                });
+            }
+
             return null;
         }
 
@@ -241,9 +416,9 @@ namespace EVEMon.SDEExternalsToSql
                 }
 
                 if (parameters.ContainsKey("columnFilter3") &&
-                 parameters.ContainsKey("id3") &&
-                 !String.IsNullOrWhiteSpace(parameters["columnFilter3"]) &&
-                 !String.IsNullOrWhiteSpace(parameters["id3"]))
+                    parameters.ContainsKey("id3") &&
+                    !String.IsNullOrWhiteSpace(parameters["columnFilter3"]) &&
+                    !String.IsNullOrWhiteSpace(parameters["id3"]))
                 {
                     sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter3"], parameters["id3"]);
                 }
@@ -253,11 +428,51 @@ namespace EVEMon.SDEExternalsToSql
         }
 
         /// <summary>
+        /// SQL delete command text.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        internal static string SqlDeleteCommandText(String tableName, IDictionary<string, string> parameters)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (!String.IsNullOrWhiteSpace(parameters["columnFilter"]) && !String.IsNullOrWhiteSpace(parameters["id"]))
+            {
+                sb.AppendFormat(" WHERE {0} = {1}", parameters["columnFilter"], parameters["id"]);
+
+                if (parameters.ContainsKey("columnFilter2") &&
+                    parameters.ContainsKey("id2") &&
+                    !String.IsNullOrWhiteSpace(parameters["columnFilter2"]) &&
+                    !String.IsNullOrWhiteSpace(parameters["id2"]))
+                {
+                    sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter2"], parameters["id2"]);
+                }
+
+                if (parameters.ContainsKey("columnFilter3") &&
+                    parameters.ContainsKey("id3") &&
+                    !String.IsNullOrWhiteSpace(parameters["columnFilter3"]) &&
+                    !String.IsNullOrWhiteSpace(parameters["id3"]))
+                {
+                    sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter3"], parameters["id3"]);
+                }
+            }
+
+            return String.Format("DELETE {0}{1}", tableName, sb);
+        }
+
+        /// <summary>
         /// Drops the table.
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
         private static void DropTable(String tableName)
         {
+            if (Program.IsClosing)
+                return;
+
+            if (SqlConnection == null)
+                return;
+
             using (IDbCommand command = new SqlCommand { Connection = SqlConnection })
             {
                 command.Transaction = SqlConnection.BeginTransaction();
@@ -271,13 +486,59 @@ namespace EVEMon.SDEExternalsToSql
                 catch (SqlException e)
                 {
                     command.Transaction.Rollback();
-                    Console.WriteLine();
-                    Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
-                    Console.WriteLine(e.Message);
-                    Console.ReadLine();
-                    Environment.Exit(-1);
+                    Util.HandleExceptionForCommand(command, e);
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates the table.
+        /// </summary>
+        /// <param name="rNode">The r node.</param>
+        /// <param name="searchKey">The search key.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="columns">The columns.</param>
+        /// <returns>
+        ///   <c>true</c> if the table is empty; otherwise, <c>false</c>.
+        /// </returns>
+        internal static bool CreateTableOrColumns(YamlMappingNode rNode, string searchKey, string tableName,
+            IDictionary<string, string> columns)
+        {
+            if (CreateTable(rNode, searchKey, tableName))
+                return true;
+
+            CreateColumns(tableName, columns);
+            return false;
+        }
+
+        /// <summary>
+        /// Creates the table.
+        /// </summary>
+        /// <param name="rNode">The r node.</param>
+        /// <param name="searchKey">The search key.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns></returns>
+        internal static bool CreateTable(YamlMappingNode rNode, string searchKey, string tableName)
+        {
+            bool createTable = false;
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
+            {
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
+
+                if (cNode == null)
+                    continue;
+
+                createTable = cNode.Any(x => x.Key.ToString() == searchKey);
+
+                if (createTable)
+                    break;
+            }
+
+            if (!createTable)
+                return false;
+
+            CreateTable(tableName);
+            return true;
         }
 
         /// <summary>
@@ -286,6 +547,12 @@ namespace EVEMon.SDEExternalsToSql
         /// <param name="tableName">Name of the table.</param>
         internal static void CreateTable(String tableName)
         {
+            if (Program.IsClosing)
+                return;
+
+            if (SqlConnection == null)
+                return;
+
             if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length != 0)
                 DropTable(tableName);
 
@@ -302,12 +569,33 @@ namespace EVEMon.SDEExternalsToSql
                 catch (SqlException e)
                 {
                     command.Transaction.Rollback();
-                    Console.WriteLine();
-                    Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
-                    Console.WriteLine(e.Message);
-                    Console.ReadLine();
-                    Environment.Exit(-1);
+                    Util.HandleExceptionForCommand(command, e);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Creates the columns.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="columns">The columns.</param>
+        private static void CreateColumns(String tableName, IDictionary<string, string> columns)
+        {
+            if (Program.IsClosing)
+                return;
+
+            if (SqlConnection == null)
+                return;
+
+            if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length == 0)
+            {
+                Console.WriteLine(@"Can't find table '{0}'.", tableName);
+                Util.PressAnyKey(-1);
+            }
+
+            foreach (KeyValuePair<string, string> column in columns)
+            {
+                CreateColumn(tableName, column.Key, column.Value);
             }
         }
 
@@ -317,12 +605,32 @@ namespace EVEMon.SDEExternalsToSql
         /// <param name="tableName">Name of the table.</param>
         /// <param name="columnName">Name of the column.</param>
         /// <param name="columnType">Type of the column.</param>
-        private static void CreateColumn(String tableName, String columnName, String columnType)
+        /// <param name="defaultValue">The default value.</param>
+        private static void CreateColumn(String tableName, String columnName, String columnType, string defaultValue = "Null")
         {
-            if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tableName, columnName)).Length != 0)
+            if (Program.IsClosing)
                 return;
 
-            var commandText = String.Format("ALTER TABLE {0} ADD {1} {2} null", tableName, columnName, columnType);
+            if (SqlConnection == null)
+                return;
+
+            if (SqlConnection.GetSchema("columns")
+                .Select(String.Format("TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tableName, columnName))
+                .Length != 0)
+            {
+                return;
+            }
+
+            double number;
+            string commandText = String.Format("ALTER TABLE {0} ADD {1} {2} {3} NULL {4}", tableName, columnName, columnType,
+                defaultValue != SqlString.Null.ToString() ? "NOT" : String.Empty,
+                defaultValue != SqlString.Null.ToString()
+                    ? String.Format("DEFAULT ({0})",
+                        Double.TryParse(defaultValue, out number)
+                            ? String.Format("({0})", defaultValue)
+                            : String.Format("'{0}'", defaultValue)
+                        )
+                    : String.Empty);
 
             using (IDbCommand command = new SqlCommand(
                 commandText,
@@ -337,62 +645,71 @@ namespace EVEMon.SDEExternalsToSql
                 catch (SqlException e)
                 {
                     command.Transaction.Rollback();
-                    Console.WriteLine();
-                    Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
-                    Console.WriteLine(e.Message);
-                    Console.ReadLine();
-                    Environment.Exit(-1);
+                    Util.HandleExceptionForCommand(command, e);
                 }
             }
         }
 
         /// <summary>
-        /// Creates the table.
+        /// Imports the specified data.
         /// </summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <param name="columns">The columns.</param>
-        internal static void CreateTableOrColumns(string tableName, IDictionary<string, string> columns)
+        /// <param name="data">The data.</param>
+        /// <exception cref="System.ArgumentNullException">data</exception>
+        private static void Import(IQueryable<object> data)
         {
-            var tableColumns = SqlConnection.GetSchema("columns");
-            var queryTableText = String.Format("TABLE_NAME = '{0}'", tableName);
-            var builder = new StringBuilder();
+            if (data == null)
+                throw new ArgumentNullException("data");
 
-            builder.Append(queryTableText);
-            builder.Append(" AND (");
-            foreach (KeyValuePair<string, string> column in columns)
-            {
-                builder.AppendFormat("COLUMN_NAME = '{0}'", column.Key);
-                builder.Append(!columns.Last().Equals(column) ? " OR " : ")");
-            }
+            if (SqliteConnection == null)
+                return;
 
-            if (tableColumns.Select(queryTableText).Length == 0
-                || tableColumns.Select(builder.ToString()).Length != 0)
-            {
-                CreateTable(tableName);
-            }
-            else
-            {
-                CreateColumns(tableName, columns);
-            }
+            string tableName = data.GetType().GetGenericArguments().First().Name;
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            Util.ResetCounters();
+
+            Console.Write(@"Importing {0}... ", tableName);
+
+            CreateTable(tableName);
+
+            DataTable table = data.ToDataTable();
+
+            if (SqliteConnection == null)
+                return;
+
+            ImportDataBulk(tableName, table);
+
+            Util.UpdatePercentDone(table.Rows.Count);
+
+            Util.DisplayEndTime(stopwatch);
+
+            Console.WriteLine();
         }
 
         /// <summary>
-        /// Creates the columns.
+        /// Imports the data bulk.
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
-        /// <param name="columns">The columns.</param>
-        private static void CreateColumns(String tableName, IDictionary<string, string> columns)
+        /// <param name="data">The data.</param>
+        internal static void ImportDataBulk(string tableName, DataTable data)
         {
-            if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length == 0)
-            {
-                Console.WriteLine(@"Can't find table '{0}'.", tableName);
-                Console.ReadLine();
-                Environment.Exit(-1);
-            }
+            if (SqlConnection == null)
+                return;
 
-            foreach (KeyValuePair<string, string> column in columns)
+            using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(
+                SqlConnection.ConnectionString,
+                SqlBulkCopyOptions.UseInternalTransaction))
             {
-                CreateColumn(tableName, column.Key, column.Value);
+                sqlBulkCopy.DestinationTableName = tableName;
+
+                try
+                {
+                    sqlBulkCopy.WriteToServer(data);
+                }
+                catch (Exception e)
+                {
+                    string text = String.Format(@"Unable to import {0}", tableName);
+                    Util.HandleExceptionWithReason(s_text, text, e.Message);
+                }
             }
         }
     }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
@@ -12,7 +11,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
     /// <summary>
     /// Represents a certificate grade.
     /// </summary>
-    internal enum CertificateGrade
+    enum CertificateGrade
     {
         None = 0,
         Basic = 1,
@@ -22,7 +21,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         Elite = 5
     }
 
-    internal static class Certificates
+    internal class Certificates
     {
         private const string CrtClassesTableName = "crtClasses";
         private const string CrtCertificateTableName = "crtCertificates";
@@ -57,16 +56,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// </summary>
         public static void Import()
         {
+            if (Program.IsClosing)
+                return;
+
             Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.certificates;
-            var filePath = Util.CheckYamlFileExists(yamlFile);
+            string yamlFile = YamlFilesConstants.certificates;
+            string filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            var text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -77,6 +79,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             }
 
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
+
             Console.Write(@"Importing {0}... ", yamlFile);
 
             Database.CreateTable(CrtClassesTableName);
@@ -84,7 +87,7 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             Database.CreateTable(CrtRecommendationsTableName);
             Database.CreateTable(CrtRelationshipsTableName);
 
-            ImportData(rNode);
+            ImportDataBulk(rNode);
 
             Util.DisplayEndTime(stopwatch);
 
@@ -92,115 +95,218 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Imports the data.
+        /// Imports the data bulk.
         /// </summary>
         /// <param name="rNode">The r node.</param>
-        private static void ImportData(YamlMappingNode rNode)
+        private static void ImportDataBulk(YamlMappingNode rNode)
         {
+            Util.UpdatePercentDone(0);
+
+            DataTable crtCertificatesTable = GetCrtCertificatesDataTable();
+            DataTable crtClassesTable = GetCrtClassesDataTable();
+            DataTable crtRecommendationsTable = GetCrtRecommendationsDataTable();
+            DataTable crtRelationshipsTable = GetCrtRelationshipsDataTable();
+
             int classId = 0;
+            int total = rNode.Count();
+            total = (int)Math.Ceiling(total + (total * 0.01));
 
-            using (IDbCommand command = new SqlCommand(
-                String.Empty,
-                Database.SqlConnection,
-                Database.SqlConnection.BeginTransaction()))
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
             {
-                try
+                Util.UpdatePercentDone(total);
+
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
+
+                if (cNode == null)
+                    continue;
+
+                ImportClasses(cNode, crtClassesTable, ref classId);
+
+                ImportRecommendations(cNode, crtRecommendationsTable, pair);
+
+                ImportRelationships(cNode, crtRelationshipsTable, pair);
+
+                DataRow row = crtCertificatesTable.NewRow();
+                row[CertificateIDText] = SqlInt32.Parse(pair.Key.ToString());
+                row[GroupIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt16>(GroupIDText);
+                row[ClassIDText] = classId;
+                row[DescriptionText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(DescriptionText, defaultValue: "");
+
+                crtCertificatesTable.Rows.Add(row);
+            }
+
+            Database.ImportDataBulk(CrtClassesTableName, crtClassesTable);
+            Database.ImportDataBulk(CrtCertificateTableName, crtCertificatesTable);
+            Database.ImportDataBulk(CrtRecommendationsTableName, crtRecommendationsTable);
+            Database.ImportDataBulk(CrtRelationshipsTableName, crtRelationshipsTable);
+
+            Util.UpdatePercentDone(crtCertificatesTable.Rows.Count);
+        }
+
+        /// <summary>
+        /// Imports the relationships.
+        /// </summary>
+        /// <param name="cNode">The c node.</param>
+        /// <param name="crtRelationshipsTable">The CRT relationships table.</param>
+        /// <param name="pair">The pair.</param>
+        private static void ImportRelationships(YamlMappingNode cNode, DataTable crtRelationshipsTable,
+            KeyValuePair<YamlNode, YamlNode> pair)
+        {
+            YamlNode skillTypesNode = new YamlScalarNode(SkillTypesText);
+            if (cNode.Children.ContainsKey(skillTypesNode))
+            {
+                YamlMappingNode stNode = cNode.Children[skillTypesNode] as YamlMappingNode;
+
+                if (stNode == null)
+                    return;
+
+                foreach (KeyValuePair<YamlNode, YamlNode> skillType in stNode)
                 {
-                    foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
+                    YamlMappingNode grNode = skillType.Value as YamlMappingNode;
+
+                    if (grNode == null)
+                        continue;
+
+                    foreach (KeyValuePair<YamlNode, YamlNode> grade in grNode)
                     {
-                        Util.UpdatePercentDone(rNode.Count());
+                        DataRow row = crtRelationshipsTable.NewRow();
+                        row[ParentTypeIDText] = SqlInt32.Parse(skillType.Key.ToString());
+                        row[ParentLevelText] = SqlByte.Parse(grade.Value.ToString());
+                        row[ChildIDText] = SqlInt32.Parse(pair.Key.ToString());
+                        row[GradeText] = SqlByte.Parse(
+                            ((byte)(int)Enum.Parse(typeof(CertificateGrade), grade.Key.ToString(), true))
+                                .ToString());
 
-                        Dictionary<string, string> parameters;
-
-                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
-
-                        if (cNode == null)
-                            continue;
-
-                        YamlNode nameNode = new YamlScalarNode(NameText);
-                        if (cNode.Children.ContainsKey(nameNode))
-                        {
-                            classId++;
-                            parameters = new Dictionary<string, string>();
-                            parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
-                            parameters[ClassNameText] = cNode.Children.GetTextOrDefaultString(NameText,
-                                defaultValue: Database.StringEmpty, isUnicode: true);
-                            parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(NameText,
-                                defaultValue: Database.StringEmpty, isUnicode: true);
-
-                            command.CommandText = Database.SqlInsertCommandText(CrtClassesTableName, parameters);
-                            command.ExecuteNonQuery();
-                        }
-
-                        YamlNode recommendedForNode = new YamlScalarNode(RecommendedForText);
-                        if (cNode.Children.ContainsKey(recommendedForNode))
-                        {
-                            YamlSequenceNode recNode = cNode.Children[recommendedForNode] as YamlSequenceNode;
-
-                            if (recNode == null)
-                                continue;
-
-                            foreach (YamlNode recommendation in recNode.Distinct())
-                            {
-                                parameters = new Dictionary<string, string>();
-                                parameters[ShipTypeIDText] = recommendation.ToString();
-                                parameters[CertificateIDText] = pair.Key.ToString();
-
-                                command.CommandText = Database.SqlInsertCommandText(CrtRecommendationsTableName, parameters);
-                                command.ExecuteNonQuery();
-                            }
-                        }
-
-                        YamlNode skillTypesNode = new YamlScalarNode(SkillTypesText);
-                        if (cNode.Children.ContainsKey(skillTypesNode))
-                        {
-                            YamlMappingNode stNode = cNode.Children[skillTypesNode] as YamlMappingNode;
-
-                            if (stNode == null)
-                                continue;
-
-                            foreach (KeyValuePair<YamlNode, YamlNode> skillType in stNode)
-                            {
-                                YamlMappingNode grNode = skillType.Value as YamlMappingNode;
-
-                                if (grNode == null)
-                                    continue;
-
-                                foreach (KeyValuePair<YamlNode, YamlNode> grade in grNode)
-                                {
-                                    parameters = new Dictionary<string, string>();
-                                    parameters[ParentTypeIDText] = skillType.Key.ToString();
-                                    parameters[ParentLevelText] = grade.Value.ToString();
-                                    parameters[ChildIDText] = pair.Key.ToString();
-                                    parameters[GradeText] =
-                                        ((int)Enum.Parse(typeof(CertificateGrade), grade.Key.ToString(), true))
-                                            .ToString(CultureInfo.InvariantCulture);
-
-                                    command.CommandText = Database.SqlInsertCommandText(CrtRelationshipsTableName, parameters);
-                                    command.ExecuteNonQuery();
-                                }
-                            }
-                        }
-
-                        parameters = new Dictionary<string, string>();
-                        parameters[CertificateIDText] = pair.Key.ToString();
-                        parameters[GroupIDText] = cNode.Children.GetTextOrDefaultString(GroupIDText);
-                        parameters[ClassIDText] = classId.ToString(CultureInfo.InvariantCulture);
-                        parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(DescriptionText,
-                            defaultValue: Database.StringEmpty, isUnicode: true);
-
-                        command.CommandText = Database.SqlInsertCommandText(CrtCertificateTableName, parameters);
-                        command.ExecuteNonQuery();
+                        crtRelationshipsTable.Rows.Add(row);
                     }
-
-                    command.Transaction.Commit();
-                }
-                catch (SqlException e)
-                {
-                    command.Transaction.Rollback();
-                    Util.HandleException(command, e);
                 }
             }
+        }
+
+        /// <summary>
+        /// Imports the recommendations.
+        /// </summary>
+        /// <param name="cNode">The c node.</param>
+        /// <param name="crtRecommendationsTable">The CRT recommendations table.</param>
+        /// <param name="pair">The pair.</param>
+        private static void ImportRecommendations(YamlMappingNode cNode, DataTable crtRecommendationsTable,
+            KeyValuePair<YamlNode, YamlNode> pair)
+        {
+            YamlNode recommendedForNode = new YamlScalarNode(RecommendedForText);
+            if (cNode.Children.ContainsKey(recommendedForNode))
+            {
+                YamlSequenceNode recNode = cNode.Children[recommendedForNode] as YamlSequenceNode;
+
+                if (recNode == null)
+                    return;
+
+                foreach (YamlNode recommendation in recNode.Distinct())
+                {
+                    DataRow row = crtRecommendationsTable.NewRow();
+                    row[ShipTypeIDText] = SqlInt32.Parse(recommendation.ToString());
+                    row[CertificateIDText] = SqlInt32.Parse(pair.Key.ToString());
+
+                    crtRecommendationsTable.Rows.Add(row);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Imports the classes.
+        /// </summary>
+        /// <param name="cNode">The c node.</param>
+        /// <param name="crtClassesTable">The CRT classes table.</param>
+        /// <param name="classId">The class identifier.</param>
+        private static void ImportClasses(YamlMappingNode cNode, DataTable crtClassesTable, ref int classId)
+        {
+            YamlNode nameNode = new YamlScalarNode(NameText);
+            if (cNode.Children.ContainsKey(nameNode))
+            {
+                classId++;
+                DataRow row = crtClassesTable.NewRow();
+                row[ClassIDText] = classId;
+                row[DescriptionText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(NameText, defaultValue: "");
+                row[ClassNameText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(NameText, defaultValue: "");
+
+                crtClassesTable.Rows.Add(row);
+            }
+        }
+
+        /// <summary>
+        /// Gets the data table for the crtRelationships table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetCrtRelationshipsDataTable()
+        {
+            DataTable crtRelationshipsTable = new DataTable();
+            crtRelationshipsTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn("relationshipID", typeof(SqlInt32)),
+                    new DataColumn("parentID", typeof(SqlInt32)),
+                    new DataColumn(ParentTypeIDText, typeof(SqlInt32)),
+                    new DataColumn(ParentLevelText, typeof(SqlByte)),
+                    new DataColumn(ChildIDText, typeof(SqlInt32)),
+                    new DataColumn(GradeText, typeof(SqlByte)),
+                });
+            return crtRelationshipsTable;
+        }
+
+        /// <summary>
+        /// Gets the data table for the crtRecommendations table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetCrtRecommendationsDataTable()
+        {
+            DataTable crtRecommendationsTable = new DataTable();
+            crtRecommendationsTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn("recommendationID", typeof(SqlInt32)),
+                    new DataColumn(ShipTypeIDText, typeof(SqlInt32)),
+                    new DataColumn(CertificateIDText, typeof(SqlInt32)),
+                });
+            return crtRecommendationsTable;
+        }
+
+        /// <summary>
+        /// Gets the data table for the crtClasses table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetCrtClassesDataTable()
+        {
+            DataTable crtClassesTable = new DataTable();
+            crtClassesTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(ClassIDText, typeof(SqlInt32)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                    new DataColumn(ClassNameText, typeof(SqlString)),
+                });
+            return crtClassesTable;
+        }
+
+        /// <summary>
+        /// Gets the data table for the crtCertificates table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetCrtCertificatesDataTable()
+        {
+            DataTable crtCertificatesTable = new DataTable();
+            crtCertificatesTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(CertificateIDText, typeof(SqlInt32)),
+                    new DataColumn(GroupIDText, typeof(SqlInt16)),
+                    new DataColumn(ClassIDText, typeof(SqlInt32)),
+
+                    // Not used columns
+                    new DataColumn(GradeText, typeof(SqlByte)),
+                    new DataColumn("corpID", typeof(SqlInt32)),
+                    new DataColumn("iconID", typeof(SqlInt32)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                });
+            return crtCertificatesTable;
         }
     }
 }

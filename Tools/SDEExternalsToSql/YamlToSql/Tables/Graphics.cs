@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class Graphics
+    internal class Graphics
     {
         private const string EveGraphicsTableName = "eveGraphics";
 
@@ -29,16 +29,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// </summary>
         internal static void Import()
         {
+            if (Program.IsClosing)
+                return;
+
             Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.graphicsIDs;
-            var filePath = Util.CheckYamlFileExists(yamlFile);
+            string yamlFile = YamlFilesConstants.graphicsIDs;
+            string filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            var text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -49,11 +52,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             }
 
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
+
             Console.Write(@"Importing {0}... ", yamlFile);
 
             Database.CreateTable(EveGraphicsTableName);
 
-            ImportData(rNode);
+            ImportDataBulk(rNode);
 
             Util.DisplayEndTime(stopwatch);
 
@@ -61,55 +65,61 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Imports the data.
+        /// Imports the data bulk.
         /// </summary>
         /// <param name="rNode">The r node.</param>
-        private static void ImportData(YamlMappingNode rNode)
+        private static void ImportDataBulk(YamlMappingNode rNode)
         {
-            using (IDbCommand command = new SqlCommand(
-                String.Empty,
-                Database.SqlConnection,
-                Database.SqlConnection.BeginTransaction()))
+            Util.UpdatePercentDone(0);
+
+            DataTable eveGraphicsTable = new DataTable();
+            eveGraphicsTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(GraphicIDText, typeof(SqlInt32)),
+                    new DataColumn(GraphicFileText, typeof(SqlString)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                    new DataColumn(ObsoleteText, typeof(SqlBoolean)),
+                    new DataColumn(GraphicTypeText, typeof(SqlString)),
+                    new DataColumn(CollidableText, typeof(SqlBoolean)),
+                    new DataColumn(DirectoryIDText, typeof(SqlInt32)),
+                    new DataColumn(GraphicNameText, typeof(SqlString)),
+                    new DataColumn(GfxRaceIDText, typeof(SqlString)),
+                    new DataColumn(ColorSchemeText, typeof(SqlString)),
+                    new DataColumn(SofHullNameText, typeof(SqlString)),
+                });
+
+            int total = rNode.Count();
+            total = (int)Math.Ceiling(total + (total * 0.01));
+
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
             {
-                try
-                {
-                    foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
-                    {
-                        Util.UpdatePercentDone(rNode.Count());
+                Util.UpdatePercentDone(total);
 
-                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
-                        if (cNode == null)
-                            continue;
+                if (cNode == null)
+                    continue;
 
-                        Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters[GraphicIDText] = pair.Key.ToString();
-                        parameters[GraphicFileText] = cNode.Children.GetTextOrDefaultString(GraphicFileText,
-                            defaultValue: Database.StringEmpty);
-                        parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(DescriptionText,
-                            defaultValue: Database.StringEmpty, isUnicode: true);
-                        parameters[ObsoleteText] = cNode.Children.GetTextOrDefaultString(ObsoleteText, defaultValue: "0");
-                        parameters[GraphicTypeText] = cNode.Children.GetTextOrDefaultString(GraphicTypeText);
-                        parameters[DirectoryIDText] = cNode.Children.GetTextOrDefaultString(DirectoryIDText);
-                        parameters[CollidableText] = cNode.Children.GetTextOrDefaultString(CollidableText);
-                        parameters[GraphicNameText] = cNode.Children.GetTextOrDefaultString(GraphicNameText,
-                            defaultValue: Database.StringEmpty, isUnicode: true);
-                        parameters[GfxRaceIDText] = cNode.Children.GetTextOrDefaultString(GfxRaceIDText);
-                        parameters[ColorSchemeText] = cNode.Children.GetTextOrDefaultString(ColorSchemeText);
-                        parameters[SofHullNameText] = cNode.Children.GetTextOrDefaultString(SofHullNameText);
+                DataRow row = eveGraphicsTable.NewRow();
+                row[GraphicIDText] = SqlInt32.Parse(pair.Key.ToString());
+                row[GraphicFileText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(GraphicFileText, defaultValue: "");
+                row[DescriptionText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(DescriptionText, defaultValue: "");
+                row[ObsoleteText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(ObsoleteText, defaultValue: "0");
+                row[GraphicTypeText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(GraphicTypeText);
+                row[CollidableText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(CollidableText);
+                row[DirectoryIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(DirectoryIDText);
+                row[GraphicNameText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(GraphicNameText, defaultValue: "");
+                row[GfxRaceIDText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(GfxRaceIDText);
+                row[ColorSchemeText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(ColorSchemeText);
+                row[SofHullNameText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(SofHullNameText);
 
-                        command.CommandText = Database.SqlInsertCommandText(EveGraphicsTableName, parameters);
-                        command.ExecuteNonQuery();
-                    }
-
-                    command.Transaction.Commit();
-                }
-                catch (SqlException e)
-                {
-                    command.Transaction.Rollback();
-                    Util.HandleException(command, e);
-                }
+                eveGraphicsTable.Rows.Add(row);
             }
+
+            Database.ImportDataBulk(EveGraphicsTableName, eveGraphicsTable);
+
+            Util.UpdatePercentDone(eveGraphicsTable.Rows.Count);
         }
     }
 }

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class Groups
+    internal class Groups
     {
         private const string InvGroupsTableName = "invGroups";
 
@@ -27,23 +27,29 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 
         private const string NameText = "name";
 
+        // Translations
+        private const string TranslationGroupsID = "7";
+        private const string TranslationGroupsGroupID = "5";
+
+
         /// <summary>
         /// Imports the groups ids.
         /// </summary>
         internal static void Import()
         {
+            if (Program.IsClosing)
+                return;
+
             Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.groupIDs;
-            var filePath = Util.CheckYamlFileExists(yamlFile);
+            string yamlFile = YamlFilesConstants.groupIDs;
+            string filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            ImportTranslations();
-
-            var text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -53,12 +59,23 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 return;
             }
 
+            Translations.InsertTranslationsStaticData(new TranslationsParameters
+            {
+                TableName = InvGroupsTableName,
+                SourceTable = "inventory.groupsTx",
+                ColumnName = GroupNameText,
+                MasterID = GroupIDText,
+                TcGroupID = TranslationGroupsGroupID,
+                TcID = TranslationGroupsID
+            });
+
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
+
             Console.Write(@"Importing {0}... ", yamlFile);
 
             Database.CreateTable(InvGroupsTableName);
 
-            ImportData(rNode);
+            ImportDataBulk(rNode);
 
             Util.DisplayEndTime(stopwatch);
 
@@ -66,94 +83,80 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Imports the data.
+        /// Imports the data bulk.
         /// </summary>
         /// <param name="rNode">The r node.</param>
-        private static void ImportData(YamlMappingNode rNode)
+        private static void ImportDataBulk(YamlMappingNode rNode)
         {
-            using (IDbCommand command = new SqlCommand(
-                String.Empty,
-                Database.SqlConnection,
-                Database.SqlConnection.BeginTransaction()))
+            Util.UpdatePercentDone(0);
+
+            DataTable invGroupsTable = new DataTable();
+            invGroupsTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(GroupIDText, typeof(SqlInt32)),
+                    new DataColumn(CategoryIDText, typeof(SqlInt32)),
+                    new DataColumn(GroupNameText, typeof(SqlString)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                    new DataColumn(IconIDText, typeof(SqlInt32)),
+                    new DataColumn(UseBasePriceText, typeof(SqlBoolean)),
+                    new DataColumn(AllowManufactureText, typeof(SqlBoolean)),
+                    new DataColumn(AllowRecyclerText, typeof(SqlBoolean)),
+                    new DataColumn(AnchoredText, typeof(SqlBoolean)),
+                    new DataColumn(AnchorableText, typeof(SqlBoolean)),
+                    new DataColumn(FittableNonSingletonText, typeof(SqlBoolean)),
+                    new DataColumn(PublishedText, typeof(SqlBoolean)),
+                });
+
+            DataTable trnTranslationsTable = Translations.GetTrnTranslationsDataTable();
+
+            int total = rNode.Count();
+            total = (int)Math.Ceiling(total + (total * 0.01));
+
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
             {
-                try
-                {
-                    foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
-                    {
-                        Util.UpdatePercentDone(rNode.Count());
+                Util.UpdatePercentDone(total);
 
-                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
-                        if (cNode == null)
-                            continue;
+                if (cNode == null)
+                    continue;
 
-                        var groupNameNodes = cNode.Children.Keys.Any(key => key.ToString() == NameText)
-                            ? cNode.Children[new YamlScalarNode(NameText)] as YamlMappingNode
-                            : null;
+                YamlMappingNode groupNameNodes = cNode.Children.Keys.Any(key => key.ToString() == NameText)
+                    ? cNode.Children[new YamlScalarNode(NameText)] as YamlMappingNode
+                    : null;
 
-                        Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters[GroupIDText] = pair.Key.ToString();
-                        parameters[CategoryIDText] = cNode.Children.GetTextOrDefaultString(CategoryIDText);
-                        parameters[GroupNameText] = groupNameNodes == null
-                            ? cNode.Children.GetTextOrDefaultString(NameText, isUnicode: true)
-                            : groupNameNodes.Children.GetTextOrDefaultString(Translations.EnglishLanguageIDText);
-                        parameters[DescriptionText] = cNode.Children.GetTextOrDefaultString(DescriptionText, isUnicode: true);
-                        parameters[IconIDText] = cNode.Children.GetTextOrDefaultString(IconIDText);
-                        parameters[UseBasePriceText] = cNode.Children.GetTextOrDefaultString(UseBasePriceText);
-                        parameters[AllowManufactureText] = cNode.Children.GetTextOrDefaultString(AllowManufactureText);
-                        parameters[AllowRecyclerText] = cNode.Children.GetTextOrDefaultString(AllowRecyclerText);
-                        parameters[AnchoredText] = cNode.Children.GetTextOrDefaultString(AnchoredText);
-                        parameters[AnchorableText] = cNode.Children.GetTextOrDefaultString(AnchorableText);
-                        parameters[FittableNonSingletonText] =
-                            cNode.Children.GetTextOrDefaultString(FittableNonSingletonText);
-                        parameters[PublishedText] = cNode.Children.GetTextOrDefaultString(PublishedText);
+                DataRow row = invGroupsTable.NewRow();
+                row[GroupIDText] = SqlInt32.Parse(pair.Key.ToString());
+                row[CategoryIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(CategoryIDText);
+                row[GroupNameText] = groupNameNodes == null
+                    ? cNode.Children.GetSqlTypeOrDefault<SqlString>(GroupNameText)
+                    : groupNameNodes.Children.GetSqlTypeOrDefault<SqlString>(Translations.EnglishLanguageIDText);
+                row[DescriptionText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(DescriptionText);
+                row[IconIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(IconIDText);
+                row[UseBasePriceText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(UseBasePriceText);
+                row[AllowManufactureText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(AllowManufactureText);
+                row[AllowRecyclerText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(AllowRecyclerText);
+                row[AnchoredText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(AnchoredText);
+                row[AnchorableText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(AnchorableText);
+                row[FittableNonSingletonText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(FittableNonSingletonText);
+                row[PublishedText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(PublishedText);
 
-                        if (groupNameNodes != null)
-                            Translations.InsertTranslations(command, Translations.TranslationGroupsID, pair.Key, groupNameNodes);
+                invGroupsTable.Rows.Add(row);
 
-                        command.CommandText = Database.SqlInsertCommandText(InvGroupsTableName, parameters);
-                        command.ExecuteNonQuery();
-                    }
-
-                    command.Transaction.Commit();
-                }
-                catch (SqlException e)
-                {
-                    command.Transaction.Rollback();
-                    Util.HandleException(command, e);
-                }
+                if (groupNameNodes != null)
+                    Translations.InsertTranslations(TranslationGroupsID, pair.Key, groupNameNodes, trnTranslationsTable);
             }
-        }
 
-        /// <summary>
-        /// Imports the translations.
-        /// </summary>
-        private static void ImportTranslations()
-        {
-            const string TableText = "dbo." + InvGroupsTableName;
-            var baseParameters = new Dictionary<string, string>();
-            baseParameters[Translations.TcGroupIDText] = Translations.TranslationGroupsGroupID;
-            baseParameters[Translations.TcIDText] = Translations.TranslationGroupsID;
+            if (trnTranslationsTable.Rows.Count > 0)
+            {
+                Translations.DeleteTranslations(TranslationGroupsID);
+                Translations.ImportDataBulk(trnTranslationsTable);
+            }
 
-            var parameters = new Dictionary<string, string>(baseParameters);
-            parameters[Translations.SourceTableText] = "inventory.groupsTx".GetTextOrDefaultString();
-            parameters[Translations.DestinationTableText] = TableText.GetTextOrDefaultString();
-            parameters[Translations.TranslatedKeyText] = GroupNameText.GetTextOrDefaultString();
-            parameters["id"] = parameters[Translations.SourceTableText];
-            parameters["id2"] = parameters[Translations.TranslatedKeyText];
-            parameters["columnFilter"] = Translations.SourceTableText;
-            parameters["columnFilter2"] = Translations.TranslatedKeyText;
+            Database.ImportDataBulk(InvGroupsTableName, invGroupsTable);
 
-            Translations.ImportData(Translations.TranslationTableName, parameters);
-
-            parameters = new Dictionary<string, string>(baseParameters);
-            parameters[Translations.TableNameText] = TableText.GetTextOrDefaultString();
-            parameters[Translations.ColumnNameText] = GroupNameText.GetTextOrDefaultString();
-            parameters[Translations.MasterIDText] = GroupIDText.GetTextOrDefaultString();
-            parameters["id"] = parameters[Translations.TcIDText];
-            parameters["columnFilter"] = Translations.TcIDText;
-
-            Translations.ImportData(Translations.TrnTranslationColumnsTableName, parameters);
+            Util.UpdatePercentDone(invGroupsTable.Rows.Count);
         }
     }
 }

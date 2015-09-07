@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class SkinLicenses
+    internal class SkinLicenses
     {
         private const string SknLicensesTableName = "sknLicenses";
 
@@ -21,16 +21,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// </summary>
         internal static void Import()
         {
+            if (Program.IsClosing)
+                return;
+
             Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.skinLicenses;
-            var filePath = Util.CheckYamlFileExists(yamlFile);
+            string yamlFile = YamlFilesConstants.skinLicenses;
+            string filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            var text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -41,11 +44,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             }
 
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
+
             Console.Write(@"Importing {0}... ", yamlFile);
 
             Database.CreateTable(SknLicensesTableName);
 
-            ImportData(rNode);
+            ImportDataBulk(rNode);
 
             Util.DisplayEndTime(stopwatch);
 
@@ -53,44 +57,45 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Imports the data.
+        /// Imports the data bulk.
         /// </summary>
         /// <param name="rNode">The r node.</param>
-        private static void ImportData(YamlMappingNode rNode)
+        private static void ImportDataBulk(YamlMappingNode rNode)
         {
-            using (IDbCommand command = new SqlCommand(
-                String.Empty,
-                Database.SqlConnection,
-                Database.SqlConnection.BeginTransaction()))
+            Util.UpdatePercentDone(0);
+
+            DataTable sknLicensesTable = new DataTable();
+            sknLicensesTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(LicenseTypeIDText, typeof(SqlInt32)),
+                    new DataColumn(SkinIDText, typeof(SqlInt32)),
+                    new DataColumn(DurationText, typeof(SqlInt32)),
+                });
+
+            int total = rNode.Count();
+            total = (int)Math.Ceiling(total + (total * 0.01));
+
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
             {
-                try
-                {
-                    foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
-                    {
-                        Util.UpdatePercentDone(rNode.Count());
+                Util.UpdatePercentDone(total);
 
-                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
 
-                        if (cNode == null)
-                            continue;
+                if (cNode == null)
+                    continue;
 
-                        Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters[LicenseTypeIDText] = pair.Key.ToString();
-                        parameters[SkinIDText] = cNode.Children.GetTextOrDefaultString(SkinIDText);
-                        parameters[DurationText] = cNode.Children.GetTextOrDefaultString(DurationText, defaultValue: "-1");
+                DataRow row = sknLicensesTable.NewRow();
+                row[LicenseTypeIDText] = SqlInt32.Parse(pair.Key.ToString());
+                row[SkinIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(SkinIDText);
+                row[DurationText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(DurationText, defaultValue: "-1");
 
-                        command.CommandText = Database.SqlInsertCommandText(SknLicensesTableName, parameters);
-                        command.ExecuteNonQuery();
-                    }
-
-                    command.Transaction.Commit();
-                }
-                catch (SqlException e)
-                {
-                    command.Transaction.Rollback();
-                    Util.HandleException(command, e);
-                }
+                sknLicensesTable.Rows.Add(row);
             }
+
+            Database.ImportDataBulk(SknLicensesTableName, sknLicensesTable);
+
+            Util.UpdatePercentDone(sknLicensesTable.Rows.Count);
         }
     }
 }

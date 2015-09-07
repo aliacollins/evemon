@@ -2,137 +2,162 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class Translations
+    internal class Translations
     {
-        internal static string TranslationTableName
-        {
-            get { return "translationTables"; }
-        }
-
-        internal static string TrnTranslationColumnsTableName
-        {
-            get { return "trnTranslationColumns"; }
-        }
-
-        internal static string TrnTranslationsTableName
-        {
-            get { return "trnTranslations"; }
-        }
-
-        internal static string TranslationCategoriesID
-        {
-            get { return "6"; }
-        }
-
-        internal static string TranslationCategoriesGroupID
-        {
-            get { return "4"; }
-        }
-
-        internal static string TranslationGroupsID
-        {
-            get { return "7"; }
-        }
-
-        internal static string TranslationGroupsGroupID
-        {
-            get { return "5"; }
-        }
-
-        internal static string TranslationTypesGroupID
-        {
-            get { return TranslationGroupsGroupID; }
-        }
-
-        internal static string TranslationTypesDescriptionID
-        {
-            get { return "33"; }
-        }
-
-        internal static string TranslationTypesTypeNameID
-        {
-            get { return "8"; }
-        }
-
+        private const string TranslationTableName = "translationTables";
+        private const string TrnTranslationColumnsTableName = "trnTranslationColumns";
+        private const string TrnTranslationsTableName= "trnTranslations";
 
         // translationTables and trnTranslationColumns and trnTranslations
-        internal static string TcIDText
-        {
-            get { return "tcID"; }
-        }
+        private const string TcIDText = "tcID";
 
         // translationTables and trnTranslationColumns
-        internal static string TcGroupIDText
-        {
-            get { return "tcGroupID"; }
-        }
-
+        private const string TcGroupIDText = "tcGroupID";
 
         // translationTables
-        internal static string SourceTableText
-        {
-            get { return "sourceTable"; }
-        }
+        private const string SourceTableText = "sourceTable";
+        private const string DestinationTableText = "destinationTable";
+        private const string TranslatedKeyText = "translatedKey";
 
-        internal static string DestinationTableText
-        {
-            get { return "destinationTable"; }
-        }
 
-        internal static string TranslatedKeyText
-        {
-            get { return "translatedKey"; }
-        }
-
-        
         // trnTranslationColumns
-        internal static string TableNameText
-        {
-            get { return "tableName"; }
-        }
+        private const string TableNameText = "tableName";
+        private const string ColumnNameText = "columnName";
+        private const string MasterIDText = "masterID";
 
-        internal static string ColumnNameText
-        {
-            get { return "columnName"; }
-        }
 
-        internal static string MasterIDText
-        {
-            get { return "masterID"; }
-        }
-
-        
         // trnTranslations
-        internal static string KeyIDText
+        private const string KeyIDText = "keyID";
+        private const string LanguageIDText = "languageID";
+        private const string TextText = "text";
+
+        internal const string EnglishLanguageIDText = "en";
+
+        /// <summary>
+        /// Gets the data table.
+        /// </summary>
+        /// <returns></returns>
+        internal static DataTable GetTrnTranslationsDataTable()
         {
-            get { return "keyID"; }
+            DataTable trnTranslationsTable = new DataTable();
+            trnTranslationsTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(TcIDText, typeof(SqlInt16)),
+                    new DataColumn(KeyIDText, typeof(SqlInt32)),
+                    new DataColumn(LanguageIDText, typeof(SqlString)),
+                    new DataColumn(TextText, typeof(SqlString)),
+                });
+
+            return trnTranslationsTable;
         }
 
-        internal static string LanguageIDText
+        /// <summary>
+        /// Deletes the translations of the specifies tcID.
+        /// </summary>
+        /// <param name="tcID">The tc identifier.</param>
+        internal static void DeleteTranslations(string tcID)
         {
-            get { return "languageID"; }
-        }
-
-        internal static string TextText
-        {
-            get { return "text"; }
-        }
-
-
-        internal static string EnglishLanguageIDText
-        {
-            get
+            using (IDbCommand command = new SqlCommand(
+                String.Empty,
+                Database.SqlConnection,
+                Database.SqlConnection.BeginTransaction()))
             {
-                return "en";
+                try
+                {
+                    Dictionary<string, string> parameters = new Dictionary<string, string>();
+                    parameters["id"] = tcID;
+                    parameters["columnFilter"] = TcIDText;
+
+                    command.CommandText = Database.SqlDeleteCommandText(TrnTranslationsTableName, parameters);
+                    command.ExecuteNonQuery();
+                    command.Transaction.Commit();
+                }
+                catch (SqlException e)
+                {
+                    command.Transaction.Rollback();
+                    Util.HandleExceptionForCommand(command, e);
+                }
             }
         }
 
-        internal static void ImportData(string tableName, IDictionary<string, string> parameters)
+        /// <summary>
+        /// Inserts the translations static data.
+        /// </summary>
+        /// <param name="trnParameters">The translations parameters.</param>
+        internal static void InsertTranslationsStaticData(TranslationsParameters trnParameters)
+        {
+            string tableText = "dbo." + trnParameters.TableName;
+            var baseParameters = new Dictionary<string, string>();
+            baseParameters[TcGroupIDText] = trnParameters.TcGroupID;
+            baseParameters[TcIDText] = trnParameters.TcID;
+
+            var parameters = new Dictionary<string, string>(baseParameters);
+            parameters[SourceTableText] = trnParameters.SourceTable.GetTextOrDefaultString();
+            parameters[DestinationTableText] = tableText.GetTextOrDefaultString();
+            parameters[TranslatedKeyText] = trnParameters.ColumnName.GetTextOrDefaultString();
+            parameters["id"] = parameters[SourceTableText];
+            parameters["id2"] = parameters[TranslatedKeyText];
+            parameters["columnFilter"] = SourceTableText;
+            parameters["columnFilter2"] = TranslatedKeyText;
+
+            InsertStaticData(TranslationTableName, parameters);
+
+            parameters = new Dictionary<string, string>(baseParameters);
+            parameters[TableNameText] = tableText.GetTextOrDefaultString();
+            parameters[ColumnNameText] = trnParameters.ColumnName.GetTextOrDefaultString();
+            parameters[MasterIDText] = trnParameters.MasterID.GetTextOrDefaultString();
+            parameters["id"] = parameters[TcIDText];
+            parameters["columnFilter"] = TcIDText;
+
+            InsertStaticData(TrnTranslationColumnsTableName, parameters);
+        }
+
+        /// <summary>
+        /// Inserts the translations.
+        /// </summary>
+        /// <param name="tcID">The tc identifier.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="nameNodes">The name nodes.</param>
+        /// <param name="table">The table.</param>
+        internal static void InsertTranslations(string tcID, YamlNode key, YamlMappingNode nameNodes, DataTable table)
+        {
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in nameNodes)
+            {
+                DataRow row = table.NewRow();
+                row[TcIDText] = SqlInt16.Parse(tcID);
+                row[KeyIDText] = SqlInt32.Parse(key.ToString());
+                row[LanguageIDText] = GetProperLanguageID(pair.Key);
+                row[TextText] = !nameNodes.Children.ContainsKey(new YamlScalarNode(pair.Key.ToString())) ||
+                                nameNodes.Children[new YamlScalarNode(pair.Key.ToString())] == null
+                    ? Convert.DBNull.ToString()
+                    : nameNodes.Children[new YamlScalarNode(pair.Key.ToString())].ToString();
+
+                table.Rows.Add(row);
+            }
+        }
+
+        /// <summary>
+        /// Imports the data bulk.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        internal static void ImportDataBulk(DataTable data)
+        {
+            Database.ImportDataBulk(TrnTranslationsTableName, data);
+        }
+
+        /// <summary>
+        /// Inserts the static data.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="parameters">The parameters.</param>
+        private static void InsertStaticData(string tableName, IDictionary<string, string> parameters)
         {
             using (IDbCommand command = new SqlCommand(
                 String.Empty,
@@ -161,55 +186,20 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
                 catch (SqlException e)
                 {
                     command.Transaction.Rollback();
-                    Util.HandleException(command, e);
+                    Util.HandleExceptionForCommand(command, e);
                 }
             }
         }
 
         /// <summary>
-        /// Inserts the translations.
+        /// Gets the proper language identifier.
         /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="tcID">The translation column identifier.</param>
-        /// <param name="keyId">The key identifier.</param>
-        /// <param name="nameNodes">The name nodes.</param>
-        internal static void InsertTranslations(IDbCommand command, string tcID, YamlNode keyId, YamlMappingNode nameNodes)
-        {
-            foreach (KeyValuePair<YamlNode, YamlNode> pair in nameNodes)
-            {
-                Dictionary<string, string> parameters = new Dictionary<string, string>();
-                parameters[TcIDText] = tcID;
-                parameters[KeyIDText] = keyId.ToString();
-                parameters[LanguageIDText] = GetProperLanguageID(pair.Key).GetTextOrDefaultString();
-                parameters[TextText] = nameNodes.Children.GetTextOrDefaultString(pair.Key.ToString(), Database.StringEmpty, isUnicode: true);              
-                parameters["id"] = parameters[TcIDText];
-                parameters["columnFilter"] = TcIDText;
-                parameters["id2"] = parameters[KeyIDText];
-                parameters["columnFilter2"] = KeyIDText;
-                parameters["id3"] = parameters[LanguageIDText];
-                parameters["columnFilter3"] = LanguageIDText;
-
-                command.CommandText = Database.SqlUpdateCommandText(TrnTranslationsTableName, parameters);
-                if (command.ExecuteNonQuery() == 0)
-                {
-                    foreach (KeyValuePair<string, string> parameter in parameters
-                        .Where(par => par.Key.StartsWith("id", StringComparison.OrdinalIgnoreCase) ||
-                                      par.Key.StartsWith("columnFilter", StringComparison.OrdinalIgnoreCase))
-                        .ToList())
-                    {
-                        parameters.Remove(parameter.Key);
-                    }
-
-                    command.CommandText = Database.SqlInsertCommandText(TrnTranslationsTableName, parameters);
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         private static string GetProperLanguageID(YamlNode key)
         {
             string languageIDText = key.ToString();
-            if (String.Equals(languageIDText, EnglishLanguageIDText, StringComparison.InvariantCultureIgnoreCase))
+            if (String.Equals(languageIDText, EnglishLanguageIDText, StringComparison.OrdinalIgnoreCase))
                 languageIDText = languageIDText + "-US";
 
             return languageIDText.ToUpperInvariant();

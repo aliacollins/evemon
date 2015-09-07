@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
 {
-    internal static class Skins
+    internal class Skins
     {
         private const string SknSkinsTableName = "sknSkins";
 
@@ -26,16 +26,19 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         /// </summary>
         internal static void Import()
         {
+            if (Program.IsClosing)
+                return;
+
             Stopwatch stopwatch = Stopwatch.StartNew();
             Util.ResetCounters();
 
-            var yamlFile = YamlFilesConstants.skins;
-            var filePath = Util.CheckYamlFileExists(yamlFile);
+            string yamlFile = YamlFilesConstants.skins;
+            string filePath = Util.CheckYamlFileExists(yamlFile);
 
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            var text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format("Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -46,11 +49,12 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
             }
 
             Console.SetCursorPosition(Console.CursorLeft - text.Length, Console.CursorTop);
+
             Console.Write(@"Importing {0}... ", yamlFile);
 
             Database.CreateTable(SknSkinsTableName);
 
-            ImportData(rNode);
+            ImportDataBulk(rNode);
 
             Util.DisplayEndTime(stopwatch);
 
@@ -58,62 +62,64 @@ namespace EVEMon.SDEExternalsToSql.YamlToSql.Tables
         }
 
         /// <summary>
-        /// Imports the data.
+        /// Imports the data bulk.
         /// </summary>
         /// <param name="rNode">The r node.</param>
-        private static void ImportData(YamlMappingNode rNode)
+        private static void ImportDataBulk(YamlMappingNode rNode)
         {
-            using (IDbCommand command = new SqlCommand(
-                String.Empty,
-                Database.SqlConnection,
-                Database.SqlConnection.BeginTransaction()))
+            Util.UpdatePercentDone(0);
+
+            DataTable sknSkinsTable = new DataTable();
+            sknSkinsTable.Columns.AddRange(
+                new[]
+                {
+                    new DataColumn(SkinIDText, typeof(SqlInt32)),
+                    new DataColumn(InternalNameText, typeof(SqlString)),
+                    new DataColumn(SkinMaterialIDText, typeof(SqlInt32)),
+                    new DataColumn(TypeIDText, typeof(SqlInt32)),
+                    new DataColumn(AllowCCPDevsText, typeof(SqlBoolean)),
+                    new DataColumn(VisibleSerenityText, typeof(SqlBoolean)),
+                    new DataColumn(VisibleTranquilityText, typeof(SqlBoolean)),
+                });
+
+            int total = rNode.Count();
+            total = (int)Math.Ceiling(total + (total * 0.01));
+
+            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
             {
-                try
+                Util.UpdatePercentDone(total);
+
+                YamlMappingNode cNode = pair.Value as YamlMappingNode;
+
+                if (cNode == null)
+                    continue;
+
+                DataRow row = sknSkinsTable.NewRow();
+                row[SkinIDText] = SqlInt32.Parse(pair.Key.ToString());
+                row[InternalNameText] = cNode.Children.GetSqlTypeOrDefault<SqlString>(InternalNameText, defaultValue: "");
+                row[SkinMaterialIDText] = cNode.Children.GetSqlTypeOrDefault<SqlInt32>(SkinMaterialIDText);
+                row[AllowCCPDevsText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(AllowCCPDevsText, defaultValue: "0");
+                row[VisibleSerenityText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(VisibleSerenityText, defaultValue: "0");
+                row[VisibleTranquilityText] = cNode.Children.GetSqlTypeOrDefault<SqlBoolean>(VisibleTranquilityText,defaultValue: "0");
+
+                YamlNode typesNode = new YamlScalarNode(TypesText);
+                if (cNode.Children.ContainsKey(typesNode))
                 {
-                    foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
-                    {
-                        Util.UpdatePercentDone(rNode.Count());
+                    YamlSequenceNode typeIDsNode = cNode.Children[typesNode] as YamlSequenceNode;
 
-                        YamlMappingNode cNode = pair.Value as YamlMappingNode;
-
-                        if (cNode == null)
-                            continue;
-
-                        Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters[SkinIDText] = pair.Key.ToString();
-                        parameters[InternalNameText] = cNode.Children.GetTextOrDefaultString(InternalNameText,
-                            defaultValue: Database.StringEmpty, isUnicode: true);
-                        parameters[SkinMaterialIDText] = cNode.Children.GetTextOrDefaultString(SkinMaterialIDText);
-                        parameters[AllowCCPDevsText] = cNode.Children.GetTextOrDefaultString(AllowCCPDevsText, defaultValue: "0");
-                        parameters[VisibleSerenityText] = cNode.Children.GetTextOrDefaultString(VisibleSerenityText,
-                            defaultValue: "0");
-                        parameters[VisibleTranquilityText] = cNode.Children.GetTextOrDefaultString(VisibleTranquilityText,
-                            defaultValue: "0");
-
-                        YamlNode typesNode = new YamlScalarNode(TypesText);
-                        if (cNode.Children.ContainsKey(typesNode))
-                        {
-                            YamlSequenceNode typeIDsNode = cNode.Children[typesNode] as YamlSequenceNode;
-
-                            parameters[TypeIDText] = typeIDsNode != null
-                                ? typeIDsNode.Count() == 1
-                                    ? typeIDsNode.Children.First().ToString()
-                                    : Database.DbNull
-                                : Database.DbNull;
-                        }
-
-                        command.CommandText = Database.SqlInsertCommandText(SknSkinsTableName, parameters);
-                        command.ExecuteNonQuery();
-                    }
-
-                    command.Transaction.Commit();
+                    row[TypeIDText] = typeIDsNode != null
+                        ? typeIDsNode.Count() == 1
+                            ? SqlInt32.Parse(typeIDsNode.Children.First().ToString())
+                            : SqlInt32.Null
+                        : SqlInt32.Null;
                 }
-                catch (SqlException e)
-                {
-                    command.Transaction.Rollback();
-                    Util.HandleException(command, e);
-                }
+
+                sknSkinsTable.Rows.Add(row);
             }
+
+            Database.ImportDataBulk(SknSkinsTableName, sknSkinsTable);
+
+            Util.UpdatePercentDone(sknSkinsTable.Rows.Count);
         }
     }
 }
