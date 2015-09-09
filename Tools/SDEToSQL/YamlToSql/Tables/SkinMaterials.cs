@@ -54,7 +54,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(SknMaterialsTableName);
+            Database.DropAndCreateTable(SknMaterialsTableName);
 
             ImportDataBulk(rNode);
 

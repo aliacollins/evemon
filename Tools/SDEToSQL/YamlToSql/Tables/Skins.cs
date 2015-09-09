@@ -52,7 +52,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(SknSkinsTableName);
+            Database.DropAndCreateTable(SknSkinsTableName);
 
             ImportDataBulk(rNode);
 

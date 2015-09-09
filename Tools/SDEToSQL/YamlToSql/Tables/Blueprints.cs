@@ -110,8 +110,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(InvBlueprintTypesTableName);
-            Database.CreateTable(RamTypeRequirementsTableName);
+            Database.DropAndCreateTable(InvBlueprintTypesTableName);
+            Database.DropAndCreateTable(RamTypeRequirementsTableName);
 
             ImportDataBulk(rNode);
 

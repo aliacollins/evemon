@@ -1,4 +1,7 @@
-﻿SET ANSI_NULLS ON
+﻿IF OBJECT_ID('dbo.mapSolarSystems', 'U') IS NOT NULL
+DROP TABLE [dbo].[mapSolarSystems]; 
+
+SET ANSI_NULLS ON
 
 SET QUOTED_IDENTIFIER ON
 

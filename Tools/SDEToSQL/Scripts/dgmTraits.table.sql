@@ -1,4 +1,7 @@
-﻿SET ANSI_NULLS ON
+﻿IF OBJECT_ID('dbo.dgmTraits', 'U') IS NOT NULL
+DROP TABLE [dbo].[dgmTraits]; 
+
+SET ANSI_NULLS ON
 
 SET QUOTED_IDENTIFIER ON
 

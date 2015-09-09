@@ -1,3 +1,6 @@
+IF OBJECT_ID('dbo.crtRelationships', 'U') IS NOT NULL
+DROP TABLE [dbo].[crtRelationships]; 
+
 SET ANSI_NULLS ON
 
 SET QUOTED_IDENTIFIER ON

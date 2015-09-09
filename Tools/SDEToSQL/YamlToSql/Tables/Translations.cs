@@ -72,8 +72,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                 try
                 {
                     Dictionary<string, string> parameters = new Dictionary<string, string>();
-                    parameters["id"] = tcID;
-                    parameters["columnFilter"] = TcIDText;
+                    parameters["columnFilter1"] = TcIDText;
+                    parameters["id1"] = tcID;
 
                     command.CommandText = Database.SqlDeleteCommandText(TrnTranslationsTableName, parameters);
                     command.ExecuteNonQuery();
@@ -81,8 +81,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                 }
                 catch (SqlException e)
                 {
-                    command.Transaction.Rollback();
                     Util.HandleExceptionForCommand(command, e);
+
+                    if (command.Transaction != null)
+                        command.Transaction.Rollback();
                 }
             }
         }
@@ -102,10 +104,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             parameters[SourceTableText] = trnParameters.SourceTable.GetTextOrDefaultString();
             parameters[DestinationTableText] = tableText.GetTextOrDefaultString();
             parameters[TranslatedKeyText] = trnParameters.ColumnName.GetTextOrDefaultString();
-            parameters["id"] = parameters[SourceTableText];
-            parameters["id2"] = parameters[TranslatedKeyText];
-            parameters["columnFilter"] = SourceTableText;
+            parameters["columnFilter1"] = SourceTableText;
+            parameters["id1"] = parameters[SourceTableText];
             parameters["columnFilter2"] = TranslatedKeyText;
+            parameters["id2"] = parameters[TranslatedKeyText];
 
             InsertStaticData(TranslationTableName, parameters);
 
@@ -113,8 +115,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             parameters[TableNameText] = tableText.GetTextOrDefaultString();
             parameters[ColumnNameText] = trnParameters.ColumnName.GetTextOrDefaultString();
             parameters[MasterIDText] = trnParameters.MasterID.GetTextOrDefaultString();
-            parameters["id"] = parameters[TcIDText];
-            parameters["columnFilter"] = TcIDText;
+            parameters["columnFilter1"] = TcIDText;
+            parameters["id1"] = parameters[TcIDText];
 
             InsertStaticData(TrnTranslationColumnsTableName, parameters);
         }
@@ -185,8 +187,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                 }
                 catch (SqlException e)
                 {
-                    command.Transaction.Rollback();
                     Util.HandleExceptionForCommand(command, e);
+
+                    if (command.Transaction != null)
+                        command.Transaction.Rollback();
                 }
             }
         }

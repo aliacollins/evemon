@@ -106,11 +106,11 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 
             bool tableIsEmpty = Database.CreateTableOrColumns(rNode, "name", InvTypesTableName, columns);
 
-            Database.CreateTable(rNode, "masteries", DgmMasteriesTableName);
-            Database.CreateTable(rNode, "masteries", DgmTypeMasteriesTableName);
+            Database.DropAndCreateTable(rNode, "masteries", DgmMasteriesTableName);
+            Database.DropAndCreateTable(rNode, "masteries", DgmTypeMasteriesTableName);
 
-            bool traitsAdded = Database.CreateTable(rNode, "traits", DgmTraitsTableName);
-            Database.CreateTable(rNode, "traits", DgmTypeTraitsTableName);
+            bool traitsAdded = Database.DropAndCreateTable(rNode, "traits", DgmTraitsTableName);
+            Database.DropAndCreateTable(rNode, "traits", DgmTypeTraitsTableName);
 
             if (tableIsEmpty)
                 ImportTranslationsStaticData(traitsAdded);
@@ -219,8 +219,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                         ImportTraits(cNode, dgmTraitsTable, dgmTypeTraitsTable, trnTranslationsTable, pair, traitsDict, ref traitId);
 
                         Dictionary<string, string> parameters = new Dictionary<string, string>();
-                        parameters["id"] = pair.Key.ToString();
-                        parameters["columnFilter"] = TypeIDText;
+                        parameters["columnFilter1"] = TypeIDText;
+                        parameters["id1"] = pair.Key.ToString();
 
                         parameters[FactionIDText] = cNode.Children.GetTextOrDefaultString(FactionIDText);
                         parameters[GraphicIDText] = cNode.Children.GetTextOrDefaultString(GraphicIDText);
@@ -247,8 +247,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                 }
                 catch (SqlException e)
                 {
-                    command.Transaction.Rollback();
                     Util.HandleExceptionForCommand(command, e);
+
+                    if (command.Transaction != null)
+                        command.Transaction.Rollback();
                 }
             }
         }

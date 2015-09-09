@@ -128,20 +128,20 @@ namespace EVEMon.SDEToSQL
             if (SqlConnection == null)
                 return;
 
-            Categories.Import();
+            //Categories.Import();
 
-            if (Debugger.IsAttached)
-                return;
+            //if (Debugger.IsAttached)
+            //    return;
 
-            Groups.Import();
-            Graphics.Import();
-            Icons.Import();
-            Skins.Import();
-            SkinMaterials.Import();
-            SkinLicenses.Import();
+            //Groups.Import();
+            //Graphics.Import();
+            //Icons.Import();
+            //Skins.Import();
+            //SkinMaterials.Import();
+            //SkinLicenses.Import();
             Types.Import();
-            Certificates.Import();
-            Blueprints.Import();
+            //Certificates.Import();
+            //Blueprints.Import();
         }
 
         /// <summary>
@@ -403,24 +403,20 @@ namespace EVEMon.SDEToSQL
                     sb.Append(", ");
             }
 
-            if (!String.IsNullOrWhiteSpace(parameters["columnFilter"]) && !String.IsNullOrWhiteSpace(parameters["id"]))
+            if (!String.IsNullOrWhiteSpace(parameters["columnFilter1"]) && !String.IsNullOrWhiteSpace(parameters["id1"]))
             {
-                sb.AppendFormat(" WHERE {0} = {1}", parameters["columnFilter"], parameters["id"]);
-
-                if (parameters.ContainsKey("columnFilter2") &&
-                    parameters.ContainsKey("id2") &&
-                    !String.IsNullOrWhiteSpace(parameters["columnFilter2"]) &&
-                    !String.IsNullOrWhiteSpace(parameters["id2"]))
+                for (int i = 1; i < 5; i++)
                 {
-                    sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter2"], parameters["id2"]);
-                }
+                    string filterName = "columnFilter" + i;
+                    string idName = "id" + i;
 
-                if (parameters.ContainsKey("columnFilter3") &&
-                    parameters.ContainsKey("id3") &&
-                    !String.IsNullOrWhiteSpace(parameters["columnFilter3"]) &&
-                    !String.IsNullOrWhiteSpace(parameters["id3"]))
-                {
-                    sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter3"], parameters["id3"]);
+                    if (parameters.ContainsKey(filterName) &&
+                        parameters.ContainsKey(idName) &&
+                        !String.IsNullOrWhiteSpace(parameters[filterName]) &&
+                        !String.IsNullOrWhiteSpace(parameters[idName]))
+                    {
+                        sb.AppendFormat("{0}{1} = {2}", i == 1 ? " WHERE " : " AND ", parameters[filterName], parameters[idName]);
+                    }
                 }
             }
 
@@ -436,59 +432,25 @@ namespace EVEMon.SDEToSQL
         internal static string SqlDeleteCommandText(String tableName, IDictionary<string, string> parameters)
         {
             StringBuilder sb = new StringBuilder();
-
-            if (!String.IsNullOrWhiteSpace(parameters["columnFilter"]) && !String.IsNullOrWhiteSpace(parameters["id"]))
+            
+            if (!String.IsNullOrWhiteSpace(parameters["columnFilter1"]) && !String.IsNullOrWhiteSpace(parameters["id1"]))
             {
-                sb.AppendFormat(" WHERE {0} = {1}", parameters["columnFilter"], parameters["id"]);
-
-                if (parameters.ContainsKey("columnFilter2") &&
-                    parameters.ContainsKey("id2") &&
-                    !String.IsNullOrWhiteSpace(parameters["columnFilter2"]) &&
-                    !String.IsNullOrWhiteSpace(parameters["id2"]))
+                for (int i = 1; i < 5; i++)
                 {
-                    sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter2"], parameters["id2"]);
-                }
+                    string filterName = "columnFilter" + i;
+                    string idName = "id" + i;
 
-                if (parameters.ContainsKey("columnFilter3") &&
-                    parameters.ContainsKey("id3") &&
-                    !String.IsNullOrWhiteSpace(parameters["columnFilter3"]) &&
-                    !String.IsNullOrWhiteSpace(parameters["id3"]))
-                {
-                    sb.AppendFormat(" AND {0} = {1}", parameters["columnFilter3"], parameters["id3"]);
+                    if (parameters.ContainsKey(filterName) &&
+                        parameters.ContainsKey(idName) &&
+                        !String.IsNullOrWhiteSpace(parameters[filterName]) &&
+                        !String.IsNullOrWhiteSpace(parameters[idName]))
+                    {
+                        sb.AppendFormat("{0}{1} = {2}", i == 1 ? " WHERE " : " AND ", parameters[filterName], parameters[idName]);
+                    }
                 }
             }
 
             return String.Format("DELETE {0}{1}", tableName, sb);
-        }
-
-        /// <summary>
-        /// Drops the table.
-        /// </summary>
-        /// <param name="tableName">Name of the table.</param>
-        private static void DropTable(String tableName)
-        {
-            if (Program.IsClosing)
-                return;
-
-            if (SqlConnection == null)
-                return;
-
-            using (IDbCommand command = new SqlCommand { Connection = SqlConnection })
-            {
-                command.Transaction = SqlConnection.BeginTransaction();
-                command.CommandText = String.Format("DROP TABLE {0}", tableName);
-
-                try
-                {
-                    command.ExecuteNonQuery();
-                    command.Transaction.Commit();
-                }
-                catch (SqlException e)
-                {
-                    command.Transaction.Rollback();
-                    Util.HandleExceptionForCommand(command, e);
-                }
-            }
         }
 
         /// <summary>
@@ -504,7 +466,7 @@ namespace EVEMon.SDEToSQL
         internal static bool CreateTableOrColumns(YamlMappingNode rNode, string searchKey, string tableName,
             IDictionary<string, string> columns)
         {
-            if (CreateTable(rNode, searchKey, tableName))
+            if (DropAndCreateTable(rNode, searchKey, tableName))
                 return true;
 
             CreateColumns(tableName, columns);
@@ -512,49 +474,37 @@ namespace EVEMon.SDEToSQL
         }
 
         /// <summary>
-        /// Creates the table.
+        /// Drops and Creates the specified table.
         /// </summary>
         /// <param name="rNode">The r node.</param>
         /// <param name="searchKey">The search key.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <returns></returns>
-        internal static bool CreateTable(YamlMappingNode rNode, string searchKey, string tableName)
+        internal static bool DropAndCreateTable(YamlMappingNode rNode, string searchKey, string tableName)
         {
-            bool createTable = false;
-            foreach (KeyValuePair<YamlNode, YamlNode> pair in rNode.Children)
+            if (!rNode.Children.Select(pair => pair.Value)
+                .OfType<YamlMappingNode>()
+                .Select(cNode => cNode.Any(x => x.Key.ToString() == searchKey))
+                .Any(createTable => createTable))
             {
-                YamlMappingNode cNode = pair.Value as YamlMappingNode;
-
-                if (cNode == null)
-                    continue;
-
-                createTable = cNode.Any(x => x.Key.ToString() == searchKey);
-
-                if (createTable)
-                    break;
+                return false;
             }
 
-            if (!createTable)
-                return false;
-
-            CreateTable(tableName);
+            DropAndCreateTable(tableName);
             return true;
         }
 
         /// <summary>
-        /// Creates the table.
+        /// Drops and Creates the specified table.
         /// </summary>
         /// <param name="tableName">Name of the table.</param>
-        internal static void CreateTable(String tableName)
+        internal static void DropAndCreateTable(String tableName)
         {
             if (Program.IsClosing)
                 return;
 
             if (SqlConnection == null)
                 return;
-
-            if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length != 0)
-                DropTable(tableName);
 
             using (IDbCommand command = new SqlCommand(
                 Util.GetScriptFor(tableName),
@@ -568,8 +518,10 @@ namespace EVEMon.SDEToSQL
                 }
                 catch (SqlException e)
                 {
-                    command.Transaction.Rollback();
                     Util.HandleExceptionForCommand(command, e);
+
+                    if (command.Transaction != null)
+                        command.Transaction.Rollback();
                 }
             }
         }
@@ -644,8 +596,10 @@ namespace EVEMon.SDEToSQL
                 }
                 catch (SqlException e)
                 {
-                    command.Transaction.Rollback();
                     Util.HandleExceptionForCommand(command, e);
+
+                    if (command.Transaction != null)
+                        command.Transaction.Rollback();
                 }
             }
         }
@@ -669,7 +623,7 @@ namespace EVEMon.SDEToSQL
 
             Console.Write(@"Importing {0}... ", tableName);
 
-            CreateTable(tableName);
+            DropAndCreateTable(tableName);
 
             DataTable table = data.ToDataTable();
 
