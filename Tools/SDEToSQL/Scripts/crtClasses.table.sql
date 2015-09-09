@@ -1,3 +1,6 @@
+IF OBJECT_ID('dbo.crtClasses', 'U') IS NOT NULL
+DROP TABLE [dbo].[crtClasses]; 
+
 SET ANSI_NULLS ON
 
 SET QUOTED_IDENTIFIER ON

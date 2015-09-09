@@ -1,4 +1,7 @@
-﻿SET ANSI_NULLS ON
+﻿IF OBJECT_ID('dbo.mapLocationWormholeClasses', 'U') IS NOT NULL
+DROP TABLE [dbo].[mapLocationWormholeClasses]; 
+
+SET ANSI_NULLS ON
 
 SET QUOTED_IDENTIFIER ON
 

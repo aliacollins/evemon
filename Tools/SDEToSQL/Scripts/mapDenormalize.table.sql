@@ -1,4 +1,7 @@
-﻿SET ANSI_NULLS ON
+﻿IF OBJECT_ID('dbo.mapDenormalize', 'U') IS NOT NULL
+DROP TABLE [dbo].[mapDenormalize]; 
+
+SET ANSI_NULLS ON
 
 SET QUOTED_IDENTIFIER ON
 

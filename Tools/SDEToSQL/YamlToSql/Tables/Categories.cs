@@ -67,7 +67,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(InvCategoriesTableName);
+            Database.DropAndCreateTable(InvCategoriesTableName);
 
             ImportDataBulk(rNode);
 

@@ -82,10 +82,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 
             Console.Write(@"Importing {0}... ", yamlFile);
 
-            Database.CreateTable(CrtClassesTableName);
-            Database.CreateTable(CrtCertificateTableName);
-            Database.CreateTable(CrtRecommendationsTableName);
-            Database.CreateTable(CrtRelationshipsTableName);
+            Database.DropAndCreateTable(CrtClassesTableName);
+            Database.DropAndCreateTable(CrtCertificateTableName);
+            Database.DropAndCreateTable(CrtRecommendationsTableName);
+            Database.DropAndCreateTable(CrtRelationshipsTableName);
 
             ImportDataBulk(rNode);
 

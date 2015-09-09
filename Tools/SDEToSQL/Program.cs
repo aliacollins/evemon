@@ -47,7 +47,12 @@ namespace EVEMon.SDEToSQL
             }
             catch (Exception ex)
             {
-                Trace.WriteLine(ex.GetRecursiveStackTrace());
+                Trace.Write(ex.GetRecursiveStackTrace());
+
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine(@"An unhandled exception was thrown.");
+                Console.WriteLine(@"For more info refer to the 'trace.txt' file.");
                 Util.PressAnyKey(-1);
             }
 
