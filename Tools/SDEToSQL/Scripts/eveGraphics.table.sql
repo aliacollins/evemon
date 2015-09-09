@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.eveGraphics', 'U') IS NOT NULL
-DROP TABLE [dbo].[eveGraphics]; 
+DROP TABLE [dbo].[eveGraphics]
 
 SET ANSI_NULLS ON
 

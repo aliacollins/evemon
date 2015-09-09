@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.mapSolarSystems', 'U') IS NOT NULL
-DROP TABLE [dbo].[mapSolarSystems]; 
+DROP TABLE [dbo].[mapSolarSystems]
 
 SET ANSI_NULLS ON
 

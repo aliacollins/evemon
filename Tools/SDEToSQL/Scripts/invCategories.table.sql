@@ -1,6 +1,6 @@
 ﻿IF OBJECT_ID('dbo.invCategories', 'U') IS NOT NULL
-DROP TABLE [dbo].[invCategories]; 
-  
+DROP TABLE [dbo].[invCategories]
+
 SET ANSI_NULLS ON
 
 SET QUOTED_IDENTIFIER ON

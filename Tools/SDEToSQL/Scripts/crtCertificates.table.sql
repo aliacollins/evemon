@@ -1,5 +1,5 @@
 IF OBJECT_ID('dbo.crtCertificates', 'U') IS NOT NULL
-DROP TABLE [dbo].[crtCertificates]; 
+DROP TABLE [dbo].[crtCertificates]
 
 SET ANSI_NULLS ON
 

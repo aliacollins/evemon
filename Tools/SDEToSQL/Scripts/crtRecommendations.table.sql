@@ -1,5 +1,5 @@
 IF OBJECT_ID('dbo.crtRecommendations', 'U') IS NOT NULL
-DROP TABLE [dbo].[crtRecommendations]; 
+DROP TABLE [dbo].[crtRecommendations]
 
 SET ANSI_NULLS ON
 

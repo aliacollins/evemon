@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.mapLocationScenes', 'U') IS NOT NULL
-DROP TABLE [dbo].[mapLocationScenes]; 
+DROP TABLE [dbo].[mapLocationScenes]
 
 SET ANSI_NULLS ON
 

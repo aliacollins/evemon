@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.invTypes', 'U') IS NOT NULL
-DROP TABLE [dbo].[invTypes]; 
+DROP TABLE [dbo].[invTypes]
 
 SET ANSI_NULLS ON
 
