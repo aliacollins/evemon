@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.sknMaterials', 'U') IS NOT NULL
-DROP TABLE [dbo].[sknMaterials]; 
+DROP TABLE [dbo].[sknMaterials]
 
 SET ANSI_NULLS ON
 

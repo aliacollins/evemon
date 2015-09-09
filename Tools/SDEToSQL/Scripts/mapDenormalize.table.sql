@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.mapDenormalize', 'U') IS NOT NULL
-DROP TABLE [dbo].[mapDenormalize]; 
+DROP TABLE [dbo].[mapDenormalize]
 
 SET ANSI_NULLS ON
 

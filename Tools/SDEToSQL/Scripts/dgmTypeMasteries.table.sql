@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.dgmTypeMasteries', 'U') IS NOT NULL
-DROP TABLE [dbo].[dgmTypeMasteries]; 
+DROP TABLE [dbo].[dgmTypeMasteries]
 
 SET ANSI_NULLS ON
 

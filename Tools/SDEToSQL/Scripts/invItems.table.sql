@@ -1,0 +1,19 @@
+﻿IF OBJECT_ID('dbo.invItems', 'U') IS NOT NULL
+DROP TABLE [dbo].[invItems]
+
+SET ANSI_NULLS ON
+
+SET QUOTED_IDENTIFIER ON
+
+CREATE TABLE [dbo].[invItems](
+	[itemID] [bigint] NOT NULL,
+	[typeID] [int] NOT NULL,
+	[ownerID] [int] NOT NULL,
+	[locationID] [bigint] NOT NULL,
+	[flagID] [smallint] NOT NULL,
+	[quantity] [int] NOT NULL,
+ CONSTRAINT [invItems_PK] PRIMARY KEY CLUSTERED 
+(
+	[itemID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]

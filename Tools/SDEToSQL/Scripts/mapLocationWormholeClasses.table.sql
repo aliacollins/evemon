@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.mapLocationWormholeClasses', 'U') IS NOT NULL
-DROP TABLE [dbo].[mapLocationWormholeClasses]; 
+DROP TABLE [dbo].[mapLocationWormholeClasses]
 
 SET ANSI_NULLS ON
 

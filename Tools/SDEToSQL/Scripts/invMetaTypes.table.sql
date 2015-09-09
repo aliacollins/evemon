@@ -1,0 +1,16 @@
+﻿IF OBJECT_ID('dbo.invMetaTypes', 'U') IS NOT NULL
+DROP TABLE [dbo].[invMetaTypes]
+
+SET ANSI_NULLS ON
+
+SET QUOTED_IDENTIFIER ON
+
+CREATE TABLE [dbo].[invMetaTypes](
+	[typeID] [int] NOT NULL,
+	[parentTypeID] [int] NULL,
+	[metaGroupID] [smallint] NULL,
+ CONSTRAINT [invMetaTypes_PK] PRIMARY KEY CLUSTERED 
+(
+	[typeID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]

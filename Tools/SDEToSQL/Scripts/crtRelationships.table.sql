@@ -1,5 +1,5 @@
 IF OBJECT_ID('dbo.crtRelationships', 'U') IS NOT NULL
-DROP TABLE [dbo].[crtRelationships]; 
+DROP TABLE [dbo].[crtRelationships]
 
 SET ANSI_NULLS ON
 

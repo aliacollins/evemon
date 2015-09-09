@@ -1,0 +1,16 @@
+﻿IF OBJECT_ID('dbo.agtResearchAgents', 'U') IS NOT NULL
+DROP TABLE [dbo].[agtResearchAgents]
+
+SET ANSI_NULLS ON
+
+SET QUOTED_IDENTIFIER ON
+
+CREATE TABLE [dbo].[agtResearchAgents](
+	[agentID] [int] NOT NULL,
+	[typeID] [int] NOT NULL,
+ CONSTRAINT [agtResearchAgents_PK] PRIMARY KEY CLUSTERED 
+(
+	[agentID] ASC,
+	[typeID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]

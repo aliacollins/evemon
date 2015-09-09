@@ -1,0 +1,16 @@
+﻿IF OBJECT_ID('dbo.crpNPCCorporationTrades', 'U') IS NOT NULL
+DROP TABLE [dbo].[crpNPCCorporationTrades] 
+
+SET ANSI_NULLS ON
+
+SET QUOTED_IDENTIFIER ON
+
+CREATE TABLE [dbo].[crpNPCCorporationTrades](
+	[corporationID] [int] NOT NULL,
+	[typeID] [int] NOT NULL,
+ CONSTRAINT [crpNPCCorporationTrades_PK] PRIMARY KEY CLUSTERED 
+(
+	[corporationID] ASC,
+	[typeID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]

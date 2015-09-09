@@ -1,5 +1,5 @@
 ﻿IF OBJECT_ID('dbo.eveIcons', 'U') IS NOT NULL
-DROP TABLE [dbo].[eveIcons]; 
+DROP TABLE [dbo].[eveIcons]
 
 SET ANSI_NULLS ON
 

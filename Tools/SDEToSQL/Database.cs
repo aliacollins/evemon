@@ -128,20 +128,20 @@ namespace EVEMon.SDEToSQL
             if (SqlConnection == null)
                 return;
 
-            //Categories.Import();
+            Categories.Import();
 
-            //if (Debugger.IsAttached)
-            //    return;
+            if (Debugger.IsAttached)
+                return;
 
-            //Groups.Import();
-            //Graphics.Import();
-            //Icons.Import();
-            //Skins.Import();
-            //SkinMaterials.Import();
-            //SkinLicenses.Import();
+            Groups.Import();
+            Graphics.Import();
+            Icons.Import();
+            Skins.Import();
+            SkinMaterials.Import();
+            SkinLicenses.Import();
             Types.Import();
-            //Certificates.Import();
-            //Blueprints.Import();
+            Certificates.Import();
+            Blueprints.Import();
         }
 
         /// <summary>
