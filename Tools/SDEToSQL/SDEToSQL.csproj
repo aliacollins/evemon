@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1720C71D-5718-4A87-8F78-DB48FE4F7400}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EVEMon.SDEToSQL</RootNamespace>
+    <AssemblyName>EVEMonSDEToSQL</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Snapshot|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unofficial.Microsoft.SQLServer.SMO.2014.12.0.2000.8\lib\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unofficial.Microsoft.SQLServer.SMO.2014.12.0.2000.8\lib\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unofficial.Microsoft.SQLServer.SMO.2014.12.0.2000.8\lib\Microsoft.SqlServer.Smo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.SmoExtended, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unofficial.Microsoft.SQLServer.SMO.2014.12.0.2000.8\lib\Microsoft.SqlServer.SmoExtended.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Data.SQLite.EF6.1.0.98.1\lib\net40\System.Data.SQLite.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Data.SQLite.Linq.1.0.98.1\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\YamlDotNet.3.7.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Database.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapCelestialStatistics.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapConstellationJumps.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapConstellations.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapDenormalize.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapJumps.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapLandmarks.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapLocationScenes.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapLocationWormholeClasses.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapRegionJumps.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapRegions.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapSolarSystemJumps.cs" />
+    <Compile Include="SQLiteToSQL\Models\mapSolarSystems.cs" />
+    <Compile Include="SQLiteToSQL\Models\UniverseData.cs" />
+    <Compile Include="SQLiteToSQL\SqliteDbConfiguration.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="YamlToSQL\Tables\Blueprints.cs" />
+    <Compile Include="YamlToSQL\Tables\Categories.cs" />
+    <Compile Include="YamlToSQL\Tables\Certificates.cs" />
+    <Compile Include="YamlToSQL\Tables\Graphics.cs" />
+    <Compile Include="YamlToSQL\Tables\Groups.cs" />
+    <Compile Include="YamlToSQL\Tables\Icons.cs" />
+    <Compile Include="YamlToSQL\Tables\TranslationsParameters.cs" />
+    <Compile Include="YamlToSQL\Tables\Translations.cs" />
+    <Compile Include="YamlToSQL\Tables\Types.cs" />
+    <Compile Include="YamlToSQL\Tables\SkinLicenses.cs" />
+    <Compile Include="YamlToSQL\Tables\SkinMaterials.cs" />
+    <Compile Include="YamlToSQL\Tables\Skins.cs" />
+    <Compile Include="YamlToSQL\YamlFilesConstants.Designer.cs">
+      <DependentUpon>YamlFilesConstants.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="SDEFiles\Put SDE zip or individual files here">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\mapCelestialStatistics.table.sql" />
+    <EmbeddedResource Include="Scripts\mapConstellationJumps.table.sql" />
+    <EmbeddedResource Include="Scripts\mapConstellations.table.sql" />
+    <EmbeddedResource Include="Scripts\mapDenormalize.table.sql" />
+    <EmbeddedResource Include="Scripts\mapJumps.table.sql" />
+    <EmbeddedResource Include="Scripts\mapLandmarks.table.sql" />
+    <EmbeddedResource Include="Scripts\mapLocationScenes.table.sql" />
+    <EmbeddedResource Include="Scripts\mapLocationWormholeClasses.table.sql" />
+    <EmbeddedResource Include="Scripts\mapRegionJumps.table.sql" />
+    <EmbeddedResource Include="Scripts\mapRegions.table.sql" />
+    <EmbeddedResource Include="Scripts\mapSolarSystemJumps.table.sql" />
+    <EmbeddedResource Include="Scripts\mapSolarSystems.table.sql" />
+    <EmbeddedResource Include="Scripts\crtCertificates.table.sql" />
+    <EmbeddedResource Include="Scripts\crtClasses.table.sql" />
+    <EmbeddedResource Include="Scripts\crtRecommendations.table.sql" />
+    <EmbeddedResource Include="Scripts\crtRelationships.table.sql" />
+    <EmbeddedResource Include="Scripts\dgmMasteries.table.sql" />
+    <EmbeddedResource Include="Scripts\dgmTraits.table.sql" />
+    <EmbeddedResource Include="Scripts\dgmTypeMasteries.table.sql" />
+    <EmbeddedResource Include="Scripts\dgmTypeTraits.table.sql" />
+    <EmbeddedResource Include="Scripts\eveGraphics.table.sql" />
+    <EmbeddedResource Include="Scripts\eveIcons.table.sql" />
+    <EmbeddedResource Include="Scripts\invTypes.table.sql" />
+    <EmbeddedResource Include="Scripts\invBlueprintTypes.table.sql" />
+    <EmbeddedResource Include="Scripts\ramTypeRequirements.table.sql" />
+    <EmbeddedResource Include="Scripts\sknSkins.table.sql" />
+    <EmbeddedResource Include="Scripts\sknMaterials.table.sql" />
+    <EmbeddedResource Include="Scripts\sknLicenses.table.sql" />
+    <EmbeddedResource Include="Scripts\invGroups.table.sql" />
+    <EmbeddedResource Include="Scripts\invCategories.table.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="YamlToSQL\YamlFilesConstants.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>YamlFilesConstants.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets')" />
+  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

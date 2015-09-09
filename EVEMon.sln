@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon.MarketUnifiedUploade
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResFileCreator", "Tools\ResFileCreator\ResFileCreator.csproj", "{87682BB1-CCE5-4CA4-BDE8-1A2ACF0B3CE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDEExternalsToSql", "Tools\SDEExternalsToSql\SDEExternalsToSql.csproj", "{1720C71D-5718-4A87-8F78-DB48FE4F7400}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDEToSQL", "Tools\SDEToSQL\SDEToSQL.csproj", "{1720C71D-5718-4A87-8F78-DB48FE4F7400}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7AC1A9C-97FC-4937-A8CA-684650A99D01}"
 	ProjectSection(SolutionItems) = preProject
