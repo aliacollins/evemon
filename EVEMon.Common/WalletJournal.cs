@@ -90,7 +90,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_refType == "Unknown"
+                return m_refType == EVEMonConstants.UnknownText
                            ? m_refType = EveRefType.GetRefTypeIDToName(m_refTypeID)
                            : m_refType;
             }
@@ -103,7 +103,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_taxReceiver == "Unknown"
+                return m_taxReceiver == EVEMonConstants.UnknownText
                            ? m_taxReceiver = GetTaxReceiver()
                            : m_taxReceiver;
             }

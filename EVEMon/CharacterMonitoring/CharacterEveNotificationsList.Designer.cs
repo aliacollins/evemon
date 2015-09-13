@@ -101,7 +101,7 @@ namespace EVEMon.CharacterMonitoring
             // 
             // chType
             // 
-            this.chType.Text = "Type";
+            this.chType.Text = "Subject";
             this.chType.Width = 121;
             // 
             // chSentDate

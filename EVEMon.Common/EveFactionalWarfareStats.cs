@@ -214,7 +214,7 @@ namespace EVEMon.Common
                 return;
 
             APIResult<SerializableAPIEveFactionalWarfareStats> result =
-                Util.DeserializeAPIResult<SerializableAPIEveFactionalWarfareStats>(filename, APIProvider.RowsetsTransform);
+                Util.DeserializeAPIResultFromFile<SerializableAPIEveFactionalWarfareStats>(filename, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization
             if (result.HasError)

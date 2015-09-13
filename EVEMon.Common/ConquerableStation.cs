@@ -119,10 +119,7 @@ namespace EVEMon.Common
 
             EveMonClient.Notifications.InvalidateAPIError();
 
-            // Save the file to our cache
-            LocalXmlCache.Save(Filename, result.XmlDocument);
-
-            // Deserialize the list
+            // Import the list
             Import(result.Result.Outposts);
 
             // Reset query pending flag
@@ -130,6 +127,9 @@ namespace EVEMon.Common
 
             // Notify the subscribers
             EveMonClient.OnConquerableStationListUpdated();
+
+            // Save the file to our cache
+            LocalXmlCache.Save(Filename, result.XmlDocument);
         }
 
         #endregion
@@ -162,7 +162,7 @@ namespace EVEMon.Common
                 return;
 
             APIResult<SerializableAPIConquerableStationList> result =
-                Util.DeserializeAPIResult<SerializableAPIConquerableStationList>(filename, APIProvider.RowsetsTransform);
+                Util.DeserializeAPIResultFromFile<SerializableAPIConquerableStationList>(filename, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization
             if (result.HasError)

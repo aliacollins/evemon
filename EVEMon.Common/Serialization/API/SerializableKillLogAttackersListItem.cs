@@ -27,7 +27,7 @@ namespace EVEMon.Common.Serialization.API
                     return string.Empty;
 
                 Item weapon = StaticItems.GetItemByID(WeaponTypeID);
-                return weapon == null ? "Unknown" : weapon.Name;
+                return weapon == null ? EVEMonConstants.UnknownText : weapon.Name;
             }
         }
     }

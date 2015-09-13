@@ -20,6 +20,7 @@ using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Threading;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.Common
 {
@@ -108,15 +109,15 @@ namespace EVEMon.Common
                     return (T)xs.Deserialize(stream);
                 }
             }
-                // An error occurred during the XSL transform
             catch (XsltException exc)
             {
+                // An error occurred during the XSL transform
                 ExceptionHandler.LogException(exc, true);
                 return null;
             }
-                // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
+                // An error occurred during the deserialization
                 ExceptionHandler.LogException(exc, true);
                 return null;
             }
@@ -241,13 +242,35 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Deserializes an XML from a text.
+        /// </summary>
+        /// <typeparam name="T">The inner type to deserialize</typeparam>
+        /// <param name="text">The text.</param>
+        /// <param name="transform">The XSL transform to apply, may be null.</param>
+        /// <returns>The deserialized result</returns>
+        internal static APIResult<T> DeserializeAPIResultFromString<T>(string text, XslCompiledTransform transform = null)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(text);
+                return DeserializeAPIResultCore<T>(doc, transform);
+            }
+            catch (XmlException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                return new APIResult<T>(exc);
+            }
+        }
+
+        /// <summary>
         /// Deserialize an XML from a file.
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="filename">The filename.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <returns>The deserialized result</returns>
-        internal static APIResult<T> DeserializeAPIResult<T>(string filename, XslCompiledTransform transform = null)
+        internal static APIResult<T> DeserializeAPIResultFromFile<T>(string filename, XslCompiledTransform transform = null)
         {
             try
             {
@@ -589,9 +612,9 @@ namespace EVEMon.Common
                         // Was there an HTTP error ??
                         if (asyncResult.Error != null)
                             errorMessage = asyncResult.Error.Message;
-                            // No http error, let's try to deserialize
                         else
                         {
+                            // No http error, let's try to deserialize
                             try
                             {
                                 // Deserialize
@@ -601,9 +624,9 @@ namespace EVEMon.Common
                                     result = (T)xs.Deserialize(reader);
                                 }
                             }
-                                // An error occurred during the deserialization
                             catch (InvalidOperationException exc)
                             {
+                                // An error occurred during the deserialization
                                 ExceptionHandler.LogException(exc, true);
                                 errorMessage = (exc.InnerException == null
                                                     ? exc.Message
@@ -1139,6 +1162,21 @@ namespace EVEMon.Common
                 }
             }
             return decrypted;
+        }
+
+        /// <summary>
+        /// Parses the specified yaml text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        internal static YamlMappingNode ParseYaml(string text)
+        {
+            using (var sr = new StringReader(text))
+            {
+                YamlStream yStream = new YamlStream();
+                yStream.Load(sr);
+                return yStream.Documents.First().RootNode as YamlMappingNode;
+            }
         }
     }
 }

@@ -194,7 +194,7 @@ namespace EVEMon.CharacterMonitoring
                 BirthdayLabel.Text = String.Format(CultureConstants.DefaultCulture,
                                                    "Birthday: {0}", m_character.Birthday.ToLocalTime());
                 CorporationNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                          "Corporation: {0}", m_character.CorporationName ?? "Unknown");
+                                                          "Corporation: {0}", m_character.CorporationName ?? EVEMonConstants.UnknownText);
 
                 AllianceInfoIndicationPictureBox.Visible = m_character.AllianceID != 0;
 
@@ -616,7 +616,7 @@ namespace EVEMon.CharacterMonitoring
                                  (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
                                       ? String.Format(CultureConstants.DefaultCulture, "{0} [{1}]", m_character.ShipTypeName,
                                                       m_character.ShipName)
-                                      : "Unknown"));
+                                      : EVEMonConstants.UnknownText));
         }
 
         #endregion

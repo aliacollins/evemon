@@ -25,7 +25,7 @@ namespace EVEMon.Common
             SerializableEveFlagsListItem flag = s_eveFlags != null
                                                     ? s_eveFlags.EVEFlags.FirstOrDefault(x => x.ID == id)
                                                     : null;
-            return flag != null ? flag.Text : "Unknown";
+            return flag != null ? flag.Text : EVEMonConstants.UnknownText;
         }
 
         /// <summary>

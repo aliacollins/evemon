@@ -72,7 +72,7 @@ namespace EVEMon.Common
             EnsureImportation();
 
             SerializableRefTypesListItem refType = s_refTypes.FirstOrDefault(type => type.ID == refTypeID);
-            return refType != null ? refType.Name : "Unknown";
+            return refType != null ? refType.Name : EVEMonConstants.UnknownText;
         }
 
         #endregion

@@ -74,12 +74,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the description.
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; private set; }
 
         /// <summary>
         /// Gets the title.
         /// </summary>
-        public string Title { get; set; }
+        public string Title { get; private set; }
 
         /// <summary>
         /// Gets the issued.
@@ -103,7 +103,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_issuer == "Unknown"
+                return m_issuer == EVEMonConstants.UnknownText
                            ? m_issuer = EveIDToName.GetIDToName(IssuerID)
                            : m_issuer;
             }
@@ -116,7 +116,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_corporationName == "Unknown"
+                return m_corporationName == EVEMonConstants.UnknownText
                            ? m_corporationName = EveIDToName.GetIDToName(IssuerID)
                            : m_corporationName;
             }

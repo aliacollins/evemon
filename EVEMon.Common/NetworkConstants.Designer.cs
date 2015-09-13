@@ -1186,6 +1186,15 @@ namespace EVEMon.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /eve/EveNotificationTextExternalParser.cs.
+        /// </summary>
+        public static string EveNotificationTextExternalParser {
+            get {
+                return ResourceManager.GetString("EveNotificationTextExternalParser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://www.google.com/calendar/feeds/default/private/full.
         /// </summary>
         public static string GoogleCalendarURL {
@@ -1200,6 +1209,15 @@ namespace EVEMon.Common {
         public static string MyEVELevelImage {
             get {
                 return ResourceManager.GetString("MyEVELevelImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /eve/NotificationRefTypes.xml.
+        /// </summary>
+        public static string NotificationRefTypes {
+            get {
+                return ResourceManager.GetString("NotificationRefTypes", resourceCulture);
             }
         }
         

@@ -35,6 +35,7 @@ namespace EVEMon.DetailsWindow
             EveMonClient.CharacterEVEMailBodyDownloaded += EveMonClient_CharacterEVEMailBodyDownloaded;
             EveMonClient.CharacterEVENotificationTextDownloaded += EveMonClient_CharacterEVENotificationTextDownloaded;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
+            EveMonClient.EveIDToNameUpdated += EveMonClient_EveIDToNameUpdated;
             Disposed += OnDisposed;
 
             Tag = message;
@@ -68,6 +69,7 @@ namespace EVEMon.DetailsWindow
             EveMonClient.CharacterEVEMailBodyDownloaded -= EveMonClient_CharacterEVEMailBodyDownloaded;
             EveMonClient.CharacterEVENotificationTextDownloaded -= EveMonClient_CharacterEVENotificationTextDownloaded;
             EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
+            EveMonClient.EveIDToNameUpdated -= EveMonClient_EveIDToNameUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -128,6 +130,17 @@ namespace EVEMon.DetailsWindow
             // In case there was an error, close the window
             if (notification.Result.HasError)
                 Close();
+        }
+
+        /// <summary>
+        /// Handles the EveIDToNameUpdated event of the EveMonClient control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_EveIDToNameUpdated(object sender, EventArgs e)
+        {
+            if (Visible)
+                readingPane.UpdatePane();
         }
     }
 }

@@ -81,9 +81,9 @@ namespace EVEMon.Common
                     sb.AppendFormat(CultureConstants.InvariantCulture, "Security: {0:N1}", attacker.SecurityStatus).AppendLine();
                     sb.AppendFormat(CultureConstants.InvariantCulture, "Corp: {0}", attacker.CorporationName).AppendLine();
                     sb.AppendFormat(CultureConstants.InvariantCulture, "Alliance: {0}",
-                                    attacker.AllianceName == "Unknown" ? "None" : attacker.AllianceName).AppendLine();
+                        attacker.AllianceName == EVEMonConstants.UnknownText ? "None" : attacker.AllianceName).AppendLine();
                     sb.AppendFormat(CultureConstants.InvariantCulture, "Faction: {0}",
-                                    attacker.FactionName == "Unknown" ? "None" : attacker.FactionName).AppendLine();
+                        attacker.FactionName == EVEMonConstants.UnknownText ? "None" : attacker.FactionName).AppendLine();
                     sb.AppendFormat(CultureConstants.InvariantCulture, "Ship: {0}", attacker.ShipTypeName).AppendLine();
                     sb.AppendFormat(CultureConstants.InvariantCulture, "Weapon: {0}", attacker.WeaponTypeName).AppendLine();
                 }

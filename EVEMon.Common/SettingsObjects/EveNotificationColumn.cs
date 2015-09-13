@@ -18,8 +18,8 @@ namespace EVEMon.Common.SettingsObjects
         [Description("From ( Sender )")]
         SenderName = 1,
 
-        [Header("Type")]
-        [Description("Type")]
+        [Header("Subject")]
+        [Description("Subject")]
         Type = 2,
     }
 }

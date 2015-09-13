@@ -55,7 +55,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        internal static string GetIDToName(string id)
+        public static string GetIDToName(string id)
         {
             // If there is no ID to query return an empty string
             if (String.IsNullOrEmpty(id))
@@ -149,7 +149,7 @@ namespace EVEMon.Common
                 QueryAPICharacterName(idsToQuery);
 
             // Add an "Unknown" entry for every id we query
-            s_listOfIDsToQuery.ForEach(id => s_listOfNames.Add("Unknown"));
+            s_listOfIDsToQuery.ForEach(id => s_listOfNames.Add(EVEMonConstants.UnknownText));
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace EVEMon.Common
 
             // In case the list is empty, add an "Unknown" entry
             if (!s_listOfNames.Any())
-                s_listOfNames.Add("Unknown");
+                s_listOfNames.Add(EVEMonConstants.UnknownText);
 
             EveMonClient.OnEveIDToNameUpdated();
         }
@@ -269,13 +269,14 @@ namespace EVEMon.Common
             // Save in file
             EveMonClient.EnsureCacheDirInit();
             FileHelper.OverwriteOrWarnTheUser(s_file,
-                                              fs =>
-                                                  {
-                                                      XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
-                                                      xs.Serialize(fs, serial);
-                                                      fs.Flush();
-                                                      return true;
-                                                  });
+                fs =>
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
+                    xs.Serialize(fs, serial);
+                    fs.Flush();
+                    return true;
+                });
+
             // Reset savePending flag
             s_lastSaveTime = DateTime.UtcNow;
             s_savePending = false;
@@ -290,10 +291,10 @@ namespace EVEMon.Common
             SerializableEveIDToName serial = new SerializableEveIDToName();
             IEnumerable<SerializableEveIDToNameListItem> entitiesList = s_cacheList.Select(
                 item => new SerializableEveIDToNameListItem
-                            {
-                                ID = item.Key,
-                                Name = item.Value,
-                            });
+                {
+                    ID = item.Key,
+                    Name = item.Value,
+                });
             serial.Entities.AddRange(entitiesList);
 
             return serial;
