@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Controls
 {

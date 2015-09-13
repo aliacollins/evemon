@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.Common.Data
 {

@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Models;
 
 namespace EVEMon.SettingsUI
 {

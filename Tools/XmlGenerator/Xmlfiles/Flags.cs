@@ -1,7 +1,7 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using EVEMon.Common.Collections;
 using EVEMon.XmlGenerator.Xmlfiles.Serialization;
 
 namespace EVEMon.XmlGenerator.Xmlfiles

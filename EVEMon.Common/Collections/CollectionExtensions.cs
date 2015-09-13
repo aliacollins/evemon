@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace System.Collections.ObjectModel
+namespace EVEMon.Common.Collections
 {
     public static class CollectionExtensions
     {

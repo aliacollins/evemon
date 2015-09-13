@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Data
 {
@@ -159,7 +164,7 @@ namespace EVEMon.Common.Data
         /// <returns>Skill Name and Level</returns>
         public override string ToString()
         {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Common.Skill.GetRomanFromInt(Level));
+            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Models.Skill.GetRomanFromInt(Level));
         }
 
         #endregion

@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Net
 {

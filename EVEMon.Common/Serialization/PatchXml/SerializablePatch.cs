@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
+using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Serialization.PatchXml
 {

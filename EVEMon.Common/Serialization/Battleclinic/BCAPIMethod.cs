@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {
     /// <summary>
     /// Serializable class for a Battleclinic's API method and its path.
-    /// Each BCAPIConfiguration maintains a list of Battleclinic's APIMethods.
+    /// Each BCAPIConfiguration maintains a list of Battleclinic's APIMethodsEnum.
     /// </summary>
     public class BCAPIMethod
     {

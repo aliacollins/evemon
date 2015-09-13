@@ -7,6 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Controls
 {

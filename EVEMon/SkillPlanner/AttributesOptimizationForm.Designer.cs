@@ -1,5 +1,6 @@
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.SkillPlanner
 {

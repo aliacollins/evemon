@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 {
-    internal class Graphics
+    internal static class Graphics
     {
         private const string EveGraphicsTableName = "eveGraphics";
 
@@ -41,7 +42,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -72,22 +73,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         {
             Util.UpdatePercentDone(0);
 
-            DataTable eveGraphicsTable = new DataTable();
-            eveGraphicsTable.Columns.AddRange(
-                new[]
-                {
-                    new DataColumn(GraphicIDText, typeof(SqlInt32)),
-                    new DataColumn(GraphicFileText, typeof(SqlString)),
-                    new DataColumn(DescriptionText, typeof(SqlString)),
-                    new DataColumn(ObsoleteText, typeof(SqlBoolean)),
-                    new DataColumn(GraphicTypeText, typeof(SqlString)),
-                    new DataColumn(CollidableText, typeof(SqlBoolean)),
-                    new DataColumn(DirectoryIDText, typeof(SqlInt32)),
-                    new DataColumn(GraphicNameText, typeof(SqlString)),
-                    new DataColumn(GfxRaceIDText, typeof(SqlString)),
-                    new DataColumn(ColorSchemeText, typeof(SqlString)),
-                    new DataColumn(SofHullNameText, typeof(SqlString)),
-                });
+            DataTable eveGraphicsTable = GetEveGraphicsDataTable();
 
             int total = rNode.Count();
             total = (int)Math.Ceiling(total + (total * 0.01));
@@ -120,6 +106,33 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             Database.ImportDataBulk(EveGraphicsTableName, eveGraphicsTable);
 
             Util.UpdatePercentDone(eveGraphicsTable.Rows.Count);
+        }
+
+        /// <summary>
+        /// Gets the data table for the eveGraphics table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetEveGraphicsDataTable()
+        {
+            using (DataTable eveGraphicsTable = new DataTable())
+            {
+                eveGraphicsTable.Columns.AddRange(
+                    new[]
+                {
+                    new DataColumn(GraphicIDText, typeof(SqlInt32)),
+                    new DataColumn(GraphicFileText, typeof(SqlString)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                    new DataColumn(ObsoleteText, typeof(SqlBoolean)),
+                    new DataColumn(GraphicTypeText, typeof(SqlString)),
+                    new DataColumn(CollidableText, typeof(SqlBoolean)),
+                    new DataColumn(DirectoryIDText, typeof(SqlInt32)),
+                    new DataColumn(GraphicNameText, typeof(SqlString)),
+                    new DataColumn(GfxRaceIDText, typeof(SqlString)),
+                    new DataColumn(ColorSchemeText, typeof(SqlString)),
+                    new DataColumn(SofHullNameText, typeof(SqlString)),
+                });
+                return eveGraphicsTable;
+            }
         }
     }
 }

@@ -7,8 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using Region = EVEMon.Common.Data.Region;
@@ -680,16 +689,16 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(Asset x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Item.Name.ToLowerInvariant().Contains(text)
-                   || x.Item.GroupName.ToLowerInvariant().Contains(text)
-                   || x.Item.CategoryName.ToLowerInvariant().Contains(text)
-                   || x.TypeOfBlueprint.ToLowerInvariant().Contains(text)
-                   || x.Container.ToLowerInvariant().Contains(text)
-                   || x.Flag.ToLowerInvariant().Contains(text)
-                   || x.Location.ToLowerInvariant().Contains(text)
-                   || x.SolarSystem.Name.ToLowerInvariant().Contains(text)
-                   || x.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
-                   || x.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text);
+                   || x.Item.Name.ToUpperInvariant().Contains(text)
+                   || x.Item.GroupName.ToUpperInvariant().Contains(text)
+                   || x.Item.CategoryName.ToUpperInvariant().Contains(text)
+                   || x.TypeOfBlueprint.ToUpperInvariant().Contains(text)
+                   || x.Container.ToUpperInvariant().Contains(text)
+                   || x.Flag.ToUpperInvariant().Contains(text)
+                   || x.Location.ToUpperInvariant().Contains(text)
+                   || x.SolarSystem.Name.ToUpperInvariant().Contains(text)
+                   || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
+                   || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
         }
 
         /// <summary>

@@ -4,6 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 
 namespace EVEMon.Sales
 {

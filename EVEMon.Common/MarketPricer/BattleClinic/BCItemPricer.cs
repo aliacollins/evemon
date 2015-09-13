@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.BattleClinic.MarketPricer;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Common.MarketPricer.BattleClinic
 {

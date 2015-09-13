@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.SettingsObjects;
 

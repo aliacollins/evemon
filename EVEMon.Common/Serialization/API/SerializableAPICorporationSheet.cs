@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Serialization.API
 {

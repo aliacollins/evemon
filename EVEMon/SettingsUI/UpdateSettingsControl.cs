@@ -5,6 +5,11 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Models.Extended;
 using EVEMon.Common.Properties;
 using EVEMon.Common.SettingsObjects;
 
@@ -70,10 +75,10 @@ namespace EVEMon.SettingsUI
                         .ToList();
 
                 methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
-                    method => (int)method == ((int)method & (int)(APIMethodsExtensions.BasicCharacterFeatures))).Cast<Enum>());
+                    method => (int)method == ((int)method & (int)(APIMethodsEnum.BasicCharacterFeatures))).Cast<Enum>());
 
                 methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
-                    method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCharacterFeatures)).Cast<Enum>().
+                    method => (int)method == ((int)method & (int)APIMethodsEnum.AdvancedCharacterFeatures)).Cast<Enum>().
                                      OrderBy(method => method.GetHeader()));
 
                 // Add the planetary colonies method above the research points (a special case as CCP likes to brake patterns)
@@ -88,7 +93,7 @@ namespace EVEMon.SettingsUI
 
                 // Uncomment upon implementing an exclicit corporation monitor feature
                 //methods.AddRange(apiMethods.OfType<APICorporationMethods>().Where(
-                //    method => (int)method == ((int)method & (int)APIMethodsExtensions.AdvancedCorporationFeatures)).Cast<Enum>().OrderBy(
+                //    method => (int)method == ((int)method & (int)APIMethodsEnum.AdvancedCorporationFeatures)).Cast<Enum>().OrderBy(
                 //        method => method.GetHeader()));
 
                 return methods;
@@ -237,7 +242,7 @@ namespace EVEMon.SettingsUI
             if (method is APICharacterMethods)
             {
                 APICharacterMethods apiMethod = (APICharacterMethods)method;
-                if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCharacterFeatures))
+                if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsEnum.AdvancedCharacterFeatures))
                 {
                     icon = Resources.KeyGold16;
                     iconToolTip = "This is an advanced feature query.";
@@ -258,7 +263,7 @@ namespace EVEMon.SettingsUI
             //if (method is APICorporationMethods)
             //{
             //    APICorporationMethods apiMethod = (APICorporationMethods)method;
-            //    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsExtensions.AdvancedCorporationFeatures))
+            //    if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsEnum.AdvancedCorporationFeatures))
             //    {
             //        icon = CommonProperties.Resources.KeyGold16;
             //        iconToolTip = "This is an advanced feature query.";

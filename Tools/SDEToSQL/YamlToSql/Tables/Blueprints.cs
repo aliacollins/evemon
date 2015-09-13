@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
@@ -38,7 +39,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         Invention = 8
     }
 
-    internal class Blueprints
+    internal static class Blueprints
     {
         private const string InvBlueprintTypesTableName = "invBlueprintTypes";
         private const string RamTypeRequirementsTableName = "ramTypeRequirements";
@@ -96,7 +97,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -156,7 +157,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                 YamlNode blueprintTypeIDNode = cNode.Children[new YamlScalarNode(BlueprintTypeIDText)];
 
                 if (blueprintTypeIDText.ToString() != blueprintTypeIDNode.ToString())
-                    throw new Exception(String.Format("Key [{0}] differs from {1}", blueprintTypeIDText, BlueprintTypeIDText));
+                    throw new ConstraintException(String.Format(CultureInfo.InvariantCulture, "Key [{0}] differs from {1}", blueprintTypeIDText, BlueprintTypeIDText));
 
                 SqlInt32 productTypeIDText = SqlInt32.Null;
                 SqlInt32 productionTimeText = SqlInt32.Null;
@@ -391,9 +392,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetRamTypeRequirementsDataTable()
         {
-            DataTable ramTypeRequirements = new DataTable();
-            ramTypeRequirements.Columns.AddRange(
-                new[]
+            using (DataTable ramTypeRequirements = new DataTable())
+            {
+                ramTypeRequirements.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn(TypeIDText, typeof(SqlInt32)),
                     new DataColumn(ActivityIDText, typeof(SqlByte)),
@@ -406,7 +408,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                     new DataColumn(ProbabilityText, typeof(SqlDouble)),
                     new DataColumn(ConsumeText, typeof(SqlBoolean)),
                 });
-            return ramTypeRequirements;
+                return ramTypeRequirements;
+            }
         }
 
         /// <summary>
@@ -415,9 +418,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetInvBlueprintTypesDataTable()
         {
-            DataTable invBlueprintTypes = new DataTable();
-            invBlueprintTypes.Columns.AddRange(
-                new[]
+            using (DataTable invBlueprintTypes = new DataTable())
+            {
+                invBlueprintTypes.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn(BlueprintTypeIDText, typeof(SqlInt32)),
                     new DataColumn(ParentBlueprintTypeIDText, typeof(SqlInt32)),
@@ -436,7 +440,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                     new DataColumn(WasteFactorText, typeof(SqlInt16)),
                     new DataColumn(MaxProductionLimitText, typeof(SqlInt32)),
                 });
-            return invBlueprintTypes;
+                return invBlueprintTypes;
+            }
         }
     }
 }

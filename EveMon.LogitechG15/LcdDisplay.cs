@@ -6,7 +6,13 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Timers;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Models;
 using LogitechLcd.NET;
 
 namespace EVEMon.LogitechG15

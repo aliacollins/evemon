@@ -4,8 +4,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
 {
@@ -454,11 +457,13 @@ namespace EVEMon.SkillPlanner
             if (item == null)
                 throw new ArgumentNullException("item");
 
-            IEnumerable<StaticSkillLevel> prerequisites =
-                item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering);
+            IList<StaticSkillLevel> prerequisites =
+                item.Prerequisites.Where(x => x.Activity != BlueprintActivity.ReverseEngineering).ToList();
+
+            BlueprintSelectControl blueprintSelectControl = this as BlueprintSelectControl;
 
             // Is item a blueprint and supports the selected activity ?  
-            if (this is BlueprintSelectControl)
+            if (blueprintSelectControl != null)
             {
                 bool hasSelectedActivity = prerequisites.Any(x => x.Activity == Activity)
                                            || ((Blueprint)item).MaterialRequirements.Any(x => x.Activity == Activity);
@@ -470,7 +475,7 @@ namespace EVEMon.SkillPlanner
 
                 // Enumerates the prerequisites skills to the selected activity 
                 if (ActivityFilter != ObjectActivityFilter.All && ActivityFilter != ObjectActivityFilter.Any)
-                    prerequisites = prerequisites.Where(x => x.Activity == Activity);
+                    prerequisites = prerequisites.Where(x => x.Activity == Activity).ToList();
             }
 
             // Item doesn't have prerequisites
@@ -479,7 +484,7 @@ namespace EVEMon.SkillPlanner
 
             // Is this the "Blueprint Browser" and the activity filter is set to "Any" ?
             List<Boolean> prereqTrained = new List<Boolean>();
-            if (this is BlueprintSelectControl && ActivityFilter == ObjectActivityFilter.Any)
+            if (blueprintSelectControl != null && ActivityFilter == ObjectActivityFilter.Any)
             {
                 List<BlueprintActivity> prereqActivity = new List<BlueprintActivity>();
 

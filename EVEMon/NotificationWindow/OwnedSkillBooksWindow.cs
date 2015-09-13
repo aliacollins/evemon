@@ -4,8 +4,11 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Models;
 
 namespace EVEMon.NotificationWindow
 {

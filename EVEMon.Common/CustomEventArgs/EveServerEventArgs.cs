@@ -1,4 +1,6 @@
 using System;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
 
 namespace EVEMon.Common.CustomEventArgs
 {

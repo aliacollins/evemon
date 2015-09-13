@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Data;
+using EVEMon.Common.Factories;
 
 namespace EVEMon.ImplantControls
 {

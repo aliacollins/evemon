@@ -1,4 +1,6 @@
-﻿namespace EVEMon.CharacterMonitoring
+﻿using EVEMon.Common.Enumerations;
+
+namespace EVEMon.CharacterMonitoring
 {
     internal sealed partial class CharacterMonitorHeader
     {
@@ -141,7 +143,7 @@
             this.UpdateThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.UpdateThrobber.Name = "UpdateThrobber";
             this.UpdateThrobber.Size = new System.Drawing.Size(24, 24);
-            this.UpdateThrobber.State = EVEMon.Common.ThrobberState.Stopped;
+            this.UpdateThrobber.State = ThrobberState.Stopped;
             this.UpdateThrobber.TabIndex = 4;
             this.UpdateThrobber.TabStop = false;
             this.UpdateThrobber.MouseClick += new System.Windows.Forms.MouseEventHandler(this.UpdateThrobber_Click);

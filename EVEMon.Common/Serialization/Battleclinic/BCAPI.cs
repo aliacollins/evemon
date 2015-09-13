@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Windows.Forms;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.Common.Serialization.BattleClinic
 {

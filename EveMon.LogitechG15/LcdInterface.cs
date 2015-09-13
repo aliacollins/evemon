@@ -9,19 +9,7 @@ namespace EVEMon.LogitechG15
         private static bool s_lcdInterfaceInitialized;
         private static bool s_result;
 
-        private static readonly ILogitechLcd s_lgLcd;
-
-        #region Static Constructor
-
-        /// <summary>
-        /// Initializes the <see cref="LcdInterface"/> class.
-        /// </summary>
-        static LcdInterface()
-        {
-            s_lgLcd = LogitechLcd.NET.LogitechLcd.Instance;
-        }
-
-        #endregion
+        private static readonly ILogitechLcd s_lgLcd = LogitechLcd.NET.LogitechLcd.Instance;
 
         #region Internal Methods
 

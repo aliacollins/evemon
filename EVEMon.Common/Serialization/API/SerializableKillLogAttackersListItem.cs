@@ -1,4 +1,5 @@
 using System.Xml.Serialization;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Serialization.API

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.Common.Net
 {

@@ -2,6 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data

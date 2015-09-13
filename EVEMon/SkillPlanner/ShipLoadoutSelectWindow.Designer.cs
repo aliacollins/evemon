@@ -1,5 +1,6 @@
 
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.SkillPlanner
 {
@@ -196,7 +197,7 @@ namespace EVEMon.SkillPlanner
             this.throbberFitting.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbberFitting.Name = "throbberFitting";
             this.throbberFitting.Size = new System.Drawing.Size(24, 24);
-            this.throbberFitting.State = EVEMon.Common.ThrobberState.Stopped;
+            this.throbberFitting.State = ThrobberState.Stopped;
             this.throbberFitting.TabIndex = 4;
             this.throbberFitting.TabStop = false;
             // 
@@ -209,7 +210,7 @@ namespace EVEMon.SkillPlanner
             this.throbberLoadouts.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbberLoadouts.Name = "throbberLoadouts";
             this.throbberLoadouts.Size = new System.Drawing.Size(24, 24);
-            this.throbberLoadouts.State = EVEMon.Common.ThrobberState.Stopped;
+            this.throbberLoadouts.State = ThrobberState.Stopped;
             this.throbberLoadouts.TabIndex = 6;
             this.throbberLoadouts.TabStop = false;
             // 
@@ -363,12 +364,12 @@ namespace EVEMon.SkillPlanner
             // eveImage
             // 
             this.eveImage.EveItem = null;
-            this.eveImage.ImageSize = EVEMon.Common.EveImageSize.x128;
+            this.eveImage.ImageSize = EVEMon.Common.Enumerations.EveImageSize.x128;
             this.eveImage.Location = new System.Drawing.Point(12, 12);
             this.eveImage.Name = "eveImage";
             this.eveImage.PopUpEnabled = true;
             this.eveImage.Size = new System.Drawing.Size(80, 80);
-            this.eveImage.SizeMode = EVEMon.Common.EveImageSizeMode.StretchImage;
+            this.eveImage.SizeMode = EVEMon.Common.Enumerations.EveImageSizeMode.StretchImage;
             this.eveImage.TabIndex = 30;
             // 
             // ShipLoadoutSelectWindow

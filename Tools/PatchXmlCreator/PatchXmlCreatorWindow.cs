@@ -9,7 +9,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Data;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.PatchXml;
 
 namespace EVEMon.PatchXmlCreator

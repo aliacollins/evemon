@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
 
 namespace EVEMon.NotificationWindow

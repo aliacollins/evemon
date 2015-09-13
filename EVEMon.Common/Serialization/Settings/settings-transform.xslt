@@ -15,7 +15,7 @@
     <xsl:for-each select ="item">
       <xsl:variable name="apiMethod" select="key/string"/>
       <!--As of version 1.5.2 the element name was renamed, so we try to catch that name too-->
-      <xsl:variable name="apiMethodPre-Renamed" select="key/APIMethods"/>
+      <xsl:variable name="apiMethodPre-Renamed" select="key/APIMethodsEnum"/>
       <xsl:variable name="updatePeriod" select="value/UpdatePeriod"/>
       <period updatePeriod ="{$updatePeriod}">
         <xsl:value-of select="$apiMethod|$apiMethodPre-Renamed"/>

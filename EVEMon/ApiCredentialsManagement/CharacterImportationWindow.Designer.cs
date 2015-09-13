@@ -1,5 +1,6 @@
 ﻿using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.ApiCredentialsManagement
 {
@@ -134,7 +135,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.urlThrobber.MinimumSize = new System.Drawing.Size(24, 24);
             this.urlThrobber.Name = "urlThrobber";
             this.urlThrobber.Size = new System.Drawing.Size(24, 24);
-            this.urlThrobber.State = EVEMon.Common.ThrobberState.Stopped;
+            this.urlThrobber.State = ThrobberState.Stopped;
             this.urlThrobber.TabIndex = 5;
             this.urlThrobber.TabStop = false;
             // 

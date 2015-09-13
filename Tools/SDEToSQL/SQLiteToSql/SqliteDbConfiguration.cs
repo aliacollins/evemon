@@ -25,7 +25,7 @@ namespace EVEMon.SDEToSQL.SQLiteToSQL
         /// Registers the database provider factories.
         /// </summary>
         /// <param name="assemblyName">Name of the assembly.</param>
-        static void RegisterDbProviderFactories(String assemblyName)
+        private static void RegisterDbProviderFactories(String assemblyName)
         {
             var dataSet = ConfigurationManager.GetSection("system.data") as DataSet;
             if (dataSet == null)

@@ -6,8 +6,17 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.CharacterMonitoring
@@ -605,11 +614,11 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(WalletJournal x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Type.ToLowerInvariant().Contains(text)
-                   || x.Reason.ToLowerInvariant().Contains(text)
-                   || x.Issuer.ToLowerInvariant().Contains(text)
-                   || x.Recipient.ToLowerInvariant().Contains(text)
-                   || x.TaxReceiver.ToLowerInvariant().Contains(text);
+                   || x.Type.ToUpperInvariant().Contains(text)
+                   || x.Reason.ToUpperInvariant().Contains(text)
+                   || x.Issuer.ToUpperInvariant().Contains(text)
+                   || x.Recipient.ToUpperInvariant().Contains(text)
+                   || x.TaxReceiver.ToUpperInvariant().Contains(text);
         }
 
         #endregion

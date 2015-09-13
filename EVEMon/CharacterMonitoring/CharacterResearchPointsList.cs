@@ -6,8 +6,16 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.CharacterMonitoring
@@ -493,12 +501,12 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(ResearchPoint x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.AgentName.ToLowerInvariant().Contains(text)
-                   || x.Field.ToLowerInvariant().Contains(text)
-                   || x.Station.Name.ToLowerInvariant().Contains(text)
-                   || x.Station.SolarSystem.Name.ToLowerInvariant().Contains(text)
-                   || x.Station.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
-                   || x.Station.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text);
+                   || x.AgentName.ToUpperInvariant().Contains(text)
+                   || x.Field.ToUpperInvariant().Contains(text)
+                   || x.Station.Name.ToUpperInvariant().Contains(text)
+                   || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text)
+                   || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
+                   || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
         }
 
         #endregion
