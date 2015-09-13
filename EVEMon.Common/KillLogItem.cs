@@ -123,7 +123,7 @@ namespace EVEMon.Common
             get
             {
                 Item item = StaticItems.GetItemByID(m_typeID);
-                return item == null ? "Unknown" : item.Name;
+                return item == null ? EVEMonConstants.UnknownText : item.Name;
             }
         }
 

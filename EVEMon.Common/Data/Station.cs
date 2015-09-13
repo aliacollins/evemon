@@ -149,7 +149,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The station's id.</param>
         /// <returns></returns>
-        internal static Station GetByID(int id)
+        public static Station GetByID(int id)
         {
             // Check if it's a conquerable outpost station, if not look in our data
             return ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);

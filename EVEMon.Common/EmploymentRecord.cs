@@ -70,7 +70,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_corporationName == "Unknown"
+                return m_corporationName == EVEMonConstants.UnknownText
                     ? m_corporationName = GetIDToName(m_corporationId)
                     : m_corporationName;
 

@@ -56,11 +56,11 @@ namespace EVEMon.Controls
             this.wbMailBody.AllowWebBrowserDrop = false;
             this.wbMailBody.Dock = System.Windows.Forms.DockStyle.Fill;
             this.wbMailBody.IsWebBrowserContextMenuEnabled = false;
-            this.wbMailBody.Location = new System.Drawing.Point(5, 70);
+            this.wbMailBody.Location = new System.Drawing.Point(5, 74);
             this.wbMailBody.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbMailBody.Name = "wbMailBody";
             this.wbMailBody.ScriptErrorsSuppressed = true;
-            this.wbMailBody.Size = new System.Drawing.Size(257, 85);
+            this.wbMailBody.Size = new System.Drawing.Size(257, 81);
             this.wbMailBody.TabIndex = 2;
             this.wbMailBody.WebBrowserShortcutsEnabled = false;
             this.wbMailBody.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.wbMailBody_Navigating);
@@ -78,7 +78,7 @@ namespace EVEMon.Controls
             this.flPanelHeader.Location = new System.Drawing.Point(5, 5);
             this.flPanelHeader.MinimumSize = new System.Drawing.Size(0, 65);
             this.flPanelHeader.Name = "flPanelHeader";
-            this.flPanelHeader.Size = new System.Drawing.Size(257, 65);
+            this.flPanelHeader.Size = new System.Drawing.Size(257, 69);
             this.flPanelHeader.TabIndex = 1;
             this.flPanelHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.flPanelHeader_Paint);
             // 
@@ -98,14 +98,15 @@ namespace EVEMon.Controls
             this.lblSender.Location = new System.Drawing.Point(3, 19);
             this.lblSender.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.lblSender.Name = "lblSender";
-            this.lblSender.Size = new System.Drawing.Size(41, 13);
+            this.lblSender.Size = new System.Drawing.Size(33, 13);
             this.lblSender.TabIndex = 1;
-            this.lblSender.Text = "Sender";
+            this.lblSender.Text = "From:";
             // 
             // lblSendDate
             // 
             this.lblSendDate.AutoSize = true;
             this.lblSendDate.Location = new System.Drawing.Point(3, 35);
+            this.lblSendDate.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.lblSendDate.Name = "lblSendDate";
             this.lblSendDate.Size = new System.Drawing.Size(32, 13);
             this.lblSendDate.TabIndex = 2;
@@ -114,7 +115,8 @@ namespace EVEMon.Controls
             // lblRecipient
             // 
             this.lblRecipient.AutoSize = true;
-            this.lblRecipient.Location = new System.Drawing.Point(3, 48);
+            this.lblRecipient.Location = new System.Drawing.Point(3, 51);
+            this.lblRecipient.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.lblRecipient.Name = "lblRecipient";
             this.lblRecipient.Size = new System.Drawing.Size(23, 13);
             this.lblRecipient.TabIndex = 3;

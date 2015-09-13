@@ -24,7 +24,6 @@ namespace EVEMon.Controls
             InitializeComponent();
 
             lblMessageHeader.Font = FontFactory.GetDefaultFont(10F, FontStyle.Bold);
-            lblSender.Font = FontFactory.GetDefaultFont(10F);
             flPanelHeader.ForeColor = SystemColors.ControlText;
         }
 
@@ -64,11 +63,12 @@ namespace EVEMon.Controls
         /// <summary>
         /// Updates the reading pane.
         /// </summary>
-        private void UpdatePane()
+        internal void UpdatePane()
         {
             // Update the text on the header labels
             lblMessageHeader.Text = m_selectedObject.Title;
-            lblSender.Text = m_selectedObject.SenderName;
+            lblSender.Text = String.Format(CultureConstants.DefaultCulture, "From: {0}",
+                                              string.Join(", ", m_selectedObject.SenderName));
             lblSendDate.Text = String.Format(CultureConstants.DefaultCulture, "Sent: {0:ddd} {0:G}",
                                              m_selectedObject.SentDate.ToLocalTime());
             lblRecipient.Text = String.Format(CultureConstants.DefaultCulture, "To: {0}",
@@ -132,7 +132,7 @@ namespace EVEMon.Controls
             foreach (Match match in regexLinks.Matches(m_selectedObject.Text))
             {
                 string matchValue = match.Groups[1].Value;
-                string matchText = match.Groups[2].Value;
+                string matchText = match.Groups[2].Value.TrimEnd("<br>".ToCharArray());
                 string url = String.Empty;
                 Match showInfoMatch = regexShowInfo.Match(matchValue);
                 bool igbOnly = false;
@@ -148,7 +148,7 @@ namespace EVEMon.Controls
                         url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                             String.Format(CultureConstants.InvariantCulture,
                                                           NetworkConstants.EVEGateCharacterProfile,
-                                                          Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
+                                                          Uri.EscapeUriString(matchText)));
                     }
                     else
                     {
@@ -158,13 +158,13 @@ namespace EVEMon.Controls
                                 url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                                     String.Format(CultureConstants.InvariantCulture,
                                                                   NetworkConstants.EVEGateAllianceProfile,
-                                                                  Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
+                                                                  Uri.EscapeUriString(matchText)));
                                 break;
                             case DBConstants.CorporationID:
                                 url = String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
                                                     String.Format(CultureConstants.InvariantCulture,
                                                                   NetworkConstants.EVEGateCorporationProfile,
-                                                                  Uri.EscapeUriString(matchText.TrimEnd("<br>".ToCharArray()))));
+                                                                  Uri.EscapeUriString(matchText)));
                                 break;
                             default:
                                 igbOnly = true;

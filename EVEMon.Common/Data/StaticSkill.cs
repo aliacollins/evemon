@@ -21,7 +21,7 @@ namespace EVEMon.Common.Data
         private StaticSkill()
         {
             ID = Int32.MaxValue;
-            Name = "Unknown";
+            Name = EVEMonConstants.UnknownText;
             Description = "An unknown skill.";
             ArrayIndex = Int16.MaxValue;
             Prerequisites = new Collection<StaticSkillLevel>();

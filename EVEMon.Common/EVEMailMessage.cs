@@ -87,7 +87,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_toCorpOrAlliance == "Unknown"
+                return m_toCorpOrAlliance == EVEMonConstants.UnknownText
                     ? m_toCorpOrAlliance = GetCorpOrAlliance(m_source.ToCorpOrAllianceID)
                     : m_toCorpOrAlliance;
             }
@@ -100,7 +100,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_toCharacters.Contains("Unknown")
+                return m_toCharacters.Contains(EVEMonConstants.UnknownText)
                     ? m_toCharacters = GetIDsToNames(m_source.ToCharacterIDs)
                     : m_toCharacters;
             }
@@ -113,7 +113,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_mailingLists.Contains("Unknown")
+                return m_mailingLists.Contains(EVEMonConstants.UnknownText)
                     ? m_mailingLists = GetMailingListIDsToNames(m_source.ToListID)
                     : m_mailingLists;
             }
@@ -224,11 +224,11 @@ namespace EVEMon.Common
 
             List<string> listOfNames = mailingListIDs.Select(listID => m_ccpCharacter.EVEMailingLists.FirstOrDefault(
                 x => x.ID.ToString(CultureConstants.InvariantCulture) == listID)).Select(
-                    mailingList => mailingList != null ? mailingList.Name : "Unknown").ToList();
+                    mailingList => mailingList != null ? mailingList.Name : EVEMonConstants.UnknownText).ToList();
 
             // In case the list returned from the API is empty, add an "Unknown" entry
             if (!listOfNames.Any())
-                listOfNames.Add("Unknown");
+                listOfNames.Add(EVEMonConstants.UnknownText);
 
             return listOfNames;
         }

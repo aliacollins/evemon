@@ -6,6 +6,17 @@ namespace EVEMon.Common
 {
     public static class TimeExtensions
     {
+
+        /// <summary>
+        /// Converts a Windows timestamp to <see cref="System.DateTime"/>.
+        /// </summary>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <returns></returns>
+        public static DateTime WinTimeStampToDateTime(this long timestamp)
+        {
+            return new DateTime(1601, 1, 1).AddTicks(timestamp);
+        }
+
         /// <summary>
         /// Converts a DateTime to the API date/time string.
         /// </summary>
@@ -63,8 +74,7 @@ namespace EVEMon.Common
             StringBuilder sb = new StringBuilder();
             if (t <= now)
                 return "Done";
-
-
+            
             // Fixing the small chance that the method could cross over the
             // second boundary, and have an inconsistent result.
             double factor = Math.Pow(10, 7);
@@ -118,7 +128,10 @@ namespace EVEMon.Common
             if (t <= now)
                 return String.Empty;
 
-            TimeSpan ts = t.Subtract(now);
+            double factor = Math.Pow(10, 7);
+            long roundedTicks = (long)Math.Round(t.Subtract(now).Ticks / factor) * (int)factor;
+            TimeSpan ts = new TimeSpan(roundedTicks);
+
             if (ts.Days > 0)
             {
                 sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));
@@ -159,7 +172,10 @@ namespace EVEMon.Common
             if (t <= now)
                 return "Completed";
 
-            TimeSpan ts = t.Subtract(now);
+            double factor = Math.Pow(10, 7);
+            long roundedTicks = (long)Math.Round(t.Subtract(now).Ticks / factor) * (int)factor;
+            TimeSpan ts = new TimeSpan(roundedTicks);
+
             if (ts.Days > 0)
             {
                 sb.Append(ts.Days.ToString(CultureConstants.DefaultCulture));

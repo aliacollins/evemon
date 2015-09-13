@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Serialization.API;
 
 namespace EVEMon.Common
@@ -9,6 +10,7 @@ namespace EVEMon.Common
         private readonly CCPCharacter m_ccpCharacter;
 
         private bool m_queryPending;
+        private string m_title;
 
 
         #region Constructor
@@ -23,15 +25,16 @@ namespace EVEMon.Common
             m_ccpCharacter = ccpCharacter;
 
             NotificationID = src.NotificationID;
-            Type = EveNotificationType.GetType(src.TypeID);
+            TypeID = src.TypeID;
+            TypeName = EveNotificationType.GetName(src.TypeID);
             SenderName = src.SenderName;
             SentDate = src.SentDate;
             Recipient = new List<string> { ccpCharacter.Name };
-            EVENotificationText = new EveNotificationText(new SerializableNotificationTextsListItem
-                                                              {
-                                                                  NotificationID = 0,
-                                                                  NotificationText = String.Empty
-                                                              });
+            EVENotificationText = new EveNotificationText(this, new SerializableNotificationTextsListItem
+            {
+                NotificationID = 0,
+                NotificationText = String.Empty,
+            });
         }
 
         #endregion
@@ -40,36 +43,52 @@ namespace EVEMon.Common
         #region Properties
 
         /// <summary>
-        /// Gets or sets the EVE notification ID.
+        /// Gets the CCP character.
+        /// </summary>
+        /// <value>
+        /// The CCP character.
+        /// </value>
+        public CCPCharacter CCPCharacter { get { return m_ccpCharacter; } }
+
+        /// <summary>
+        /// Gets the EVE notification ID.
         /// </summary>
         /// <value>The notification ID.</value>
         public long NotificationID { get; private set; }
 
         /// <summary>
-        /// Gets or sets the EVE notification type.
+        /// Gets the EVE notification type.
         /// </summary>
         /// <value>The type.</value>
-        public string Type { get; private set; }
+        public int TypeID { get; private set; }
 
         /// <summary>
-        /// Gets or sets the EVE notification sender name.
+        /// Gets the name of the type.
+        /// </summary>
+        /// <value>
+        /// The name of the type.
+        /// </value>
+        public string TypeName { get; private set; }
+
+        /// <summary>
+        /// Gets the EVE notification sender name.
         /// </summary>
         public string SenderName { get; private set; }
 
         /// <summary>
-        /// Gets or sets the sent date of the EVE notification.
+        /// Gets the sent date of the EVE notification.
         /// </summary>
         /// <value>The sent date.</value>
         public DateTime SentDate { get; private set; }
 
         /// <summary>
-        /// Gets or sets the EVE notification recipient.
+        /// Gets the EVE notification recipient.
         /// </summary>
         /// <value>The recipient.</value>
         public IEnumerable<string> Recipient { get; private set; }
 
         /// <summary>
-        /// Gets or sets the EVE notification text.
+        /// Gets the EVE notification text.
         /// </summary>
         /// <value>The EVE notification text.</value>
         public EveNotificationText EVENotificationText { get; private set; }
@@ -80,7 +99,28 @@ namespace EVEMon.Common
         /// <value>The title.</value>
         public string Title
         {
-            get { return Type; }
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(m_title) && !m_title.Contains(EVEMonConstants.UnknownText))
+                    return m_title;
+
+                var subjectLayout = EveNotificationType.GetSubjectLayout(TypeID);
+                if (subjectLayout.Contains("{") && String.IsNullOrWhiteSpace(EVENotificationText.NotificationText))
+                {
+                    GetNotificationText();
+                    return EVEMonConstants.UnknownText;
+                }
+
+                m_title = String.IsNullOrWhiteSpace(subjectLayout)
+                    ? EVEMonConstants.UnknownText
+                    : EVENotificationText.Parse(subjectLayout);
+
+                m_title = m_title.Contains("{") || m_title == EVENotificationText.NotificationText
+                    ? EVEMonConstants.UnknownText
+                    : m_title;
+
+                return m_title;
+            }
         }
 
         /// <summary>
@@ -89,7 +129,7 @@ namespace EVEMon.Common
         /// <value>The text.</value>
         public string Text
         {
-            get { return EVENotificationText.NotificationText.Normalize(); }
+            get { return EVENotificationText.ParsedText; }
         }
 
         #endregion
@@ -149,11 +189,11 @@ namespace EVEMon.Common
             }
 
             // Quit if for any reason there is no text
-            if (result.Result.Texts.Count == 0)
+            if (!result.Result.Texts.Any())
                 return;
 
             // Import the data
-            EVENotificationText = new EveNotificationText(result.Result.Texts[0]);
+            EVENotificationText = new EveNotificationText(this, result.Result.Texts.First());
 
             EveMonClient.OnCharacterEVENotificationTextDownloaded(m_ccpCharacter);
         }

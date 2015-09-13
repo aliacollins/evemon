@@ -694,7 +694,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.EndDate.ToLocalTime().ToString();
                     break;
                 case IndustryJobColumn.OriginalOrCopy:
-                    item.Text = "Unknown";
+                    item.Text = EVEMonConstants.UnknownText;
                     break;
                 case IndustryJobColumn.InstalledME:
                     item.Text = String.Empty; /*(job.Activity == BlueprintActivity.ResearchingMaterialEfficiency

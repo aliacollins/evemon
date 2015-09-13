@@ -22,7 +22,7 @@ namespace EVEMon.Common.Serialization.API
         public string CorporationNameXml
         {
             get { return CorporationName; }
-            set { CorporationName = String.IsNullOrEmpty(value) ? "Unknown" : value.HtmlDecode(); }
+            set { CorporationName = String.IsNullOrEmpty(value) ? EVEMonConstants.UnknownText : value.HtmlDecode(); }
         }
 
         [XmlAttribute("allianceID")]
@@ -32,7 +32,7 @@ namespace EVEMon.Common.Serialization.API
         public string AllianceNameXml
         {
             get { return AllianceName; }
-            set { AllianceName = String.IsNullOrEmpty(value) ? "Unknown" : value.HtmlDecode(); }
+            set { AllianceName = String.IsNullOrEmpty(value) ? EVEMonConstants.UnknownText : value.HtmlDecode(); }
         }
 
         [XmlAttribute("factionID")]
@@ -42,7 +42,7 @@ namespace EVEMon.Common.Serialization.API
         public string FactionNameXml
         {
             get { return FactionName; }
-            set { FactionName = String.IsNullOrEmpty(value) ? "Unknown" : value; }
+            set { FactionName = String.IsNullOrEmpty(value) ? EVEMonConstants.UnknownText : value; }
         }
 
         [XmlAttribute("shipTypeID")]
@@ -63,7 +63,7 @@ namespace EVEMon.Common.Serialization.API
             get
             {
                 Item ship = StaticItems.GetItemByID(ShipTypeID);
-                return ship == null || ShipTypeID == 0 ? "Unknown" : ship.Name;
+                return ship == null || ShipTypeID == 0 ? EVEMonConstants.UnknownText : ship.Name;
             }
         }
     }

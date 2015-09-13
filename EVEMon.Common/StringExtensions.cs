@@ -58,18 +58,30 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string NewLinesToBreakLines(this string text)
         {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
+            if (String.IsNullOrWhiteSpace(text))
+                return text;
+
+            text = text.Replace(@"\r\n", Environment.NewLine)
+                .Replace(@"\r", Environment.NewLine)
+                .Replace(@"\n", Environment.NewLine);
+
             using (StringReader sr = new StringReader(text))
             using (StringWriter sw = new StringWriter(CultureConstants.InvariantCulture))
             {
                 //Loop while next character exists
                 while (sr.Peek() > -1)
                 {
-                    // Read a line from the string and store it to a temp variable
-                    string temp = sr.ReadLine();
-                    // Write the string with the HTML break tag
-                    // (method writes to an internal StringBuilder created automatically)
-                    sw.Write("{0}<br>", temp);
+                    // Read a line from the string and writes it to an internal StringBuilder created automatically
+                    sw.Write(sr.ReadLine());
+
+                    // Adds an HTML break line as long as it's not the last line
+                    if (sr.Peek() > -1)
+                        sw.Write("<br>");
                 }
+
                 return sw.GetStringBuilder().ToString();
             }
         }
@@ -81,6 +93,9 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string DecodeUnicodeCharacters(this string text)
         {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
             return Regex.Replace(text, @"\\u(?<Value>[a-zA-Z0-9]{4})",
                                  m => ((char)int.Parse(m.Groups["Value"].Value,
                                                        NumberStyles.HexNumber,
@@ -177,11 +192,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string ToNumericString(this long number, int decimals, CultureInfo culture = null)
         {
-            if (culture == null)
-                culture = CultureConstants.DefaultCulture;
-
-            string decimalsString = String.Format(culture, "N{0}", decimals);
-            return number.ToString(decimalsString, culture);
+            string decimalsString = String.Format(culture ?? CultureConstants.DefaultCulture, "N{0}", decimals);
+            return number.ToString(decimalsString, culture ?? CultureConstants.DefaultCulture);
         }
 
         /// <summary>
@@ -193,11 +205,8 @@ namespace EVEMon.Common
         /// <returns></returns>
         public static string ToNumericString(this double number, int decimals, CultureInfo culture = null)
         {
-            if (culture == null)
-                culture = CultureConstants.DefaultCulture;
-
-            string decimalsString = String.Format(culture, "N{0}", decimals);
-            return number.ToString(decimalsString, culture);
+            string decimalsString = String.Format(culture ?? CultureConstants.DefaultCulture, "N{0}", decimals);
+            return number.ToString(decimalsString, culture ?? CultureConstants.DefaultCulture);
         }
 
         /// <summary>

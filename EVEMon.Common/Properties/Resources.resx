@@ -187,8 +187,8 @@
   <data name="Warning16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Images\Warning16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NotificationRefTypeIDs" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Serialization\NotificationRefTypeIDs.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1253</value>
+  <data name="NotificationRefTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Serialization\NotificationRefTypes.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1253</value>
   </data>
   <data name="DefaultAllianceImage32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Images\DefaultAllianceImage32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

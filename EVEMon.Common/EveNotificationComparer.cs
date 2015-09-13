@@ -66,7 +66,7 @@ namespace EVEMon.Common
                 case EveNotificationColumn.SenderName:
                     return String.Compare(x.SenderName, y.SenderName, StringComparison.CurrentCulture);
                 case EveNotificationColumn.Type:
-                    return String.Compare(x.Type, y.Type, StringComparison.CurrentCulture);
+                    return String.Compare(x.Title, y.Title, StringComparison.CurrentCulture);
                 case EveNotificationColumn.SentDate:
                     return x.SentDate.CompareTo(y.SentDate);
                 default:

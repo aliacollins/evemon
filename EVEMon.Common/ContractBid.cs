@@ -67,7 +67,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_bidder == "Unknown"
+                return m_bidder == EVEMonConstants.UnknownText
                            ? m_bidder = EveIDToName.GetIDToName(m_bidderId)
                            : m_bidder;
             }

@@ -114,14 +114,14 @@ namespace EVEMon.Common.Data
         /// Gets the name of the skill.
         /// </summary>
         /// <param name="id">The id.</param>
-        /// <returns>The skill name or "Unknown" if the is no such skill in our data.</returns>
+        /// <returns>The skill name or <see cref="EVEMonConstants.UnknownText"/> if the is no such skill in our data.</returns>
         public static string GetSkillName(int id)
         {
             if (id == 0)
                 return string.Empty;
 
             StaticSkill skill = GetSkillByID(id);
-            return (skill != null ? skill.Name : "Unknown");
+            return (skill != null ? skill.Name : EVEMonConstants.UnknownText);
         }
 
         /// <summary>

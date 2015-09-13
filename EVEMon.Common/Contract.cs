@@ -189,7 +189,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_issuer == "Unknown"
+                return m_issuer == EVEMonConstants.UnknownText
                     ? m_issuer = EveIDToName.GetIDToName(IssuerID)
                     : m_issuer;
             }
@@ -202,7 +202,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_assignee == "Unknown"
+                return m_assignee == EVEMonConstants.UnknownText
                     ? m_assignee = EveIDToName.GetIDToName(AssigneeID)
                     : m_assignee;
             }
@@ -215,7 +215,7 @@ namespace EVEMon.Common
         {
             get
             {
-                return m_acceptor == "Unknown"
+                return m_acceptor == EVEMonConstants.UnknownText
                     ? m_acceptor = EveIDToName.GetIDToName(AcceptorID)
                     : m_acceptor;
             }
@@ -242,7 +242,7 @@ namespace EVEMon.Common
                                          StartStation.SolarSystem.Name, EndStation.SolarSystem.Name, Math.Round(Volume));
 
                 if (!m_contractItems.Any() || !ContractItems.Any())
-                    return "Unknown";
+                    return EVEMonConstants.UnknownText;
 
                 if (IsTrading)
                     return "[Want To Trade]";

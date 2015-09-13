@@ -87,6 +87,10 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.3.7.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -101,6 +105,7 @@
     <Compile Include="BlankCharacterUIHelper.cs" />
     <Compile Include="CharacterDataQuerying.cs" />
     <Compile Include="CharacterIdentityIgnoreList.cs" />
+    <Compile Include="CodeCompiler.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
     <Compile Include="Contact.cs" />
@@ -247,6 +252,9 @@
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
     <Compile Include="EVEMonConstants.cs" />
+    <Compile Include="EveNotificationTextExternalParser.cs" />
+    <Compile Include="EveNotificationTextInternalParser.cs" />
+    <Compile Include="EveNotificationTextParser.cs" />
     <Compile Include="EveNotificationType.cs" />
     <Compile Include="CalendarEventAttendee.cs" />
     <Compile Include="EveRefType.cs" />
@@ -424,8 +432,8 @@
     <Compile Include="Serialization\SerializableEveFlagsListItem.cs" />
     <Compile Include="Serialization\SerializableEveIDToNameListItem.cs" />
     <Compile Include="Serialization\SerializableEveFlags.cs" />
-    <Compile Include="Serialization\SerializableNotificationRefTypeIDs.cs" />
-    <Compile Include="Serialization\SerializableNotificationRefTypeIDsListItem.cs" />
+    <Compile Include="Serialization\SerializableNotificationRefTypes.cs" />
+    <Compile Include="Serialization\SerializableNotificationRefTypesListItem.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIKey.cs" />
     <Compile Include="Serialization\Settings\SerializableContract.cs" />
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
@@ -972,7 +980,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Serialization\Settings\settings-transform.xslt" />
-    <EmbeddedResource Include="Serialization\NotificationRefTypeIDs.xml" />
+    <EmbeddedResource Include="Serialization\NotificationRefTypes.xml" />
     <None Include="Resources\eve-blueprints-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

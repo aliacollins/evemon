@@ -54,7 +54,7 @@ namespace EVEMon.Common
             if (!File.Exists(filename))
                 return;
 
-            APIResult<SerializableAPIKillLog> result = Util.DeserializeAPIResult<SerializableAPIKillLog>(
+            APIResult<SerializableAPIKillLog> result = Util.DeserializeAPIResultFromFile<SerializableAPIKillLog>(
                 filename, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization
