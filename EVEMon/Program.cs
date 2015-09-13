@@ -208,23 +208,26 @@ namespace EVEMon
                 // Some exceptions may be thrown on a worker thread so we need to invoke them to the UI thread,
                 // if we are already on the UI thread nothing changes
                 Dispatcher.Invoke(() =>
-                                      {
-                                          using (UnhandledExceptionWindow form = new UnhandledExceptionWindow(ex))
-                                          {
-                                              form.ShowDialog(s_mainWindow);
-                                          }
-                                      });
+                {
+                    using (UnhandledExceptionWindow form = new UnhandledExceptionWindow(ex))
+                    {
+                        form.ShowDialog(s_mainWindow);
+                    }
+                });
             }
             catch
             {
                 StringBuilder messageBuilder = new StringBuilder();
-                messageBuilder.AppendLine("An error occurred and EVEMon was unable to handle the error message gracefully");
+                messageBuilder.AppendLine(
+                    "An error occurred and EVEMon was unable to handle the error message gracefully");
                 messageBuilder.AppendLine();
-                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, "The exception encountered was '{0}'.", ex.Message);
+                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, "The exception encountered was '{0}'.",
+                    ex.Message);
                 messageBuilder.AppendLine();
                 messageBuilder.AppendLine();
                 messageBuilder.AppendLine("Please report this on the EVEMon forums.");
-                MessageBox.Show(messageBuilder.ToString(), "EVEMon Error Occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(messageBuilder.ToString(), "EVEMon Error Occurred", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 throw;
             }
 
