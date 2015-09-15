@@ -14,7 +14,7 @@ namespace EVEMon.Common
     /// This class is not intended to be called from anywhere inside the application.
     /// Its only purpose for being included in the codebase is for formatting and compiling reasons.
     /// </remarks>
-    public sealed class EveNotificationTextExternalParser : EveNotificationTextParser
+    public sealed class ExternalEveNotificationTextParser : EveNotificationTextParser
     {
         public override void Parse(EveNotification notification, KeyValuePair<YamlNode, YamlNode> pair,
             IDictionary<string, string> parsedDict)

@@ -252,8 +252,8 @@
     <Compile Include="EveMailingList.cs" />
     <Compile Include="EveMailingListCollection.cs" />
     <Compile Include="EVEMonConstants.cs" />
-    <Compile Include="EveNotificationTextExternalParser.cs" />
-    <Compile Include="EveNotificationTextInternalParser.cs" />
+    <Compile Include="ExternalEveNotificationTextParser.cs" />
+    <Compile Include="InternalEveNotificationTextParser.cs" />
     <Compile Include="EveNotificationTextParser.cs" />
     <Compile Include="EveNotificationType.cs" />
     <Compile Include="CalendarEventAttendee.cs" />
