@@ -42,7 +42,7 @@ namespace EVEMon.Common
 
             s_cachedUntil = s_cachedUntil.AddHours(12);
 
-            return new EveNotificationTextInternalParser();
+            return new InternalEveNotificationTextParser();
         }
 
         /// <summary>

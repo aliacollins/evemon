@@ -13,7 +13,7 @@ namespace EVEMon.Common
     /// <remarks>
     /// This class is called when the fetching of the external parser fails for any reason.
     /// </remarks>
-    internal class EveNotificationTextInternalParser : EveNotificationTextParser
+    internal class InternalEveNotificationTextParser : EveNotificationTextParser
     {
         /// <summary>
         /// Parses the notification text.
