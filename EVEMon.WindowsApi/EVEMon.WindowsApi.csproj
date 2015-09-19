@@ -54,6 +54,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="OSFeatureCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafeNativeMethods.cs" />
     <Compile Include="Windows7.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
