@@ -739,11 +739,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                     return 500;
                 case DBConstants.FrigateGroupID:
                 case DBConstants.RookieShipGroupID:
-                case DBConstants.AssaultShipGroupID:
+                case DBConstants.AssaultFrigateGroupID:
                 case DBConstants.CovertOpsGroupID:
                 case DBConstants.InterceptorGroupID:
                 case DBConstants.StealthBomberGroupID:
                 case DBConstants.ElectronicAttackShipGroupID:
+                case DBConstants.ExpeditionFrigateGroupID:
                     return 2500;
                 case DBConstants.MiningBargeGroupID:
                 case DBConstants.ExhumerGroupID:
@@ -751,19 +752,22 @@ namespace EVEMon.XmlGenerator.Datafiles
                 case DBConstants.DestroyerGroupID:
                 case DBConstants.InterdictorGroupID:
                 case DBConstants.StrategicCruiserGroupID:
+                case DBConstants.TacticalDestroyerGroupID:
                     return 5000;
                 case DBConstants.CruiserGroupID:
-                case DBConstants.HeavyAssaultShipGroupID:
+                case DBConstants.HeavyAssaultCruiserGroupID:
                 case DBConstants.LogisticsGroupID:
                 case DBConstants.ForceReconShipGroupID:
-                case DBConstants.HeavyInterdictorGroupID:
+                case DBConstants.HeavyInterdictorCruiserGroupID:
                 case DBConstants.CombatReconShipGroupID:
                     return 10000;
-                case DBConstants.BattlecruiserGroupID:
+                case DBConstants.CombatBattlecruiserGroupID:
                 case DBConstants.CommandShipGroupID:
+                case DBConstants.AttackBattlecruiserGroupID:
                     return 15000;
                 case DBConstants.IndustrialGroupID:
-                case DBConstants.TransportShipGroupID:
+                case DBConstants.DeepSpaceTransportGroupID:
+                case DBConstants.BlockadeRunnerGroupID:
                     return 20000;
                 case DBConstants.BattleshipGroupID:
                 case DBConstants.EliteBattleshipGroupID:
