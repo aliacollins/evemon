@@ -436,12 +436,12 @@ namespace EVEMon.Common.Data
         public const int RookieShipGroupID = 237;
         public const int TradeSkillsGroupID = 274;
         public const int SocialSkillsGroupID = 278;
-        public const int AssaultShipGroupID = 324;
-        public const int HeavyAssaultShipGroupID = 358;
+        public const int AssaultFrigateGroupID = 324;
+        public const int HeavyAssaultCruiserGroupID = 358;
         public const int ControlTowerGroupID = 365;
-        public const int TransportShipGroupID = 380;
+        public const int DeepSpaceTransportGroupID = 380;
         public const int EliteBattleshipGroupID = 381;
-        public const int BattlecruiserGroupID = 419;
+        public const int CombatBattlecruiserGroupID = 419;
         public const int DestroyerGroupID = 420;
         public const int MiningBargeGroupID = 463;
         public const int DreadnoughtGroupID = 485;
@@ -460,7 +460,7 @@ namespace EVEMon.Common.Data
         public const int StealthBomberGroupID = 834;
         public const int CapitalIndustrialShipGroupID = 883;
         public const int ElectronicAttackShipGroupID = 893;
-        public const int HeavyInterdictorGroupID = 894;
+        public const int HeavyInterdictorCruiserGroupID = 894;
         public const int BlackOpsGroupID = 898;
         public const int MarauderGroupID = 900;
         public const int JumpFreighterGroupID = 902;
@@ -468,6 +468,10 @@ namespace EVEMon.Common.Data
         public const int IndustrialCommandShipGroupID = 941;
         public const int StrategicCruiserGroupID = 963;
         public const int CorporationManagementSkillsGroupID = 266;
+        public const int AttackBattlecruiserGroupID = 1201;
+        public const int BlockadeRunnerGroupID = 1202;
+        public const int ExpeditionFrigateGroupID = 1283;
+        public const int TacticalDestroyerGroupID = 1305;
 
         #endregion
 
