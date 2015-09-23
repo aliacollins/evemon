@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -20,6 +21,11 @@ namespace EVEMon.SDEToSQL
         /// <param name="args">The arguments.</param>
         private static void Main(string[] args)
         {
+            string assemblyDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location) ?? Directory.GetCurrentDirectory();
+
+            if (Directory.GetCurrentDirectory() != assemblyDirectory)
+                Directory.SetCurrentDirectory(assemblyDirectory);
+
             s_handler += CtrlHandler;
             SetConsoleCtrlHandler(s_handler, true);
 
