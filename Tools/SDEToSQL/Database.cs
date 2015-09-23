@@ -91,7 +91,10 @@ namespace EVEMon.SDEToSQL
 
             Console.WriteLine();
 
-            string connectionString = @"data source=SDEFiles\universeDataDx.db";
+            string assemblyDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location) ?? String.Empty;
+            string connectionString = string.Format(@"data source={0}",
+                Path.Combine(assemblyDirectory, @"SDEFiles\universeDataDx.db"));
+
             SqliteConnection = CreateConnection<SQLiteConnection>(connectionString);
 
             if (SqliteConnection == null)
