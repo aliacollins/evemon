@@ -18,41 +18,85 @@ namespace EVEMon.Common
 
         private static readonly Dictionary<int, int> s_allRaceSkills = new Dictionary<int, int>
         {
-            { DBConstants.CPUManagementSkillID, 3 },
-            { DBConstants.PowerGridManagementSkillID, 3 },
-            { DBConstants.AstrometricsSkillID, 1 },
-            { DBConstants.GunnerySkillID, 2 },
-            { DBConstants.MiningSkillID, 2 },
+            { DBConstants.HullUpgradesSkillID, 2 },
             { DBConstants.MechanicSkillID, 2 },
+            { DBConstants.RepairSystemsSkillID, 1 },
+            { DBConstants.DroneAvionicsSkillID, 1 },
+            { DBConstants.DronesSkillID, 1 },
+            { DBConstants.ElectronicWarfareSkillID, 1 },
+            { DBConstants.PropulsionJammingSkillID, 1 },
+            { DBConstants.CapacitorManagementSkillID, 3 },
+            { DBConstants.CapacitorSystemsOperationSkillID, 3 },
+            { DBConstants.CPUManagementSkillID, 4 },
+            { DBConstants.ElectronicsUpgradesSkillID, 3 },
+            { DBConstants.EnergyGridUpgradesSkillID, 1 },
+            { DBConstants.PowerGridManagementSkillID, 4 },
+            { DBConstants.ThermodynamicsSkillID, 1 },
+            { DBConstants.WeaponUpgradesSkillID, 2 },
+            { DBConstants.ControlledBurstsSkillID, 2 },
+            { DBConstants.GunnerySkillID, 4 },
+            { DBConstants.MotionPredictionSkillID, 2 },
+            { DBConstants.RapidFiringSkillID, 3 },
+            { DBConstants.SharpshooterSkillID, 3 },
+            { DBConstants.SurgicalStrikeSkillID, 1 },
+            { DBConstants.TrajectoryAnalysisSkillID, 1 },
+            { DBConstants.MissileLauncherOperationSkillID, 1 },
+            { DBConstants.AccelerationControlSkillID, 1 },
+            { DBConstants.AfterburnerSkillID, 3 },
+            { DBConstants.EvasiveManeuveringSkillID, 1 },
+            { DBConstants.HighSpeedManeuveringSkillID, 1 },
             { DBConstants.NavigationSkillID, 3 },
-            { DBConstants.ScienceSkillID, 3 },
-            { DBConstants.SpaceshipCommandSkillID, 3 }
+            { DBConstants.WarpDriveOperationSkillID, 1 },
+            { DBConstants.CyberneticsSkillID, 1 },
+            { DBConstants.IndustrySkillID, 1 },
+            { DBConstants.MiningSkillID, 3 },
+            { DBConstants.SalvagingSkillID, 3 },
+            { DBConstants.ArchaeologySkillID, 1 },
+            { DBConstants.AstrometricAcquisitionSkillID, 1 },
+            { DBConstants.AstrometricRangefindingSkillID, 1 },
+            { DBConstants.AstrometricsSkillID, 3 },
+            { DBConstants.HackingSkillID, 1 },
+            { DBConstants.SurveySkillID, 3 },
+            { DBConstants.ScienceSkillID, 4 },
+            { DBConstants.ShieldManagementSkillID, 2 },
+            { DBConstants.ShieldOperationSkillID, 3 },
+            { DBConstants.ShieldUpgradesSkillID, 2 },
+            { DBConstants.TacticalShieldManipulationSkillID, 2 },
+            { DBConstants.MiningFrigateSkillID, 1 },
+            { DBConstants.SpaceshipCommandSkillID, 3 },
+            { DBConstants.LongRangeTargetingSkillID, 1 },
+            { DBConstants.SignatureAnalysisSkillID, 1 },
+            { DBConstants.TargetManagementSkillID, 2 },
+            { DBConstants.TradeSkillID, 2 }
         };
 
         private static readonly Dictionary<int, int> s_amarrRaceSkills = new Dictionary<int, int>
         {
             { DBConstants.SmallEnergyTurretSkillID, 3 },
-            { DBConstants.AmarrFrigateSkillID, 2 }
-        };
+            { DBConstants.AmarrFrigateSkillID, 3 },
+            { DBConstants.AmarrIndustrialSkillID, 1 }
+       };
 
         private static readonly Dictionary<int, int> s_caldariRaceSkills = new Dictionary<int, int>
         {
             { DBConstants.SmallHybridTurretSkillID, 3 },
-            { DBConstants.CaldariFrigateSkillID, 2 }
+            { DBConstants.CaldariFrigateSkillID, 3 },
+            { DBConstants.CaldariIndustrialSkillID, 1 }
         };
 
         private static readonly Dictionary<int, int> s_gallenteRaceSkills = new Dictionary<int, int>
         {
             { DBConstants.SmallHybridTurretSkillID, 3 },
-            { DBConstants.GallenteFrigateSkillID, 2 }
+            { DBConstants.GallenteFrigateSkillID, 3 },
+            { DBConstants.GallenteIndustrialSkillID, 1 }
         };
 
-        private static readonly Dictionary<int, int> s_minmatarRaceSkills =
-            new Dictionary<int, int>
-            {
-                { DBConstants.SmallProjectileTurretSkillID, 3 },
-                { DBConstants.MinmatarFrigateSkillID, 2 }
-            };
+        private static readonly Dictionary<int, int> s_minmatarRaceSkills = new Dictionary<int, int>
+        {
+            { DBConstants.SmallProjectileTurretSkillID, 3 },
+            { DBConstants.MinmatarFrigateSkillID, 3 },
+            { DBConstants.MinmatarIndustrialSkillID, 1 }
+        };
 
         private static string s_filename;
 
