@@ -97,7 +97,6 @@ namespace EVEMon.ResFileCreator
             }
 
             Console.WriteLine("Resource script file created successfully.");
-            Console.WriteLine();
             return true;
         }
 
@@ -205,19 +204,25 @@ namespace EVEMon.ResFileCreator
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                FileName = s_rcexe.EscapeWhiteSpaces(),
-                Arguments = String.Format("/v /nologo /r {0} ", s_resScriptfile.EscapeWhiteSpaces()),
+                FileName = s_rcexe,
+                Arguments = String.Format("/v /nologo /r \"{0}\"", s_resScriptfile),
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };
+
             int exitCode;
             using (Process makeResProcess = new Process())
             {
                 makeResProcess.StartInfo = startInfo;
                 makeResProcess.Start();
-                Console.WriteLine(makeResProcess.StandardOutput.ReadToEnd());
                 makeResProcess.WaitForExit();
                 exitCode = makeResProcess.ExitCode;
+
+                if (Debugger.IsAttached)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(makeResProcess.StandardOutput.ReadToEnd());
+                }
             }
 
             Console.Write(exitCode != 0
@@ -264,18 +269,6 @@ namespace EVEMon.ResFileCreator
                                             RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
             }
             return s_projectDir;
-        }
-
-        /// <summary>
-        /// Escapes the white spaces.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns></returns>
-        private static string EscapeWhiteSpaces(this string path)
-        {
-            return path.Contains(" ")
-                    ? String.Format("\"{0}\"", path)
-                    : path;
         }
     }
 }
