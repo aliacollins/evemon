@@ -1146,7 +1146,7 @@ namespace EVEMon
             m_isUpdatingData = true;
 
             // Find the expected path for 'EVEMon.Watchdog.exe'
-            string executable = Assembly.GetAssembly(typeof(WatchdogWindow)).Location;
+            string executable = typeof(WatchdogWindow).Assembly.Location;
 
             // If the 'Watchdog' exist start the process
             if (File.Exists(executable))

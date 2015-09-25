@@ -87,11 +87,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rd /s /q $(TargetDir)\Resources
-del $(TargetDir)Google*.dll
-del $(TargetDir)*office*.dll
-del $(TargetDir)*SharpZipLib*.dll
-if exist $(TargetDir)stdole.dll del $(TargetDir)stdole.dll</PostBuildEvent>
+    <PostBuildEvent>rd /s /q "$(TargetDir)"Resources
+del "$(TargetDir)"Google*
+del "$(TargetDir)"*office*
+del "$(TargetDir)"*SharpZipLib*
+del "$(TargetDir)"YamlDotNet*
+if exist "$(TargetDir)"stdole.dll del "$(TargetDir)"stdole.dll</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

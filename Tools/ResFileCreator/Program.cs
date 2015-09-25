@@ -97,7 +97,6 @@ namespace EVEMon.ResFileCreator
             }
 
             Console.WriteLine("Resource script file created successfully.");
-            Console.WriteLine();
             return true;
         }
 
@@ -206,18 +205,24 @@ namespace EVEMon.ResFileCreator
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = s_rcexe,
-                Arguments = String.Format("/v /nologo /r {0} ", s_resScriptfile),
+                Arguments = String.Format("/v /nologo /r \"{0}\"", s_resScriptfile),
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };
+
             int exitCode;
             using (Process makeResProcess = new Process())
             {
                 makeResProcess.StartInfo = startInfo;
                 makeResProcess.Start();
-                Console.WriteLine(makeResProcess.StandardOutput.ReadToEnd());
                 makeResProcess.WaitForExit();
                 exitCode = makeResProcess.ExitCode;
+
+                if (Debugger.IsAttached)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(makeResProcess.StandardOutput.ReadToEnd());
+                }
             }
 
             Console.Write(exitCode != 0
@@ -231,12 +236,11 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static string FindRcExe()
         {
+            // Lookup for 'RC.exe' for the particular process architecture
+            string architecture = Environment.Is64BitProcess ? "x64" : "x86";
+            string filePath = Path.Combine(GetProjectDirectory(), @"Dependencies\ResCompiler\", architecture, "rc.exe");
 
-            // Lookup for 'RC.exe' for the particular process architexture
-            string architexture = Environment.Is64BitProcess ? "x64" : "x86";
-            string file = Path.Combine(GetProjectDirectory(), @"Dependencies\ResCompiler\", architexture, "rc.exe");
-
-            return File.Exists(file) ? file : null;
+            return File.Exists(filePath) ? filePath : null;
         }
 
         /// <summary>
