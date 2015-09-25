@@ -205,8 +205,8 @@ namespace EVEMon.ResFileCreator
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                FileName = s_rcexe,
-                Arguments = String.Format("/v /nologo /r {0} ", s_resScriptfile),
+                FileName = s_rcexe.EscapeWhiteSpaces(),
+                Arguments = String.Format("/v /nologo /r {0} ", s_resScriptfile.EscapeWhiteSpaces()),
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };
@@ -231,12 +231,11 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static string FindRcExe()
         {
+            // Lookup for 'RC.exe' for the particular process architecture
+            string architecture = Environment.Is64BitProcess ? "x64" : "x86";
+            string filePath = Path.Combine(GetProjectDirectory(), @"Dependencies\ResCompiler\", architecture, "rc.exe");
 
-            // Lookup for 'RC.exe' for the particular process architexture
-            string architexture = Environment.Is64BitProcess ? "x64" : "x86";
-            string file = Path.Combine(GetProjectDirectory(), @"Dependencies\ResCompiler\", architexture, "rc.exe");
-
-            return File.Exists(file) ? file : null;
+            return File.Exists(filePath) ? filePath : null;
         }
 
         /// <summary>
@@ -265,6 +264,18 @@ namespace EVEMon.ResFileCreator
                                             RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
             }
             return s_projectDir;
+        }
+
+        /// <summary>
+        /// Escapes the white spaces.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        private static string EscapeWhiteSpaces(this string path)
+        {
+            return path.Contains(" ")
+                    ? String.Format("\"{0}\"", path)
+                    : path;
         }
     }
 }
