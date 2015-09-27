@@ -3,7 +3,8 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Microsoft.Office.Interop.Outlook;
+using NetOffice.OutlookApi;
+using NetOffice.OutlookApi.Enums;
 
 namespace EVEMon.Common.ExternalCalendar
 {
@@ -31,10 +32,14 @@ namespace EVEMon.Common.ExternalCalendar
                     if (s_outlookApplication == null)
                     {
                         s_outlookApplication = new Application();
-                        ((ApplicationEvents_11_Event)s_outlookApplication).Quit += Outlook_Quit;
+                        s_outlookApplication.QuitEvent += Outlook_Quit;
                     }
                 }
                 catch (COMException ex)
+                {
+                    ExceptionHandler.LogException(ex, true);
+                }
+                catch (ArgumentException ex)
                 {
                     ExceptionHandler.LogException(ex, true);
                 }
@@ -52,7 +57,8 @@ namespace EVEMon.Common.ExternalCalendar
         /// </summary>
         private static void Outlook_Quit()
         {
-            ((ApplicationEvents_11_Event)s_outlookApplication).Quit -= Outlook_Quit;
+            s_outlookApplication.QuitEvent -= Outlook_Quit;
+            s_outlookApplication.Dispose();
             s_outlookApplication = null;
             s_mapiFolder = null;
         }
@@ -178,17 +184,17 @@ namespace EVEMon.Common.ExternalCalendar
         internal static bool OutlookCalendarExist(bool useDefaultCalendar, string path = null)
         {
             s_mapiFolder = null;
-            return GetMapiFolder(useDefaultCalendar, OutlookApplication.Session.Folders, path);
+            return GetMapiFolder(OutlookApplication.Session.Folders, useDefaultCalendar, path);
         }
 
         /// <summary>
         /// Gets the mapi folder.
         /// </summary>
+        /// <param name="folders">The folders.</param>
         /// <param name="useDefaultCalendar">if set to <c>true</c> [use default calendar].</param>
         /// <param name="path">The path.</param>
-        /// <param name="folders">The folders.</param>
         /// <returns></returns>
-        private static bool GetMapiFolder(bool useDefaultCalendar, IEnumerable folders, string path = null)
+        private static bool GetMapiFolder(IEnumerable folders, bool useDefaultCalendar = false, string path = null)
         {
             if (useDefaultCalendar)
             {
@@ -204,7 +210,7 @@ namespace EVEMon.Common.ExternalCalendar
 
             string pathRoot = GetFolderPathRoot(path);
 
-            foreach (Folder folder in folders.Cast<Folder>().TakeWhile(
+            foreach (MAPIFolder folder in folders.Cast<MAPIFolder>().TakeWhile(
                 folder => s_mapiFolder == null).Select(
                     folder => new { folder, folderRoot = GetFolderPathRoot(folder.FolderPath) }).Where(
                         folder => folder.folderRoot == pathRoot).Select(folder => folder.folder))
@@ -215,8 +221,8 @@ namespace EVEMon.Common.ExternalCalendar
                     break;
                 }
 
-                if (folder.Folders.Cast<Folder>().Any())
-                    GetMapiFolder(false, folder.Folders, path);
+                if (folder.Folders.Cast<MAPIFolder>().Any())
+                    GetMapiFolder(folder.Folders, path: path);
             }
 
             return s_mapiFolder != null && s_mapiFolder.FolderPath == path;
@@ -238,7 +244,7 @@ namespace EVEMon.Common.ExternalCalendar
             // Use a Jet Query to filter the details we need initially between the two specified dates
             string dateFilter = String.Format(CultureConstants.DefaultCulture, "[Start] >= '{0:g}' and [End] <= '{1:g}'",
                                               StartDate, EndDate);
-            Items calendarItems = s_mapiFolder.Items.Restrict(dateFilter);
+            _Items calendarItems = s_mapiFolder.Items.Restrict(dateFilter);
             calendarItems.Sort("[Start]", Type.Missing);
             calendarItems.IncludeRecurrences = true;
 

@@ -10,7 +10,8 @@ using EVEMon.Common;
 using EVEMon.Common.Data;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
-using EVEMon.MarketUnifiedUploader.EveCacheParser;
+using EveCacheParser;
+using EveCacheParser.Exceptions;
 
 namespace EVEMon.MarketUnifiedUploader
 {
