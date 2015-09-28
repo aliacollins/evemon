@@ -82,6 +82,10 @@
       <HintPath>..\packages\NetOffice.Outlook.Net40.1.7.2.0\lib\net40\OutlookApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="YamlDotNet, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.3.7.0\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Design" />
@@ -90,10 +94,6 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="YamlDotNet, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\YamlDotNet.3.7.0\lib\net35\YamlDotNet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -169,28 +169,27 @@
     <Compile Include="Enumerations\ThrobberState.cs" />
     <Compile Include="Enumerations\TrainingOrigin.cs" />
     <Compile Include="Enumerations\TransactionType.cs" />
-    <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
-    <Compile Include="QueryMonitor\APIKeyQueryMonitor.cs" />
-    <Compile Include="Models\Extended\APIMethods.cs" />
-    <Compile Include="Helpers\ApiTesterUIHelper.cs" />
-    <Compile Include="Models\Asset.cs" />
-    <Compile Include="Models\Collections\AssetCollection.cs" />
-    <Compile Include="Models\Comparers\AssetComparer.cs" />
-    <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
-    <Compile Include="QueryMonitor\CharacterDataQuerying.cs" />
-    <Compile Include="Models\Collections\CharacterIdentityIgnoreList.cs" />
-    <Compile Include="Service\CodeCompiler.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
-    <Compile Include="Models\Contact.cs" />
-    <Compile Include="Models\Collections\ContactCollection.cs" />
+    <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
+    <Compile Include="Helpers\ApiTesterUIHelper.cs" />
+    <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
+    <Compile Include="Models\Asset.cs" />
+    <Compile Include="Models\Corporation.cs" />
+    <Compile Include="Models\ContractItem.cs" />
     <Compile Include="Models\Contract.cs" />
     <Compile Include="Models\ContractBid.cs" />
+    <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\Collections\AssetCollection.cs" />
+    <Compile Include="Models\Collections\CharacterIdentityIgnoreList.cs" />
+    <Compile Include="Models\Collections\ContactCollection.cs" />
     <Compile Include="Models\Collections\ContractBidCollection.cs" />
     <Compile Include="Models\Collections\ContractCollection.cs" />
+    <Compile Include="Models\Comparers\AssetComparer.cs" />
     <Compile Include="Models\Comparers\ContractComparer.cs" />
-    <Compile Include="Models\ContractItem.cs" />
     <Compile Include="Models\Comparers\ContractItemComparer.cs" />
+    <Compile Include="Models\Extended\APIMethods.cs" />
+    <Compile Include="Service\CodeCompiler.cs" />
     <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="Controls\BorderPanel.cs">
       <SubType>Component</SubType>
@@ -267,7 +266,8 @@
     <Compile Include="Controls\TrayIcon.Designer.cs">
       <DependentUpon>TrayIcon.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Corporation.cs" />
+    <Compile Include="QueryMonitor\APIKeyQueryMonitor.cs" />
+    <Compile Include="QueryMonitor\CharacterDataQuerying.cs" />
     <Compile Include="QueryMonitor\CorporationDataQuerying.cs" />
     <Compile Include="QueryMonitor\CorporationQueryMonitor.cs" />
     <Compile Include="CustomEventArgs\ApiErrorTroubleshooterEventArgs.cs" />
@@ -555,7 +555,7 @@
     <Compile Include="Models\Collections\WalletTransactionsCollection.cs" />
     <Compile Include="Factories\WindowsFactory.cs" />
     <Compile Include="Extensions\WinFormsExtensions.cs" />
-    <None Include="app.config" />
+    <None Include="App.config" />
     <None Include="packages.config" />
     <Compile Include="Models\BuyOrder.cs" />
     <Compile Include="Data\Datafile.cs" />
