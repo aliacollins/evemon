@@ -38,7 +38,8 @@ namespace EVEMon.InstallBuilder
             if (!HasVersion())
                 return 1;
 
-            s_version = String.Format("{0}.{1}.{2}", s_fullVersion.Major, s_fullVersion.Minor, s_fullVersion.Build);
+            s_version = String.Format(CultureInfo.InvariantCulture,
+                "{0}.{1}.{2}", s_fullVersion.Major, s_fullVersion.Minor, s_fullVersion.Build);
 
             if (args.Any())
             {
@@ -72,7 +73,7 @@ namespace EVEMon.InstallBuilder
                 }
 
                 // Create the appropriate folder if it doesn't exist
-                string directory = s_isSnapshot ? GetSnapshotDirectory() : GetBinariesDirectory(); 
+                string directory = s_isSnapshot ? GetSnapshotDirectory() : GetBinariesDirectory();
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
 

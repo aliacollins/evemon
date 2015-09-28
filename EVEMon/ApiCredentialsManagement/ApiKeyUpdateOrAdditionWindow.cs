@@ -3,9 +3,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Models;
 using EVEMon.Common.Properties;
 
 namespace EVEMon.ApiCredentialsManagement
@@ -266,7 +270,7 @@ namespace EVEMon.ApiCredentialsManagement
                 WarningLabel.Visible = true;
             }
                 // Issue a warning if the access of API key is less than needed for basic features
-            else if (e.Type != APIKeyType.Corporation && e.AccessMask < (int)APIMethodsExtensions.BasicCharacterFeatures)
+            else if (e.Type != APIKeyType.Corporation && e.AccessMask < (int)APIMethodsEnum.BasicCharacterFeatures)
             {
                 WarningLabel.Text = "Beware! The data this API key provides does not suffice for basic features!";
                 WarningLabel.Visible = true;

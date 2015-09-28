@@ -4,12 +4,13 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 {
-    internal class Types
+    internal static class Types
     {
         private const string InvTypesTableName = "invTypes";
         private const string DgmMasteriesTableName = "dgmMasteries";
@@ -81,7 +82,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -352,7 +353,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                         // dgmTraits
                         traitId++;
                         DataRow row = dgmTraitsTable.NewRow();
-                        row[TraitIDText] = SqlInt32.Parse(traitId.ToString());
+                        row[TraitIDText] = SqlInt32.Parse(traitId.ToString(CultureInfo.InvariantCulture));
                         row[BonusTextText] = bonusTextNodes == null
                             ? bonusNode.Children.GetSqlTypeOrDefault<SqlString>(BonusTextText)
                             : bonusTextNodes.Children.GetSqlTypeOrDefault<SqlString>(Translations.EnglishLanguageIDText);
@@ -369,7 +370,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                             if (bonusTextNodes != null)
                             {
                                 Translations.InsertTranslations(TranslationTraitsBonusTextID,
-                                    new YamlScalarNode(traitId.ToString()),
+                                    new YamlScalarNode(traitId.ToString(CultureInfo.InvariantCulture)),
                                     bonusTextNodes, trnTranslationsTable);
                             }
                         }
@@ -383,7 +384,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                         if (traitsDict.ContainsValue(value))
                         {
                             row[TraitIDText] = SqlInt32.Parse(
-                                traitsDict.First(x => x.Value == value).Key.ToString());
+                                traitsDict.First(x => x.Value == value).Key.ToString(CultureInfo.InvariantCulture));
                             row[BonusText] = bonusNode.Children.GetSqlTypeOrDefault<SqlDouble>(BonusText);
 
                             if (!dgmTypeTraitsTable.Rows.OfType<DataRow>()
@@ -399,7 +400,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 
                         traitsDict[traitId] = value;
 
-                        row[TraitIDText] = SqlInt32.Parse(traitId.ToString());
+                        row[TraitIDText] = SqlInt32.Parse(traitId.ToString(CultureInfo.InvariantCulture));
                         row[BonusText] = bonusNode.Children.GetSqlTypeOrDefault<SqlDouble>(BonusText);
 
                         dgmTypeTraitsTable.Rows.Add(row);
@@ -440,7 +441,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                         // dgmMasteries
                         masteryId++;
                         DataRow row = dgmMasteriesTable.NewRow();
-                        row[MasteryIDText] = SqlInt32.Parse(masteryId.ToString());
+                        row[MasteryIDText] = SqlInt32.Parse(masteryId.ToString(CultureInfo.InvariantCulture));
                         row[CertificateIDText] = SqlInt32.Parse(certificate.ToString());
                         row[GradeText] = SqlByte.Parse(mastery.Key.ToString());
 
@@ -469,7 +470,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                             row[MasteryIDText] = SqlInt16.Parse(
                                 masteriesDict.First(
                                     x => value.Any(y => x.Value.ContainsKey(y.Key) && x.Value.ContainsValue(y.Value)))
-                                    .Key.ToString());
+                                    .Key.ToString(CultureInfo.InvariantCulture));
 
                             dgmTypeMasteriesTable.Rows.Add(row);
 
@@ -478,7 +479,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 
                         masteriesDict[masteryId] = value;
 
-                        row[MasteryIDText] = SqlInt16.Parse(masteryId.ToString());
+                        row[MasteryIDText] = SqlInt16.Parse(masteryId.ToString(CultureInfo.InvariantCulture));
 
                         dgmTypeMasteriesTable.Rows.Add(row);
                     }
@@ -492,16 +493,18 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetDgmTypeTraitsDataTable()
         {
-            DataTable dgmTypeTraits = new DataTable();
-            dgmTypeTraits.Columns.AddRange(
-                new[]
+            using (DataTable dgmTypeTraits = new DataTable())
+            {
+                dgmTypeTraits.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn(TypeIDText, typeof(SqlInt32)),
                     new DataColumn(ParentTypeIDText, typeof(SqlInt32)),
                     new DataColumn(TraitIDText, typeof(SqlInt32)),
                     new DataColumn(BonusText, typeof(SqlDouble)),
                 });
-            return dgmTypeTraits;
+                return dgmTypeTraits;
+            }
         }
 
         /// <summary>
@@ -510,15 +513,17 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetDgmTraitsDataTable()
         {
-            DataTable dgmTraits = new DataTable();
-            dgmTraits.Columns.AddRange(
-                new[]
+            using (DataTable dgmTraits = new DataTable())
+            {
+                dgmTraits.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn(TraitIDText, typeof(SqlInt32)),
                     new DataColumn(BonusTextText, typeof(SqlString)),
                     new DataColumn(UnitIDText, typeof(SqlByte)),
                 });
-            return dgmTraits;
+                return dgmTraits;
+            }
         }
 
         /// <summary>
@@ -527,14 +532,16 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetDgmTypeMasteriesDataTable()
         {
-            DataTable dgmTypeMasteries = new DataTable();
-            dgmTypeMasteries.Columns.AddRange(
-                new[]
+            using (DataTable dgmTypeMasteries = new DataTable())
+            {
+                dgmTypeMasteries.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn(TypeIDText, typeof(SqlInt32)),
                     new DataColumn(MasteryIDText, typeof(SqlInt16)),
                 });
-            return dgmTypeMasteries;
+                return dgmTypeMasteries;
+            }
         }
 
         /// <summary>
@@ -543,15 +550,17 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetDgmMasteriesDataTable()
         {
-            DataTable dgmMasteries = new DataTable();
-            dgmMasteries.Columns.AddRange(
-                new[]
+            using (DataTable dgmMasteries = new DataTable())
+            {
+                dgmMasteries.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn(MasteryIDText, typeof(SqlInt32)),
                     new DataColumn(CertificateIDText, typeof(SqlInt32)),
                     new DataColumn(GradeText, typeof(SqlByte)),
                 });
-            return dgmMasteries;
+                return dgmMasteries;
+            }
         }
 
         /// <summary>
@@ -560,9 +569,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetInvTypesDataTable()
         {
-            DataTable invTypesTable = new DataTable();
-            invTypesTable.Columns.AddRange(
-                new[]
+            using (DataTable invTypesTable = new DataTable())
+            {
+                invTypesTable.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn(TypeIDText, typeof(SqlInt32)),
                     new DataColumn(GroupIDText, typeof(SqlInt32)),
@@ -583,7 +593,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                     new DataColumn(RadiusText, typeof(SqlDouble)),
                     new DataColumn(SoundIDText, typeof(SqlInt32)),
                 });
-            return invTypesTable;
+                return invTypesTable;
+            }
         }
 
         /// <summary>

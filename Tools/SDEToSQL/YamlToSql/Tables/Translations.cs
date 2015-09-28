@@ -8,7 +8,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 {
-    internal class Translations
+    internal static class Translations
     {
         private const string TranslationTableName = "translationTables";
         private const string TrnTranslationColumnsTableName = "trnTranslationColumns";
@@ -45,9 +45,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         internal static DataTable GetTrnTranslationsDataTable()
         {
-            DataTable trnTranslationsTable = new DataTable();
-            trnTranslationsTable.Columns.AddRange(
-                new[]
+            using (DataTable trnTranslationsTable = new DataTable())
+            {
+                trnTranslationsTable.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn(TcIDText, typeof(SqlInt16)),
                     new DataColumn(KeyIDText, typeof(SqlInt32)),
@@ -55,7 +56,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                     new DataColumn(TextText, typeof(SqlString)),
                 });
 
-            return trnTranslationsTable;
+                return trnTranslationsTable;
+            }
         }
 
         /// <summary>

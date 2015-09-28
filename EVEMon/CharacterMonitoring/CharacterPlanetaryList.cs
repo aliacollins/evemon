@@ -6,9 +6,18 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.CharacterMonitoring
@@ -342,7 +351,7 @@ namespace EVEMon.CharacterMonitoring
             lvPlanetary.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
+                string text = m_textFilter.ToUpperInvariant();
                 IEnumerable<PlanetaryPin> pins = m_list.Where(x => IsTextMatching(x, text));
 
                 if (m_showOnlyExtractors)
@@ -652,7 +661,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = pin.QuantityPerCycle.ToNumericString(2);
                     break;
                 case PlanetaryColumn.CycleTime:
-                    item.Text = pin.CycleTime.ToString();
+                    item.Text = pin.CycleTime.ToString(CultureConstants.DefaultCulture);
                     break;
                 case PlanetaryColumn.Volume:
                     item.Text = pin.ContentVolume.ToNumericString(2);
@@ -684,14 +693,14 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(PlanetaryPin x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Colony.PlanetName.ToLowerInvariant().Contains(text)
-                   || x.Colony.PlanetTypeName.ToLowerInvariant().Contains(text)
-                   || x.Colony.PlanetTypeName.ToLowerInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Name.ToLowerInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
-                   || x.Colony.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text)
-                   || x.TypeName.ToLowerInvariant().Contains(text)
-                   || x.ContentTypeName.ToLowerInvariant().Contains(text);
+                   || x.Colony.PlanetName.ToUpperInvariant().Contains(text)
+                   || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
+                   || x.Colony.PlanetTypeName.ToUpperInvariant().Contains(text)
+                   || x.Colony.SolarSystem.Name.ToUpperInvariant().Contains(text)
+                   || x.Colony.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
+                   || x.Colony.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text)
+                   || x.TypeName.ToUpperInvariant().Contains(text)
+                   || x.ContentTypeName.ToUpperInvariant().Contains(text);
         }
 
         /// <summary>

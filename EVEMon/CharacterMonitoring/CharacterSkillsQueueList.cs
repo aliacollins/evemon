@@ -5,8 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.Properties;
 using EVEMon.SkillPlanner;
 

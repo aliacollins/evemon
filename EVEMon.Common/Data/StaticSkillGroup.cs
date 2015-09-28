@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data

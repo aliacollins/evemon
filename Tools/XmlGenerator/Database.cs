@@ -4,6 +4,8 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.XmlGenerator.Models;
 using EVEMon.XmlGenerator.StaticData;

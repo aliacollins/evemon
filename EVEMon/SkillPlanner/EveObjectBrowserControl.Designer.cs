@@ -1,4 +1,5 @@
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.SkillPlanner
 {
@@ -154,12 +155,12 @@ namespace EVEMon.SkillPlanner
             // eoImage
             // 
             this.eoImage.EveItem = null;
-            this.eoImage.ImageSize = EVEMon.Common.EveImageSize.x64;
+            this.eoImage.ImageSize = EveImageSize.x64;
             this.eoImage.Location = new System.Drawing.Point(3, 3);
             this.eoImage.Name = "eoImage";
             this.eoImage.PopUpEnabled = true;
             this.eoImage.Size = new System.Drawing.Size(64, 64);
-            this.eoImage.SizeMode = EVEMon.Common.EveImageSizeMode.Normal;
+            this.eoImage.SizeMode = EveImageSizeMode.Normal;
             this.eoImage.TabIndex = 8;
             // 
             // lblEveObjCategory

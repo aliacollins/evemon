@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Controls
 {

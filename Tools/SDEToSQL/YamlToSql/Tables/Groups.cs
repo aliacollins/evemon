@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 {
-    internal class Groups
+    internal static class Groups
     {
         private const string InvGroupsTableName = "invGroups";
 
@@ -49,7 +50,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -90,23 +91,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         {
             Util.UpdatePercentDone(0);
 
-            DataTable invGroupsTable = new DataTable();
-            invGroupsTable.Columns.AddRange(
-                new[]
-                {
-                    new DataColumn(GroupIDText, typeof(SqlInt32)),
-                    new DataColumn(CategoryIDText, typeof(SqlInt32)),
-                    new DataColumn(GroupNameText, typeof(SqlString)),
-                    new DataColumn(DescriptionText, typeof(SqlString)),
-                    new DataColumn(IconIDText, typeof(SqlInt32)),
-                    new DataColumn(UseBasePriceText, typeof(SqlBoolean)),
-                    new DataColumn(AllowManufactureText, typeof(SqlBoolean)),
-                    new DataColumn(AllowRecyclerText, typeof(SqlBoolean)),
-                    new DataColumn(AnchoredText, typeof(SqlBoolean)),
-                    new DataColumn(AnchorableText, typeof(SqlBoolean)),
-                    new DataColumn(FittableNonSingletonText, typeof(SqlBoolean)),
-                    new DataColumn(PublishedText, typeof(SqlBoolean)),
-                });
+            DataTable invGroupsTable = GetInvGroupsDataTable();
 
             DataTable trnTranslationsTable = Translations.GetTrnTranslationsDataTable();
 
@@ -157,6 +142,34 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             Database.ImportDataBulk(InvGroupsTableName, invGroupsTable);
 
             Util.UpdatePercentDone(invGroupsTable.Rows.Count);
+        }
+
+        /// <summary>
+        /// Gets the data table for the invGroups table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetInvGroupsDataTable()
+        {
+            using (DataTable invGroupsTable = new DataTable())
+            {
+                invGroupsTable.Columns.AddRange(
+                    new[]
+                {
+                    new DataColumn(GroupIDText, typeof(SqlInt32)),
+                    new DataColumn(CategoryIDText, typeof(SqlInt32)),
+                    new DataColumn(GroupNameText, typeof(SqlString)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                    new DataColumn(IconIDText, typeof(SqlInt32)),
+                    new DataColumn(UseBasePriceText, typeof(SqlBoolean)),
+                    new DataColumn(AllowManufactureText, typeof(SqlBoolean)),
+                    new DataColumn(AllowRecyclerText, typeof(SqlBoolean)),
+                    new DataColumn(AnchoredText, typeof(SqlBoolean)),
+                    new DataColumn(AnchorableText, typeof(SqlBoolean)),
+                    new DataColumn(FittableNonSingletonText, typeof(SqlBoolean)),
+                    new DataColumn(PublishedText, typeof(SqlBoolean)),
+                });
+                return invGroupsTable;
+            }
         }
     }
 }

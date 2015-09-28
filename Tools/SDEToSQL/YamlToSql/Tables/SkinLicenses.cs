@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 {
-    internal class SkinLicenses
+    internal static class SkinLicenses
     {
         private const string SknLicensesTableName = "sknLicenses";
 
@@ -33,7 +34,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -64,14 +65,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         {
             Util.UpdatePercentDone(0);
 
-            DataTable sknLicensesTable = new DataTable();
-            sknLicensesTable.Columns.AddRange(
-                new[]
-                {
-                    new DataColumn(LicenseTypeIDText, typeof(SqlInt32)),
-                    new DataColumn(SkinIDText, typeof(SqlInt32)),
-                    new DataColumn(DurationText, typeof(SqlInt32)),
-                });
+            DataTable sknLicensesTable = GetSknLicensesDataTable();
 
             int total = rNode.Count();
             total = (int)Math.Ceiling(total + (total * 0.01));
@@ -96,6 +90,25 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             Database.ImportDataBulk(SknLicensesTableName, sknLicensesTable);
 
             Util.UpdatePercentDone(sknLicensesTable.Rows.Count);
+        }
+
+        /// <summary>
+        /// Gets the data table for the sknLicenses table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetSknLicensesDataTable()
+        {
+            using (DataTable sknLicensesTable = new DataTable())
+            {
+                sknLicensesTable.Columns.AddRange(
+                    new[]
+                {
+                    new DataColumn(LicenseTypeIDText, typeof(SqlInt32)),
+                    new DataColumn(SkinIDText, typeof(SqlInt32)),
+                    new DataColumn(DurationText, typeof(SqlInt32)),
+                });
+                return sknLicensesTable;
+            }
         }
     }
 }

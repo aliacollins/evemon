@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using EVEMon.Common.Models;
 
 namespace EVEMon.Common.CustomEventArgs
 {

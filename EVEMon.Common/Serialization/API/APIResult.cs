@@ -3,6 +3,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.API

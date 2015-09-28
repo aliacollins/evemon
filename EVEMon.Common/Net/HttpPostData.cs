@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.Common.Net
 {

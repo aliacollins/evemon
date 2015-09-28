@@ -1,8 +1,12 @@
 using System;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
 

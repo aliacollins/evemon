@@ -1,5 +1,6 @@
 ﻿using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.ApiCredentialsManagement
 {
@@ -268,7 +269,7 @@ namespace EVEMon.ApiCredentialsManagement
             this.Throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.Throbber.Name = "Throbber";
             this.Throbber.Size = new System.Drawing.Size(24, 24);
-            this.Throbber.State = EVEMon.Common.ThrobberState.Stopped;
+            this.Throbber.State = ThrobberState.Stopped;
             this.Throbber.TabIndex = 0;
             this.Throbber.TabStop = false;
             // 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
@@ -21,7 +22,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         Elite = 5
     }
 
-    internal class Certificates
+    internal static class Certificates
     {
         private const string CrtClassesTableName = "crtClasses";
         private const string CrtCertificateTableName = "crtCertificates";
@@ -68,7 +69,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -175,7 +176,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                         row[ChildIDText] = SqlInt32.Parse(pair.Key.ToString());
                         row[GradeText] = SqlByte.Parse(
                             ((byte)(int)Enum.Parse(typeof(CertificateGrade), grade.Key.ToString(), true))
-                                .ToString());
+                                .ToString(CultureInfo.InvariantCulture));
 
                         crtRelationshipsTable.Rows.Add(row);
                     }
@@ -238,9 +239,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetCrtRelationshipsDataTable()
         {
-            DataTable crtRelationshipsTable = new DataTable();
-            crtRelationshipsTable.Columns.AddRange(
-                new[]
+            using (DataTable crtRelationshipsTable = new DataTable())
+            {
+                crtRelationshipsTable.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn("relationshipID", typeof(SqlInt32)),
                     new DataColumn("parentID", typeof(SqlInt32)),
@@ -249,7 +251,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                     new DataColumn(ChildIDText, typeof(SqlInt32)),
                     new DataColumn(GradeText, typeof(SqlByte)),
                 });
-            return crtRelationshipsTable;
+                return crtRelationshipsTable;
+            }
         }
 
         /// <summary>
@@ -258,15 +261,17 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetCrtRecommendationsDataTable()
         {
-            DataTable crtRecommendationsTable = new DataTable();
-            crtRecommendationsTable.Columns.AddRange(
-                new[]
+            using (DataTable crtRecommendationsTable = new DataTable())
+            {
+                crtRecommendationsTable.Columns.AddRange(
+                    new[]
                 {
                     new DataColumn("recommendationID", typeof(SqlInt32)),
                     new DataColumn(ShipTypeIDText, typeof(SqlInt32)),
                     new DataColumn(CertificateIDText, typeof(SqlInt32)),
                 });
-            return crtRecommendationsTable;
+                return crtRecommendationsTable;
+            }
         }
 
         /// <summary>
@@ -275,15 +280,17 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetCrtClassesDataTable()
         {
-            DataTable crtClassesTable = new DataTable();
-            crtClassesTable.Columns.AddRange(
-                new[]
+            using (DataTable crtClassesTable = new DataTable())
+            {
+                crtClassesTable.Columns.AddRange(
+                   new[]
                 {
                     new DataColumn(ClassIDText, typeof(SqlInt32)),
                     new DataColumn(DescriptionText, typeof(SqlString)),
                     new DataColumn(ClassNameText, typeof(SqlString)),
                 });
-            return crtClassesTable;
+                return crtClassesTable;
+            }
         }
 
         /// <summary>
@@ -292,9 +299,10 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         /// <returns></returns>
         private static DataTable GetCrtCertificatesDataTable()
         {
-            DataTable crtCertificatesTable = new DataTable();
-            crtCertificatesTable.Columns.AddRange(
-                new[]
+            using (DataTable crtCertificatesTable = new DataTable())
+            {
+                crtCertificatesTable.Columns.AddRange(
+                   new[]
                 {
                     new DataColumn(CertificateIDText, typeof(SqlInt32)),
                     new DataColumn(GroupIDText, typeof(SqlInt16)),
@@ -306,7 +314,8 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
                     new DataColumn("iconID", typeof(SqlInt32)),
                     new DataColumn(DescriptionText, typeof(SqlString)),
                 });
-            return crtCertificatesTable;
+                return crtCertificatesTable;
+            }
         }
     }
 }

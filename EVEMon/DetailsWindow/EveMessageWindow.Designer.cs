@@ -1,4 +1,5 @@
 using EVEMon.CharacterMonitoring;
+using EVEMon.Common.Enumerations;
 using EVEMon.Controls;
 
 namespace EVEMon.DetailsWindow
@@ -44,7 +45,7 @@ namespace EVEMon.DetailsWindow
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
             this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Common.ThrobberState.Stopped;
+            this.throbber.State = ThrobberState.Stopped;
             this.throbber.TabIndex = 1;
             this.throbber.TabStop = false;
             // 

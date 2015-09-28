@@ -103,7 +103,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CtrlType.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLiteToSQL\Models\mapCelestialStatistics.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="SQLiteToSQL\Models\mapSolarSystemJumps.cs" />
     <Compile Include="SQLiteToSQL\Models\mapSolarSystems.cs" />
     <Compile Include="SQLiteToSQL\Models\UniverseData.cs" />
+    <Compile Include="SafeNativeMethods.cs" />
     <Compile Include="SQLiteToSQL\SqliteDbConfiguration.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="YamlToSQL\Tables\Blueprints.cs" />

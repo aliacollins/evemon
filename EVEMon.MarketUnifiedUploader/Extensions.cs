@@ -1,5 +1,6 @@
 using System;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.MarketUnifiedUploader
 {

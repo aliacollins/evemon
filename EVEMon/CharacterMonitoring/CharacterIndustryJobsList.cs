@@ -7,9 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.CharacterMonitoring
@@ -739,10 +748,10 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.Cost.ToNumericString(2);
                     break;
                 case IndustryJobColumn.Probability:
-                    item.Text = Math.Abs(job.Probability) < Double.Epsilon ? String.Empty : job.Probability.ToString("P1");
+                    item.Text = Math.Abs(job.Probability) < Double.Epsilon ? String.Empty : job.Probability.ToString("P1", CultureConstants.DefaultCulture);
                     break;
                 case IndustryJobColumn.Runs:
-                    item.Text = job.Runs.ToString();
+                    item.Text = job.Runs.ToString(CultureConstants.DefaultCulture);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -821,12 +830,12 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(IndustryJob x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.InstalledItem.Name.ToLowerInvariant().Contains(text)
-                   || x.OutputItem.Name.ToLowerInvariant().Contains(text)
-                   || x.Installation.ToLowerInvariant().Contains(text)
-                   || x.SolarSystem.Name.ToLowerInvariant().Contains(text)
-                   || x.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
-                   || x.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text);
+                   || x.InstalledItem.Name.ToUpperInvariant().Contains(text)
+                   || x.OutputItem.Name.ToUpperInvariant().Contains(text)
+                   || x.Installation.ToUpperInvariant().Contains(text)
+                   || x.SolarSystem.Name.ToUpperInvariant().Contains(text)
+                   || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
+                   || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
         }
 
         /// <summary>

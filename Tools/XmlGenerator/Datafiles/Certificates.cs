@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.XmlGenerator.StaticData;
 

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
 
 namespace EVEMon.ApiCredentialsManagement
 {

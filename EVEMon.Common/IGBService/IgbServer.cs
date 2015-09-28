@@ -6,11 +6,16 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.Net;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 
-namespace EVEMon.Common.IgbService
+namespace EVEMon.Common.IGBService
 {
     /// <summary>
     /// Incomplete HTTP 1.0 web server, to serve out simple pages to

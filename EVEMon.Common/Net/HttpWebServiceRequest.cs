@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 

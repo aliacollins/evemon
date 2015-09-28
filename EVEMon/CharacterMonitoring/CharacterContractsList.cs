@@ -7,9 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.DetailsWindow;
 
@@ -754,18 +763,18 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(Contract x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Status.GetDescription().ToLowerInvariant().Contains(text)
-                   || x.ContractText.ToLowerInvariant().Contains(text)
-                   || x.ContractType.GetDescription().ToLowerInvariant().Contains(text)
-                   || x.Issuer.ToLowerInvariant().Contains(text)
-                   || x.Assignee.ToLowerInvariant().Contains(text)
-                   || x.Acceptor.ToLowerInvariant().Contains(text)
-                   || x.Description.ToLowerInvariant().Contains(text)
-                   || x.Availability.GetDescription().ToLowerInvariant().Contains(text)
-                   || x.StartStation.Name.ToLowerInvariant().Contains(text)
-                   || x.StartStation.SolarSystem.Name.ToLowerInvariant().Contains(text)
-                   || x.StartStation.SolarSystem.Constellation.Name.ToLowerInvariant().Contains(text)
-                   || x.StartStation.SolarSystem.Constellation.Region.Name.ToLowerInvariant().Contains(text);
+                   || x.Status.GetDescription().ToUpperInvariant().Contains(text)
+                   || x.ContractText.ToUpperInvariant().Contains(text)
+                   || x.ContractType.GetDescription().ToUpperInvariant().Contains(text)
+                   || x.Issuer.ToUpperInvariant().Contains(text)
+                   || x.Assignee.ToUpperInvariant().Contains(text)
+                   || x.Acceptor.ToUpperInvariant().Contains(text)
+                   || x.Description.ToUpperInvariant().Contains(text)
+                   || x.Availability.GetDescription().ToUpperInvariant().Contains(text)
+                   || x.StartStation.Name.ToUpperInvariant().Contains(text)
+                   || x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text)
+                   || x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
+                   || x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
         }
 
         /// <summary>

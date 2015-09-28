@@ -6,8 +6,17 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.SettingsObjects;
@@ -686,11 +695,11 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(EveMailMessage x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.SenderName.ToLowerInvariant().Contains(text)
-                   || x.Title.ToLowerInvariant().Contains(text)
-                   || x.ToCorpOrAlliance.ToLowerInvariant().Contains(text)
-                   || x.ToCharacters.Any(y => y.ToLowerInvariant().Contains(text))
-                   || x.EVEMailBody.BodyText.ToLowerInvariant().Contains(text);
+                   || x.SenderName.ToUpperInvariant().Contains(text)
+                   || x.Title.ToUpperInvariant().Contains(text)
+                   || x.ToCorpOrAlliance.ToUpperInvariant().Contains(text)
+                   || x.ToCharacters.Any(y => y.ToUpperInvariant().Contains(text))
+                   || x.EVEMailBody.BodyText.ToUpperInvariant().Contains(text);
         }
 
         /// <summary>

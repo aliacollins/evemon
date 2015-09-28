@@ -14,6 +14,11 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.API;
 using EVEMon.Common.Serialization.BattleClinic;
@@ -294,7 +299,7 @@ namespace EVEMon.Common
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static void DownloadAPIResultAsync<T>(Uri url, QueryCallback<T> callback, bool acceptEncoded = false,
+        internal static void DownloadAPIResultAsync<T>(Uri url, Models.QueryCallback<T> callback, bool acceptEncoded = false,
                                                        string postData = null, XslCompiledTransform transform = null)
         {
             HttpWebService.DownloadXmlAsync(

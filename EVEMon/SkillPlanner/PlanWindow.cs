@@ -5,9 +5,16 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
@@ -256,6 +263,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill"></param>
         public void ShowSkillInBrowser(Skill skill)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             // Quit if it's an "Unknown" skill
             if (skill.ID == Int32.MaxValue)
                 return;
@@ -270,6 +280,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="skill"></param>
         public void ShowSkillInExplorer(Skill skill)
         {
+            if (skill == null)
+                throw new ArgumentNullException("skill");
+
             // Quit if it's an "Unknown" skill
             if (skill.ID == Int32.MaxValue)
                 return;

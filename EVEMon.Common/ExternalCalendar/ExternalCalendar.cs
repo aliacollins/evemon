@@ -1,6 +1,10 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
 using Google.GData.Client;
 

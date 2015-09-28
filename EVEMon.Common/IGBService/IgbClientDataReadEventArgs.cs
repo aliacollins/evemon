@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EVEMon.Common.IgbService
+namespace EVEMon.Common.IGBService
 {
     public class IgbClientDataReadEventArgs : EventArgs
     {

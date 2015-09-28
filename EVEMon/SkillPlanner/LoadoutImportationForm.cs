@@ -7,9 +7,17 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.FittingXml;
 
 namespace EVEMon.SkillPlanner

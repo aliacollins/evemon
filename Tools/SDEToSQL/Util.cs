@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -56,7 +57,7 @@ namespace EVEMon.SDEToSQL
                 Console.SetCursorPosition(position > -1 ? position : 0, Console.CursorTop);
             }
 
-            s_text = String.Format("{0}%", percent);
+            s_text = String.Format(CultureInfo.InvariantCulture, "{0}%", percent);
 
             if (Console.CursorLeft == 0 || Program.IsClosing)
                 return;
@@ -73,7 +74,7 @@ namespace EVEMon.SDEToSQL
             if (Program.IsClosing)
                 return;
 
-            Console.WriteLine(@" in {0}", stopwatch.Elapsed.ToString("g"));
+            Console.WriteLine(@" in {0}", stopwatch.Elapsed.ToString("g", CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace EVEMon.SDEToSQL
         /// <returns></returns>
         internal static string GetScriptFor(string tableName)
         {
-            var resourceName = String.Format(@"{0}.Scripts.{1}.table.sql", typeof(Program).Namespace, tableName);
+            var resourceName = String.Format(CultureInfo.InvariantCulture, "{0}.Scripts.{1}.table.sql", typeof(Program).Namespace, tableName);
 
             string result = null;
             using (Stream stream = typeof(Program).Assembly.GetManifestResourceStream(resourceName))
@@ -110,7 +111,9 @@ namespace EVEMon.SDEToSQL
             if (!String.IsNullOrWhiteSpace(result))
                 return result;
 
-            throw new MissingManifestResourceException(String.Format("{0}.table.sql resource file does not exists!", tableName));
+            throw new MissingManifestResourceException(
+                String.Format(CultureInfo.InvariantCulture,
+                "{0}.table.sql resource file does not exists!", tableName));
         }
 
         /// <summary>
@@ -314,8 +317,8 @@ namespace EVEMon.SDEToSQL
                 ? defaultValue
                 : String.Equals(text, "false", StringComparison.OrdinalIgnoreCase) ||
                   String.Equals(text, "true", StringComparison.OrdinalIgnoreCase)
-                    ? Convert.ToByte(Convert.ToBoolean(text)).ToString()
-                    : String.Format("{0}'{1}'", isUnicode ? "N" : String.Empty, text.Replace("'", "''"));
+                    ? Convert.ToByte(Convert.ToBoolean(text, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture)
+                    : String.Format(CultureInfo.InvariantCulture, "{0}'{1}'", isUnicode ? "N" : String.Empty, text.Replace("'", "''"));
         }
 
         /// <summary>
@@ -330,7 +333,7 @@ namespace EVEMon.SDEToSQL
             string defaultValue = "Null", bool isUnicode = false)
         {
             if (node == null || String.IsNullOrWhiteSpace(text) || !node.ContainsKey(new YamlScalarNode(text)))
-                return defaultValue != Convert.DBNull.ToString() ? defaultValue : String.Format("'{0}'", defaultValue);
+                return defaultValue != Convert.DBNull.ToString() ? defaultValue : String.Format(CultureInfo.InvariantCulture, "'{0}'", defaultValue);
 
             return node[new YamlScalarNode(text)].ToString().GetTextOrDefaultString(defaultValue, isUnicode);
         }
@@ -455,7 +458,7 @@ namespace EVEMon.SDEToSQL
                     return (T)typeof(T).GetField("Null").GetValue(null);
 
                 parseMethod = new T().GetType().GetMethod("Parse");
-                if (parseMethod != null && defaultValue != "")
+                if (parseMethod != null && !string.IsNullOrWhiteSpace(defaultValue))
                     return (T)parseMethod.Invoke(null, new object[] { defaultValue });
 
                 return (T)Activator.CreateInstance(typeof(T), defaultValue);
@@ -465,9 +468,9 @@ namespace EVEMon.SDEToSQL
 
             parseMethod = new T().GetType().GetMethod("Parse");
             if (parseMethod == null)
-                return (T)Activator.CreateInstance(typeof(T), value.ToString());
+                return (T)Activator.CreateInstance(typeof(T), value.ToString(CultureInfo.InvariantCulture));
 
-            return (T)parseMethod.Invoke(null, new object[] { value.ToString() });
+            return (T)parseMethod.Invoke(null, new object[] { value.ToString(CultureInfo.InvariantCulture) });
         }
 
         /// <summary>
@@ -489,7 +492,7 @@ namespace EVEMon.SDEToSQL
                     return (T)typeof(T).GetField("Null").GetValue(null);
 
                 parseMethod = new T().GetType().GetMethod("Parse");
-                if (parseMethod != null && defaultValue != "")
+                if (parseMethod != null && !string.IsNullOrWhiteSpace(defaultValue))
                     return (T)parseMethod.Invoke(null, new object[] { defaultValue });
 
                 return (T)Activator.CreateInstance(typeof(T), defaultValue);
