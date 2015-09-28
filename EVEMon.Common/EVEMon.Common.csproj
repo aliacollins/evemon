@@ -555,9 +555,6 @@
     <Compile Include="Models\Collections\WalletTransactionsCollection.cs" />
     <Compile Include="Factories\WindowsFactory.cs" />
     <Compile Include="Extensions\WinFormsExtensions.cs" />
-    <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
     <None Include="packages.config" />
     <Compile Include="Models\BuyOrder.cs" />
     <Compile Include="Data\Datafile.cs" />
