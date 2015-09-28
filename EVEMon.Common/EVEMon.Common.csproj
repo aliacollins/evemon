@@ -556,6 +556,8 @@
     <Compile Include="Factories\WindowsFactory.cs" />
     <Compile Include="Extensions\WinFormsExtensions.cs" />
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="packages.config" />
     <Compile Include="Models\BuyOrder.cs" />
     <Compile Include="Data\Datafile.cs" />
@@ -947,16 +949,6 @@
     <Compile Include="Serialization\API\SerializableAPICharacters.cs" />
     <Compile Include="Serialization\API\SerializableAPIServerStatus.cs" />
     <Compile Include="Models\QueuedSkill.cs" />
-    <None Include="Diagrams\Characters - accounting.cd" />
-    <None Include="Diagrams\Settings.cd" />
-    <None Include="Diagrams\Implants.cd" />
-    <None Include="Diagrams\Serialization - Characters.cd" />
-    <None Include="Diagrams\Serialization - Settings.cd" />
-    <None Include="Diagrams\Ships.cd" />
-    <None Include="Diagrams\Items.cd" />
-    <None Include="Diagrams\Plan.cd" />
-    <None Include="Diagrams\SkillLevel.cd" />
-    <None Include="Diagrams\Skills.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\PrintOptionsDialog.resx">

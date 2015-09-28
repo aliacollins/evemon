@@ -73,7 +73,7 @@
     </Compile>
     <Compile Include="PieSlice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="app.config" />
+    <None Include="App.config" />
     <Compile Include="Quadrilateral.cs" />
     <Compile Include="SkillsPieChart.cs">
       <SubType>Form</SubType>
