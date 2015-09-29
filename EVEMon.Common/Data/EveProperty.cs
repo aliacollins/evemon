@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data

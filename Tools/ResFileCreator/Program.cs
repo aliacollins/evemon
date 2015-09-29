@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -64,9 +65,9 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static string GetValueOf(string assemblyInfoFileContent, string key)
         {
-            int index = assemblyInfoFileContent.IndexOf(key, StringComparison.InvariantCulture) + key.Length;
+            int index = assemblyInfoFileContent.IndexOf(key, StringComparison.Ordinal) + key.Length;
             string substring = assemblyInfoFileContent.Substring(index);
-            int length = substring.IndexOf(")", StringComparison.InvariantCulture) - 1;
+            int length = substring.IndexOf(")", StringComparison.Ordinal) - 1;
             string value = assemblyInfoFileContent.Substring(index, length)
                 .Replace("(\"", String.Empty).Replace("\")", String.Empty);
             return value;
@@ -78,7 +79,8 @@ namespace EVEMon.ResFileCreator
         /// <returns></returns>
         private static bool GenerateRcFile()
         {
-            s_resScriptfile = Path.GetFullPath(String.Format(@"EVEMon\{0}.rc", s_dictionary["AssemblyTitle"]));
+            s_resScriptfile = Path.GetFullPath(String.Format(CultureInfo.InvariantCulture,
+                "EVEMon\\{0}.rc", s_dictionary["AssemblyTitle"]));
 
             StringBuilder sb = new StringBuilder();
 
@@ -107,8 +109,10 @@ namespace EVEMon.ResFileCreator
         private static void AddVersionInfo(StringBuilder sb)
         {
             Version version = (Version)s_dictionary["AssemblyVersion"];
-            string commaVersion = String.Format("{0},{1},{2},{3}", version.Major, version.Minor, version.Build, version.Revision);
-            string dotVersion = String.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+            string commaVersion = String.Format(CultureInfo.InvariantCulture,
+                "{0},{1},{2},{3}", version.Major, version.Minor, version.Build, version.Revision);
+            string dotVersion = String.Format(CultureInfo.InvariantCulture,
+                "{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
 
             sb.AppendLine("// Version");
             sb.AppendLine("1 VERSIONINFO");
@@ -205,7 +209,7 @@ namespace EVEMon.ResFileCreator
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = s_rcexe,
-                Arguments = String.Format("/v /nologo /r \"{0}\"", s_resScriptfile),
+                Arguments = String.Format(CultureInfo.InvariantCulture, "/v /nologo /r \"{0}\"", s_resScriptfile),
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };

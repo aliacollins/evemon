@@ -4,8 +4,14 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
 {
@@ -808,7 +814,7 @@ namespace EVEMon.SkillPlanner
             {
                 case BlueprintActivity.ResearchingMaterialEfficiency:
                 case BlueprintActivity.ResearchingTimeEfficiency:
-                    return text.StartsWith("Hyasyoda") ? 0.65d : 0.70d;
+                    return text.StartsWith("Hyasyoda", StringComparison.Ordinal) ? 0.65d : 0.70d;
             }
 
             return 1.0d;
@@ -862,51 +868,56 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void nudME_ValueChanged(object sender, EventArgs e)
         {
-            int value = (int)((NumericUpDown)sender).Value;
+            NumericUpDown control = sender as NumericUpDown;
+
+            if (control == null)
+                return;
+
+            int value = (int)control.Value;
 
             switch (value)
             {
                 case -1:
                 case -19:
-                    ((NumericUpDown)sender).Value = -10;
+                    control.Value = -10;
                     break;
                 case -11:
                 case -29:
-                    ((NumericUpDown)sender).Value = -20;
+                    control.Value = -20;
                     break;
                 case -21:
                 case -39:
-                    ((NumericUpDown)sender).Value = -30;
+                    control.Value = -30;
                     break;
                 case -31:
                 case -49:
-                    ((NumericUpDown)sender).Value = -40;
+                    control.Value = -40;
                     break;
                 case -41:
                 case -59:
-                    ((NumericUpDown)sender).Value = -50;
+                    control.Value = -50;
                     break;
                 case -51:
                 case -69:
-                    ((NumericUpDown)sender).Value = -60;
+                    control.Value = -60;
                     break;
                 case -61:
                 case -79:
-                    ((NumericUpDown)sender).Value = -70;
+                    control.Value = -70;
                     break;
                 case -71:
                 case -89:
-                    ((NumericUpDown)sender).Value = -80;
+                    control.Value = -80;
                     break;
                 case -81:
                 case -99:
-                    ((NumericUpDown)sender).Value = -90;
+                    control.Value = -90;
                     break;
                 case -91:
-                    ((NumericUpDown)sender).Value = -100;
+                    control.Value = -100;
                     break;
                 case -9:
-                    ((NumericUpDown)sender).Value = 0;
+                    control.Value = 0;
                     break;
             }
 
@@ -921,19 +932,24 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void nudTE_ValueChanged(object sender, EventArgs e)
         {
-            int value = (int)((NumericUpDown)sender).Value;
+            NumericUpDown control = sender as NumericUpDown;
+
+            if (control == null)
+                return;
+
+            int value = (int)control.Value;
 
             switch (value)
             {
                 case -2:
                 case -98:
-                    ((NumericUpDown)sender).Value = -50;
+                    control.Value = -50;
                     break;
                 case -52:
-                    ((NumericUpDown)sender).Value = -100;
+                    control.Value = -100;
                     break;
                 case -48:
-                    ((NumericUpDown)sender).Value = 0;
+                    control.Value = 0;
                     break;
             }
 

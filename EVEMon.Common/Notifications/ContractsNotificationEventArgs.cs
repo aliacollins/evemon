@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Notifications
 {

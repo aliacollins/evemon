@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data

@@ -8,10 +8,13 @@ using System.Threading;
 using System.Web;
 using EVEMon.Common;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
 using EveCacheParser;
 using EveCacheParser.Exceptions;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 
 namespace EVEMon.MarketUnifiedUploader
 {

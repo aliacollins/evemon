@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.SkillPlanner
 {

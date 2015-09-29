@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 {
-    internal class Categories
+    internal static class Categories
     {
         private const string InvCategoriesTableName = "invCategories";
 
@@ -43,7 +44,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -84,16 +85,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         {
             Util.UpdatePercentDone(0);
 
-            DataTable invCategoriesTable = new DataTable();
-            invCategoriesTable.Columns.AddRange(
-                new[]
-                {
-                    new DataColumn(CategoryIDText, typeof(SqlInt32)),
-                    new DataColumn(CategoryNameText, typeof(SqlString)),
-                    new DataColumn(DescriptionText, typeof(SqlString)),
-                    new DataColumn(IconIDText, typeof(SqlInt32)),
-                    new DataColumn(PublishedText, typeof(SqlBoolean)),
-                });
+            DataTable invCategoriesTable = GetInvCategoriesDataTable();
 
             DataTable trnTranslationsTable = Translations.GetTrnTranslationsDataTable();
 
@@ -136,6 +128,27 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             Database.ImportDataBulk(InvCategoriesTableName, invCategoriesTable);
 
             Util.UpdatePercentDone(invCategoriesTable.Rows.Count);
+        }
+
+        /// <summary>
+        /// Gets the data table for the invCategories table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetInvCategoriesDataTable()
+        {
+            using (DataTable invCategoriesTable = new DataTable())
+            {
+                invCategoriesTable.Columns.AddRange(
+                    new[]
+                {
+                    new DataColumn(CategoryIDText, typeof(SqlInt32)),
+                    new DataColumn(CategoryNameText, typeof(SqlString)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                    new DataColumn(IconIDText, typeof(SqlInt32)),
+                    new DataColumn(PublishedText, typeof(SqlBoolean)),
+                });
+                return invCategoriesTable;
+            }
         }
     }
 }

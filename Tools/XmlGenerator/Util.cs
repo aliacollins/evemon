@@ -10,6 +10,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Data;
 
 namespace EVEMon.XmlGenerator
 {

@@ -8,8 +8,13 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common.Attributes;
+using EVEMon.Common.Collections.Global;
+using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
+using EVEMon.Common.Models.Extended;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Serialization.PatchXml;
@@ -62,7 +67,7 @@ namespace EVEMon.Common
                 // Network monitoring (connection availability changes)
                 NetworkMonitor.Initialize();
 
-                // APIMethods collection initialization (always before members instatiation)
+                // APIMethodsEnum collection initialization (always before members instatiation)
                 APIMethods.Initialize();
 
                 // Members instantiations

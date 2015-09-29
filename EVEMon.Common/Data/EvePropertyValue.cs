@@ -1,4 +1,5 @@
 ﻿using System;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data

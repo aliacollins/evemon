@@ -3,7 +3,11 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Controls
 {

@@ -17,6 +17,7 @@ using EVEMon.SDEToSQL.YamlToSQL.Tables;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 using YamlDotNet.RepresentationModel;
+using System.Globalization;
 
 namespace EVEMon.SDEToSQL
 {
@@ -92,7 +93,7 @@ namespace EVEMon.SDEToSQL
             Console.WriteLine();
 
             string assemblyDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location) ?? String.Empty;
-            string connectionString = string.Format(@"data source={0}",
+            string connectionString = String.Format(CultureInfo.InvariantCulture, "data source={0}",
                 Path.Combine(assemblyDirectory, @"SDEFiles\universeDataDx.db"));
 
             SqliteConnection = CreateConnection<SQLiteConnection>(connectionString);
@@ -161,7 +162,7 @@ namespace EVEMon.SDEToSQL
             string filePath = Util.CheckDataDumpExists().Single();
             DbConnection connection = GetConnection<SqlConnection>("name=EveStaticData");
 
-            s_text = String.Format(@"Restoring data dump to '{0}' Database... ", connection.Database);
+            s_text = String.Format(CultureInfo.InvariantCulture, "Restoring data dump to '{0}' Database... ", connection.Database);
             Console.Write(s_text);
 
             try
@@ -187,8 +188,8 @@ namespace EVEMon.SDEToSQL
                 restore.RelocateFiles.AddRange(
                     new[]
                     {
-                        new RelocateFile("ebs_DATADUMP", String.Format("{0}{1}.mdf", defaultDataPath, restore.Database)),
-                        new RelocateFile("ebs_DATADUMP_log", String.Format("{0}{1}_log.ldf", defaultLogPath, restore.Database))
+                        new RelocateFile("ebs_DATADUMP", String.Format(CultureInfo.InvariantCulture, "{0}{1}.mdf", defaultDataPath, restore.Database)),
+                        new RelocateFile("ebs_DATADUMP_log", String.Format(CultureInfo.InvariantCulture, "{0}{1}_log.ldf", defaultLogPath, restore.Database))
                     });
 
                 ServerRestore = restore;
@@ -200,7 +201,7 @@ namespace EVEMon.SDEToSQL
             }
             catch (Exception ex)
             {
-                string text = String.Format("Restoring data dump to '{0}' Database: Failed\n{1}", connection.Database,
+                string text = String.Format(CultureInfo.InvariantCulture, "Restoring data dump to '{0}' Database: Failed\n{1}", connection.Database,
                     ex.Message);
                 Util.HandleExceptionWithReason(s_text, text, ex.InnerException.Message);
             }
@@ -231,7 +232,7 @@ namespace EVEMon.SDEToSQL
 
             string databaseTypeName = connection is SqlConnection ? "SQL Server" : "SQLite";
 
-            s_text = String.Format("Connecting to {0} '{1}' Database... ", databaseTypeName, connection.Database);
+            s_text = String.Format(CultureInfo.InvariantCulture, "Connecting to {0} '{1}' Database... ", databaseTypeName, connection.Database);
             Console.Write(s_text);
 
             try
@@ -244,7 +245,7 @@ namespace EVEMon.SDEToSQL
             }
             catch (Exception ex)
             {
-                string text = String.Format("Connection to {0} '{1}' Database: Failed", databaseTypeName, connection.Database);
+                string text = String.Format(CultureInfo.InvariantCulture, "Connection to {0} '{1}' Database: Failed", databaseTypeName, connection.Database);
                 Util.HandleExceptionWithReason(s_text, text, ex.Message);
             }
 
@@ -261,7 +262,7 @@ namespace EVEMon.SDEToSQL
 
             string databaseTypeName = connection is SqlConnection ? "SQL Server" : "SQLite";
 
-            s_text = String.Format("Disconnecting from {0} '{1}' Database... ", databaseTypeName, connection.Database);
+            s_text = String.Format(CultureInfo.InvariantCulture, "Disconnecting from {0} '{1}' Database... ", databaseTypeName, connection.Database);
             Console.Write(s_text);
 
             try
@@ -274,7 +275,7 @@ namespace EVEMon.SDEToSQL
             }
             catch (Exception ex)
             {
-                string text = String.Format("Disconnection from {0} '{1}' Database: Failed", databaseTypeName,
+                string text = String.Format(CultureInfo.InvariantCulture, "Disconnection from {0} '{1}' Database: Failed", databaseTypeName,
                     connection.Database);
                 Util.HandleExceptionWithReason(s_text, text, ex.Message);
             }
@@ -325,7 +326,8 @@ namespace EVEMon.SDEToSQL
                     Console.WriteLine(@"Database {0}file does not exists!",
                         match.Count != 2
                             ? String.Empty
-                            : String.Format("{0} ", match[1].Value.TrimEnd(new[] { '\"' }).Replace("SDEFiles\\", String.Empty)));
+                            : String.Format(CultureInfo.InvariantCulture,
+                            "{0} ", match[1].Value.TrimEnd(new[] { '\"' }).Replace("SDEFiles\\", String.Empty)));
 
                     Console.WriteLine();
                     Console.WriteLine();
@@ -381,7 +383,7 @@ namespace EVEMon.SDEToSQL
                 sb.Append(!parameter.Equals(parameters.Last()) ? ", " : ")");
             }
 
-            return String.Format("INSERT INTO {0} {1}", tableName, sb);
+            return String.Format(CultureInfo.InvariantCulture, "INSERT INTO {0} {1}", tableName, sb);
         }
 
         /// <summary>
@@ -423,7 +425,7 @@ namespace EVEMon.SDEToSQL
                 }
             }
 
-            return String.Format("UPDATE {0} SET {1}", tableName, sb);
+            return String.Format(CultureInfo.InvariantCulture, "UPDATE {0} SET {1}", tableName, sb);
         }
 
         /// <summary>
@@ -453,7 +455,7 @@ namespace EVEMon.SDEToSQL
                 }
             }
 
-            return String.Format("DELETE {0}{1}", tableName, sb);
+            return String.Format(CultureInfo.InvariantCulture, "DELETE {0}{1}", tableName, sb);
         }
 
         /// <summary>
@@ -542,7 +544,7 @@ namespace EVEMon.SDEToSQL
             if (SqlConnection == null)
                 return;
 
-            if (SqlConnection.GetSchema("columns").Select(String.Format("TABLE_NAME = '{0}'", tableName)).Length == 0)
+            if (SqlConnection.GetSchema("columns").Select(String.Format(CultureInfo.InvariantCulture, "TABLE_NAME = '{0}'", tableName)).Length == 0)
             {
                 Console.WriteLine(@"Can't find table '{0}'.", tableName);
                 Util.PressAnyKey(-1);
@@ -570,20 +572,20 @@ namespace EVEMon.SDEToSQL
                 return;
 
             if (SqlConnection.GetSchema("columns")
-                .Select(String.Format("TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tableName, columnName))
+                .Select(String.Format(CultureInfo.InvariantCulture, "TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", tableName, columnName))
                 .Length != 0)
             {
                 return;
             }
 
             double number;
-            string commandText = String.Format("ALTER TABLE {0} ADD {1} {2} {3} NULL {4}", tableName, columnName, columnType,
+            string commandText = String.Format(CultureInfo.InvariantCulture, "ALTER TABLE {0} ADD {1} {2} {3} NULL {4}", tableName, columnName, columnType,
                 defaultValue != SqlString.Null.ToString() ? "NOT" : String.Empty,
                 defaultValue != SqlString.Null.ToString()
-                    ? String.Format("DEFAULT ({0})",
+                    ? String.Format(CultureInfo.InvariantCulture, "DEFAULT ({0})",
                         Double.TryParse(defaultValue, out number)
-                            ? String.Format("({0})", defaultValue)
-                            : String.Format("'{0}'", defaultValue)
+                            ? String.Format(CultureInfo.InvariantCulture, "({0})", defaultValue)
+                            : String.Format(CultureInfo.InvariantCulture, "'{0}'", defaultValue)
                         )
                     : String.Empty);
 
@@ -664,7 +666,7 @@ namespace EVEMon.SDEToSQL
                 }
                 catch (Exception e)
                 {
-                    string text = String.Format(@"Unable to import {0}", tableName);
+                    string text = String.Format(CultureInfo.InvariantCulture, "Unable to import {0}", tableName);
                     Util.HandleExceptionWithReason(s_text, text, e.Message);
                 }
             }

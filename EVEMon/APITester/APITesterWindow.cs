@@ -6,8 +6,14 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.XPath;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.Net;
+using APIMethods = EVEMon.Common.Models.Extended.APIMethods;
 
 namespace EVEMon.ApiTester
 {

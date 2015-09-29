@@ -4,8 +4,12 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 
 namespace EVEMon.CharactersComparison
 {

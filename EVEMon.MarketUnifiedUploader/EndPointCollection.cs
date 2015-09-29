@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Threading;

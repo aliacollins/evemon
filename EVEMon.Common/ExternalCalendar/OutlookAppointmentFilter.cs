@@ -3,6 +3,8 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 using NetOffice.OutlookApi;
 using NetOffice.OutlookApi.Enums;
 

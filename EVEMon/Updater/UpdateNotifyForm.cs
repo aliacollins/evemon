@@ -4,8 +4,10 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Helpers;
 
 namespace EVEMon.Updater
 {

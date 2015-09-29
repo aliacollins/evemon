@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Serialization.Settings
 {

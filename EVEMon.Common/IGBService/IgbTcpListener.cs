@@ -2,8 +2,10 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 
-namespace EVEMon.Common.IgbService
+namespace EVEMon.Common.IGBService
 {
     /// <summary>
     /// Listens for IGB client connections

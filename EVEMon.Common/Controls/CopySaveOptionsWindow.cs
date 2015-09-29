@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Controls

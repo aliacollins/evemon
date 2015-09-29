@@ -78,7 +78,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="app.config" />
     <EmbeddedResource Include="MineralTile.resx">
       <DependentUpon>MineralTile.cs</DependentUpon>
       <SubType>Designer</SubType>

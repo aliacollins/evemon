@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.XPath;
+using EVEMon.Common.Enumerations.API;
 
 namespace EVEMon.Common.Serialization.API
 {

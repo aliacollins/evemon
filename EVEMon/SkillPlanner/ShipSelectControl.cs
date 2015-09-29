@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.SkillPlanner
 {

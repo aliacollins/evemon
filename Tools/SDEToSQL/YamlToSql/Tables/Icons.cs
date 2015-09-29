@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 {
-    internal class Icons
+    internal static class Icons
     {
         private const string EveIconsTableName = "eveIcons";
 
@@ -33,7 +34,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -64,14 +65,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         {
             Util.UpdatePercentDone(0);
 
-            DataTable eveIconsTable = new DataTable();
-            eveIconsTable.Columns.AddRange(
-                new[]
-                {
-                    new DataColumn(IconIDText, typeof(SqlInt32)),
-                    new DataColumn(IconFileText, typeof(SqlString)),
-                    new DataColumn(DescriptionText, typeof(SqlString)),
-                });
+            DataTable eveIconsTable = GetEveIconsDataTable();
 
             int total = rNode.Count();
             total = (int)Math.Ceiling(total + (total * 0.01));
@@ -96,6 +90,25 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             Database.ImportDataBulk(EveIconsTableName, eveIconsTable);
 
             Util.UpdatePercentDone(eveIconsTable.Rows.Count);
+        }
+
+        /// <summary>
+        /// Gets the data table for the eveIcons table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetEveIconsDataTable()
+        {
+            using (DataTable eveIconsTable = new DataTable())
+            {
+                eveIconsTable.Columns.AddRange(
+                    new[]
+                {
+                    new DataColumn(IconIDText, typeof(SqlInt32)),
+                    new DataColumn(IconFileText, typeof(SqlString)),
+                    new DataColumn(DescriptionText, typeof(SqlString)),
+                });
+                return eveIconsTable;
+            }
         }
     }
 }

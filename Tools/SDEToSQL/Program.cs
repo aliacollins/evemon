@@ -3,15 +3,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace EVEMon.SDEToSQL
 {
     internal class Program
     {
-        private delegate bool EventHandler(CtrlType ctrlType);
-        private static EventHandler s_handler;
+        private static SafeNativeMethods.EventHandler s_handler;
 
         internal static bool IsClosing;
 
@@ -27,7 +25,7 @@ namespace EVEMon.SDEToSQL
                 Directory.SetCurrentDirectory(assemblyDirectory);
 
             s_handler += CtrlHandler;
-            SetConsoleCtrlHandler(s_handler, true);
+            SafeNativeMethods.SetConsoleCtrlHandler(s_handler, add: true);
 
             Util.StartTraceLogging();
 
@@ -67,8 +65,8 @@ namespace EVEMon.SDEToSQL
 
             if (!IsClosing)
             {
-                Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Importing files completed in {0}",
-                    stopwatch.Elapsed.ToString("g")));
+                Console.WriteLine(String.Format(CultureInfo.InvariantCulture, "Importing files completed in {0}",
+                    stopwatch.Elapsed.ToString("g", CultureInfo.InvariantCulture)));
             }
 
             if (IsClosing)
@@ -133,17 +131,5 @@ namespace EVEMon.SDEToSQL
 
             return true;
         }
-
-        private enum CtrlType
-        {
-            CtrlCEvent = 0,
-            CtrlBreakEvent = 1,
-            CtrlCloseEvent = 2,
-            CtrlLogoffEvent = 5,
-            CtrlShutdownEvent = 6
-        }
-
-        [DllImport("Kernel32")]
-        private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
     }
 }

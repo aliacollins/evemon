@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Constants;
 using Google.GData.Calendar;
 using Google.GData.Client;
 using Google.GData.Extensions;

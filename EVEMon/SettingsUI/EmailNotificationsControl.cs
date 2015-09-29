@@ -4,7 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.EmailProvider;
+using EVEMon.Common.Extensions;
+using EVEMon.Common.Service;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SettingsUI

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Text;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
 
 namespace EVEMon.Common.Net
 {

@@ -1,4 +1,6 @@
-﻿namespace System.Windows.Forms
+﻿using System.Windows.Forms;
+
+namespace EVEMon.Common.Controls
 {
     public static class ControlExtensions
     {

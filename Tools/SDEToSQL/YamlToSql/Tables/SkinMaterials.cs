@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.YamlToSQL.Tables
 {
-    internal class SkinMaterials
+    internal static class SkinMaterials
     {
         private const string SknMaterialsTableName = "sknMaterials";
 
@@ -40,7 +41,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             if (String.IsNullOrEmpty(filePath))
                 return;
 
-            string text = String.Format("Parsing {0}... ", yamlFile);
+            string text = String.Format(CultureInfo.InvariantCulture, "Parsing {0}... ", yamlFile);
             Console.Write(text);
             YamlMappingNode rNode = Util.ParseYamlFile(filePath);
 
@@ -71,21 +72,7 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
         {
             Util.UpdatePercentDone(0);
 
-            DataTable sknMaterialsTable = new DataTable();
-            sknMaterialsTable.Columns.AddRange(
-                new[]
-                {
-                    new DataColumn(SkinMaterialIDText, typeof(SqlInt32)),
-                    new DataColumn(MaterialSetIDText, typeof(SqlInt32)),
-                    new DataColumn(DisplayNameIDText, typeof(SqlInt32)),
-                    
-                    // Obsolete since Galatea 1.0
-                    new DataColumn(MaterialText, typeof(SqlString)),
-                    new DataColumn(ColorHullText, typeof(SqlString)),
-                    new DataColumn(ColorWindowText, typeof(SqlString)),
-                    new DataColumn(ColorPrimaryText, typeof(SqlString)),
-                    new DataColumn(ColorSecondaryText, typeof(SqlString)),
-                });
+            DataTable sknMaterialsTable = GetSknMaterialsDataTable();
 
             int total = rNode.Count();
             total = (int)Math.Ceiling(total + (total * 0.01));
@@ -117,6 +104,32 @@ namespace EVEMon.SDEToSQL.YamlToSQL.Tables
             Database.ImportDataBulk(SknMaterialsTableName, sknMaterialsTable);
 
             Util.UpdatePercentDone(sknMaterialsTable.Rows.Count);
+        }
+
+        /// <summary>
+        /// Gets the data table for the sknMaterials table.
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable GetSknMaterialsDataTable()
+        {
+            using (DataTable sknMaterialsTable = new DataTable())
+            {
+                sknMaterialsTable.Columns.AddRange(
+                    new[]
+                {
+                    new DataColumn(SkinMaterialIDText, typeof(SqlInt32)),
+                    new DataColumn(MaterialSetIDText, typeof(SqlInt32)),
+                    new DataColumn(DisplayNameIDText, typeof(SqlInt32)),
+                    
+                    // Obsolete since Galatea 1.0
+                    new DataColumn(MaterialText, typeof(SqlString)),
+                    new DataColumn(ColorHullText, typeof(SqlString)),
+                    new DataColumn(ColorWindowText, typeof(SqlString)),
+                    new DataColumn(ColorPrimaryText, typeof(SqlString)),
+                    new DataColumn(ColorSecondaryText, typeof(SqlString)),
+                });
+                return sknMaterialsTable;
+            }
         }
     }
 }

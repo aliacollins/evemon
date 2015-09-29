@@ -456,8 +456,8 @@ namespace EVEMon.PieChart
         /// </summary>
         public void SliceRelativeDisplacements(float[] relativeDisplacements)
         {
-            m_sliceRelativeDisplacements = relativeDisplacements;
             Debug.Assert(AreDisplacementsValid(relativeDisplacements));
+            m_sliceRelativeDisplacements = relativeDisplacements;
         }
 
         /// <summary>

@@ -6,7 +6,11 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Models;
 using EVEMon.Common.Properties;
 
 namespace EVEMon.ApiCredentialsManagement

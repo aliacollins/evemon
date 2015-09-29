@@ -1,5 +1,6 @@
 ﻿using EVEMon.Common;
 using EVEMon.Common.Controls;
+using EVEMon.Common.Enumerations;
 
 namespace EVEMon.SettingsUI
 {
@@ -110,7 +111,7 @@ namespace EVEMon.SettingsUI
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
             this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Common.ThrobberState.Stopped;
+            this.throbber.State = ThrobberState.Stopped;
             this.throbber.TabIndex = 9;
             this.throbber.TabStop = false;
             // 

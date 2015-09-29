@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
+using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Net
 {

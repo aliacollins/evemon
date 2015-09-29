@@ -1,3 +1,5 @@
+using EVEMon.Common.Enumerations;
+
 namespace EVEMon.SkillPlanner
 {
     partial class BlueprintBrowserControl
@@ -196,7 +198,7 @@ namespace EVEMon.SkillPlanner
             // 
             // requiredSkillsControl
             // 
-            this.requiredSkillsControl.Activity = EVEMon.Common.BlueprintActivity.None;
+            this.requiredSkillsControl.Activity = BlueprintActivity.None;
             this.requiredSkillsControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.requiredSkillsControl.Location = new System.Drawing.Point(3, 16);
             this.requiredSkillsControl.MinimumSize = new System.Drawing.Size(187, 0);

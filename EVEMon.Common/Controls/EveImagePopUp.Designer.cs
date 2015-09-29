@@ -1,3 +1,5 @@
+using EVEMon.Common.Enumerations;
+
 namespace EVEMon.Common.Controls
 {
     partial class EveImagePopUp
@@ -34,7 +36,7 @@ namespace EVEMon.Common.Controls
             // eveImage
             // 
             this.eveImage.EveItem = null;
-            this.eveImage.ImageSize = EVEMon.Common.EveImageSize.x256;
+            this.eveImage.ImageSize = EveImageSize.x256;
             this.eveImage.Location = new System.Drawing.Point(0, 0);
             this.eveImage.Name = "eveImage";
             this.eveImage.PopUpEnabled = false;

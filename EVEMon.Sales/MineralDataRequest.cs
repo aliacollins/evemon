@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using EVEMon.Common;
 using EVEMon.Common.Data;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Sales

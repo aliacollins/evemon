@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using EVEMon.Common;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Factories;
 
 namespace EVEMon.LogitechG15
 {

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.SettingsUI

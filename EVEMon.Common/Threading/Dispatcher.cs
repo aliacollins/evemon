@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Factories;
 
 namespace EVEMon.Common.Threading
 {
