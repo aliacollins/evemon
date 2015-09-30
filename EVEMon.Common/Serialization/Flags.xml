@@ -134,5 +134,6 @@
     <row flagID="154" flagName="QuafeBay" flagText="Quafe Bay" />
     <row flagID="155" flagName="FleetHangar" flagText="Fleet Hangar" />
     <row flagID="156" flagName="HiddenModifiers" flagText="Hidden Modifiers" />
+    <row flagID="157" flagName="StructureOffline" flagText="Structure Offline" />
   </rowset>
 </invFlags>
