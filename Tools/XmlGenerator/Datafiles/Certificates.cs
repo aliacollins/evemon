@@ -122,7 +122,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Select(recommendation => new SerializableCertificateRecommendation
                                           {
                                               ID = recommendation.ShipTypeID,
-                                              Ship = Database.InvTypesTable[recommendation.ShipTypeID].Name,
+                                              ShipName = Database.InvTypesTable[recommendation.ShipTypeID].Name,
                                           });
 
             crtCertificate.Recommendations.AddRange(listOfRecommendations);
