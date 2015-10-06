@@ -121,7 +121,7 @@
     <value>eve-blueprints-en-US.xml.gzip</value>
   </data>
   <data name="CertificatesDatafile" xml:space="preserve">
-    <value>eve-certificates-v2-en-US.xml.gzip</value>
+    <value>eve-certificates-en-US.xml.gzip</value>
   </data>
   <data name="GeographyDatafile" xml:space="preserve">
     <value>eve-geography-en-US.xml.gzip</value>

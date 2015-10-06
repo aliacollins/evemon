@@ -36,7 +36,7 @@ namespace EVEMon.Common.Data
 
             foreach (Ship ship in src.Recommendations
                 .Select(recommendation => StaticItems.ShipsMarketGroup.AllItems.OfType<Ship>()
-                    .FirstOrDefault(item => item.Name == recommendation.Ship))
+                    .FirstOrDefault(item => item.Name == recommendation.ShipName))
                 .Where(ship => ship != null))
             {
                 ship.Recommendations.Add(this);
