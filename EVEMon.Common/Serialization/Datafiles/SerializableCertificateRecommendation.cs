@@ -18,7 +18,7 @@ namespace EVEMon.Common.Serialization.Datafiles
         /// Gets or sets the ship.
         /// </summary>
         /// <value>The ship.</value>
-        [XmlAttribute("Ship")]
-        public string Ship { get; set; }
+        [XmlAttribute("name")]
+        public string ShipName { get; set; }
     }
 }
