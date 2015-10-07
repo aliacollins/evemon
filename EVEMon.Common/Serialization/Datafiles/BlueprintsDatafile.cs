@@ -10,7 +10,7 @@ namespace EVEMon.Common.Serialization.Datafiles
     /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
     /// Don't use auto-property with private setter for the collections as it does not work with XmlSerializer.
     /// </remarks>
-    [XmlRoot("blueprints")]
+    [XmlRoot("blueprintsDatafile")]
     public sealed class BlueprintsDatafile
     {
         private readonly Collection<SerializableBlueprintMarketGroup> m_marketGroups;

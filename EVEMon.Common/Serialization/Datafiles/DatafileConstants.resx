@@ -129,6 +129,9 @@
   <data name="ItemsDatafile" xml:space="preserve">
     <value>eve-items-en-US.xml.gzip</value>
   </data>
+  <data name="MasteriesDatafile" xml:space="preserve">
+    <value>eve-masteries-en-US.xml.gzip</value>
+  </data>
   <data name="PropertiesDatafile" xml:space="preserve">
     <value>eve-properties-en-US.xml.gzip</value>
   </data>

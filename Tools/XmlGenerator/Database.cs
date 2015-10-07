@@ -28,6 +28,7 @@ namespace EVEMon.XmlGenerator
         internal static int BlueprintsTotalCount;
         internal static int GeographyTotalCount;
         internal static int ReprocessingTotalCount;
+        internal static int MasteriesTotalCount;
 
 
         #region Properties
@@ -839,6 +840,8 @@ namespace EVEMon.XmlGenerator
                     MasteryID = typeMastery.masteryID,
                     ItemID = typeMastery.typeID
                 }).ToList();
+
+            MasteriesTotalCount = list.Count;
 
             return new RelationSet<DgmTypeMasteries>(list);
         }

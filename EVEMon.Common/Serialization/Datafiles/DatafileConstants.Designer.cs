@@ -97,6 +97,15 @@ namespace EVEMon.Common.Serialization.Datafiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to eve-masteries-en-US.xml.gzip.
+        /// </summary>
+        public static string MasteriesDatafile {
+            get {
+                return ResourceManager.GetString("MasteriesDatafile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to eve-properties-en-US.xml.gzip.
         /// </summary>
         public static string PropertiesDatafile {

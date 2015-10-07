@@ -76,6 +76,7 @@
     <Compile Include="Datafiles\Properties.cs" />
     <Compile Include="Datafiles\Reprocessing.cs" />
     <Compile Include="Datafiles\Skills.cs" />
+    <Compile Include="Datafiles\Masteries.cs" />
     <Compile Include="Models\agtAgents.cs" />
     <Compile Include="Models\agtAgentTypes.cs" />
     <Compile Include="Models\agtResearchAgents.cs" />
