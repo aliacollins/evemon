@@ -4,33 +4,33 @@ using System.Xml.Serialization;
 namespace EVEMon.Common.Serialization.Datafiles
 {
     /// <summary>
-    /// Represents our certificates datafile
+    /// Represents our masteries datafile
     /// </summary>
     /// <remarks>
     /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
     /// Don't use auto-property with private setter for the collections as it does not work with XmlSerializer.
     /// </remarks>
-    [XmlRoot("certificatesDatafile")]
-    public sealed class CertificatesDatafile
+    [XmlRoot("masteriesDatafile")]
+    public sealed class MasteriesDatafile
     {
-        private readonly Collection<SerializableCertificateGroup> m_groups;
+        private readonly Collection<SerializableMasteryShip> m_masteryShips;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CertificatesDatafile"/> class.
+        /// Initializes a new instance of the <see cref="MasteriesDatafile"/> class.
         /// </summary>
-        public CertificatesDatafile()
+        public MasteriesDatafile()
         {
-            m_groups = new Collection<SerializableCertificateGroup>();
+            m_masteryShips = new Collection<SerializableMasteryShip>();
         }
 
         /// <summary>
-        /// Gets the certificates groups.
+        /// Gets the masteries groups.
         /// </summary>
         /// <value>The groups.</value>
-        [XmlElement("certificateGroup")]
-        public Collection<SerializableCertificateGroup> Groups
+        [XmlElement("ship")]
+        public Collection<SerializableMasteryShip> MasteryShips
         {
-            get { return m_groups; }
+            get { return m_masteryShips; }
         }
     }
 }

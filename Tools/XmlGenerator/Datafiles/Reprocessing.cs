@@ -7,7 +7,7 @@ using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.XmlGenerator.Datafiles
 {
-    public static class Reprocessing
+    internal static class Reprocessing
     {
         /// <summary>
         /// Generates the reprocessing datafile.
@@ -29,10 +29,10 @@ namespace EVEMon.XmlGenerator.Datafiles
                 List<SerializableMaterialQuantity> materials = Database.InvTypeMaterialsTable.Where(
                     x => x.ID == typeID).Select(
                         srcMaterial => new SerializableMaterialQuantity
-                                           {
-                                               ID = srcMaterial.MaterialTypeID,
-                                               Quantity = srcMaterial.Quantity
-                                           }).ToList();
+                        {
+                            ID = srcMaterial.MaterialTypeID,
+                            Quantity = srcMaterial.Quantity
+                        }).ToList();
 
                 if (!materials.Any())
                     continue;

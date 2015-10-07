@@ -10,7 +10,7 @@ using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator.Datafiles
 {
-    public static class Blueprints
+    internal static class Blueprints
     {
         private static List<InvMarketGroups> s_injectedMarketGroups;
         private static List<InvTypes> s_nullMarketBlueprints;

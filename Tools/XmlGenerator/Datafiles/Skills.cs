@@ -10,7 +10,7 @@ using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator.Datafiles
 {
-    public static class Skills
+    internal static class Skills
     {
         /// <summary>
         /// Generate the skills datafile.
@@ -30,10 +30,10 @@ namespace EVEMon.XmlGenerator.Datafiles
                 x => x.CategoryID == DBConstants.SkillCategoryID && x.ID != DBConstants.FakeSkillsGroupID).OrderBy(x => x.Name))
             {
                 SerializableSkillGroup skillGroup = new SerializableSkillGroup
-                                                        {
-                                                            ID = group.ID,
-                                                            Name = group.Name,
-                                                        };
+                {
+                    ID = group.ID,
+                    Name = group.Name,
+                };
 
                 // Add skills in skill group
                 skillGroup.Skills.AddRange(ExportSkillsInGroup(group).OrderBy(x => x.Name));
@@ -65,13 +65,13 @@ namespace EVEMon.XmlGenerator.Datafiles
                 Util.UpdatePercentDone(Database.SkillsTotalCount);
 
                 SerializableSkill singleSkill = new SerializableSkill
-                                                    {
-                                                        ID = skill.ID,
-                                                        Name = skill.Name,
-                                                        Description = skill.Description,
-                                                        Public = skill.Published,
-                                                        Cost = (long)skill.BasePrice,
-                                                    };
+                {
+                    ID = skill.ID,
+                    Name = skill.Name,
+                    Description = skill.Description,
+                    Public = skill.Published,
+                    Cost = (long)skill.BasePrice,
+                };
 
                 // Export skill atributes
                 Dictionary<int, Int64> skillAttributes = Database.DgmTypeAttributesTable.Where(
@@ -80,16 +80,16 @@ namespace EVEMon.XmlGenerator.Datafiles
 
                 singleSkill.Rank = skillAttributes.ContainsKey(DBConstants.SkillTimeConstantPropertyID) &&
                                    skillAttributes[DBConstants.SkillTimeConstantPropertyID] > 0
-                                       ? skillAttributes[DBConstants.SkillTimeConstantPropertyID]
-                                       : 1;
+                    ? skillAttributes[DBConstants.SkillTimeConstantPropertyID]
+                    : 1;
 
                 singleSkill.PrimaryAttribute = skillAttributes.ContainsKey(DBConstants.PrimaryAttributePropertyID)
-                                                   ? IntToEveAttribute(skillAttributes[DBConstants.PrimaryAttributePropertyID])
-                                                   : EveAttribute.None;
+                    ? IntToEveAttribute(skillAttributes[DBConstants.PrimaryAttributePropertyID])
+                    : EveAttribute.None;
                 singleSkill.SecondaryAttribute = skillAttributes.ContainsKey(DBConstants.SecondaryAttributePropertyID)
-                                                     ? IntToEveAttribute(
-                                                         skillAttributes[DBConstants.SecondaryAttributePropertyID])
-                                                     : EveAttribute.None;
+                    ? IntToEveAttribute(
+                        skillAttributes[DBConstants.SecondaryAttributePropertyID])
+                    : EveAttribute.None;
                 singleSkill.CanTrainOnTrial = !skillAttributes.ContainsKey(DBConstants.CanNotBeTrainedOnTrialPropertyID) ||
                                               skillAttributes[DBConstants.CanNotBeTrainedOnTrialPropertyID] == 0;
 
@@ -105,12 +105,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                     InvTypes prereqSkill = Database.InvTypesTable[skillAttributes[DBConstants.RequiredSkillPropertyIDs[i]]];
 
                     SerializableSkillPrerequisite preReq = new SerializableSkillPrerequisite
-                                                           {
-                                                               ID = prereqSkill.ID,
-                                                               Level =
-                                                                   skillAttributes[DBConstants.RequiredSkillLevelPropertyIDs[i]],
-                                                               Name = prereqSkill.Name
-                                                           };
+                    {
+                        ID = prereqSkill.ID,
+                        Level =
+                            skillAttributes[DBConstants.RequiredSkillLevelPropertyIDs[i]],
+                        Name = prereqSkill.Name
+                    };
 
                     // Add prerequisites
                     listOfPrerequisites.Add(preReq);
