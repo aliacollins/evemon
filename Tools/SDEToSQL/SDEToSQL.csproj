@@ -104,43 +104,49 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CtrlType.cs" />
-    <Compile Include="Database.cs" />
+    <Compile Include="Providers\DbConnectionProvider.cs" />
+    <Compile Include="Providers\SqlConnectionProvider.cs" />
+    <Compile Include="Providers\SqliteConnectionProvider.cs" />
+    <Compile Include="Importers\DataDumpToSQL\DataDumpImporter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapCelestialStatistics.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapConstellationJumps.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapConstellations.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapDenormalize.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapJumps.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapLandmarks.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapLocationScenes.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapLocationWormholeClasses.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapRegionJumps.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapRegions.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapSolarSystemJumps.cs" />
-    <Compile Include="SQLiteToSQL\Models\mapSolarSystems.cs" />
-    <Compile Include="SQLiteToSQL\Models\UniverseData.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapCelestialStatistics.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapConstellationJumps.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapConstellations.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapDenormalize.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapJumps.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapLandmarks.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapLocationScenes.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapLocationWormholeClasses.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapRegionJumps.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapRegions.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapSolarSystemJumps.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\mapSolarSystems.cs" />
+    <Compile Include="Importers\SQLiteToSQL\Models\UniverseData.cs" />
     <Compile Include="SafeNativeMethods.cs" />
-    <Compile Include="SQLiteToSQL\SqliteDbConfiguration.cs" />
-    <Compile Include="Util.cs" />
-    <Compile Include="YamlToSQL\Tables\Blueprints.cs" />
-    <Compile Include="YamlToSQL\Tables\Categories.cs" />
-    <Compile Include="YamlToSQL\Tables\Certificates.cs" />
-    <Compile Include="YamlToSQL\Tables\Graphics.cs" />
-    <Compile Include="YamlToSQL\Tables\Groups.cs" />
-    <Compile Include="YamlToSQL\Tables\Icons.cs" />
-    <Compile Include="YamlToSQL\Tables\TranslationsParameters.cs" />
-    <Compile Include="YamlToSQL\Tables\Translations.cs" />
-    <Compile Include="YamlToSQL\Tables\Types.cs" />
-    <Compile Include="YamlToSQL\Tables\SkinLicenses.cs" />
-    <Compile Include="YamlToSQL\Tables\SkinMaterials.cs" />
-    <Compile Include="YamlToSQL\Tables\Skins.cs" />
-    <Compile Include="YamlToSQL\YamlFilesConstants.Designer.cs">
+    <Compile Include="Providers\SqliteDbConfiguration.cs" />
+    <Compile Include="Importers\SQLiteToSQL\SqliteImporter.cs" />
+    <Compile Include="Utils\Util.cs" />
+    <Compile Include="Importers\YamlToSQL\Blueprints.cs" />
+    <Compile Include="Importers\YamlToSQL\Categories.cs" />
+    <Compile Include="Importers\YamlToSQL\Certificates.cs" />
+    <Compile Include="Importers\YamlToSQL\Graphics.cs" />
+    <Compile Include="Importers\YamlToSQL\Groups.cs" />
+    <Compile Include="Importers\YamlToSQL\Icons.cs" />
+    <Compile Include="Importers\IImporter.cs" />
+    <Compile Include="Importers\YamlToSQL\TranslationsParameters.cs" />
+    <Compile Include="Importers\YamlToSQL\Translations.cs" />
+    <Compile Include="Importers\YamlToSQL\Types.cs" />
+    <Compile Include="Importers\YamlToSQL\SkinLicenses.cs" />
+    <Compile Include="Importers\YamlToSQL\SkinMaterials.cs" />
+    <Compile Include="Importers\YamlToSQL\Skins.cs" />
+    <Compile Include="Importers\YamlToSQL\YamlFilesConstants.Designer.cs">
       <DependentUpon>YamlFilesConstants.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Importers\YamlToSQL\YamlImporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -242,7 +248,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="YamlToSQL\YamlFilesConstants.resx">
+    <EmbeddedResource Include="Importers\YamlToSQL\YamlFilesConstants.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>YamlFilesConstants.Designer.cs</LastGenOutput>
     </EmbeddedResource>
