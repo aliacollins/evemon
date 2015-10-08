@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using EVEMon.XmlGenerator.Interfaces;
 
-namespace EVEMon.XmlGenerator
+namespace EVEMon.XmlGenerator.Collections
 {
     /// <summary>
     /// A dictionary-based implementation.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class Bag<T> : IEnumerable<T>
+    public sealed class BagCollection<T> : IEnumerable<T>
         where T : IHasID
     {
         private readonly Dictionary<Int64, T> m_items;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Bag&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="BagCollection{T}"/> class.
         /// </summary>
         /// <param name="collection">The list.</param>
-        public Bag(IndexedCollection<T> collection)
+        public BagCollection(IndexedCollection<T> collection)
         {
             if (collection == null)
                 throw new ArgumentNullException("collection");

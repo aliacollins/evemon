@@ -6,6 +6,9 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Datafiles;
+using EVEMon.XmlGenerator.Helpers;
+using EVEMon.XmlGenerator.Interfaces;
+using EVEMon.XmlGenerator.Providers;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator.Datafiles

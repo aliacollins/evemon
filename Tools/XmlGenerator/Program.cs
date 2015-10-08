@@ -2,7 +2,10 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
+using EVEMon.Common.Constants;
 using EVEMon.XmlGenerator.Datafiles;
+using EVEMon.XmlGenerator.Helpers;
+using EVEMon.XmlGenerator.Providers;
 using EVEMon.XmlGenerator.Xmlfiles;
 
 namespace EVEMon.XmlGenerator
@@ -42,8 +45,7 @@ namespace EVEMon.XmlGenerator
             // Generate support xml files
             Flags.GenerateXmlfile();
 
-            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating files completed in {0}",
-                                            stopwatch.Elapsed.ToString("g")));
+            Console.WriteLine(String.Format(CultureInfo.CurrentCulture, "Generating files completed in {0:g}", stopwatch.Elapsed));
             Console.WriteLine();
             Console.Write(@"Press any key to exit.");
             Console.ReadLine();

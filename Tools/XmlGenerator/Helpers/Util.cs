@@ -3,125 +3,23 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Serialization;
-using System.Xml.Xsl;
-using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 
-namespace EVEMon.XmlGenerator
+namespace EVEMon.XmlGenerator.Helpers
 {
     public static class Util
     {
         private static string s_text;
+        private static string s_solutionDir;
+        private static string s_outputPath;
+        private static string s_projectDir;
         private static int s_counter;
         private static int s_tablesCount;
         private static int s_percentOld;
-        private static string s_solutionDir;
 
-        private static String s_outputPath;
-        private static String s_projectDir;
-
-        /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize</typeparam>
-        /// <param name="filename">The file to deserialize from</param>
-        /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
-        /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
-        public static SimpleCollection<T> DeserializeList<T>(string filename)
-        {
-            return DeserializeXMLCore<SimpleCollection<T>>(filename);
-        }
-
-        /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize</typeparam>
-        /// <param name="filename">The file to deserialize from</param>
-        /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
-        /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
-        public static IndexedCollection<T> DeserializeIndexedList<T>(string filename)
-            where T : IHasID
-        {
-            return DeserializeXMLCore<IndexedCollection<T>>(filename);
-        }
-
-        /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize</typeparam>
-        /// <param name="filename">The file to deserialize from</param>
-        /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
-        /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
-        public static Relations<T> DeserializeRelations<T>(string filename)
-            where T : class, IRelation
-        {
-            return DeserializeXMLCore<Relations<T>>(filename);
-        }
-
-        /// <summary>
-        /// Deserializes an XML, returning null when exceptions occur.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize</typeparam>
-        /// <param name="filename">The file to deserialize from</param>
-        /// <returns>The deserialized object when success, <c>null</c> otherwise.</returns>
-        /// <remarks>Currently unused, as we have switched to loading data from MSSQL, may be used in the future.</remarks>
-        private static T DeserializeXMLCore<T>(string filename)
-        {
-            string path = Path.Combine(@"..\..\..\Input", filename);
-
-            // Load xml doc
-            XmlDocument doc = new XmlDocument();
-            doc.Load(path);
-
-            // Load XSLT 
-            Assembly asm = Assembly.GetExecutingAssembly();
-            XslCompiledTransform xslt = new XslCompiledTransform();
-            Stream input = asm.GetManifestResourceStream(String.Format(CultureConstants.DefaultCulture,
-                "{0}.Zofu.MySQLDumpImport.xslt", asm.GetName().Name));
-            if (input != null)
-            {
-                using (XmlReader reader = XmlReader.Create(input))
-                {
-                    xslt.Load(reader);
-                }
-            }
-
-            // Apply trasnform and deserialize
-            using (XmlNodeReader reader = new XmlNodeReader(doc))
-            {
-                MemoryStream stream = Common.Util.GetMemoryStream();
-
-                // Apply the XSL transform
-                using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
-                {
-                    writer.Formatting = Formatting.Indented;
-                    xslt.Transform(reader, writer);
-                    writer.Flush();
-
-                    if (EveMonClient.IsDebugBuild)
-                    {
-                        // Gets a printing for debugging
-                        stream.Seek(0, SeekOrigin.Begin);
-                        XmlDocument doc2 = new XmlDocument();
-                        doc2.Load(stream);
-                        Trace.Write(Common.Util.GetXmlStringRepresentation(doc2));
-                    }
-
-                    // Deserialize from the given stream
-                    stream.Seek(0, SeekOrigin.Begin);
-                    XmlSerializer xs = new XmlSerializer(typeof(T));
-                    T result = (T)xs.Deserialize(stream);
-
-                    return result;
-                }
-            }
-        }
 
         /// <summary>
         /// Serializes a XML file to EVEMon.Common\Resources.
@@ -142,9 +40,9 @@ namespace EVEMon.XmlGenerator
                 zstream.Flush();
             }
 
-            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine(@"-----------------------------------------------");
             Console.WriteLine("Updated : {0}", filename);
-            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine(@"-----------------------------------------------");
 
             // As long as EVEMon.Common is not rebuilt, files are not updated in output directories
             Copy(path, Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\", GetOutputPath(), "Resources", filename));
@@ -205,7 +103,7 @@ namespace EVEMon.XmlGenerator
                 }
             }
 
-            Console.WriteLine("MD5Sums file created successfully");
+            Console.WriteLine(@"MD5Sums file created successfully");
             Console.WriteLine();
         }
 
@@ -305,7 +203,7 @@ namespace EVEMon.XmlGenerator
         internal static void UpdatePercentDone(int total)
         {
             s_counter++;
-            int percent = total > 0 ? (s_counter * 100 / total) : 0;
+            int percent = total > 0 ? (s_counter / total) : 0;
 
             if (s_counter != 1 && s_percentOld >= percent)
                 return;
@@ -313,7 +211,7 @@ namespace EVEMon.XmlGenerator
             if (!String.IsNullOrEmpty(s_text))
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
 
-            s_text = String.Format(CultureConstants.DefaultCulture, "{0}%", percent);
+            s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", percent);
             Console.Write(s_text);
             s_percentOld = percent;
         }
@@ -321,13 +219,14 @@ namespace EVEMon.XmlGenerator
         /// <summary>
         /// Updates the progress of data loaded from SQL server.
         /// </summary>
-        internal static void UpdateProgress()
+        /// <param name="totalTableCount">The total table count.</param>
+        internal static void UpdateProgress(int totalTableCount)
         {
             if (!String.IsNullOrEmpty(s_text))
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
 
             s_tablesCount++;
-            s_text = String.Format(CultureConstants.DefaultCulture, "{0}%", (s_tablesCount * 100 / Database.TotalTablesCount));
+            s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", (s_tablesCount / totalTableCount));
             Console.Write(s_text);
         }
 
@@ -347,7 +246,7 @@ namespace EVEMon.XmlGenerator
         /// <param name="stopwatch">The stopwatch.</param>
         internal static void DisplayEndTime(Stopwatch stopwatch)
         {
-            Console.WriteLine(@" in {0}", stopwatch.Elapsed.ToString("g"));
+            Console.WriteLine(@" in {0:g}", stopwatch.Elapsed);
         }
 
         #endregion

@@ -3,12 +3,12 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using EVEMon.XmlGenerator.StaticData;
 
-namespace EVEMon.XmlGenerator
+namespace EVEMon.XmlGenerator.Extensions
 {
     /// <summary>
     /// Series of extension methods to cleanup and format strings for use in the data files.
     /// </summary>
-    public static class StringCleaningExtensions
+    public static class StringCleaning
     {
         /// <summary>
         /// Cleans up and normalizes a string by passing it through the following filters.
