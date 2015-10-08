@@ -74,25 +74,22 @@ namespace EVEMon.SDEToSQL.Importers.DataDumpToSQL
                     ? server.MasterDBLogPath
                     : server.Settings.DefaultLog;
 
-                Restore restore = new Restore
-                {
-                    Database = m_sqlConnection.Database,
-                    ReplaceDatabase = true,
-                    PercentCompleteNotification = 1,
-                };
-                restore.PercentComplete += Restore_PercentComplete;
-                restore.Devices.AddDevice(filePath, DeviceType.File);
-                restore.RelocateFiles.AddRange(
+                m_restore.Database = m_sqlConnection.Database;
+                m_restore.ReplaceDatabase = true;
+                m_restore.PercentCompleteNotification = 1;
+                m_restore.PercentComplete += Restore_PercentComplete;
+                m_restore.Devices.AddDevice(filePath, DeviceType.File);
+                m_restore.RelocateFiles.AddRange(
                     new[]
                     {
                         new RelocateFile("ebs_DATADUMP",
-                            String.Format(CultureInfo.InvariantCulture, "{0}{1}.mdf", defaultDataPath, restore.Database)),
+                            String.Format(CultureInfo.InvariantCulture, "{0}{1}.mdf", defaultDataPath, m_restore.Database)),
                         new RelocateFile("ebs_DATADUMP_log",
-                            String.Format(CultureInfo.InvariantCulture, "{0}{1}_log.ldf", defaultLogPath, restore.Database))
+                            String.Format(CultureInfo.InvariantCulture, "{0}{1}_log.ldf", defaultLogPath, m_restore.Database))
                     });
 
                 if (!m_isClosing)
-                    restore.SqlRestore(server);
+                    m_restore.SqlRestore(server);
 
                 Util.DisplayEndTime(stopwatch);
                 Console.WriteLine();
