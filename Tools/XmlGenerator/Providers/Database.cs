@@ -318,9 +318,9 @@ namespace EVEMon.XmlGenerator.Providers
         /// Creates the connection to the SQL Database.
         /// </summary>
         /// <returns></returns>
-        private static void CreateConnection()
+        private static SqlConnection CreateConnection()
         {
-            s_text = "Connecting to SQL Database... ";
+            s_text = "Connecting to SQL Server... ";
             Console.Write(s_text);
 
             // Initialize the SQL Connection
@@ -331,18 +331,20 @@ namespace EVEMon.XmlGenerator.Providers
                 connection.Open();
 
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                Console.WriteLine(@"Connection to MSSQL Database: Successful");
+                Console.WriteLine(@"Connection to SQL Server: Successful");
                 Console.WriteLine();
             }
             catch (Exception ex)
             {
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
-                Console.WriteLine(@"Connection to MSSQL Database: Failed");
+                Console.WriteLine(@"Connection to SQL Server: Failed");
                 Console.WriteLine(@"Reason: {0}", ex.Message);
                 Console.Write(@"Press any key to exit.");
                 Console.ReadLine();
                 Environment.Exit(-1);
             }
+
+            return connection;
         }
 
         /// <summary>
@@ -376,10 +378,10 @@ namespace EVEMon.XmlGenerator.Providers
         {
             s_totalTablesCount = Util.GetCountOfTypesInNamespace("EVEMon.XmlGenerator.StaticData");
 
-            CreateConnection();
+            SqlConnection connection = CreateConnection();
 
             // Data dumps are available from CCP
-            Console.Write(@"Loading Data from Database... ");
+            Console.Write(@"Loading data from '{0}' database... ", connection.Database);
 
             s_startTime = DateTime.Now;
 

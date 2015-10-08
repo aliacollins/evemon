@@ -18,7 +18,7 @@ namespace EVEMon.XmlGenerator.Helpers
         private static string s_projectDir;
         private static int s_counter;
         private static int s_tablesCount;
-        private static int s_percentOld;
+        private static double s_percentOld;
 
 
         /// <summary>
@@ -199,11 +199,11 @@ namespace EVEMon.XmlGenerator.Helpers
         /// <summary>
         /// Updates the percantage done of the datafile generating procedure.
         /// </summary>
-        /// <param name="total"></param>
-        internal static void UpdatePercentDone(int total)
+        /// <param name="totalCount">The total count.</param>
+        internal static void UpdatePercentDone(int totalCount)
         {
             s_counter++;
-            int percent = total > 0 ? (s_counter / total) : 0;
+            double percent = totalCount > 0 ? (s_counter / (double)totalCount) : 0;
 
             if (s_counter != 1 && s_percentOld >= percent)
                 return;
@@ -219,14 +219,14 @@ namespace EVEMon.XmlGenerator.Helpers
         /// <summary>
         /// Updates the progress of data loaded from SQL server.
         /// </summary>
-        /// <param name="totalTableCount">The total table count.</param>
-        internal static void UpdateProgress(int totalTableCount)
+        /// <param name="totalCount">The total count.</param>
+        internal static void UpdateProgress(int totalCount)
         {
             if (!String.IsNullOrEmpty(s_text))
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
 
             s_tablesCount++;
-            s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", (s_tablesCount / totalTableCount));
+            s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", (s_tablesCount / (double)totalCount));
             Console.Write(s_text);
         }
 

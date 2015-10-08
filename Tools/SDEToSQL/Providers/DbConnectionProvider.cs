@@ -93,7 +93,7 @@ namespace EVEMon.SDEToSQL.Providers
 
             string databaseTypeName = Connection is SqlConnection ? "SQL Server" : "SQLite";
 
-            Text = String.Format(CultureInfo.InvariantCulture, "Connecting to {0} '{1}' Database... ",
+            Text = String.Format(CultureInfo.InvariantCulture, "Connecting to {0} '{1}' database... ",
                 databaseTypeName, Connection.Database);
             Console.Write(Text);
 
@@ -102,12 +102,12 @@ namespace EVEMon.SDEToSQL.Providers
                 Connection.Open();
 
                 Util.SetConsoleCursorPosition(Text);
-                Console.WriteLine(@"Connection to {0} '{1}' Database: Successful", databaseTypeName, Connection.Database);
+                Console.WriteLine(@"Connection to {0} '{1}' database: Successful", databaseTypeName, Connection.Database);
                 Console.WriteLine();
             }
             catch (Exception ex)
             {
-                string text = String.Format(CultureInfo.InvariantCulture, "Connection to {0} '{1}' Database: Failed",
+                string text = String.Format(CultureInfo.InvariantCulture, "Connection to {0} '{1}' database: Failed",
                     databaseTypeName, Connection.Database);
                 Util.HandleExceptionWithReason(Text, text, ex.Message);
             }
@@ -125,7 +125,7 @@ namespace EVEMon.SDEToSQL.Providers
 
             string databaseTypeName = Connection is SqlConnection ? "SQL Server" : "SQLite";
 
-            Text = String.Format(CultureInfo.InvariantCulture, "Disconnecting from {0} '{1}' Database... ",
+            Text = String.Format(CultureInfo.InvariantCulture, "Disconnecting from {0} '{1}' database... ",
                 databaseTypeName, Connection.Database);
             Console.Write(Text);
 
@@ -134,12 +134,12 @@ namespace EVEMon.SDEToSQL.Providers
                 Connection.Close();
 
                 Util.SetConsoleCursorPosition(Text);
-                Console.WriteLine(@"Disconnection from {0} '{1}' Database: Successful", databaseTypeName,
+                Console.WriteLine(@"Disconnection from {0} '{1}' database: Successful", databaseTypeName,
                     Connection.Database);
             }
             catch (Exception ex)
             {
-                string text = String.Format(CultureInfo.InvariantCulture, "Disconnection from {0} '{1}' Database: Failed",
+                string text = String.Format(CultureInfo.InvariantCulture, "Disconnection from {0} '{1}' database: Failed",
                     databaseTypeName, Connection.Database);
                 Util.HandleExceptionWithReason(Text, text, ex.Message);
             }
