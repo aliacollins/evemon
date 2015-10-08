@@ -8,6 +8,10 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Datafiles;
+using EVEMon.XmlGenerator.Extensions;
+using EVEMon.XmlGenerator.Helpers;
+using EVEMon.XmlGenerator.Interfaces;
+using EVEMon.XmlGenerator.Providers;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator.Datafiles
@@ -272,7 +276,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID > 0)
                 .GroupBy(x => x.ParentItemID))
             {
-                skillBonusesText += String.Format("{0} bonuses (per skill level):{1}", Database.InvTypesTable[bonuses.Key].Name,
+                skillBonusesText += String.Format(CultureConstants.DefaultCulture, "{0} bonuses (per skill level):{1}", Database.InvTypesTable[bonuses.Key].Name,
                     Environment.NewLine);
 
                 foreach (DgmTypeTraits bonus in bonuses)
@@ -292,7 +296,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID == -1)
                 .GroupBy(x => x.ParentItemID))
             {
-                roleBonusesText += String.Format("Role bonus:{0}", Environment.NewLine);
+                roleBonusesText += String.Format(CultureConstants.DefaultCulture, "Role bonus:{0}", Environment.NewLine);
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
@@ -310,7 +314,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID == -2)
                 .GroupBy(x => x.ParentItemID))
             {
-                miscBonusesText += String.Format("Misc bonus:{0}", Environment.NewLine);
+                miscBonusesText += String.Format(CultureConstants.DefaultCulture, "Misc bonus:{0}", Environment.NewLine);
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {

@@ -67,8 +67,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bag.cs" />
-    <Compile Include="Database.cs" />
+    <Compile Include="Collections\BagCollection.cs" />
+    <Compile Include="Providers\Database.cs" />
     <Compile Include="Datafiles\Blueprints.cs" />
     <Compile Include="Datafiles\Certificates.cs" />
     <Compile Include="Datafiles\Geography.cs" />
@@ -178,11 +178,11 @@
     <Compile Include="StaticData\InvTypeReactions.cs" />
     <Compile Include="Xmlfiles\Flags.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="IHasId.cs" />
-    <Compile Include="RelationSet.cs" />
+    <Compile Include="Interfaces\IHasId.cs" />
+    <Compile Include="Collections\RelationSetCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IRelation.cs" />
+    <Compile Include="Interfaces\IRelation.cs" />
     <Compile Include="StaticData\AgtAgents.cs" />
     <Compile Include="StaticData\AgtAgentTypes.cs" />
     <Compile Include="StaticData\AgtResearchAgents.cs" />
@@ -192,8 +192,8 @@
     <Compile Include="StaticData\InvBlueprintTypes.cs" />
     <Compile Include="StaticData\InvTypeMaterials.cs" />
     <Compile Include="StaticData\RamTypeRequirements.cs" />
-    <Compile Include="StringCleaningExtensions.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Extensions\StringCleaning.cs" />
+    <Compile Include="Helpers\Util.cs" />
     <Compile Include="StaticData\DgmAttributeTypes.cs" />
     <Compile Include="StaticData\DgmAttributeCategories.cs" />
     <Compile Include="StaticData\DgmTypeAttributes.cs" />
@@ -209,9 +209,7 @@
     <Compile Include="StaticData\MapSolarSystems.cs" />
     <Compile Include="StaticData\MapSolarSystemsJump.cs" />
     <Compile Include="StaticData\StaStations.cs" />
-    <Compile Include="IndexedCollection.cs" />
-    <Compile Include="SimpleCollection.cs" />
-    <Compile Include="Relations.cs" />
+    <Compile Include="Collections\IndexedCollection.cs" />
     <Compile Include="Xmlfiles\Serialization\SerialiazableRowset.cs" />
     <Compile Include="Xmlfiles\Serialization\SerializableInvFlagsRow.cs" />
     <Compile Include="Xmlfiles\Serialization\SerializableRoot.cs" />

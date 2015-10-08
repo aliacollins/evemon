@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using EVEMon.XmlGenerator.Interfaces;
 
-namespace EVEMon.XmlGenerator
+namespace EVEMon.XmlGenerator.Collections
 {
-    public sealed class RelationSet<T> : IEnumerable<T>
+    public sealed class RelationSetCollection<T> : IEnumerable<T>
         where T : class, IRelation
     {
         private readonly Dictionary<long, T> m_dictionary;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RelationSet&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="RelationSetCollection{T}"/> class.
         /// </summary>
         /// <param name="src">The SRC.</param>
-        public RelationSet(IEnumerable<T> src)
+        public RelationSetCollection(IEnumerable<T> src)
         {
             if (src == null)
                 throw new ArgumentNullException("src");

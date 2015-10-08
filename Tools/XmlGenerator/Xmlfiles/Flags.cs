@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using EVEMon.Common.Collections;
+using EVEMon.XmlGenerator.Helpers;
+using EVEMon.XmlGenerator.Providers;
 using EVEMon.XmlGenerator.Xmlfiles.Serialization;
 
 namespace EVEMon.XmlGenerator.Xmlfiles
