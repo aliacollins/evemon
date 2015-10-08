@@ -59,7 +59,7 @@ namespace EVEMon.SDEToSQL.Importers.DataDumpToSQL
 
             string filePath = Util.CheckDataDumpExists().Single();
 
-            string text = String.Format(CultureInfo.InvariantCulture, "Restoring data dump to '{0}' Database... ", m_sqlConnection.Database);
+            string text = String.Format(CultureInfo.InvariantCulture, "Restoring data dump to '{0}' database... ", m_sqlConnection.Database);
             Console.Write(text);
 
             try
