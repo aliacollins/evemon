@@ -19,7 +19,7 @@ namespace EVEMon.SDEToSQL.Importers.YamlToSQL
             if (sqlConnectionProvider == null)
                 throw new ArgumentNullException("sqlConnectionProvider");
 
-            m_sqlConnectionProvider = sqlConnectionProvider as SqlConnectionProvider;
+            m_sqlConnectionProvider = sqlConnectionProvider;
 
             Util.Closing += Util_Closing;
         }
