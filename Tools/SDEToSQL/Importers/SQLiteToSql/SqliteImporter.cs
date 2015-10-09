@@ -10,7 +10,7 @@ namespace EVEMon.SDEToSQL.Importers.SQLiteToSQL
 {
     internal class SqliteImporter : IImporter
     {
-        private readonly SqliteConnectionProvider m_sqliteConnectionProvider;
+        private readonly DbConnectionProvider m_sqliteConnectionProvider;
         private readonly SqlConnectionProvider m_sqlConnectionProvider;
 
         private bool m_isClosing;
@@ -31,8 +31,8 @@ namespace EVEMon.SDEToSQL.Importers.SQLiteToSQL
             if (sqlConnectionProvider == null)
                 throw new ArgumentNullException("sqlConnectionProvider");
 
-            m_sqliteConnectionProvider = sqliteConnectionProvider as SqliteConnectionProvider;
-            m_sqlConnectionProvider = sqlConnectionProvider as SqlConnectionProvider;
+            m_sqliteConnectionProvider = sqliteConnectionProvider;
+            m_sqlConnectionProvider = (SqlConnectionProvider)sqlConnectionProvider;
 
             Util.Closing += Util_Closing;
         }
