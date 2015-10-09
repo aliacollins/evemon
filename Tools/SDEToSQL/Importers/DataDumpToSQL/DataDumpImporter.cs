@@ -47,6 +47,17 @@ namespace EVEMon.SDEToSQL.Importers.DataDumpToSQL
         }
 
         /// <summary>
+        /// Gets the restore.
+        /// </summary>
+        /// <value>
+        /// The restore.
+        /// </value>
+        internal Restore Restore
+        {
+            get { return m_restore; }
+        }
+
+        /// <summary>
         /// Imports the files.
         /// </summary>
         public void ImportFiles()
