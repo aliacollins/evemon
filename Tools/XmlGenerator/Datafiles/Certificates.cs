@@ -6,11 +6,14 @@ using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Datafiles;
+using EVEMon.XmlGenerator.Helpers;
+using EVEMon.XmlGenerator.Interfaces;
+using EVEMon.XmlGenerator.Providers;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator.Datafiles
 {
-    public static class Certificates
+    internal static class Certificates
     {
         /// <summary>
         /// Generate the certificates datafile.
@@ -30,11 +33,11 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Select(x => Database.InvGroupsTable[x.Key]).OrderBy(x => x.Name))
             {
                 SerializableCertificateGroup crtGroup = new SerializableCertificateGroup
-                                                        {
-                                                            ID = group.ID,
-                                                            Name = group.Name,
-                                                            Description = group.Description
-                                                        };
+                {
+                    ID = group.ID,
+                    Name = group.Name,
+                    Description = group.Description
+                };
 
                 // Add classes to categories
                 crtGroup.Classes.AddRange(ExportCertificateClasses(group).OrderBy(x => x.Name));
@@ -67,11 +70,11 @@ namespace EVEMon.XmlGenerator.Datafiles
                 Util.UpdatePercentDone(Database.CertificatesTotalCount);
 
                 SerializableCertificateClass crtClass = new SerializableCertificateClass
-                                                        {
-                                                            ID = certClass.ID,
-                                                            Name = certClass.ClassName,
-                                                            Description = certClass.Description
-                                                        };
+                {
+                    ID = certClass.ID,
+                    Name = certClass.ClassName,
+                    Description = certClass.Description
+                };
 
                 // Export certificate
                 SerializableCertificate certificate = Database.CrtCertificatesTable
@@ -97,21 +100,21 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
 
             SerializableCertificate crtCertificate = new SerializableCertificate
-                                                     {
-                                                         ID = certificate.ID,
-                                                         Description = certificate.Description
-                                                     };
+            {
+                ID = certificate.ID,
+                Description = certificate.Description
+            };
 
             // Export prerequesities
             IEnumerable<SerializableCertificatePrerequisite> listOfPrereq = Database.CrtRelationshipsTable
                 .Where(x => x.ChildID == certificate.ID && x.ParentLevel != 0)
                 .Select(relationship => new SerializableCertificatePrerequisite
-                                        {
-                                            ID = Database.InvTypesTable[relationship.ParentTypeID].ID,
-                                            Skill = Database.InvTypesTable[relationship.ParentTypeID].Name,
-                                            Level = relationship.ParentLevel.ToString(CultureInfo.InvariantCulture),
-                                            Grade = (CertificateGrade)Enum.ToObject(typeof(CertificateGrade), relationship.Grade),
-                                        });
+                {
+                    ID = Database.InvTypesTable[relationship.ParentTypeID].ID,
+                    Skill = Database.InvTypesTable[relationship.ParentTypeID].Name,
+                    Level = relationship.ParentLevel.ToString(CultureInfo.InvariantCulture),
+                    Grade = (CertificateGrade)Enum.ToObject(typeof(CertificateGrade), relationship.Grade),
+                });
 
             //Add prerequisites to certificate
             crtCertificate.Prerequisites.AddRange(listOfPrereq.OrderBy(x => x.Grade));
@@ -120,10 +123,10 @@ namespace EVEMon.XmlGenerator.Datafiles
             IEnumerable<SerializableCertificateRecommendation> listOfRecommendations = Database.CrtRecommendationsTable.Where(
                 x => x.CertificateID == certificate.ID)
                 .Select(recommendation => new SerializableCertificateRecommendation
-                                          {
-                                              ID = recommendation.ShipTypeID,
-                                              ShipName = Database.InvTypesTable[recommendation.ShipTypeID].Name,
-                                          });
+                {
+                    ID = recommendation.ShipTypeID,
+                    ShipName = Database.InvTypesTable[recommendation.ShipTypeID].Name,
+                });
 
             crtCertificate.Recommendations.AddRange(listOfRecommendations);
 

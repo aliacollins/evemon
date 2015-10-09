@@ -8,11 +8,15 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Datafiles;
+using EVEMon.XmlGenerator.Extensions;
+using EVEMon.XmlGenerator.Helpers;
+using EVEMon.XmlGenerator.Interfaces;
+using EVEMon.XmlGenerator.Providers;
 using EVEMon.XmlGenerator.StaticData;
 
 namespace EVEMon.XmlGenerator.Datafiles
 {
-    public static class Items
+    internal static class Items
     {
         private static List<InvMarketGroups> s_injectedMarketGroups;
         private static List<InvTypes> s_nullMarketItems;
@@ -115,24 +119,24 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static void ConfigureNullMarketItems()
         {
             s_injectedMarketGroups = new List<InvMarketGroups>
-                                         {
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Unique Designs",
-                                                     Description = "Ships of a unique design",
-                                                     ID = DBConstants.UniqueDesignsRootNonMarketGroupID,
-                                                     ParentID = DBConstants.ShipsMarketGroupID,
-                                                     IconID = DBConstants.UnknownShipIconID
-                                                 },
-                                             new InvMarketGroups
-                                                 {
-                                                     Name = "Various Non-Market",
-                                                     Description = "Non-Market Items",
-                                                     ID = DBConstants.RootNonMarketGroupID,
-                                                     ParentID = null,
-                                                     IconID = DBConstants.UnknownIconID
-                                                 }
-                                         };
+            {
+                new InvMarketGroups
+                {
+                    Name = "Unique Designs",
+                    Description = "Ships of a unique design",
+                    ID = DBConstants.UniqueDesignsRootNonMarketGroupID,
+                    ParentID = DBConstants.ShipsMarketGroupID,
+                    IconID = DBConstants.UnknownShipIconID
+                },
+                new InvMarketGroups
+                {
+                    Name = "Various Non-Market",
+                    Description = "Non-Market Items",
+                    ID = DBConstants.RootNonMarketGroupID,
+                    ParentID = null,
+                    IconID = DBConstants.UnknownIconID
+                }
+            };
 
             // Add all items with null market group
             s_nullMarketItems = Database.InvTypesTable.Where(x => x.MarketGroupID == null).ToList();
@@ -184,19 +188,19 @@ namespace EVEMon.XmlGenerator.Datafiles
 
             // Creates the item with base informations
             SerializableItem item = new SerializableItem
-                                        {
-                                            ID = srcItem.ID,
-                                            Name = srcItem.Name,
-                                            Description = srcItem.Description ?? String.Empty,
-                                            Icon = (srcItem.IconID.HasValue
-                                                        ? Database.EveIconsTable[srcItem.IconID.Value].Icon
-                                                        : String.Empty),
-                                            PortionSize = srcItem.PortionSize,
-                                            MetaGroup = ItemMetaGroup.None,
-                                            Group = itemGroup.Name,
-                                            Category = Database.InvCategoriesTable[itemGroup.CategoryID].Name,
-                                            Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0))
-                                        };
+            {
+                ID = srcItem.ID,
+                Name = srcItem.Name,
+                Description = srcItem.Description ?? String.Empty,
+                Icon = (srcItem.IconID.HasValue
+                    ? Database.EveIconsTable[srcItem.IconID.Value].Icon
+                    : String.Empty),
+                PortionSize = srcItem.PortionSize,
+                MetaGroup = ItemMetaGroup.None,
+                Group = itemGroup.Name,
+                Category = Database.InvCategoriesTable[itemGroup.CategoryID].Name,
+                Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0))
+            };
 
 
             // Set race to Faction if item race is Jovian or belongs to a Faction market group
@@ -272,7 +276,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID > 0)
                 .GroupBy(x => x.ParentItemID))
             {
-                skillBonusesText += String.Format("{0} bonuses (per skill level):{1}", Database.InvTypesTable[bonuses.Key].Name,
+                skillBonusesText += String.Format(CultureConstants.DefaultCulture, "{0} bonuses (per skill level):{1}", Database.InvTypesTable[bonuses.Key].Name,
                     Environment.NewLine);
 
                 foreach (DgmTypeTraits bonus in bonuses)
@@ -292,7 +296,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID == -1)
                 .GroupBy(x => x.ParentItemID))
             {
-                roleBonusesText += String.Format("Role bonus:{0}", Environment.NewLine);
+                roleBonusesText += String.Format(CultureConstants.DefaultCulture, "Role bonus:{0}", Environment.NewLine);
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
@@ -310,7 +314,7 @@ namespace EVEMon.XmlGenerator.Datafiles
                 .Where(x => x.ItemID == srcItem.ID && x.ParentItemID == -2)
                 .GroupBy(x => x.ParentItemID))
             {
-                miscBonusesText += String.Format("Misc bonus:{0}", Environment.NewLine);
+                miscBonusesText += String.Format(CultureConstants.DefaultCulture, "Misc bonus:{0}", Environment.NewLine);
 
                 foreach (DgmTypeTraits bonus in bonuses)
                 {
@@ -350,24 +354,24 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             IEnumerable<SerializableControlTowerFuel> controlTowerResourcesTable = Database.InvControlTowerResourcesTable
                 .Join(Database.InvControlTowerResourcePurposesTable, ctr => ctr.PurposeID, ctrp => ctrp.ID,
-                      (ctr, ctrp) => new { ctr, ctrp })
+                    (ctr, ctrp) => new { ctr, ctrp })
                 .Where(x => x.ctr.ID == srcItem.ID)
                 .Select(resource => new SerializableControlTowerFuel
-                                        {
-                                            ID = resource.ctr.ResourceID,
-                                            Purpose = resource.ctrp.PurposeName,
-                                            Quantity = resource.ctr.Quantity,
-                                            MinSecurityLevel = resource.ctr.MinSecurityLevel.HasValue
-                                                                   ? resource.ctr.MinSecurityLevel.Value.ToString(CultureInfo.InvariantCulture)
-                                                                   : String.Empty,
-                                            FactionID = resource.ctr.FactionID.HasValue
-                                                            ? resource.ctr.FactionID.Value.ToString(CultureInfo.InvariantCulture)
-                                                            : String.Empty,
-                                            FactionName = resource.ctr.FactionID.HasValue
-                                                              ? Database.ChrFactionsTable[resource.ctr.FactionID.Value].
-                                                                    FactionName
-                                                              : String.Empty
-                                        });
+                {
+                    ID = resource.ctr.ResourceID,
+                    Purpose = resource.ctrp.PurposeName,
+                    Quantity = resource.ctr.Quantity,
+                    MinSecurityLevel = resource.ctr.MinSecurityLevel.HasValue
+                        ? resource.ctr.MinSecurityLevel.Value.ToString(CultureInfo.InvariantCulture)
+                        : String.Empty,
+                    FactionID = resource.ctr.FactionID.HasValue
+                        ? resource.ctr.FactionID.Value.ToString(CultureInfo.InvariantCulture)
+                        : String.Empty,
+                    FactionName = resource.ctr.FactionID.HasValue
+                        ? Database.ChrFactionsTable[resource.ctr.FactionID.Value].
+                            FactionName
+                        : String.Empty
+                });
 
             item.ControlTowerFuelInfo.AddRange(controlTowerResourcesTable);
         }
@@ -381,21 +385,21 @@ namespace EVEMon.XmlGenerator.Datafiles
         {
             item.ReactionInfo.AddRange(Database.InvTypeReactionsTable.Where(x => x.ID == srcItem.ID).Select(
                 srcReaction => new
-                                   {
-                                       srcReaction,
-                                       multiplier = Database.DgmTypeAttributesTable.Where(
-                                           x => x.ItemID == srcReaction.TypeID &&
-                                                x.AttributeID == DBConstants.MoonMiningAmountPropertyID).Select(
-                                                    x => x.GetInt64Value).FirstOrDefault()
-                                   }).Select(
-                                       reaction => new SerializableReactionInfo
-                                                       {
-                                                           ID = reaction.srcReaction.TypeID,
-                                                           IsInput = reaction.srcReaction.Input,
-                                                           Quantity = reaction.multiplier > 0
-                                                                          ? reaction.srcReaction.Quantity * reaction.multiplier
-                                                                          : reaction.srcReaction.Quantity
-                                                       }));
+                {
+                    srcReaction,
+                    multiplier = Database.DgmTypeAttributesTable.Where(
+                        x => x.ItemID == srcReaction.TypeID &&
+                             x.AttributeID == DBConstants.MoonMiningAmountPropertyID).Select(
+                                 x => x.GetInt64Value).FirstOrDefault()
+                }).Select(
+                    reaction => new SerializableReactionInfo
+                    {
+                        ID = reaction.srcReaction.TypeID,
+                        IsInput = reaction.srcReaction.Input,
+                        Quantity = reaction.multiplier > 0
+                            ? reaction.srcReaction.Quantity * reaction.multiplier
+                            : reaction.srcReaction.Quantity
+                    }));
         }
 
         /// <summary>
@@ -406,8 +410,8 @@ namespace EVEMon.XmlGenerator.Datafiles
         private static void AddMetaGroup(IHasID srcItem, SerializableItem item)
         {
             int itemID = Database.InvBlueprintTypesTable.Any(x => x.ID == srcItem.ID)
-                             ? Database.InvBlueprintTypesTable[srcItem.ID].ProductTypeID
-                             : srcItem.ID;
+                ? Database.InvBlueprintTypesTable[srcItem.ID].ProductTypeID
+                : srcItem.ID;
 
             foreach (InvMetaTypes relation in Database.InvMetaTypesTable.Where(x => x.ItemID == itemID))
             {
@@ -481,12 +485,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (launcherIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
-                                                  ? Database.InvGroupsTable[propInt64Value].Name
-                                                  : String.Empty
-                                  });
+                    {
+                        ID = srcProp.AttributeID,
+                        Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                            ? Database.InvGroupsTable[propInt64Value].Name
+                            : String.Empty
+                    });
                     continue;
                 }
 
@@ -495,12 +499,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (chargeIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
-                                                  ? Database.InvGroupsTable[propInt64Value].Name
-                                                  : String.Empty
-                                  });
+                    {
+                        ID = srcProp.AttributeID,
+                        Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                            ? Database.InvGroupsTable[propInt64Value].Name
+                            : String.Empty
+                    });
                     continue;
                 }
 
@@ -509,12 +513,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (canFitShipIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
-                                                  ? Database.InvGroupsTable[propInt64Value].Name
-                                                  : String.Empty
-                                  });
+                    {
+                        ID = srcProp.AttributeID,
+                        Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                            ? Database.InvGroupsTable[propInt64Value].Name
+                            : String.Empty
+                    });
                     continue;
                 }
 
@@ -523,12 +527,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (moduleShipIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
-                                                  ? Database.InvGroupsTable[propInt64Value].Name
-                                                  : String.Empty
-                                  });
+                    {
+                        ID = srcProp.AttributeID,
+                        Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                            ? Database.InvGroupsTable[propInt64Value].Name
+                            : String.Empty
+                    });
                     continue;
                 }
 
@@ -537,12 +541,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (specialisationAsteroidIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
-                                                  ? Database.InvGroupsTable[propInt64Value].Name
-                                                  : String.Empty
-                                  });
+                    {
+                        ID = srcProp.AttributeID,
+                        Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                            ? Database.InvGroupsTable[propInt64Value].Name
+                            : String.Empty
+                    });
                     continue;
                 }
 
@@ -551,12 +555,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (reactionIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
-                                                  ? Database.InvGroupsTable[propInt64Value].Name
-                                                  : String.Empty
-                                  });
+                    {
+                        ID = srcProp.AttributeID,
+                        Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                            ? Database.InvGroupsTable[propInt64Value].Name
+                            : String.Empty
+                    });
                     continue;
                 }
 
@@ -565,12 +569,12 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (posCargobayAcceptIndex > -1)
                 {
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = srcProp.AttributeID,
-                                      Value = Database.InvGroupsTable.HasValue(propInt64Value)
-                                                  ? Database.InvGroupsTable[propInt64Value].Name
-                                                  : String.Empty
-                                  });
+                    {
+                        ID = srcProp.AttributeID,
+                        Value = Database.InvGroupsTable.HasValue(propInt64Value)
+                            ? Database.InvGroupsTable[propInt64Value].Name
+                            : String.Empty
+                    });
                     continue;
                 }
 
@@ -582,17 +586,17 @@ namespace EVEMon.XmlGenerator.Datafiles
                 if (srcProp.AttributeID == DBConstants.ShipWarpSpeedPropertyID)
                 {
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = srcProp.AttributeID,
-                                      Value = warpSpeedMultiplier.ToString(CultureConstants.InvariantCulture)
-                                  });
+                    {
+                        ID = srcProp.AttributeID,
+                        Value = warpSpeedMultiplier.ToString(CultureConstants.InvariantCulture)
+                    });
 
                     // Also add packaged volume as a prop as only ships have 'ship warp speed' attribute
                     props.Add(new SerializablePropertyValue
-                                  {
-                                      ID = Properties.PackagedVolumePropertyID,
-                                      Value = GetPackagedVolume(srcItem.GroupID).ToString(CultureConstants.InvariantCulture)
-                                  });
+                    {
+                        ID = Properties.PackagedVolumePropertyID,
+                        Value = GetPackagedVolume(srcItem.GroupID).ToString(CultureConstants.InvariantCulture)
+                    });
                 }
 
                 // Other props
@@ -682,48 +686,48 @@ namespace EVEMon.XmlGenerator.Datafiles
             if (Math.Abs(srcItem.Mass) > double.Epsilon)
             {
                 props.Add(new SerializablePropertyValue
-                              {
-                                  ID = DBConstants.MassPropertyID,
-                                  Value = srcItem.Mass.ToString(CultureConstants.InvariantCulture)
-                              });
+                {
+                    ID = DBConstants.MassPropertyID,
+                    Value = srcItem.Mass.ToString(CultureConstants.InvariantCulture)
+                });
             }
 
             // Ensures there is a cargo capacity and add it to prop
             if (Math.Abs(srcItem.Capacity) > double.Epsilon)
             {
                 props.Add(new SerializablePropertyValue
-                              {
-                                  ID = DBConstants.CargoCapacityPropertyID,
-                                  Value = srcItem.Capacity.ToString(CultureConstants.InvariantCulture)
-                              });
+                {
+                    ID = DBConstants.CargoCapacityPropertyID,
+                    Value = srcItem.Capacity.ToString(CultureConstants.InvariantCulture)
+                });
             }
 
             // Ensures there is a volume and add it to prop
             if (Math.Abs(srcItem.Volume) > double.Epsilon)
             {
                 props.Add(new SerializablePropertyValue
-                              {
-                                  ID = DBConstants.VolumePropertyID,
-                                  Value = srcItem.Volume.ToString(CultureConstants.InvariantCulture)
-                              });
+                {
+                    ID = DBConstants.VolumePropertyID,
+                    Value = srcItem.Volume.ToString(CultureConstants.InvariantCulture)
+                });
             }
 
             // Add unit to refine prop where applicable
             if (Database.InvGroupsTable[srcItem.GroupID].CategoryID == DBConstants.AsteroidCategoryID)
             {
                 props.Add(new SerializablePropertyValue
-                              {
-                                  ID = Properties.UnitsToRefinePropertyID,
-                                  Value = srcItem.PortionSize.ToString(CultureInfo.InvariantCulture)
-                              });
+                {
+                    ID = Properties.UnitsToRefinePropertyID,
+                    Value = srcItem.PortionSize.ToString(CultureInfo.InvariantCulture)
+                });
             }
 
             // Add base price as a prop
             props.Add(new SerializablePropertyValue
-                          {
-                              ID = Properties.BasePricePropertyID,
-                              Value = srcItem.BasePrice.FormatDecimal()
-                          });
+            {
+                ID = Properties.BasePricePropertyID,
+                Value = srcItem.BasePrice.FormatDecimal()
+            });
         }
 
         /// <summary>
