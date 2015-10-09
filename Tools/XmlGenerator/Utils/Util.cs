@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 
-namespace EVEMon.XmlGenerator.Helpers
+namespace EVEMon.XmlGenerator.Utils
 {
     public static class Util
     {
@@ -18,7 +18,7 @@ namespace EVEMon.XmlGenerator.Helpers
         private static string s_projectDir;
         private static int s_counter;
         private static int s_tablesCount;
-        private static double s_percentOld;
+        private static int s_percentOld;
 
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace EVEMon.XmlGenerator.Helpers
             }
 
             Console.WriteLine(@"-----------------------------------------------");
-            Console.WriteLine("Updated : {0}", filename);
+            Console.WriteLine(@"Updated : {0}", filename);
             Console.WriteLine(@"-----------------------------------------------");
 
             // As long as EVEMon.Common is not rebuilt, files are not updated in output directories
@@ -192,7 +192,7 @@ namespace EVEMon.XmlGenerator.Helpers
                 Console.WriteLine(s_counter);
 
             s_counter = 0;
-            s_percentOld = 0;
+            s_percentOld = -1;
             s_text = String.Empty;
         }
 
@@ -200,20 +200,22 @@ namespace EVEMon.XmlGenerator.Helpers
         /// Updates the percantage done of the datafile generating procedure.
         /// </summary>
         /// <param name="totalCount">The total count.</param>
-        internal static void UpdatePercentDone(int totalCount)
+        internal static void UpdatePercentDone(double totalCount)
         {
             s_counter++;
-            double percent = totalCount > 0 ? (s_counter / (double)totalCount) : 0;
+            double percent = totalCount > 0d ? (s_counter / totalCount) : 0d;
+            int percentRounded = (int)(percent * 100);
 
-            if (s_counter != 1 && s_percentOld >= percent)
+            if (s_counter != 1 && s_percentOld >= percentRounded)
                 return;
+
+            s_percentOld = percentRounded;
 
             if (!String.IsNullOrEmpty(s_text))
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
 
             s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", percent);
             Console.Write(s_text);
-            s_percentOld = percent;
         }
 
         /// <summary>

@@ -56,8 +56,8 @@ namespace EVEMon.SDEToSQL.Utils
             if (s_isClosing)
                 return;
 
-            s_counter = total > 0 && s_counter < total ? s_counter + 1 : s_counter;
-            double percent = total > 0 ? (s_counter / total) : 0;
+            s_counter = total > 0d && s_counter < total ? s_counter + 1 : s_counter;
+            double percent = total > 0d ? (s_counter / total) : 0d;
             int percentRounded = (int)(percent * 100);
 
             if (s_counter < 0 || s_percentOld >= percentRounded)

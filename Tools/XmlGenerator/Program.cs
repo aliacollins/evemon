@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Threading;
 using EVEMon.Common.Constants;
 using EVEMon.XmlGenerator.Datafiles;
-using EVEMon.XmlGenerator.Helpers;
 using EVEMon.XmlGenerator.Providers;
+using EVEMon.XmlGenerator.Utils;
 using EVEMon.XmlGenerator.Xmlfiles;
 
 namespace EVEMon.XmlGenerator

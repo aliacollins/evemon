@@ -7,9 +7,9 @@ using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.XmlGenerator.Collections;
 using EVEMon.XmlGenerator.Extensions;
-using EVEMon.XmlGenerator.Helpers;
 using EVEMon.XmlGenerator.Models;
 using EVEMon.XmlGenerator.StaticData;
+using EVEMon.XmlGenerator.Utils;
 
 namespace EVEMon.XmlGenerator.Providers
 {
