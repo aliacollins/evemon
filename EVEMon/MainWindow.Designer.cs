@@ -88,6 +88,7 @@ namespace EVEMon
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.forumsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userVoiceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.followUsOnTwitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutKnownProblemsToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -510,7 +511,7 @@ namespace EVEMon
             this.toolsOwnedOptionsToolStripSeparator,
             this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // apiTesterToolStripMenuItem
@@ -603,6 +604,7 @@ namespace EVEMon
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.forumsMenuItem,
             this.userVoiceMenuItem,
+            this.followUsOnTwitterToolStripMenuItem,
             this.helpAboutKnownProblemsToolStripSeparator,
             this.aboutMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
@@ -613,7 +615,7 @@ namespace EVEMon
             // 
             this.forumsMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("forumsMenuItem.Image")));
             this.forumsMenuItem.Name = "forumsMenuItem";
-            this.forumsMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.forumsMenuItem.Size = new System.Drawing.Size(229, 22);
             this.forumsMenuItem.Text = "&Forums";
             this.forumsMenuItem.Click += new System.EventHandler(this.forumsMenu_Click);
             // 
@@ -621,20 +623,28 @@ namespace EVEMon
             // 
             this.userVoiceMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("userVoiceMenuItem.Image")));
             this.userVoiceMenuItem.Name = "userVoiceMenuItem";
-            this.userVoiceMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.userVoiceMenuItem.Size = new System.Drawing.Size(229, 22);
             this.userVoiceMenuItem.Text = "&Suggest a Feature (UserVoice)";
             this.userVoiceMenuItem.Click += new System.EventHandler(this.userVoiceMenuItem_Click);
+            // 
+            // followUsOnTwitterToolStripMenuItem
+            // 
+            this.followUsOnTwitterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("followUsOnTwitterToolStripMenuItem.Image")));
+            this.followUsOnTwitterToolStripMenuItem.Name = "followUsOnTwitterToolStripMenuItem";
+            this.followUsOnTwitterToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.followUsOnTwitterToolStripMenuItem.Text = "Follow us on Twitter";
+            this.followUsOnTwitterToolStripMenuItem.Click += new System.EventHandler(this.twitterMenu_Click);
             // 
             // helpAboutKnownProblemsToolStripSeparator
             // 
             this.helpAboutKnownProblemsToolStripSeparator.Name = "helpAboutKnownProblemsToolStripSeparator";
-            this.helpAboutKnownProblemsToolStripSeparator.Size = new System.Drawing.Size(227, 6);
+            this.helpAboutKnownProblemsToolStripSeparator.Size = new System.Drawing.Size(226, 6);
             // 
             // aboutMenuItem
             // 
             this.aboutMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutMenuItem.Image")));
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.aboutMenuItem.Size = new System.Drawing.Size(229, 22);
             this.aboutMenuItem.Text = "&About...";
             this.aboutMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -647,7 +657,7 @@ namespace EVEMon
             this.testCharacterNotificationToolStripMenuItem,
             this.testTimeoutOneSecToolStripMenuItem});
             this.testsToolStripMenuItem.Name = "testsToolStripMenuItem";
-            this.testsToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.testsToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.testsToolStripMenuItem.Text = "Te&st";
             this.testsToolStripMenuItem.Visible = false;
             this.testsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.testToolStripMenuItem_DropDownOpening);
@@ -1210,6 +1220,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripMenuItem exceptionWindowRecursiveExceptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator plansStripSeparator;
         private System.Windows.Forms.ToolStripMenuItem userVoiceMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem followUsOnTwitterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testTrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator testsToolStripSeperator;
         private System.Windows.Forms.ToolStripMenuItem testNotificationToolStripMenuItem;

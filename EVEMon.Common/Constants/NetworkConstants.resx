@@ -550,4 +550,7 @@
   <data name="NotificationRefTypes" xml:space="preserve">
     <value>/eve/NotificationRefTypes.xml</value>
   </data>
+  <data name="EVEMonTwitter" xml:space="preserve">
+    <value>https://twitter.com/EVEMon</value>
+  </data>
 </root>
