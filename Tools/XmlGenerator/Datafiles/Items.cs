@@ -9,10 +9,10 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Datafiles;
 using EVEMon.XmlGenerator.Extensions;
-using EVEMon.XmlGenerator.Helpers;
 using EVEMon.XmlGenerator.Interfaces;
 using EVEMon.XmlGenerator.Providers;
 using EVEMon.XmlGenerator.StaticData;
+using EVEMon.XmlGenerator.Utils;
 
 namespace EVEMon.XmlGenerator.Datafiles
 {
