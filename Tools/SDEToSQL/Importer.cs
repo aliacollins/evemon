@@ -18,9 +18,9 @@ namespace EVEMon.SDEToSQL
     internal static class Importer
     {
         private static readonly SafeNativeMethods.EventHandler s_handler;
-        private static readonly SqlConnectionProvider s_sqlConnectionProvider;
-        private static readonly SqliteConnectionProvider s_sqliteConnectionProvider;
-        private static readonly DataDumpImporter s_dataDumpImporter;
+        private static readonly DbConnectionProvider s_sqlConnectionProvider;
+        private static readonly DbConnectionProvider s_sqliteConnectionProvider;
+        private static readonly IImporter s_dataDumpImporter;
 
         private static bool s_isClosing;
 
@@ -221,8 +221,8 @@ namespace EVEMon.SDEToSQL
                         Util.OnClosing();
                         Console.WriteLine();
 
-                        if (s_dataDumpImporter != null && s_dataDumpImporter.Restore != null)
-                            s_dataDumpImporter.Restore.Abort();
+                        if (s_dataDumpImporter != null && ((DataDumpImporter)s_dataDumpImporter).Restore != null)
+                            ((DataDumpImporter)s_dataDumpImporter).Restore.Abort();
 
                         if (s_sqliteConnectionProvider != null)
                             s_sqliteConnectionProvider.CloseConnection();
