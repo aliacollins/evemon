@@ -18,7 +18,7 @@ namespace EVEMon.SDEToSQL
     internal static class Importer
     {
         private static readonly SafeNativeMethods.EventHandler s_handler;
-        private static readonly DbConnectionProvider s_sqlConnectionProvider;
+        private static DbConnectionProvider s_sqlConnectionProvider;
         private static DbConnectionProvider s_sqliteConnectionProvider;
         private static IImporter s_dataDumpImporter;
 
@@ -39,8 +39,6 @@ namespace EVEMon.SDEToSQL
 
             if (Directory.GetCurrentDirectory() != assemblyDirectory)
                 Directory.SetCurrentDirectory(assemblyDirectory);
-            
-            s_sqlConnectionProvider = new SqlConnectionProvider("name=EveStaticData");
         }
 
         /// <summary>
@@ -82,14 +80,11 @@ namespace EVEMon.SDEToSQL
             if (args.Any(x => x == "-norestore") && args.Any(x => x == "-noyaml") && args.Any(x => x == "-nosqlite"))
                 return;
 
-            if (!s_isClosing)
-            {
-                Console.WriteLine(String.Format(CultureInfo.InvariantCulture, "Importing files completed in {0:g}",
-                    stopwatch.Elapsed));
-            }
-
             if (s_isClosing)
                 return;
+
+            Console.WriteLine(String.Format(CultureInfo.InvariantCulture, "Importing files completed in {0:g}",
+                stopwatch.Elapsed));
 
             Util.PressAnyKey();
         }
@@ -100,6 +95,8 @@ namespace EVEMon.SDEToSQL
         /// <param name="args">The arguments.</param>
         private static void ImportSDEFiles(string[] args)
         {
+            s_sqlConnectionProvider = new SqlConnectionProvider("name=EveStaticData");
+
             if (!args.Any() || args.All(x => x != "-norestore"))
             {
                 s_dataDumpImporter = new DataDumpImporter(s_sqlConnectionProvider, new Restore());
