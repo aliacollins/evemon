@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Globalization;
@@ -376,7 +377,7 @@ namespace EVEMon.SDEToSQL.Utils
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="exception">The exception.</param>
-        internal static void HandleExceptionForCommand(IDbCommand command, Exception exception)
+        internal static void HandleExceptionForCommand(DbCommand command, Exception exception)
         {
             Console.WriteLine();
             Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
@@ -592,7 +593,9 @@ namespace EVEMon.SDEToSQL.Utils
             Console.Write(@"Press any key to exit.");
             Console.ReadKey(true);
             DeleteSDEFilesIfZipExists();
-            Environment.Exit(exitCode);
+
+            if (exitCode != 0)
+                Environment.Exit(exitCode);
         }
 
         /// <summary>

@@ -49,30 +49,12 @@ namespace EVEMon.SDEToSQL
         }
 
         /// <summary>
-        /// Imports the SDE with the specified arguments.
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        internal static void Import(string[] args)
-        {
-            using (StreamWriter traceStream = File.CreateText("trace.txt"))
-            {
-                TextWriterTraceListener traceListener = new TextWriterTraceListener(traceStream);
-                Trace.Listeners.Add(traceListener);
-                Trace.AutoFlush = true;
-
-                StartImporter(args);
-            }
-        }
-
-        /// <summary>
         /// Starts the importer with the specified arguments.
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <exception cref="System.Exception">test</exception>
-        private static void StartImporter(string[] args)
+        internal static void Start(string[] args)
         {
-            Trace.WriteLine("SDEToSql.Starting");
-
             if (args.Any(x => x != "-norestore" && x != "-noyaml" && x != "-nosqlite")
                 || (args.Any() && (args[0] == "-help" || args[0] == "/?")))
             {
@@ -190,7 +172,6 @@ namespace EVEMon.SDEToSQL
             Console.WriteLine(@"        -norestore  Excludes the restoration of the SQL DATADUMP backup file");
             Console.WriteLine(@"        -noyaml     Excludes the importation of the yaml files");
             Console.WriteLine(@"        -nosqlite   Excludes the importation of the sqlite files");
-            Util.PressAnyKey();
         }
 
         /// <summary>
@@ -231,6 +212,7 @@ namespace EVEMon.SDEToSQL
                             s_sqlConnectionProvider.CloseConnection();
 
                         Util.DeleteSDEFilesIfZipExists();
+                        Trace.WriteLine("SDEToSql.Closed");
                         Environment.Exit(0);
                         break;
                     }
