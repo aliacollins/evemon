@@ -23,8 +23,8 @@ namespace EVEMon.SDEToSQL.Providers
         /// </summary>
         /// <param name="nameOrConnectionString">The name or connection string.</param>
         internal SqlConnectionProvider(String nameOrConnectionString)
+            : base(typeof(SqlConnection), nameOrConnectionString)
         {
-            CreateConnection<SqlConnection>(nameOrConnectionString);
             m_sqlConnection = (SqlConnection)Connection;
 
             Util.Closing += Util_Closing;

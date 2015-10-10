@@ -15,15 +15,31 @@ namespace EVEMon.SDEToSQL.Providers
     {
         protected string Text;
 
-        internal DbConnection Connection { get; private set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbConnectionProvider"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="nameOrConnectionString">The name or connection string.</param>
+        protected DbConnectionProvider(Type type, string nameOrConnectionString)
+        {
+            CreateConnection(type, nameOrConnectionString);
+        }
+
+        /// <summary>
+        /// Gets the connection.
+        /// </summary>
+        /// <value>
+        /// The connection.
+        /// </value>
+        protected internal DbConnection Connection { get; private set; }
 
         /// <summary>
         /// Creates the connection.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="connectionType">Type of the connection.</param>
         /// <param name="nameOrConnectionString">The name or connection string.</param>
         /// <exception cref="System.ArgumentNullException">nameOrConnectionString</exception>
-        protected void CreateConnection<T>(String nameOrConnectionString) where T : DbConnection
+        private void CreateConnection(Type connectionType, String nameOrConnectionString)
         {
             if (String.IsNullOrWhiteSpace(nameOrConnectionString))
                 throw new ArgumentNullException("nameOrConnectionString");
@@ -37,7 +53,7 @@ namespace EVEMon.SDEToSQL.Providers
                 ? nameOrConnectionString
                 : connectionStringSetting.ConnectionString;
 
-            if (typeof(T) != typeof(SqlConnection))
+            if (connectionType != typeof(SqlConnection))
             {
                 var match = Regex.Match(connectionString, "data source=(?<filePath>.*\\.[a-z]+)",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled).Groups;
@@ -67,7 +83,7 @@ namespace EVEMon.SDEToSQL.Providers
                 Util.PressAnyKey(-1);
             }
 
-            ConstructorInfo ci = typeof(T).GetConstructor(new[]
+            ConstructorInfo ci = connectionType.GetConstructor(new[]
             {
                 typeof(string)
             });
@@ -75,7 +91,7 @@ namespace EVEMon.SDEToSQL.Providers
             if (ci == null)
                 return;
 
-            Connection = (T)ci.Invoke(new object[]
+            Connection = (DbConnection)ci.Invoke(new object[]
             {
                 connectionString
             });
@@ -84,9 +100,7 @@ namespace EVEMon.SDEToSQL.Providers
         /// <summary>
         /// Opens the connection.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        internal void OpenConnection()
+        protected internal void OpenConnection()
         {
             if (Connection == null)
                 return;
@@ -116,7 +130,7 @@ namespace EVEMon.SDEToSQL.Providers
         /// <summary>
         /// Closes the connection.
         /// </summary>
-        internal void CloseConnection()
+        protected internal void CloseConnection()
         {
             if (Connection == null || Connection.State == ConnectionState.Closed)
                 return;
