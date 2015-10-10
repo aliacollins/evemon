@@ -19,8 +19,8 @@ namespace EVEMon.SDEToSQL
     {
         private static readonly SafeNativeMethods.EventHandler s_handler;
         private static readonly DbConnectionProvider s_sqlConnectionProvider;
-        private static readonly DbConnectionProvider s_sqliteConnectionProvider;
-        private static readonly IImporter s_dataDumpImporter;
+        private static DbConnectionProvider s_sqliteConnectionProvider;
+        private static IImporter s_dataDumpImporter;
 
         private static bool s_isClosing;
 
@@ -40,12 +40,7 @@ namespace EVEMon.SDEToSQL
             if (Directory.GetCurrentDirectory() != assemblyDirectory)
                 Directory.SetCurrentDirectory(assemblyDirectory);
             
-            string connectionString = String.Format(CultureInfo.InvariantCulture, "data source={0}",
-                Path.Combine(Directory.GetCurrentDirectory(), @"SDEFiles\universeDataDx.db"));
-
-            s_sqliteConnectionProvider = new SqliteConnectionProvider(connectionString);
             s_sqlConnectionProvider = new SqlConnectionProvider("name=EveStaticData");
-            s_dataDumpImporter = new DataDumpImporter(s_sqlConnectionProvider, new Restore());
         }
 
         /// <summary>
@@ -107,6 +102,7 @@ namespace EVEMon.SDEToSQL
         {
             if (!args.Any() || args.All(x => x != "-norestore"))
             {
+                s_dataDumpImporter = new DataDumpImporter(s_sqlConnectionProvider, new Restore());
                 s_dataDumpImporter.ImportFiles();
             }
 
@@ -129,7 +125,11 @@ namespace EVEMon.SDEToSQL
                     s_sqlConnectionProvider.OpenConnection();
 
                 Console.WriteLine();
+                
+                string connectionString = String.Format(CultureInfo.InvariantCulture, "data source={0}",
+                    Path.Combine(Directory.GetCurrentDirectory(), @"SDEFiles\universeDataDx.db"));
 
+                s_sqliteConnectionProvider = new SqliteConnectionProvider(connectionString);
                 s_sqliteConnectionProvider.OpenConnection();
 
                 IImporter sqliteImporter = new SqliteImporter(s_sqliteConnectionProvider, s_sqlConnectionProvider);
