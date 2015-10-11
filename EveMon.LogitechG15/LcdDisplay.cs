@@ -100,7 +100,7 @@ namespace EVEMon.LogitechG15
             ShowSystemTime = false;
             CycleSkillQueueTime = false;
 
-            m_buttonPressedCheckTimer = new Timer { Interval = 300 };
+            m_buttonPressedCheckTimer = new Timer { Interval = 100 };
             m_buttonPressedCheckTimer.Elapsed += ButtonPressedCheckTimerOnElapsed;
             m_buttonPressedCheckTimer.Start();
 
@@ -639,8 +639,8 @@ namespace EVEMon.LogitechG15
 
             // Less than minute ? Display seconds
             string timeLeftText = timeLeft < TimeSpan.FromMinutes(1)
-                                      ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
-                                      : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
+                ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
+                : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, includeSeconds: false);
 
             string skillQueueFreemRoom = String.Format(CultureConstants.DefaultCulture, "{0} free room in skill queue",
                                                        timeLeftText);
@@ -648,7 +648,8 @@ namespace EVEMon.LogitechG15
             RectangleF line = new RectangleF(new PointF(0f, 11f + m_defaultOffset), size);
             using (Brush brush = new SolidBrush(Color.Black))
             {
-                m_lcdCanvas.FillRectangle(brush, line.Left, line.Top, G15Width, size.Height - 1);
+                m_lcdCanvas.FillRectangle(brush, line.Left, line.Top + (Environment.Is64BitProcess ? 2 : 0),
+                    G15Width, size.Height - 1);
                 m_lcdOverlay.DrawString(skillQueueFreemRoom, m_defaultFont, brush, line);
             }
         }
