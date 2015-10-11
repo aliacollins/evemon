@@ -100,7 +100,7 @@ namespace EVEMon.LogitechG15
                 string systemTime = DateTime.Now.ToShortTimeString();
                 SizeF systemTimeSize = canvas.MeasureString(systemTime, m_font);
                 RectangleF systemTimeRect = new RectangleF(new PointF(LcdDisplay.G15Width + 1 - systemTimeSize.Width, offset),
-                                                                      systemTimeSize);
+                    systemTimeSize);
                 width -= (int)systemTimeSize.Width + Pad;
                 using (Brush brush = new SolidBrush(Color.Black))
                 {
@@ -110,7 +110,8 @@ namespace EVEMon.LogitechG15
 
             string text = percentage.ToString("P2", CultureConstants.DefaultCulture);
             SizeF textSize = canvas.MeasureString(text, m_font);
-            RectangleF barRect = new RectangleF(new PointF(left, offset - defaultOffset - (Environment.Is64BitProcess ? 0 : 1)), new SizeF(width, textSize.Height - 1));
+            RectangleF barRect = new RectangleF(left, offset - defaultOffset - (Environment.Is64BitProcess ? 0 : 1),
+                width, textSize.Height - 1);
             float textLeft = (barRect.Width - textSize.Width) / 2;
             RectangleF textRect = new RectangleF(new PointF(left + textLeft, offset), textSize);
 
