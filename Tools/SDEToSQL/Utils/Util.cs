@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Globalization;
@@ -11,7 +12,6 @@ using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Xml.Serialization;
 using YamlDotNet.RepresentationModel;
 
@@ -52,23 +52,24 @@ namespace EVEMon.SDEToSQL.Utils
         /// Updates the percent done.
         /// </summary>
         /// <param name="total">The total.</param>
-        internal static void UpdatePercentDone(int total)
+        internal static void UpdatePercentDone(double total)
         {
             if (s_isClosing)
                 return;
 
-            s_counter = total > 0 && s_counter < total ? s_counter + 1 : s_counter;
-            int percent = total > 0 ? (s_counter * 100 / total) : 0;
+            s_counter = total > 0d && s_counter < total ? s_counter + 1 : s_counter;
+            double percent = total > 0d ? (s_counter / total) : 0d;
+            int percentRounded = (int)(percent * 100);
 
-            if (s_counter < 0 || s_percentOld >= percent)
+            if (s_counter < 0 || s_percentOld >= percentRounded)
                 return;
 
-            s_percentOld = percent;
+            s_percentOld = percentRounded;
 
             if (!String.IsNullOrEmpty(s_text))
                 SetConsoleCursorPosition(s_text);
 
-            s_text = String.Format(CultureInfo.InvariantCulture, "{0}%", percent);
+            s_text = String.Format(CultureInfo.InvariantCulture, "{0:P0}", percent);
 
             if (Console.CursorLeft == 0 || s_isClosing)
                 return;
@@ -95,7 +96,7 @@ namespace EVEMon.SDEToSQL.Utils
             if (s_isClosing)
                 return;
 
-            Console.WriteLine(@" in {0}", stopwatch.Elapsed.ToString("g", CultureInfo.InvariantCulture));
+            Console.WriteLine(@" in {0:g}", stopwatch.Elapsed);
         }
 
         /// <summary>
@@ -376,7 +377,7 @@ namespace EVEMon.SDEToSQL.Utils
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="exception">The exception.</param>
-        internal static void HandleExceptionForCommand(IDbCommand command, Exception exception)
+        internal static void HandleExceptionForCommand(DbCommand command, Exception exception)
         {
             Console.WriteLine();
             Console.WriteLine(@"Unable to execute SQL command: {0}", command.CommandText);
@@ -592,7 +593,9 @@ namespace EVEMon.SDEToSQL.Utils
             Console.Write(@"Press any key to exit.");
             Console.ReadKey(true);
             DeleteSDEFilesIfZipExists();
-            Environment.Exit(exitCode);
+
+            if (exitCode != 0)
+                Environment.Exit(exitCode);
         }
 
         /// <summary>

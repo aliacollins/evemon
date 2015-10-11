@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
-using EVEMon.XmlGenerator.Helpers;
 using EVEMon.XmlGenerator.Providers;
 using EVEMon.XmlGenerator.StaticData;
+using EVEMon.XmlGenerator.Utils;
 
 namespace EVEMon.XmlGenerator.Datafiles
 {

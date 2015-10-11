@@ -10,8 +10,8 @@ namespace EVEMon.SDEToSQL.Providers
         /// </summary>
         /// <param name="nameOrConnectionString">The name or connection string.</param>
         internal SqliteConnectionProvider(String nameOrConnectionString)
+            : base(typeof(SQLiteConnection), nameOrConnectionString)
         {
-            CreateConnection<SQLiteConnection>(nameOrConnectionString);
         }
     }
 }

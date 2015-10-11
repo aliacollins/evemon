@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CtrlType.cs" />
+    <Compile Include="Importer.cs" />
     <Compile Include="Providers\DbConnectionProvider.cs" />
     <Compile Include="Providers\SqlConnectionProvider.cs" />
     <Compile Include="Providers\SqliteConnectionProvider.cs" />

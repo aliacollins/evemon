@@ -12,37 +12,8 @@ using YamlDotNet.RepresentationModel;
 
 namespace EVEMon.SDEToSQL.Importers.YamlToSQL
 {
-    enum Activity
-    {
-        None = 0,
-
-        [Description("manufacturing")]
-        Manufacturing = 1,
-
-        [Description("research_technology")]
-        ResearchingTechnology = 2,
-
-        [Description("research_time")]
-        ResearchingTimeEfficiency = 3,
-
-        [Description("research_material")]
-        ResearchingMaterialEfficiency = 4,
-
-        [Description("copying")]
-        Copying = 5,
-
-        [Description("duplicating")]
-        Duplicating = 6,
-
-        [Description("reverse_engineering")]
-        ReverseEngineering = 7,
-
-        [Description("invention")]
-        Invention = 8
-    }
-
     internal static class Blueprints
-    {
+    { 
         private const string InvBlueprintTypesTableName = "invBlueprintTypes";
         private const string RamTypeRequirementsTableName = "ramTypeRequirements";
 
@@ -476,5 +447,39 @@ namespace EVEMon.SDEToSQL.Importers.YamlToSQL
                 return invBlueprintTypes;
             }
         }
+        
+
+        #region Helper Enumeration
+
+        private enum Activity
+        {
+            None = 0,
+
+            [Description("manufacturing")]
+            Manufacturing = 1,
+
+            [Description("research_technology")]
+            ResearchingTechnology = 2,
+
+            [Description("research_time")]
+            ResearchingTimeEfficiency = 3,
+
+            [Description("research_material")]
+            ResearchingMaterialEfficiency = 4,
+
+            [Description("copying")]
+            Copying = 5,
+
+            [Description("duplicating")]
+            Duplicating = 6,
+
+            [Description("reverse_engineering")]
+            ReverseEngineering = 7,
+
+            [Description("invention")]
+            Invention = 8
+        }
+
+        #endregion
     }
 }

@@ -22,6 +22,8 @@ namespace EVEMon.PatchXmlCreator
     {
         #region Fields
 
+        private const string CompatibilityMessage = "\nNOT COMPATIBLE with EVEMon prior to version 2.2.0";
+
         private static readonly Dictionary<Control, String> s_listOfInitMessages = new Dictionary<Control, String>();
         private static readonly List<Datafile> s_datafiles = new List<Datafile>();
         private static readonly CultureInfo s_enUsCulture = new CultureInfo("en-US");
@@ -552,8 +554,6 @@ namespace EVEMon.PatchXmlCreator
         /// <returns></returns>
         private void ExportDatafiles(ICollection<SerializableDatafile> datafiles)
         {
-            const string CompatibilityMessage = "\nNOT COMPATIBLE with EVEMon prior to version 1.8.9";
-
             string url = String.Format(CultureConstants.InvariantCulture, "{1}{2}{0}{3}",
                 Path.AltDirectorySeparatorChar, rtbDatafileUrl.Text, tbExpansion.Text, tbExpRevision.Text);
 
