@@ -118,7 +118,10 @@
     <Compile Include="Enumerations\BlueprintActivity.cs" />
     <Compile Include="Enumerations\BlueprintType.cs" />
     <Compile Include="Enumerations\CaldariMilitiaRank.cs" />
+    <Compile Include="Enumerations\CertificateFilter.cs" />
     <Compile Include="Enumerations\CertificateGrade.cs" />
+    <Compile Include="Enumerations\CertificateSort.cs" />
+    <Compile Include="Enumerations\CertificateStatus.cs" />
     <Compile Include="Enumerations\CharacterSortCriteria.cs" />
     <Compile Include="Enumerations\ConnectionStatus.cs" />
     <Compile Include="Enumerations\ContactGroup.cs" />
@@ -175,6 +178,12 @@
     <Compile Include="Helpers\ApiTesterUIHelper.cs" />
     <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
     <Compile Include="Models\Asset.cs" />
+    <Compile Include="Models\Certificate.cs" />
+    <Compile Include="Models\CertificateGroup.cs" />
+    <Compile Include="Models\CertificateCategoryCollection.cs" />
+    <Compile Include="Models\CertificateClass.cs" />
+    <Compile Include="Models\CertificateClassCollection.cs" />
+    <Compile Include="Models\CertificateCollection.cs" />
     <Compile Include="Models\Corporation.cs" />
     <Compile Include="Models\ContractItem.cs" />
     <Compile Include="Models\Contract.cs" />
@@ -189,6 +198,7 @@
     <Compile Include="Models\Comparers\ContractComparer.cs" />
     <Compile Include="Models\Comparers\ContractItemComparer.cs" />
     <Compile Include="Models\Extended\APIMethods.cs" />
+    <Compile Include="Serialization\API\SerializableCharacterCertificate.cs" />
     <Compile Include="Serialization\Datafiles\MasteriesDatafile.cs" />
     <Compile Include="Serialization\Datafiles\SerializableMastery.cs" />
     <Compile Include="Serialization\Datafiles\SerializableMasteryCertificate.cs" />
@@ -516,6 +526,7 @@
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
+    <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />
     <Compile Include="SettingsObjects\MarketPricerSettings.cs" />
     <Compile Include="SettingsObjects\PlanetarySettings.cs" />

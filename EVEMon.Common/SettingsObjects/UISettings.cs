@@ -72,6 +72,13 @@ namespace EVEMon.Common.SettingsObjects
         public PlanWindowSettings PlanWindow { get; set; }
 
         /// <summary>
+        /// Gets or sets the certificate browser.
+        /// </summary>
+        /// <value>The certificate browser.</value>
+        [XmlElement("certificateBrowser")]
+        public CertificateBrowserSettings CertificateBrowser { get; set; }
+
+        /// <summary>
         /// Gets or sets the ship browser.
         /// </summary>
         /// <value>The ship browser.</value>
