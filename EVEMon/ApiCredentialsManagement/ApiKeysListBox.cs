@@ -183,34 +183,63 @@ namespace EVEMon.ApiCredentialsManagement
         {
             // Draws the texts on the upper third
             left += icon.Width + Margin.Left;
-            string apiKeyId = apiKey.ID.ToString(CultureConstants.DefaultCulture);
+
+            // Api key ID
+            string apiKeyId = apiKey.ID.ToString(CultureConstants.InvariantCulture);
             g.DrawString(apiKeyId, m_boldFont, fontBrush, new Point(left, top + 2));
-            int indentedLeft = left + g.MeasureString(apiKeyId, m_boldFont).ToSize().Width + Margin.Left;
+            int indentedLeft = left + g.MeasureString(apiKeyId, m_boldFont).ToSize().Width + Margin.Left * 2;
 
+            // Api key verification code
             g.DrawString(apiKey.VerificationCode, Font, fontBrush, new Point(indentedLeft, top));
-            indentedLeft += g.MeasureString(apiKey.VerificationCode, Font).ToSize().Width + Margin.Left * 4;
+            indentedLeft += g.MeasureString(apiKey.VerificationCode, Font).ToSize().Width + Margin.Left * 2;
 
+            // Api key expiration date
             string apiKeyExpiration = String.Format(CultureConstants.DefaultCulture, "Expires: {0}",
-                                                    (apiKey.Expiration != DateTime.MinValue
-                                                         ? apiKey.Expiration.ToLocalTime().ToString()
-                                                         : "Never"));
+                apiKey.Expiration != DateTime.MinValue
+                    ? apiKey.Expiration.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                    : "Never");
             g.DrawString(apiKeyExpiration, Font, fontBrush, new Point(indentedLeft, top));
 
             // Draw the texts on the middle third
             top += g.MeasureString(apiKeyExpiration, Font).ToSize().Height;
-            string accountCreated = String.Format(CultureConstants.DefaultCulture, "Account Created: {0}",
-                                                  (apiKey.AccountCreated != DateTime.MinValue
-                                                       ? apiKey.AccountCreated.ToLocalTime().ToString()
-                                                       : "-"));
-            g.DrawString(accountCreated, m_middleFont, fontBrush, new Point(left, top));
-            indentedLeft = left + g.MeasureString(accountCreated, m_middleFont).ToSize().Width + Margin.Left * 4;
 
-            string accountExpires = String.Format(CultureConstants.DefaultCulture, "Account Paid Until: {0}",
-                                                  (apiKey.AccountExpires != DateTime.MinValue
-                                                       ? apiKey.AccountExpires.ToLocalTime().ToString()
-                                                       : "-"));
-            g.DrawString(accountExpires, m_middleFont, fontBrush, new Point(indentedLeft, top));
+            // Account header
+            string accountHeader = "Account";
+            g.DrawString(accountHeader, m_boldFont, fontBrush, new Point(left, top));
+            indentedLeft = left + g.MeasureString(accountHeader, m_boldFont).ToSize().Width + Margin.Left * 2;
 
+            // Account created
+            string accountCreated = String.Format(CultureConstants.DefaultCulture, "Created: {0}",
+                apiKey.AccountCreated != DateTime.MinValue
+                    ? apiKey.AccountCreated.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                    : "-");
+            g.DrawString(accountCreated, m_middleFont, fontBrush, new Point(indentedLeft, top));
+            indentedLeft += g.MeasureString(accountCreated, m_middleFont).ToSize().Width + Margin.Left * 2;
+
+            // Account paid until
+            string accountPaidUntil = String.Format(CultureConstants.DefaultCulture, "Paid Until: {0}",
+                apiKey.AccountExpires != DateTime.MinValue
+                    ? apiKey.AccountExpires.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                    : "-");
+            g.DrawString(accountPaidUntil, m_middleFont, fontBrush, new Point(indentedLeft, top));
+            indentedLeft += g.MeasureString(accountPaidUntil, m_middleFont).ToSize().Width + Margin.Left * 2;
+
+            // Account status header
+            string accountStatusHeader = "Status: ";   
+            g.DrawString(accountStatusHeader, m_middleFont, fontBrush, new Point(indentedLeft, top));
+            indentedLeft += g.MeasureString(accountStatusHeader, m_middleFont).ToSize().Width;
+
+            // Account status body
+            string accountStatusBody = apiKey.AccountExpires != DateTime.MinValue
+                ? apiKey.AccountExpires > DateTime.UtcNow
+                    ? "Active"
+                    : "Expired"
+                : "-";
+            Brush accountStatusBrush = apiKey.AccountExpires != DateTime.MinValue
+                ? new SolidBrush(apiKey.AccountExpires > DateTime.UtcNow ? Color.DarkGreen : Color.Red)
+                : fontBrush;
+            g.DrawString(accountStatusBody, m_middleFont, accountStatusBrush, new Point(indentedLeft, top));
+            
             // Draws the texts on the lower third
             top += g.MeasureString(accountCreated, m_middleFont).ToSize().Height;
             bool isFirst = true;
