@@ -91,6 +91,9 @@ namespace EVEMon.SkillPlanner
             // Description
             tbDescription.Text = SelectedObject.Description;
 
+            // Recommended Certificates
+            recommendedCertificatesControl.Object = SelectedObject;
+
             // Required Skills
             requiredSkillsControl.Object = SelectedObject;
 
@@ -105,6 +108,7 @@ namespace EVEMon.SkillPlanner
         protected override void OnPlanChanged()
         {
             base.OnPlanChanged();
+            recommendedCertificatesControl.Plan = Plan;
             requiredSkillsControl.Plan = Plan;
 
             // We recalculate the right panels minimum size

@@ -220,7 +220,11 @@ namespace EVEMon.SkillPlanner
 
             Character character = (Character)m_plan.Character;
             Skill skill = character.Skills[prereq.Skill.ID];
-            TreeNode node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
+            TreeNode node;
+            
+            
+
+            node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
 
             // Generate child prerequisite skill nodes if required
             foreach (StaticSkillLevel childPrereq in skill.StaticData.Prerequisites.Where(childPrereq => childPrereq != prereq))
