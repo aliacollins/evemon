@@ -19,17 +19,11 @@ namespace EVEMon.Common.Models
         internal CertificateCollection(Character character)
         {
             // Builds the list
-            foreach (Certificate cert in character.CertificateCategories.SelectMany(
-                category => category, (category, certClass) => new { category, certClass }).SelectMany(
+            foreach (var certClass in character.CertificateCategories.SelectMany(
+                category => category, (category, certClass) => new { category, certClass }).Select(
                     category => category.certClass))
             {
-                Items[cert.ID] = cert;
-            }
-
-            // Builds the prerequisites certificates list
-            foreach (Certificate cert in Items.Values)
-            {
-                cert.CompleteInitialization(Items);
+                Items[certClass.Certificate.ID] = certClass.Certificate;
             }
         }
 
@@ -48,15 +42,15 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="status">The status the certificates must have</param>
         /// <returns></returns>
-        public IEnumerable<Certificate> FilterByStatus(CertificateStatus status)
+        public IEnumerable<CertificateLevel> FilterByStatus(CertificateStatus status)
         {
-            return Items.Values.Where(cert => cert.Status == status);
+            return Items.Values.SelectMany(cert => cert.AllLevel).Where(certLevel => certLevel.Status == status);
         }
 
         /// <summary>
         /// Gets the certificates granted to that character.
         /// </summary>
-        public IEnumerable<Certificate> GrantedCertificates
+        public IEnumerable<CertificateLevel> GrantedCertificates
         {
             get { return FilterByStatus(CertificateStatus.Granted); }
         }
@@ -67,7 +61,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         internal IEnumerable<SerializableCharacterCertificate> Export()
         {
-            return Items.Values.Where(x => x.IsGranted).Select(
+            return Items.Values.Where(x => x.AllLevel.Any(certLevel => certLevel.IsGranted)).Select(
                 cert => new SerializableCharacterCertificate { CertificateID = cert.ID });
         }
 
@@ -80,14 +74,20 @@ namespace EVEMon.Common.Models
             // Certificates : reset > mark the granted ones > update the other ones
             foreach (Certificate cert in Items.Values)
             {
-                cert.Reset();
+                foreach (var certLevel in cert.AllLevel)
+                {
+                    certLevel.Reset();
+                }                
             }
 
             foreach (SerializableCharacterCertificate serialCert in certificates.Where(x => this[x.CertificateID] != null))
             {
                 // Take care of the new certs not in our datafiles yet
                 // Mark as granted if it exists
-                Items[serialCert.CertificateID].MarkAsGranted();
+                foreach (var certLevel in Items[serialCert.CertificateID].AllLevel)
+                {
+                    certLevel.MarkAsGranted();
+                }
             }
 
             while (true)

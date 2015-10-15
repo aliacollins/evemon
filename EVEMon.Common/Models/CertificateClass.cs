@@ -69,12 +69,11 @@ namespace EVEMon.Common.Models
         /// Gets the lowest untrained (neither granted nor claimable).
         /// Null if all certificates have been granted or are claimable.
         /// </summary>
-        public Certificate LowestUntrainedGrade
+        public CertificateLevel LowestUntrainedGrade
         {
             get
             {
-                return m_items.Where(cert => cert != null).FirstOrDefault(
-                    cert => cert.Status != CertificateStatus.Claimable && cert.Status != CertificateStatus.Granted);
+                return Certificate.AllLevel.FirstOrDefault(level => level.Status != CertificateStatus.Claimable && level.Status != CertificateStatus.Granted);                
             }
         }
 
@@ -82,18 +81,18 @@ namespace EVEMon.Common.Models
         /// Gets the highest claimed grade.
         /// May be null if no grade has been granted.
         /// </summary>
-        public Certificate HighestClaimedGrade
+        public CertificateLevel HighestClaimedGrade
         {
             get
             {
-                Certificate lastCert = null;
-                foreach (Certificate cert in m_items.Where(cert => cert != null))
+                CertificateLevel lastCertLevel = null;
+                foreach (var certLevel in Certificate.AllLevel)
                 {
-                    if (cert.Status != CertificateStatus.Granted)
-                        return lastCert;
-                    lastCert = cert;
+                    if (certLevel.Status != CertificateStatus.Granted && certLevel.Status != CertificateStatus.Claimable)
+                        return lastCertLevel;
+                    lastCertLevel = certLevel;
                 }
-                return lastCert;
+                return lastCertLevel;
             }
         }
 
@@ -102,7 +101,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public bool IsCompleted
         {
-            get { return m_items.All(cert => cert == null || cert.Status == CertificateStatus.Granted); }
+            get { return Certificate.AllLevel.All(certLevel => certLevel.Status == CertificateStatus.Granted); }
         }
 
         /// <summary>
@@ -114,9 +113,9 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                foreach (Certificate cert in m_items.Where(cert => cert != null))
+                foreach (var certLevel in Certificate.AllLevel)
                 {
-                    switch (cert.Status)
+                    switch (certLevel.Status)
                     {
                         case CertificateStatus.PartiallyTrained:
                             return true;

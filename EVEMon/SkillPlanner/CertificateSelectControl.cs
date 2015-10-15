@@ -19,10 +19,10 @@ namespace EVEMon.SkillPlanner
 {
     public partial class CertificateSelectControl : UserControl
     {
-        private readonly char[] m_upperCertificatesLetters = new[] { 'B', 'S', 'I', 'E' };
+        private readonly char[] m_upperCertificatesLetters = new[] { '1', '2', '3', '4', '5' };
 
         // Stupid insensitive images keys' comparison, we cannot use bsie
-        private readonly char[] m_lowerCertificatesLetters = new[] { '1', '2', '3', '4' };
+        private readonly char[] m_lowerCertificatesLetters = new[] { '1', '2', '3', '4', '5' };
 
         // Blank image list for 'Safe for work' setting
         private readonly ImageList m_emptyImageList = new ImageList();
@@ -419,7 +419,7 @@ namespace EVEMon.SkillPlanner
                         certClass => new
                                          {
                                              certClass,
-                                             index = GetCertImageIndex(certClass)
+                                             index = GetCertImageIndex(certClass.Certificate.AllLevel)
                                          }).Select(childNode => new TreeNode
                                                                     {
                                                                         Text = childNode.certClass.Name,
@@ -600,8 +600,8 @@ namespace EVEMon.SkillPlanner
                     return x => x.IsFurtherTrainable;
                 case CertificateFilter.NextGradeUntrainable:
                     return x => !x.IsFurtherTrainable & !x.IsCompleted;
-                case CertificateFilter.Claimable:
-                    return x => x.Any(y => y.CanBeClaimed);
+                //case CertificateFilter.Claimable:
+                    //return x => x.Certificate.AllLevel.Any(y => y.CanBeClaimed);
                 default:
                     throw new NotImplementedException();
             }
@@ -656,7 +656,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static TimeSpan GetTimeToNextGrade(CertificateClass x)
         {
-            Certificate nextUntrained = x.LowestUntrainedGrade;
+            var nextUntrained = x.Certificate.LowestUntrainedGrade;
             return (nextUntrained == null
                         ? TimeSpan.Zero
                         : nextUntrained.GetTrainingTime);
@@ -669,7 +669,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static TimeSpan GetTimeToEliteGrade(CertificateClass x)
         {
-            Certificate lastGrade = x.HighestGradeCertificate;
+            var lastGrade = x.Certificate.LevelFive;
             CertificateStatus status = lastGrade.Status;
 
             if (status == CertificateStatus.Granted ||
@@ -685,43 +685,42 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="certClass"></param>
         /// <returns></returns>
-        private int GetCertImageIndex(IEnumerable<Certificate> certClass)
+        private int GetCertImageIndex(IEnumerable<CertificateLevel> certLevels)
         {
             // Prepare datas, especially image keys like "BSIE", "BSie", "BE", etc (lower for non-granted, upper for granted, only existing certs)
             // Correction : keys are insenstive, so we use 1234 instead of lower case letters
-            char[] chars = new char[4];
-            bool[] granted = new bool[4];
-            List<Certificate> certs = new List<Certificate>(certClass);
+            char[] chars = new char[5];
+            bool[] granted = new bool[5];            
 
             int index = 0;
             int totalGranted = 0;
-            foreach (Certificate cert in certs)
+            foreach (var certLevel in certLevels)
             {
-                bool isGranted = (cert.Status == CertificateStatus.Granted);
+                bool isGranted = (certLevel.Status == CertificateStatus.Granted || certLevel.Status == CertificateStatus.Claimable);
                 if (isGranted)
                 {
                     totalGranted++;
                     granted[index] = true;
-                    chars[index] = m_upperCertificatesLetters[(int)cert.Grade]; // Gets "B" for granted basic
+                    chars[index] = m_upperCertificatesLetters[(int)certLevel.Grade]; // Gets "B" for granted basic
                 }
                 else
-                    chars[index] = m_lowerCertificatesLetters[(int)cert.Grade]; // Gets "b" for non-granted basic
+                    chars[index] = m_lowerCertificatesLetters[(int)certLevel.Grade]; // Gets "b" for non-granted basic
 
                 index++;
             }
 
             // Special cases where we return immediately
-            if (totalGranted == certs.Count)
+            if (totalGranted == certLevels.Count())
                 return tvItems.ImageList.Images.IndexOfKey("AllGranted");
 
             // Create key and retrieves its index, then returns if it already exists
-            string key = new string(chars);
+            string key = string.Concat(chars);
             index = tvItems.ImageList.Images.IndexOfKey(key);
             if (index != -1)
                 return index;
 
             // Create the image if it does not exist yet
-            const int ImageSize = 24;
+            const int ImageSize = 32;
             const int MaxLetterWidth = 6;
 
             Bitmap bmp;
@@ -732,20 +731,22 @@ namespace EVEMon.SkillPlanner
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                string[] letters = new string[4];
-                float[] xPositions = new float[4];
+                string[] letters = new string[5];
+                float[] xPositions = new float[5];
                 float x = 0.0f,
                       height = 0.0f;
 
+                int i = 0;
                 // Scroll through letters and measure them
-                for (int i = 0; i < certs.Count; i++)
+                foreach (var certLevel in certLevels)
                 {
-                    letters[i] = m_upperCertificatesLetters[(int)certs[i].Grade].ToString();
+                    letters[i] = m_upperCertificatesLetters[(int)certLevel.Grade].ToString();
                     SizeF size = g.MeasureString(letters[i], m_iconsFont, MaxLetterWidth, StringFormat.GenericTypographic);
                     height = Math.Max(height, size.Height);
                     xPositions[i] = x;
                     x += (size.Width + 1.0f);
-                }
+                    i++;
+                }                
 
                 // Y offset
                 float y = Math.Max(0.0f, (ImageSize - height) * 0.5f);
@@ -755,13 +756,13 @@ namespace EVEMon.SkillPlanner
                 using (SolidBrush grantedBrush = new SolidBrush(Color.Blue))
                 {
                     using (SolidBrush nonGrantedBrush = new SolidBrush(Color.Gray))
-                    {
-                        for (int i = 0; i < certs.Count; i++)
+                    {                     
+                        for (int j = 0; j < certLevels.Count(); j++)
                         {
                             // Special color for granted, gray for the other ones
-                            bool isGranted = granted[i];
+                            bool isGranted = granted[j];
                             SolidBrush brush = (isGranted ? grantedBrush : nonGrantedBrush);
-                            g.DrawString(letters[i], m_iconsFont, brush, xPositions[i], y);
+                            g.DrawString(letters[j], m_iconsFont, brush, xPositions[j], y);
                         }
                     }
                 }
@@ -859,7 +860,7 @@ namespace EVEMon.SkillPlanner
         {
             TreeNode node = tvItems.SelectedNode;
             CertificateClass certClass = SelectedCertificateClass;
-            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.HighestGradeCertificate))
+            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.Certificate.LevelFive))
             {
                 cmiLvPlanTo.Enabled = false;
                 cmiLvPlanTo.Text = "Plan to...";
@@ -868,10 +869,10 @@ namespace EVEMon.SkillPlanner
             {
                 cmiLvPlanTo.Enabled = true;
                 cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" to...", certClass.Name);
-                SetAdditionMenuStatus(tsmLevel1, certClass[CertificateGrade.Basic]);
-                SetAdditionMenuStatus(tsmLevel2, certClass[CertificateGrade.Standard]);
-                SetAdditionMenuStatus(tsmLevel3, certClass[CertificateGrade.Improved]);
-                SetAdditionMenuStatus(tsmLevel4, certClass[CertificateGrade.Elite]);
+                SetAdditionMenuStatus(tsmLevel1, certClass.Certificate.LevelOne);
+                SetAdditionMenuStatus(tsmLevel2, certClass.Certificate.LevelTwo);
+                SetAdditionMenuStatus(tsmLevel3, certClass.Certificate.LevelThree);
+                SetAdditionMenuStatus(tsmLevel4, certClass.Certificate.LevelFive);
             }
 
             tsSeparatorPlanTo.Visible = (certClass == null && node != null);
@@ -899,16 +900,16 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="menu"></param>
         /// <param name="cert"></param>
-        private void SetAdditionMenuStatus(ToolStripMenuItem menu, Certificate cert)
+        private void SetAdditionMenuStatus(ToolStripMenuItem menu, CertificateLevel certLevel)
         {
-            if (cert == null)
+            if (certLevel == null)
             {
                 menu.Visible = false;
                 return;
             }
 
             menu.Visible = true;
-            menu.Enabled = !m_plan.WillGrantEligibilityFor(cert);
+            menu.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
         }
 
         /// <summary>
@@ -918,7 +919,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmLevel1_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass[CertificateGrade.Basic]);
+            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelOne);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -929,7 +930,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmLevel2_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass[CertificateGrade.Standard]);
+            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelTwo);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -940,7 +941,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmLevel3_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass[CertificateGrade.Improved]);
+            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelThree);
             PlanHelper.SelectPerform(operation);
         }
 
@@ -951,7 +952,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmLevel4_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass[CertificateGrade.Elite]);
+            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelFive);
             PlanHelper.SelectPerform(operation);
         }
 

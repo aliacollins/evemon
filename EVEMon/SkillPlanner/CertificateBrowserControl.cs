@@ -145,92 +145,93 @@ namespace EVEMon.SkillPlanner
             // Updates controls visibility
             panelRight.Visible = true;
 
-            Certificate firstCert = certClass.LowestGradeCertificate;
-            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", certClass.Name, (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
+            Certificate firstCert = certClass.Certificate;
+            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
             lblCategory.Text = certClass.Category.Name;
 
             // Initialize the labels' text for every existing grade
             List<Control> newItems = new List<Control>();
-            Label[] labels = new[] { lblLevel1Time, lblLevel2Time, lblLevel3Time, lblLevel4Time };
+            Label[] labels = new[] { lblLevel1Time, lblLevel2Time, lblLevel3Time, lblLevel4Time, lblLevel5Time };
             int lbIndex = 0;
-            PersistentSplitContainer rSplCont = rightSplitContainer;
-            foreach (Certificate cert in certClass)
-            {
+            PersistentSplitContainer rSplCont = rightSplitContainer;            
+
+            foreach (var certLevelLabelInfo in certClass.Certificate.AllLevel)
+            {                
                 Label label = labels[lbIndex];
-                TimeSpan time = cert.GetTrainingTime;
+                TimeSpan time = certLevelLabelInfo.GetTrainingTime;
                 label.Text = String.Format(CultureConstants.DefaultCulture, "{0} : {1}",
-                                           cert.Grade,
-                                           time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
+                                            certLevelLabelInfo,
+                                            time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas));
                 label.Visible = true;
                 lbIndex++;
-
-                SortedList<string, Item> ships = new SortedList<string, Item>();
-                foreach (Item ship in cert.Recommendations)
-                {
-                    ships.Add(ship.Name, ship);
-                }
-
-                if (ships.Count == 0)
-                    continue;
-
-                Label tempLabel = null;
-                try
-                {
-                    tempLabel = new Label();
-                    tempLabel.Font = new Font(tempLabel.Font, FontStyle.Bold);
-                    tempLabel.AutoSize = true;
-                    tempLabel.Dock = DockStyle.Top;
-                    tempLabel.Text = String.Format(CultureConstants.DefaultCulture, "Recommends {0}:", cert.Grade);
-                    tempLabel.Padding = new Padding(5);
-
-                    Label tsl = tempLabel;
-                    tempLabel = null;
-
-                    newItems.Add(tsl);
-
-                    Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
-                    int panelMinSize = rSplCont.Panel2MinSize;
-                    rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad
-                                                  ? panelMinSize
-                                                  : tslTextSize.Width + HPad);
-                    rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
-                }
-                finally
-                {
-                    if (tempLabel != null)
-                        tempLabel.Dispose();
-                }
-
-                foreach (LinkLabel linkLabel in ships.Values.Select(
-                    ship =>
-                        {
-                            LinkLabel linkLabel;
-                            LinkLabel tempLinkLabel = null;
-                            try
-                            {
-                                tempLinkLabel = new LinkLabel();
-                                tempLinkLabel.LinkBehavior = LinkBehavior.HoverUnderline;
-                                tempLinkLabel.Padding = new Padding(16, 0, 0, 0);
-                                tempLinkLabel.Dock = DockStyle.Top;
-                                tempLinkLabel.Text = ship.Name;
-                                tempLinkLabel.Tag = ship;
-
-                                linkLabel = tempLinkLabel;
-                                tempLinkLabel = null;
-                            }
-                            finally
-                            {
-                                if (tempLinkLabel != null)
-                                    tempLinkLabel.Dispose();
-                            }
-
-                            return linkLabel;
-                        }))
-                {
-                    linkLabel.MouseClick += recommendations_MenuItem;
-                    newItems.Add(linkLabel);
-                }
             }
+
+            // Only read the recommendations from one level, because they are all the same
+            var certLevel = certClass.Certificate.LevelFive;
+            SortedList<string, Item> ships = new SortedList<string, Item>();
+            foreach (Item ship in certLevel.Certificate.Recommendations)
+            {
+                ships.Add(ship.Name, ship);
+            }
+
+            Label tempLabel = null;
+            try
+            {
+                tempLabel = new Label();
+                tempLabel.Font = new Font(tempLabel.Font, FontStyle.Bold);
+                tempLabel.AutoSize = true;
+                tempLabel.Dock = DockStyle.Top;
+                tempLabel.Text = "Recommends";
+                tempLabel.Padding = new Padding(5);
+
+                Label tsl = tempLabel;
+                tempLabel = null;
+
+                newItems.Add(tsl);
+
+                Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
+                int panelMinSize = rSplCont.Panel2MinSize;
+                rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad
+                                                ? panelMinSize
+                                                : tslTextSize.Width + HPad);
+                rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
+            }
+            finally
+            {
+                if (tempLabel != null)
+                    tempLabel.Dispose();
+            }
+
+            foreach (LinkLabel linkLabel in ships.Values.Select(
+                ship =>
+                    {
+                        LinkLabel linkLabel;
+                        LinkLabel tempLinkLabel = null;
+                        try
+                        {
+                            tempLinkLabel = new LinkLabel();
+                            tempLinkLabel.LinkBehavior = LinkBehavior.HoverUnderline;
+                            tempLinkLabel.Padding = new Padding(16, 0, 0, 0);
+                            tempLinkLabel.Dock = DockStyle.Top;
+                            tempLinkLabel.Text = ship.Name;
+                            tempLinkLabel.Tag = ship;
+
+                            linkLabel = tempLinkLabel;
+                            tempLinkLabel = null;
+                        }
+                        finally
+                        {
+                            if (tempLinkLabel != null)
+                                tempLinkLabel.Dispose();
+                        }
+
+                        return linkLabel;
+                    }))
+            {
+                linkLabel.MouseClick += recommendations_MenuItem;
+                newItems.Add(linkLabel);
+            }
+            
 
             // Updates the recommendations for this certificate
             UpdateRecommendations(newItems, rSplCont);
@@ -296,40 +297,41 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateEligibility()
         {
-            Certificate lastEligibleCert = null;
+            CertificateLevel lastEligibleCertLevel = null;
             CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
 
             if (certClass == null)
                 return;
 
             // First we search the highest eligible certificate after this plan
-            foreach (Certificate cert in certClass.TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)))
+            foreach (var certLevel in certClass.Certificate.AllLevel.TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)))
             {
-                lastEligibleCert = cert;
+                lastEligibleCertLevel = certLevel;
             }
 
-            if (lastEligibleCert == null)
+            if (lastEligibleCertLevel == null)
                 tslbEligible.Text = "(none)";
             else
             {
-                tslbEligible.Text = lastEligibleCert.Grade.ToString();
+                tslbEligible.Text = lastEligibleCertLevel.ToString();
 
-                Certificate highestClaimedCertificate = certClass.HighestClaimedGrade;
-                if (highestClaimedCertificate == null)
+                CertificateLevel highestClaimedCertificateLevel = certClass.HighestClaimedGrade;
+                if (highestClaimedCertificateLevel == null)
                     tslbEligible.Text += " (improved from \"none\")";
-                else if ((int)lastEligibleCert.Grade > (int)highestClaimedCertificate.Grade)
+                else if ((int)lastEligibleCertLevel.Grade > (int)highestClaimedCertificateLevel.Grade)
                 {
                     tslbEligible.Text += String.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")",
-                                                       highestClaimedCertificate.Grade);
+                                                       highestClaimedCertificateLevel);
                 }
                 else
                     tslbEligible.Text += " (no change)";
             }
-
-            UpdatePlanningMenuStatus(tsPlanToBasic, certClass, CertificateGrade.Basic, lastEligibleCert);
-            UpdatePlanningMenuStatus(tsPlanToStandard, certClass, CertificateGrade.Standard, lastEligibleCert);
-            UpdatePlanningMenuStatus(tsPlanToImproved, certClass, CertificateGrade.Improved, lastEligibleCert);
-            UpdatePlanningMenuStatus(tsPlanToElite, certClass, CertificateGrade.Elite, lastEligibleCert);
+            
+            UpdatePlanningMenuStatus(tsPlanToLevelOne, certClass, CertificateGrade.LevelOne, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelTwo, certClass, CertificateGrade.LevelTwo, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelThree, certClass, CertificateGrade.LevelThree, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelFour, certClass, CertificateGrade.LevelFour, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelFive, certClass, CertificateGrade.LevelFive, lastEligibleCertLevel);
         }
 
         /// <summary>
@@ -338,17 +340,36 @@ namespace EVEMon.SkillPlanner
         /// <param name="menu">The menu to update</param>
         /// <param name="certClass">The selected certificate class</param>
         /// <param name="grade">The grade represent by this menu</param>
-        /// <param name="lastEligibleCert">The highest eligible certificate after this plan</param>
+        /// <param name="lastEligibleCertLevel">The highest eligible certificate after this plan</param>
         private static void UpdatePlanningMenuStatus(ToolStripItem menu, CertificateClass certClass,
-                                              CertificateGrade grade, Certificate lastEligibleCert)
+                                              CertificateGrade grade, CertificateLevel lastEligibleCertLevel)
         {
-            Certificate cert = certClass[grade];
-            if (cert == null)
+            CertificateLevel certLevel = null;
+            switch (grade)
+            {
+                case CertificateGrade.LevelOne:
+                    certLevel = certClass.Certificate.LevelOne;
+                    break;
+                case CertificateGrade.LevelTwo:
+                    certLevel = certClass.Certificate.LevelTwo;
+                    break;
+                case CertificateGrade.LevelThree:
+                    certLevel = certClass.Certificate.LevelThree;
+                    break;
+                case CertificateGrade.LevelFour:
+                    certLevel = certClass.Certificate.LevelFour;
+                    break;
+                case CertificateGrade.LevelFive:
+                    certLevel = certClass.Certificate.LevelFive;
+                    break;
+            }
+            
+            if (certLevel == null)
                 menu.Visible = false;
             else
             {
                 menu.Visible = true;
-                menu.Enabled = (lastEligibleCert == null || ((int)cert.Grade > (int)lastEligibleCert.Grade));
+                menu.Enabled = (lastEligibleCertLevel == null || certLevel.Grade > lastEligibleCertLevel.Grade);
             }
         }
 
@@ -389,25 +410,24 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
         {
-            Certificate cert = certDisplayCtl.SelectedCertificateLevel;
+            var certLevel = certDisplayCtl.SelectedCertificateLevel;
             CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
 
             if (certClass == null)
                 return;
 
             // No certificate or not one of the roots ? Then, we display the description for the lowest grade cert
-            if (cert == null || cert.Class != certClass)
+            if (certLevel == null || certLevel.Certificate.Class != certClass)
             {
-                Certificate firstCert = certClass.LowestGradeCertificate;
-                textboxDescription.Text = (firstCert == null ? String.Empty : firstCert.Description);
-                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", certClass.Name,
-                                             (firstCert == null ? String.Empty : firstCert.Grade.ToString()));
+                CertificateLevel firstCertLevel = certClass.Certificate.LevelOne;
+                textboxDescription.Text = certClass.Certificate.Description;
+                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
             }
                 // So, one of our cert class's grades has been selected, we use its description
             else
             {
-                textboxDescription.Text = cert.Description;
-                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0} {1}", certClass.Name, cert.Grade);
+                textboxDescription.Text = certLevel.Certificate.Description;
+                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
             }
         }
 
@@ -443,48 +463,59 @@ namespace EVEMon.SkillPlanner
         #region Context menu
 
         /// <summary>
-        /// Handles the Click event of the tsPlanToBasic control.
+        /// Handles the Click event of the tsPlanToLevelOne control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToBasic_Click(object sender, EventArgs e)
+        private void tsPlanToLevelOne_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Basic]);
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelOne);
             PlanHelper.SelectPerform(operation);
         }
 
         /// <summary>
-        /// Handles the Click event of the tsPlanToStandard control.
+        /// Handles the Click event of the tsPlanToLevelTwo control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToStandard_Click(object sender, EventArgs e)
+        private void tsPlanToLevelTwo_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Standard]);
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelTwo);
             PlanHelper.SelectPerform(operation);
         }
 
         /// <summary>
-        /// Handles the Click event of the tsPlanToImproved control.
+        /// Handles the Click event of the tsPlanToLevelThree control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToImproved_Click(object sender, EventArgs e)
+        private void tsPlanToLevelThree_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Improved]);
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelThree);
             PlanHelper.SelectPerform(operation);
         }
 
         /// <summary>
-        /// Handles the Click event of the tsPlanToElite control.
+        /// Handles the Click event of the tsPlanToLevelFour control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToElite_Click(object sender, EventArgs e)
+        private void tsPlanToLevelFour_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass[CertificateGrade.Elite]);
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelFour);
             PlanHelper.SelectPerform(operation);
         }
+
+        /// <summary>
+        /// Handles the Click event of the tsPlanToLevelFive control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void tsPlanToLevelFive_Click(object sender, EventArgs e)
+        {
+            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelFive);
+            PlanHelper.SelectPerform(operation);
+        }        
 
         #endregion
 
@@ -494,16 +525,16 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// This is the way to set the selected certificate.
         /// </summary>
-        public void SelectedCertificate(Certificate certificate)
+        public void SelectedCertificateLevel(CertificateLevel certificateLevel)
         {
-            if (certificate == null)
+            if (certificateLevel == null)
                 throw new ArgumentNullException("certificate");
 
-            if (SelectedCertificateClass == certificate.Class && certDisplayCtl.SelectedCertificate == certificate)
+            if (SelectedCertificateClass == certificateLevel.Certificate.Class && certDisplayCtl.SelectedCertificate == certificateLevel)
                 return;
 
-            SelectedCertificateClass = certificate.Class;
-            certDisplayCtl.ExpandCert(certificate);
+            SelectedCertificateClass = certificateLevel.Certificate.Class;
+            certDisplayCtl.ExpandCert(certificateLevel);
         }
 
         /// <summary>
@@ -524,5 +555,7 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
+
+        
     }
 }

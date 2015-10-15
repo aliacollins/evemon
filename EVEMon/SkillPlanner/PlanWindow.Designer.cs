@@ -62,6 +62,8 @@ namespace EVEMon.SkillPlanner
             this.tpBlueprintBrowser = new System.Windows.Forms.TabPage();
             this.blueprintBrowser = new EVEMon.SkillPlanner.BlueprintBrowserControl();
             this.ilTabIcons = new System.Windows.Forms.ImageList(this.components);
+            this.tpCertificateBrowser = new System.Windows.Forms.TabPage();
+            this.certBrowser = new EVEMon.SkillPlanner.CertificateBrowserControl();
             this.MainStatusStrip.SuspendLayout();
             this.upperToolStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -70,6 +72,7 @@ namespace EVEMon.SkillPlanner
             this.tpShipBrowser.SuspendLayout();
             this.tpItemBrowser.SuspendLayout();
             this.tpBlueprintBrowser.SuspendLayout();
+            this.tpCertificateBrowser.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainStatusStrip
@@ -262,6 +265,7 @@ namespace EVEMon.SkillPlanner
             this.tabControl.Controls.Add(this.tpShipBrowser);
             this.tabControl.Controls.Add(this.tpItemBrowser);
             this.tabControl.Controls.Add(this.tpBlueprintBrowser);
+            this.tabControl.Controls.Add(this.tpCertificateBrowser);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.ImageList = this.ilTabIcons;
             this.tabControl.Location = new System.Drawing.Point(0, 25);
@@ -390,6 +394,27 @@ namespace EVEMon.SkillPlanner
             this.ilTabIcons.Images.SetKeyName(3, "Items.png");
             this.ilTabIcons.Images.SetKeyName(4, "Blueprint_24.png");
             // 
+            // tpCertificateBrowser
+            // 
+            this.tpCertificateBrowser.Controls.Add(this.certBrowser);
+            this.tpCertificateBrowser.Location = new System.Drawing.Point(4, 31);
+            this.tpCertificateBrowser.Name = "tpCertificateBrowser";
+            this.tpCertificateBrowser.Padding = new System.Windows.Forms.Padding(3);
+            this.tpCertificateBrowser.Size = new System.Drawing.Size(816, 480);
+            this.tpCertificateBrowser.TabIndex = 6;
+            this.tpCertificateBrowser.Text = "Certificate";
+            this.tpCertificateBrowser.UseVisualStyleBackColor = true;
+            // 
+            // certBrowser
+            // 
+            this.certBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.certBrowser.Location = new System.Drawing.Point(3, 3);
+            this.certBrowser.Name = "certBrowser";
+            this.certBrowser.Plan = null;
+            this.certBrowser.SelectedCertificateClass = null;
+            this.certBrowser.Size = new System.Drawing.Size(810, 474);
+            this.certBrowser.TabIndex = 0;
+            // 
             // PlanWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -412,6 +437,7 @@ namespace EVEMon.SkillPlanner
             this.tpShipBrowser.ResumeLayout(false);
             this.tpItemBrowser.ResumeLayout(false);
             this.tpBlueprintBrowser.ResumeLayout(false);
+            this.tpCertificateBrowser.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -451,5 +477,7 @@ namespace EVEMon.SkillPlanner
         private BlueprintBrowserControl blueprintBrowser;
         private System.Windows.Forms.ToolStripStatusLabel CostStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel TimeStatusLabel;
+        private System.Windows.Forms.TabPage tpCertificateBrowser;
+        private CertificateBrowserControl certBrowser;
     }
 }

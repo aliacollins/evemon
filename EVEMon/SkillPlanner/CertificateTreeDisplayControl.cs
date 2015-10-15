@@ -102,30 +102,30 @@ namespace EVEMon.SkillPlanner
         /// Note that the selected certificate may be a prerequisite and therefore
         /// not have the same class than the one represented by this control.
         /// </summary>
-        public Certificate SelectedCertificate
+        public CertificateLevel SelectedCertificate
         {
             get
             {
                 if (treeView.SelectedNode == null)
                     return null;
 
-                return treeView.SelectedNode.Tag as Certificate;
+                return treeView.SelectedNode.Tag as CertificateLevel;
             }
         }
 
         /// <summary>
         /// Gets cert of the displayed class which contains the current selection.
         /// </summary>
-        public Certificate SelectedCertificateLevel
+        public CertificateLevel SelectedCertificateLevel
         {
             get
             {
                 TreeNode node = treeView.SelectedNode;
                 while (node != null)
                 {
-                    Certificate certificate = node.Tag as Certificate;
-                    if (certificate != null && certificate.Class == CertificateClass)
-                        return certificate;
+                    var certLevel = node.Tag as CertificateLevel;
+                    if (certLevel != null && certLevel.Certificate.Class == CertificateClass)
+                        return certLevel;
 
                     node = node.Parent;
                 }
@@ -137,9 +137,9 @@ namespace EVEMon.SkillPlanner
         /// Expands the node representing this certificate.
         /// </summary>
         /// <param name="cert"></param>
-        public void ExpandCert(Certificate cert)
+        public void ExpandCert(CertificateLevel certLevel)
         {
-            foreach (TreeNode node in treeView.Nodes.Cast<TreeNode>().Where(node => node.Tag == cert))
+            foreach (var node in treeView.Nodes.Cast<TreeNode>().Where(node => node.Tag == certLevel))
             {
                 treeView.SelectedNode = node;
                 node.Expand();
@@ -172,8 +172,8 @@ namespace EVEMon.SkillPlanner
             treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
             treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
 
-            m_emptyImageList.ImageSize = new Size(24, 24);
-            m_emptyImageList.Images.Add(new Bitmap(24, 24));
+            m_emptyImageList.ImageSize = new Size(30, 24);
+            m_emptyImageList.Images.Add(new Bitmap(30, 24));
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
@@ -293,7 +293,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateTree()
         {
-            Certificate oldSelection = SelectedCertificate;
+            var oldSelection = SelectedCertificate;
             TreeNode newSelection = null;
 
             treeView.ImageList = (Settings.UI.SafeForWork ? m_emptyImageList : imageList);
@@ -311,13 +311,13 @@ namespace EVEMon.SkillPlanner
                 // Create the nodes when not done, yet
                 if (treeView.Nodes.Count == 0)
                 {
-                    foreach (Certificate cert in m_class)
+                    foreach (var certLevel in m_class.Certificate.AllLevel)
                     {
-                        TreeNode node = CreateNode(cert);
+                        TreeNode node = CreateNode(certLevel);
                         treeView.Nodes.Add(node);
 
                         // Does the old selection still exists ?
-                        if (cert == oldSelection)
+                        if (certLevel == oldSelection)
                             newSelection = node;
                     }
                 }
@@ -350,20 +350,15 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
-        private static TreeNode CreateNode(Certificate cert)
+        private static TreeNode CreateNode(CertificateLevel certLevel)
         {
             TreeNode node = new TreeNode
                                 {
-                                    Text = cert.ToString(),
-                                    Tag = cert
-                                };
+                                    Text = certLevel.ToString(),
+                                    Tag = certLevel
+            };           
 
-            foreach (Certificate prereqCert in cert.PrerequisiteCertificates)
-            {
-                node.Nodes.Add(CreateNode(prereqCert));
-            }
-
-            foreach (SkillLevel prereqSkill in cert.PrerequisiteSkills)
+            foreach (SkillLevel prereqSkill in certLevel.PrerequisiteSkills)
             {
                 node.Nodes.Add(CreateNode(prereqSkill));
             }
@@ -400,12 +395,12 @@ namespace EVEMon.SkillPlanner
         /// <param name="node"></param>
         private void UpdateNode(TreeNode node)
         {
-            Certificate cert = node.Tag as Certificate;
+            var certLevel = node.Tag as CertificateLevel;
 
             // The node represents a certificate
-            if (cert != null)
+            if (certLevel != null)
             {
-                switch (cert.Status)
+                switch (certLevel.Status)
                 {
                     case CertificateStatus.Granted:
                         node.ImageIndex = GrantedIcon;
@@ -468,18 +463,18 @@ namespace EVEMon.SkillPlanner
             int supIcon = -1;
 
             // Is it a certificate ?
-            Certificate cert = e.Node.Tag as Certificate;
-            if (cert != null)
+            var certLevel = e.Node.Tag as CertificateLevel;
+            if (certLevel != null)
             {
-                line1 = cert.ToString();
+                line1 = certLevel.ToString();
                 if (!Settings.UI.SafeForWork)
                     supIcon = CertificateIcon;
-                CertificateStatus status = cert.Status;
+                CertificateStatus status = certLevel.Status;
 
                 // When not granted or claimable, let's display the training time
                 if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
                 {
-                    TimeSpan time = cert.GetTrainingTime;
+                    TimeSpan time = certLevel.GetTrainingTime;
                     line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
@@ -571,19 +566,19 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                Certificate cert = node.Tag as Certificate;
+                var certLevel = node.Tag as CertificateLevel;
                 showInMenuSeparator.Visible = true;
                 showInBrowserMenu.Visible = true;
 
                 // When a certificate is selected
-                if (cert != null)
+                if (certLevel != null)
                 {
                     // Update "add to" menu
-                    tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(cert);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", cert);
+                    tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\"", certLevel);
 
                     // Update "browser" menu
-                    showInBrowserMenu.Enabled = m_class != cert.Class;
+                    showInBrowserMenu.Enabled = m_class != certLevel.Certificate.Class;
                     showInBrowserMenu.Text = "Show Certificates";
 
                     // Update "show in skill explorer" menu
@@ -633,7 +628,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmAddToPlan_Click(object sender, EventArgs e)
         {
-            Certificate cert = treeView.SelectedNode.Tag as Certificate;
+            var cert = treeView.SelectedNode.Tag as CertificateLevel;
             if (cert != null)
             {
                 IPlanOperation operation = m_plan.TryPlanTo(cert);
@@ -705,10 +700,10 @@ namespace EVEMon.SkillPlanner
             if (treeView.SelectedNode == null)
                 return;
 
-            Certificate cert = treeView.SelectedNode.Tag as Certificate;
+            var certLevel = treeView.SelectedNode.Tag as CertificateLevel;
             // When a certificate is selected, we select its class in the left tree
-            if (cert != null)
-                planWindow.ShowCertInBrowser(cert);
+            if (certLevel != null)
+                planWindow.ShowCertInBrowser(certLevel);
                 // When a skill is selected, we select it in the skill browser
             else
             {

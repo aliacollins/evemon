@@ -18,7 +18,7 @@ namespace EVEMon.Common.Enumerations
         /// <summary>
         /// The certificate can be claimed by the char, all prerequisites are met.
         /// </summary>
-        Claimable,
+        Claimable, 
 
         /// <summary>
         /// The certificate is not claimable yet but at least one prerequisite is satisfied

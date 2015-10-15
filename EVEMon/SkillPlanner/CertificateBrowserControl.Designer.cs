@@ -31,19 +31,22 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CertificateBrowserControl));
-            this.leftSplitContainer = new PersistentSplitContainer();
+            this.leftSplitContainer = new EVEMon.Common.Controls.PersistentSplitContainer();
             this.certSelectCtl = new EVEMon.SkillPlanner.CertificateSelectControl();
             this.panelRight = new System.Windows.Forms.Panel();
+            this.rightSplitContainer = new EVEMon.Common.Controls.PersistentSplitContainer();
+            this.certDisplayCtl = new EVEMon.SkillPlanner.CertificateTreeDisplayControl();
             this.panelHeader = new System.Windows.Forms.Panel();
+            this.lblLevel5Time = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tslbTextForEligibility = new System.Windows.Forms.ToolStripLabel();
             this.tslbEligible = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsPlanToMenu = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsPlanToBasic = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsPlanToStandard = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsPlanToImproved = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsPlanToElite = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelOne = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelTwo = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelThree = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelFive = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblCategory = new System.Windows.Forms.Label();
             this.textboxDescription = new System.Windows.Forms.TextBox();
@@ -52,20 +55,19 @@ namespace EVEMon.SkillPlanner
             this.lblLevel2Time = new System.Windows.Forms.Label();
             this.lblLevel1Time = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
-            this.rightSplitContainer = new PersistentSplitContainer();
-            this.certDisplayCtl = new EVEMon.SkillPlanner.CertificateTreeDisplayControl();
             this.lblHelp = new System.Windows.Forms.Label();
+            this.tsPlanToLevelFour = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.leftSplitContainer)).BeginInit();
             this.leftSplitContainer.Panel1.SuspendLayout();
             this.leftSplitContainer.Panel2.SuspendLayout();
             this.leftSplitContainer.SuspendLayout();
             this.panelRight.SuspendLayout();
-            this.panelHeader.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rightSplitContainer)).BeginInit();
             this.rightSplitContainer.Panel1.SuspendLayout();
             this.rightSplitContainer.SuspendLayout();
+            this.panelHeader.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // leftSplitContainer
@@ -111,8 +113,42 @@ namespace EVEMon.SkillPlanner
             this.panelRight.TabIndex = 3;
             this.panelRight.Visible = false;
             // 
+            // rightSplitContainer
+            // 
+            this.rightSplitContainer.BackColor = System.Drawing.SystemColors.Control;
+            this.rightSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rightSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.rightSplitContainer.Location = new System.Drawing.Point(0, 133);
+            this.rightSplitContainer.Name = "rightSplitContainer";
+            // 
+            // rightSplitContainer.Panel1
+            // 
+            this.rightSplitContainer.Panel1.Controls.Add(this.certDisplayCtl);
+            // 
+            // rightSplitContainer.Panel2
+            // 
+            this.rightSplitContainer.Panel2.AutoScroll = true;
+            this.rightSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.Window;
+            this.rightSplitContainer.RememberDistanceKey = null;
+            this.rightSplitContainer.Size = new System.Drawing.Size(588, 417);
+            this.rightSplitContainer.SplitterDistance = 420;
+            this.rightSplitContainer.TabIndex = 3;
+            // 
+            // certDisplayCtl
+            // 
+            this.certDisplayCtl.BackColor = System.Drawing.SystemColors.Window;
+            this.certDisplayCtl.CertificateClass = null;
+            this.certDisplayCtl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.certDisplayCtl.Location = new System.Drawing.Point(0, 0);
+            this.certDisplayCtl.Name = "certDisplayCtl";
+            this.certDisplayCtl.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
+            this.certDisplayCtl.Plan = null;
+            this.certDisplayCtl.Size = new System.Drawing.Size(420, 417);
+            this.certDisplayCtl.TabIndex = 2;
+            // 
             // panelHeader
             // 
+            this.panelHeader.Controls.Add(this.lblLevel5Time);
             this.panelHeader.Controls.Add(this.toolStrip1);
             this.panelHeader.Controls.Add(this.pictureBox1);
             this.panelHeader.Controls.Add(this.lblCategory);
@@ -125,8 +161,17 @@ namespace EVEMon.SkillPlanner
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Size = new System.Drawing.Size(588, 116);
+            this.panelHeader.Size = new System.Drawing.Size(588, 133);
             this.panelHeader.TabIndex = 1;
+            // 
+            // lblLevel5Time
+            // 
+            this.lblLevel5Time.AutoSize = true;
+            this.lblLevel5Time.Location = new System.Drawing.Point(3, 84);
+            this.lblLevel5Time.Name = "lblLevel5Time";
+            this.lblLevel5Time.Size = new System.Drawing.Size(115, 13);
+            this.lblLevel5Time.TabIndex = 29;
+            this.lblLevel5Time.Text = "Elite : 11d, 6h, 33m, 3s";
             // 
             // toolStrip1
             // 
@@ -137,7 +182,7 @@ namespace EVEMon.SkillPlanner
             this.tslbEligible,
             this.toolStripSeparator1,
             this.tsPlanToMenu});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 91);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 108);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(588, 25);
             this.toolStrip1.TabIndex = 28;
@@ -163,43 +208,44 @@ namespace EVEMon.SkillPlanner
             // tsPlanToMenu
             // 
             this.tsPlanToMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsPlanToBasic,
-            this.tsPlanToStandard,
-            this.tsPlanToImproved,
-            this.tsPlanToElite});
+            this.tsPlanToLevelOne,
+            this.tsPlanToLevelTwo,
+            this.tsPlanToLevelThree,
+            this.tsPlanToLevelFour,
+            this.tsPlanToLevelFive});
             this.tsPlanToMenu.Image = ((System.Drawing.Image)(resources.GetObject("tsPlanToMenu.Image")));
             this.tsPlanToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsPlanToMenu.Name = "tsPlanToMenu";
             this.tsPlanToMenu.Size = new System.Drawing.Size(82, 22);
             this.tsPlanToMenu.Text = "Plan to...";
             // 
-            // tsPlanToBasic
+            // tsPlanToLevelOne
             // 
-            this.tsPlanToBasic.Name = "tsPlanToBasic";
-            this.tsPlanToBasic.Size = new System.Drawing.Size(125, 22);
-            this.tsPlanToBasic.Text = "&Basic";
-            this.tsPlanToBasic.Click += new System.EventHandler(this.tsPlanToBasic_Click);
+            this.tsPlanToLevelOne.Name = "tsPlanToLevelOne";
+            this.tsPlanToLevelOne.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelOne.Text = "&Level I";
+            this.tsPlanToLevelOne.Click += new System.EventHandler(this.tsPlanToLevelOne_Click);
             // 
-            // tsPlanToStandard
+            // tsPlanToLevelTwo
             // 
-            this.tsPlanToStandard.Name = "tsPlanToStandard";
-            this.tsPlanToStandard.Size = new System.Drawing.Size(125, 22);
-            this.tsPlanToStandard.Text = "&Standard";
-            this.tsPlanToStandard.Click += new System.EventHandler(this.tsPlanToStandard_Click);
+            this.tsPlanToLevelTwo.Name = "tsPlanToLevelTwo";
+            this.tsPlanToLevelTwo.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelTwo.Text = "&Level II";
+            this.tsPlanToLevelTwo.Click += new System.EventHandler(this.tsPlanToLevelTwo_Click);
             // 
-            // tsPlanToImproved
+            // tsPlanToLevelThree
             // 
-            this.tsPlanToImproved.Name = "tsPlanToImproved";
-            this.tsPlanToImproved.Size = new System.Drawing.Size(125, 22);
-            this.tsPlanToImproved.Text = "&Improved";
-            this.tsPlanToImproved.Click += new System.EventHandler(this.tsPlanToImproved_Click);
+            this.tsPlanToLevelThree.Name = "tsPlanToLevelThree";
+            this.tsPlanToLevelThree.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelThree.Text = "&Level III";
+            this.tsPlanToLevelThree.Click += new System.EventHandler(this.tsPlanToLevelThree_Click);
             // 
-            // tsPlanToElite
+            // tsPlanToLevelFive
             // 
-            this.tsPlanToElite.Name = "tsPlanToElite";
-            this.tsPlanToElite.Size = new System.Drawing.Size(125, 22);
-            this.tsPlanToElite.Text = "&Elite";
-            this.tsPlanToElite.Click += new System.EventHandler(this.tsPlanToElite_Click);
+            this.tsPlanToLevelFive.Name = "tsPlanToLevelFive";
+            this.tsPlanToLevelFive.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFive.Text = "&Level V";
+            this.tsPlanToLevelFive.Click += new System.EventHandler(this.tsPlanToLevelFive_Click);
             // 
             // pictureBox1
             // 
@@ -221,9 +267,9 @@ namespace EVEMon.SkillPlanner
             // 
             // textboxDescription
             // 
-            this.textboxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textboxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textboxDescription.BackColor = System.Drawing.SystemColors.Window;
             this.textboxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textboxDescription.Location = new System.Drawing.Point(376, 3);
@@ -231,7 +277,7 @@ namespace EVEMon.SkillPlanner
             this.textboxDescription.Name = "textboxDescription";
             this.textboxDescription.ReadOnly = true;
             this.textboxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textboxDescription.Size = new System.Drawing.Size(209, 85);
+            this.textboxDescription.Size = new System.Drawing.Size(209, 102);
             this.textboxDescription.TabIndex = 25;
             // 
             // lblLevel4Time
@@ -279,39 +325,6 @@ namespace EVEMon.SkillPlanner
             this.lblName.TabIndex = 19;
             this.lblName.Text = "Skill Name";
             // 
-            // rightSplitContainer
-            // 
-            this.rightSplitContainer.BackColor = System.Drawing.SystemColors.Control;
-            this.rightSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rightSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.rightSplitContainer.Location = new System.Drawing.Point(0, 116);
-            this.rightSplitContainer.Name = "rightSplitContainer";
-            // 
-            // rightSplitContainer.Panel1
-            // 
-            this.rightSplitContainer.Panel1.Controls.Add(this.certDisplayCtl);
-            // 
-            // rightSplitContainer.Panel2
-            // 
-            this.rightSplitContainer.Panel2.AutoScroll = true;
-            this.rightSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.Window;
-            this.rightSplitContainer.RememberDistanceKey = null;
-            this.rightSplitContainer.Size = new System.Drawing.Size(588, 434);
-            this.rightSplitContainer.SplitterDistance = 420;
-            this.rightSplitContainer.TabIndex = 3;
-            // 
-            // certDisplayCtl
-            // 
-            this.certDisplayCtl.BackColor = System.Drawing.SystemColors.Window;
-            this.certDisplayCtl.CertificateClass = null;
-            this.certDisplayCtl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.certDisplayCtl.Location = new System.Drawing.Point(0, 0);
-            this.certDisplayCtl.Name = "certDisplayCtl";
-            this.certDisplayCtl.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
-            this.certDisplayCtl.Plan = null;
-            this.certDisplayCtl.Size = new System.Drawing.Size(420, 434);
-            this.certDisplayCtl.TabIndex = 2;
-            // 
             // lblHelp
             // 
             this.lblHelp.AutoSize = true;
@@ -320,6 +333,13 @@ namespace EVEMon.SkillPlanner
             this.lblHelp.Size = new System.Drawing.Size(247, 13);
             this.lblHelp.TabIndex = 29;
             this.lblHelp.Text = "Use the tree on the left to select certificate to view.";
+            // 
+            // tsPlanToLevelFour
+            // 
+            this.tsPlanToLevelFour.Name = "tsPlanToLevelFour";
+            this.tsPlanToLevelFour.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFour.Text = "&Level IV";
+            this.tsPlanToLevelFour.Click += new System.EventHandler(this.tsPlanToLevelFour_Click);
             // 
             // CertificateBrowserControl
             // 
@@ -334,14 +354,14 @@ namespace EVEMon.SkillPlanner
             ((System.ComponentModel.ISupportInitialize)(this.leftSplitContainer)).EndInit();
             this.leftSplitContainer.ResumeLayout(false);
             this.panelRight.ResumeLayout(false);
+            this.rightSplitContainer.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.rightSplitContainer)).EndInit();
+            this.rightSplitContainer.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.rightSplitContainer.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.rightSplitContainer)).EndInit();
-            this.rightSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -363,14 +383,16 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripLabel tslbTextForEligibility;
         private System.Windows.Forms.ToolStripLabel tslbEligible;
         private System.Windows.Forms.ToolStripDropDownButton tsPlanToMenu;
-        private System.Windows.Forms.ToolStripMenuItem tsPlanToStandard;
-        private System.Windows.Forms.ToolStripMenuItem tsPlanToImproved;
-        private System.Windows.Forms.ToolStripMenuItem tsPlanToElite;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelTwo;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelThree;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelFive;
         private PersistentSplitContainer leftSplitContainer;
-        private System.Windows.Forms.ToolStripMenuItem tsPlanToBasic;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelOne;
         private System.Windows.Forms.Panel panelRight;
         private PersistentSplitContainer rightSplitContainer;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Label lblHelp;
+        private System.Windows.Forms.Label lblLevel5Time;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelFour;
     }
 }

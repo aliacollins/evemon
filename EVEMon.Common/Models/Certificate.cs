@@ -15,9 +15,7 @@ namespace EVEMon.Common.Models
     public sealed class Certificate
     {
         private readonly Character m_character;
-        private readonly Dictionary<CertificateGrade, List<SkillLevel>> m_prereqSkills;        
-
-        private bool m_initialized;
+        private readonly CertificateLevel[] m_levels;               
 
 
         #region Initialization, importation, exportation and update
@@ -29,17 +27,17 @@ namespace EVEMon.Common.Models
         /// <param name="src"></param>
         /// <param name="certClass"></param>
         internal Certificate(Character character, StaticCertificate src, CertificateClass certClass)
-        {
+        {            
             StaticData = src;
             Class = certClass;
-            m_character = character;
-            Status = CertificateStatus.Untrained;
+            m_character = character;            
 
-            m_prereqSkills = new Dictionary<CertificateGrade, List<SkillLevel>>();
-
+            m_levels = new CertificateLevel[5];
+            
             foreach (var skill in src.PrerequisiteSkills)
             {
-                m_prereqSkills.Add(skill.Key, skill.Value.ToCharacter(character).ToList());
+                m_levels[(int)skill.Key] = new CertificateLevel(skill.Key, this, character);
+                m_levels[(int)skill.Key].CompleteInitialization(skill.Value.ToCharacter(character).ToList());               
             }           
         }
 
@@ -49,56 +47,18 @@ namespace EVEMon.Common.Models
         public StaticCertificate StaticData { get; private set; }
 
         /// <summary>
-        /// Marks the certificate as granted.
-        /// </summary>
-        internal void MarkAsGranted()
-        {
-            Status = CertificateStatus.Granted;
-            m_initialized = true;
-        }
-
-        /// <summary>
-        /// Resets the data before we import a deserialization object.
-        /// </summary>
-        internal void Reset()
-        {
-            Status = CertificateStatus.Untrained;
-            m_initialized = false;
-        }
-
-        /// <summary>
         /// Try to update the certificate's status. 
         /// </summary>
         /// <returns>True if the status was updated, false otherwise.</returns>
         internal bool TryUpdateCertificateStatus()
         {
-            if (m_initialized)
-                return false;
-
-            bool claimable = true;
-            bool noPrereq = true;
-
-            // Scan prerequisite skills
-            foreach (SkillLevel prereqSkill in PrerequisiteSkills)
+            bool updated = false;
+            foreach (var level in m_levels)
             {
-                Skill skill = prereqSkill.Skill;
-
-                // Claimable only if the skill's level is grater or equal than the minimum level
-                claimable &= (skill.Level >= prereqSkill.Level);
-
-                // Untrainable if no prereq is satisfied
-                noPrereq &= (skill.Level < prereqSkill.Level);
-            }
-
-            // Updates status
-            if (claimable)
-                Status = CertificateStatus.Claimable;
-            else if (noPrereq)
-                Status = CertificateStatus.Untrained;
-            else
-                Status = CertificateStatus.PartiallyTrained;
-            m_initialized = true;
-            return true;
+                updated |= level.TryUpdateCertificateStatus();
+            }  
+            
+            return updated;
         }
 
         #endregion
@@ -142,32 +102,23 @@ namespace EVEMon.Common.Models
         {
             get { return StaticData.Recommendations; }
         }
+        
+        public CertificateLevel LevelOne {  get { return m_levels[(int)CertificateGrade.LevelOne]; } }
 
-        /// <summary>
-        /// Gets the current certificate status this character has.
-        /// </summary>
-        public CertificateStatus Status { get; private set; }
+        public CertificateLevel LevelTwo { get { return m_levels[(int)CertificateGrade.LevelTwo]; } }
 
-        /// <summary>
-        /// Gets the immediate prerequisite skills.
-        /// </summary>
-        public IEnumerable<SkillLevel> PrerequisiteSkills
-        {
-            get { return m_prereqSkills.SelectMany(prereq => prereq.Value).ToList(); }
-        }
+        public CertificateLevel LevelThree { get { return m_levels[(int)CertificateGrade.LevelThree]; } }
+
+        public CertificateLevel LevelFour { get { return m_levels[(int)CertificateGrade.LevelFour]; } }
+
+        public CertificateLevel LevelFive { get { return m_levels[(int)CertificateGrade.LevelFive]; } } 
+
+        public IEnumerable<CertificateLevel> AllLevel { get { return new List<CertificateLevel> { LevelOne, LevelTwo, LevelThree, LevelFour, LevelFive }; } }
 
         #endregion
 
 
-        #region Helper methods and properties
-
-        /// <summary>
-        /// Gets true whether the certificate is granted.
-        /// </summary>
-        public bool IsGranted
-        {
-            get { return Status == CertificateStatus.Granted; }
-        }
+        #region Helper methods and properties  
 
         /// <summary>
         /// Gets all the top-level prerequisite skills, including the ones from prerequisite certificates.
@@ -175,19 +126,6 @@ namespace EVEMon.Common.Models
         public IEnumerable<SkillLevel> AllTopPrerequisiteSkills
         {
             get { return StaticData.AllTopPrerequisiteSkills.ToCharacter(m_character); }
-        }
-
-        /// <summary>
-        /// Gets true when the certificate can be claimed.
-        /// </summary>
-        public bool CanBeClaimed
-        {
-            get
-            {
-                return Status == CertificateStatus.Claimable |
-                       (Status == CertificateStatus.PartiallyTrained &&
-                        AllTopPrerequisiteSkills.All(x => x.Skill.Level >= x.Level));
-            }
         }
 
         /// <summary>
@@ -202,12 +140,25 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Checks whether the provided skill is an immediate prerequisite.
         /// </summary>
+        /// <param name="grade">The level of the certificate to check</param>
         /// <param name="skill">The skill to test</param>
         /// <param name="neededLevel">When this skill is an immediate prerequisite, this parameter will held the required level</param>
         /// <returns></returns>
-        public bool HasAsImmediatePrerequisite(Skill skill, out Int64 neededLevel)
+        public bool HasAsImmediatePrerequisite(CertificateGrade grade, Skill skill, out Int64 neededLevel)
         {
-            return PrerequisiteSkills.Contains(skill, out neededLevel);
+            return m_levels[(int)grade].PrerequisiteSkills.Contains(skill, out neededLevel);
+        }
+
+        /// <summary>
+        /// Gets the lowest untrained (neither granted nor claimable).
+        /// Null if all certificates have been granted or are claimable.
+        /// </summary>
+        public CertificateLevel LowestUntrainedGrade
+        {
+            get
+            {
+                return m_levels.FirstOrDefault(cert => cert.Status != CertificateStatus.Granted);
+            }
         }
         #endregion
 

@@ -770,6 +770,30 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+        #region Certificates
+
+        /// <summary>
+        /// Checks whether, after this plan, the owner will be eligible to the provided certificate
+        /// </summary>
+        /// <param name="certLevel"></param>
+        /// <returns></returns>
+        public bool WillGrantEligibilityFor(CertificateLevel certLevel)
+        {
+            if (certLevel == null)
+                throw new ArgumentNullException("cert");
+
+            if (certLevel.Status == CertificateStatus.Claimable || certLevel.Status == CertificateStatus.Granted)
+                return true;
+
+            // We check every prerequisite is trained
+            return !(certLevel.PrerequisiteSkills.Select(
+                skillToTrain => new { skillToTrain, skill = skillToTrain.Skill }).Where(
+                    skillToTrain => skillToTrain.skill.Level < skillToTrain.skillToTrain.Level).Where(
+                        skillToTrain => !IsPlanned(skillToTrain.skill, skillToTrain.skillToTrain.Level)).Select(
+                            skill => skill.skillToTrain)).Any();
+        }
+
+        #endregion
 
         #region Sort
 

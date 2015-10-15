@@ -179,6 +179,7 @@
     <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\Certificate.cs" />
+    <Compile Include="Models\CertificateLevel.cs" />
     <Compile Include="Models\CertificateGroup.cs" />
     <Compile Include="Models\CertificateCategoryCollection.cs" />
     <Compile Include="Models\CertificateClass.cs" />

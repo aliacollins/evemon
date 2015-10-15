@@ -448,6 +448,22 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+        #region Certificates
+
+        /// <summary>
+        /// Adds the provided certificate's prerequisites to the plan.
+        /// </summary>
+        /// <param name="certificate">The certificate.</param>
+        /// <returns></returns>
+        public IPlanOperation TryPlanTo(CertificateLevel certificateLevel)
+        {
+            if (certificateLevel == null)
+                throw new ArgumentNullException("certificate");
+
+            return TryAddSet(certificateLevel.PrerequisiteSkills, certificateLevel.ToString());
+        }
+
+        #endregion
 
         #region Priorities changes
 
