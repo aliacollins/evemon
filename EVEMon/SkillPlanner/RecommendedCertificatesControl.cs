@@ -197,10 +197,10 @@ namespace EVEMon.SkillPlanner
             Character character = (Character)m_plan.Character;
             Certificate cert = character.Certificates[certificate.ID];
 
-            TreeNode node = new TreeNode(cert.ToString()) { Tag = cert.LevelFive };         
+            TreeNode node = new TreeNode(cert.Name) { Tag = cert };         
 
             // Generate prerequisites skill nodes if required
-            foreach (StaticSkillLevel prereq in cert.StaticData.PrerequisiteSkills.SelectMany(skill => skill.Value).Distinct())
+            foreach (StaticSkillLevel prereq in cert.StaticData.AllTopPrerequisiteSkills)
             {
                 node.Nodes.Add(GetSkillNode(prereq));
             }
@@ -220,11 +220,7 @@ namespace EVEMon.SkillPlanner
 
             Character character = (Character)m_plan.Character;
             Skill skill = character.Skills[prereq.Skill.ID];
-            TreeNode node;
-            
-            
-
-            node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
+            TreeNode node = new TreeNode(prereq.ToString()) { Tag = new SkillLevel(skill, prereq.Level) };
 
             // Generate child prerequisite skill nodes if required
             foreach (StaticSkillLevel childPrereq in skill.StaticData.Prerequisites.Where(childPrereq => childPrereq != prereq))
@@ -243,19 +239,20 @@ namespace EVEMon.SkillPlanner
         /// <param name="certsUnplanned">if set to <c>true</c> [certs unplanned].</param>
         private void UpdateNode(TreeNode node, ref bool allCertsKnown, ref bool certsUnplanned)
         {
-            var certLevel = node.Tag as CertificateLevel;
+            var cert = node.Tag as Certificate;
 
             // The node represents a certificate
-            if (certLevel != null)
+            if (cert != null)
             {
-                switch (certLevel.Status)
+                switch (cert.LevelFive.Status)
                 {
                     case CertificateStatus.Granted:
+                    case CertificateStatus.Claimable:
                         node.ImageIndex = GrantedIcon;
                         break;
-                    case CertificateStatus.Claimable:
-                        node.ImageIndex = ClaimableIcon;
-                        break;
+                    //case CertificateStatus.Claimable:
+                    //    node.ImageIndex = ClaimableIcon;
+                    //    break;
                     case CertificateStatus.PartiallyTrained:
                         node.ImageIndex = UnknownButTrainableIcon;
                         break;
@@ -326,16 +323,16 @@ namespace EVEMon.SkillPlanner
             int supIcon;
 
             // Is it a certificate ?
-            var certLevel = e.Node.Tag as CertificateLevel;
-            if (certLevel != null)
+            var cert = e.Node.Tag as Certificate;
+            if (cert != null)
             {
-                CertificateStatus status = certLevel.Status;
-                line = certLevel.ToString();
+                CertificateStatus status = cert.LevelFive.Status;
+                line = cert.Name;
                 supIcon = CertificateIcon;
 
                 // When not granted or claimable, let's calculate the training time
                 if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
-                    m_trainTime += certLevel.GetTrainingTime;
+                    m_trainTime += cert.GetTrainingTime;
             }
                 // Or a skill prerequisite ?
             else
@@ -462,12 +459,12 @@ namespace EVEMon.SkillPlanner
             if (selectedNode.Tag == null)
                 return;
 
-            var certLevel = selectedNode.Tag as CertificateLevel;
+            var cert = selectedNode.Tag as Certificate;
             PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (certLevel != null)
+            if (cert != null)
             {
                 if (planWindow != null && !planWindow.IsDisposed)
-                    planWindow.ShowCertInBrowser(certLevel);
+                    planWindow.ShowCertInBrowser(cert.LevelFive);
             }
             else
             {
@@ -502,16 +499,16 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                var certLevel = tvCertList.SelectedNode.Tag as CertificateLevel;
+                var cert = tvCertList.SelectedNode.Tag as Certificate;
                 showInMenuSeparator.Visible = true;
                 showInBrowserMenu.Visible = true;
 
                 // When a certificate is selected
-                if (certLevel != null)
+                if (cert != null)
                 {
                     // Update "add to" menu
-                    tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
-                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "&Plan \"{0}\"", certLevel);
+                    tsmAddToPlan.Enabled = !m_plan.WillGrantEligibilityFor(cert.LevelFive);
+                    tsmAddToPlan.Text = String.Format(CultureConstants.DefaultCulture, "&Plan \"{0}\"", cert);
 
                     // Update "show in..." menu
                     showInBrowserMenu.Text = "Show in &Certificates";
