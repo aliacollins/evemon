@@ -32,7 +32,7 @@ namespace EVEMon.Common.Models
             Class = certClass;
             m_character = character;            
 
-            m_levels = new CertificateLevel[5];
+            m_levels = new CertificateLevel[6];
             
             foreach (var skill in src.PrerequisiteSkills)
             {
@@ -53,7 +53,7 @@ namespace EVEMon.Common.Models
         internal bool TryUpdateCertificateStatus()
         {
             bool updated = false;
-            foreach (var level in m_levels)
+            foreach (var level in m_levels.Where(level => level != null))
             {
                 updated |= level.TryUpdateCertificateStatus();
             }  
@@ -103,15 +103,15 @@ namespace EVEMon.Common.Models
             get { return StaticData.Recommendations; }
         }
         
-        public CertificateLevel LevelOne {  get { return m_levels[(int)CertificateGrade.LevelOne]; } }
+        public CertificateLevel LevelOne {  get { return m_levels[(int)CertificateGrade.Basic]; } }
 
-        public CertificateLevel LevelTwo { get { return m_levels[(int)CertificateGrade.LevelTwo]; } }
+        public CertificateLevel LevelTwo { get { return m_levels[(int)CertificateGrade.Standard]; } }
 
-        public CertificateLevel LevelThree { get { return m_levels[(int)CertificateGrade.LevelThree]; } }
+        public CertificateLevel LevelThree { get { return m_levels[(int)CertificateGrade.Improved]; } }
 
-        public CertificateLevel LevelFour { get { return m_levels[(int)CertificateGrade.LevelFour]; } }
+        public CertificateLevel LevelFour { get { return m_levels[(int)CertificateGrade.Advanced]; } }
 
-        public CertificateLevel LevelFive { get { return m_levels[(int)CertificateGrade.LevelFive]; } } 
+        public CertificateLevel LevelFive { get { return m_levels[(int)CertificateGrade.Elite]; } } 
 
         public IEnumerable<CertificateLevel> AllLevel { get { return new List<CertificateLevel> { LevelOne, LevelTwo, LevelThree, LevelFour, LevelFive }; } }
 

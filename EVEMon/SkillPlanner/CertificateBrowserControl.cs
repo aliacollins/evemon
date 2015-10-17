@@ -327,11 +327,11 @@ namespace EVEMon.SkillPlanner
                     tslbEligible.Text += " (no change)";
             }
             
-            UpdatePlanningMenuStatus(tsPlanToLevelOne, certClass, CertificateGrade.LevelOne, lastEligibleCertLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelTwo, certClass, CertificateGrade.LevelTwo, lastEligibleCertLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelThree, certClass, CertificateGrade.LevelThree, lastEligibleCertLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelFour, certClass, CertificateGrade.LevelFour, lastEligibleCertLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelFive, certClass, CertificateGrade.LevelFive, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelOne, certClass, CertificateGrade.Basic, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelTwo, certClass, CertificateGrade.Standard, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelThree, certClass, CertificateGrade.Improved, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelFour, certClass, CertificateGrade.Advanced, lastEligibleCertLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelFive, certClass, CertificateGrade.Elite, lastEligibleCertLevel);
         }
 
         /// <summary>
@@ -347,19 +347,19 @@ namespace EVEMon.SkillPlanner
             CertificateLevel certLevel = null;
             switch (grade)
             {
-                case CertificateGrade.LevelOne:
+                case CertificateGrade.Basic:
                     certLevel = certClass.Certificate.LevelOne;
                     break;
-                case CertificateGrade.LevelTwo:
+                case CertificateGrade.Standard:
                     certLevel = certClass.Certificate.LevelTwo;
                     break;
-                case CertificateGrade.LevelThree:
+                case CertificateGrade.Improved:
                     certLevel = certClass.Certificate.LevelThree;
                     break;
-                case CertificateGrade.LevelFour:
+                case CertificateGrade.Advanced:
                     certLevel = certClass.Certificate.LevelFour;
                     break;
-                case CertificateGrade.LevelFive:
+                case CertificateGrade.Elite:
                     certLevel = certClass.Certificate.LevelFive;
                     break;
             }

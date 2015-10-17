@@ -701,10 +701,10 @@ namespace EVEMon.SkillPlanner
                 {
                     totalGranted++;
                     granted[index] = true;
-                    chars[index] = m_upperCertificatesLetters[(int)certLevel.Grade]; // Gets "B" for granted basic
+                    chars[index] = Convert.ToChar((int)certLevel.Grade); // Gets "B" for granted basic
                 }
                 else
-                    chars[index] = m_lowerCertificatesLetters[(int)certLevel.Grade]; // Gets "b" for non-granted basic
+                    chars[index] = Convert.ToChar((int)certLevel.Grade); // Gets "b" for non-granted basic
 
                 index++;
             }
@@ -740,7 +740,7 @@ namespace EVEMon.SkillPlanner
                 // Scroll through letters and measure them
                 foreach (var certLevel in certLevels)
                 {
-                    letters[i] = m_upperCertificatesLetters[(int)certLevel.Grade].ToString();
+                    letters[i] = ((int)certLevel.Grade).ToString();
                     SizeF size = g.MeasureString(letters[i], m_iconsFont, MaxLetterWidth, StringFormat.GenericTypographic);
                     height = Math.Max(height, size.Height);
                     xPositions[i] = x;

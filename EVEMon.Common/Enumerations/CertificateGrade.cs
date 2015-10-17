@@ -5,11 +5,11 @@ namespace EVEMon.Common.Enumerations
     /// </summary>
     public enum CertificateGrade
     {
-        None = -1,
-        LevelOne = 0,
-        LevelTwo = 1,
-        LevelThree = 2,
-        LevelFour = 3,
-        LevelFive = 4
+        None = 0,
+        Basic = 1,
+        Standard = 2,
+        Improved = 3,
+        Advanced = 4,
+        Elite = 5
     }
 }
