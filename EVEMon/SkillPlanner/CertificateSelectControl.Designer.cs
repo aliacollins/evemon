@@ -71,10 +71,10 @@ namespace EVEMon.SkillPlanner
             this.cbFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFilter.Items.AddRange(new object[] {
             "All",
-            "Claimable",
-            "Hide elite",
-            "Next grade is trainable",
-            "Next grade is untrainable"});
+            "Completed",
+            "Hide completed",
+            "Next level is trainable",
+            "Next level is untrainable"});
             this.cbFilter.Location = new System.Drawing.Point(45, 3);
             this.cbFilter.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbFilter.MaxDropDownItems = 12;
@@ -91,8 +91,8 @@ namespace EVEMon.SkillPlanner
             this.cbSorting.FormattingEnabled = true;
             this.cbSorting.Items.AddRange(new object[] {
             "Name",
-            "Time to next grade",
-            "Time to elite grade"});
+            "Time to next level",
+            "Time to max level"});
             this.cbSorting.Location = new System.Drawing.Point(45, 29);
             this.cbSorting.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbSorting.Name = "cbSorting";

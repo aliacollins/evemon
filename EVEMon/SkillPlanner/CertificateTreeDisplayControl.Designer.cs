@@ -30,7 +30,6 @@ namespace EVEMon.SkillPlanner
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CertificateTreeDisplayControl));
-            this.treeView = new EVEMon.SkillPlanner.OverridenTreeView();
             this.cmListSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmAddToPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -43,27 +42,9 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
+            this.treeView = new EVEMon.SkillPlanner.OverridenTreeView();
             this.cmListSkills.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // treeView
-            // 
-            this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.treeView.ContextMenuStrip = this.cmListSkills;
-            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-            this.treeView.FullRowSelect = true;
-            this.treeView.ImageIndex = 0;
-            this.treeView.ImageList = this.imageList;
-            this.treeView.Indent = 27;
-            this.treeView.ItemHeight = 1;
-            this.treeView.Location = new System.Drawing.Point(0, 10);
-            this.treeView.Name = "treeView";
-            this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new System.Drawing.Size(359, 441);
-            this.treeView.TabIndex = 0;
-            this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
-            this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
             // 
             // cmListSkills
             // 
@@ -79,7 +60,7 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(195, 198);
+            this.cmListSkills.Size = new System.Drawing.Size(195, 176);
             // 
             // tsmAddToPlan
             // 
@@ -152,12 +133,30 @@ namespace EVEMon.SkillPlanner
             this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList.Images.SetKeyName(0, "Certificate - Granted.png");
-            this.imageList.Images.SetKeyName(1, "Certificate - Claimable.png");
-            this.imageList.Images.SetKeyName(2, "Certificate - Trainable.png");
-            this.imageList.Images.SetKeyName(3, "Certificate - Untrainable.png");
-            this.imageList.Images.SetKeyName(4, "Certificate.png");
-            this.imageList.Images.SetKeyName(5, "Skillbook.png");
-            this.imageList.Images.SetKeyName(6, "Plan.png");
+            this.imageList.Images.SetKeyName(1, "Certificate - Trainable.png");
+            this.imageList.Images.SetKeyName(2, "Certificate - Untrainable.png");
+            this.imageList.Images.SetKeyName(3, "Certificate.png");
+            this.imageList.Images.SetKeyName(4, "Skillbook.png");
+            this.imageList.Images.SetKeyName(5, "Plan.png");
+            // 
+            // treeView
+            // 
+            this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.treeView.ContextMenuStrip = this.cmListSkills;
+            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+            this.treeView.FullRowSelect = true;
+            this.treeView.ImageIndex = 0;
+            this.treeView.ImageList = this.imageList;
+            this.treeView.Indent = 27;
+            this.treeView.ItemHeight = 1;
+            this.treeView.Location = new System.Drawing.Point(0, 10);
+            this.treeView.Name = "treeView";
+            this.treeView.SelectedImageIndex = 0;
+            this.treeView.Size = new System.Drawing.Size(359, 441);
+            this.treeView.TabIndex = 0;
+            this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
+            this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
             // 
             // CertificateTreeDisplayControl
             // 

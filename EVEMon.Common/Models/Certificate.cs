@@ -15,7 +15,7 @@ namespace EVEMon.Common.Models
     public sealed class Certificate
     {
         private readonly Character m_character;
-        private readonly CertificateLevel[] m_levels;               
+        private readonly CertificateLevel[] m_levels;
 
 
         #region Initialization, importation, exportation and update
@@ -27,18 +27,18 @@ namespace EVEMon.Common.Models
         /// <param name="src"></param>
         /// <param name="certClass"></param>
         internal Certificate(Character character, StaticCertificate src, CertificateClass certClass)
-        {            
+        {
             StaticData = src;
             Class = certClass;
-            m_character = character;            
+            m_character = character;
 
             m_levels = new CertificateLevel[6];
-            
-            foreach (var skill in src.PrerequisiteSkills)
+
+            foreach (KeyValuePair<CertificateGrade, List<StaticSkillLevel>> skill in src.PrerequisiteSkills)
             {
                 m_levels[(int)skill.Key] = new CertificateLevel(skill.Key, this, character);
-                m_levels[(int)skill.Key].CompleteInitialization(skill.Value.ToCharacter(character).ToList());               
-            }           
+                m_levels[(int)skill.Key].CompleteInitialization(skill.Value.ToCharacter(character).ToList());
+            }
         }
 
         /// <summary>
@@ -52,13 +52,8 @@ namespace EVEMon.Common.Models
         /// <returns>True if the status was updated, false otherwise.</returns>
         internal bool TryUpdateCertificateStatus()
         {
-            bool updated = false;
-            foreach (var level in m_levels.Where(level => level != null))
-            {
-                updated |= level.TryUpdateCertificateStatus();
-            }  
-            
-            return updated;
+            return m_levels.Where(level => level != null)
+                .Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
         }
 
         #endregion
@@ -102,18 +97,72 @@ namespace EVEMon.Common.Models
         {
             get { return StaticData.Recommendations; }
         }
-        
-        public CertificateLevel LevelOne {  get { return m_levels[(int)CertificateGrade.Basic]; } }
 
-        public CertificateLevel LevelTwo { get { return m_levels[(int)CertificateGrade.Standard]; } }
+        /// <summary>
+        /// Gets the level one of the cerificate.
+        /// </summary>
+        /// <value>
+        /// The level one.
+        /// </value>
+        public CertificateLevel LevelOne
+        {
+            get { return m_levels[(int)CertificateGrade.Basic]; }
+        }
 
-        public CertificateLevel LevelThree { get { return m_levels[(int)CertificateGrade.Improved]; } }
+        /// <summary>
+        /// Gets the level two of the cerificate.
+        /// </summary>
+        /// <value>
+        /// The level two.
+        /// </value>
+        public CertificateLevel LevelTwo
+        {
+            get { return m_levels[(int)CertificateGrade.Standard]; }
+        }
 
-        public CertificateLevel LevelFour { get { return m_levels[(int)CertificateGrade.Advanced]; } }
+        /// <summary>
+        /// Gets the level three of the cerificate.
+        /// </summary>
+        /// <value>
+        /// The level three.
+        /// </value>
+        public CertificateLevel LevelThree
+        {
+            get { return m_levels[(int)CertificateGrade.Improved]; }
+        }
 
-        public CertificateLevel LevelFive { get { return m_levels[(int)CertificateGrade.Elite]; } } 
+        /// <summary>
+        /// Gets the level four of the cerificate.
+        /// </summary>
+        /// <value>
+        /// The level four.
+        /// </value>
+        public CertificateLevel LevelFour
+        {
+            get { return m_levels[(int)CertificateGrade.Advanced]; }
+        }
 
-        public IEnumerable<CertificateLevel> AllLevel { get { return new List<CertificateLevel> { LevelOne, LevelTwo, LevelThree, LevelFour, LevelFive }; } }
+        /// <summary>
+        /// Gets the level five of the cerificate.
+        /// </summary>
+        /// <value>
+        /// The level five.
+        /// </value>
+        public CertificateLevel LevelFive
+        {
+            get { return m_levels[(int)CertificateGrade.Elite]; }
+        }
+
+        /// <summary>
+        /// Gets all levels of the cerificate.
+        /// </summary>
+        /// <value>
+        /// All level.
+        /// </value>
+        public IEnumerable<CertificateLevel> AllLevel
+        {
+            get { return m_levels.Where(level => level != null); }
+        }
 
         #endregion
 
@@ -121,7 +170,7 @@ namespace EVEMon.Common.Models
         #region Helper methods and properties  
 
         /// <summary>
-        /// Gets all the top-level prerequisite skills, including the ones from prerequisite certificates.
+        /// Gets all the top-level prerequisite skills.
         /// </summary>
         public IEnumerable<SkillLevel> AllTopPrerequisiteSkills
         {
@@ -138,28 +187,14 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// Checks whether the provided skill is an immediate prerequisite.
-        /// </summary>
-        /// <param name="grade">The level of the certificate to check</param>
-        /// <param name="skill">The skill to test</param>
-        /// <param name="neededLevel">When this skill is an immediate prerequisite, this parameter will held the required level</param>
-        /// <returns></returns>
-        public bool HasAsImmediatePrerequisite(CertificateGrade grade, Skill skill, out Int64 neededLevel)
-        {
-            return m_levels[(int)grade].PrerequisiteSkills.Contains(skill, out neededLevel);
-        }
-
-        /// <summary>
-        /// Gets the lowest untrained (neither granted nor claimable).
-        /// Null if all certificates have been granted or are claimable.
+        /// Gets the lowest untrained.
+        /// Null if all certificates have been trained.
         /// </summary>
         public CertificateLevel LowestUntrainedGrade
         {
-            get
-            {
-                return m_levels.FirstOrDefault(cert => cert.Status != CertificateStatus.Granted);
-            }
+            get { return m_levels.FirstOrDefault(cert => cert.Status != CertificateStatus.Trained); }
         }
+
         #endregion
 
 

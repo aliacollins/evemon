@@ -3,9 +3,9 @@
     public enum CertificateFilter
     {
         All = 0,
-        Claimable = 1,
-        HideElite = 2,
-        NextGradeTrainable = 3,
-        NextGradeUntrainable = 4
+        Completed = 1,
+        HideMaxLevel = 2,
+        NextLevelTrainable = 3,
+        NextLevelUntrainable = 4
     }
 }

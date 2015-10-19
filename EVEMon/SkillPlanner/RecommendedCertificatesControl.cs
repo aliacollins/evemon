@@ -246,11 +246,10 @@ namespace EVEMon.SkillPlanner
             {
                 switch (cert.LevelFive.Status)
                 {
-                    case CertificateStatus.Granted:
-                    case CertificateStatus.Claimable:
+                    case CertificateStatus.Trained:
                         node.ImageIndex = GrantedIcon;
                         break;
-                    //case CertificateStatus.Claimable:
+                    //case CertificateStatus.Trained:
                     //    node.ImageIndex = ClaimableIcon;
                     //    break;
                     case CertificateStatus.PartiallyTrained:
@@ -331,7 +330,7 @@ namespace EVEMon.SkillPlanner
                 supIcon = CertificateIcon;
 
                 // When not granted or claimable, let's calculate the training time
-                if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
+                if (status != CertificateStatus.Trained)
                     m_trainTime += cert.GetTrainingTime;
             }
                 // Or a skill prerequisite ?

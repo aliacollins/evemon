@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 
@@ -58,37 +56,29 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// Gets this skill's description.
+        /// Gets the lowest untrained certificate level.
+        /// Null if all certificates have been trained.
         /// </summary>
-        public string Description
-        {
-            get { return StaticData.Description; }
-        }        
-
-        /// <summary>
-        /// Gets the lowest untrained (neither granted nor claimable).
-        /// Null if all certificates have been granted or are claimable.
-        /// </summary>
-        public CertificateLevel LowestUntrainedGrade
+        public CertificateLevel LowestUntrainedLevel
         {
             get
             {
-                return Certificate.AllLevel.FirstOrDefault(level => level.Status != CertificateStatus.Claimable && level.Status != CertificateStatus.Granted);                
+                return Certificate.AllLevel.FirstOrDefault(level => level.Status != CertificateStatus.Trained);                
             }
         }
 
         /// <summary>
-        /// Gets the highest claimed grade.
-        /// May be null if no grade has been granted.
+        /// Gets the highest trained certificate level.
+        /// May be null if no level has been trained.
         /// </summary>
-        public CertificateLevel HighestClaimedGrade
+        public CertificateLevel HighestTrainedLevel
         {
             get
             {
                 CertificateLevel lastCertLevel = null;
                 foreach (var certLevel in Certificate.AllLevel)
                 {
-                    if (certLevel.Status != CertificateStatus.Granted && certLevel.Status != CertificateStatus.Claimable)
+                    if (certLevel.Status != CertificateStatus.Trained)
                         return lastCertLevel;
                     lastCertLevel = certLevel;
                 }
@@ -101,7 +91,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public bool IsCompleted
         {
-            get { return Certificate.AllLevel.All(certLevel => certLevel.Status == CertificateStatus.Granted); }
+            get { return Certificate.AllLevel.All(certLevel => certLevel.Status == CertificateStatus.Trained); }
         }
 
         /// <summary>
@@ -113,7 +103,10 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                foreach (var certLevel in Certificate.AllLevel)
+                if (Certificate.AllLevel.All(cert => cert.IsTrained))
+                    return false;
+
+                foreach (CertificateLevel certLevel in Certificate.AllLevel)
                 {
                     switch (certLevel.Status)
                     {
@@ -123,6 +116,7 @@ namespace EVEMon.Common.Models
                             return false;
                     }
                 }
+
                 return false;
             }
         }

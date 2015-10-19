@@ -13,17 +13,11 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.SkillPlanner
 {
     public partial class CertificateSelectControl : UserControl
     {
-        private readonly char[] m_upperCertificatesLetters = new[] { '1', '2', '3', '4', '5' };
-
-        // Stupid insensitive images keys' comparison, we cannot use bsie
-        private readonly char[] m_lowerCertificatesLetters = new[] { '1', '2', '3', '4', '5' };
-
         // Blank image list for 'Safe for work' setting
         private readonly ImageList m_emptyImageList = new ImageList();
 
@@ -346,7 +340,7 @@ namespace EVEMon.SkillPlanner
             if (m_character == null || m_iconsFont == null)
                 return;
 
-            IEnumerable<CertificateClass> classes = GetFilteredData();
+            IList<CertificateClass> classes = GetFilteredData().ToList();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -383,7 +377,7 @@ namespace EVEMon.SkillPlanner
         /// Updates the certificates tree.
         /// </summary>
         /// <param name="classes"></param>
-        private void UpdateTree(IEnumerable<CertificateClass> classes)
+        private void UpdateTree(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = (tvItems.SelectedNodes.Count > 0
@@ -419,7 +413,7 @@ namespace EVEMon.SkillPlanner
                         certClass => new
                                          {
                                              certClass,
-                                             index = GetCertImageIndex(certClass.Certificate.AllLevel)
+                                             index = GetCertImageIndex(certClass.Certificate.AllLevel.ToList())
                                          }).Select(childNode => new TreeNode
                                                                     {
                                                                         Text = childNode.certClass.Name,
@@ -488,7 +482,7 @@ namespace EVEMon.SkillPlanner
         /// Updates the listview displayed when there is a sort criteria.
         /// </summary>
         /// <param name="classes"></param>
-        private void UpdateListView(IEnumerable<CertificateClass> classes)
+        private void UpdateListView(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = (tvItems.SelectedNodes.Count > 0
@@ -574,8 +568,8 @@ namespace EVEMon.SkillPlanner
             }
 
             // When sorting by "time to...", filter completed items
-            if (cbSorting.SelectedIndex == (int)CertificateSort.TimeToEliteGrade ||
-                cbSorting.SelectedIndex == (int)CertificateSort.TimeToNextGrade)
+            if (cbSorting.SelectedIndex == (int)CertificateSort.TimeToMaxLevel ||
+                cbSorting.SelectedIndex == (int)CertificateSort.TimeToNextLevel)
                 classes = classes.Where(x => !x.IsCompleted);
 
             return classes;
@@ -594,14 +588,14 @@ namespace EVEMon.SkillPlanner
             {
                 case CertificateFilter.All:
                     return x => true;
-                case CertificateFilter.HideElite:
+                case CertificateFilter.HideMaxLevel:
                     return x => !x.IsCompleted;
-                case CertificateFilter.NextGradeTrainable:
+                case CertificateFilter.NextLevelTrainable:
                     return x => x.IsFurtherTrainable;
-                case CertificateFilter.NextGradeUntrainable:
+                case CertificateFilter.NextLevelUntrainable:
                     return x => !x.IsFurtherTrainable & !x.IsCompleted;
-                //case CertificateFilter.Claimable:
-                    //return x => x.Certificate.AllLevel.Any(y => y.CanBeClaimed);
+                case CertificateFilter.Completed:
+                    return x => x.IsCompleted;
                 default:
                     throw new NotImplementedException();
             }
@@ -613,7 +607,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="classes"></param>
         /// <param name="labels"></param>
         /// <returns></returns>
-        private string GetSortedListData(ref IEnumerable<CertificateClass> classes, ref IEnumerable<string> labels)
+        private string GetSortedListData(ref IList<CertificateClass> classes, ref IEnumerable<string> labels)
         {
             IEnumerable<TimeSpan> times;
             string columnHeader;
@@ -624,14 +618,14 @@ namespace EVEMon.SkillPlanner
                 case CertificateSort.Name:
                     return String.Empty;
                     // Sort by time to next grade
-                case CertificateSort.TimeToNextGrade:
+                case CertificateSort.TimeToNextLevel:
                     {
                         times = classes.Select(GetTimeToNextGrade);
                         columnHeader = "Time";
                         break;
                     }
                     // Sort by time to elite (or highest) grade
-                case CertificateSort.TimeToEliteGrade:
+                case CertificateSort.TimeToMaxLevel:
                     {
                         times = classes.Select(GetTimeToEliteGrade);
                         columnHeader = "Time to Elite";
@@ -672,8 +666,7 @@ namespace EVEMon.SkillPlanner
             var lastGrade = x.Certificate.LevelFive;
             CertificateStatus status = lastGrade.Status;
 
-            if (status == CertificateStatus.Granted ||
-                status == CertificateStatus.Claimable)
+            if (status == CertificateStatus.Trained)
                 return TimeSpan.Zero;
 
             return lastGrade.GetTrainingTime;
@@ -683,34 +676,30 @@ namespace EVEMon.SkillPlanner
         /// Gets the image's index for the provided certificate class,
         /// lazily creating the images when they're needed.
         /// </summary>
-        /// <param name="certClass"></param>
+        /// <param name="certLevels">The cert levels.</param>
         /// <returns></returns>
-        private int GetCertImageIndex(IEnumerable<CertificateLevel> certLevels)
+        private int GetCertImageIndex(ICollection<CertificateLevel> certLevels)
         {
-            // Prepare datas, especially image keys like "BSIE", "BSie", "BE", etc (lower for non-granted, upper for granted, only existing certs)
-            // Correction : keys are insenstive, so we use 1234 instead of lower case letters
+            // Prepares data
             char[] chars = new char[5];
             bool[] granted = new bool[5];            
 
             int index = 0;
-            int totalGranted = 0;
+            //int totalGranted = 0;
             foreach (var certLevel in certLevels)
             {
-                bool isGranted = (certLevel.Status == CertificateStatus.Granted || certLevel.Status == CertificateStatus.Claimable);
-                if (isGranted)
+                if (certLevel.Status == CertificateStatus.Trained)
                 {
-                    totalGranted++;
+                    //totalGranted++;
                     granted[index] = true;
-                    chars[index] = Convert.ToChar((int)certLevel.Grade); // Gets "B" for granted basic
+                    chars[index] = Convert.ToChar((int)certLevel.Grade);
                 }
-                else
-                    chars[index] = Convert.ToChar((int)certLevel.Grade); // Gets "b" for non-granted basic
 
                 index++;
             }
 
             // Special cases where we return immediately
-            if (totalGranted == certLevels.Count())
+            if (granted.Count(x => x) == certLevels.Count)
                 return tvItems.ImageList.Images.IndexOfKey("AllGranted");
 
             // Create key and retrieves its index, then returns if it already exists

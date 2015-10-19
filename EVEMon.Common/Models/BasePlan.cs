@@ -782,7 +782,7 @@ namespace EVEMon.Common.Models
             if (certLevel == null)
                 throw new ArgumentNullException("cert");
 
-            if (certLevel.Status == CertificateStatus.Claimable || certLevel.Status == CertificateStatus.Granted)
+            if (certLevel.Status == CertificateStatus.Trained)
                 return true;
 
             // We check every prerequisite is trained

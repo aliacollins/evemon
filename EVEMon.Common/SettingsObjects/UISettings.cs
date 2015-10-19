@@ -21,6 +21,7 @@ namespace EVEMon.Common.SettingsObjects
             Splitters = new ModifiedSerializableDictionary<string, int>();
             m_confirmedTips = new Collection<string>();
 
+            CertificateBrowser = new CertificateBrowserSettings();
             BlueprintBrowser = new BlueprintBrowserSettings();
             SystemTrayTooltip = new TrayTooltipSettings();
             SkillPieChart = new SkillPieChartSettings();

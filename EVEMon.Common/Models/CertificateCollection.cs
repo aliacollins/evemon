@@ -52,7 +52,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public IEnumerable<CertificateLevel> GrantedCertificates
         {
-            get { return FilterByStatus(CertificateStatus.Granted); }
+            get { return FilterByStatus(CertificateStatus.Trained); }
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         internal IEnumerable<SerializableCharacterCertificate> Export()
         {
-            return Items.Values.Where(x => x.AllLevel.Any(certLevel => certLevel.IsGranted)).Select(
+            return Items.Values.Where(x => x.AllLevel.Any(certLevel => certLevel.IsTrained)).Select(
                 cert => new SerializableCharacterCertificate { CertificateID = cert.ID });
         }
 
@@ -86,7 +86,7 @@ namespace EVEMon.Common.Models
                 // Mark as granted if it exists
                 foreach (var certLevel in Items[serialCert.CertificateID].AllLevel)
                 {
-                    certLevel.MarkAsGranted();
+                    certLevel.MarkAsTrained();
                 }
             }
 

@@ -297,34 +297,31 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateEligibility()
         {
-            CertificateLevel lastEligibleCertLevel = null;
             CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
 
             if (certClass == null)
                 return;
 
             // First we search the highest eligible certificate after this plan
-            foreach (var certLevel in certClass.Certificate.AllLevel.TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)))
-            {
-                lastEligibleCertLevel = certLevel;
-            }
+            IEnumerable<CertificateLevel> eligibleCertLevel = certClass.Certificate.AllLevel.TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)).ToList();
 
-            if (lastEligibleCertLevel == null)
-                tslbEligible.Text = "(none)";
+            CertificateLevel lastEligibleCertLevel = null;
+            if (!eligibleCertLevel.Any())
+                tslbEligible.Text = @"(none)";
             else
             {
+                lastEligibleCertLevel = eligibleCertLevel.Last();
                 tslbEligible.Text = lastEligibleCertLevel.ToString();
 
-                CertificateLevel highestClaimedCertificateLevel = certClass.HighestClaimedGrade;
-                if (highestClaimedCertificateLevel == null)
-                    tslbEligible.Text += " (improved from \"none\")";
-                else if ((int)lastEligibleCertLevel.Grade > (int)highestClaimedCertificateLevel.Grade)
+                if (certClass.HighestTrainedLevel == null)
+                    tslbEligible.Text += @" (improved from ""none"")";
+                else if ((int)lastEligibleCertLevel.Grade > (int)certClass.HighestTrainedLevel.Grade)
                 {
                     tslbEligible.Text += String.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")",
-                                                       highestClaimedCertificateLevel);
+                                                       certClass.HighestTrainedLevel);
                 }
                 else
-                    tslbEligible.Text += " (no change)";
+                    tslbEligible.Text += @" (no change)";
             }
             
             UpdatePlanningMenuStatus(tsPlanToLevelOne, certClass, CertificateGrade.Basic, lastEligibleCertLevel);

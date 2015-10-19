@@ -171,7 +171,7 @@ namespace EVEMon.SkillPlanner
             this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList.Images.SetKeyName(0, "Certificate - Granted.png");
-            this.imageList.Images.SetKeyName(1, "Certificate - Claimable.png");
+            this.imageList.Images.SetKeyName(1, "Certificate - Trained.png");
             this.imageList.Images.SetKeyName(2, "Certificate - Trainable.png");
             this.imageList.Images.SetKeyName(3, "Certificate - Untrainable.png");
             this.imageList.Images.SetKeyName(4, "Certificate.png");

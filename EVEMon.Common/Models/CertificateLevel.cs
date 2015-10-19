@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 
@@ -12,19 +11,18 @@ namespace EVEMon.Common.Models
     /// </summary>
     public sealed class CertificateLevel
     {
-        /// <summary>
-        /// 
-        /// </summary>
         private List<SkillLevel> m_skills;
 
         private bool m_initialized;
-        private Character m_character;
+
+        private readonly Character m_character;
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="CertificateLevel"/> class.
         /// </summary>
-        /// <param name="grade"></param>
-        /// <param name="skills"></param>
+        /// <param name="grade">The grade.</param>
+        /// <param name="cert">The cert.</param>
+        /// <param name="characater">The characater.</param>
         public CertificateLevel(CertificateGrade grade, Certificate cert, Character characater)
         {
             Grade = grade;
@@ -35,18 +33,27 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// 
+        /// Gets the grade.
         /// </summary>
+        /// <value>
+        /// The grade.
+        /// </value>
         public CertificateGrade Grade { get; private set; }
 
         /// <summary>
-        /// 
+        /// Gets the certificate.
         /// </summary>
+        /// <value>
+        /// The certificate.
+        /// </value>
         public Certificate Certificate { get; private set; }
 
         /// <summary>
-        /// 
+        /// Gets the status.
         /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
         public CertificateStatus Status { get; private set; }
 
         /// <summary>                                                                                                             
@@ -54,13 +61,13 @@ namespace EVEMon.Common.Models
         /// </summary>
         public IEnumerable<SkillLevel> PrerequisiteSkills
         {
-            get { return m_skills.ToList(); }
+            get { return m_skills; }
         }
 
         /// <summary>
-        /// 
+        /// Completes the initialization.
         /// </summary>
-        /// <param name="skills"></param>
+        /// <param name="skills">The skills.</param>
         public void CompleteInitialization(IEnumerable<SkillLevel> skills)
         {
             m_skills = skills.ToList();
@@ -69,17 +76,20 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true whether the certificate is granted.
         /// </summary>
-        public bool IsGranted
+        /// <value>
+        /// <c>true</c> if this instance is granted; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsTrained
         {
-            get { return Status == CertificateStatus.Granted; }
+            get { return Status == CertificateStatus.Trained; }
         }
 
         /// <summary>
-        /// Marks the certificate as granted.
+        /// Marks the certificate as trained.
         /// </summary>
-        internal void MarkAsGranted()
+        internal void MarkAsTrained()
         {
-            Status = CertificateStatus.Granted;
+            Status = CertificateStatus.Trained;
             m_initialized = true;
         }
 
@@ -111,23 +121,21 @@ namespace EVEMon.Common.Models
                 return false;
             
             bool noPrereq = true;
-            bool claimable = true;
+            bool trained = true;
 
             // Scan prerequisite skills
             foreach (SkillLevel prereqSkill in m_skills)
             {
-                Skill skill = prereqSkill.Skill;
-
-                // Claimable only if the skill's level is grater or equal than the minimum level
-                claimable &= (skill.Level >= prereqSkill.Level);
+                // Trained only if the skill's level is greater or equal than the minimum level
+                trained &= (prereqSkill.Skill.Level >= prereqSkill.Level);
 
                 // Untrainable if no prereq is satisfied
-                noPrereq &= (skill.Level < prereqSkill.Level);
+                noPrereq &= prereqSkill.AllDependencies.All(x => !x.IsTrained);
             }
 
             // Updates status
-            if (claimable)
-                Status = CertificateStatus.Claimable;
+            if (trained)
+                Status = CertificateStatus.Trained;
             else if (noPrereq)
                 Status = CertificateStatus.Untrained;
             else
@@ -137,12 +145,14 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// 
+        /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
-            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt(((int)Grade) + 1));
+            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt(((int)Grade)));
         }
     }
 }

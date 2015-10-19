@@ -20,13 +20,12 @@ namespace EVEMon.SkillPlanner
     /// </summary>
     public sealed partial class CertificateTreeDisplayControl : UserControl
     {
-        private const int GrantedIcon = 0;
-        private const int ClaimableIcon = 1;
-        private const int UnknownButTrainableIcon = 2;
-        private const int UnknownIcon = 3;
-        private const int CertificateIcon = 4;
-        private const int SkillIcon = 5;
-        private const int Planned = 6;
+        private const int TrainedIcon = 0;
+        private const int UnknownButTrainableIcon = 1;
+        private const int UnknownIcon = 2;
+        private const int CertificateIcon = 3;
+        private const int SkillIcon = 4;
+        private const int PlannedIcon = 5;
 
         // Blank image list for 'Safe for work' setting
         private readonly ImageList m_emptyImageList = new ImageList();
@@ -402,11 +401,8 @@ namespace EVEMon.SkillPlanner
             {
                 switch (certLevel.Status)
                 {
-                    case CertificateStatus.Granted:
-                        node.ImageIndex = GrantedIcon;
-                        break;
-                    case CertificateStatus.Claimable:
-                        node.ImageIndex = ClaimableIcon;
+                    case CertificateStatus.Trained:
+                        node.ImageIndex = TrainedIcon;
                         break;
                     case CertificateStatus.PartiallyTrained:
                         node.ImageIndex = UnknownButTrainableIcon;
@@ -425,9 +421,9 @@ namespace EVEMon.SkillPlanner
                 Skill skill = m_character.Skills[skillPrereq.Skill.ID];
 
                 if (skillPrereq.IsTrained)
-                    node.ImageIndex = GrantedIcon;
+                    node.ImageIndex = TrainedIcon;
                 else if (m_plan.IsPlanned(skill, skillPrereq.Level))
-                    node.ImageIndex = Planned;
+                    node.ImageIndex = PlannedIcon;
                 else if (skill.IsKnown)
                     node.ImageIndex = UnknownButTrainableIcon;
                 else
@@ -469,10 +465,9 @@ namespace EVEMon.SkillPlanner
                 line1 = certLevel.ToString();
                 if (!Settings.UI.SafeForWork)
                     supIcon = CertificateIcon;
-                CertificateStatus status = certLevel.Status;
 
-                // When not granted or claimable, let's display the training time
-                if (status != CertificateStatus.Claimable && status != CertificateStatus.Granted)
+                // When not trained, let's display the training time
+                if (certLevel.Status != CertificateStatus.Trained)
                 {
                     TimeSpan time = certLevel.GetTrainingTime;
                     line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
@@ -488,10 +483,9 @@ namespace EVEMon.SkillPlanner
                 line1 = skillPrereq.ToString();
 
                 // When not known to the require level, let's display the training time
-                Skill skill = skillPrereq.Skill;
                 if (!skillPrereq.IsTrained)
                 {
-                    TimeSpan time = skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
+                    TimeSpan time = skillPrereq.Skill.GetLeftTrainingTimeToLevel(skillPrereq.Level);
                     line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
