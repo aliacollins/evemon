@@ -1061,6 +1061,9 @@
     <None Include="Resources\eve-blueprints-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\eve-certificates-en-US.xml.gzip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\eve-geography-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
