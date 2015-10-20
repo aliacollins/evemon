@@ -455,8 +455,7 @@ namespace EVEMon.SkillPlanner
                 // When not trained, let's display the training time
                 if (!certLevel.IsTrained)
                 {
-                    TimeSpan time = certLevel.GetTrainingTime;
-                    line2 = time.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                    line2 = certLevel.GetTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
             // Or a skill prerequisite ?

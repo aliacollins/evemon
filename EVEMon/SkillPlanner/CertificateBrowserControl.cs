@@ -29,6 +29,7 @@ namespace EVEMon.SkillPlanner
         public CertificateBrowserControl()
         {
             InitializeComponent();
+
             rightSplitContainer.RememberDistanceKey = "CertificateBrowser_Right";
             leftSplitContainer.RememberDistanceKey = "CertificateBrowser_Left";
         }
@@ -183,8 +184,8 @@ namespace EVEMon.SkillPlanner
                 Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
                 int panelMinSize = rSplCont.Panel2MinSize;
                 rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad
-                                                ? panelMinSize
-                                                : tslTextSize.Width + HPad);
+                    ? panelMinSize
+                    : tslTextSize.Width + HPad);
                 rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
             }
             finally
@@ -193,36 +194,36 @@ namespace EVEMon.SkillPlanner
                     tempLabel.Dispose();
             }
 
-            foreach (LinkLabel linkLabel in ships.Values.Select(
-                ship =>
+            foreach (LinkLabel linkLabel in ships.Values
+                .Select(ship =>
+                {
+                    LinkLabel linkLabel;
+                    LinkLabel tempLinkLabel = null;
+                    try
                     {
-                        LinkLabel linkLabel;
-                        LinkLabel tempLinkLabel = null;
-                        try
-                        {
-                            tempLinkLabel = new LinkLabel();
-                            tempLinkLabel.LinkBehavior = LinkBehavior.HoverUnderline;
-                            tempLinkLabel.Padding = new Padding(16, 0, 0, 0);
-                            tempLinkLabel.Dock = DockStyle.Top;
-                            tempLinkLabel.Text = ship.Name;
-                            tempLinkLabel.Tag = ship;
+                        tempLinkLabel = new LinkLabel();
+                        tempLinkLabel.LinkBehavior = LinkBehavior.HoverUnderline;
+                        tempLinkLabel.Padding = new Padding(16, 0, 0, 0);
+                        tempLinkLabel.Dock = DockStyle.Top;
+                        tempLinkLabel.Text = ship.Name;
+                        tempLinkLabel.Tag = ship;
 
-                            linkLabel = tempLinkLabel;
-                            tempLinkLabel = null;
-                        }
-                        finally
-                        {
-                            if (tempLinkLabel != null)
-                                tempLinkLabel.Dispose();
-                        }
+                        linkLabel = tempLinkLabel;
+                        tempLinkLabel = null;
+                    }
+                    finally
+                    {
+                        if (tempLinkLabel != null)
+                            tempLinkLabel.Dispose();
+                    }
 
-                        return linkLabel;
-                    }))
+                    return linkLabel;
+                }))
             {
                 linkLabel.MouseClick += recommendations_MenuItem;
                 newItems.Add(linkLabel);
             }
-            
+
 
             // Updates the recommendations for this certificate
             UpdateRecommendations(newItems, rSplCont);
@@ -542,8 +543,7 @@ namespace EVEMon.SkillPlanner
                 tsPlanToMenu.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             }
         }
-
-
+        
         #endregion
     }
 }
