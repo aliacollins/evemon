@@ -219,6 +219,7 @@ namespace EVEMon.SkillPlanner
                 shipBrowser.Plan = m_plan;
                 itemBrowser.Plan = m_plan;
                 skillBrowser.Plan = m_plan;
+                certBrowser.Plan = m_plan;
                 blueprintBrowser.Plan = m_plan;
 
                 // Check to see if one or more invalid entries were 
@@ -298,6 +299,16 @@ namespace EVEMon.SkillPlanner
         {
             tabControl.SelectedTab = tpShipBrowser;
             shipBrowser.SelectedObject = ship;
+        }
+
+        /// <summary>
+        /// Opens this certificate in the certificate browser and switches to this tab.
+        /// </summary>
+        /// <param name="certificateLevel">The certificate level.</param>
+        public void ShowCertInBrowser(CertificateLevel certificateLevel)
+        {
+            tabControl.SelectedTab = tpCertificateBrowser;
+            certBrowser.SelectedCertificateLevel(certificateLevel);
         }
 
         /// <summary>

@@ -141,6 +141,7 @@ namespace EVEMon.About
                                    { "Shwehan Juanis", 6 },
                                    { "skolima", 6 },
                                    { "Spiff Nutter", 6 },
+                                   { "stiez", 6 },
                                    { "Subkahnshus", 6 },
                                    { "SyndicateAexeron", 6 },
                                    { "The_Assimilator", 6 },

@@ -12,11 +12,13 @@ namespace EVEMon.Common.Serialization.API
     {
         private readonly Collection<SerializableCharacterSkill> m_skills;
         private readonly Collection<SerializableEmploymentHistory> m_employmentHistory;
+        private readonly Collection<SerializableCharacterCertificate> m_certificates;
 
         protected SerializableCharacterSheetBase()
         {
             Attributes = new SerializableCharacterAttributes();
             m_skills = new Collection<SerializableCharacterSkill>();
+            m_certificates = new Collection<SerializableCharacterCertificate>();
             m_employmentHistory = new Collection<SerializableEmploymentHistory>();
         }
 
@@ -163,6 +165,13 @@ namespace EVEMon.Common.Serialization.API
                 if (!String.IsNullOrEmpty(value))
                     JumpLastUpdateDate = value.TimeStringToDateTime();
             }
+        }
+
+        [XmlArray("certificates")]
+        [XmlArrayItem("certificate")]
+        public Collection<SerializableCharacterCertificate> Certificates
+        {
+            get { return m_certificates; }
         }
 
         [XmlElement("balance")]

@@ -414,8 +414,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Removes a set of skill levels from this plan.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="skillsToRemove">The skill levels to remove.</param>
-        /// <returns>An object allowing to perform and control the removal.</returns>
+        /// <returns>
+        /// An object allowing to perform and control the removal.
+        /// </returns>
         public IPlanOperation TryRemoveSet<T>(IEnumerable<T> skillsToRemove)
             where T : ISkillLevel
         {
@@ -448,6 +451,23 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+        #region Certificates
+
+        /// <summary>
+        /// Adds the provided certificate's prerequisites to the plan.
+        /// </summary>
+        /// <param name="certificateLevel">The certificate level.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">certificate</exception>
+        public IPlanOperation TryPlanTo(CertificateLevel certificateLevel)
+        {
+            if (certificateLevel == null)
+                throw new ArgumentNullException("certificateLevel");
+
+            return TryAddSet(certificateLevel.PrerequisiteSkills, certificateLevel.ToString());
+        }
+
+        #endregion
 
         #region Priorities changes
 
@@ -460,6 +480,7 @@ namespace EVEMon.Common.Models
         /// <returns>
         /// True when successful, false when a conflict arised.
         /// </returns>
+        /// <exception cref="System.ArgumentNullException">entries</exception>
         public bool TrySetPriority(PlanScratchpad displayPlan, IEnumerable<PlanEntry> entries, int priority)
         {
             if (entries == null)
