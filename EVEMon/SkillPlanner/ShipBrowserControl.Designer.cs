@@ -41,6 +41,9 @@ namespace EVEMon.SkillPlanner
             this.shipSelectControl = new EVEMon.SkillPlanner.ShipSelectControl();
             this.gbRequiredSkills = new System.Windows.Forms.GroupBox();
             this.requiredSkillsControl = new EVEMon.SkillPlanner.RequiredSkillsControl();
+            this.tbCntrlShipInformation = new System.Windows.Forms.TabControl();
+            this.tbPgShipDetails = new System.Windows.Forms.TabPage();
+            this.tbPgShipMastery = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).BeginInit();
             this.scObjectBrowser.Panel1.SuspendLayout();
             this.scObjectBrowser.Panel2.SuspendLayout();
@@ -59,6 +62,8 @@ namespace EVEMon.SkillPlanner
             this.gbAttributes.SuspendLayout();
             this.ShipPropertiesContextMenu.SuspendLayout();
             this.gbRequiredSkills.SuspendLayout();
+            this.tbCntrlShipInformation.SuspendLayout();
+            this.tbPgShipDetails.SuspendLayout();
             this.SuspendLayout();
             // 
             // scObjectBrowser
@@ -67,6 +72,15 @@ namespace EVEMon.SkillPlanner
             // scObjectBrowser.Panel1
             // 
             this.scObjectBrowser.Panel1.Controls.Add(this.shipSelectControl);
+            // 
+            // scObjectBrowser.Panel2
+            // 
+            this.scObjectBrowser.Panel2.Controls.Add(this.tbCntrlShipInformation);
+            // 
+            // pnlDetails
+            // 
+            this.pnlDetails.Location = new System.Drawing.Point(3, 3);
+            this.pnlDetails.Size = new System.Drawing.Size(465, 308);
             // 
             // pnlBrowserHeader
             // 
@@ -83,7 +97,8 @@ namespace EVEMon.SkillPlanner
             // 
             this.scDetailsRight.Panel2.Controls.Add(this.gbRequiredSkills);
             this.scDetailsRight.Panel2MinSize = 108;
-            this.scDetailsRight.SplitterDistance = 231;
+            this.scDetailsRight.Size = new System.Drawing.Size(240, 308);
+            this.scDetailsRight.SplitterDistance = 196;
             // 
             // scDetails
             // 
@@ -91,14 +106,16 @@ namespace EVEMon.SkillPlanner
             // scDetails.Panel1
             // 
             this.scDetails.Panel1.Controls.Add(this.gbAttributes);
+            this.scDetails.Size = new System.Drawing.Size(465, 308);
+            this.scDetails.SplitterDistance = 221;
             // 
             // gbDescription
             // 
-            this.gbDescription.Size = new System.Drawing.Size(240, 220);
+            this.gbDescription.Size = new System.Drawing.Size(240, 196);
             // 
             // tbDescription
             // 
-            this.tbDescription.Size = new System.Drawing.Size(234, 201);
+            this.tbDescription.Size = new System.Drawing.Size(234, 177);
             // 
             // lblBattleclinic
             // 
@@ -117,7 +134,7 @@ namespace EVEMon.SkillPlanner
             this.gbAttributes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbAttributes.Location = new System.Drawing.Point(0, 0);
             this.gbAttributes.Name = "gbAttributes";
-            this.gbAttributes.Size = new System.Drawing.Size(238, 343);
+            this.gbAttributes.Size = new System.Drawing.Size(221, 308);
             this.gbAttributes.TabIndex = 4;
             this.gbAttributes.TabStop = false;
             this.gbAttributes.Text = "Attributes";
@@ -133,7 +150,7 @@ namespace EVEMon.SkillPlanner
             this.lvShipProperties.HideSelection = false;
             this.lvShipProperties.Location = new System.Drawing.Point(3, 16);
             this.lvShipProperties.Name = "lvShipProperties";
-            this.lvShipProperties.Size = new System.Drawing.Size(232, 324);
+            this.lvShipProperties.Size = new System.Drawing.Size(215, 289);
             this.lvShipProperties.TabIndex = 3;
             this.lvShipProperties.UseCompatibleStateImageBehavior = false;
             this.lvShipProperties.View = System.Windows.Forms.View.Details;
@@ -181,7 +198,7 @@ namespace EVEMon.SkillPlanner
             this.gbRequiredSkills.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbRequiredSkills.Location = new System.Drawing.Point(0, 0);
             this.gbRequiredSkills.Name = "gbRequiredSkills";
-            this.gbRequiredSkills.Size = new System.Drawing.Size(240, 119);
+            this.gbRequiredSkills.Size = new System.Drawing.Size(240, 108);
             this.gbRequiredSkills.TabIndex = 0;
             this.gbRequiredSkills.TabStop = false;
             this.gbRequiredSkills.Text = "Required Skills";
@@ -195,8 +212,42 @@ namespace EVEMon.SkillPlanner
             this.requiredSkillsControl.Name = "requiredSkillsControl";
             this.requiredSkillsControl.Object = null;
             this.requiredSkillsControl.Plan = null;
-            this.requiredSkillsControl.Size = new System.Drawing.Size(234, 100);
+            this.requiredSkillsControl.Size = new System.Drawing.Size(234, 89);
             this.requiredSkillsControl.TabIndex = 0;
+            // 
+            // tbCntrlShipInformation
+            // 
+            this.tbCntrlShipInformation.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbCntrlShipInformation.Controls.Add(this.tbPgShipDetails);
+            this.tbCntrlShipInformation.Controls.Add(this.tbPgShipMastery);
+            this.tbCntrlShipInformation.Location = new System.Drawing.Point(0, 73);
+            this.tbCntrlShipInformation.Name = "tbCntrlShipInformation";
+            this.tbCntrlShipInformation.SelectedIndex = 0;
+            this.tbCntrlShipInformation.Size = new System.Drawing.Size(479, 340);
+            this.tbCntrlShipInformation.TabIndex = 1;
+            // 
+            // tbPgShipDetails
+            // 
+            this.tbPgShipDetails.Controls.Add(this.pnlDetails);
+            this.tbPgShipDetails.Location = new System.Drawing.Point(4, 22);
+            this.tbPgShipDetails.Name = "tbPgShipDetails";
+            this.tbPgShipDetails.Padding = new System.Windows.Forms.Padding(3);
+            this.tbPgShipDetails.Size = new System.Drawing.Size(471, 314);
+            this.tbPgShipDetails.TabIndex = 0;
+            this.tbPgShipDetails.Text = "Overview";
+            this.tbPgShipDetails.UseVisualStyleBackColor = true;
+            // 
+            // tbPgShipMastery
+            // 
+            this.tbPgShipMastery.Location = new System.Drawing.Point(4, 22);
+            this.tbPgShipMastery.Name = "tbPgShipMastery";
+            this.tbPgShipMastery.Padding = new System.Windows.Forms.Padding(3);
+            this.tbPgShipMastery.Size = new System.Drawing.Size(471, 314);
+            this.tbPgShipMastery.TabIndex = 1;
+            this.tbPgShipMastery.Text = "Mastery";
+            this.tbPgShipMastery.UseVisualStyleBackColor = true;
             // 
             // ShipBrowserControl
             // 
@@ -225,6 +276,8 @@ namespace EVEMon.SkillPlanner
             this.gbAttributes.ResumeLayout(false);
             this.ShipPropertiesContextMenu.ResumeLayout(false);
             this.gbRequiredSkills.ResumeLayout(false);
+            this.tbCntrlShipInformation.ResumeLayout(false);
+            this.tbPgShipDetails.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -242,5 +295,8 @@ namespace EVEMon.SkillPlanner
         //private System.Windows.Forms.SplitContainer scDetailsLowerRight;
         private System.Windows.Forms.GroupBox gbRequiredSkills;
         private RequiredSkillsControl requiredSkillsControl;
+        private System.Windows.Forms.TabControl tbCntrlShipInformation;
+        private System.Windows.Forms.TabPage tbPgShipDetails;
+        private System.Windows.Forms.TabPage tbPgShipMastery;
     }
 }

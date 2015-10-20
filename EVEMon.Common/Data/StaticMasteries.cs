@@ -17,6 +17,8 @@ namespace EVEMon.Common.Data
 
         internal static void Load()
         {
+            Masteries = new Collection<StaticMasterieShip>();
+
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.MasteriesDatafile)))
                 return;
 
