@@ -244,9 +244,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="level"></param>
         private void UpdateLevelLabel(Control label, int level)
         {
-            // "Level III :"
             StringBuilder sb = new StringBuilder();
 
+            // "Level III: "
             sb.AppendFormat(CultureConstants.DefaultCulture, "Level {0}: ", Skill.GetRomanFromInt(level));
 
             // Is it already trained ?

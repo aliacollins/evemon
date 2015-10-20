@@ -471,6 +471,24 @@
     <Compile Include="Controls\OverviewLabel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SkillPlanner\CertificateBrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateBrowserControl.Designer.cs">
+      <DependentUpon>CertificateBrowserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateSelectControl.Designer.cs">
+      <DependentUpon>CertificateSelectControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateTreeDisplayControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkillPlanner\CertificateTreeDisplayControl.Designer.cs">
+      <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Updater\DataUpdateNotifyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -643,6 +661,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\UpdateSettingsControl.resx">
       <DependentUpon>UpdateSettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\CertificateBrowserControl.resx">
+      <DependentUpon>CertificateBrowserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\CertificateSelectControl.resx">
+      <DependentUpon>CertificateSelectControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkillPlanner\CertificateTreeDisplayControl.resx">
+      <DependentUpon>CertificateTreeDisplayControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Updater\UpdateNotifyForm.resx">
       <SubType>Designer</SubType>

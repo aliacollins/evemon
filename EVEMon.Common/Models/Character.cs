@@ -59,6 +59,9 @@ namespace EVEMon.Common.Models
             EmploymentHistory = new EmploymentRecordCollection(this);
             ImplantSets = new ImplantSetCollection(this);
             Plans = new PlanCollection(this);
+            CertificateCategories = new CertificateCategoryCollection(this);
+            CertificateClasses = new CertificateClassCollection(this);
+            Certificates = new CertificateCollection(this);
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
@@ -303,6 +306,25 @@ namespace EVEMon.Common.Models
             get { return StaticGeography.GetSolarSystemByName(LastKnownLocation); }
         }
 
+
+        #endregion
+
+        #region Certificates
+
+        /// <summary>
+        /// Gets the collection of certificate categories.
+        /// </summary>
+        public CertificateCategoryCollection CertificateCategories { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of certificate classes.
+        /// </summary>
+        public CertificateClassCollection CertificateClasses { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of certificates.
+        /// </summary>
+        public CertificateCollection Certificates { get; private set; }
 
         #endregion
 
@@ -624,6 +646,9 @@ namespace EVEMon.Common.Models
 
             // Skills
             Skills.Import(serial.Skills, serial is SerializableAPICharacterSheet);
+
+            // Certificates
+            Certificates.Import(serial.Certificates);
         }
 
         /// <summary>

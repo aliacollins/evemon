@@ -12,8 +12,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticCertificate
     {
-        private readonly List<StaticSkillLevel> m_prerequisiteSkills = new List<StaticSkillLevel>();
-
+        private readonly Dictionary<CertificateGrade, List<StaticSkillLevel>> m_prerequisiteSkills = new Dictionary<CertificateGrade, List<StaticSkillLevel>>();
 
         #region Constructor
 
@@ -77,13 +76,13 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the prerequisite skills.
         /// </summary>
-        public IEnumerable<StaticSkillLevel> PrerequisiteSkills
+        public Dictionary<CertificateGrade, List<StaticSkillLevel>> PrerequisiteSkills
         {
             get { return m_prerequisiteSkills; }
         }
 
         /// <summary>
-        /// Gets all the top-level prerequisite skills, including the ones from prerequisite certificates.
+        /// Gets all the top-level prerequisite skills
         /// </summary>
         public IEnumerable<StaticSkillLevel> AllTopPrerequisiteSkills
         {
@@ -93,7 +92,7 @@ namespace EVEMon.Common.Data
                 List<StaticSkillLevel> list = new List<StaticSkillLevel>();
 
                 // Collect all prerequisites from skills
-                foreach (StaticSkillLevel skillPrereq in m_prerequisiteSkills.Where(
+                foreach (StaticSkillLevel skillPrereq in m_prerequisiteSkills.SelectMany(entry => entry.Value).Where(
                     skillPrereq => skillPrereq.Skill != null && highestLevels[skillPrereq.Skill.ArrayIndex] < skillPrereq.Level))
                 {
                     highestLevels[skillPrereq.Skill.ArrayIndex] = skillPrereq.Level;
@@ -120,14 +119,11 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal void CompleteInitialization(IEnumerable<SerializableCertificatePrerequisite> prereqs)
         {
-            foreach (IGrouping<CertificateGrade, SerializableCertificatePrerequisite> prereqGrade in prereqs.GroupBy(x => x.Grade))
-            {
-                var gradePrereq = prereqGrade.Select(
-                    prereq => new StaticSkillLevel(prereq.ID, Int32.Parse(prereq.Level, CultureConstants.InvariantCulture)))
-                    .ToList();
-
-                Grades.Add(prereqGrade.Key, gradePrereq);
-                m_prerequisiteSkills.AddRange(gradePrereq);
+            foreach (var prereqGrade in prereqs.GroupBy(x => x.Grade))
+            {               
+                m_prerequisiteSkills.Add(prereqGrade.Key, prereqGrade.Select(
+                    prereq => new StaticSkillLevel( prereq.ID, Int32.Parse(prereq.Level, CultureConstants.InvariantCulture)))
+                    .ToList());                               
             }
         }
 
