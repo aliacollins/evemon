@@ -101,6 +101,10 @@
     </Compile>
     <Compile Include="Constants\EveConstants.cs" />
     <Compile Include="Constants\EVEMonConstants.cs" />
+    <Compile Include="Data\StaticMasteries.cs" />
+    <Compile Include="Data\StaticMasterieShip.cs" />
+    <Compile Include="Data\StaticMasteryCertificate.cs" />
+    <Compile Include="Data\StaticMasteryCertificates.cs" />
     <Compile Include="Enumerations\AbbreviationFormat.cs" />
     <Compile Include="Enumerations\ActiveJobState.cs" />
     <Compile Include="Enumerations\AgentType.cs" />

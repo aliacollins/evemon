@@ -86,6 +86,8 @@ namespace EVEMon.Common
                 StaticSkills.Load();
                 StaticItems.Load();
                 StaticCertificates.Load();
+                // Load Masteries after the certificates, because they are required for the masteries
+                StaticMasteries.Load();
                 StaticBlueprints.Load();
                 Trace("Load Datafiles - done");
 
