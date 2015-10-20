@@ -381,8 +381,8 @@ namespace EVEMon.SkillPlanner
         {
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = (tvItems.SelectedNodes.Count > 0
-                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                        : 0);
+                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                : 0);
 
             TreeNode selectedNode = null;
 
@@ -391,7 +391,7 @@ namespace EVEMon.SkillPlanner
             tvItems.BeginUpdate();
             try
             {
-                tvItems.ImageList = (Settings.UI.SafeForWork ? m_emptyImageList : ilCertIcons);
+                tvItems.ImageList = Settings.UI.SafeForWork ? m_emptyImageList : ilCertIcons;
 
                 // Clear the existing nodes
                 tvItems.Nodes.Clear();
@@ -402,25 +402,25 @@ namespace EVEMon.SkillPlanner
                     int imageIndex = tvItems.ImageList.Images.IndexOfKey("Certificate");
 
                     TreeNode node = new TreeNode
-                                        {
-                                            Text = category.Name,
-                                            ImageIndex = imageIndex,
-                                            SelectedImageIndex = imageIndex,
-                                            Tag = category
-                                        };
+                    {
+                        Text = category.Name,
+                        ImageIndex = imageIndex,
+                        SelectedImageIndex = imageIndex,
+                        Tag = category
+                    };
 
                     foreach (TreeNode childNode in classes.Where(x => x.Category == category).Select(
                         certClass => new
-                                         {
-                                             certClass,
-                                             index = GetCertImageIndex(certClass.Certificate.AllLevel.ToList())
-                                         }).Select(childNode => new TreeNode
-                                                                    {
-                                                                        Text = childNode.certClass.Name,
-                                                                        ImageIndex = childNode.index,
-                                                                        SelectedImageIndex = childNode.index,
-                                                                        Tag = childNode.certClass
-                                                                    }))
+                        {
+                            certClass,
+                            index = GetCertImageIndex(certClass.Certificate)
+                        }).Select(childNode => new TreeNode
+                        {
+                            Text = childNode.certClass.Name,
+                            ImageIndex = childNode.index,
+                            SelectedImageIndex = childNode.index,
+                            Tag = childNode.certClass
+                        }))
                     {
                         numberOfItems++;
                         node.Nodes.Add(childNode);
@@ -617,18 +617,18 @@ namespace EVEMon.SkillPlanner
                     // Sort by name, default, occurs on initialization
                 case CertificateSort.Name:
                     return String.Empty;
-                    // Sort by time to next grade
+                    // Sort by time to next level
                 case CertificateSort.TimeToNextLevel:
                     {
-                        times = classes.Select(GetTimeToNextGrade);
+                        times = classes.Select(GetTimeToNextLevel);
                         columnHeader = "Time";
                         break;
                     }
-                    // Sort by time to elite (or highest) grade
+                    // Sort by time to max level
                 case CertificateSort.TimeToMaxLevel:
                     {
-                        times = classes.Select(GetTimeToEliteGrade);
-                        columnHeader = "Time to Elite";
+                        times = classes.Select(GetTimeToMaxLevel);
+                        columnHeader = "Time to max level";
                         break;
                     }
                 default:
@@ -646,65 +646,63 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the time to next grade.
         /// </summary>
-        /// <param name="x">The x.</param>
+        /// <param name="certificateClass">The certificate class.</param>
         /// <returns></returns>
-        private static TimeSpan GetTimeToNextGrade(CertificateClass x)
+        private static TimeSpan GetTimeToNextLevel(CertificateClass certificateClass)
         {
-            var nextUntrained = x.Certificate.LowestUntrainedGrade;
-            return (nextUntrained == null
+            return certificateClass.Certificate.LowestUntrainedLevel == null
                         ? TimeSpan.Zero
-                        : nextUntrained.GetTrainingTime);
+                        : certificateClass.Certificate.LowestUntrainedLevel.GetTrainingTime;
         }
 
         /// <summary>
         /// Gets the time to elite grade.
         /// </summary>
-        /// <param name="x">The x.</param>
+        /// <param name="certificateClass">The certificate class.</param>
         /// <returns></returns>
-        private static TimeSpan GetTimeToEliteGrade(CertificateClass x)
+        private static TimeSpan GetTimeToMaxLevel(CertificateClass certificateClass)
         {
-            var lastGrade = x.Certificate.LevelFive;
-            CertificateStatus status = lastGrade.Status;
-
-            if (status == CertificateStatus.Trained)
-                return TimeSpan.Zero;
-
-            return lastGrade.GetTrainingTime;
+            return certificateClass.Certificate.LevelFive.IsTrained
+                ? TimeSpan.Zero
+                : certificateClass.Certificate.LevelFive.GetTrainingTime;
         }
 
         /// <summary>
         /// Gets the image's index for the provided certificate class,
         /// lazily creating the images when they're needed.
         /// </summary>
-        /// <param name="certLevels">The cert levels.</param>
+        /// <param name="certificate">The certificate.</param>
         /// <returns></returns>
-        private int GetCertImageIndex(ICollection<CertificateLevel> certLevels)
+        private int GetCertImageIndex(Certificate certificate)
         {
-            // Prepares data
-            char[] chars = new char[5];
-            bool[] granted = new bool[5];            
-
-            int index = 0;
-            //int totalGranted = 0;
-            foreach (var certLevel in certLevels)
+            if (!Settings.UI.SafeForWork)
             {
-                if (certLevel.Status == CertificateStatus.Trained)
-                {
-                    //totalGranted++;
-                    granted[index] = true;
-                    chars[index] = Convert.ToChar((int)certLevel.Grade);
-                }
-
-                index++;
+                return certificate.HighestTrainedLevel == null
+                    ? 0
+                    : (int)certificate.HighestTrainedLevel.Level;
             }
 
-            // Special cases where we return immediately
-            if (granted.Count(x => x) == certLevels.Count)
-                return tvItems.ImageList.Images.IndexOfKey("AllGranted");
+            // Prepares data
+            char[] chars = new char[5];
+            bool[] trained = new bool[5];
+
+            foreach (int level in certificate.AllLevel
+                .Select(certLevel =>
+                    new
+                    {
+                        certLevel,
+                        level = (int)certLevel.Level
+                    })
+                .Where(cert => cert.certLevel.IsTrained)
+                .Select(cert => cert.level))
+            {
+                trained[level - 1] = true;
+                chars[level - 1] = Convert.ToChar(level);
+            }
 
             // Create key and retrieves its index, then returns if it already exists
             string key = string.Concat(chars);
-            index = tvItems.ImageList.Images.IndexOfKey(key);
+            int index = tvItems.ImageList.Images.IndexOfKey(key);
             if (index != -1)
                 return index;
 
@@ -723,19 +721,19 @@ namespace EVEMon.SkillPlanner
                 string[] letters = new string[5];
                 float[] xPositions = new float[5];
                 float x = 0.0f,
-                      height = 0.0f;
+                    height = 0.0f;
 
                 int i = 0;
                 // Scroll through letters and measure them
-                foreach (var certLevel in certLevels)
+                foreach (var certLevel in certificate.AllLevel)
                 {
-                    letters[i] = ((int)certLevel.Grade).ToString();
+                    letters[i] = ((int)certLevel.Level).ToString();
                     SizeF size = g.MeasureString(letters[i], m_iconsFont, MaxLetterWidth, StringFormat.GenericTypographic);
                     height = Math.Max(height, size.Height);
                     xPositions[i] = x;
                     x += (size.Width + 1.0f);
                     i++;
-                }                
+                }
 
                 // Y offset
                 float y = Math.Max(0.0f, (ImageSize - height) * 0.5f);
@@ -743,20 +741,17 @@ namespace EVEMon.SkillPlanner
                 // Draw the letters
                 g.Clear(Color.White);
                 using (SolidBrush grantedBrush = new SolidBrush(Color.Blue))
+                using (SolidBrush nonGrantedBrush = new SolidBrush(Color.Gray))
                 {
-                    using (SolidBrush nonGrantedBrush = new SolidBrush(Color.Gray))
-                    {                     
-                        for (int j = 0; j < certLevels.Count(); j++)
-                        {
-                            // Special color for granted, gray for the other ones
-                            bool isGranted = granted[j];
-                            SolidBrush brush = (isGranted ? grantedBrush : nonGrantedBrush);
-                            g.DrawString(letters[j], m_iconsFont, brush, xPositions[j], y);
-                        }
+                    for (int j = 0; j < certificate.AllLevel.Count(); j++)
+                    {
+                        // Special color for trained, gray for the other ones
+                        bool isTrained = trained[j];
+                        SolidBrush brush = isTrained ? grantedBrush : nonGrantedBrush;
+                        g.DrawString(letters[j], m_iconsFont, brush, xPositions[j], y);
                     }
                 }
             }
-
             // Insert image and return its index
             tvItems.ImageList.Images.Add(key, bmp);
             return tvItems.ImageList.Images.IndexOfKey(key);
@@ -852,16 +847,18 @@ namespace EVEMon.SkillPlanner
             if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.Certificate.LevelFive))
             {
                 cmiLvPlanTo.Enabled = false;
-                cmiLvPlanTo.Text = "Plan to...";
+                cmiLvPlanTo.Text = @"Plan to...";
             }
             else
             {
                 cmiLvPlanTo.Enabled = true;
                 cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" to...", certClass.Name);
+
                 SetAdditionMenuStatus(tsmLevel1, certClass.Certificate.LevelOne);
                 SetAdditionMenuStatus(tsmLevel2, certClass.Certificate.LevelTwo);
                 SetAdditionMenuStatus(tsmLevel3, certClass.Certificate.LevelThree);
-                SetAdditionMenuStatus(tsmLevel4, certClass.Certificate.LevelFive);
+                SetAdditionMenuStatus(tsmLevel4, certClass.Certificate.LevelFour);
+                SetAdditionMenuStatus(tsmLevel5, certClass.Certificate.LevelFive);
             }
 
             tsSeparatorPlanTo.Visible = (certClass == null && node != null);
@@ -887,22 +884,20 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Sets the visible status of the context menu submenu.
         /// </summary>
-        /// <param name="menu"></param>
-        /// <param name="cert"></param>
+        /// <param name="menu">The menu.</param>
+        /// <param name="certLevel">The cert level.</param>
         private void SetAdditionMenuStatus(ToolStripMenuItem menu, CertificateLevel certLevel)
         {
-            if (certLevel == null)
-            {
-                menu.Visible = false;
-                return;
-            }
+            menu.Visible = certLevel != null;
 
-            menu.Visible = true;
+            if (certLevel == null)
+                return;
+
             menu.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
         }
 
         /// <summary>
-        /// Context menu > Plan to > Basic
+        /// Context menu > Plan to > Level I
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -913,7 +908,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context menu > Plan to > Standard
+        /// Context menu > Plan to > Level II
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -924,7 +919,7 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context menu > Plan to > Improved
+        /// Context menu > Plan to > Level III
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -935,11 +930,22 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Context menu > Plan to > Elite
+        /// Context menu > Plan to > Level IV
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void tsmLevel4_Click(object sender, EventArgs e)
+        {
+            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelFour);
+            PlanHelper.SelectPerform(operation);
+        }
+
+        /// <summary>
+        /// Context menu > Plan to > Level V
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmLevel5_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelFive);
             PlanHelper.SelectPerform(operation);

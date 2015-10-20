@@ -46,6 +46,7 @@ namespace EVEMon.SkillPlanner
             this.tsPlanToLevelOne = new System.Windows.Forms.ToolStripMenuItem();
             this.tsPlanToLevelTwo = new System.Windows.Forms.ToolStripMenuItem();
             this.tsPlanToLevelThree = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelFour = new System.Windows.Forms.ToolStripMenuItem();
             this.tsPlanToLevelFive = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblCategory = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@ namespace EVEMon.SkillPlanner
             this.lblLevel1Time = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.lblHelp = new System.Windows.Forms.Label();
-            this.tsPlanToLevelFour = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.leftSplitContainer)).BeginInit();
             this.leftSplitContainer.Panel1.SuspendLayout();
             this.leftSplitContainer.Panel2.SuspendLayout();
@@ -169,9 +169,9 @@ namespace EVEMon.SkillPlanner
             this.lblLevel5Time.AutoSize = true;
             this.lblLevel5Time.Location = new System.Drawing.Point(3, 84);
             this.lblLevel5Time.Name = "lblLevel5Time";
-            this.lblLevel5Time.Size = new System.Drawing.Size(115, 13);
+            this.lblLevel5Time.Size = new System.Drawing.Size(131, 13);
             this.lblLevel5Time.TabIndex = 29;
-            this.lblLevel5Time.Text = "Elite : 11d, 6h, 33m, 3s";
+            this.lblLevel5Time.Text = "Level V : 11d, 6h, 33m, 3s";
             // 
             // toolStrip1
             // 
@@ -218,6 +218,7 @@ namespace EVEMon.SkillPlanner
             this.tsPlanToMenu.Name = "tsPlanToMenu";
             this.tsPlanToMenu.Size = new System.Drawing.Size(82, 22);
             this.tsPlanToMenu.Text = "Plan to...";
+            this.tsPlanToMenu.DropDownOpening += new System.EventHandler(this.tsPlanToMenu_DropDownOpening);
             // 
             // tsPlanToLevelOne
             // 
@@ -239,6 +240,13 @@ namespace EVEMon.SkillPlanner
             this.tsPlanToLevelThree.Size = new System.Drawing.Size(152, 22);
             this.tsPlanToLevelThree.Text = "&Level III";
             this.tsPlanToLevelThree.Click += new System.EventHandler(this.tsPlanToLevelThree_Click);
+            // 
+            // tsPlanToLevelFour
+            // 
+            this.tsPlanToLevelFour.Name = "tsPlanToLevelFour";
+            this.tsPlanToLevelFour.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFour.Text = "&Level IV";
+            this.tsPlanToLevelFour.Click += new System.EventHandler(this.tsPlanToLevelFour_Click);
             // 
             // tsPlanToLevelFive
             // 
@@ -285,36 +293,36 @@ namespace EVEMon.SkillPlanner
             this.lblLevel4Time.AutoSize = true;
             this.lblLevel4Time.Location = new System.Drawing.Point(3, 71);
             this.lblLevel4Time.Name = "lblLevel4Time";
-            this.lblLevel4Time.Size = new System.Drawing.Size(115, 13);
+            this.lblLevel4Time.Size = new System.Drawing.Size(140, 13);
             this.lblLevel4Time.TabIndex = 23;
-            this.lblLevel4Time.Text = "Elite : 11d, 6h, 33m, 3s";
+            this.lblLevel4Time.Text = "Level IV : 5d, 12h, 15m, 24s";
             // 
             // lblLevel3Time
             // 
             this.lblLevel3Time.AutoSize = true;
             this.lblLevel3Time.Location = new System.Drawing.Point(3, 58);
             this.lblLevel3Time.Name = "lblLevel3Time";
-            this.lblLevel3Time.Size = new System.Drawing.Size(145, 13);
+            this.lblLevel3Time.Size = new System.Drawing.Size(139, 13);
             this.lblLevel3Time.TabIndex = 22;
-            this.lblLevel3Time.Text = "Improved : 1d, 23h, 49m, 36s";
+            this.lblLevel3Time.Text = "Level III : 1d, 23h, 49m, 36s";
             // 
             // lblLevel2Time
             // 
             this.lblLevel2Time.AutoSize = true;
             this.lblLevel2Time.Location = new System.Drawing.Point(3, 45);
             this.lblLevel2Time.Name = "lblLevel2Time";
-            this.lblLevel2Time.Size = new System.Drawing.Size(120, 13);
+            this.lblLevel2Time.Size = new System.Drawing.Size(112, 13);
             this.lblLevel2Time.TabIndex = 21;
-            this.lblLevel2Time.Text = "Standard : 8h, 27m, 17s";
+            this.lblLevel2Time.Text = "Level II : 8h, 27m, 17s";
             // 
             // lblLevel1Time
             // 
             this.lblLevel1Time.AutoSize = true;
             this.lblLevel1Time.Location = new System.Drawing.Point(3, 32);
             this.lblLevel1Time.Name = "lblLevel1Time";
-            this.lblLevel1Time.Size = new System.Drawing.Size(103, 13);
+            this.lblLevel1Time.Size = new System.Drawing.Size(109, 13);
             this.lblLevel1Time.TabIndex = 20;
-            this.lblLevel1Time.Text = "Basic : 1h, 48m, 55s";
+            this.lblLevel1Time.Text = "Level I : 1h, 48m, 55s";
             // 
             // lblName
             // 
@@ -333,13 +341,6 @@ namespace EVEMon.SkillPlanner
             this.lblHelp.Size = new System.Drawing.Size(247, 13);
             this.lblHelp.TabIndex = 29;
             this.lblHelp.Text = "Use the tree on the left to select certificate to view.";
-            // 
-            // tsPlanToLevelFour
-            // 
-            this.tsPlanToLevelFour.Name = "tsPlanToLevelFour";
-            this.tsPlanToLevelFour.Size = new System.Drawing.Size(152, 22);
-            this.tsPlanToLevelFour.Text = "&Level IV";
-            this.tsPlanToLevelFour.Click += new System.EventHandler(this.tsPlanToLevelFour_Click);
             // 
             // CertificateBrowserControl
             // 

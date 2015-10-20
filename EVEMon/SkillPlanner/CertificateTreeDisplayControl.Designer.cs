@@ -42,6 +42,7 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
+            this.imageListCertLevels = new System.Windows.Forms.ImageList(this.components);
             this.treeView = new EVEMon.SkillPlanner.OverridenTreeView();
             this.cmListSkills.SuspendLayout();
             this.SuspendLayout();
@@ -132,12 +133,23 @@ namespace EVEMon.SkillPlanner
             // 
             this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList.Images.SetKeyName(0, "Certificate - Granted.png");
-            this.imageList.Images.SetKeyName(1, "Certificate - Trainable.png");
-            this.imageList.Images.SetKeyName(2, "Certificate - Untrainable.png");
-            this.imageList.Images.SetKeyName(3, "Certificate.png");
-            this.imageList.Images.SetKeyName(4, "Skillbook.png");
-            this.imageList.Images.SetKeyName(5, "Plan.png");
+            this.imageList.Images.SetKeyName(0, "Trained");
+            this.imageList.Images.SetKeyName(1, "Trainable");
+            this.imageList.Images.SetKeyName(2, "Untrainable");
+            this.imageList.Images.SetKeyName(3, "Certificate");
+            this.imageList.Images.SetKeyName(4, "Skillbook");
+            this.imageList.Images.SetKeyName(5, "Planned");
+            // 
+            // imageListCertLevels
+            // 
+            this.imageListCertLevels.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListCertLevels.ImageStream")));
+            this.imageListCertLevels.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListCertLevels.Images.SetKeyName(0, "level0");
+            this.imageListCertLevels.Images.SetKeyName(1, "level1");
+            this.imageListCertLevels.Images.SetKeyName(2, "level2");
+            this.imageListCertLevels.Images.SetKeyName(3, "level3");
+            this.imageListCertLevels.Images.SetKeyName(4, "level4");
+            this.imageListCertLevels.Images.SetKeyName(5, "level5");
             // 
             // treeView
             // 
@@ -187,5 +199,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripSeparator tsSeparatorToggle;
         private System.Windows.Forms.ToolStripMenuItem tsmExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem tsmCollapseSelected;
+        private System.Windows.Forms.ImageList imageListCertLevels;
     }
 }

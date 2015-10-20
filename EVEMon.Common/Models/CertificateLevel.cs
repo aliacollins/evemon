@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Models
 {
@@ -11,8 +13,6 @@ namespace EVEMon.Common.Models
     /// </summary>
     public sealed class CertificateLevel
     {
-        private List<SkillLevel> m_skills;
-
         private bool m_initialized;
 
         private readonly Character m_character;
@@ -20,25 +20,27 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="CertificateLevel"/> class.
         /// </summary>
-        /// <param name="grade">The grade.</param>
+        /// <param name="skill">The skill.</param>
         /// <param name="cert">The cert.</param>
-        /// <param name="characater">The characater.</param>
-        public CertificateLevel(CertificateGrade grade, Certificate cert, Character characater)
+        /// <param name="character">The character.</param>
+        public CertificateLevel(KeyValuePair<CertificateGrade, List<StaticSkillLevel>> skill, Certificate cert, Character character)
         {
-            Grade = grade;
-            Certificate = cert;
-            m_character = characater;
+            m_character = character;
             m_initialized = false;
-            Status = CertificateStatus.Untrained;            
+
+            Level = skill.Key;
+            Certificate = cert;
+            Status = CertificateStatus.Untrained;
+            PrerequisiteSkills = skill.Value.ToCharacter(character);
         }
 
         /// <summary>
-        /// Gets the grade.
+        /// Gets the level (also known as Grade).
         /// </summary>
         /// <value>
-        /// The grade.
+        /// The level.
         /// </value>
-        public CertificateGrade Grade { get; private set; }
+        public CertificateGrade Level { get; private set; }
 
         /// <summary>
         /// Gets the certificate.
@@ -59,19 +61,7 @@ namespace EVEMon.Common.Models
         /// <summary>                                                                                                             
         /// Gets the immediate prerequisite skills.                                                                                                            
         /// </summary>
-        public IEnumerable<SkillLevel> PrerequisiteSkills
-        {
-            get { return m_skills; }
-        }
-
-        /// <summary>
-        /// Completes the initialization.
-        /// </summary>
-        /// <param name="skills">The skills.</param>
-        public void CompleteInitialization(IEnumerable<SkillLevel> skills)
-        {
-            m_skills = skills.ToList();
-        }
+        public IEnumerable<SkillLevel> PrerequisiteSkills { get; private set; }
 
         /// <summary>
         /// Gets true whether the certificate is granted.
@@ -108,7 +98,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         public TimeSpan GetTrainingTime
         {
-            get { return m_character.GetTrainingTimeToMultipleSkills(m_skills); }
+            get { return m_character.GetTrainingTimeToMultipleSkills(PrerequisiteSkills); }
         }
 
         /// <summary>
@@ -124,7 +114,7 @@ namespace EVEMon.Common.Models
             bool trained = true;
 
             // Scan prerequisite skills
-            foreach (SkillLevel prereqSkill in m_skills)
+            foreach (SkillLevel prereqSkill in PrerequisiteSkills)
             {
                 // Trained only if the skill's level is greater or equal than the minimum level
                 trained &= (prereqSkill.Skill.Level >= prereqSkill.Level);
@@ -152,7 +142,7 @@ namespace EVEMon.Common.Models
         /// </returns>
         public override string ToString()
         {
-            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt(((int)Grade)));
+            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt(((int)Level)));
         }
     }
 }

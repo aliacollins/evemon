@@ -28,38 +28,27 @@ namespace EVEMon.Common.Models
         /// <param name="certClass"></param>
         internal Certificate(Character character, StaticCertificate src, CertificateClass certClass)
         {
+            m_character = character;
+            m_levels = new CertificateLevel[6];
+
             StaticData = src;
             Class = certClass;
-            m_character = character;
-
-            m_levels = new CertificateLevel[6];
 
             foreach (KeyValuePair<CertificateGrade, List<StaticSkillLevel>> skill in src.PrerequisiteSkills)
             {
-                m_levels[(int)skill.Key] = new CertificateLevel(skill.Key, this, character);
-                m_levels[(int)skill.Key].CompleteInitialization(skill.Value.ToCharacter(character).ToList());
+                m_levels[(int)skill.Key] = new CertificateLevel(skill, this, character);
             }
-        }
-
-        /// <summary>
-        /// Gets the static data associated with this certificate.
-        /// </summary>
-        public StaticCertificate StaticData { get; private set; }
-
-        /// <summary>
-        /// Try to update the certificate's status. 
-        /// </summary>
-        /// <returns>True if the status was updated, false otherwise.</returns>
-        internal bool TryUpdateCertificateStatus()
-        {
-            return m_levels.Where(level => level != null)
-                .Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
         }
 
         #endregion
 
 
         #region Core properties
+
+        /// <summary>
+        /// Gets the static data associated with this certificate.
+        /// </summary>
+        public StaticCertificate StaticData { get; private set; }
 
         /// <summary>
         /// Gets this certificate's id.
@@ -170,6 +159,16 @@ namespace EVEMon.Common.Models
         #region Helper methods and properties  
 
         /// <summary>
+        /// Try to update the certificate's status. 
+        /// </summary>
+        /// <returns>True if the status was updated, false otherwise.</returns>
+        internal bool TryUpdateCertificateStatus()
+        {
+            return m_levels.Where(level => level != null)
+                .Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
+        }
+
+        /// <summary>
         /// Gets all the top-level prerequisite skills.
         /// </summary>
         public IEnumerable<SkillLevel> AllTopPrerequisiteSkills
@@ -187,12 +186,21 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// Gets the lowest untrained.
+        /// Gets the lowest untrained certificate level.
         /// Null if all certificates have been trained.
         /// </summary>
-        public CertificateLevel LowestUntrainedGrade
+        public CertificateLevel LowestUntrainedLevel
         {
-            get { return m_levels.FirstOrDefault(cert => cert.Status != CertificateStatus.Trained); }
+            get { return AllLevel.FirstOrDefault(cert => !cert.IsTrained); }
+        }
+
+        /// <summary>
+        /// Gets the highest trained certificate level.
+        /// Null if no certificates have been trained.
+        /// </summary>
+        public CertificateLevel HighestTrainedLevel
+        {
+            get { return AllLevel.LastOrDefault(cert => cert.IsTrained); }
         }
 
         #endregion

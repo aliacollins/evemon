@@ -780,17 +780,17 @@ namespace EVEMon.Common.Models
         public bool WillGrantEligibilityFor(CertificateLevel certLevel)
         {
             if (certLevel == null)
-                throw new ArgumentNullException("cert");
+                throw new ArgumentNullException("certLevel");
 
-            if (certLevel.Status == CertificateStatus.Trained)
+            if (certLevel.IsTrained)
                 return true;
 
             // We check every prerequisite is trained
-            return !(certLevel.PrerequisiteSkills.Select(
+            return !certLevel.PrerequisiteSkills.Select(
                 skillToTrain => new { skillToTrain, skill = skillToTrain.Skill }).Where(
                     skillToTrain => skillToTrain.skill.Level < skillToTrain.skillToTrain.Level).Where(
                         skillToTrain => !IsPlanned(skillToTrain.skill, skillToTrain.skillToTrain.Level)).Select(
-                            skill => skill.skillToTrain)).Any();
+                            skill => skill.skillToTrain).Any();
         }
 
         #endregion
