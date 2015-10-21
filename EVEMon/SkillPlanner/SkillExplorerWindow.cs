@@ -12,6 +12,8 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 
@@ -697,7 +699,14 @@ namespace EVEMon.SkillPlanner
         private void tsAddLevel_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>
@@ -872,7 +881,14 @@ namespace EVEMon.SkillPlanner
             IPlanOperation operation =
                 m_planWindow.Plan.TryAddSet(
                     entity.Prerequisites.Where(x => listOfActivities.Contains(x.Activity.GetDescription())), entity.Name);
-            PlanHelper.Perform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.Perform(new PlanToOperationForm(operation), window);
         }
 
         /// <summary>
