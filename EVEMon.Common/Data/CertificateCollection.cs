@@ -3,9 +3,10 @@ using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.API;
 
-namespace EVEMon.Common.Models
+namespace EVEMon.Common.Data
 {
     /// <summary>
     /// Represents a collection of certificates

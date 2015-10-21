@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Models;
 
-namespace EVEMon.Common.Models
+namespace EVEMon.Common.Data
 {
     /// <summary>
     /// Represetns a collection of character's certificate class

@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using EVEMon.Common.Attributes;
-using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
 
-namespace EVEMon.Common.Models
+namespace EVEMon.Common.Data
 {
     /// <summary>
     /// Represents a certificate class from a character's point of view.

@@ -196,7 +196,14 @@ namespace EVEMon.SkillPlanner
         private void btnPlan_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = m_plan.TryAddSet(m_skillsToAdd, m_loadoutName);
-            PlanHelper.Perform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.Perform(new PlanToOperationForm(operation), window);
             UpdatePlanStatus();
         }
 
