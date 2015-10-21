@@ -227,31 +227,36 @@ namespace EVEMon.CharacterMonitoring
 
             // Draw background
             g.FillRectangle(e.Index % 2 == 0 ? Brushes.LightGray : Brushes.White, e.Bounds);
-
-
+            
             // Measure texts
             const TextFormatFlags Format = TextFormatFlags.NoPadding | TextFormatFlags.NoClipping;
+            bool hasSkill = (skill.Skill != null) && (skill.Skill != Skill.UnknownSkill);
 
-            Int64 skillPoints = (skill.Skill == null || skill.Skill == Skill.UnknownSkill
-                ? skill.StartSP
-                : skill.Skill.SkillPoints);
-            Int64 skillPointsToNextLevel = (skill.Skill == null || skill.Skill == Skill.UnknownSkill
+            Int64 skillPoints = (skill.Skill != null) && (skill.Level > skill.Skill.Level + 1)
+                ? skill.CurrentSP
+                : !hasSkill
+                    ? skill.StartSP
+                    : skill.Skill.SkillPoints;
+            Int64 skillPointsToNextLevel = !hasSkill
                 ? skill.EndSP
-                : skill.Skill.StaticData.GetPointsRequiredForLevel(
-                    Math.Min(skill.Level, 5)));
+                : skill.Skill.StaticData.GetPointsRequiredForLevel(Math.Min(skill.Level, 5));
+            Int64 pointsLeft = skillPointsToNextLevel - skillPoints;
+            TimeSpan timeSpanFromPoints = !hasSkill
+                ? skill.EndTime.Subtract(DateTime.UtcNow)
+                : skill.Skill.GetTimeSpanForPoints(pointsLeft);
+            string remainingTimeText = timeSpanFromPoints.ToDescriptiveText(DescriptiveTextOptions.SpaceBetween);
 
-            double percentCompleted = e.Index == 0 || skill.Skill != Skill.UnknownSkill
+            double percentCompleted = e.Index == 0 || hasSkill
                 ? skill.PercentCompleted
                 : 0d;
-
-            if (skill.Skill != null && skill.Level > skill.Skill.Level + 1)
-                skillPoints = skill.CurrentSP;
 
             string indexText = String.Format(CultureConstants.DefaultCulture, "{0}. ", e.Index + 1);
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})",
                 (skill.Skill == null ? 0 : skill.Rank));
+            string spPerHourText = String.Format(CultureConstants.DefaultCulture, " SP/Hour: {0}", skill.SkillPointsPerHour);
             string spText = String.Format(CultureConstants.DefaultCulture, "SP: {0:N0}/{1:N0}", skillPoints,
                 skillPointsToNextLevel);
+            string trainingTimeText = String.Format(CultureConstants.DefaultCulture, " Training Time: {0}", remainingTimeText);
             string levelText = String.Format(CultureConstants.DefaultCulture, "Level {0}", skill.Level);
             string pctText = String.Format(CultureConstants.DefaultCulture, "{0}% Done", Math.Floor(percentCompleted));
 
@@ -259,28 +264,37 @@ namespace EVEMon.CharacterMonitoring
             Size skillNameSize = TextRenderer.MeasureText(g, skill.SkillName, m_boldSkillsQueueFont, Size.Empty, Format);
             Size rankTextSize = TextRenderer.MeasureText(g, rankText, m_skillsQueueFont, Size.Empty, Format);
             Size levelTextSize = TextRenderer.MeasureText(g, levelText, m_skillsQueueFont, Size.Empty, Format);
+            Size spPerHourTextSize = TextRenderer.MeasureText(g, spPerHourText, m_skillsQueueFont, Size.Empty, Format);
             Size spTextSize = TextRenderer.MeasureText(g, spText, m_skillsQueueFont, Size.Empty, Format);
+            Size ttTextSize = TextRenderer.MeasureText(g, trainingTimeText, m_skillsQueueFont, Size.Empty, Format);
             Size pctTextSize = TextRenderer.MeasureText(g, pctText, m_skillsQueueFont, Size.Empty, Format);
-
 
             // Draw texts
             Color highlightColor = Color.Black;
 
+            // First line
+            int left = e.Bounds.Left + PadLeft;
+            int top = e.Bounds.Top + PadTop;
             TextRenderer.DrawText(g, indexText, m_boldSkillsQueueFont,
-                new Rectangle(e.Bounds.Left + PadLeft, e.Bounds.Top + PadTop,
-                    indexTextSize.Width + PadLeft, indexTextSize.Height), highlightColor);
-
+                new Rectangle(left, top, indexTextSize.Width + PadLeft, indexTextSize.Height), highlightColor);
+            left += indexTextSize.Width;
             TextRenderer.DrawText(g, skill.SkillName, m_boldSkillsQueueFont,
-                new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width, e.Bounds.Top + PadTop,
-                    skillNameSize.Width + PadLeft, skillNameSize.Height), highlightColor);
+                new Rectangle(left, top, skillNameSize.Width + PadLeft, skillNameSize.Height), highlightColor);
+            left += skillNameSize.Width;
             TextRenderer.DrawText(g, rankText, m_skillsQueueFont,
-                new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width + skillNameSize.Width, e.Bounds.Top + PadTop,
-                    rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
-            TextRenderer.DrawText(g, spText, m_skillsQueueFont,
-                new Rectangle(e.Bounds.Left + PadLeft + indexTextSize.Width,
-                    e.Bounds.Top + PadTop + skillNameSize.Height,
-                    spTextSize.Width + PadLeft, spTextSize.Height), highlightColor);
+                new Rectangle(left, top, rankTextSize.Width + PadLeft, rankTextSize.Height), highlightColor);
 
+            // Second line
+            left = e.Bounds.Left + PadLeft + indexTextSize.Width;
+            top += skillNameSize.Height;
+            TextRenderer.DrawText(g, spText, m_skillsQueueFont,
+                new Rectangle(left, top, spTextSize.Width + PadLeft, spTextSize.Height), highlightColor);
+            left += spTextSize.Width + PadLeft;
+            TextRenderer.DrawText(g, spPerHourText, m_skillsQueueFont,
+                new Rectangle(left, top, spPerHourTextSize.Width + PadLeft, spPerHourTextSize.Height), highlightColor);
+            left += spPerHourTextSize.Width + PadLeft;
+            TextRenderer.DrawText(g, trainingTimeText, m_skillsQueueFont,
+                new Rectangle(left, top, ttTextSize.Width + PadLeft, ttTextSize.Height), highlightColor);
 
             // Boxes
             DrawBoxes(percentCompleted, skill, e);
@@ -288,23 +302,13 @@ namespace EVEMon.CharacterMonitoring
             // Draw progression bar
             DrawProgressionBar(percentCompleted, e);
 
-
             // Draw level and percent texts
             TextRenderer.DrawText(g, levelText, m_skillsQueueFont,
-                new Rectangle(
-                    e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
-                    levelTextSize.Width,
-                    e.Bounds.Top + PadTop,
-                    levelTextSize.Width + PadRight,
-                    levelTextSize.Height), Color.Black);
-
+                new Rectangle(e.Bounds.Right - BoxWidth - PadRight - BoxHPad - levelTextSize.Width,
+                    e.Bounds.Top + PadTop, levelTextSize.Width + PadRight, levelTextSize.Height), highlightColor);
             TextRenderer.DrawText(g, pctText, m_skillsQueueFont,
-                new Rectangle(
-                    e.Bounds.Right - BoxWidth - PadRight - BoxHPad -
-                    pctTextSize.Width,
-                    e.Bounds.Top + PadTop + levelTextSize.Height,
-                    pctTextSize.Width + PadRight,
-                    pctTextSize.Height), Color.Black);
+                new Rectangle(e.Bounds.Right - BoxWidth - PadRight - BoxHPad - pctTextSize.Width,
+                    e.Bounds.Top + PadTop + levelTextSize.Height, pctTextSize.Width + PadRight, pctTextSize.Height), highlightColor);
 
             // Draw the queue color bar
             DrawQueueColorBar(skill, e);
@@ -669,13 +673,9 @@ namespace EVEMon.CharacterMonitoring
             if (skill.Skill == null)
                 return String.Empty;
 
-            Int64 sp = skill.Skill.SkillPoints;
-            int nextLevel = Math.Min(5, skill.Level);
-            double percentCompleted = skill.PercentCompleted;
-
-            if (skill.Level > skill.Skill.Level + 1)
-                sp = skill.CurrentSP;
-
+            Int64 sp = skill.Level > skill.Skill.Level + 1 ? skill.CurrentSP : skill.Skill.SkillPoints;
+            Int32 nextLevel = Math.Min(5, skill.Level);
+            Double percentCompleted = skill.PercentCompleted;
             Int64 nextLevelSP = skill.Skill == Skill.UnknownSkill
                 ? skill.EndSP
                 : skill.Skill.StaticData.GetPointsRequiredForLevel(nextLevel);
@@ -785,7 +785,7 @@ namespace EVEMon.CharacterMonitoring
             toolTip.AppendLine(skill.Skill.Description.WordWrap(100));
             toolTip.AppendFormat(CultureConstants.DefaultCulture, "Primary: {0}, ", skill.Skill.PrimaryAttribute);
             toolTip.AppendFormat(CultureConstants.DefaultCulture, "Secondary: {0} ", skill.Skill.SecondaryAttribute);
-            toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0:N0} SP/hour)", skill.SkillPointsPerHour);
+            toolTip.AppendFormat(CultureConstants.DefaultCulture, "({0} SP/Hour)", skill.SkillPointsPerHour);
         }
 
         /// <summary>
