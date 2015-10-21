@@ -1200,7 +1200,14 @@ namespace EVEMon.SkillPlanner
                 return;
 
             IPlanOperation operation = PrepareSelectionRemoval();
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>
@@ -1810,7 +1817,14 @@ namespace EVEMon.SkillPlanner
                 return;
 
             IPlanOperation operation = menu.Tag as IPlanOperation;
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         #endregion

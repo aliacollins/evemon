@@ -786,7 +786,6 @@
     <Compile Include="SkillPlanner\PlanColumnSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SkillPlanner\PlanHelper.cs" />
     <Compile Include="SkillPlanner\PlanPrioritiesEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>

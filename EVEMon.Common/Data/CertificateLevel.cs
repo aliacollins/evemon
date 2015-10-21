@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Models;
 
-namespace EVEMon.Common.Models
+namespace EVEMon.Common.Data
 {
     /// <summary>
     /// Wraps the informations of a specific level of a certificate

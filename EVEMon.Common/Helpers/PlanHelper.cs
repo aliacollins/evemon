@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
-using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 
-namespace EVEMon.SkillPlanner
+namespace EVEMon.Common.Helpers
 {
     /// <summary>
     /// Helper for the "Plan To" and "Remove" menus.
@@ -18,10 +16,16 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates a regular "Plan to X" menu : text, tag, enable/disable.
         /// </summary>
-        /// <param name="menu"></param>
-        /// <param name="plan"></param>
-        /// <param name="skill"></param>
-        /// <param name="level"></param>
+        /// <param name="menu">The menu.</param>
+        /// <param name="plan">The plan.</param>
+        /// <param name="skill">The skill.</param>
+        /// <param name="level">The level.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// menu
+        /// or
+        /// plan
+        /// </exception>
         public static bool UpdatesRegularPlanToMenu(ToolStripItem menu, Plan plan, Skill skill, int level)
         {
             if (menu == null)
@@ -51,8 +55,8 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Checks whether the given skill level can be planned. Used to enable or disable the "Plan To N" and "Remove" menu options.
         /// </summary>
-        /// <param name="plan"></param>
-        /// <param name="skill"></param>
+        /// <param name="plan">The plan.</param>
+        /// <param name="skill">The skill.</param>
         /// <param name="level">A integer between 0 (remove all entries for this skill) and 5.</param>
         /// <returns></returns>
         private static bool EnablePlanTo(BasePlan plan, Skill skill, int level)
@@ -73,7 +77,7 @@ namespace EVEMon.SkillPlanner
         /// Checks whether the given operation absolutely requires a confirmation from the user.
         /// True when there are dependencies to remove.
         /// </summary>
-        /// <param name="operation"></param>
+        /// <param name="operation">The operation.</param>
         /// <returns></returns>
         public static bool RequiresWindow(IPlanOperation operation)
         {
@@ -89,33 +93,16 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Performs the action for the "Plan To N" and "Remove" menu options, in a silent way whenever possible.
         /// </summary>
-        /// <param name="operation"></param>
-        /// <returns></returns>
-        private static void PerformSilently(IPlanOperation operation)
-        {
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PerformSilently(window, operation);
-        }
-
-        /// <summary>
-        /// Performs the action for the "Plan To N" and "Remove" menu options, in a silent way whenever possible.
-        /// </summary>
-        /// <param name="parentForm"></param>
-        /// <param name="operation"></param>
-        /// <returns></returns>
-        private static void PerformSilently(IWin32Window parentForm, IPlanOperation operation)
+        /// <param name="operationForm">The operation form.</param>
+        /// <param name="parentForm">The parent form.</param>
+        /// <param name="operation">The operation.</param>
+        private static void PerformSilently(Form operationForm, IWin32Window parentForm, IPlanOperation operation)
         {
             if (operation == null)
                 return;
 
             // A window is required
-            if (RequiresWindow(operation) && Perform(parentForm, operation) != DialogResult.OK)
+            if (RequiresWindow(operation) && Perform(operationForm, parentForm) != DialogResult.OK)
                 return;
 
             // Silent way
@@ -125,29 +112,12 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Performs the action for the "Plan To N" and "Remove" menu options.
         /// </summary>
-        /// <param name="operation"></param>
+        /// <param name="operationForm">The operation form.</param>
+        /// <param name="parentForm">The parent form.</param>
         /// <returns></returns>
-        public static void Perform(IPlanOperation operation)
+        public static DialogResult Perform(Form operationForm, IWin32Window parentForm)
         {
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-            
-            Perform(window, operation);
-        }
-
-        /// <summary>
-        /// Performs the action for the "Plan To N" and "Remove" menu options.
-        /// </summary>
-        /// <param name="parentForm"></param>
-        /// <param name="operation"></param>
-        /// <returns></returns>
-        private static DialogResult Perform(IWin32Window parentForm, IPlanOperation operation)
-        {
-            using (PlanToOperationForm window = new PlanToOperationForm(operation))
+            using (Form window = operationForm)
             {
                 window.ShowDialog(parentForm);
                 return window.DialogResult;
@@ -157,20 +127,21 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Selects which type of Perform will be called according to user settings.
         /// </summary>
-        /// <param name="operation"></param>
-        /// <returns></returns>
-        public static void SelectPerform(IPlanOperation operation)
+        /// <param name="operationForm">The operation form.</param>
+        /// <param name="parentForm">The parent form.</param>
+        /// <param name="operation">The operation.</param>
+        public static void SelectPerform(Form operationForm, IWin32Window parentForm, IPlanOperation operation)
         {
             if (operation == null)
                 return;
 
             if (Settings.UI.PlanWindow.UseAdvanceEntryAddition && operation.Type == PlanOperations.Addition)
             {
-                Perform(operation);
+                Perform(operationForm, parentForm);
                 return;
             }
 
-            PerformSilently(operation);
+            PerformSilently(operationForm, parentForm, operation);
         }
     }
 }

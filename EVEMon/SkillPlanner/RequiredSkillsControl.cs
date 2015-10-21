@@ -10,6 +10,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 
@@ -268,7 +269,14 @@ namespace EVEMon.SkillPlanner
             // Add skills to plan
             IPlanOperation operation = m_plan.TryAddSet(m_object.Prerequisites.Where(x => x.Activity.Equals(Activity)),
                                                         m_object.Name);
-            PlanHelper.Perform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.Perform(new PlanToOperationForm(operation), window);
 
             // Refresh display to reflect plan changes
             UpdateDisplay();
@@ -417,7 +425,14 @@ namespace EVEMon.SkillPlanner
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
             IPlanOperation operation = (IPlanOperation)menu.Tag;
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         #endregion
