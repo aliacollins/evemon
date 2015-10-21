@@ -14,6 +14,7 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Resources.Skill_Select;
@@ -1035,7 +1036,14 @@ namespace EVEMon.SkillPlanner
         {
             ToolStripMenuItem levelItem = (ToolStripMenuItem)sender;
             IPlanOperation operation = levelItem.Tag as IPlanOperation;
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>

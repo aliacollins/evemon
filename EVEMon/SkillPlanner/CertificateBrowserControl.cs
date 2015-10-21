@@ -13,6 +13,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 
@@ -450,7 +451,14 @@ namespace EVEMon.SkillPlanner
         private void tsPlanToLevelOne_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelOne);
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>
@@ -461,7 +469,14 @@ namespace EVEMon.SkillPlanner
         private void tsPlanToLevelTwo_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelTwo);
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>
@@ -472,7 +487,14 @@ namespace EVEMon.SkillPlanner
         private void tsPlanToLevelThree_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelThree);
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>
@@ -483,7 +505,14 @@ namespace EVEMon.SkillPlanner
         private void tsPlanToLevelFour_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelFour);
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>
@@ -494,7 +523,14 @@ namespace EVEMon.SkillPlanner
         private void tsPlanToLevelFive_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelFive);
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>

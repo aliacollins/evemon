@@ -9,6 +9,7 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.NotificationWindow;
@@ -437,7 +438,14 @@ namespace EVEMon.SkillPlanner
         private void planToMenu_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         #endregion
