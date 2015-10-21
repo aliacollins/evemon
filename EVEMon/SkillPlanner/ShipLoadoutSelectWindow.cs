@@ -523,7 +523,14 @@ namespace EVEMon.SkillPlanner
         private void btnPlan_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = m_plan.TryAddSet(m_prerequisites, m_selectedLoadout.LoadoutName);
-            PlanHelper.Perform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.Perform(new PlanToOperationForm(operation), window);
             UpdatePlanningControls();
         }
 

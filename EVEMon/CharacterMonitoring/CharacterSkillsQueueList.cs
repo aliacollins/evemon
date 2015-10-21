@@ -857,7 +857,14 @@ namespace EVEMon.CharacterMonitoring
             KeyValuePair<Plan, SkillLevel> tag = (KeyValuePair<Plan, SkillLevel>)planItem.Tag;
 
             IPlanOperation operation = tag.Key.TryPlanTo(tag.Value.Skill, tag.Value.Level);
-            PlanHelper.SelectPerform(operation);
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>

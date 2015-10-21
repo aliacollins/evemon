@@ -7,9 +7,11 @@ using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 
@@ -613,18 +615,25 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsmAddToPlan_Click(object sender, EventArgs e)
         {
-            var cert = treeView.SelectedNode.Tag as CertificateLevel;
+            CertificateLevel cert = treeView.SelectedNode.Tag as CertificateLevel;
+            IPlanOperation operation;
+
             if (cert != null)
-            {
-                IPlanOperation operation = m_plan.TryPlanTo(cert);
-                PlanHelper.SelectPerform(operation);
-            }
+                operation = m_plan.TryPlanTo(cert);
             else
             {
                 SkillLevel prereq = (SkillLevel)treeView.SelectedNode.Tag;
-                IPlanOperation operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
-                PlanHelper.SelectPerform(operation);
+                operation = m_plan.TryPlanTo(prereq.Skill, prereq.Level);
             }
+
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         /// <summary>
