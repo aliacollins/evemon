@@ -28,6 +28,7 @@ namespace EVEMon.Common.Data
                 return;
 
             CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
+
             Groups = new Collection<StaticCertificateGroup>();
 
             foreach (SerializableCertificateGroup srcGroup in datafile.Groups)
@@ -89,7 +90,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static StaticCertificate GetCertificate(int id)
+        public static StaticCertificate GetCertificateByID(int id)
         {
             return s_certificatesByID[id];
         }
@@ -99,7 +100,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static StaticCertificateClass GetCertificateClass(string name)
+        public static StaticCertificateClass GetCertificateClassByName(string name)
         {
             return s_classesByName[name];
         }

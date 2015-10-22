@@ -1,45 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
 {
     /// <summary>
-    /// The static list of masteries
+    /// The static list of the masteries.
     /// </summary>
-    public class StaticMasteries
+    public static class StaticMasteries
     {
+        private static readonly Dictionary<int, MasteryShip> s_masteryShipsByID = new Dictionary<int, MasteryShip>();
+
+
         #region Initialization
 
+        /// <summary>
+        /// Initialize static masteries.
+        /// </summary>
         internal static void Load()
         {
-            Masteries = new Collection<StaticMasterieShip>();
-
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.MasteriesDatafile)))
                 return;
 
             MasteriesDatafile datafile = Util.DeserializeDatafile<MasteriesDatafile>(DatafileConstants.MasteriesDatafile);
 
-            foreach (var mastery in datafile.MasteryShips)
+            foreach (SerializableMasteryShip ship in datafile.MasteryShips)
             {
-                Masteries.Add(new StaticMasterieShip(mastery));
-            }
-
-            // Set the certificate class for every 
-            foreach (var masteryCertificate in Masteries.SelectMany(m => m.SelectMany(s => s.Select(c => c))))
-            {
-                masteryCertificate.CompleteInitialization();
+                MasteryShip masteryShip = new MasteryShip(ship);
+                s_masteryShipsByID[ship.ID] = masteryShip;
             }
         }
 
         #endregion
 
-        #region Properties
-        public static Collection<StaticMasterieShip> Masteries { get; private set; }
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets an enumeration of all the mastery ships.
+        /// </summary>
+        public static IEnumerable<MasteryShip> AllMasteryShips
+        {
+            get { return s_masteryShipsByID.Values; }
+        }
+
+        /// <summary>
+        /// Gets the mastery ship with the provided ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        public static MasteryShip GetMasteryShipByID(int id)
+        {
+            return s_masteryShipsByID[id];
+        }
+
         #endregion
 
     }

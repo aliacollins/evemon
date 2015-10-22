@@ -80,13 +80,16 @@ namespace EVEMon.Common
                 APIKeys = new GlobalAPIKeyCollection();
                 EVEServer = new EveServer();
 
-                // Load static datas (min order to follow : skills before anything else, items before certs)
+                // Load static data
+                // (min order to follow : 
+                // skills before anything else,
+                // items before certs,
+                // certs before masteries)
                 Trace("Load Datafiles - begin");
                 StaticProperties.Load();
                 StaticSkills.Load();
                 StaticItems.Load();
                 StaticCertificates.Load();
-                // Load Masteries after the certificates, because they are required for the masteries
                 StaticMasteries.Load();
                 StaticBlueprints.Load();
                 Trace("Load Datafiles - done");
