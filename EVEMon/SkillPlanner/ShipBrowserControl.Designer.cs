@@ -31,6 +31,7 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipBrowserControl));
             this.lblBattleclinic = new System.Windows.Forms.LinkLabel();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.lvShipProperties = new System.Windows.Forms.ListView();
@@ -44,6 +45,15 @@ namespace EVEMon.SkillPlanner
             this.tbCntrlShipInformation = new System.Windows.Forms.TabControl();
             this.tbPgShipDetails = new System.Windows.Forms.TabPage();
             this.tbPgShipMastery = new System.Windows.Forms.TabPage();
+            this.trVwshipMasteries = new EVEMon.SkillPlanner.OverridenTreeView();
+            this.tlStrpPlanTo = new System.Windows.Forms.ToolStrip();
+            this.spltCntnrMasteries = new System.Windows.Forms.SplitContainer();
+            this.tsPlanToMenu = new System.Windows.Forms.ToolStripDropDownButton();
+            this.tsPlanToLevelOne = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelTwo = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelThree = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelFour = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsPlanToLevelFive = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).BeginInit();
             this.scObjectBrowser.Panel1.SuspendLayout();
             this.scObjectBrowser.Panel2.SuspendLayout();
@@ -64,6 +74,12 @@ namespace EVEMon.SkillPlanner
             this.gbRequiredSkills.SuspendLayout();
             this.tbCntrlShipInformation.SuspendLayout();
             this.tbPgShipDetails.SuspendLayout();
+            this.tbPgShipMastery.SuspendLayout();
+            this.tlStrpPlanTo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spltCntnrMasteries)).BeginInit();
+            this.spltCntnrMasteries.Panel1.SuspendLayout();
+            this.spltCntnrMasteries.Panel2.SuspendLayout();
+            this.spltCntnrMasteries.SuspendLayout();
             this.SuspendLayout();
             // 
             // scObjectBrowser
@@ -241,6 +257,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tbPgShipMastery
             // 
+            this.tbPgShipMastery.Controls.Add(this.spltCntnrMasteries);
             this.tbPgShipMastery.Location = new System.Drawing.Point(4, 22);
             this.tbPgShipMastery.Name = "tbPgShipMastery";
             this.tbPgShipMastery.Padding = new System.Windows.Forms.Padding(3);
@@ -248,6 +265,92 @@ namespace EVEMon.SkillPlanner
             this.tbPgShipMastery.TabIndex = 1;
             this.tbPgShipMastery.Text = "Mastery";
             this.tbPgShipMastery.UseVisualStyleBackColor = true;
+            // 
+            // trVwshipMasteries
+            // 
+            this.trVwshipMasteries.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trVwshipMasteries.Location = new System.Drawing.Point(0, 0);
+            this.trVwshipMasteries.Name = "trVwshipMasteries";
+            this.trVwshipMasteries.Size = new System.Drawing.Size(465, 276);
+            this.trVwshipMasteries.TabIndex = 0;
+            // 
+            // tlStrpPlanTo
+            // 
+            this.tlStrpPlanTo.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsPlanToMenu});
+            this.tlStrpPlanTo.Location = new System.Drawing.Point(0, 0);
+            this.tlStrpPlanTo.Name = "tlStrpPlanTo";
+            this.tlStrpPlanTo.Size = new System.Drawing.Size(465, 25);
+            this.tlStrpPlanTo.TabIndex = 1;
+            this.tlStrpPlanTo.Text = "toolStrip1";
+            // 
+            // spltCntnrMasteries
+            // 
+            this.spltCntnrMasteries.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spltCntnrMasteries.IsSplitterFixed = true;
+            this.spltCntnrMasteries.Location = new System.Drawing.Point(3, 3);
+            this.spltCntnrMasteries.Name = "spltCntnrMasteries";
+            this.spltCntnrMasteries.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // spltCntnrMasteries.Panel1
+            // 
+            this.spltCntnrMasteries.Panel1.Controls.Add(this.tlStrpPlanTo);
+            // 
+            // spltCntnrMasteries.Panel2
+            // 
+            this.spltCntnrMasteries.Panel2.Controls.Add(this.trVwshipMasteries);
+            this.spltCntnrMasteries.Size = new System.Drawing.Size(465, 308);
+            this.spltCntnrMasteries.SplitterDistance = 28;
+            this.spltCntnrMasteries.TabIndex = 2;
+            // 
+            // tsPlanToMenu
+            // 
+            this.tsPlanToMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsPlanToLevelOne,
+            this.tsPlanToLevelTwo,
+            this.tsPlanToLevelThree,
+            this.tsPlanToLevelFour,
+            this.tsPlanToLevelFive});
+            this.tsPlanToMenu.Image = ((System.Drawing.Image)(resources.GetObject("tsPlanToMenu.Image")));
+            this.tsPlanToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsPlanToMenu.Name = "tsPlanToMenu";
+            this.tsPlanToMenu.Size = new System.Drawing.Size(82, 22);
+            this.tsPlanToMenu.Text = "Plan to...";
+            // 
+            // tsPlanToLevelOne
+            // 
+            this.tsPlanToLevelOne.Name = "tsPlanToLevelOne";
+            this.tsPlanToLevelOne.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelOne.Text = "&Level I";
+            this.tsPlanToLevelOne.Click += new System.EventHandler(this.tsPlanToLevelOne_Click);
+            // 
+            // tsPlanToLevelTwo
+            // 
+            this.tsPlanToLevelTwo.Name = "tsPlanToLevelTwo";
+            this.tsPlanToLevelTwo.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelTwo.Text = "&Level II";
+            this.tsPlanToLevelTwo.Click += new System.EventHandler(this.tsPlanToLevelTwo_Click);
+            // 
+            // tsPlanToLevelThree
+            // 
+            this.tsPlanToLevelThree.Name = "tsPlanToLevelThree";
+            this.tsPlanToLevelThree.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelThree.Text = "&Level III";
+            this.tsPlanToLevelThree.Click += new System.EventHandler(this.tsPlanToLevelThree_Click);
+            // 
+            // tsPlanToLevelFour
+            // 
+            this.tsPlanToLevelFour.Name = "tsPlanToLevelFour";
+            this.tsPlanToLevelFour.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFour.Text = "&Level IV";
+            this.tsPlanToLevelFour.Click += new System.EventHandler(this.tsPlanToLevelFour_Click);
+            // 
+            // tsPlanToLevelFive
+            // 
+            this.tsPlanToLevelFive.Name = "tsPlanToLevelFive";
+            this.tsPlanToLevelFive.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFive.Text = "&Level V";
+            this.tsPlanToLevelFive.Click += new System.EventHandler(this.tsPlanToLevelFive_Click);
             // 
             // ShipBrowserControl
             // 
@@ -278,6 +381,14 @@ namespace EVEMon.SkillPlanner
             this.gbRequiredSkills.ResumeLayout(false);
             this.tbCntrlShipInformation.ResumeLayout(false);
             this.tbPgShipDetails.ResumeLayout(false);
+            this.tbPgShipMastery.ResumeLayout(false);
+            this.tlStrpPlanTo.ResumeLayout(false);
+            this.tlStrpPlanTo.PerformLayout();
+            this.spltCntnrMasteries.Panel1.ResumeLayout(false);
+            this.spltCntnrMasteries.Panel1.PerformLayout();
+            this.spltCntnrMasteries.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.spltCntnrMasteries)).EndInit();
+            this.spltCntnrMasteries.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -298,5 +409,14 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.TabControl tbCntrlShipInformation;
         private System.Windows.Forms.TabPage tbPgShipDetails;
         private System.Windows.Forms.TabPage tbPgShipMastery;
+        private OverridenTreeView trVwshipMasteries;
+        private System.Windows.Forms.SplitContainer spltCntnrMasteries;
+        private System.Windows.Forms.ToolStrip tlStrpPlanTo;
+        private System.Windows.Forms.ToolStripDropDownButton tsPlanToMenu;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelOne;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelTwo;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelThree;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelFour;
+        private System.Windows.Forms.ToolStripMenuItem tsPlanToLevelFive;
     }
 }
