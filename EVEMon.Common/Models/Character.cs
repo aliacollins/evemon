@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
@@ -221,16 +220,6 @@ namespace EVEMon.Common.Models
         /// Gets the remote station date.
         /// </summary>
         public DateTime RemoteStationDate { get; private set; }
-
-        /// <summary>
-        /// Gets the jump clones.
-        /// </summary>
-        //public JumpCloneCollection JumpClones { get; private set; }
-
-        /// <summary>
-        /// Gets the jump clone implants.
-        /// </summary>
-        //public JumpCloneImplantCollection JumpCloneImplants { get; private set; }
 
         /// <summary>
         /// Gets or sets the jump activation date.
@@ -618,12 +607,6 @@ namespace EVEMon.Common.Models
             JumpFatigueDate = serial.JumpFatigueDate;
             JumpLastUpdateDate = serial.JumpLastUpdateDate;
             Balance = serial.Balance;
-
-            //// JumpClones
-            //JumpClones.Import(serial.JumpClones);
-
-            //// JumpCloneImplants
-            //JumpCloneImplants.Import(serial.JumpCloneImplants);
 
             if (serial is SerializableSettingsCharacter)
             {
