@@ -51,7 +51,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the certificates granted to that character.
         /// </summary>
-        public IEnumerable<CertificateLevel> GrantedCertificates
+        public IEnumerable<CertificateLevel> TrainedCertificates
         {
             get { return FilterByStatus(CertificateStatus.Trained); }
         }

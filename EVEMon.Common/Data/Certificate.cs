@@ -43,12 +43,12 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        #region Core properties
+        #region Core Properties
 
         /// <summary>
         /// Gets the static data associated with this certificate.
         /// </summary>
-        public StaticCertificate StaticData { get; private set; }
+        private StaticCertificate StaticData { get; set; }
 
         /// <summary>
         /// Gets this certificate's id.
@@ -153,21 +153,6 @@ namespace EVEMon.Common.Data
             get { return m_levels.Where(level => level != null); }
         }
 
-        #endregion
-
-
-        #region Helper methods and properties  
-
-        /// <summary>
-        /// Try to update the certificate's status. 
-        /// </summary>
-        /// <returns>True if the status was updated, false otherwise.</returns>
-        internal bool TryUpdateCertificateStatus()
-        {
-            return m_levels.Where(level => level != null)
-                .Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
-        }
-
         /// <summary>
         /// Gets all the top-level prerequisite skills.
         /// </summary>
@@ -201,6 +186,30 @@ namespace EVEMon.Common.Data
         public CertificateLevel HighestTrainedLevel
         {
             get { return AllLevel.LastOrDefault(cert => cert.IsTrained); }
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets the certificate level.
+        /// </summary>
+        /// <param name="level">The level.</param>
+        /// <returns></returns>
+        public CertificateLevel GetCertificateLevel(int level)
+        {
+            return AllLevel.FirstOrDefault(x => (int)x.Level == level);
+        }
+
+        /// <summary>
+        /// Try to update the certificate's status. 
+        /// </summary>
+        /// <returns>True if the status was updated, false otherwise.</returns>
+        internal bool TryUpdateCertificateStatus()
+        {
+            return AllLevel.Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
         }
 
         #endregion

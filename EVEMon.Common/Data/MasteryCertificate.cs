@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -17,7 +20,7 @@ namespace EVEMon.Common.Data
         internal MasteryCertificate(Mastery masteryLevel, SerializableMasteryCertificate src)
         {
             MasteryLevel = masteryLevel;
-
+            
             Certificate = StaticCertificates.GetCertificateByID(src.ID);
         }
 
@@ -35,6 +38,20 @@ namespace EVEMon.Common.Data
         /// Gets or sets the certificate.
         /// </summary>
         public StaticCertificate Certificate { get; set; }
+
+        /// <summary>
+        /// Gets this certificate's representation for the provided character.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">character</exception>
+        public Certificate ToCharacter(Character character)
+        {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
+            return character.Certificates.FirstOrDefault(x => x.ID == Certificate.ID);
+        }
 
         #endregion
 

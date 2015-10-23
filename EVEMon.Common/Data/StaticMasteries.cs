@@ -51,12 +51,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static MasteryShip GetMasteryShipByID(int id)
         {
-            if (s_masteryShipsByID.ContainsKey(id))
-            {
-                return s_masteryShipsByID[id];
-            }
-
-            return null;
+            return s_masteryShipsByID[id];
         }
 
         #endregion

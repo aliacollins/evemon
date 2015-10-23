@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Serialization.Datafiles;
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Factories;
@@ -451,6 +452,32 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
+        #region Masteries
+
+        /// <summary>
+        /// Adds the provided mastery's prerequisites to the plan.
+        /// </summary>
+        /// <param name="masteryLevel">The mastery level.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">masteryLevel</exception>
+        public IPlanOperation TryPlanTo(Mastery masteryLevel)
+        {
+            if (masteryLevel == null)
+                throw new ArgumentNullException("masteryLevel");
+
+            IList<CertificateLevel> certificatesOfMasteryLevel =
+                masteryLevel.Select(mcert => mcert.ToCharacter((Character)Character).GetCertificateLevel(masteryLevel.Level))
+                    .ToList();
+
+            return TryAddSet(certificatesOfMasteryLevel.SelectMany(x => x.PrerequisiteSkills),
+                String.Format(CultureConstants.DefaultCulture, "{0} Mastery {1}",
+                    masteryLevel.MasteryShip.Ship.Name, masteryLevel));
+        }
+
+        #endregion
+
+
         #region Certificates
 
         /// <summary>
@@ -458,13 +485,15 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="certificateLevel">The certificate level.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException">certificate</exception>
+        /// <exception cref="System.ArgumentNullException">certificateLevel</exception>
         public IPlanOperation TryPlanTo(CertificateLevel certificateLevel)
         {
             if (certificateLevel == null)
                 throw new ArgumentNullException("certificateLevel");
 
-            return TryAddSet(certificateLevel.PrerequisiteSkills, certificateLevel.ToString());
+            return TryAddSet(certificateLevel.PrerequisiteSkills,
+                String.Format(CultureConstants.DefaultCulture, "{0} {1}",
+                    certificateLevel.Certificate.Name, certificateLevel));
         }
 
         #endregion

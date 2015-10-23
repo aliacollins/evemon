@@ -305,7 +305,7 @@ namespace EVEMon.SkillPlanner
         /// Opens this certificate in the certificate browser and switches to this tab.
         /// </summary>
         /// <param name="certificateLevel">The certificate level.</param>
-        public void ShowCertInBrowser(CertificateLevel certificateLevel)
+        public void ShowCertificateInBrowser(CertificateLevel certificateLevel)
         {
             tabControl.SelectedTab = tpCertificateBrowser;
             certBrowser.SelectedCertificateLevel(certificateLevel);

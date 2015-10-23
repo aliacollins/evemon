@@ -1,4 +1,8 @@
-﻿using EVEMon.Common.Collections;
+﻿using System;
+using System.Collections.Generic;
+using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -47,6 +51,17 @@ namespace EVEMon.Common.Data
         public int Level { get; private set; }
 
         #endregion
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt((Level)));
+        }
 
     }
 }

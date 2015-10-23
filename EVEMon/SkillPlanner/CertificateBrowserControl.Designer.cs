@@ -38,7 +38,7 @@ namespace EVEMon.SkillPlanner
             this.certDisplayCtl = new EVEMon.SkillPlanner.CertificateTreeDisplayControl();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.lblLevel5Time = new System.Windows.Forms.Label();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.tspControl = new System.Windows.Forms.ToolStrip();
             this.tslbTextForEligibility = new System.Windows.Forms.ToolStripLabel();
             this.tslbEligible = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -66,7 +66,7 @@ namespace EVEMon.SkillPlanner
             this.rightSplitContainer.Panel1.SuspendLayout();
             this.rightSplitContainer.SuspendLayout();
             this.panelHeader.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.tspControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -149,7 +149,7 @@ namespace EVEMon.SkillPlanner
             // panelHeader
             // 
             this.panelHeader.Controls.Add(this.lblLevel5Time);
-            this.panelHeader.Controls.Add(this.toolStrip1);
+            this.panelHeader.Controls.Add(this.tspControl);
             this.panelHeader.Controls.Add(this.pictureBox1);
             this.panelHeader.Controls.Add(this.lblCategory);
             this.panelHeader.Controls.Add(this.textboxDescription);
@@ -173,20 +173,19 @@ namespace EVEMon.SkillPlanner
             this.lblLevel5Time.TabIndex = 29;
             this.lblLevel5Time.Text = "Level V : 11d, 6h, 33m, 3s";
             // 
-            // toolStrip1
+            // tspControl
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tspControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tspControl.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.tspControl.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tslbTextForEligibility,
             this.tslbEligible,
             this.toolStripSeparator1,
             this.tsPlanToMenu});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 108);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(588, 25);
-            this.toolStrip1.TabIndex = 28;
-            this.toolStrip1.Text = "toolStrip1";
+            this.tspControl.Location = new System.Drawing.Point(0, 108);
+            this.tspControl.Name = "tspControl";
+            this.tspControl.Size = new System.Drawing.Size(588, 25);
+            this.tspControl.TabIndex = 28;
             // 
             // tslbTextForEligibility
             // 
@@ -223,35 +222,35 @@ namespace EVEMon.SkillPlanner
             // tsPlanToLevelOne
             // 
             this.tsPlanToLevelOne.Name = "tsPlanToLevelOne";
-            this.tsPlanToLevelOne.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelOne.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelOne.Text = "&Level I";
             this.tsPlanToLevelOne.Click += new System.EventHandler(this.tsPlanToLevelOne_Click);
             // 
             // tsPlanToLevelTwo
             // 
             this.tsPlanToLevelTwo.Name = "tsPlanToLevelTwo";
-            this.tsPlanToLevelTwo.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelTwo.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelTwo.Text = "&Level II";
             this.tsPlanToLevelTwo.Click += new System.EventHandler(this.tsPlanToLevelTwo_Click);
             // 
             // tsPlanToLevelThree
             // 
             this.tsPlanToLevelThree.Name = "tsPlanToLevelThree";
-            this.tsPlanToLevelThree.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelThree.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelThree.Text = "&Level III";
             this.tsPlanToLevelThree.Click += new System.EventHandler(this.tsPlanToLevelThree_Click);
             // 
             // tsPlanToLevelFour
             // 
             this.tsPlanToLevelFour.Name = "tsPlanToLevelFour";
-            this.tsPlanToLevelFour.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFour.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelFour.Text = "&Level IV";
             this.tsPlanToLevelFour.Click += new System.EventHandler(this.tsPlanToLevelFour_Click);
             // 
             // tsPlanToLevelFive
             // 
             this.tsPlanToLevelFive.Name = "tsPlanToLevelFive";
-            this.tsPlanToLevelFive.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFive.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelFive.Text = "&Level V";
             this.tsPlanToLevelFive.Click += new System.EventHandler(this.tsPlanToLevelFive_Click);
             // 
@@ -360,8 +359,8 @@ namespace EVEMon.SkillPlanner
             this.rightSplitContainer.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.tspControl.ResumeLayout(false);
+            this.tspControl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -380,7 +379,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Label lblLevel1Time;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip tspControl;
         private System.Windows.Forms.ToolStripLabel tslbTextForEligibility;
         private System.Windows.Forms.ToolStripLabel tslbEligible;
         private System.Windows.Forms.ToolStripDropDownButton tsPlanToMenu;

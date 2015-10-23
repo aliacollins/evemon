@@ -64,14 +64,25 @@ namespace EVEMon.Common.Data
         public IEnumerable<SkillLevel> PrerequisiteSkills { get; private set; }
 
         /// <summary>
-        /// Gets true whether the certificate is granted.
+        /// Gets true whether the certificate is trained.
         /// </summary>
         /// <value>
-        /// <c>true</c> if this instance is granted; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is trained; otherwise, <c>false</c>.
         /// </value>
         public bool IsTrained
         {
             get { return Status == CertificateStatus.Trained; }
+        }
+
+        /// <summary>
+        /// Gets true whether the certificate is partially trained.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is partilly trained; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsPartiallyTrained
+        {
+            get { return Status == CertificateStatus.PartiallyTrained; }
         }
 
         /// <summary>

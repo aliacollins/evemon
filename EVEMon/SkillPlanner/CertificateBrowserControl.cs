@@ -392,24 +392,13 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
         {
-            var certLevel = certDisplayCtl.SelectedCertificateLevel;
             CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
 
             if (certClass == null)
                 return;
 
-            // No certificate or not one of the roots ? Then, we display the description for the lowest grade cert
-            if (certLevel == null || certLevel.Certificate.Class != certClass)
-            {
-                textboxDescription.Text = certClass.Certificate.Description;
-                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
-            }
-                // So, one of our cert class's grades has been selected, we use its description
-            else
-            {
-                textboxDescription.Text = certLevel.Certificate.Description;
-                lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
-            }
+            textboxDescription.Text = certClass.Certificate.Description;
+            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
         }
 
         #endregion
