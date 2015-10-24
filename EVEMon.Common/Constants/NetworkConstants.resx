@@ -553,4 +553,7 @@
   <data name="EVEMonTwitter" xml:space="preserve">
     <value>https://twitter.com/EVEMon</value>
   </data>
+  <data name="GoogleAnalyticsUrl" xml:space="preserve">
+    <value>https://ssl.google-analytics.com/collect</value>
+  </data>
 </root>
