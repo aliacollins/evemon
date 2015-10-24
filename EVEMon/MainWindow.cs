@@ -6,7 +6,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -139,6 +138,9 @@ namespace EVEMon
             // Check with BattleClinic the local clock is synchronized
             CheckTimeSynchronization();
 
+            // Notify Gooogle Analytics about start up
+            TrackStartUp();
+
             trayIcon.Text = Application.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
@@ -167,7 +169,25 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Check for time synchronization, or reschedule it for later if no connection is available.
+        /// Tracks the start up via Google Analytics,
+        /// or reschedule it for later if no connection is available.
+        /// </summary>
+        private void TrackStartUp()
+        {
+            // Sent notification
+            if (NetworkMonitor.IsNetworkAvailable)
+            {
+                GAnalyticsTracker.TrackEventAsync(GetType(), "ApplicationLifeCycle", "Start");
+                return;
+            }
+
+            // Reschedule later otherwise
+            Dispatcher.Schedule(TimeSpan.FromMinutes(1), TrackStartUp);
+        }
+
+        /// <summary>
+        /// Check for time synchronization,
+        /// or reschedule it for later if no connection is available.
         /// </summary>
         private void CheckTimeSynchronization()
         {

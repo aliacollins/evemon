@@ -1204,6 +1204,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://ssl.google-analytics.com/collect.
+        /// </summary>
+        public static string GoogleAnalyticsUrl {
+            get {
+                return ResourceManager.GetString("GoogleAnalyticsUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://www.google.com/calendar/feeds/default/private/full.
         /// </summary>
         public static string GoogleCalendarURL {
