@@ -178,6 +178,7 @@
     <Compile Include="Enumerations\TransactionType.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
+    <Compile Include="Helpers\GAnalyticsTracker.cs" />
     <Compile Include="Helpers\PlanHelper.cs" />
     <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
     <Compile Include="Helpers\ApiTesterUIHelper.cs" />
