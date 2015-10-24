@@ -34,7 +34,6 @@ namespace EVEMon.SkillPlanner
 
         private Plan m_plan;
         private Character m_character;
-        private MasteryShip m_masteryShip;
         private Font m_boldFont;
 
         private bool m_allExpanded;
@@ -84,13 +83,13 @@ namespace EVEMon.SkillPlanner
         [Browsable(false)]
         public Item Ship
         {
-            get { return m_masteryShip != null ? m_masteryShip.Ship : null; }
+            get { return MasteryShip != null ? MasteryShip.Ship : null; }
             set
             {
-                if (value == null || (m_masteryShip != null && value.ID == m_masteryShip.Ship.ID))
+                if (value == null || (MasteryShip != null && value.ID == MasteryShip.Ship.ID))
                     return;
 
-                m_masteryShip = StaticMasteries.GetMasteryShipByID(value.ID);
+                MasteryShip = StaticMasteries.GetMasteryShipByID(value.ID);
                 UpdateTree();
             }
         }
@@ -114,6 +113,15 @@ namespace EVEMon.SkillPlanner
                 }
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Browsable(false)]
+        public MasteryShip MasteryShip
+        {
+            get; private set;
         }
 
         #endregion
@@ -274,13 +282,13 @@ namespace EVEMon.SkillPlanner
                 treeView.Nodes.Clear();
 
                 // No update when not fully initialized
-                if (m_character == null || m_masteryShip == null)
+                if (m_character == null || MasteryShip == null)
                     return;
 
                 // Create the nodes when not done, yet
                 if (treeView.Nodes.Count == 0)
                 {
-                    foreach (Mastery masteryLevel in m_masteryShip)
+                    foreach (Mastery masteryLevel in MasteryShip)
                     {
                         TreeNode node = CreateNode(masteryLevel);
                         treeView.Nodes.Add(node);

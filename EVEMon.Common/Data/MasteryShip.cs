@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -29,8 +32,41 @@ namespace EVEMon.Common.Data
             }
         }
 
+        public void TryUpdateCertificateStatus(Character character)
+        {
+            bool trained = true;
+            int highestLevel = 0;
+
+            // Scan prerequisite skills
+            foreach (var mastery in Items)
+            {
+                trained = true;
+                foreach (var skillLevel in mastery.SelectMany(cert => cert.Certificate.PrerequisiteSkills.Where(level => level.Key == (CertificateGrade)mastery.Level).SelectMany(level => level.Value)))
+                {
+                    var charSkill = character.Skills.FirstOrDefault(s => s.ID == skillLevel.Skill.ID);
+
+                    if(charSkill == null)
+                    {                        
+                        break;
+                    }
+
+                    // Trained only if the skill's level is greater or equal than the minimum level
+                    trained &= (charSkill.Level >= skillLevel.Level);
+                }
+
+                if(trained)
+                {
+                    highestLevel = mastery.Level;
+                }
+            }
+
+            HighestTrainedLevel = Items.FirstOrDefault(m => m.Level == highestLevel);            
+        }
+
+        public Mastery HighestTrainedLevel { get; private set; }
+
         #endregion
-        
+
 
         #region Public Properties
 
