@@ -32,7 +32,12 @@ namespace EVEMon.Common.Data
             }
         }
 
-        public void TryUpdateCertificateStatus(Character character)
+        /// <summary>
+        /// Try to update the status of the mastery level of the ship
+        /// </summary>
+        /// <param name="character">The character whos mastery level should be determined</param>
+        /// <returns>The highest trained mastery level</returns>
+        public Mastery GetHighestTrainedMastery(Character character)
         {
             bool trained = true;
             int highestLevel = 0;
@@ -60,10 +65,8 @@ namespace EVEMon.Common.Data
                 }
             }
 
-            HighestTrainedLevel = Items.FirstOrDefault(m => m.Level == highestLevel);            
+            return Items.FirstOrDefault(m => m.Level == highestLevel);            
         }
-
-        public Mastery HighestTrainedLevel { get; private set; }
 
         #endregion
 

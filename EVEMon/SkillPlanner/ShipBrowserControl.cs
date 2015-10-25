@@ -55,26 +55,51 @@ namespace EVEMon.SkillPlanner
             ListViewExporter.CreateCSV(PropertiesList, true);
         }
 
+        /// <summary>
+        /// Adds the skills to the plan, which are required to achive the mastery level one for the current ship
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsPlanToLevelOne_Click(object sender, EventArgs e)
         {
             PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 1));
         }
 
+        /// <summary>
+        /// Adds the skills to the plan, which are required to achive the mastery level one for the current ship
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsPlanToLevelTwo_Click(object sender, EventArgs e)
         {
             PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 2));
         }
 
+        /// <summary>
+        /// Adds the skills to the plan, which are required to achive the mastery level three for the current ship
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsPlanToLevelThree_Click(object sender, EventArgs e)
         {
             PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 3));
         }
 
+        /// <summary>
+        /// Adds the skills to the plan, which are required to achive the mastery level four for the current ship
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsPlanToLevelFour_Click(object sender, EventArgs e)
         {
             PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 4));
         }
 
+        /// <summary>
+        /// Adds the skills to the plan, which are required to achive the mastery level five for the current ship
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tsPlanToLevelFive_Click(object sender, EventArgs e)
         {
             PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 5));
@@ -169,6 +194,10 @@ namespace EVEMon.SkillPlanner
 
         #region Helper Methods
 
+        /// <summary>
+        /// Adds all skills required to achieve the mastery to the plan
+        /// </summary>
+        /// <param name="mastery">The master that should be achived</param>
         private void PlanTo(Mastery mastery)
         {
             IPlanOperation operation = Plan.TryPlanTo(mastery);
@@ -208,7 +237,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Update the training status of each mastery level
-            masteryShip.TryUpdateCertificateStatus((Character)Plan.Character);
+            Mastery highestTrainedLevel = masteryShip.GetHighestTrainedMastery((Character)Plan.Character);
 
             // First we search the highest eligible certificate after this plan
             IEnumerable<Mastery> eligibleMasteryLevel = masteryShip.TakeWhile(masteryLevel => Plan.WillGrantEligibilityFor(masteryLevel)).ToList();
@@ -223,13 +252,13 @@ namespace EVEMon.SkillPlanner
                 lastEligibleMasteryLevel = eligibleMasteryLevel.Last();
                 tslbEligible.Text = lastEligibleMasteryLevel.ToString();
 
-                if (masteryShip.HighestTrainedLevel == null)
+                if (highestTrainedLevel == null)
                 {
                     tslbEligible.Text += @" (improved from ""none"")";
                 }
-                else if (lastEligibleMasteryLevel.Level > masteryShip.HighestTrainedLevel.Level)
+                else if (lastEligibleMasteryLevel.Level > highestTrainedLevel.Level)
                 {
-                    tslbEligible.Text += string.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")", masteryShip.HighestTrainedLevel);
+                    tslbEligible.Text += string.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")", highestTrainedLevel);
                 }
                 else
                 {
