@@ -6,6 +6,7 @@ using System.Text;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Net;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Helpers
 {
@@ -41,9 +42,19 @@ namespace EVEMon.Common.Helpers
             s_parameters.ScreenName = type.Name;
             s_parameters.EventCategory = category;
             s_parameters.EventAction = action;
-            
-            HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
-                (e, args) => { }, null, HttpMethod.Post, postdata: BuildQueryString());
+
+            // Sent notification
+            if (NetworkMonitor.IsNetworkAvailable)
+            {
+                HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
+                    (e, args) => { }, null, HttpMethod.Post, postdata: BuildQueryString());
+
+                Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, action));
+                return;
+            }
+
+            // Reschedule later otherwise
+            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action));
         }
 
         /// <summary>
