@@ -174,15 +174,7 @@ namespace EVEMon
         /// </summary>
         private void TrackStartUp()
         {
-            // Sent notification
-            if (NetworkMonitor.IsNetworkAvailable)
-            {
-                GAnalyticsTracker.TrackEventAsync(GetType(), "ApplicationLifeCycle", "Start");
-                return;
-            }
-
-            // Reschedule later otherwise
-            Dispatcher.Schedule(TimeSpan.FromMinutes(1), TrackStartUp);
+            GAnalyticsTracker.TrackEventAsync(GetType(), "ApplicationLifeCycle", "Start");
         }
 
         /// <summary>
