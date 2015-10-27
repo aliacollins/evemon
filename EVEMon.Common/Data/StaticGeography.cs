@@ -37,7 +37,8 @@ namespace EVEMon.Common.Data
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.GeographyDatafile)))
                 return;
 
-            GeoDatafile datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile);
+            GeoDatafile datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile,
+                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
             // Generate the nodes
             foreach (SerializableRegion srcRegion in datafile.Regions)
