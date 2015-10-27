@@ -27,7 +27,8 @@ namespace EVEMon.Common.Data
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.CertificatesDatafile)))
                 return;
 
-            CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
+            CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile,
+                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
             Groups = new Collection<StaticCertificateGroup>();
 
@@ -90,7 +91,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static StaticCertificate GetCertificateByID(int id)
+        public static StaticCertificate GetCertificate(int id)
         {
             return s_certificatesByID[id];
         }
@@ -100,7 +101,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static StaticCertificateClass GetCertificateClassByName(string name)
+        public static StaticCertificateClass GetCertificateClass(string name)
         {
             return s_classesByName[name];
         }

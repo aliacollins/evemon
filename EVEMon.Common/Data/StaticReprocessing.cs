@@ -24,7 +24,8 @@ namespace EVEMon.Common.Data
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.ReprocessingDatafile)))
                 return;
 
-            ReprocessingDatafile datafile = Util.DeserializeDatafile<ReprocessingDatafile>(DatafileConstants.ReprocessingDatafile);
+            ReprocessingDatafile datafile = Util.DeserializeDatafile<ReprocessingDatafile>(
+                DatafileConstants.ReprocessingDatafile, Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
             foreach (SerializableItemMaterials item in datafile.Items)
             {

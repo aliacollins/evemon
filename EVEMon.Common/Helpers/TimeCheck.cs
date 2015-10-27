@@ -13,8 +13,6 @@ namespace EVEMon.Common.Helpers
     /// </summary>
     public static class TimeCheck
     {
-        private static string s_macAddressSHA1Sum;
-
         /// <summary>
         /// Asynchronous method to determine if the user's clock is syncrhonized to BattleClinic time.
         /// </summary>

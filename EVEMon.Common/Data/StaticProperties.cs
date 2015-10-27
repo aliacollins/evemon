@@ -31,8 +31,8 @@ namespace EVEMon.Common.Data
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.PropertiesDatafile)))
                 return;
 
-            PropertiesDatafile datafile =
-                Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile);
+            PropertiesDatafile datafile = Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile,
+                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
             // Fetch deserialized data
             foreach (EvePropertyCategory category in datafile.Categories.Select(
