@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Net;
@@ -26,8 +28,30 @@ namespace EVEMon.Common.Helpers
                 AnonymizeIp = true,
                 ClientId = Util.CreateSHA1SumFromMacAddress(),
                 ApplicationName = Assembly.GetEntryAssembly().GetName().Name,
-                ApplicationVersion = Assembly.GetEntryAssembly().GetName().Version.ToString()
+                ApplicationVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                ScreenResolution = String.Format(CultureConstants.InvariantCulture, "{0}x{1}",
+                    Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height),
+                UserAgent = String.Format(CultureConstants.InvariantCulture, "{0} ({1}; {2})", HttpWebServiceState.UserAgent,
+                    Environment.OSVersion.VersionString, Environment.Is64BitOperatingSystem ? "x64" : "x86"),
             };
+        }
+
+        /// <summary>
+        /// Tracks the starting of the application.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        public static void TrackStart(Type type)
+        {
+            TrackEventAsync(type, "ApplicationLifeCycle", SessionStatus.Start.ToString());
+        }
+
+        /// <summary>
+        /// Tracks the ending of the application.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        public static void TrackEnd(Type type)
+        {
+            TrackEventAsync(type, "ApplicationLifeCycle", SessionStatus.End.ToString());
         }
 
         /// <summary>
@@ -36,18 +60,26 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         /// <param name="category">The category.</param>
         /// <param name="action">The action.</param>
-        public static void TrackEventAsync(Type type, string category, string action)
+        /// <param name="callback">The callback.</param>
+        public static void TrackEventAsync(Type type, string category, string action, DownloadImageCompletedCallback callback = null)
         {
             s_parameters.HitType = GaHitType.Event;
             s_parameters.ScreenName = type.Name;
             s_parameters.EventCategory = category;
             s_parameters.EventAction = action;
 
+            SessionStatus status;
+            if (Enum.TryParse(action, true, out status))
+                s_parameters.SessionControl = status.ToString().ToLowerInvariant();
+
+            if (callback == null)
+                callback = (e, args) => { };
+
             // Sent notification
             if (NetworkMonitor.IsNetworkAvailable)
             {
                 HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
-                    (e, args) => { }, null, HttpMethod.Post, postdata: BuildQueryString());
+                    callback, null, HttpMethod.Post, postdata: BuildQueryString());
 
                 Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, action));
                 return;
@@ -122,6 +154,12 @@ namespace EVEMon.Common.Helpers
             Event,
         }
 
+        private enum SessionStatus
+        {
+            Start,
+            End
+        }
+
         private class GampParameters
         {
             /// <summary>
@@ -188,6 +226,24 @@ namespace EVEMon.Common.Helpers
             internal string ApplicationName { get; set; }
 
             /// <summary>
+            /// Gets or sets the control of the session.
+            /// </summary>
+            /// <value>
+            /// The name of the screen.
+            /// </value>
+            [GampParameter("sc")]
+            internal string SessionControl { get; set; }
+
+            /// <summary>
+            /// Gets or sets the resolution of the screen.
+            /// </summary>
+            /// <value>
+            /// The name of the screen.
+            /// </value>
+            [GampParameter("sr")]
+            internal string ScreenResolution { get; set; }
+
+            /// <summary>
             /// Gets or sets the application version.
             /// </summary>
             /// <value>
@@ -213,6 +269,39 @@ namespace EVEMon.Common.Helpers
             /// </value>
             [GampParameter("ea")]
             internal string EventAction { get; set; }
+
+            /// <summary>
+            /// Gets or sets the user agent info.
+            /// </summary>
+            /// <value>
+            /// The name of the screen.
+            /// </value>
+            [GampParameter("ua")]
+            internal string UserAgent { get; set; }
+
+            /// <summary>
+            /// Gets or sets the user language.
+            /// </summary>
+            /// <value>
+            /// The name of the screen.
+            /// </value>
+            [GampParameter("ul")]
+            internal string UserLanguage
+            {
+                get { return Encoding.Default.BodyName; }
+            }
+
+            /// <summary>
+            /// Gets or sets the document encoding.
+            /// </summary>
+            /// <value>
+            /// The name of the screen.
+            /// </value>
+            [GampParameter("de")]
+            internal string DocumentEncoding
+            {
+                get { return CultureInfo.CurrentUICulture.Name; }
+            }
         }
 
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum)]
