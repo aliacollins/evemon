@@ -11,6 +11,14 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Renaming root name 'blueprints' in blueprints datafile to 'blueprintsDatafile' -->
+  <xsl:template match="blueprints">
+    <xsl:element name="blueprintsDatafile">
+      <xsl:copy-of select="namespace::*"/>
+      <xsl:apply-templates/>
+    </xsl:element>
+  </xsl:template>
+
   <!-- Renaming attribute 'Name' in items datafile to 'name' -->
   <xsl:template match="@Name">
     <xsl:attribute name="name">

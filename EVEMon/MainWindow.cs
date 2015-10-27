@@ -139,7 +139,7 @@ namespace EVEMon
             CheckTimeSynchronization();
 
             // Notify Gooogle Analytics about start up
-            TrackStartUp();
+            GAnalyticsTracker.TrackStart(GetType());
 
             trayIcon.Text = Application.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
@@ -166,15 +166,6 @@ namespace EVEMon
 
             // Force cleanup
             TriggerAutoShrink();
-        }
-
-        /// <summary>
-        /// Tracks the start up via Google Analytics,
-        /// or reschedule it for later if no connection is available.
-        /// </summary>
-        private void TrackStartUp()
-        {
-            GAnalyticsTracker.TrackEventAsync(GetType(), "ApplicationLifeCycle", "Start");
         }
 
         /// <summary>
@@ -246,6 +237,7 @@ namespace EVEMon
             if (!Visible || m_isUpdating || m_isUpdatingData || e.CloseReason == CloseReason.ApplicationExitCall ||
                 e.CloseReason == CloseReason.TaskManagerClosing || e.CloseReason == CloseReason.WindowsShutDown)
             {
+                GAnalyticsTracker.TrackEnd(GetType());
                 return;
             }
 

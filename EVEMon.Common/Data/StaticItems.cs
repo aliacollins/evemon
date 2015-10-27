@@ -38,7 +38,8 @@ namespace EVEMon.Common.Data
 
             // Deserialize the items datafile
             ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile,
-                                                                             Util.LoadXslt(Properties.Resources.DatafilesXSLT));
+                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
+
             MarketGroups = new MarketGroupCollection(null, datafile.MarketGroups);
 
             // Gather the items into a by-ID dictionary

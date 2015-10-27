@@ -27,7 +27,9 @@ namespace EVEMon.Common.Data
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.CertificatesDatafile)))
                 return;
 
-            CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile);
+            CertificatesDatafile datafile = Util.DeserializeDatafile<CertificatesDatafile>(DatafileConstants.CertificatesDatafile,
+                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
+
             Groups = new Collection<StaticCertificateGroup>();
 
             foreach (SerializableCertificateGroup srcGroup in datafile.Groups)
