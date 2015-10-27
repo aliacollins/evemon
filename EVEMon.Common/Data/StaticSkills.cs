@@ -30,7 +30,8 @@ namespace EVEMon.Common.Data
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.SkillsDatafile)))
                 return;
 
-            SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>(DatafileConstants.SkillsDatafile);
+            SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>(DatafileConstants.SkillsDatafile,
+                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
             // Fetch deserialized data
             s_arrayIndicesCount = 0;

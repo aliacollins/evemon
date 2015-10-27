@@ -26,7 +26,8 @@ namespace EVEMon.Common.Data
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.BlueprintsDatafile)))
                 return;
 
-            BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile);
+            BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile,
+                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
             BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.MarketGroups);
 
