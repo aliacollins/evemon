@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -35,6 +34,7 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
         private Character m_character;
         private Font m_boldFont;
+        private MasteryShip m_masteryShip;
 
         private bool m_allExpanded;
 
@@ -81,15 +81,16 @@ namespace EVEMon.SkillPlanner
         /// Gets or sets the mastery ship.
         /// </summary>
         [Browsable(false)]
-        public Item Ship
+        public MasteryShip MasteryShip
         {
-            get { return MasteryShip != null ? MasteryShip.Ship : null; }
+            get { return m_masteryShip; }
             set
             {
-                if (value == null || (MasteryShip != null && value.ID == MasteryShip.Ship.ID))
+                if (value == m_masteryShip)
                     return;
 
-                MasteryShip = StaticMasteries.GetMasteryShipByID(value.ID);
+                m_masteryShip = value;
+                m_masteryShip.ToCharacter(m_character);
                 UpdateTree();
             }
         }
@@ -114,16 +115,7 @@ namespace EVEMon.SkillPlanner
                 return null;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Browsable(false)]
-        public MasteryShip MasteryShip
-        {
-            get; private set;
-        }
-
+        
         #endregion
 
 
@@ -203,6 +195,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
+            if ((e.Plan != m_plan) || (e.Plan.Character != m_plan.Character))
+                return;
+
             UpdateTree();
         }
 
@@ -282,13 +277,13 @@ namespace EVEMon.SkillPlanner
                 treeView.Nodes.Clear();
 
                 // No update when not fully initialized
-                if (m_character == null || MasteryShip == null)
+                if (m_character == null || m_masteryShip == null)
                     return;
 
                 // Create the nodes when not done, yet
                 if (treeView.Nodes.Count == 0)
                 {
-                    foreach (Mastery masteryLevel in MasteryShip)
+                    foreach (Mastery masteryLevel in m_masteryShip)
                     {
                         TreeNode node = CreateNode(masteryLevel);
                         treeView.Nodes.Add(node);
@@ -395,12 +390,9 @@ namespace EVEMon.SkillPlanner
             // The node represents a mastery level
             if (masteryLevel != null)
             {
-                List<CertificateLevel> certificatesOfMasteryLevel =
-                    masteryLevel.Select(mcert => mcert.ToCharacter(m_character).GetCertificateLevel(masteryLevel.Level)).ToList();
-
-                if (certificatesOfMasteryLevel.All(cert => cert.IsTrained))
+                if (masteryLevel.IsTrained)
                     node.ImageIndex = imageList.Images.IndexOfKey(TrainedIcon);
-                else if (certificatesOfMasteryLevel.Any(cert => cert.IsPartiallyTrained))
+                else if (masteryLevel.IsPartiallyTrained)
                     node.ImageIndex = imageList.Images.IndexOfKey(TrainableIcon);
                 else
                     node.ImageIndex = imageList.Images.IndexOfKey(UntrainableIcon);
@@ -470,14 +462,13 @@ namespace EVEMon.SkillPlanner
 
                 il = imageListMasteryLevels;
 
-                IList<CertificateLevel> certificatesOfMasteryLevel =
-                    masteryLevel.Select(mcert => mcert.ToCharacter(m_character).GetCertificateLevel(masteryLevel.Level)).ToList();
-
                 // When not trained, let's display the training time of all certificates of this level
-                if (!certificatesOfMasteryLevel.All(y => y.IsTrained))
+                if (!masteryLevel.IsTrained)
                 {
-                    line2 = certificatesOfMasteryLevel.Aggregate(TimeSpan.Zero,
-                        (current, certificateLevel) => current.Add(certificateLevel.GetTrainingTime))
+                    line2 = masteryLevel.Aggregate(TimeSpan.Zero,
+                        (current, certificateLevel) =>
+                            current.Add(
+                                certificateLevel.ToCharacter(m_character).GetCertificateLevel(masteryLevel.Level).GetTrainingTime))
                         .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }

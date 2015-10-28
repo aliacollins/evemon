@@ -298,6 +298,7 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
         #region Certificates
 
         /// <summary>
@@ -631,7 +632,7 @@ namespace EVEMon.Common.Models
             Skills.Import(serial.Skills, serial is SerializableAPICharacterSheet);
 
             // Certificates
-            Certificates.Import(serial.Certificates);
+            Certificates.Initialize();
         }
 
         /// <summary>

@@ -176,7 +176,6 @@ namespace EVEMon.SkillPlanner
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.treeView);
-            this.DoubleBuffered = true;
             this.Name = "CertificateTreeDisplayControl";
             this.Size = new System.Drawing.Size(226, 282);
             this.cmListSkills.ResumeLayout(false);

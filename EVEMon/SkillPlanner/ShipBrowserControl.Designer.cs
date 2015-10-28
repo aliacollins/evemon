@@ -282,7 +282,7 @@ namespace EVEMon.SkillPlanner
             this.masteryTreeDisplayControl.Name = "masteryTreeDisplayControl";
             this.masteryTreeDisplayControl.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
             this.masteryTreeDisplayControl.Plan = null;
-            this.masteryTreeDisplayControl.Ship = null;
+            this.masteryTreeDisplayControl.MasteryShip = null;
             this.masteryTreeDisplayControl.Size = new System.Drawing.Size(339, 385);
             this.masteryTreeDisplayControl.TabIndex = 2;
             // 

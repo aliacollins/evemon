@@ -652,9 +652,10 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static TimeSpan GetTimeToNextLevel(CertificateClass certificateClass)
         {
-            return certificateClass.Certificate.LowestUntrainedLevel == null
-                        ? TimeSpan.Zero
-                        : certificateClass.Certificate.LowestUntrainedLevel.GetTrainingTime;
+            CertificateLevel lowestTrinedLevel = certificateClass.Certificate.LowestUntrainedLevel;
+            return lowestTrinedLevel == null
+                ? TimeSpan.Zero
+                : lowestTrinedLevel.GetTrainingTime;
         }
 
         /// <summary>
@@ -664,9 +665,10 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static TimeSpan GetTimeToMaxLevel(CertificateClass certificateClass)
         {
-            return certificateClass.Certificate.LevelFive.IsTrained
+            CertificateLevel levelFive = certificateClass.Certificate.GetCertificateLevel(5);
+            return levelFive.IsTrained
                 ? TimeSpan.Zero
-                : certificateClass.Certificate.LevelFive.GetTrainingTime;
+                : levelFive.GetTrainingTime;
         }
 
         /// <summary>
@@ -837,6 +839,25 @@ namespace EVEMon.SkillPlanner
         #region Context menus
 
         /// <summary>
+        /// Context > Plan To > Level N
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void planToLevelMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem levelItem = (ToolStripMenuItem)sender;
+            IPlanOperation operation = levelItem.Tag as IPlanOperation;
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+        }
+
+        /// <summary>
         /// When the tree's context menu opens,
         /// we update the submenus' statuses.
         /// </summary>
@@ -846,7 +867,7 @@ namespace EVEMon.SkillPlanner
         {
             TreeNode node = tvItems.SelectedNode;
             CertificateClass certClass = SelectedCertificateClass;
-            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.Certificate.LevelFive))
+            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.Certificate.GetCertificateLevel(5)))
             {
                 cmiLvPlanTo.Enabled = false;
                 cmiLvPlanTo.Text = @"Plan to...";
@@ -856,11 +877,11 @@ namespace EVEMon.SkillPlanner
                 cmiLvPlanTo.Enabled = true;
                 cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" to...", certClass.Name);
 
-                SetAdditionMenuStatus(tsmLevel1, certClass.Certificate.LevelOne);
-                SetAdditionMenuStatus(tsmLevel2, certClass.Certificate.LevelTwo);
-                SetAdditionMenuStatus(tsmLevel3, certClass.Certificate.LevelThree);
-                SetAdditionMenuStatus(tsmLevel4, certClass.Certificate.LevelFour);
-                SetAdditionMenuStatus(tsmLevel5, certClass.Certificate.LevelFive);
+                // "Plan to N" menus
+                for (int i = 1; i <= 5; i++)
+                {
+                    SetAdditionMenuStatus(cmiLvPlanTo.DropDownItems[i - 1], certClass.Certificate.GetCertificateLevel(i));
+                }
             }
 
             tsSeparatorPlanTo.Visible = (certClass == null && node != null);
@@ -888,7 +909,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="menu">The menu.</param>
         /// <param name="certLevel">The cert level.</param>
-        private void SetAdditionMenuStatus(ToolStripMenuItem menu, CertificateLevel certLevel)
+        private void SetAdditionMenuStatus(ToolStripItem menu, CertificateLevel certLevel)
         {
             menu.Visible = certLevel != null;
 
@@ -896,96 +917,9 @@ namespace EVEMon.SkillPlanner
                 return;
 
             menu.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
-        }
 
-        /// <summary>
-        /// Context menu > Plan to > Level I
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel1_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelOne);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Context menu > Plan to > Level II
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel2_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelTwo);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Context menu > Plan to > Level III
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel3_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelThree);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Context menu > Plan to > Level IV
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel4_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelFour);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Context menu > Plan to > Level V
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel5_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelFive);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            if (menu.Enabled)
+                menu.Tag = m_plan.TryPlanTo(certLevel);
         }
 
         /// <summary>
@@ -1031,5 +965,6 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
+
     }
 }

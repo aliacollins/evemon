@@ -56,53 +56,53 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Adds the skills to the plan, which are required to achive the mastery level one for the current ship
+        /// Handles the Click event of the tsPlanToLevelOne control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsPlanToLevelOne_Click(object sender, EventArgs e)
         {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 1));
+            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(1));
         }
 
         /// <summary>
-        /// Adds the skills to the plan, which are required to achive the mastery level one for the current ship
+        /// Handles the Click event of the tsPlanToLevelTwo control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsPlanToLevelTwo_Click(object sender, EventArgs e)
         {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 2));
+            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(2));
         }
 
         /// <summary>
-        /// Adds the skills to the plan, which are required to achive the mastery level three for the current ship
+        /// Handles the Click event of the tsPlanToLevelThree control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsPlanToLevelThree_Click(object sender, EventArgs e)
         {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 3));
+            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(3));
         }
 
         /// <summary>
-        /// Adds the skills to the plan, which are required to achive the mastery level four for the current ship
+        /// Handles the Click event of the tsPlanToLevelFour control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsPlanToLevelFour_Click(object sender, EventArgs e)
         {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 4));
+            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(4));
         }
 
         /// <summary>
-        /// Adds the skills to the plan, which are required to achive the mastery level five for the current ship
+        /// Handles the Click event of the tsPlanToLevelFive control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsPlanToLevelFive_Click(object sender, EventArgs e)
         {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.FirstOrDefault(m => m.Level == 5));
+            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(5));
         }
 
         /// <summary>
@@ -160,22 +160,22 @@ namespace EVEMon.SkillPlanner
             requiredSkillsControl.Object = SelectedObject;
 
             // Update the Mastery tab
-            masteryTreeDisplayControl.Ship = SelectedObject;
+            masteryTreeDisplayControl.MasteryShip = StaticMasteries.GetMasteryShipByID(SelectedObject.ID);
 
             ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(Plan);
             if (loadoutSelect != null && !loadoutSelect.IsDisposed)
                 loadoutSelect.Ship = shipSelectControl.SelectedObject;
 
-            // Update toolstrip
+            // Update the eligibity controls
             UpdateEligibility();
         }
 
         /// <summary>
-        /// Updates the plan when the selection is changed.
+        /// Updates whenever the selected plan changed.
         /// </summary>
-        protected override void OnPlanChanged()
+        protected override void OnSelectedPlanChanged()
         {
-            base.OnPlanChanged();
+            base.OnSelectedPlanChanged();
             requiredSkillsControl.Plan = Plan;
             masteryTreeDisplayControl.Plan = Plan;
 
@@ -183,9 +183,17 @@ namespace EVEMon.SkillPlanner
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
             scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
-                                           ? reqSkillPanelMinWidth
-                                           : reqSkillControlMinWidth);
+                ? reqSkillPanelMinWidth
+                : reqSkillControlMinWidth);
 
+            UpdateEligibility();
+        }
+
+        /// <summary>
+        /// Updates whenever the plan changed.
+        /// </summary>
+        protected override void OnPlanChanged()
+        {
             UpdateEligibility();
         }
 
@@ -195,12 +203,12 @@ namespace EVEMon.SkillPlanner
         #region Helper Methods
 
         /// <summary>
-        /// Adds all skills required to achieve the mastery to the plan
+        /// Plans to the specified level.
         /// </summary>
-        /// <param name="mastery">The master that should be achived</param>
-        private void PlanTo(Mastery mastery)
+        /// <param name="masteryLevel">The mastery level.</param>
+        private void PlanTo(Mastery masteryLevel)
         {
-            IPlanOperation operation = Plan.TryPlanTo(mastery);
+            IPlanOperation operation = Plan.TryPlanTo(masteryLevel);
             if (operation == null)
                 return;
 
@@ -209,8 +217,6 @@ namespace EVEMon.SkillPlanner
                 return;
 
             PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-
-            UpdateEligibility();
         }
 
         /// <summary>
@@ -219,8 +225,8 @@ namespace EVEMon.SkillPlanner
         private void UpdateControlVisibility()
         {
             lblBattleclinic.Location = Settings.UI.SafeForWork
-                                           ? new Point(Pad, lblBattleclinic.Location.Y)
-                                           : new Point(eoImage.Width + Pad * 2, lblBattleclinic.Location.Y);
+                ? new Point(Pad, lblBattleclinic.Location.Y)
+                : new Point(eoImage.Width + Pad * 2, lblBattleclinic.Location.Y);
         }
 
         /// <summary>
@@ -231,16 +237,14 @@ namespace EVEMon.SkillPlanner
             if (SelectedObject == null)
                 return;
 
-            MasteryShip masteryShip = StaticMasteries.GetMasteryShipByID(SelectedObject.ID);
-            
+            MasteryShip masteryShip = masteryTreeDisplayControl.MasteryShip;
+
             if (masteryShip == null)
                 return;
 
-            // Update the training status of each mastery level
-            Mastery highestTrainedLevel = masteryShip.GetHighestTrainedMastery((Character)Plan.Character);
-
-            // First we search the highest eligible certificate after this plan
-            IEnumerable<Mastery> eligibleMasteryLevel = masteryShip.TakeWhile(masteryLevel => Plan.WillGrantEligibilityFor(masteryLevel)).ToList();
+            // First we search the highest eligible mastery level after this plan
+            IEnumerable<Mastery> eligibleMasteryLevel =
+                masteryShip.TakeWhile(masteryLevel => Plan.WillGrantEligibilityFor(masteryLevel)).ToList();
 
             Mastery lastEligibleMasteryLevel = null;
             if (!eligibleMasteryLevel.Any())
@@ -252,40 +256,41 @@ namespace EVEMon.SkillPlanner
                 lastEligibleMasteryLevel = eligibleMasteryLevel.Last();
                 tslbEligible.Text = lastEligibleMasteryLevel.ToString();
 
-                if (highestTrainedLevel == null)
+                if (masteryShip.HighestTrainedLevel == null)
                 {
                     tslbEligible.Text += @" (improved from ""none"")";
                 }
-                else if (lastEligibleMasteryLevel.Level > highestTrainedLevel.Level)
+                else if (lastEligibleMasteryLevel.Level > masteryShip.HighestTrainedLevel.Level)
                 {
-                    tslbEligible.Text += string.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")", highestTrainedLevel);
+                    tslbEligible.Text += string.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")",
+                        masteryShip.HighestTrainedLevel);
                 }
                 else
                 {
                     tslbEligible.Text += @" (no change)";
                 }
             }
-            
-            UpdatePlanningMenuStatus(tsPlanToLevelOne, masteryShip.FirstOrDefault(m => m.Level == 1), lastEligibleMasteryLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelTwo, masteryShip.FirstOrDefault(m => m.Level == 2), lastEligibleMasteryLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelThree, masteryShip.FirstOrDefault(m => m.Level == 3), lastEligibleMasteryLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelFour, masteryShip.FirstOrDefault(m => m.Level == 4), lastEligibleMasteryLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelFive, masteryShip.FirstOrDefault(m => m.Level == 5), lastEligibleMasteryLevel);
+
+            UpdatePlanningMenuStatus(tsPlanToLevelOne, masteryShip.GetLevel(1), lastEligibleMasteryLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelTwo, masteryShip.GetLevel(2), lastEligibleMasteryLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelThree, masteryShip.GetLevel(3), lastEligibleMasteryLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelFour, masteryShip.GetLevel(4), lastEligibleMasteryLevel);
+            UpdatePlanningMenuStatus(tsPlanToLevelFive, masteryShip.GetLevel(5), lastEligibleMasteryLevel);
         }
 
         /// <summary>
         /// Updates a "plan to" menu.
         /// </summary>
         /// <param name="menu">The menu to update</param>
-        /// <param name="level">The level represent by this menu</param>
+        /// <param name="masteryLevel">The level represent by this menu</param>
         /// <param name="lastEligibleMasteryLevel">The highest eligible mastery after this plan</param>
-        private static void UpdatePlanningMenuStatus(ToolStripItem menu, Mastery level, Mastery lastEligibleMasteryLevel)
+        private static void UpdatePlanningMenuStatus(ToolStripItem menu, Mastery masteryLevel, Mastery lastEligibleMasteryLevel)
         {
-            Mastery mastery = level;
-            menu.Visible = mastery != null;
-            menu.Enabled = mastery != null && (lastEligibleMasteryLevel == null || mastery.Level > lastEligibleMasteryLevel.Level);
+            menu.Visible = masteryLevel != null;
+            menu.Enabled = masteryLevel != null &&
+                           (lastEligibleMasteryLevel == null || masteryLevel.Level > lastEligibleMasteryLevel.Level);
         }
 
-        #endregion 
+        #endregion
     }
 }

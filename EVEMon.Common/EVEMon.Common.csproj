@@ -150,6 +150,7 @@
     <Compile Include="Enumerations\JobState.cs" />
     <Compile Include="Enumerations\KillGroup.cs" />
     <Compile Include="Enumerations\LearningOptions.cs" />
+    <Compile Include="Enumerations\MasteryStatus.cs" />
     <Compile Include="Enumerations\MedalGroup.cs" />
     <Compile Include="Enumerations\MinmatarMilitiaRank.cs" />
     <Compile Include="Enumerations\ObjectActivityFilter.cs" />

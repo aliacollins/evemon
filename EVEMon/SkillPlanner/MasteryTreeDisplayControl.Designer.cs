@@ -73,7 +73,7 @@
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(195, 198);
+            this.cmListSkills.Size = new System.Drawing.Size(195, 176);
             // 
             // tsmAddToPlan
             // 
@@ -186,7 +186,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.treeView);
-            this.DoubleBuffered = true;
             this.Name = "MasteryTreeDisplayControl";
             this.Size = new System.Drawing.Size(226, 282);
             this.cmListSkills.ResumeLayout(false);

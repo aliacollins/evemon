@@ -1,7 +1,6 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -12,6 +11,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class MasteryShip : ReadonlyCollection<Mastery>
     {
+
         #region Constructor
 
         /// <summary>
@@ -32,42 +32,6 @@ namespace EVEMon.Common.Data
             }
         }
 
-        /// <summary>
-        /// Try to update the status of the mastery level of the ship
-        /// </summary>
-        /// <param name="character">The character whos mastery level should be determined</param>
-        /// <returns>The highest trained mastery level</returns>
-        public Mastery GetHighestTrainedMastery(Character character)
-        {
-            bool trained = true;
-            int highestLevel = 0;
-
-            // Scan prerequisite skills
-            foreach (var mastery in Items)
-            {
-                trained = true;
-                foreach (var skillLevel in mastery.SelectMany(cert => cert.Certificate.PrerequisiteSkills.Where(level => level.Key == (CertificateGrade)mastery.Level).SelectMany(level => level.Value)))
-                {
-                    var charSkill = character.Skills.FirstOrDefault(s => s.ID == skillLevel.Skill.ID);
-
-                    if(charSkill == null)
-                    {                        
-                        break;
-                    }
-
-                    // Trained only if the skill's level is greater or equal than the minimum level
-                    trained &= (charSkill.Level >= skillLevel.Level);
-                }
-
-                if(trained)
-                {
-                    highestLevel = mastery.Level;
-                }
-            }
-
-            return Items.FirstOrDefault(m => m.Level == highestLevel);            
-        }
-
         #endregion
 
 
@@ -78,7 +42,50 @@ namespace EVEMon.Common.Data
         /// </summary>
         public Ship Ship { get; private set; }
 
+        /// <summary>
+        /// Gets the highest trained mastery level.
+        /// May be null if no level has been trained.
+        /// </summary>
+        public Mastery HighestTrainedLevel
+        {
+            get { return Items.LastOrDefault(level => level.IsTrained); }
+        }
+        
         #endregion
 
+        /// <summary>
+        /// Gets the level.
+        /// </summary>
+        /// <param name="level">The level.</param>
+        /// <returns></returns>
+        public Mastery GetLevel(int level)
+        {
+            return Items.FirstOrDefault(mastery => mastery.Level == level);
+        }
+
+        /// <summary>
+        /// Gets this mastery's ship representation for the provided character.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <exception cref="System.ArgumentNullException">character</exception>
+        public void ToCharacter(Character character)
+        {
+            if (character == null)
+                throw new ArgumentNullException("character");
+
+            foreach (Mastery mastery in Items)
+            {
+                mastery.Reset();
+            }
+
+            while (true)
+            {
+                bool updatedAnything = Items
+                    .Aggregate(false, (current, mastery) => current | mastery.TryUpdateMasteryStatus(character));
+
+                if (!updatedAnything)
+                    break;
+            }
+        }
     }
 }

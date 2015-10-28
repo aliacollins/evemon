@@ -20,7 +20,6 @@ namespace EVEMon.Common.Data
         internal MasteryCertificate(Mastery masteryLevel, SerializableMasteryCertificate src)
         {
             MasteryLevel = masteryLevel;
-            
             Certificate = StaticCertificates.GetCertificateByID(src.ID);
         }
 

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
+using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Factories;
@@ -51,6 +52,7 @@ namespace EVEMon.SkillPlanner
         {
             SelectControl.SelectionChanged -= OnSelectionChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             Disposed -= OnDisposed;
         }
 
@@ -72,8 +74,8 @@ namespace EVEMon.SkillPlanner
 
             // Watch for selection changes
             SelectControl.SelectionChanged += OnSelectionChanged;
-
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             Disposed += OnDisposed;
 
             // Reposition the help text along side the treeview
@@ -104,7 +106,7 @@ namespace EVEMon.SkillPlanner
             {
                 m_plan = value;
                 SelectControl.Plan = value;
-                OnPlanChanged();
+                OnSelectedPlanChanged();
             }
         }
 
@@ -147,7 +149,15 @@ namespace EVEMon.SkillPlanner
         #region Events
 
         /// <summary>
-        /// Called whenever the plan changes.
+        /// Updates whenever the selected plan changed.
+        /// </summary>
+        /// <remarks>This virtual method is implemented in classes that inherit from EveObjectBrowserControl.</remarks>
+        protected virtual void OnSelectedPlanChanged()
+        {
+        }
+
+        /// <summary>
+        /// Updates whenever the plan changed.
         /// </summary>
         /// <remarks>This virtual method is implemented in classes that inherit from EveObjectBrowserControl.</remarks>
         protected virtual void OnPlanChanged()
@@ -174,6 +184,19 @@ namespace EVEMon.SkillPlanner
 
 
         #region Event Handlers
+
+        /// <summary>
+        /// When the current plan changes (new skills, etc), we need to update some informations.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
+        {
+            if ((e.Plan != m_plan) || (e.Plan.Character != m_plan.Character))
+                return;
+
+            OnPlanChanged();
+        }
 
         /// <summary>
         /// Occurs when the settings changed.

@@ -199,6 +199,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_PlanChanged(object sender, PlanChangedEventArgs e)
         {
+            if ((e.Plan != m_plan) || (e.Plan.Character != m_plan.Character))
+                return;
+
             UpdateTree();
         }
 

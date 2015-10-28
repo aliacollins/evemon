@@ -53,12 +53,12 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tvItems = new EVEMon.Common.Controls.TreeView();
             this.ilCertIcons = new System.Windows.Forms.ImageList(this.components);
             this.lvSortedList = new System.Windows.Forms.ListView();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chSortKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pnlFilter = new System.Windows.Forms.Panel();
-            this.tvItems = new EVEMon.Common.Controls.TreeView();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.pnlResults.SuspendLayout();
             this.cmListSkills.SuspendLayout();
@@ -213,7 +213,7 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll,
             this.tsmCollapseAll});
             this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(167, 126);
+            this.cmListSkills.Size = new System.Drawing.Size(167, 148);
             // 
             // cmiLvPlanTo
             // 
@@ -226,42 +226,42 @@ namespace EVEMon.SkillPlanner
             this.cmiLvPlanTo.Image = ((System.Drawing.Image)(resources.GetObject("cmiLvPlanTo.Image")));
             this.cmiLvPlanTo.Name = "cmiLvPlanTo";
             this.cmiLvPlanTo.Size = new System.Drawing.Size(166, 22);
-            this.cmiLvPlanTo.Text = "&Add to plan...";
+            this.cmiLvPlanTo.Text = "&Plan to...";
             // 
             // tsmLevel1
             // 
             this.tsmLevel1.Name = "tsmLevel1";
-            this.tsmLevel1.Size = new System.Drawing.Size(125, 22);
+            this.tsmLevel1.Size = new System.Drawing.Size(152, 22);
             this.tsmLevel1.Text = "&Level I";
-            this.tsmLevel1.Click += new System.EventHandler(this.tsmLevel1_Click);
+            this.tsmLevel1.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsmLevel2
             // 
             this.tsmLevel2.Name = "tsmLevel2";
-            this.tsmLevel2.Size = new System.Drawing.Size(125, 22);
+            this.tsmLevel2.Size = new System.Drawing.Size(152, 22);
             this.tsmLevel2.Text = "Level II";
-            this.tsmLevel2.Click += new System.EventHandler(this.tsmLevel2_Click);
+            this.tsmLevel2.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsmLevel3
             // 
             this.tsmLevel3.Name = "tsmLevel3";
-            this.tsmLevel3.Size = new System.Drawing.Size(125, 22);
+            this.tsmLevel3.Size = new System.Drawing.Size(152, 22);
             this.tsmLevel3.Text = "Level III";
-            this.tsmLevel3.Click += new System.EventHandler(this.tsmLevel3_Click);
+            this.tsmLevel3.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsmLevel4
             // 
             this.tsmLevel4.Name = "tsmLevel4";
-            this.tsmLevel4.Size = new System.Drawing.Size(125, 22);
+            this.tsmLevel4.Size = new System.Drawing.Size(152, 22);
             this.tsmLevel4.Text = "Level IV";
-            this.tsmLevel4.Click += new System.EventHandler(this.tsmLevel4_Click);
+            this.tsmLevel4.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsmLevel5
             // 
             this.tsmLevel5.Name = "tsmLevel5";
-            this.tsmLevel5.Size = new System.Drawing.Size(125, 22);
+            this.tsmLevel5.Size = new System.Drawing.Size(152, 22);
             this.tsmLevel5.Text = "Level V";
-            this.tsmLevel5.Click += new System.EventHandler(this.tsmLevel5_Click);
+            this.tsmLevel5.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
             // 
             // tsSeparatorPlanTo
             // 
@@ -300,6 +300,22 @@ namespace EVEMon.SkillPlanner
             this.tsmCollapseAll.Size = new System.Drawing.Size(166, 22);
             this.tsmCollapseAll.Text = "&Collapse All";
             this.tsmCollapseAll.Click += new System.EventHandler(this.tsmCollapseAll_Click);
+            // 
+            // tvItems
+            // 
+            this.tvItems.ContextMenuStrip = this.cmListSkills;
+            this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvItems.HideSelection = false;
+            this.tvItems.ImageIndex = 0;
+            this.tvItems.ImageList = this.ilCertIcons;
+            this.tvItems.Location = new System.Drawing.Point(0, 0);
+            this.tvItems.Margin = new System.Windows.Forms.Padding(2);
+            this.tvItems.Name = "tvItems";
+            this.tvItems.SelectedImageIndex = 0;
+            this.tvItems.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            this.tvItems.SelectionMode = EVEMon.Common.Controls.TreeViewSelectionMode.SingleSelect;
+            this.tvItems.Size = new System.Drawing.Size(227, 343);
+            this.tvItems.TabIndex = 20;
             // 
             // ilCertIcons
             // 
@@ -356,22 +372,6 @@ namespace EVEMon.SkillPlanner
             this.pnlFilter.Name = "pnlFilter";
             this.pnlFilter.Size = new System.Drawing.Size(227, 78);
             this.pnlFilter.TabIndex = 47;
-            // 
-            // tvItems
-            // 
-            this.tvItems.ContextMenuStrip = this.cmListSkills;
-            this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tvItems.HideSelection = false;
-            this.tvItems.ImageIndex = 0;
-            this.tvItems.ImageList = this.ilCertIcons;
-            this.tvItems.Location = new System.Drawing.Point(0, 0);
-            this.tvItems.Margin = new System.Windows.Forms.Padding(2);
-            this.tvItems.Name = "tvItems";
-            this.tvItems.SelectedImageIndex = 0;
-            this.tvItems.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            this.tvItems.SelectionMode = EVEMon.Common.Controls.TreeViewSelectionMode.SingleSelect;
-            this.tvItems.Size = new System.Drawing.Size(227, 343);
-            this.tvItems.TabIndex = 20;
             // 
             // CertificateSelectControl
             // 

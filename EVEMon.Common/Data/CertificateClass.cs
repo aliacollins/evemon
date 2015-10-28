@@ -61,10 +61,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public CertificateLevel LowestUntrainedLevel
         {
-            get
-            {
-                return Certificate.AllLevel.FirstOrDefault(level => level.Status != CertificateStatus.Trained);                
-            }
+            get { return Certificate.AllLevel.FirstOrDefault(level => !level.IsTrained); }
         }
 
         /// <summary>
@@ -73,17 +70,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public CertificateLevel HighestTrainedLevel
         {
-            get
-            {
-                CertificateLevel lastCertLevel = null;
-                foreach (var certLevel in Certificate.AllLevel)
-                {
-                    if (certLevel.Status != CertificateStatus.Trained)
-                        return lastCertLevel;
-                    lastCertLevel = certLevel;
-                }
-                return lastCertLevel;
-            }
+            get { return Certificate.AllLevel.LastOrDefault(level => level.IsTrained); }
         }
 
         /// <summary>
@@ -91,7 +78,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         public bool IsCompleted
         {
-            get { return Certificate.AllLevel.All(certLevel => certLevel.Status == CertificateStatus.Trained); }
+            get { return Certificate.AllLevel.All(certLevel => certLevel.IsTrained); }
         }
 
         /// <summary>

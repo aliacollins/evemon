@@ -56,11 +56,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates the plan when the selection is changed.
+        /// Updates whenever the selected plan changed.
         /// </summary>
-        protected override void OnPlanChanged()
+        protected override void OnSelectedPlanChanged()
         {
-            base.OnPlanChanged();
+            base.OnSelectedPlanChanged();
             requiredSkillsControl.Plan = Plan;
 
             // We recalculate the right panels minimum size

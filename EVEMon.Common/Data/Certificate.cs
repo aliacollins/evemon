@@ -88,61 +88,6 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the level one of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level one.
-        /// </value>
-        public CertificateLevel LevelOne
-        {
-            get { return m_levels[(int)CertificateGrade.Basic]; }
-        }
-
-        /// <summary>
-        /// Gets the level two of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level two.
-        /// </value>
-        public CertificateLevel LevelTwo
-        {
-            get { return m_levels[(int)CertificateGrade.Standard]; }
-        }
-
-        /// <summary>
-        /// Gets the level three of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level three.
-        /// </value>
-        public CertificateLevel LevelThree
-        {
-            get { return m_levels[(int)CertificateGrade.Improved]; }
-        }
-
-        /// <summary>
-        /// Gets the level four of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level four.
-        /// </value>
-        public CertificateLevel LevelFour
-        {
-            get { return m_levels[(int)CertificateGrade.Advanced]; }
-        }
-
-        /// <summary>
-        /// Gets the level five of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level five.
-        /// </value>
-        public CertificateLevel LevelFive
-        {
-            get { return m_levels[(int)CertificateGrade.Elite]; }
-        }
-
-        /// <summary>
         /// Gets all levels of the cerificate.
         /// </summary>
         /// <value>

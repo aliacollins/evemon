@@ -770,6 +770,7 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
         #region Certificates
 
         /// <summary>
@@ -809,21 +810,20 @@ namespace EVEMon.Common.Models
             if (masteryLevel == null)
                 throw new ArgumentNullException("masteryLevel");
 
-            IList<CertificateLevel> certificatesOfMasteryLevel =
-                masteryLevel.Select(mcert => mcert.ToCharacter((Character)Character).GetCertificateLevel(masteryLevel.Level))
-                    .ToList();
-
-            if (certificatesOfMasteryLevel.All(cert => cert.IsTrained))
+            if (masteryLevel.IsTrained)
                 return true;
 
-            return !certificatesOfMasteryLevel.SelectMany(cert => cert.PrerequisiteSkills).Select(
-                skillToTrain => new { skillToTrain, skill = skillToTrain.Skill }).Where(
-                    skillToTrain => skillToTrain.skill.Level < skillToTrain.skillToTrain.Level).Where(
-                        skillToTrain => !IsPlanned(skillToTrain.skill, skillToTrain.skillToTrain.Level)).Select(
-                            skill => skill.skillToTrain).Any();
+            return !masteryLevel.Select(mcert => mcert.ToCharacter((Character)Character).GetCertificateLevel(masteryLevel.Level))
+                .SelectMany(cert => cert.PrerequisiteSkills)
+                .Select(skillToTrain => new { skillToTrain, skill = skillToTrain.Skill })
+                .Where(skillToTrain => skillToTrain.skill.Level < skillToTrain.skillToTrain.Level)
+                .Where(skillToTrain => !IsPlanned(skillToTrain.skill, skillToTrain.skillToTrain.Level))
+                .Select(skill => skill.skillToTrain)
+                .Any();
         }
 
         #endregion
+
 
         #region Sort
 

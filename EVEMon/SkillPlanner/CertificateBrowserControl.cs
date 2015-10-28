@@ -106,6 +106,7 @@ namespace EVEMon.SkillPlanner
 
                 certSelectCtl.Plan = m_plan;
                 certDisplayCtl.Plan = m_plan;
+
                 UpdateEligibility();
             }
         }
@@ -130,7 +131,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateContent()
         {
-            CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
+            CertificateClass certClass = SelectedCertificateClass;
 
             // When no certificate class is selected, we just hide the right panel.
             if (certClass == null)
@@ -152,11 +153,11 @@ namespace EVEMon.SkillPlanner
             lblCategory.Text = certClass.Category.Name;
 
             // Training time per certificate level
-            UpdateLevelLabel(lblLevel1Time, certClass.Certificate.LevelOne);
-            UpdateLevelLabel(lblLevel2Time, certClass.Certificate.LevelTwo);
-            UpdateLevelLabel(lblLevel3Time, certClass.Certificate.LevelThree);
-            UpdateLevelLabel(lblLevel4Time, certClass.Certificate.LevelFour);
-            UpdateLevelLabel(lblLevel5Time, certClass.Certificate.LevelFive);
+            UpdateLevelLabel(lblLevel1Time, certClass.Certificate.GetCertificateLevel(1));
+            UpdateLevelLabel(lblLevel2Time, certClass.Certificate.GetCertificateLevel(2));
+            UpdateLevelLabel(lblLevel3Time, certClass.Certificate.GetCertificateLevel(3));
+            UpdateLevelLabel(lblLevel4Time, certClass.Certificate.GetCertificateLevel(4));
+            UpdateLevelLabel(lblLevel5Time, certClass.Certificate.GetCertificateLevel(5));
 
             // Only read the recommendations from one level, because they are all the same
             PersistentSplitContainer rSplCont = rightSplitContainer;
@@ -308,13 +309,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateEligibility()
         {
-            CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
-
-            if (certClass == null)
+            if (SelectedCertificateClass == null)
                 return;
 
-            // First we search the highest eligible certificate after this plan
-            IEnumerable<CertificateLevel> eligibleCertLevel = certClass.Certificate.AllLevel.TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)).ToList();
+            // First we search the highest eligible certificate level after this plan
+            IEnumerable<CertificateLevel> eligibleCertLevel = SelectedCertificateClass.Certificate.AllLevel
+                .TakeWhile(cert => m_plan.WillGrantEligibilityFor(cert)).ToList();
 
             CertificateLevel lastEligibleCertLevel = null;
             if (!eligibleCertLevel.Any())
@@ -324,35 +324,38 @@ namespace EVEMon.SkillPlanner
                 lastEligibleCertLevel = eligibleCertLevel.Last();
                 tslbEligible.Text = lastEligibleCertLevel.ToString();
 
-                if (certClass.HighestTrainedLevel == null)
+                if (SelectedCertificateClass.HighestTrainedLevel == null)
                     tslbEligible.Text += @" (improved from ""none"")";
-                else if ((int)lastEligibleCertLevel.Level > (int)certClass.HighestTrainedLevel.Level)
+                else if ((int)lastEligibleCertLevel.Level > (int)SelectedCertificateClass.HighestTrainedLevel.Level)
                 {
                     tslbEligible.Text += String.Format(CultureConstants.DefaultCulture, " (improved from \"{0}\")",
-                                                       certClass.HighestTrainedLevel);
+                        SelectedCertificateClass.HighestTrainedLevel);
                 }
                 else
                     tslbEligible.Text += @" (no change)";
             }
-            
-            UpdatePlanningMenuStatus(tsPlanToLevelOne, certClass.Certificate.LevelOne, lastEligibleCertLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelTwo, certClass.Certificate.LevelTwo, lastEligibleCertLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelThree, certClass.Certificate.LevelThree, lastEligibleCertLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelFour, certClass.Certificate.LevelFour, lastEligibleCertLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelFive, certClass.Certificate.LevelFive, lastEligibleCertLevel);
+
+            // "Plan to N" menus
+            for (int i = 1; i <= 5; i++)
+            {
+                UpdatePlanningMenuStatus(tsPlanToMenu.DropDownItems[i - 1],
+                    SelectedCertificateClass.Certificate.GetCertificateLevel(i), lastEligibleCertLevel);
+            }
         }
 
         /// <summary>
         /// Updates a "plan to" menu.
         /// </summary>
         /// <param name="menu">The menu to update</param>
-        /// <param name="level">The level represent by this menu</param>
+        /// <param name="certLevel">The level represent by this menu</param>
         /// <param name="lastEligibleCertLevel">The highest eligible certificate after this plan</param>
-        private static void UpdatePlanningMenuStatus(ToolStripItem menu, CertificateLevel level, CertificateLevel lastEligibleCertLevel)
+        private void UpdatePlanningMenuStatus(ToolStripItem menu, CertificateLevel certLevel, CertificateLevel lastEligibleCertLevel)
         {
-            CertificateLevel certLevel = level;
             menu.Visible = certLevel != null;
             menu.Enabled = certLevel != null && (lastEligibleCertLevel == null || certLevel.Level > lastEligibleCertLevel.Level);
+
+            if (menu.Enabled)
+                menu.Tag = m_plan.TryPlanTo(certLevel);
         }
 
         #endregion
@@ -392,13 +395,11 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void certDisplayCtl_SelectionChanged(object sender, EventArgs e)
         {
-            CertificateClass certClass = certSelectCtl.SelectedCertificateClass;
-
-            if (certClass == null)
+            if (SelectedCertificateClass == null)
                 return;
 
-            textboxDescription.Text = certClass.Certificate.Description;
-            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", certClass.Name);
+            textboxDescription.Text = SelectedCertificateClass.Certificate.Description;
+            lblName.Text = String.Format(CultureConstants.DefaultCulture, "{0}", SelectedCertificateClass.Name);
         }
 
         #endregion
@@ -432,14 +433,9 @@ namespace EVEMon.SkillPlanner
 
         #region Context menu
 
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelOne control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelOne_Click(object sender, EventArgs e)
+        private void tsPlanToLevel_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelOne);
+            IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
             if (operation == null)
                 return;
 
@@ -448,88 +444,6 @@ namespace EVEMon.SkillPlanner
                 return;
 
             PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelTwo control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelTwo_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelTwo);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelThree control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelThree_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelThree);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelFour control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelFour_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelFour);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelFive control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelFive_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(certSelectCtl.SelectedCertificateClass.Certificate.LevelFive);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Handles the DropDownOpening event of the tsPlanToMenu control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToMenu_DropDownOpening(object sender, EventArgs e)
-        {
-            UpdateEligibility();
         }
 
         #endregion
@@ -570,5 +484,6 @@ namespace EVEMon.SkillPlanner
         }
         
         #endregion
+
     }
 }
