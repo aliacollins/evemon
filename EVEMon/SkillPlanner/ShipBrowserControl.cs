@@ -56,63 +56,21 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Handles the Click event of the tsPlanToLevelOne control.
+        /// Plan to Level N.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelOne_Click(object sender, EventArgs e)
+        private void tsPlanToLevel_Click(object sender, EventArgs e)
         {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(1));
-        }
+            IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
+            if (operation == null)
+                return;
 
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelTwo control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelTwo_Click(object sender, EventArgs e)
-        {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(2));
-        }
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
 
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelThree control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelThree_Click(object sender, EventArgs e)
-        {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(3));
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelFour control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelFour_Click(object sender, EventArgs e)
-        {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(4));
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsPlanToLevelFive control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToLevelFive_Click(object sender, EventArgs e)
-        {
-            PlanTo(masteryTreeDisplayControl.MasteryShip.GetLevel(5));
-        }
-
-        /// <summary>
-        /// Handles the DropDownOpening event of the tsPlanToMenu control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsPlanToMenu_DropDownOpening(object sender, EventArgs e)
-        {
-            //UpdateEligibility();
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         #endregion
@@ -203,23 +161,6 @@ namespace EVEMon.SkillPlanner
         #region Helper Methods
 
         /// <summary>
-        /// Plans to the specified level.
-        /// </summary>
-        /// <param name="masteryLevel">The mastery level.</param>
-        private void PlanTo(Mastery masteryLevel)
-        {
-            IPlanOperation operation = Plan.TryPlanTo(masteryLevel);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
         /// Updates the contol visibility.
         /// </summary>
         private void UpdateControlVisibility()
@@ -271,11 +212,11 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            UpdatePlanningMenuStatus(tsPlanToLevelOne, masteryShip.GetLevel(1), lastEligibleMasteryLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelTwo, masteryShip.GetLevel(2), lastEligibleMasteryLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelThree, masteryShip.GetLevel(3), lastEligibleMasteryLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelFour, masteryShip.GetLevel(4), lastEligibleMasteryLevel);
-            UpdatePlanningMenuStatus(tsPlanToLevelFive, masteryShip.GetLevel(5), lastEligibleMasteryLevel);
+            // "Plan to N" menus
+            for (int i = 1; i <= 5; i++)
+            {
+                UpdatePlanningMenuStatus(tsPlanToMenu.DropDownItems[i - 1], masteryShip.GetLevel(i), lastEligibleMasteryLevel);
+            }
         }
 
         /// <summary>
@@ -284,11 +225,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="menu">The menu to update</param>
         /// <param name="masteryLevel">The level represent by this menu</param>
         /// <param name="lastEligibleMasteryLevel">The highest eligible mastery after this plan</param>
-        private static void UpdatePlanningMenuStatus(ToolStripItem menu, Mastery masteryLevel, Mastery lastEligibleMasteryLevel)
+        private void UpdatePlanningMenuStatus(ToolStripItem menu, Mastery masteryLevel, Mastery lastEligibleMasteryLevel)
         {
             menu.Visible = masteryLevel != null;
             menu.Enabled = masteryLevel != null &&
                            (lastEligibleMasteryLevel == null || masteryLevel.Level > lastEligibleMasteryLevel.Level);
+
+            if (menu.Enabled)
+                menu.Tag = Plan.TryPlanTo(masteryLevel);
         }
 
         #endregion

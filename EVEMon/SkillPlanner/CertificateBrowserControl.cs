@@ -433,6 +433,11 @@ namespace EVEMon.SkillPlanner
 
         #region Context menu
 
+        /// <summary>
+        /// Plan to Level N.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void tsPlanToLevel_Click(object sender, EventArgs e)
         {
             IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
