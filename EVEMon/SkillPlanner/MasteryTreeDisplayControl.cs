@@ -465,11 +465,7 @@ namespace EVEMon.SkillPlanner
                 // When not trained, let's display the training time of all certificates of this level
                 if (!masteryLevel.IsTrained)
                 {
-                    line2 = masteryLevel.Aggregate(TimeSpan.Zero,
-                        (current, certificateLevel) =>
-                            current.Add(
-                                certificateLevel.ToCharacter(m_character).GetCertificateLevel(masteryLevel.Level).GetTrainingTime))
-                        .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                    line2 = masteryLevel.GetTrainingTime(m_character).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
             else if (certLevel != null)

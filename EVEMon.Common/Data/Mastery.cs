@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
@@ -87,6 +88,33 @@ namespace EVEMon.Common.Data
         #endregion
 
 
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets the prerequisite skills.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        public IEnumerable<SkillLevel> GetPrerequisiteSkills(Character character)
+        {
+            return Items.SelectMany(cert => cert.Certificate.PrerequisiteSkills
+                .Where(level => (int)level.Key == Level)
+                .SelectMany(level => level.Value.ToCharacter(character))).Distinct();
+        }
+
+        /// <summary>
+        /// Gets the training time.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        public TimeSpan GetTrainingTime(Character character)
+        {
+            return character.GetTrainingTimeToMultipleSkills(GetPrerequisiteSkills(character));
+        }
+
+        /// <summary>
+        /// Resets this instance.
+        /// </summary>
         public void Reset()
         {
             Status = MasteryStatus.Untrained;
@@ -106,10 +134,7 @@ namespace EVEMon.Common.Data
             bool trained = true;
 
             // Scan prerequisite skills
-            foreach (SkillLevel prereqSkill in Items
-                .SelectMany(cert => cert.Certificate.PrerequisiteSkills
-                    .Where(level => (int)level.Key == Level)
-                    .SelectMany(level => level.Value.ToCharacter(character))))
+            foreach (SkillLevel prereqSkill in GetPrerequisiteSkills(character))
             {
                 // Trained only if the skill's level is greater or equal than the minimum level
                 trained &= (prereqSkill.Skill.Level >= prereqSkill.Level);
@@ -129,6 +154,8 @@ namespace EVEMon.Common.Data
             return true;
         }
 
+
+        #endregion
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>

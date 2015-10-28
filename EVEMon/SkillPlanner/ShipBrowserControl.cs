@@ -32,7 +32,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Event Handlers
+        #region Local Event Handlers
 
         /// <summary>
         /// Opens the BattleClinic Loadout window.
