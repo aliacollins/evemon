@@ -916,7 +916,7 @@ namespace EVEMon.SkillPlanner
                                             ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
                                             : String.Empty);
 
-            tspSeparatorExpandCollapse.Visible = lbSearchList.Items.Count == 0;
+            tsSeparatorExpandCollapse.Visible = lbSearchList.Items.Count == 0;
 
             // "Expand All" and "Collapse All" menu
             tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded && lbSearchList.Items.Count == 0;
