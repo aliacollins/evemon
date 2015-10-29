@@ -124,7 +124,7 @@ namespace EVEMon.SkillPlanner
             lvSortedList.SelectedIndexChanged -= lvSortedList_SelectedIndexChanged;
             tvItems.NodeMouseClick -= tvItems_NodeMouseClick;
             tvItems.AfterSelect -= tvItems_AfterSelect;
-            cmListSkills.Opening -= cmListSkills_Opening;
+            cmListCerts.Opening -= cmListCerts_Opening;
             Disposed -= OnDisposed;
         }
 
@@ -145,7 +145,7 @@ namespace EVEMon.SkillPlanner
             lvSortedList.SelectedIndexChanged += lvSortedList_SelectedIndexChanged;
             tvItems.NodeMouseClick += tvItems_NodeMouseClick;
             tvItems.AfterSelect += tvItems_AfterSelect;
-            cmListSkills.Opening += cmListSkills_Opening;
+            cmListCerts.Opening += cmListCerts_Opening;
             Disposed += OnDisposed;
 
             m_emptyImageList.ImageSize = new Size(24, 24);
@@ -267,7 +267,10 @@ namespace EVEMon.SkillPlanner
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
             UpdateSettingsForTextSearch(tbSearchText.Text);
-            
+
+            if (!tbSearchText.Focused)
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+
             if (m_init)
                 UpdateContent();
         }
@@ -353,6 +356,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             IList<CertificateClass> classes = GetFilteredData().ToList();
+
+            lbSearchList.Items.Clear();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -479,6 +484,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 lbSearchList.Items.Clear();
+                SelectedCertificateClass = null;
                 foreach (CertificateClass certClass in classes)
                 {
                     lbSearchList.Items.Add(certClass);
@@ -873,10 +879,11 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cmListSkills_Opening(object sender, CancelEventArgs e)
+        private void cmListCerts_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = tvItems.SelectedNode;
             CertificateClass certClass = SelectedCertificateClass;
+
             if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.Certificate.GetCertificateLevel(5)))
             {
                 cmiLvPlanTo.Enabled = false;
@@ -894,11 +901,11 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            tsSeparatorPlanTo.Visible = (certClass == null && node != null);
+            tsSeparatorPlanTo.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0);
 
             // "Expand" and "Collapse" selected menu
-            tsmExpandSelected.Visible = (certClass == null && node != null && !node.IsExpanded);
-            tsmCollapseSelected.Visible = (certClass == null && node != null && node.IsExpanded);
+            tsmExpandSelected.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0 && !node.IsExpanded);
+            tsmCollapseSelected.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0 && node.IsExpanded);
 
             tsmExpandSelected.Text = (certClass == null && node != null &&
                                       !node.IsExpanded
@@ -909,9 +916,11 @@ namespace EVEMon.SkillPlanner
                                             ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
                                             : String.Empty);
 
+            tspSeparatorExpandCollapse.Visible = lbSearchList.Items.Count == 0;
+
             // "Expand All" and "Collapse All" menu
-            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
-            tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled;
+            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded && lbSearchList.Items.Count == 0;
+            tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled && lbSearchList.Items.Count == 0;
         }
 
         /// <summary>

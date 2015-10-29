@@ -194,7 +194,7 @@ namespace EVEMon.SkillPlanner
             try
             {
                 lbSearchList.Items.Clear();
-                if (filteredItems.Count > 0)
+                if (filteredItems.Any())
                 {
                     foreach (Item eo in filteredItems)
                     {
@@ -206,9 +206,10 @@ namespace EVEMon.SkillPlanner
             {
                 lbSearchList.EndUpdate();
             }
+
             lbSearchList.Visible = true;
             tvItems.Visible = false;
-            lbNoMatches.Visible = (filteredItems.Count == 0);
+            lbNoMatches.Visible = !filteredItems.Any();
         }
 
         /// <summary>
@@ -423,11 +424,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Handles the MouseUp event of the pbSerachTextDel control.
+        /// Handles the MouseUp event of the pbSearchTextDel control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
-        private void pbSerachTextDel_MouseUp(object sender, MouseEventArgs e)
+        private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
         {
             tbSearchText.Clear();
         }

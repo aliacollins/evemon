@@ -182,7 +182,7 @@ namespace EVEMon.SkillPlanner
             this.pbSerachTextDel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbSerachTextDel.TabIndex = 25;
             this.pbSerachTextDel.TabStop = false;
-            this.pbSerachTextDel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbSerachTextDel_MouseUp);
+            this.pbSerachTextDel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbSearchTextDel_MouseUp);
             // 
             // cbUsabilityFilter
             // 

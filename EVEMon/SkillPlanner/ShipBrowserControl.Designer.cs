@@ -279,10 +279,10 @@ namespace EVEMon.SkillPlanner
             // 
             this.masteryTreeDisplayControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.masteryTreeDisplayControl.Location = new System.Drawing.Point(0, 25);
+            this.masteryTreeDisplayControl.MasteryShip = null;
             this.masteryTreeDisplayControl.Name = "masteryTreeDisplayControl";
             this.masteryTreeDisplayControl.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
             this.masteryTreeDisplayControl.Plan = null;
-            this.masteryTreeDisplayControl.MasteryShip = null;
             this.masteryTreeDisplayControl.Size = new System.Drawing.Size(339, 385);
             this.masteryTreeDisplayControl.TabIndex = 2;
             // 
@@ -322,8 +322,8 @@ namespace EVEMon.SkillPlanner
             this.tsPlanToMenu.Image = ((System.Drawing.Image)(resources.GetObject("tsPlanToMenu.Image")));
             this.tsPlanToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsPlanToMenu.Name = "tsPlanToMenu";
-            this.tsPlanToMenu.Size = new System.Drawing.Size(82, 22);
-            this.tsPlanToMenu.Text = "Plan to...";
+            this.tsPlanToMenu.Size = new System.Drawing.Size(84, 22);
+            this.tsPlanToMenu.Text = "Plan To...";
             // 
             // tsPlanToLevelOne
             // 

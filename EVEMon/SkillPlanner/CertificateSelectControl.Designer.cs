@@ -40,7 +40,7 @@ namespace EVEMon.SkillPlanner
             this.pnlResults = new System.Windows.Forms.Panel();
             this.lbNoMatches = new System.Windows.Forms.Label();
             this.lbSearchList = new System.Windows.Forms.ListBox();
-            this.cmListSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmListCerts = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiLvPlanTo = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmLevel2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,7 +50,7 @@ namespace EVEMon.SkillPlanner
             this.tsSeparatorPlanTo = new System.Windows.Forms.ToolStripSeparator();
             this.tsmExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tspSeparatorExpandCollapse = new System.Windows.Forms.ToolStripSeparator();
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tvItems = new EVEMon.Common.Controls.TreeView();
@@ -62,7 +62,7 @@ namespace EVEMon.SkillPlanner
             this.pbSearchTextDel = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.pnlResults.SuspendLayout();
-            this.cmListSkills.SuspendLayout();
+            this.cmListCerts.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchTextDel)).BeginInit();
             this.SuspendLayout();
@@ -192,7 +192,7 @@ namespace EVEMon.SkillPlanner
             // 
             // lbSearchList
             // 
-            this.lbSearchList.ContextMenuStrip = this.cmListSkills;
+            this.lbSearchList.ContextMenuStrip = this.cmListCerts;
             this.lbSearchList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbSearchList.FormattingEnabled = true;
             this.lbSearchList.IntegralHeight = false;
@@ -204,18 +204,18 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
             // 
-            // cmListSkills
+            // cmListCerts
             // 
-            this.cmListSkills.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmListCerts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmiLvPlanTo,
             this.tsSeparatorPlanTo,
             this.tsmExpandSelected,
             this.tsmCollapseSelected,
-            this.toolStripSeparator1,
+            this.tspSeparatorExpandCollapse,
             this.tsmExpandAll,
             this.tsmCollapseAll});
-            this.cmListSkills.Name = "cmListSkills";
-            this.cmListSkills.Size = new System.Drawing.Size(167, 126);
+            this.cmListCerts.Name = "cmListSkills";
+            this.cmListCerts.Size = new System.Drawing.Size(167, 126);
             // 
             // cmiLvPlanTo
             // 
@@ -284,10 +284,10 @@ namespace EVEMon.SkillPlanner
             this.tsmCollapseSelected.Text = "Collapse Selected";
             this.tsmCollapseSelected.Click += new System.EventHandler(this.tsmCollapseSelected_Click);
             // 
-            // toolStripSeparator1
+            // tspSeparatorExpandCollapse
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(163, 6);
+            this.tspSeparatorExpandCollapse.Name = "tspSeparatorExpandCollapse";
+            this.tspSeparatorExpandCollapse.Size = new System.Drawing.Size(163, 6);
             // 
             // tsmExpandAll
             // 
@@ -305,7 +305,7 @@ namespace EVEMon.SkillPlanner
             // 
             // tvItems
             // 
-            this.tvItems.ContextMenuStrip = this.cmListSkills;
+            this.tvItems.ContextMenuStrip = this.cmListCerts;
             this.tvItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvItems.HideSelection = false;
             this.tvItems.ImageIndex = 0;
@@ -336,7 +336,7 @@ namespace EVEMon.SkillPlanner
             this.lvSortedList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
             this.chSortKey});
-            this.lvSortedList.ContextMenuStrip = this.cmListSkills;
+            this.lvSortedList.ContextMenuStrip = this.cmListCerts;
             this.lvSortedList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSortedList.FullRowSelect = true;
             this.lvSortedList.HideSelection = false;
@@ -361,10 +361,10 @@ namespace EVEMon.SkillPlanner
             // 
             // pnlFilter
             // 
+            this.pnlFilter.Controls.Add(this.lbSearchTextHint);
             this.pnlFilter.Controls.Add(this.pbSearchTextDel);
             this.pnlFilter.Controls.Add(this.cbSorting);
             this.pnlFilter.Controls.Add(this.cbFilter);
-            this.pnlFilter.Controls.Add(this.lbSearchTextHint);
             this.pnlFilter.Controls.Add(this.tbSearchText);
             this.pnlFilter.Controls.Add(this.lblFilter);
             this.pnlFilter.Controls.Add(this.pbSearchImage);
@@ -401,7 +401,7 @@ namespace EVEMon.SkillPlanner
             this.Size = new System.Drawing.Size(227, 421);
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.pnlResults.ResumeLayout(false);
-            this.cmListSkills.ResumeLayout(false);
+            this.cmListCerts.ResumeLayout(false);
             this.pnlFilter.ResumeLayout(false);
             this.pnlFilter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchTextDel)).EndInit();
@@ -427,7 +427,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chSortKey;
         private System.Windows.Forms.ImageList ilCertIcons;
-        private System.Windows.Forms.ContextMenuStrip cmListSkills;
+        private System.Windows.Forms.ContextMenuStrip cmListCerts;
         private System.Windows.Forms.ToolStripMenuItem cmiLvPlanTo;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel1;
         private System.Windows.Forms.ToolStripMenuItem tsmLevel2;
@@ -440,7 +440,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel pnlFilter;
         private System.Windows.Forms.ToolStripMenuItem tsmExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem tsmCollapseSelected;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator tspSeparatorExpandCollapse;
         private System.Windows.Forms.PictureBox pbSearchTextDel;
     }
 }

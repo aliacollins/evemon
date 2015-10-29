@@ -215,41 +215,42 @@ namespace EVEMon.SkillPlanner
             this.tsPlanToMenu.Image = ((System.Drawing.Image)(resources.GetObject("tsPlanToMenu.Image")));
             this.tsPlanToMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsPlanToMenu.Name = "tsPlanToMenu";
-            this.tsPlanToMenu.Size = new System.Drawing.Size(82, 22);
-            this.tsPlanToMenu.Text = "Plan to...";
+            this.tsPlanToMenu.Size = new System.Drawing.Size(84, 22);
+            this.tsPlanToMenu.Text = "Plan To...";
+            this.tsPlanToMenu.ToolTipText = "Plan To...";
             // 
             // tsPlanToLevelOne
             // 
             this.tsPlanToLevelOne.Name = "tsPlanToLevelOne";
-            this.tsPlanToLevelOne.Size = new System.Drawing.Size(114, 22);
+            this.tsPlanToLevelOne.Size = new System.Drawing.Size(152, 22);
             this.tsPlanToLevelOne.Text = "&Level I";
             this.tsPlanToLevelOne.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
             // tsPlanToLevelTwo
             // 
             this.tsPlanToLevelTwo.Name = "tsPlanToLevelTwo";
-            this.tsPlanToLevelTwo.Size = new System.Drawing.Size(114, 22);
+            this.tsPlanToLevelTwo.Size = new System.Drawing.Size(152, 22);
             this.tsPlanToLevelTwo.Text = "&Level II";
             this.tsPlanToLevelTwo.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
             // tsPlanToLevelThree
             // 
             this.tsPlanToLevelThree.Name = "tsPlanToLevelThree";
-            this.tsPlanToLevelThree.Size = new System.Drawing.Size(114, 22);
+            this.tsPlanToLevelThree.Size = new System.Drawing.Size(152, 22);
             this.tsPlanToLevelThree.Text = "&Level III";
             this.tsPlanToLevelThree.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
             // tsPlanToLevelFour
             // 
             this.tsPlanToLevelFour.Name = "tsPlanToLevelFour";
-            this.tsPlanToLevelFour.Size = new System.Drawing.Size(114, 22);
+            this.tsPlanToLevelFour.Size = new System.Drawing.Size(152, 22);
             this.tsPlanToLevelFour.Text = "&Level IV";
             this.tsPlanToLevelFour.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
             // tsPlanToLevelFive
             // 
             this.tsPlanToLevelFive.Name = "tsPlanToLevelFive";
-            this.tsPlanToLevelFive.Size = new System.Drawing.Size(114, 22);
+            this.tsPlanToLevelFive.Size = new System.Drawing.Size(152, 22);
             this.tsPlanToLevelFive.Text = "&Level V";
             this.tsPlanToLevelFive.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
