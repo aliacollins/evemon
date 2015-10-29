@@ -19,13 +19,18 @@ namespace EVEMon.SkillPlanner
     {
         public event EventHandler SelectionChanged;
 
+
+        #region Constructor
+
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="EveObjectSelectControl"/> class.
         /// </summary>
         protected EveObjectSelectControl()
         {
             InitializeComponent();
         }
+
+        #endregion
 
 
         #region Properties
@@ -62,6 +67,8 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
+
+        #region Inherited Events
 
         /// <summary>
         /// Occurs when the control is loaded.
@@ -112,6 +119,8 @@ namespace EVEMon.SkillPlanner
         {
             pbSearchImage.Visible = !Settings.UI.SafeForWork;
         }
+
+        #endregion
 
 
         #region Search
