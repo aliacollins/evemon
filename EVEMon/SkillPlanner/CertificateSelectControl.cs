@@ -18,6 +18,9 @@ using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
 {
+    /// <summary>
+    /// Represents a control to select certificates
+    /// </summary>
     public partial class CertificateSelectControl : UserControl
     {
         // Blank image list for 'Safe for work' setting
@@ -393,7 +396,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the certificates tree.
         /// </summary>
-        /// <param name="classes"></param>
+        /// <param name="classes">The list of certificate classes to show</param>
         private void UpdateTree(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
@@ -477,7 +480,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the list box displayed when there is a text filter and no sort criteria.
         /// </summary>
-        /// <param name="classes"></param>
+        /// <param name="classes">The list of certificates to show</param>
         private void UpdateListBox(IEnumerable<CertificateClass> classes)
         {
             lbSearchList.BeginUpdate();
@@ -500,7 +503,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the listview displayed when there is a sort criteria.
         /// </summary>
-        /// <param name="classes"></param>
+        /// <param name="classes">The list of certificates to show</param>
         private void UpdateListView(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
@@ -567,7 +570,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the filtered list of data.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The fitlerd list of the data</returns>
         private IEnumerable<CertificateClass> GetFilteredData()
         {
             IEnumerable<CertificateClass> classes = m_character.CertificateClasses;
@@ -623,9 +626,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the data for the sorted list view.
         /// </summary>
-        /// <param name="classes"></param>
-        /// <param name="labels"></param>
-        /// <returns></returns>
+        /// <param name="classes">The certificate classes which are shown</param>
+        /// <param name="labels">The labeltexts to show</param>
+        /// <returns>The column header text</returns>
         private string GetSortedListData(ref IList<CertificateClass> classes, ref IEnumerable<string> labels)
         {
             IEnumerable<TimeSpan> times;
@@ -666,7 +669,7 @@ namespace EVEMon.SkillPlanner
         /// Gets the time to next grade.
         /// </summary>
         /// <param name="certificateClass">The certificate class.</param>
-        /// <returns></returns>
+        /// <returns>The time required to finish the next grade</returns>
         private static TimeSpan GetTimeToNextLevel(CertificateClass certificateClass)
         {
             CertificateLevel lowestTrinedLevel = certificateClass.Certificate.LowestUntrainedLevel;
@@ -679,7 +682,7 @@ namespace EVEMon.SkillPlanner
         /// Gets the time to elite grade.
         /// </summary>
         /// <param name="certificateClass">The certificate class.</param>
-        /// <returns></returns>
+        /// <returns>The time required to finish the final grade</returns>
         private static TimeSpan GetTimeToMaxLevel(CertificateClass certificateClass)
         {
             CertificateLevel levelFive = certificateClass.Certificate.GetCertificateLevel(5);
@@ -693,7 +696,7 @@ namespace EVEMon.SkillPlanner
         /// lazily creating the images when they're needed.
         /// </summary>
         /// <param name="certificate">The certificate.</param>
-        /// <returns></returns>
+        /// <returns>The index of the image appropriate for the certificate</returns>
         private int GetCertImageIndex(Certificate certificate)
         {
             if (!Settings.UI.SafeForWork)
@@ -816,7 +819,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the selection with the provided item.
         /// </summary>
-        /// <param name="selection"></param>
+        /// <param name="selection">The item</param>
         private void UpdateSelection(object selection)
         {
             if (!m_blockSelectionReentrancy)
@@ -826,7 +829,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the settings for the search text.
         /// </summary>
-        /// <param name="textSearch"></param>
+        /// <param name="textSearch">The search text</param>
         private static void UpdateSettingsForTextSearch(string textSearch)
         {
             Settings.UI.CertificateBrowser.TextSearch = textSearch;
@@ -835,7 +838,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the settings for the filter.
         /// </summary>
-        /// <param name="filterIndex"></param>
+        /// <param name="filterIndex">The filter index</param>
         private static void UpdateSettingsForFilter(int filterIndex)
         {
             Settings.UI.CertificateBrowser.Filter = (CertificateFilter)filterIndex;
@@ -844,7 +847,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the settings for the sort.
         /// </summary>
-        /// <param name="sortIndex"></param>
+        /// <param name="sortIndex">The sort index</param>
         private static void UpdateSettingsForSort(int sortIndex)
         {
             Settings.UI.CertificateBrowser.Sort = (CertificateSort)sortIndex;

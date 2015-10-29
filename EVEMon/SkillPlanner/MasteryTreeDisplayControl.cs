@@ -41,6 +41,9 @@ namespace EVEMon.SkillPlanner
 
         #region Constructor
 
+        /// <summary>
+        /// Creates a new object of type <see cref="MasteryTreeDisplayControl"/>
+        /// </summary>
         public MasteryTreeDisplayControl()
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
@@ -262,6 +265,9 @@ namespace EVEMon.SkillPlanner
 
         #region Tree building
 
+        /// <summary>
+        /// Updates the shown treecontrol
+        /// </summary>
         private void UpdateTree()
         {
             Mastery oldSelection = SelectedMasteryLevel;
@@ -357,7 +363,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Create a node from a prerequisite skill.
         /// </summary>
-        /// <param name="skillPrereq"></param>
+        /// <param name="skillPrereq">The skill prerequesites</param>
         /// <returns></returns>
         private static TreeNode CreateNode(SkillLevel skillPrereq)
         {
@@ -380,7 +386,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the specified node and its children.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">The Treenode</param>
         private void UpdateNode(TreeNode node)
         {
             Mastery masteryLevel = node.Tag as Mastery;

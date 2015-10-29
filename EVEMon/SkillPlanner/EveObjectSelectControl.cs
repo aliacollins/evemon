@@ -15,6 +15,9 @@ using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
 {
+    /// <summary>
+    /// The standard control to search for an item
+    /// </summary>
     public partial class EveObjectSelectControl : UserControl
     {
         public event EventHandler SelectionChanged;

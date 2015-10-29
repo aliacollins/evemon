@@ -13,6 +13,7 @@ namespace EVEMon.Common.Data
     {
         /// <summary>
         /// Constructor
+        /// <param name="character">The character</param>
         /// </summary>
         internal CertificateCollection(Character character)
         {

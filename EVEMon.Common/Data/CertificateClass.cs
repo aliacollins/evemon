@@ -14,9 +14,9 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="character"></param>
-        /// <param name="src"></param>
-        /// <param name="category"></param>
+        /// <param name="character">The character</param>
+        /// <param name="src">The static certificate class</param>
+        /// <param name="category">The owning category</param>
         internal CertificateClass(Character character, StaticCertificateClass src, CertificateGroup category)
         {
             Category = category;
