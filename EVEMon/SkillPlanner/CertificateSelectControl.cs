@@ -91,8 +91,6 @@ namespace EVEMon.SkillPlanner
                     {
                         item.Selected = true;
                     }
-
-                    lbSearchList.SelectedItem = value;
                 }
                 finally
                 {
@@ -358,6 +356,8 @@ namespace EVEMon.SkillPlanner
             IList<CertificateClass> classes = GetFilteredData().ToList();
 
             lbSearchList.Items.Clear();
+            lvSortedList.Items.Clear();
+            tvItems.Nodes.Clear();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -485,6 +485,7 @@ namespace EVEMon.SkillPlanner
             {
                 lbSearchList.Items.Clear();
                 SelectedCertificateClass = null;
+
                 foreach (CertificateClass certClass in classes)
                 {
                     lbSearchList.Items.Add(certClass);
@@ -861,8 +862,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void planToLevelMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem levelItem = (ToolStripMenuItem)sender;
-            IPlanOperation operation = levelItem.Tag as IPlanOperation;
+            IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
             if (operation == null)
                 return;
 

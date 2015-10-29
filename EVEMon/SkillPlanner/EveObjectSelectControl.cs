@@ -8,6 +8,9 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Factories;
+using EVEMon.Common.Helpers;
+using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
@@ -144,6 +147,17 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Handles the MouseUp event of the pbSearchTextDel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
+        {
+            tbSearchText.Clear();
+            UpdateContextMenu();
+        }
+
+        /// <summary>
         /// Occurs when the search text changed.
         /// </summary>
         /// <param name="sender"></param>
@@ -151,6 +165,20 @@ namespace EVEMon.SkillPlanner
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
             OnSearchTextChanged(tbSearchText.Text);
+        }
+
+        /// <summary>
+        /// Occurs when pressing a key while inside the search text control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 0x01)
+                return;
+
+            tbSearchText.SelectAll();
+            e.Handled = true;
         }
 
         /// <summary>
@@ -162,16 +190,38 @@ namespace EVEMon.SkillPlanner
             if (!tbSearchText.Focused)
                 lbSearchTextHint.Visible = String.IsNullOrEmpty(searchText);
 
+            tvItems.SelectedNodes.Clear();
+
+            UpdateContent();
+            UpdateContextMenu();
+        }
+
+        /// <summary>
+        /// Refresh the controls.
+        /// </summary>
+        protected void UpdateContent()
+        {
+            BuildTreeView();
             BuildListView();
+        }
+
+        /// <summary>
+        /// Builds the tree view.
+        /// </summary>
+        protected virtual void BuildTreeView()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Parses the tree node and extracts all the items to build the content of the list box. 
         /// It also deals with text filtering and the treeview/listbox visibility.
         /// </summary>
-        protected void BuildListView()
+        protected virtual void BuildListView()
         {
             string searchText = tbSearchText.Text.Trim().ToLower(CultureConstants.DefaultCulture);
+
+            lbSearchList.Items.Clear();
 
             if (String.IsNullOrEmpty(searchText))
             {
@@ -193,7 +243,6 @@ namespace EVEMon.SkillPlanner
             lbSearchList.BeginUpdate();
             try
             {
-                lbSearchList.Items.Clear();
                 if (filteredItems.Any())
                 {
                     foreach (Item eo in filteredItems)
@@ -232,21 +281,9 @@ namespace EVEMon.SkillPlanner
 
             if (item.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText)
                 || item.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText))
+            {
                 filteredItems.Add(item);
-        }
-
-        /// <summary>
-        /// Occurs when pressing a key while inside the search text control.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tbSearchText_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar != 0x01)
-                return;
-
-            tbSearchText.SelectAll();
-            e.Handled = true;
+            }
         }
 
         #endregion
@@ -298,26 +335,12 @@ namespace EVEMon.SkillPlanner
                 // If the object is not already selected
                 Item obj = SelectedObjects.First();
                 tvItems.SelectNodeWithTag(obj);
+                UpdateContextMenu();
             }
 
             // Notify subscribers
             if (SelectionChanged != null)
                 SelectionChanged(this, new EventArgs());
-        }
-
-        /// <summary>
-        /// Update the selected tree node.
-        /// </summary>
-        private void UpdateSelectedTreeNodes()
-        {
-            if (tvItems.SelectedNodes.Count != 0)
-            {
-                List<Item> selectedObjects = tvItems.SelectedNodes.Select(node => node.Tag).OfType<Item>().ToList();
-                SetSelectedObjects(selectedObjects);
-                return;
-            }
-
-            SetSelectedObjects(null);
         }
 
         #endregion
@@ -332,7 +355,14 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tvItems_SelectionsChanged(object sender, EventArgs e)
         {
-            UpdateSelectedTreeNodes();
+            if (tvItems.SelectedNodes.Count != 0)
+            {
+                List<Item> selectedObjects = tvItems.SelectedNodes.Select(node => node.Tag).OfType<Item>().ToList();
+                SetSelectedObjects(selectedObjects);
+                return;
+            }
+
+            SetSelectedObjects(null);
         }
 
         /// <summary>
@@ -401,36 +431,106 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            TreeNode node = tvItems.SelectedNode;
-
-            tsSeparator.Visible = (node != null && node.GetNodeCount(true) > 0);
-
-            // "Expand" and "Collapse" selected menu
-            cmiExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded);
-            cmiCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
-
-            cmiExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
-                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"",
-                                                          node.Text.Replace("&", "&&"))
-                                          : String.Empty);
-            cmiCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
-                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"",
-                                                            node.Text.Replace("&", "&&"))
-                                            : String.Empty);
-
-            // "Expand All" and "Collapse All" menu
-            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = AllExpanded;
-            cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
+            UpdateContextMenu();
         }
 
         /// <summary>
-        /// Handles the MouseUp event of the pbSearchTextDel control.
+        /// Updates the context menu.
+        /// </summary>
+        private void UpdateContextMenu()
+        {
+            TreeNode node = tvItems.SelectedNode;
+
+            // Special case for mastery ship levels
+            PlanToMasteryLevel(node);
+
+            // "Expand" and "Collapse" selected menu
+            cmiExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && !node.IsExpanded);
+            cmiCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && node.IsExpanded);
+
+            cmiExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
+                ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"",
+                    node.Text.Replace("&", "&&"))
+                : String.Empty);
+            cmiCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
+                ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"",
+                    node.Text.Replace("&", "&&"))
+                : String.Empty);
+
+            tsSeparatorExpandCollapse.Visible = (node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0);
+
+            // "Expand All" and "Collapse All" menu
+            cmiCollapseAll.Enabled = cmiCollapseAll.Visible = AllExpanded && lbSearchList.Items.Count == 0;
+            cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled && lbSearchList.Items.Count == 0;
+        }
+
+        /// <summary>
+        /// Plans to mastery level.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        private void PlanToMasteryLevel(TreeNode node)
+        {
+            ShipSelectControl shipSelectorControl = this as ShipSelectControl;
+
+            cmiLvPlanTo.Visible = shipSelectorControl != null;
+            tsSeparatorPlanTo.Visible = shipSelectorControl != null && lbSearchList.Items.Count == 0;
+
+            if (shipSelectorControl == null || ((node != null) && node.GetNodeCount(true) > 0) || SelectedObject == null)
+            {
+                cmiLvPlanTo.Visible = false;
+                tsSeparatorPlanTo.Visible = false;
+                return;
+            }
+
+            MasteryShip masteryShip = ((Character)Plan.Character).MasteryShips.GetMasteryShipByID(SelectedObject.ID);
+
+            if (masteryShip == null)
+                return;
+
+            cmiLvPlanTo.Enabled = !Plan.WillGrantEligibilityFor(masteryShip.GetLevel(5));
+            cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" Mastery to...", masteryShip.Ship.Name);
+
+            // "Plan to N" menus
+            for (int i = 1; i <= 5; i++)
+            {
+                SetAdditionMenuStatus(cmiLvPlanTo.DropDownItems[i - 1], masteryShip.GetLevel(i));
+            }
+        }
+
+        /// <summary>
+        /// Sets the visible status of the context menu submenu.
+        /// </summary>
+        /// <param name="menu">The menu.</param>
+        /// <param name="masteryLevel">The mastery level.</param>
+        private void SetAdditionMenuStatus(ToolStripItem menu, Mastery masteryLevel)
+        {
+            menu.Visible = masteryLevel != null;
+
+            if (masteryLevel == null)
+                return;
+
+            menu.Enabled = !Plan.WillGrantEligibilityFor(masteryLevel);
+
+            if (menu.Enabled)
+                menu.Tag = Plan.TryPlanTo(masteryLevel);
+        }
+
+        /// <summary>
+        /// Context > Plan To > Level N
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
-        private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void planToLevelMenuItem_Click(object sender, EventArgs e)
         {
-            tbSearchText.Clear();
+            IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
         }
 
         #endregion

@@ -815,6 +815,7 @@ namespace EVEMon.Common.Models
 
             Character character = Character as Character;
 
+            // We check every prerequisite is trained
             return !masteryLevel.Select(mcert => mcert.ToCharacter(character).GetCertificateLevel(masteryLevel.Level))
                 .SelectMany(cert => cert.PrerequisiteSkills)
                 .Select(skillToTrain => new { skillToTrain, skill = skillToTrain.Skill })
