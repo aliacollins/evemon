@@ -174,7 +174,7 @@
             // 
             this.imageListMasteryLevels.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListMasteryLevels.ImageStream")));
             this.imageListMasteryLevels.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListMasteryLevels.Images.SetKeyName(0, "masteryLevel0");
+            this.imageListMasteryLevels.Images.SetKeyName(0, "masteryLevel");
             this.imageListMasteryLevels.Images.SetKeyName(1, "masteryLevel1");
             this.imageListMasteryLevels.Images.SetKeyName(2, "masteryLevel2");
             this.imageListMasteryLevels.Images.SetKeyName(3, "masteryLevel3");
