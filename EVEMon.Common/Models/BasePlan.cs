@@ -813,7 +813,9 @@ namespace EVEMon.Common.Models
             if (masteryLevel.IsTrained)
                 return true;
 
-            return !masteryLevel.Select(mcert => mcert.ToCharacter((Character)Character).GetCertificateLevel(masteryLevel.Level))
+            Character character = Character as Character;
+
+            return !masteryLevel.Select(mcert => mcert.ToCharacter(character).GetCertificateLevel(masteryLevel.Level))
                 .SelectMany(cert => cert.PrerequisiteSkills)
                 .Select(skillToTrain => new { skillToTrain, skill = skillToTrain.Skill })
                 .Where(skillToTrain => skillToTrain.skill.Level < skillToTrain.skillToTrain.Level)

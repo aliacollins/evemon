@@ -10,6 +10,7 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class MasteryCertificate
     {
+
         #region Constructor
 
         /// <summary>
@@ -21,6 +22,20 @@ namespace EVEMon.Common.Data
         {
             MasteryLevel = masteryLevel;
             Certificate = StaticCertificates.GetCertificateByID(src.ID);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MasteryCertificate"/> class.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="masteryCertificate">The mastery certificate.</param>
+        internal MasteryCertificate(Character character, MasteryCertificate masteryCertificate)
+        {
+            if (masteryCertificate == null)
+                return;
+
+            MasteryLevel = masteryCertificate.MasteryLevel;
+            Certificate = masteryCertificate.ToCharacter(character);
         }
 
         #endregion
@@ -41,7 +56,6 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this certificate's representation for the provided character.
         /// </summary>
-        /// <param name="character">The character.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">character</exception>
         public Certificate ToCharacter(Character character)

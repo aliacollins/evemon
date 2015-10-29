@@ -16,6 +16,8 @@ namespace EVEMon.Common.Data
     public sealed class Mastery : ReadonlyCollection<MasteryCertificate>
     {
         private bool m_updated;
+        private readonly Character m_character;
+
 
         #region Constructor
 
@@ -40,8 +42,31 @@ namespace EVEMon.Common.Data
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Mastery"/> class.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="mastery">The mastery.</param>
+        internal Mastery(Character character, Mastery mastery)
+            : base(mastery == null ? 0 : mastery.Count)
+        {
+            if (mastery == null)
+                return;
+
+            m_character = character;
+
+            MasteryShip = mastery.MasteryShip;
+            Level = mastery.Level;
+            Status = MasteryStatus.Untrained;
+
+            foreach (MasteryCertificate masteryCertificate in mastery)
+            {
+                Items.Add(new MasteryCertificate(character, masteryCertificate));
+            }
+        }
+
         #endregion
-        
+
 
         #region Public Properties
 
@@ -85,47 +110,38 @@ namespace EVEMon.Common.Data
             get { return Status == MasteryStatus.PartiallyTrained; }
         }
 
+        /// <summary>
+        /// Gets the prerequisite skills.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<SkillLevel> GetPrerequisiteSkills
+        {
+            get
+            {
+                return Items.SelectMany(cert => cert.Certificate.PrerequisiteSkills
+                    .Where(level => (int)level.Key == Level)
+                    .SelectMany(level => level.Value.ToCharacter(m_character))).Distinct();
+            }
+        }
+
+        /// <summary>
+        /// Gets the training time.
+        /// </summary>
+        /// <returns></returns>
+        public TimeSpan GetTrainingTime
+        {
+            get { return m_character.GetTrainingTimeToMultipleSkills(GetPrerequisiteSkills); }
+        }
+
         #endregion
 
 
         #region Helper Methods
 
         /// <summary>
-        /// Gets the prerequisite skills.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <returns></returns>
-        public IEnumerable<SkillLevel> GetPrerequisiteSkills(Character character)
-        {
-            return Items.SelectMany(cert => cert.Certificate.PrerequisiteSkills
-                .Where(level => (int)level.Key == Level)
-                .SelectMany(level => level.Value.ToCharacter(character))).Distinct();
-        }
-
-        /// <summary>
-        /// Gets the training time.
-        /// </summary>
-        /// <param name="character">The character.</param>
-        /// <returns></returns>
-        public TimeSpan GetTrainingTime(Character character)
-        {
-            return character.GetTrainingTimeToMultipleSkills(GetPrerequisiteSkills(character));
-        }
-
-        /// <summary>
-        /// Resets this instance.
-        /// </summary>
-        public void Reset()
-        {
-            Status = MasteryStatus.Untrained;
-            m_updated = false;
-        }
-
-        /// <summary>
         /// Tries the update mastery level status.
         /// </summary>
-        /// <param name="character">The character.</param>
-        public bool TryUpdateMasteryStatus(Character character)
+        public bool TryUpdateMasteryStatus()
         {
             if (m_updated)
                 return false;
@@ -134,7 +150,7 @@ namespace EVEMon.Common.Data
             bool trained = true;
 
             // Scan prerequisite skills
-            foreach (SkillLevel prereqSkill in GetPrerequisiteSkills(character))
+            foreach (SkillLevel prereqSkill in GetPrerequisiteSkills)
             {
                 // Trained only if the skill's level is greater or equal than the minimum level
                 trained &= (prereqSkill.Skill.Level >= prereqSkill.Level);
@@ -156,6 +172,8 @@ namespace EVEMon.Common.Data
 
 
         #endregion
+        
+        
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>

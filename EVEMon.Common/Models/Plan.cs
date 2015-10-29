@@ -501,8 +501,9 @@ namespace EVEMon.Common.Models
                 throw new ArgumentNullException("masteryLevel");
 
             List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
+            Character character = Character as Character;
             foreach (SkillLevel skillLevel in masteryLevel
-                .Select(mcert => mcert.ToCharacter((Character)Character).GetCertificateLevel(masteryLevel.Level))
+                .Select(mcert => mcert.ToCharacter(character).GetCertificateLevel(masteryLevel.Level))
                 .SelectMany(x => x.PrerequisiteSkills))
             {
                 int plannedLevel = GetPlannedLevel(skillLevel.Skill);

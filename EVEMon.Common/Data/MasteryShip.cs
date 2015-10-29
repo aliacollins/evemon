@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Models;
@@ -18,17 +17,37 @@ namespace EVEMon.Common.Data
         /// Deserialization constructor.
         /// </summary>
         /// <param name="src">The source.</param>
-        internal MasteryShip(SerializableMasteryShip src)
+        /// <param name="ship">The ship.</param>
+        internal MasteryShip(SerializableMasteryShip src, Ship ship)
             : base(src == null ? 0 : src.Masteries.Count)
         {
             if (src == null)
                 return;
 
-            Ship = StaticItems.GetItemByID(src.ID) as Ship;
+            Ship = ship;
 
             foreach (SerializableMastery mastery in src.Masteries)
             {
                 Items.Add(new Mastery(this, mastery));
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MasteryShip"/> class.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <param name="masteryShip">The mastery ship.</param>
+        internal MasteryShip(Character character, MasteryShip masteryShip)
+            : base(masteryShip == null ? 0 : masteryShip.Count)
+        {
+            if (masteryShip == null)
+                return;
+
+            Ship = masteryShip.Ship;
+
+            foreach (Mastery mastery in masteryShip)
+            {
+                Items.Add(new Mastery(character, mastery));
             }
         }
 
@@ -64,28 +83,20 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets this mastery's ship representation for the provided character.
+        /// Initializes the mastery.
         /// </summary>
-        /// <param name="character">The character.</param>
         /// <exception cref="System.ArgumentNullException">character</exception>
-        public void ToCharacter(Character character)
+        internal void Initialize()
         {
-            if (character == null)
-                throw new ArgumentNullException("character");
-
-            foreach (Mastery mastery in Items)
-            {
-                mastery.Reset();
-            }
-
             while (true)
             {
                 bool updatedAnything = Items
-                    .Aggregate(false, (current, mastery) => current | mastery.TryUpdateMasteryStatus(character));
+                    .Aggregate(false, (current, mastery) => current | mastery.TryUpdateMasteryStatus());
 
                 if (!updatedAnything)
                     break;
             }
         }
+
     }
 }

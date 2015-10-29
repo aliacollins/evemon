@@ -90,7 +90,6 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_masteryShip = value;
-                m_masteryShip.ToCharacter(m_character);
                 UpdateTree();
             }
         }
@@ -465,7 +464,7 @@ namespace EVEMon.SkillPlanner
                 // When not trained, let's display the training time of all certificates of this level
                 if (!masteryLevel.IsTrained)
                 {
-                    line2 = masteryLevel.GetTrainingTime(m_character).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+                    line2 = masteryLevel.GetTrainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
                 }
             }
             else if (certLevel != null)

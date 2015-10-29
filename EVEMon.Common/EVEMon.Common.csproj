@@ -103,6 +103,7 @@
     <Compile Include="Constants\EVEMonConstants.cs" />
     <Compile Include="Data\MasteryCertificate.cs" />
     <Compile Include="Data\Mastery.cs" />
+    <Compile Include="Data\MasteryShipCollection.cs" />
     <Compile Include="Data\MasteryShip.cs" />
     <Compile Include="Data\StaticMasteries.cs" />
     <Compile Include="Enumerations\AbbreviationFormat.cs" />

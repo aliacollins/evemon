@@ -118,7 +118,7 @@ namespace EVEMon.SkillPlanner
             requiredSkillsControl.Object = SelectedObject;
 
             // Update the Mastery tab
-            masteryTreeDisplayControl.MasteryShip = StaticMasteries.GetMasteryShipByID(SelectedObject.ID);
+            masteryTreeDisplayControl.MasteryShip = ((Character)Plan.Character).MasteryShips.GetMasteryShipByID(SelectedObject.ID);
 
             ShipLoadoutSelectWindow loadoutSelect = WindowsFactory.GetByTag<ShipLoadoutSelectWindow, Plan>(Plan);
             if (loadoutSelect != null && !loadoutSelect.IsDisposed)

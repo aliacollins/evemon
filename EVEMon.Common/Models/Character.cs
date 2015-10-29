@@ -61,6 +61,7 @@ namespace EVEMon.Common.Models
             CertificateCategories = new CertificateCategoryCollection(this);
             CertificateClasses = new CertificateClassCollection(this);
             Certificates = new CertificateCollection(this);
+            MasteryShips = new MasteryShipCollection(this);
 
             for (int i = 0; i < m_attributes.Length; i++)
             {
@@ -315,6 +316,16 @@ namespace EVEMon.Common.Models
         /// Gets the collection of certificates.
         /// </summary>
         public CertificateCollection Certificates { get; private set; }
+
+        #endregion
+
+
+        #region Masteries
+
+        /// <summary>
+        /// Gets the collection of mastery ships.
+        /// </summary>
+        public MasteryShipCollection MasteryShips { get; private set; }
 
         #endregion
 
@@ -633,6 +644,9 @@ namespace EVEMon.Common.Models
 
             // Certificates
             Certificates.Initialize();
+
+            // Masteries
+            MasteryShips.Initialize();
         }
 
         /// <summary>

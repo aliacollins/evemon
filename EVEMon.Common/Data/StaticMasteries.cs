@@ -24,10 +24,13 @@ namespace EVEMon.Common.Data
 
             MasteriesDatafile datafile = Util.DeserializeDatafile<MasteriesDatafile>(DatafileConstants.MasteriesDatafile);
 
-            foreach (SerializableMasteryShip ship in datafile.MasteryShips)
+            foreach (SerializableMasteryShip srcShip in datafile.MasteryShips)
             {
-                MasteryShip masteryShip = new MasteryShip(ship);
-                s_masteryShipsByID[ship.ID] = masteryShip;
+                Ship ship = StaticItems.GetItemByID(srcShip.ID) as Ship;
+                if (ship == null)
+                    continue;
+
+                s_masteryShipsByID[ship.ID] = new MasteryShip(srcShip, ship);
             }
         }
 
@@ -42,16 +45,6 @@ namespace EVEMon.Common.Data
         public static IEnumerable<MasteryShip> AllMasteryShips
         {
             get { return s_masteryShipsByID.Values; }
-        }
-
-        /// <summary>
-        /// Gets the mastery ship with the provided ID.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        public static MasteryShip GetMasteryShipByID(int id)
-        {
-            return s_masteryShipsByID[id];
         }
 
         #endregion
