@@ -738,7 +738,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Event Handlers
+        #region Control Events
 
         /// <summary>
         /// When the user click the text search hint, he actually wants to select the text box.

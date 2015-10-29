@@ -201,7 +201,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Control events
+        #region Control Events
 
         /// <summary>
         /// When the combo filter changes, we need to refresh the display.
@@ -326,6 +326,16 @@ namespace EVEMon.SkillPlanner
         private void tvItems_AfterSelect(object sender, TreeViewEventArgs e)
         {
             UpdateSelection(e.Node.Tag);
+        }
+
+        /// <summary>
+        /// Handles the MouseUp event of the pbSearchTextDel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
+        {
+            tbSearchText.Clear();
         }
 
         #endregion
@@ -965,6 +975,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }
