@@ -159,14 +159,10 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // Toolbar > Planned to... dropdown menu
-            bool enabled = false;
-            enabled |= PlanHelper.UpdatesRegularPlanToMenu(planTo0Menu, m_plan, m_selectedSkill, 0);
-            enabled |= PlanHelper.UpdatesRegularPlanToMenu(planTo1Menu, m_plan, m_selectedSkill, 1);
-            enabled |= PlanHelper.UpdatesRegularPlanToMenu(planTo2Menu, m_plan, m_selectedSkill, 2);
-            enabled |= PlanHelper.UpdatesRegularPlanToMenu(planTo3Menu, m_plan, m_selectedSkill, 3);
-            enabled |= PlanHelper.UpdatesRegularPlanToMenu(planTo4Menu, m_plan, m_selectedSkill, 4);
-            enabled |= PlanHelper.UpdatesRegularPlanToMenu(planTo5Menu, m_plan, m_selectedSkill, 5);
-            planToMenu.Enabled = enabled;
+            for (int i = 0; i <= 5; i++)
+            {
+                planToMenu.Enabled |= PlanHelper.UpdatesRegularPlanToMenu(planToMenu.DropDownItems[i], m_plan, m_selectedSkill, i);
+            }
 
             // Toolbar > "Planned to" label
             int level = m_plan.GetPlannedLevel(m_selectedSkill);
@@ -416,12 +412,11 @@ namespace EVEMon.SkillPlanner
         {
             if (e.Button == MouseButtons.Right)
             {
-                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo0, m_plan, e.Skill, 0);
-                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo1, m_plan, e.Skill, 1);
-                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo2, m_plan, e.Skill, 2);
-                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo3, m_plan, e.Skill, 3);
-                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo4, m_plan, e.Skill, 4);
-                PlanHelper.UpdatesRegularPlanToMenu(miPlanTo5, m_plan, e.Skill, 5);
+                for (int i = 0; i <= 5; i++)
+                {
+                    PlanHelper.UpdatesRegularPlanToMenu(cmsSkillContext.Items[i], m_plan, e.Skill, i);
+                }
+
                 cmsSkillContext.Show(skillTreeDisplay, e.Location);
                 return;
             }

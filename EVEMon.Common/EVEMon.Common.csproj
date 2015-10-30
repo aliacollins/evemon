@@ -101,6 +101,11 @@
     </Compile>
     <Compile Include="Constants\EveConstants.cs" />
     <Compile Include="Constants\EVEMonConstants.cs" />
+    <Compile Include="Data\MasteryCertificate.cs" />
+    <Compile Include="Data\Mastery.cs" />
+    <Compile Include="Data\MasteryShipCollection.cs" />
+    <Compile Include="Data\MasteryShip.cs" />
+    <Compile Include="Data\StaticMasteries.cs" />
     <Compile Include="Enumerations\AbbreviationFormat.cs" />
     <Compile Include="Enumerations\ActiveJobState.cs" />
     <Compile Include="Enumerations\AgentType.cs" />
@@ -146,6 +151,7 @@
     <Compile Include="Enumerations\JobState.cs" />
     <Compile Include="Enumerations\KillGroup.cs" />
     <Compile Include="Enumerations\LearningOptions.cs" />
+    <Compile Include="Enumerations\MasteryStatus.cs" />
     <Compile Include="Enumerations\MedalGroup.cs" />
     <Compile Include="Enumerations\MinmatarMilitiaRank.cs" />
     <Compile Include="Enumerations\ObjectActivityFilter.cs" />
@@ -733,6 +739,7 @@
     <Compile Include="UpdateManager.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Factories\WeakReferenceOfT.cs" />
+    <None Include="Serialization\Exportation\output-html.xslt" />
     <None Include="Serialization\BattleClinic\BCAPISettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>BCAPISettings.Designer.cs</LastGenOutput>
@@ -1055,11 +1062,13 @@
     <EmbeddedResource Include="Serialization\Datafiles\DatafileConstants.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>DatafileConstants.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Serialization\Settings\settings-transform.xslt" />
     <EmbeddedResource Include="Serialization\NotificationRefTypes.xml" />
+    <EmbeddedResource Include="Serialization\Flags.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\eve-blueprints-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1070,6 +1079,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\eve-items-en-US.xml.gzip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\eve-masteries-en-US.xml.gzip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\eve-properties-en-US.xml.gzip">
@@ -1089,10 +1101,6 @@
     <None Include="Resources\License\gpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Serialization\Exportation\output-html.xslt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Serialization\Flags.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

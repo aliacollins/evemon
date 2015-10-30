@@ -325,18 +325,9 @@ namespace EVEMon.SkillPlanner
         #region Content creation
 
         /// <summary>
-        /// Refresh the controls.
+        /// Builds the tree view.
         /// </summary>
-        private void UpdateContent()
-        {
-            BuildTreeView();
-            BuildListView();
-        }
-
-        /// <summary>
-        /// Rebuild the tree view.
-        /// </summary>
-        private void BuildTreeView()
+        protected override void BuildTreeView()
         {
             // Store the selected node (if any) to restore it after the update
             int selectedItemHash = (tvItems.SelectedNodes.Count > 0

@@ -9,7 +9,7 @@ namespace EVEMon.Common.Extensions
     public static class StaticSkillEnumerableExtensions
     {
         /// <summary>
-        /// Rreturns an equivalent enumeration with character skills.
+        /// Returns an equivalent enumeration with character skills.
         /// </summary>
         /// <param name="src"></param>
         /// <param name="character"></param>

@@ -770,6 +770,7 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
         #region Certificates
 
         /// <summary>
@@ -794,6 +795,38 @@ namespace EVEMon.Common.Models
         }
 
         #endregion
+
+
+        #region Masteries
+
+        /// <summary>
+        /// Checks whether, after this plan, the owner will be eligible to the provided mastery
+        /// </summary>
+        /// <param name="masteryLevel">The mastery level.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">masteryLevel</exception>
+        public bool WillGrantEligibilityFor(Mastery masteryLevel)
+        {
+            if (masteryLevel == null)
+                throw new ArgumentNullException("masteryLevel");
+
+            if (masteryLevel.IsTrained)
+                return true;
+
+            Character character = Character as Character;
+
+            // We check every prerequisite is trained
+            return !masteryLevel.Select(mcert => mcert.ToCharacter(character).GetCertificateLevel(masteryLevel.Level))
+                .SelectMany(cert => cert.PrerequisiteSkills)
+                .Select(skillToTrain => new { skillToTrain, skill = skillToTrain.Skill })
+                .Where(skillToTrain => skillToTrain.skill.Level < skillToTrain.skillToTrain.Level)
+                .Where(skillToTrain => !IsPlanned(skillToTrain.skill, skillToTrain.skillToTrain.Level))
+                .Select(skill => skill.skillToTrain)
+                .Any();
+        }
+
+        #endregion
+
 
         #region Sort
 

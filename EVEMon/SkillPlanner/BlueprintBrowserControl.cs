@@ -74,7 +74,7 @@ namespace EVEMon.SkillPlanner
             // Call the base method
             base.OnLoad(e);
 
-            lblHelp.Text = "Use the tree on the left to select a blueprint to view.";
+            lblHelp.Text = @"Use the tree on the left to select a blueprint to view.";
             gbDescription.Text = "Attributes";
             pnlAttributes.AutoScroll = true;
 
@@ -110,11 +110,11 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Updates the plan when the selection is changed.
+        /// Updates whenever the selected plan changed.
         /// </summary>
-        protected override void OnPlanChanged()
+        protected override void OnSelectedPlanChanged()
         {
-            base.OnPlanChanged();
+            base.OnSelectedPlanChanged();
             requiredSkillsControl.Plan = Plan;
 
             // We recalculate the right panels minimum size

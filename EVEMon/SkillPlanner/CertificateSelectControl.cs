@@ -18,6 +18,9 @@ using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
 {
+    /// <summary>
+    /// Represents a control to select certificates
+    /// </summary>
     public partial class CertificateSelectControl : UserControl
     {
         // Blank image list for 'Safe for work' setting
@@ -91,8 +94,6 @@ namespace EVEMon.SkillPlanner
                     {
                         item.Selected = true;
                     }
-
-                    lbSearchList.SelectedItem = value;
                 }
                 finally
                 {
@@ -124,7 +125,7 @@ namespace EVEMon.SkillPlanner
             lvSortedList.SelectedIndexChanged -= lvSortedList_SelectedIndexChanged;
             tvItems.NodeMouseClick -= tvItems_NodeMouseClick;
             tvItems.AfterSelect -= tvItems_AfterSelect;
-            cmListSkills.Opening -= cmListSkills_Opening;
+            cmListCerts.Opening -= cmListCerts_Opening;
             Disposed -= OnDisposed;
         }
 
@@ -145,7 +146,7 @@ namespace EVEMon.SkillPlanner
             lvSortedList.SelectedIndexChanged += lvSortedList_SelectedIndexChanged;
             tvItems.NodeMouseClick += tvItems_NodeMouseClick;
             tvItems.AfterSelect += tvItems_AfterSelect;
-            cmListSkills.Opening += cmListSkills_Opening;
+            cmListCerts.Opening += cmListCerts_Opening;
             Disposed += OnDisposed;
 
             m_emptyImageList.ImageSize = new Size(24, 24);
@@ -201,7 +202,7 @@ namespace EVEMon.SkillPlanner
         #endregion
 
 
-        #region Control events
+        #region Control Events
 
         /// <summary>
         /// When the combo filter changes, we need to refresh the display.
@@ -267,7 +268,10 @@ namespace EVEMon.SkillPlanner
         private void tbSearchText_TextChanged(object sender, EventArgs e)
         {
             UpdateSettingsForTextSearch(tbSearchText.Text);
-            
+
+            if (!tbSearchText.Focused)
+                lbSearchTextHint.Visible = String.IsNullOrEmpty(tbSearchText.Text);
+
             if (m_init)
                 UpdateContent();
         }
@@ -328,6 +332,16 @@ namespace EVEMon.SkillPlanner
             UpdateSelection(e.Node.Tag);
         }
 
+        /// <summary>
+        /// Handles the MouseUp event of the pbSearchTextDel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
+        private void pbSearchTextDel_MouseUp(object sender, MouseEventArgs e)
+        {
+            tbSearchText.Clear();
+        }
+
         #endregion
 
 
@@ -343,6 +357,10 @@ namespace EVEMon.SkillPlanner
                 return;
 
             IList<CertificateClass> classes = GetFilteredData().ToList();
+
+            lbSearchList.Items.Clear();
+            lvSortedList.Items.Clear();
+            tvItems.Nodes.Clear();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -378,7 +396,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the certificates tree.
         /// </summary>
-        /// <param name="classes"></param>
+        /// <param name="classes">The list of certificate classes to show</param>
         private void UpdateTree(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
@@ -462,13 +480,15 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the list box displayed when there is a text filter and no sort criteria.
         /// </summary>
-        /// <param name="classes"></param>
+        /// <param name="classes">The list of certificates to show</param>
         private void UpdateListBox(IEnumerable<CertificateClass> classes)
         {
             lbSearchList.BeginUpdate();
             try
             {
                 lbSearchList.Items.Clear();
+                SelectedCertificateClass = null;
+
                 foreach (CertificateClass certClass in classes)
                 {
                     lbSearchList.Items.Add(certClass);
@@ -483,7 +503,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the listview displayed when there is a sort criteria.
         /// </summary>
-        /// <param name="classes"></param>
+        /// <param name="classes">The list of certificates to show</param>
         private void UpdateListView(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
@@ -550,7 +570,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the filtered list of data.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The fitlerd list of the data</returns>
         private IEnumerable<CertificateClass> GetFilteredData()
         {
             IEnumerable<CertificateClass> classes = m_character.CertificateClasses;
@@ -606,9 +626,9 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets the data for the sorted list view.
         /// </summary>
-        /// <param name="classes"></param>
-        /// <param name="labels"></param>
-        /// <returns></returns>
+        /// <param name="classes">The certificate classes which are shown</param>
+        /// <param name="labels">The labeltexts to show</param>
+        /// <returns>The column header text</returns>
         private string GetSortedListData(ref IList<CertificateClass> classes, ref IEnumerable<string> labels)
         {
             IEnumerable<TimeSpan> times;
@@ -649,24 +669,26 @@ namespace EVEMon.SkillPlanner
         /// Gets the time to next grade.
         /// </summary>
         /// <param name="certificateClass">The certificate class.</param>
-        /// <returns></returns>
+        /// <returns>The time required to finish the next grade</returns>
         private static TimeSpan GetTimeToNextLevel(CertificateClass certificateClass)
         {
-            return certificateClass.Certificate.LowestUntrainedLevel == null
-                        ? TimeSpan.Zero
-                        : certificateClass.Certificate.LowestUntrainedLevel.GetTrainingTime;
+            CertificateLevel lowestTrinedLevel = certificateClass.Certificate.LowestUntrainedLevel;
+            return lowestTrinedLevel == null
+                ? TimeSpan.Zero
+                : lowestTrinedLevel.GetTrainingTime;
         }
 
         /// <summary>
         /// Gets the time to elite grade.
         /// </summary>
         /// <param name="certificateClass">The certificate class.</param>
-        /// <returns></returns>
+        /// <returns>The time required to finish the final grade</returns>
         private static TimeSpan GetTimeToMaxLevel(CertificateClass certificateClass)
         {
-            return certificateClass.Certificate.LevelFive.IsTrained
+            CertificateLevel levelFive = certificateClass.Certificate.GetCertificateLevel(5);
+            return levelFive.IsTrained
                 ? TimeSpan.Zero
-                : certificateClass.Certificate.LevelFive.GetTrainingTime;
+                : levelFive.GetTrainingTime;
         }
 
         /// <summary>
@@ -674,7 +696,7 @@ namespace EVEMon.SkillPlanner
         /// lazily creating the images when they're needed.
         /// </summary>
         /// <param name="certificate">The certificate.</param>
-        /// <returns></returns>
+        /// <returns>The index of the image appropriate for the certificate</returns>
         private int GetCertImageIndex(Certificate certificate)
         {
             if (!Settings.UI.SafeForWork)
@@ -797,7 +819,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the selection with the provided item.
         /// </summary>
-        /// <param name="selection"></param>
+        /// <param name="selection">The item</param>
         private void UpdateSelection(object selection)
         {
             if (!m_blockSelectionReentrancy)
@@ -807,7 +829,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the settings for the search text.
         /// </summary>
-        /// <param name="textSearch"></param>
+        /// <param name="textSearch">The search text</param>
         private static void UpdateSettingsForTextSearch(string textSearch)
         {
             Settings.UI.CertificateBrowser.TextSearch = textSearch;
@@ -816,7 +838,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the settings for the filter.
         /// </summary>
-        /// <param name="filterIndex"></param>
+        /// <param name="filterIndex">The filter index</param>
         private static void UpdateSettingsForFilter(int filterIndex)
         {
             Settings.UI.CertificateBrowser.Filter = (CertificateFilter)filterIndex;
@@ -825,7 +847,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the settings for the sort.
         /// </summary>
-        /// <param name="sortIndex"></param>
+        /// <param name="sortIndex">The sort index</param>
         private static void UpdateSettingsForSort(int sortIndex)
         {
             Settings.UI.CertificateBrowser.Sort = (CertificateSort)sortIndex;
@@ -837,16 +859,35 @@ namespace EVEMon.SkillPlanner
         #region Context menus
 
         /// <summary>
+        /// Context > Plan To > Level N
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void planToLevelMenuItem_Click(object sender, EventArgs e)
+        {
+            IPlanOperation operation = ((ToolStripMenuItem)sender).Tag as IPlanOperation;
+            if (operation == null)
+                return;
+
+            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+            if (window == null || window.IsDisposed)
+                return;
+
+            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+        }
+
+        /// <summary>
         /// When the tree's context menu opens,
         /// we update the submenus' statuses.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cmListSkills_Opening(object sender, CancelEventArgs e)
+        private void cmListCerts_Opening(object sender, CancelEventArgs e)
         {
             TreeNode node = tvItems.SelectedNode;
             CertificateClass certClass = SelectedCertificateClass;
-            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.Certificate.LevelFive))
+
+            if (certClass == null || m_plan.WillGrantEligibilityFor(certClass.Certificate.GetCertificateLevel(5)))
             {
                 cmiLvPlanTo.Enabled = false;
                 cmiLvPlanTo.Text = @"Plan to...";
@@ -856,18 +897,18 @@ namespace EVEMon.SkillPlanner
                 cmiLvPlanTo.Enabled = true;
                 cmiLvPlanTo.Text = String.Format(CultureConstants.DefaultCulture, "Plan \"{0}\" to...", certClass.Name);
 
-                SetAdditionMenuStatus(tsmLevel1, certClass.Certificate.LevelOne);
-                SetAdditionMenuStatus(tsmLevel2, certClass.Certificate.LevelTwo);
-                SetAdditionMenuStatus(tsmLevel3, certClass.Certificate.LevelThree);
-                SetAdditionMenuStatus(tsmLevel4, certClass.Certificate.LevelFour);
-                SetAdditionMenuStatus(tsmLevel5, certClass.Certificate.LevelFive);
+                // "Plan to N" menus
+                for (int i = 1; i <= 5; i++)
+                {
+                    SetAdditionMenuStatus(cmiLvPlanTo.DropDownItems[i - 1], certClass.Certificate.GetCertificateLevel(i));
+                }
             }
 
-            tsSeparatorPlanTo.Visible = (certClass == null && node != null);
+            tsSeparatorPlanTo.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0);
 
             // "Expand" and "Collapse" selected menu
-            tsmExpandSelected.Visible = (certClass == null && node != null && !node.IsExpanded);
-            tsmCollapseSelected.Visible = (certClass == null && node != null && node.IsExpanded);
+            tsmExpandSelected.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0 && !node.IsExpanded);
+            tsmCollapseSelected.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0 && node.IsExpanded);
 
             tsmExpandSelected.Text = (certClass == null && node != null &&
                                       !node.IsExpanded
@@ -878,9 +919,11 @@ namespace EVEMon.SkillPlanner
                                             ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
                                             : String.Empty);
 
+            tsSeparatorExpandCollapse.Visible = lbSearchList.Items.Count == 0;
+
             // "Expand All" and "Collapse All" menu
-            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;
-            tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled;
+            tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded && lbSearchList.Items.Count == 0;
+            tsmExpandAll.Enabled = tsmExpandAll.Visible = !tsmCollapseAll.Enabled && lbSearchList.Items.Count == 0;
         }
 
         /// <summary>
@@ -888,7 +931,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="menu">The menu.</param>
         /// <param name="certLevel">The cert level.</param>
-        private void SetAdditionMenuStatus(ToolStripMenuItem menu, CertificateLevel certLevel)
+        private void SetAdditionMenuStatus(ToolStripItem menu, CertificateLevel certLevel)
         {
             menu.Visible = certLevel != null;
 
@@ -896,96 +939,9 @@ namespace EVEMon.SkillPlanner
                 return;
 
             menu.Enabled = !m_plan.WillGrantEligibilityFor(certLevel);
-        }
 
-        /// <summary>
-        /// Context menu > Plan to > Level I
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel1_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelOne);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Context menu > Plan to > Level II
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel2_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelTwo);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Context menu > Plan to > Level III
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel3_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelThree);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Context menu > Plan to > Level IV
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel4_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelFour);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
-        }
-
-        /// <summary>
-        /// Context menu > Plan to > Level V
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmLevel5_Click(object sender, EventArgs e)
-        {
-            IPlanOperation operation = m_plan.TryPlanTo(SelectedCertificateClass.Certificate.LevelFive);
-            if (operation == null)
-                return;
-
-            PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
-            if (window == null || window.IsDisposed)
-                return;
-
-            PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+            if (menu.Enabled)
+                menu.Tag = m_plan.TryPlanTo(certLevel);
         }
 
         /// <summary>

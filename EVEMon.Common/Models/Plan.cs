@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
+using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Factories;
@@ -451,6 +452,7 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
         #region Certificates
 
         /// <summary>
@@ -458,16 +460,69 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="certificateLevel">The certificate level.</param>
         /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException">certificate</exception>
+        /// <exception cref="System.ArgumentNullException">certificateLevel</exception>
         public IPlanOperation TryPlanTo(CertificateLevel certificateLevel)
         {
             if (certificateLevel == null)
                 throw new ArgumentNullException("certificateLevel");
 
-            return TryAddSet(certificateLevel.PrerequisiteSkills, certificateLevel.ToString());
+            List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
+            foreach (SkillLevel skillLevel in certificateLevel.PrerequisiteSkills)
+            {
+                int plannedLevel = GetPlannedLevel(skillLevel.Skill);
+                if ((skillLevel.Level == plannedLevel) || (skillLevel.Level <= plannedLevel))
+                    continue;
+
+                // Get skill levels to add
+                for (int i = plannedLevel + 1; i <= skillLevel.Level; i++)
+                {
+                    skillsToAdd.Add(new StaticSkillLevel(skillLevel.Skill, i));
+                }
+            }
+
+            return TryAddSet(skillsToAdd, String.Format(CultureConstants.DefaultCulture, "{0} {1}",
+                    certificateLevel.Certificate.Name, certificateLevel));
         }
 
         #endregion
+
+
+        #region Masteries
+
+        /// <summary>
+        /// Adds the provided mastery's prerequisites to the plan.
+        /// </summary>
+        /// <param name="masteryLevel">The mastery level.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">masteryLevel</exception>
+        public IPlanOperation TryPlanTo(Mastery masteryLevel)
+        {
+            if (masteryLevel == null)
+                throw new ArgumentNullException("masteryLevel");
+
+            List<StaticSkillLevel> skillsToAdd = new List<StaticSkillLevel>();
+            Character character = Character as Character;
+            foreach (SkillLevel skillLevel in masteryLevel
+                .Select(mcert => mcert.ToCharacter(character).GetCertificateLevel(masteryLevel.Level))
+                .SelectMany(x => x.PrerequisiteSkills))
+            {
+                int plannedLevel = GetPlannedLevel(skillLevel.Skill);
+                if ((skillLevel.Level == plannedLevel) || (skillLevel.Level <= plannedLevel))
+                    continue;
+
+                // Get skill levels to add
+                for (int i = plannedLevel + 1; i <= skillLevel.Level; i++)
+                {
+                    skillsToAdd.Add(new StaticSkillLevel(skillLevel.Skill, i));
+                }
+            }
+
+            return TryAddSet(skillsToAdd, String.Format(CultureConstants.DefaultCulture, "{0} Mastery {1}",
+                masteryLevel.MasteryShip.Ship.Name, masteryLevel));
+        }
+
+        #endregion
+
 
         #region Priorities changes
 

@@ -34,12 +34,6 @@ namespace EVEMon.SkillPlanner
             this.lbSearchTextHint = new System.Windows.Forms.Label();
             this.lbNoMatches = new System.Windows.Forms.Label();
             this.lbSearchList = new System.Windows.Forms.ListBox();
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.upperPanel = new System.Windows.Forms.Panel();
             this.pbSerachTextDel = new System.Windows.Forms.PictureBox();
             this.cbUsabilityFilter = new System.Windows.Forms.ComboBox();
@@ -47,11 +41,24 @@ namespace EVEMon.SkillPlanner
             this.pbSearchImage = new System.Windows.Forms.PictureBox();
             this.lowerPanel = new System.Windows.Forms.Panel();
             this.tvItems = new EVEMon.Common.Controls.TreeView();
-            this.contextMenu.SuspendLayout();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiLvPlanTo = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmLevel1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmLevel2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmLevel3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmLevel4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmLevel5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSeparatorPlanTo = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSeparatorExpandCollapse = new System.Windows.Forms.ToolStripSeparator();
+            this.cmiExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.upperPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).BeginInit();
             this.lowerPanel.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbSearchText
@@ -110,51 +117,6 @@ namespace EVEMon.SkillPlanner
             this.lbSearchList.Visible = false;
             this.lbSearchList.SelectedIndexChanged += new System.EventHandler(this.lbSearchList_SelectedIndexChanged);
             // 
-            // contextMenu
-            // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmiExpandSelected,
-            this.cmiCollapseSelected,
-            this.tsSeparator,
-            this.cmiExpandAll,
-            this.cmiCollapseAll});
-            this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(167, 98);
-            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
-            // 
-            // cmiExpandSelected
-            // 
-            this.cmiExpandSelected.Name = "cmiExpandSelected";
-            this.cmiExpandSelected.Size = new System.Drawing.Size(166, 22);
-            this.cmiExpandSelected.Text = "Expand Selected";
-            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
-            // 
-            // cmiCollapseSelected
-            // 
-            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
-            this.cmiCollapseSelected.Size = new System.Drawing.Size(166, 22);
-            this.cmiCollapseSelected.Text = "Collapse Selected";
-            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
-            // 
-            // tsSeparator
-            // 
-            this.tsSeparator.Name = "tsSeparator";
-            this.tsSeparator.Size = new System.Drawing.Size(163, 6);
-            // 
-            // cmiExpandAll
-            // 
-            this.cmiExpandAll.Name = "cmiExpandAll";
-            this.cmiExpandAll.Size = new System.Drawing.Size(166, 22);
-            this.cmiExpandAll.Text = "Expand All";
-            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
-            // 
-            // cmiCollapseAll
-            // 
-            this.cmiCollapseAll.Name = "cmiCollapseAll";
-            this.cmiCollapseAll.Size = new System.Drawing.Size(166, 22);
-            this.cmiCollapseAll.Text = "Collapse All";
-            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
-            // 
             // upperPanel
             // 
             this.upperPanel.Controls.Add(this.pbSerachTextDel);
@@ -182,7 +144,7 @@ namespace EVEMon.SkillPlanner
             this.pbSerachTextDel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbSerachTextDel.TabIndex = 25;
             this.pbSerachTextDel.TabStop = false;
-            this.pbSerachTextDel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbSerachTextDel_MouseUp);
+            this.pbSerachTextDel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbSearchTextDel_MouseUp);
             // 
             // cbUsabilityFilter
             // 
@@ -248,6 +210,106 @@ namespace EVEMon.SkillPlanner
             this.tvItems.TabIndex = 22;
             this.tvItems.SelectionsChanged += new System.EventHandler(this.tvItems_SelectionsChanged);
             // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiLvPlanTo,
+            this.tsSeparatorPlanTo,
+            this.cmiExpandSelected,
+            this.cmiCollapseSelected,
+            this.tsSeparatorExpandCollapse,
+            this.cmiExpandAll,
+            this.cmiCollapseAll});
+            this.contextMenu.Name = "cmListSkills";
+            this.contextMenu.Size = new System.Drawing.Size(167, 148);
+            this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            // 
+            // cmiLvPlanTo
+            // 
+            this.cmiLvPlanTo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmLevel1,
+            this.tsmLevel2,
+            this.tsmLevel3,
+            this.tsmLevel4,
+            this.tsmLevel5});
+            this.cmiLvPlanTo.Image = ((System.Drawing.Image)(resources.GetObject("cmiLvPlanTo.Image")));
+            this.cmiLvPlanTo.Name = "cmiLvPlanTo";
+            this.cmiLvPlanTo.Size = new System.Drawing.Size(166, 22);
+            this.cmiLvPlanTo.Text = "&Plan Mastery to...";
+            // 
+            // tsmLevel1
+            // 
+            this.tsmLevel1.Name = "tsmLevel1";
+            this.tsmLevel1.Size = new System.Drawing.Size(114, 22);
+            this.tsmLevel1.Text = "Level I";
+            this.tsmLevel1.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
+            // 
+            // tsmLevel2
+            // 
+            this.tsmLevel2.Name = "tsmLevel2";
+            this.tsmLevel2.Size = new System.Drawing.Size(114, 22);
+            this.tsmLevel2.Text = "Level II";
+            this.tsmLevel2.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
+            // 
+            // tsmLevel3
+            // 
+            this.tsmLevel3.Name = "tsmLevel3";
+            this.tsmLevel3.Size = new System.Drawing.Size(114, 22);
+            this.tsmLevel3.Text = "Level III";
+            this.tsmLevel3.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
+            // 
+            // tsmLevel4
+            // 
+            this.tsmLevel4.Name = "tsmLevel4";
+            this.tsmLevel4.Size = new System.Drawing.Size(114, 22);
+            this.tsmLevel4.Text = "Level IV";
+            this.tsmLevel4.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
+            // 
+            // tsmLevel5
+            // 
+            this.tsmLevel5.Name = "tsmLevel5";
+            this.tsmLevel5.Size = new System.Drawing.Size(114, 22);
+            this.tsmLevel5.Text = "Level V";
+            this.tsmLevel5.Click += new System.EventHandler(this.planToLevelMenuItem_Click);
+            // 
+            // tsSeparatorPlanTo
+            // 
+            this.tsSeparatorPlanTo.Name = "tsSeparatorPlanTo";
+            this.tsSeparatorPlanTo.Size = new System.Drawing.Size(163, 6);
+            // 
+            // cmiExpandSelected
+            // 
+            this.cmiExpandSelected.Name = "cmiExpandSelected";
+            this.cmiExpandSelected.Size = new System.Drawing.Size(166, 22);
+            this.cmiExpandSelected.Text = "Expand Selected";
+            this.cmiExpandSelected.Click += new System.EventHandler(this.cmiExpandSelected_Click);
+            // 
+            // cmiCollapseSelected
+            // 
+            this.cmiCollapseSelected.Name = "cmiCollapseSelected";
+            this.cmiCollapseSelected.Size = new System.Drawing.Size(166, 22);
+            this.cmiCollapseSelected.Text = "Collapse Selected";
+            this.cmiCollapseSelected.Click += new System.EventHandler(this.cmiCollapseSelected_Click);
+            // 
+            // tsSeparatorExpandCollapse
+            // 
+            this.tsSeparatorExpandCollapse.Name = "tsSeparatorExpandCollapse";
+            this.tsSeparatorExpandCollapse.Size = new System.Drawing.Size(163, 6);
+            // 
+            // cmiExpandAll
+            // 
+            this.cmiExpandAll.Name = "cmiExpandAll";
+            this.cmiExpandAll.Size = new System.Drawing.Size(166, 22);
+            this.cmiExpandAll.Text = "&Expand All";
+            this.cmiExpandAll.Click += new System.EventHandler(this.cmiExpandAll_Click);
+            // 
+            // cmiCollapseAll
+            // 
+            this.cmiCollapseAll.Name = "cmiCollapseAll";
+            this.cmiCollapseAll.Size = new System.Drawing.Size(166, 22);
+            this.cmiCollapseAll.Text = "&Collapse All";
+            this.cmiCollapseAll.Click += new System.EventHandler(this.cmiCollapseAll_Click);
+            // 
             // EveObjectSelectControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,12 +320,12 @@ namespace EVEMon.SkillPlanner
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "EveObjectSelectControl";
             this.Size = new System.Drawing.Size(185, 398);
-            this.contextMenu.ResumeLayout(false);
             this.upperPanel.ResumeLayout(false);
             this.upperPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSerachTextDel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSearchImage)).EndInit();
             this.lowerPanel.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -281,12 +343,19 @@ namespace EVEMon.SkillPlanner
         protected System.Windows.Forms.ComboBox cbUsabilityFilter;
         protected internal System.Windows.Forms.ListBox lbSearchList;
         protected internal EVEMon.Common.Controls.TreeView tvItems;
-        private System.Windows.Forms.ContextMenuStrip contextMenu;
-        private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
-        private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
+        protected System.Windows.Forms.PictureBox pbSerachTextDel;
+        private System.Windows.Forms.ToolStripMenuItem cmiLvPlanTo;
+        private System.Windows.Forms.ToolStripMenuItem tsmLevel1;
+        private System.Windows.Forms.ToolStripMenuItem tsmLevel2;
+        private System.Windows.Forms.ToolStripMenuItem tsmLevel3;
+        private System.Windows.Forms.ToolStripMenuItem tsmLevel4;
+        private System.Windows.Forms.ToolStripMenuItem tsmLevel5;
+        private System.Windows.Forms.ToolStripSeparator tsSeparatorPlanTo;
         private System.Windows.Forms.ToolStripMenuItem cmiExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem cmiCollapseSelected;
-        private System.Windows.Forms.ToolStripSeparator tsSeparator;
-        protected System.Windows.Forms.PictureBox pbSerachTextDel;
+        private System.Windows.Forms.ToolStripSeparator tsSeparatorExpandCollapse;
+        private System.Windows.Forms.ToolStripMenuItem cmiExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem cmiCollapseAll;
+        protected System.Windows.Forms.ContextMenuStrip contextMenu;
     }
 }

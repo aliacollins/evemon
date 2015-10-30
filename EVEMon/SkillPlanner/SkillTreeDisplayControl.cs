@@ -263,10 +263,10 @@ namespace EVEMon.SkillPlanner
             Rectangle endRect = endCell.Rectangle;
 
             g.DrawLine(pen,
-                       startRect.Location.X + ofsLeft + (startRect.Width >> 1),
-                       startRect.Location.Y + ofsTop + (startRect.Height >> 1),
-                       endRect.Location.X + ofsLeft + (startRect.Width >> 1),
-                       endRect.Location.Y + ofsTop + (startRect.Height >> 1));
+                startRect.Location.X + ofsLeft + (startRect.Width >> 1),
+                startRect.Location.Y + ofsTop + (startRect.Height >> 1),
+                endRect.Location.X + ofsLeft + (startRect.Width >> 1),
+                endRect.Location.Y + ofsTop + (startRect.Height >> 1));
 
             foreach (Cell child in endCell.Cells)
             {
@@ -298,14 +298,14 @@ namespace EVEMon.SkillPlanner
 
                 // Retrieves the output of the second line : "Current Level : II (Planned to IV)"
                 currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
-                                              "Current Level: {0}",
-                                              Skill.GetRomanFromInt(cell.Skill.Level));
+                    "Current Level: {0}",
+                    Skill.GetRomanFromInt(cell.Skill.Level));
 
                 if (m_plan.GetPlannedLevel(cell.Skill) > 0)
                 {
                     currentLevelText.AppendFormat(CultureConstants.DefaultCulture,
-                                                  " (Planned To: {0})",
-                                                  Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.Skill)));
+                        " (Planned To: {0})",
+                        Skill.GetRomanFromInt(m_plan.GetPlannedLevel(cell.Skill)));
                 }
 
                 // Retrieves the output and colors for the lower lines
@@ -316,14 +316,14 @@ namespace EVEMon.SkillPlanner
                 {
                     // Third line : "Required Level : V"
                     requiredLevel = String.Format(CultureConstants.DefaultCulture, "Required Level: {0}",
-                                                  Skill.GetRomanFromInt(cell.RequiredLevel));
+                        Skill.GetRomanFromInt(cell.RequiredLevel));
 
                     if (cell.RequiredLevel > cell.Skill.Level)
                     {
                         // Fourth line : "This Time : 9H, 26M, 42S"
                         TimeSpan ts = cell.Skill.GetLeftTrainingTimeToLevel(cell.RequiredLevel);
                         thisRequiredTime = String.Format(CultureConstants.DefaultCulture, "This Time: {0}",
-                                                         ts.ToDescriptiveText(TimeFormat));
+                            ts.ToDescriptiveText(TimeFormat));
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Yellow : SystemColors.GrayText;
 
                         if (cell.Skill.ArePrerequisitesMet)
@@ -334,17 +334,17 @@ namespace EVEMon.SkillPlanner
                             stdTextColor = !Settings.UI.SafeForWork ? Color.White : SystemColors.ControlText;
                         }
                     }
-                        // Required level already met
+                    // Required level already met
                     else
                     {
                         reqTextColor = !Settings.UI.SafeForWork ? Color.Black : SystemColors.ControlText;
                         fillBrush = GetLinearGradientBrush(rect, Color.LightSeaGreen, Color.DarkGreen, 90.0F);
                     }
                 }
-                    // Skill at level 0, prerequisites met
+                // Skill at level 0, prerequisites met
                 else if (cell.Skill.ArePrerequisitesMet)
                     fillBrush = GetLinearGradientBrush(rect, Color.LightBlue, Color.Blue, 90.0F);
-                    // Skill unknown, not trainable
+                // Skill unknown, not trainable
                 else
                 {
                     fillBrush = GetLinearGradientBrush(rect, Color.Blue, Color.Black, 90.0F);
@@ -356,7 +356,7 @@ namespace EVEMon.SkillPlanner
                 {
                     TimeSpan pts = cell.Skill.Character.GetTrainingTimeToMultipleSkills(cell.Skill.Prerequisites);
                     prereqTime = String.Format(CultureConstants.DefaultCulture, "Prerequisite: {0}",
-                                               pts.ToDescriptiveText(TimeFormat));
+                        pts.ToDescriptiveText(TimeFormat));
                 }
 
                 // Fill the background
@@ -440,8 +440,8 @@ namespace EVEMon.SkillPlanner
             Size res = TextRenderer.MeasureText(g, text, f);
 
             TextRenderer.DrawText(g, text, f,
-                                  new Rectangle(p.X, p.Y, res.Width, res.Height), c, Color.Transparent,
-                                  TextFormatFlags.Default);
+                new Rectangle(p.X, p.Y, res.Width, res.Height), c, Color.Transparent,
+                TextFormatFlags.Default);
             return res;
         }
 

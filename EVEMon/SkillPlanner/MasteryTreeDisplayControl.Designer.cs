@@ -1,6 +1,6 @@
-namespace EVEMon.SkillPlanner
+﻿namespace EVEMon.SkillPlanner
 {
-    sealed partial class CertificateTreeDisplayControl
+    partial class MasteryTreeDisplayControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,8 @@ namespace EVEMon.SkillPlanner
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CertificateTreeDisplayControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MasteryTreeDisplayControl));
+            this.imageListCertLevels = new System.Windows.Forms.ImageList(this.components);
             this.cmListSkills = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmAddToPlan = new System.Windows.Forms.ToolStripMenuItem();
             this.showInMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
@@ -42,10 +43,21 @@ namespace EVEMon.SkillPlanner
             this.tsmExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.imageListCertLevels = new System.Windows.Forms.ImageList(this.components);
             this.treeView = new EVEMon.SkillPlanner.OverridenTreeView();
+            this.imageListMasteryLevels = new System.Windows.Forms.ImageList(this.components);
             this.cmListSkills.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // imageListCertLevels
+            // 
+            this.imageListCertLevels.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListCertLevels.ImageStream")));
+            this.imageListCertLevels.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListCertLevels.Images.SetKeyName(0, "level0");
+            this.imageListCertLevels.Images.SetKeyName(1, "level1");
+            this.imageListCertLevels.Images.SetKeyName(2, "level2");
+            this.imageListCertLevels.Images.SetKeyName(3, "level3");
+            this.imageListCertLevels.Images.SetKeyName(4, "level4");
+            this.imageListCertLevels.Images.SetKeyName(5, "level5");
             // 
             // cmListSkills
             // 
@@ -140,17 +152,6 @@ namespace EVEMon.SkillPlanner
             this.imageList.Images.SetKeyName(4, "Skillbook");
             this.imageList.Images.SetKeyName(5, "Planned");
             // 
-            // imageListCertLevels
-            // 
-            this.imageListCertLevels.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListCertLevels.ImageStream")));
-            this.imageListCertLevels.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListCertLevels.Images.SetKeyName(0, "level0");
-            this.imageListCertLevels.Images.SetKeyName(1, "level1");
-            this.imageListCertLevels.Images.SetKeyName(2, "level2");
-            this.imageListCertLevels.Images.SetKeyName(3, "level3");
-            this.imageListCertLevels.Images.SetKeyName(4, "level4");
-            this.imageListCertLevels.Images.SetKeyName(5, "level5");
-            // 
             // treeView
             // 
             this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -160,7 +161,6 @@ namespace EVEMon.SkillPlanner
             this.treeView.FullRowSelect = true;
             this.treeView.ImageIndex = 0;
             this.treeView.ImageList = this.imageList;
-            this.treeView.Indent = 27;
             this.treeView.ItemHeight = 1;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
@@ -170,13 +170,23 @@ namespace EVEMon.SkillPlanner
             this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
             this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
             // 
-            // CertificateTreeDisplayControl
+            // imageListMasteryLevels
+            // 
+            this.imageListMasteryLevels.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListMasteryLevels.ImageStream")));
+            this.imageListMasteryLevels.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListMasteryLevels.Images.SetKeyName(0, "masteryLevel");
+            this.imageListMasteryLevels.Images.SetKeyName(1, "masteryLevel1");
+            this.imageListMasteryLevels.Images.SetKeyName(2, "masteryLevel2");
+            this.imageListMasteryLevels.Images.SetKeyName(3, "masteryLevel3");
+            this.imageListMasteryLevels.Images.SetKeyName(4, "masteryLevel4");
+            this.imageListMasteryLevels.Images.SetKeyName(5, "masteryLevel5");
+            // 
+            // MasteryTreeDisplayControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.treeView);
-            this.Name = "CertificateTreeDisplayControl";
+            this.Name = "MasteryTreeDisplayControl";
             this.Size = new System.Drawing.Size(226, 282);
             this.cmListSkills.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -186,18 +196,19 @@ namespace EVEMon.SkillPlanner
         #endregion
 
         private OverridenTreeView treeView;
-        private System.Windows.Forms.ImageList imageList;
+        private System.Windows.Forms.ImageList imageListCertLevels;
         private System.Windows.Forms.ContextMenuStrip cmListSkills;
-        private System.Windows.Forms.ToolStripSeparator tsSeparator;
-        private System.Windows.Forms.ToolStripMenuItem tsmExpandAll;
-        private System.Windows.Forms.ToolStripMenuItem tsmCollapseAll;
         private System.Windows.Forms.ToolStripMenuItem tsmAddToPlan;
-        private System.Windows.Forms.ToolStripMenuItem showInBrowserMenu;
         private System.Windows.Forms.ToolStripSeparator showInMenuSeparator;
+        private System.Windows.Forms.ToolStripMenuItem showInBrowserMenu;
         private System.Windows.Forms.ToolStripMenuItem showInExplorerMenu;
         private System.Windows.Forms.ToolStripSeparator tsSeparatorToggle;
         private System.Windows.Forms.ToolStripMenuItem tsmExpandSelected;
         private System.Windows.Forms.ToolStripMenuItem tsmCollapseSelected;
-        private System.Windows.Forms.ImageList imageListCertLevels;
+        private System.Windows.Forms.ToolStripSeparator tsSeparator;
+        private System.Windows.Forms.ToolStripMenuItem tsmExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem tsmCollapseAll;
+        private System.Windows.Forms.ImageList imageList;
+        private System.Windows.Forms.ImageList imageListMasteryLevels;
     }
 }

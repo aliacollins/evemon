@@ -43,12 +43,12 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        #region Core properties
+        #region Core Properties
 
         /// <summary>
         /// Gets the static data associated with this certificate.
         /// </summary>
-        public StaticCertificate StaticData { get; private set; }
+        private StaticCertificate StaticData { get; set; }
 
         /// <summary>
         /// Gets this certificate's id.
@@ -88,61 +88,6 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Gets the level one of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level one.
-        /// </value>
-        public CertificateLevel LevelOne
-        {
-            get { return m_levels[(int)CertificateGrade.Basic]; }
-        }
-
-        /// <summary>
-        /// Gets the level two of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level two.
-        /// </value>
-        public CertificateLevel LevelTwo
-        {
-            get { return m_levels[(int)CertificateGrade.Standard]; }
-        }
-
-        /// <summary>
-        /// Gets the level three of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level three.
-        /// </value>
-        public CertificateLevel LevelThree
-        {
-            get { return m_levels[(int)CertificateGrade.Improved]; }
-        }
-
-        /// <summary>
-        /// Gets the level four of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level four.
-        /// </value>
-        public CertificateLevel LevelFour
-        {
-            get { return m_levels[(int)CertificateGrade.Advanced]; }
-        }
-
-        /// <summary>
-        /// Gets the level five of the cerificate.
-        /// </summary>
-        /// <value>
-        /// The level five.
-        /// </value>
-        public CertificateLevel LevelFive
-        {
-            get { return m_levels[(int)CertificateGrade.Elite]; }
-        }
-
-        /// <summary>
         /// Gets all levels of the cerificate.
         /// </summary>
         /// <value>
@@ -151,21 +96,6 @@ namespace EVEMon.Common.Data
         public IEnumerable<CertificateLevel> AllLevel
         {
             get { return m_levels.Where(level => level != null); }
-        }
-
-        #endregion
-
-
-        #region Helper methods and properties  
-
-        /// <summary>
-        /// Try to update the certificate's status. 
-        /// </summary>
-        /// <returns>True if the status was updated, false otherwise.</returns>
-        internal bool TryUpdateCertificateStatus()
-        {
-            return m_levels.Where(level => level != null)
-                .Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
         }
 
         /// <summary>
@@ -201,6 +131,30 @@ namespace EVEMon.Common.Data
         public CertificateLevel HighestTrainedLevel
         {
             get { return AllLevel.LastOrDefault(cert => cert.IsTrained); }
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets the certificate level.
+        /// </summary>
+        /// <param name="level">The level.</param>
+        /// <returns></returns>
+        public CertificateLevel GetCertificateLevel(int level)
+        {
+            return AllLevel.FirstOrDefault(x => (int)x.Level == level);
+        }
+
+        /// <summary>
+        /// Try to update the certificate's status. 
+        /// </summary>
+        /// <returns>True if the status was updated, false otherwise.</returns>
+        internal bool TryUpdateCertificateStatus()
+        {
+            return AllLevel.Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
         }
 
         #endregion

@@ -26,7 +26,6 @@ namespace EVEMon.Common.Data
         public CertificateLevel(KeyValuePair<CertificateGrade, List<StaticSkillLevel>> skill, Certificate cert, Character character)
         {
             m_character = character;
-            m_initialized = false;
 
             Level = skill.Key;
             Certificate = cert;
@@ -64,10 +63,10 @@ namespace EVEMon.Common.Data
         public IEnumerable<SkillLevel> PrerequisiteSkills { get; private set; }
 
         /// <summary>
-        /// Gets true whether the certificate is granted.
+        /// Gets true whether the certificate is trained.
         /// </summary>
         /// <value>
-        /// <c>true</c> if this instance is granted; otherwise, <c>false</c>.
+        /// <c>true</c> if this certificate is trained; otherwise, <c>false</c>.
         /// </value>
         public bool IsTrained
         {
@@ -75,21 +74,14 @@ namespace EVEMon.Common.Data
         }
 
         /// <summary>
-        /// Marks the certificate as trained.
+        /// Gets true whether the certificate is partially trained.
         /// </summary>
-        internal void MarkAsTrained()
+        /// <value>
+        /// <c>true</c> if this certificate is partilly trained; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsPartiallyTrained
         {
-            Status = CertificateStatus.Trained;
-            m_initialized = true;
-        }
-
-        /// <summary>
-        /// Resets the data before we import a deserialization object.
-        /// </summary>
-        internal void Reset()
-        {
-            Status = CertificateStatus.Untrained;
-            m_initialized = false;
+            get { return Status == CertificateStatus.PartiallyTrained; }
         }
 
         /// <summary>
@@ -109,7 +101,7 @@ namespace EVEMon.Common.Data
         {
             if (m_initialized)
                 return false;
-            
+
             bool noPrereq = true;
             bool trained = true;
 
@@ -130,6 +122,7 @@ namespace EVEMon.Common.Data
                 Status = CertificateStatus.Untrained;
             else
                 Status = CertificateStatus.PartiallyTrained;
+
             m_initialized = true;
             return true;
         }
