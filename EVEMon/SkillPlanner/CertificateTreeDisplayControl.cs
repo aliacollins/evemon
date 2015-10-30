@@ -44,7 +44,7 @@ namespace EVEMon.SkillPlanner
         #region Constructor
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="CertificateTreeDisplayControl"/> class.
         /// </summary>
         public CertificateTreeDisplayControl()
         {

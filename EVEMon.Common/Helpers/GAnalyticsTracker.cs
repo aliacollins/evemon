@@ -63,6 +63,9 @@ namespace EVEMon.Common.Helpers
         /// <param name="callback">The callback.</param>
         public static void TrackEventAsync(Type type, string category, string action, DownloadImageCompletedCallback callback = null)
         {
+            if (EveMonClient.IsDebugBuild)
+                return;
+
             s_parameters.HitType = GaHitType.Event;
             s_parameters.ScreenName = type.Name;
             s_parameters.EventCategory = category;

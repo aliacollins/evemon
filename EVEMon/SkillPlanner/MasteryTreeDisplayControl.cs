@@ -42,7 +42,7 @@ namespace EVEMon.SkillPlanner
         #region Constructor
 
         /// <summary>
-        /// Creates a new object of type <see cref="MasteryTreeDisplayControl"/>
+        /// Initializes a new instance of the <see cref="MasteryTreeDisplayControl"/> class.
         /// </summary>
         public MasteryTreeDisplayControl()
         {
