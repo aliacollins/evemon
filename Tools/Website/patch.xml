@@ -1,83 +1,102 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>27 August 2015</date>
-    <version>2.1.0.3828</version>
-    <md5>d8b5c9b297d2336c00683ca98df4ba13</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=188782.0</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-2.1.0.exe</autopatchurl>
+    <date>04 November 2015</date>
+    <version>2.2.0.4006</version>
+    <md5>f46a9b00d87ca093f3f4eb4e3e528c31</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=189143.0</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-2.2.0.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[== Contributors for this version ==
+    <message><![CDATA[== Breaking Changes ==
+
+ * Blueprints data file will not work anymore with previous versions. 
+
+== Contributors for this version ==
 
  * Jimi
- * Vincent Pitoscia
+ * stiez
 
 == New Features ==
 
- * Added support to chose a market price provider for item prices.
+ * Added EVE notification text parsing support.
+ * Added Certificate browser (at last).
+ * Added Mastery section in Ship browser.
+  
+== Enhancements ==
 
-== Bug Fixes ==
-
- * Fixed a bug with the mineral price fetcher.
- * Fixed a visual bug when sorting assets by jumps.
- * Fixed a visual bug in the tooltip when queued skill is of level 5.
- * Fixed a bug where thread crossing occurred while checking time sync on startup.
-
+  * Added link in Help to the Twitter page.
+  * Added status info for each account in API management info window. Widened window so all info are visible on opening.
+  * Added skill points per hour and training time info for each skill level in the skill queue list.
+  
 == Misc ==
-
- * Added support of CCP's image server CDN.
- * Removing EVEAddicts as a mineral price feeder as it's out of business.
- * Several improvements have been done to the codebase to make EVEMon a better application.]]></message>
+ 
+  * Updated starter skills of Blank Character Creator.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
-      <date>30 September 2015</date>
-      <md5>7e595fb9c4dd31e3651aacb518716ef1</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Vanguard/967171</url>
-      <message><![CDATA[Vanguard 1.0 (967171) blueprints data file by the EVEMon Development Team
-NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
+      <date>04 November 2015</date>
+      <md5>5815a38131ba0d7e8eb1994cc06bf6b5</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Parallax/976307</url>
+      <message><![CDATA[Parallax 1.0 (976307) blueprints data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-certificates-en-US.xml.gzip</name>
+      <date>04 November 2015</date>
+      <md5>262b680086b94410fc9a21f8c852b369</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Parallax/976307</url>
+      <message><![CDATA[Parallax 1.0 (976307) certificates data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-geography-en-US.xml.gzip</name>
-      <date>30 September 2015</date>
+      <date>04 November 2015</date>
       <md5>502a201f4e4e2f4f2dd2cca0fe950151</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Vanguard/967171</url>
-      <message><![CDATA[Vanguard 1.0 (967171) geography data file by the EVEMon Development Team
-NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Parallax/976307</url>
+      <message><![CDATA[Parallax 1.0 (976307) geography data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-items-en-US.xml.gzip</name>
-      <date>30 September 2015</date>
-      <md5>584341233899726b3ca91f1a18267846</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Vanguard/967171</url>
-      <message><![CDATA[Vanguard 1.0 (967171) items data file by the EVEMon Development Team
-NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
+      <date>04 November 2015</date>
+      <md5>1894eacd7d8512421679c7cb16dd4aa6</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Parallax/976307</url>
+      <message><![CDATA[Parallax 1.0 (976307) items data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
+    </datafile>
+    <datafile>
+      <name>eve-masteries-en-US.xml.gzip</name>
+      <date>04 November 2015</date>
+      <md5>520eb03a3117186ad27ea252f4110554</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Parallax/976307</url>
+      <message><![CDATA[Parallax 1.0 (976307) masteries data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-properties-en-US.xml.gzip</name>
-      <date>30 September 2015</date>
-      <md5>ba6e6748fca96a34c1236603edbc80f0</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Vanguard/967171</url>
-      <message><![CDATA[Vanguard 1.0 (967171) properties data file by the EVEMon Development Team
-NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
+      <date>04 November 2015</date>
+      <md5>16ff399b2927cbe4267adc46586a03da</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Parallax/976307</url>
+      <message><![CDATA[Parallax 1.0 (976307) properties data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-reprocessing-en-US.xml.gzip</name>
-      <date>30 September 2015</date>
-      <md5>65d0ea3cf8bc646077575e701d554075</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Vanguard/967171</url>
-      <message><![CDATA[Vanguard 1.0 (967171) reprocessing data file by the EVEMon Development Team
-NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
+      <date>04 November 2015</date>
+      <md5>ecbde1b0329872d052dcd65757a707ee</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Parallax/976307</url>
+      <message><![CDATA[Parallax 1.0 (976307) reprocessing data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
     <datafile>
       <name>eve-skills-en-US.xml.gzip</name>
-      <date>30 September 2015</date>
-      <md5>a34a3d13dcc23b45a8e139ba8112415f</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Vanguard/967171</url>
-      <message><![CDATA[Vanguard 1.0 (967171) skills data file by the EVEMon Development Team
-NOT COMPATIBLE with EVEMon prior to version 1.8.9]]></message>
+      <date>04 November 2015</date>
+      <md5>01c614b33f13d2ff2de0674dd4c58578</md5>
+      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Parallax/976307</url>
+      <message><![CDATA[Parallax 1.0 (976307) skills data file by the EVEMon Development Team
+NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
   </datafiles>
 </evemon>
