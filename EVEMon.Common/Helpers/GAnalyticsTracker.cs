@@ -84,7 +84,11 @@ namespace EVEMon.Common.Helpers
                 HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
                     callback, null, HttpMethod.Post, postdata: BuildQueryString());
 
-                Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, action));
+                if (action != SessionStatus.Start.ToString() && action != "Daily-Start")
+                    return;
+
+                Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, "Daily-Start"));
+
                 return;
             }
 

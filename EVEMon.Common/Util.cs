@@ -208,10 +208,11 @@ namespace EVEMon.Common
                     GZipStream gZipStream = new GZipStream(stream, CompressionMode.Decompress);
                     XmlSerializer xs = new XmlSerializer(typeof(T));
 
-                    // Deserialization with transform
+                    // Deserialization without transform
                     if (transform == null)
                         return (T)xs.Deserialize(gZipStream);
 
+                    // Deserialization with transform
                     MemoryStream memoryStream = GetMemoryStream();
                     XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.UTF8);
                     XmlTextReader reader = new XmlTextReader(gZipStream);
@@ -225,7 +226,6 @@ namespace EVEMon.Common
                     memoryStream.Seek(0, SeekOrigin.Begin);
                     return (T)xs.Deserialize(memoryStream);
 
-                    // Deserialization without transform
                 }
             }
             catch (InvalidOperationException ex)
