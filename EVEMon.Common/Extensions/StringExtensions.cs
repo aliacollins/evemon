@@ -119,6 +119,21 @@ namespace EVEMon.Common.Extensions
         }
 
         /// <summary>
+        /// Determines whether the source contains the specified text.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="text">The text.</param>
+        /// <param name="ignoreCase">if set to <c>true</c> [ignore case].</param>
+        /// <returns></returns>
+        public static bool Contains(this string source, string text, bool ignoreCase = false)
+        {
+            if (!ignoreCase)
+                return source.Contains(text);
+
+            return source.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        /// <summary>
         /// Converts the specified string to titlecase.
         /// </summary>
         /// <param name="text">The text.</param>

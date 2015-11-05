@@ -315,7 +315,7 @@ namespace EVEMon.SkillPlanner
             if (m_plan == null)
                 return;
 
-            IEnumerable<Skill> skills = GetFilteredData();
+            IList<Skill> skills = GetFilteredData().ToList();
 
             tvItems.Visible = false;
             lbSearchList.Visible = false;
@@ -367,9 +367,8 @@ namespace EVEMon.SkillPlanner
             // Text search
             if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                string searchText = tbSearchText.Text.ToLower(CultureConstants.DefaultCulture).Trim();
-                skills = skills.Where(x => (x.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText)
-                                            || x.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText)));
+                skills = skills.Where(x => x.Name.Contains(tbSearchText.Text, ignoreCase: true)
+                                            || x.Description.Contains(tbSearchText.Text, ignoreCase: true));
             }
 
             // When sorting by "time to...", remove lv5 skills

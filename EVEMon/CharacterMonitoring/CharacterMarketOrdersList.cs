@@ -393,9 +393,8 @@ namespace EVEMon.CharacterMonitoring
             lvOrders.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<MarketOrder> orders = m_list
-                    .Where(x => x.Item != null && x.Station != null).Where(x => IsTextMatching(x, text));
+                    .Where(x => x.Item != null && x.Station != null).Where(x => IsTextMatching(x, m_textFilter));
 
                 if (Character != null && Settings.UI.MainWindow.MarketOrders.HideInactiveOrders)
                     orders = orders.Where(x => x.IsAvailable);
@@ -776,12 +775,12 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(MarketOrder x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Item.Name.ToUpperInvariant().Contains(text)
-                   || x.Item.Description.ToUpperInvariant().Contains(text)
-                   || x.Station.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
+                   || x.Item.Name.Contains(text, ignoreCase: true)
+                   || x.Item.Description.Contains(text, ignoreCase: true)
+                   || x.Station.Name.Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Name.Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Constellation.Name.Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Constellation.Region.Name.Contains(text, ignoreCase: true);
         }
 
         /// <summary>

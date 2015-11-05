@@ -303,8 +303,7 @@ namespace EVEMon.CharacterMonitoring
             lvWalletJournal.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
-                IEnumerable<WalletJournal> walletJournalTransactions = m_list.Where(x => IsTextMatching(x, text));
+                IEnumerable<WalletJournal> walletJournalTransactions = m_list.Where(x => IsTextMatching(x, m_textFilter));
 
                 UpdateSort();
 
@@ -614,11 +613,11 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(WalletJournal x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Type.ToUpperInvariant().Contains(text)
-                   || x.Reason.ToUpperInvariant().Contains(text)
-                   || x.Issuer.ToUpperInvariant().Contains(text)
-                   || x.Recipient.ToUpperInvariant().Contains(text)
-                   || x.TaxReceiver.ToUpperInvariant().Contains(text);
+                   || x.Type.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Reason.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Recipient.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.TaxReceiver.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         #endregion

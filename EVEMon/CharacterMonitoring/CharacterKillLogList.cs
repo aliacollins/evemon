@@ -310,7 +310,7 @@ namespace EVEMon.CharacterMonitoring
             lvKillLog.BeginUpdate();
             try
             {
-                IEnumerable<KillLog> killlog = Character.KillLog.Where(x => IsTextMatching(x, m_textFilter.ToLowerInvariant()));
+                IEnumerable<KillLog> killlog = Character.KillLog.Where(x => IsTextMatching(x, m_textFilter));
 
                 UpdateSort();
 
@@ -970,11 +970,11 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(KillLog x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Victim.ShipTypeName.ToUpperInvariant().Contains(text)
-                   || x.Victim.Name.ToUpperInvariant().Contains(text)
-                   || x.Victim.CorporationName.ToUpperInvariant().Contains(text)
-                   || x.Victim.AllianceName.ToUpperInvariant().Contains(text)
-                   || x.Victim.FactionName.ToUpperInvariant().Contains(text);
+                   || x.Victim.ShipTypeName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Victim.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Victim.CorporationName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Victim.AllianceName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Victim.FactionName.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         /// <summary>
