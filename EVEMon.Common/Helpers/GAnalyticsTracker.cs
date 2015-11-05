@@ -72,8 +72,9 @@ namespace EVEMon.Common.Helpers
             s_parameters.EventAction = action;
 
             SessionStatus status;
-            if (Enum.TryParse(action, true, out status))
-                s_parameters.SessionControl = status.ToString().ToLowerInvariant();
+            s_parameters.SessionControl = Enum.TryParse(action, true, out status)
+                ? status.ToString().ToLowerInvariant()
+                : null;
 
             if (callback == null)
                 callback = (e, args) => { };
