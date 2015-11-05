@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -325,10 +324,9 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
                 List<Asset> assets = m_list
                     .Where(x => x.Item != null && x.SolarSystem != null)
-                    .Where(x => IsTextMatching(x, text)).ToList();
+                    .Where(x => IsTextMatching(x, m_textFilter)).ToList();
 
                 UpdateSort();
 
@@ -689,16 +687,16 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(Asset x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Item.Name.ToUpperInvariant().Contains(text)
-                   || x.Item.GroupName.ToUpperInvariant().Contains(text)
-                   || x.Item.CategoryName.ToUpperInvariant().Contains(text)
-                   || x.TypeOfBlueprint.ToUpperInvariant().Contains(text)
-                   || x.Container.ToUpperInvariant().Contains(text)
-                   || x.Flag.ToUpperInvariant().Contains(text)
-                   || x.Location.ToUpperInvariant().Contains(text)
-                   || x.SolarSystem.Name.ToUpperInvariant().Contains(text)
-                   || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
-                   || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
+                   || x.Item.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Item.GroupName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Item.CategoryName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.TypeOfBlueprint.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Container.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Flag.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Location.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         /// <summary>

@@ -302,9 +302,8 @@ namespace EVEMon.CharacterMonitoring
             lvWalletTransactions.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<WalletTransaction> walletTransactions = m_list
-                    .Where(x => x.Station != null).Where(x => IsTextMatching(x, text));
+                    .Where(x => x.Station != null).Where(x => IsTextMatching(x, m_textFilter));
 
                 UpdateSort();
 
@@ -626,12 +625,12 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(WalletTransaction x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.ItemName.ToUpperInvariant().Contains(text)
-                   || x.ClientName.ToUpperInvariant().Contains(text)
-                   || x.Station.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
+                   || x.ItemName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.ClientName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Station.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         #endregion

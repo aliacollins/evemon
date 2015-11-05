@@ -375,10 +375,9 @@ namespace EVEMon.CharacterMonitoring
             lvJobs.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<IndustryJob> jobs = m_list
                     .Where(x => x.InstalledItem != null && x.OutputItem != null && x.SolarSystem != null)
-                    .Where(x => IsTextMatching(x, text));
+                    .Where(x => IsTextMatching(x, m_textFilter));
 
                 if (Character != null && Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs)
                     jobs = jobs.Where(x => x.IsActive);
@@ -830,12 +829,12 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(IndustryJob x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.InstalledItem.Name.ToUpperInvariant().Contains(text)
-                   || x.OutputItem.Name.ToUpperInvariant().Contains(text)
-                   || x.Installation.ToUpperInvariant().Contains(text)
-                   || x.SolarSystem.Name.ToUpperInvariant().Contains(text)
-                   || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
-                   || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
+                   || x.InstalledItem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.OutputItem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Installation.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         /// <summary>

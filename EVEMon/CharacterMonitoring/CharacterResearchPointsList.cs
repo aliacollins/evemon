@@ -290,10 +290,9 @@ namespace EVEMon.CharacterMonitoring
             lvResearchPoints.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<ResearchPoint> researhPoints = m_list
                     .Where(x => !String.IsNullOrEmpty(x.AgentName) && !String.IsNullOrEmpty(x.Field) && x.Station != null)
-                    .Where(x => IsTextMatching(x, text));
+                    .Where(x => IsTextMatching(x, m_textFilter));
 
                 UpdateSort();
 
@@ -501,12 +500,12 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(ResearchPoint x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.AgentName.ToUpperInvariant().Contains(text)
-                   || x.Field.ToUpperInvariant().Contains(text)
-                   || x.Station.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
-                   || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
+                   || x.AgentName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Field.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Station.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Station.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         #endregion

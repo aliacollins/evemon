@@ -349,10 +349,9 @@ namespace EVEMon.CharacterMonitoring
             lvContracts.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<Contract> contracts = m_list
                     .Where(x => x.ContractType != ContractType.None && x.StartStation != null && x.EndStation != null)
-                    .Where(x => IsTextMatching(x, text));
+                    .Where(x => IsTextMatching(x, m_textFilter));
 
                 if (Character != null && Settings.UI.MainWindow.Contracts.HideInactiveContracts)
                     contracts = contracts.Where(x => x.IsAvailable || x.NeedsAttention);
@@ -763,18 +762,18 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(Contract x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.Status.GetDescription().ToUpperInvariant().Contains(text)
-                   || x.ContractText.ToUpperInvariant().Contains(text)
-                   || x.ContractType.GetDescription().ToUpperInvariant().Contains(text)
-                   || x.Issuer.ToUpperInvariant().Contains(text)
-                   || x.Assignee.ToUpperInvariant().Contains(text)
-                   || x.Acceptor.ToUpperInvariant().Contains(text)
-                   || x.Description.ToUpperInvariant().Contains(text)
-                   || x.Availability.GetDescription().ToUpperInvariant().Contains(text)
-                   || x.StartStation.Name.ToUpperInvariant().Contains(text)
-                   || x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text)
-                   || x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text)
-                   || x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text);
+                   || x.Status.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.ContractText.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.ContractType.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Issuer.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Assignee.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Acceptor.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Description.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Availability.GetDescription().ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.StartStation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.StartStation.SolarSystem.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.StartStation.SolarSystem.Constellation.Name.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.StartStation.SolarSystem.Constellation.Region.Name.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         /// <summary>

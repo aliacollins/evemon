@@ -315,9 +315,8 @@ namespace EVEMon.CharacterMonitoring
             lvMailMessages.BeginUpdate();
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<EveMailMessage> eveMailMessages = m_list
-                    .Where(x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, text));
+                    .Where(x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, m_textFilter));
 
                 UpdateSort();
 
@@ -695,11 +694,11 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(EveMailMessage x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.SenderName.ToUpperInvariant().Contains(text)
-                   || x.Title.ToUpperInvariant().Contains(text)
-                   || x.ToCorpOrAlliance.ToUpperInvariant().Contains(text)
-                   || x.ToCharacters.Any(y => y.ToUpperInvariant().Contains(text))
-                   || x.EVEMailBody.BodyText.ToUpperInvariant().Contains(text);
+                   || x.SenderName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Title.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.ToCorpOrAlliance.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.ToCharacters.Any(y => y.ToUpperInvariant().Contains(text, ignoreCase: true))
+                   || x.EVEMailBody.BodyText.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         /// <summary>

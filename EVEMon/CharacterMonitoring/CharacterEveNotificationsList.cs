@@ -314,9 +314,8 @@ namespace EVEMon.CharacterMonitoring
             splitContainerNotifications.Visible = false;
             try
             {
-                string text = m_textFilter.ToLowerInvariant();
                 IEnumerable<EveNotification> eveNotifications = m_list
-                    .Where(x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, text));
+                    .Where(x => x.SentDate != DateTime.MinValue).Where(x => IsTextMatching(x, m_textFilter));
 
                 UpdateSort();
 
@@ -586,9 +585,9 @@ namespace EVEMon.CharacterMonitoring
         private static bool IsTextMatching(EveNotification x, string text)
         {
             return String.IsNullOrEmpty(text)
-                   || x.SenderName.ToUpperInvariant().Contains(text)
-                   || x.Title.ToUpperInvariant().Contains(text)
-                   || (x.Text.ToUpperInvariant().Contains(text));
+                   || x.SenderName.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Title.ToUpperInvariant().Contains(text, ignoreCase: true)
+                   || x.Text.ToUpperInvariant().Contains(text, ignoreCase: true);
         }
 
         /// <summary>

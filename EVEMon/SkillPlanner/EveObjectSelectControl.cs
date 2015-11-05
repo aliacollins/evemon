@@ -8,6 +8,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
@@ -231,11 +232,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         protected virtual void BuildListView()
         {
-            string searchText = tbSearchText.Text.Trim().ToLower(CultureConstants.DefaultCulture);
-
             lbSearchList.Items.Clear();
 
-            if (String.IsNullOrEmpty(searchText))
+            if (String.IsNullOrEmpty(tbSearchText.Text))
             {
                 tvItems.Visible = true;
                 lbSearchList.Visible = false;
@@ -247,7 +246,7 @@ namespace EVEMon.SkillPlanner
             List<Item> filteredItems = new List<Item>();
             foreach (TreeNode n in tvItems.Nodes)
             {
-                SearchNode(n, searchText, filteredItems);
+                SearchNode(n, tbSearchText.Text, filteredItems);
             }
 
             filteredItems.Sort((x, y) => String.CompareOrdinal(x.Name, y.Name));
@@ -291,8 +290,8 @@ namespace EVEMon.SkillPlanner
                 return;
             }
 
-            if (item.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText)
-                || item.Description.ToLower(CultureConstants.DefaultCulture).Contains(searchText))
+            if (item.Name.Contains(searchText, ignoreCase: true)
+                || item.Description.Contains(searchText, ignoreCase: true))
             {
                 filteredItems.Add(item);
             }

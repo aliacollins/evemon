@@ -585,8 +585,7 @@ namespace EVEMon.SkillPlanner
             // Text search
             if (!String.IsNullOrEmpty(tbSearchText.Text))
             {
-                string searchText = tbSearchText.Text.ToLower(CultureConstants.DefaultCulture).Trim();
-                classes = classes.Where(x => x.Name.ToLower(CultureConstants.DefaultCulture).Contains(searchText));
+                classes = classes.Where(x => x.Name.Contains(tbSearchText.Text, ignoreCase: true));
             }
 
             // When sorting by "time to...", filter completed items
