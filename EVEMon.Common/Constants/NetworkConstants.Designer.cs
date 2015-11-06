@@ -1195,11 +1195,11 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /eve/EveNotificationTextExternalParser.cs.
+        ///   Looks up a localized string similar to /eve/ExternalEveNotificationTextParser.cs.
         /// </summary>
-        public static string EveNotificationTextExternalParser {
+        public static string ExternalEveNotificationTextParser {
             get {
-                return ResourceManager.GetString("EveNotificationTextExternalParser", resourceCulture);
+                return ResourceManager.GetString("ExternalEveNotificationTextParser", resourceCulture);
             }
         }
         

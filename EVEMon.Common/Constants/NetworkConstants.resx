@@ -544,8 +544,8 @@
   <data name="EVEImageServerCDN" xml:space="preserve">
     <value>https://imageserver.eveonline.com</value>
   </data>
-  <data name="EveNotificationTextExternalParser" xml:space="preserve">
-    <value>/eve/EveNotificationTextExternalParser.cs</value>
+  <data name="ExternalEveNotificationTextParser" xml:space="preserve">
+    <value>/eve/ExternalEveNotificationTextParser.cs</value>
   </data>
   <data name="NotificationRefTypes" xml:space="preserve">
     <value>/eve/NotificationRefTypes.xml</value>
