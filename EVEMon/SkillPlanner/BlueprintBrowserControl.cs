@@ -167,27 +167,7 @@ namespace EVEMon.SkillPlanner
         private void RefreshTabs()
         {
             // Determine the blueprints' activities  
-            m_hasManufacturing = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Manufacturing)
-                                 || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Manufacturing)
-                                 || m_blueprint.ProductionTime > 0d;
-
-            m_hasCopying = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Copying)
-                           || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Copying)
-                           || m_blueprint.ResearchCopyTime > 0d;
-
-            m_hasResearchingMaterialEfficiency =
-                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
-                || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
-                || m_blueprint.ResearchMaterialTime > 0d;
-
-            m_hasResearchingTimeEfficiency =
-                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingTimeEfficiency)
-                || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingTimeEfficiency)
-                || m_blueprint.ResearchProductivityTime > 0d;
-
-            m_hasInvention = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Invention)
-                             || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Invention)
-                             || m_blueprint.ResearchInventionTime > 0d;
+            SetActivities();
 
             // Store the visible selector control for later use
             Control visibleSelector;
@@ -224,6 +204,34 @@ namespace EVEMon.SkillPlanner
 
             // Return focus to selector
             visibleSelector.Focus();
+        }
+
+        /// <summary>
+        /// Sets the activities.
+        /// </summary>
+        private void SetActivities()
+        {
+            m_hasManufacturing = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Manufacturing)
+                                 || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Manufacturing)
+                                 || m_blueprint.ProductionTime > 0d;
+
+            m_hasCopying = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Copying)
+                           || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Copying)
+                           || m_blueprint.ResearchCopyTime > 0d;
+
+            m_hasResearchingMaterialEfficiency =
+                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
+                || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingMaterialEfficiency)
+                || m_blueprint.ResearchMaterialTime > 0d;
+
+            m_hasResearchingTimeEfficiency =
+                m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.ResearchingTimeEfficiency)
+                || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.ResearchingTimeEfficiency)
+                || m_blueprint.ResearchProductivityTime > 0d;
+
+            m_hasInvention = m_blueprint.Prerequisites.Any(x => x.Activity == BlueprintActivity.Invention)
+                             || m_blueprint.MaterialRequirements.Any(x => x.Activity == BlueprintActivity.Invention)
+                             || m_blueprint.ResearchInventionTime > 0d;
         }
 
         /// <summary>
@@ -454,7 +462,8 @@ namespace EVEMon.SkillPlanner
                         cbFacility.Items.Add("Ammunition Assembly Array");
                     }
 
-                    if (producedItem.MarketGroup.BelongsIn(DBConstants.ShipEquipmentsMarketGroupID))
+                    if (producedItem.MarketGroup.BelongsIn(DBConstants.ShipEquipmentsMarketGroupID) ||
+                        producedItem.MarketGroup.BelongsIn(DBConstants.ShipModificationsMarketGroupID))
                     {
                         cbFacility.Items.Add("Equipment Assembly Array");
                         cbFacility.Items.Add("Rapid Equipment Assembly Array");
