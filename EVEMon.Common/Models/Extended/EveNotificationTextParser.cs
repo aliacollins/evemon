@@ -58,7 +58,7 @@ namespace EVEMon.Common.Models.Extended
             EveMonClient.Trace("EveNotificationTextParser.GetExternalParser - begin");
 
             Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
-                NetworkConstants.EveNotificationTextExternalParser));
+                NetworkConstants.ExternalEveNotificationTextParser));
 
             HttpWebService.DownloadStringAsync(url, OnDownloaded, null);
 
