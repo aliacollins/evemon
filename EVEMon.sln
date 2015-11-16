@@ -3,13 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E274AEC7-6433-48B7-ADEA-8C03F111E238}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVEMon", "EVEMon\EVEMon.csproj", "{A2E5EFE0-614A-4567-95E5-92A4D94169AC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{696E929A-6A4A-4C6D-A8B2-C4F25F781940} = {696E929A-6A4A-4C6D-A8B2-C4F25F781940}
