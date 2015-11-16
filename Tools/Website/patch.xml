@@ -1,37 +1,28 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>04 November 2015</date>
-    <version>2.2.0.4006</version>
-    <md5>f46a9b00d87ca093f3f4eb4e3e528c31</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=189143.0</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-2.2.0.exe</autopatchurl>
+    <date>16 November 2015</date>
+    <version>2.2.1.4022</version>
+    <md5>b2af8d2bcc6f4bb63be50d9d1de48026</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=189212.0</url>
+    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-2.2.1.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
-    <message><![CDATA[== Breaking Changes ==
-
- * Blueprints data file will not work anymore with previous versions. 
-
-== Contributors for this version ==
+    <message><![CDATA[== Contributors for this version ==
 
  * Jimi
- * stiez
 
-== New Features ==
+== Bug Fixes ==
 
- * Added EVE notification text parsing support.
- * Added Certificate browser (at last).
- * Added Mastery section in Ship browser.
-  
+  * Fixed an issue with using search throughout the application.
+
 == Enhancements ==
 
-  * Added link in Help to the Twitter page.
-  * Added status info for each account in API management info window. Widened window so all info are visible on opening.
-  * Added skill points per hour and training time info for each skill level in the skill queue list.
+  * Added POS facilities for manufacturing rigs.
   
 == Misc ==
  
-  * Updated starter skills of Blank Character Creator.]]></message>
+  * Several improvements have been done to the codebase to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
