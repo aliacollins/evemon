@@ -57,8 +57,8 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         protected override bool Clash(DateTime timeToTest)
         {
-            DateTime testtime = (Options & ScheduleEntryOptions.EVETime) != 0 ? timeToTest.ToUniversalTime() : timeToTest;
-            return StartDate <= testtime && testtime <= EndDate;
+            DateTime testTime = (Options & ScheduleEntryOptions.EVETime) != 0 ? timeToTest.ToUniversalTime() : timeToTest;
+            return StartDate <= testTime && testTime <= EndDate;
         }
 
         /// <summary>

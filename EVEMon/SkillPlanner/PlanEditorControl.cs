@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -13,7 +12,6 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
@@ -91,6 +89,7 @@ namespace EVEMon.SkillPlanner
             cbChooseImplantSet.DropDown += cbChooseImplantSet_DropDown;
 
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterSkillQueueUpdated += EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.CharacterImplantSetCollectionChanged += EveMonClient_CharacterImplantSetCollectionChanged;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
@@ -113,6 +112,7 @@ namespace EVEMon.SkillPlanner
         {
             m_tooltip.Dispose();
             EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
+            EveMonClient.CharacterSkillQueueUpdated -= EveMonClient_CharacterSkillQueueUpdated;
             EveMonClient.CharacterImplantSetCollectionChanged -= EveMonClient_CharacterImplantSetCollectionChanged;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
@@ -246,6 +246,20 @@ namespace EVEMon.SkillPlanner
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (!Visible || e.Character != m_character)
+                return;
+
+            UpdateDisplayPlan();
+            UpdateSkillList();
+        }
+
+        /// <summary>
+        /// When the character skill queue change, update everything.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (!Visible || e.Character != m_character)
                 return;
@@ -533,8 +547,28 @@ namespace EVEMon.SkillPlanner
             string blockingEntry = String.Empty;
             if (Settings.UI.PlanWindow.HighlightConflicts)
             {
-                bool isBlocked = Scheduler.SkillIsBlockedAt(entry.EndTime, out blockingEntry);
-                if (isBlocked)
+                bool isAutoBlocking;
+                bool isBlocked = Scheduler.SkillIsBlockedAt(entry.EndTime, out blockingEntry, out isAutoBlocking);
+                bool showBlocked = true;
+                CCPCharacter ccpCharacter = Character as CCPCharacter;
+
+                if (ccpCharacter != null)
+                {
+                    PlanEntry planEntry = m_plan.GetEntry(entry.Skill, entry.Level);
+                    int indexOfEntry = m_plan.IndexOf(planEntry);
+                    QueuedSkill queueSkill = ccpCharacter.SkillQueue.ElementAtOrDefault(indexOfEntry);
+
+                    if (queueSkill != null)
+                    {
+                        showBlocked = (Plan.Name != EVEMonConstants.CurrentSkillQueueText) ||
+                                      !isAutoBlocking ||
+                                      ((ccpCharacter.SkillQueue.Count == 1) &&
+                                       (indexOfEntry == 0) &&
+                                       (queueSkill.Skill == planEntry.Skill.ToCharacter(Character)));
+                    }
+                }
+
+                if (isBlocked && showBlocked)
                 {
                     lvi.ForeColor = Color.Red;
                     lvi.BackColor = Color.LightGray;

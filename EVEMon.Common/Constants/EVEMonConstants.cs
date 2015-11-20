@@ -4,5 +4,7 @@ namespace EVEMon.Common.Constants
     {
         public const int ImplantSetNameMaxLength = 128;
         public const string UnknownText = "Unknown";
+        public const string DowntimeText = "DOWNTIME";
+        public const string CurrentSkillQueueText = "Current Skill Queue";
     }
 }

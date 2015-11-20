@@ -13,7 +13,6 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using EVEMon.Common.QueryMonitor;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.SettingsObjects;
 
@@ -308,9 +307,13 @@ namespace EVEMon.Controls
 
                 // Changes the completion time color on scheduling block
                 string blockingEntry;
-                lblCompletionTime.ForeColor = m_showConflicts && Scheduler.SkillIsBlockedAt(endTime, out blockingEntry)
-                                                  ? Color.Red
-                                                  : m_settingsForeColor;
+                bool isAutoBlocking;
+                bool isBlocking = Scheduler.SkillIsBlockedAt(endTime, out blockingEntry, out isAutoBlocking);
+                CCPCharacter ccpCharacter = Character as CCPCharacter;
+                lblCompletionTime.ForeColor = m_showConflicts && isBlocking &&
+                                              (ccpCharacter == null || ccpCharacter.SkillQueue.Count == 1 || !isAutoBlocking)
+                    ? Color.Red
+                    : m_settingsForeColor;
 
                 // Updates the time remaining label
                 lblRemainingTime.Text = trainingSkill.RemainingTime.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);

@@ -64,27 +64,30 @@ namespace EVEMon.Common.Scheduling
         /// <remarks>Checks both scheduling entries and downtimes.</remarks>
         /// <param name="time"></param>
         /// <param name="blockingEntry"></param>
+        /// <param name="isAutoBlocking"></param>
         /// <returns></returns>
-        public static bool SkillIsBlockedAt(DateTime time, out string blockingEntry)
+        public static bool SkillIsBlockedAt(DateTime time, out string blockingEntry, out bool isAutoBlocking)
         {
             blockingEntry = String.Empty;
+            isAutoBlocking = false;
 
-            // Checks whether it will be on downtime
-            if (time.ToUniversalTime().Hour == EveConstants.DowntimeHour &&
-                time.ToUniversalTime().Minute < EveConstants.DowntimeDuration)
-            {
-                blockingEntry = "DOWNTIME";
-                return true;
-            }
-
-            // Checks schedule entries to see if they overlap the imput time
+            // Checks schedule entries to see if they overlap the input time
             foreach (ScheduleEntry entry in s_schedule.Where(entry => entry.Blocking(time)))
             {
                 blockingEntry = entry.Title;
                 return true;
             }
 
-            return false;
+            // Checks whether it will be on downtime
+            if (time.ToUniversalTime().Hour != EveConstants.DowntimeHour ||
+                time.ToUniversalTime().Minute >= EveConstants.DowntimeDuration)
+            {
+                return false;
+            }
+
+            blockingEntry = EVEMonConstants.DowntimeText;
+            isAutoBlocking = true;
+            return true;
         }
 
         /// <summary>
