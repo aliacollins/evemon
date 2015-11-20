@@ -802,7 +802,7 @@ namespace EVEMon.CharacterMonitoring
             // Ask the user for a new name
             string planName,
                 planDescription;
-            using (NewPlanWindow npw = new NewPlanWindow { PlanName = "Current Skill Queue" })
+            using (NewPlanWindow npw = new NewPlanWindow { PlanName = EVEMonConstants.CurrentSkillQueueText })
             {
                 DialogResult dr = npw.ShowDialog();
                 if (dr == DialogResult.Cancel)
@@ -817,8 +817,8 @@ namespace EVEMon.CharacterMonitoring
 
             if (Character.Plans.Any(x => x.Name == newPlan.Name))
             {
-                MessageBox.Show("There is already a plan with the same name in the characters' Plans.",
-                    "Plan Creation Failure",
+                MessageBox.Show(@"There is already a plan with the same name in the characters' Plans.",
+                    @"Plan Creation Failure",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }

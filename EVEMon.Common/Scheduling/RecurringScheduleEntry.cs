@@ -202,9 +202,9 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         protected override bool Clash(DateTime timeToTest)
         {
-            DateTime testtime = (Options & ScheduleEntryOptions.EVETime) != 0 ? timeToTest.ToUniversalTime() : timeToTest;
+            DateTime testTime = (Options & ScheduleEntryOptions.EVETime) != 0 ? timeToTest.ToUniversalTime() : timeToTest;
 
-            ScheduleDateTimeRange range = GetRangeForDay(testtime.Date);
+            ScheduleDateTimeRange range = GetRangeForDay(testTime.Date);
             if (range == null)
                 return false;
 
@@ -213,8 +213,8 @@ namespace EVEMon.Common.Scheduling
             // in the event m_endDate is set to Forever (DateTime.MaxValue) we can't add anything to it
             DateTime endDate = EndDate == DateTime.MaxValue ? EndDate : EndDate.Add(range.From.TimeOfDay);
 
-            if (startDate < testtime && testtime < endDate)
-                return range.From < testtime && testtime < range.To;
+            if (startDate < testTime && testTime < endDate)
+                return range.From < testTime && testTime < range.To;
 
             return false;
         }

@@ -163,8 +163,23 @@ namespace EVEMon.CharacterMonitoring
             lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0:ddd} {1:G}", completionTime, completionTime);
 
             // Dipslay a warning if anything scheduled is blocking us
+
             string conflictMessage;
-            lblScheduleWarning.Visible = Scheduler.SkillIsBlockedAt(training.EndTime.ToLocalTime(), out conflictMessage);
+            bool isAutoBlocking;
+            bool isBlocking = Scheduler.SkillIsBlockedAt(training.EndTime.ToLocalTime(), out conflictMessage, out isAutoBlocking);
+            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+
+            // Do not show the "DOWNTIME" warning if character's skill queue has more than one skills
+            if (ccpCharacter != null && ccpCharacter.SkillQueue.Count > 1 &&
+                isAutoBlocking &&
+                String.Equals(conflictMessage, EVEMonConstants.DowntimeText, StringComparison.OrdinalIgnoreCase))
+            {
+                lblScheduleWarning.Visible = false;
+                lblScheduleWarning.Text = String.Empty;
+                return;
+            }
+
+            lblScheduleWarning.Visible = isBlocking;
             lblScheduleWarning.Text = conflictMessage;
         }
 
@@ -323,11 +338,9 @@ namespace EVEMon.CharacterMonitoring
         /// Sets the character.
         /// </summary>
         /// <value>The character.</value>
+        /// <param name="character">The character.</param>
         public void SetCharacter(Character character)
         {
-            if (m_character == character)
-                return;
-
             m_character = character;
         }
 
