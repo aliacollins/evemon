@@ -126,6 +126,12 @@ namespace EVEMon.Common.Models.Extended
                     }
                     break;
                 }
+                case "LEVEL":
+                {
+                    parsedDict[pair.Key.ToString()] = String.Format(CultureConstants.InvariantCulture, "{0} Standing",
+                        Standing.Status(double.Parse(pair.Value.ToString())));
+                    break;
+                }
             }
         }
     }
