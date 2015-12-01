@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models.Extended;
@@ -86,9 +88,8 @@ namespace EVEMon.Common.Models
 
             YamlMappingNode pairs = Util.ParseYaml(NotificationText);
 
-            IDictionary<string, string> parsedDict = pairs.Children.ToDictionary(pair => pair.Key.ToString(),
-                pair => pair.Value.ToString());
-            
+            IDictionary<string, string> parsedDict = GetParsedDictionary(textLayout, pairs);
+
             foreach (KeyValuePair<YamlNode, YamlNode> pair in pairs)
             {
                 m_parser.Parse(m_notification, pair, parsedDict);
@@ -98,6 +99,32 @@ namespace EVEMon.Common.Models
                 (current, pair) => current.Replace(string.Format("{{{0}}}", pair.Key), pair.Value.Trim('\'')));
 
             return parsedText.Contains("{") ? NotificationText : parsedText;
+        }
+
+        /// <summary>
+        /// Gets the parsed dictionary.
+        /// </summary>
+        /// <param name="textLayout">The text layout.</param>
+        /// <param name="pairs">The text pairs.</param>
+        /// <returns></returns>
+        private IDictionary<string, string> GetParsedDictionary(string textLayout, YamlMappingNode pairs)
+        {
+            IDictionary<string, string> parsedDict = pairs
+                .Children
+                .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value.ToString());
+
+            IDictionary<string, string> textLayoutDict = Regex
+                .Matches(textLayout, "{(?<placeholder>\\w+)}", RegexOptions.Compiled | RegexOptions.IgnoreCase)
+                .Cast<Match>()
+                .Select(x => x.Groups["placeholder"].Value)
+                .ToDictionary(key => key, value => String.Empty);
+
+            parsedDict.AddRange(textLayoutDict.Keys.Except(parsedDict.Keys).ToDictionary(key => key, value => String.Empty));
+
+            if (parsedDict.ContainsKey("senderName") && String.IsNullOrWhiteSpace(parsedDict["senderName"]))
+                parsedDict["senderName"] = m_notification.SenderName;
+
+            return parsedDict;
         }
     }
 }

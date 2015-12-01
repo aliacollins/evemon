@@ -91,8 +91,8 @@
       <row refTypeID="86" refTypeName="Sovereignty TCU Damage" subjectLayout="" textLayout=""/>
       <row refTypeID="87" refTypeName="Sovereignty SBU Damage" subjectLayout="" textLayout=""/>
       <row refTypeID="88" refTypeName="Sovereignty IHUB Damage" subjectLayout="" textLayout=""/>
-      <row refTypeID="89" refTypeName="Added As Contact" subjectLayout="" textLayout=""/>
-      <row refTypeID="90" refTypeName="Contact Level Modified" subjectLayout="" textLayout=""/>
+      <row refTypeID="89" refTypeName="Added As Contact" subjectLayout="You have been added as a contact" textLayout="{senderName} has added you as a contact with {level}\n\n{message}"/>
+      <row refTypeID="90" refTypeName="Contact Level Modified" subjectLayout="Your contact level has been modified" textLayout="{senderName} has changed your contact level to {level}\n\n{message}"/>
       <row refTypeID="91" refTypeName="Incursion Completed" subjectLayout="" textLayout=""/>
       <row refTypeID="92" refTypeName="Kicked From Corporation" subjectLayout="Kicked from {corpID}" textLayout="{corpID} hereby informs you that your services are no longer needed.\n\nThank you for your time at our corporation and best of luck to you in the future."/>
       <row refTypeID="93" refTypeName="Orbital Structure Attacked" subjectLayout="" textLayout=""/>
