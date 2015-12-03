@@ -3,11 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -18,22 +16,19 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.BattleClinic.Loadout;
 using SortOrder = System.Windows.Forms.SortOrder;
 
 namespace EVEMon.SkillPlanner
 {
     public partial class ShipLoadoutSelectWindow : EVEMonForm
     {
-        // TODO : This class needs totally re-writing to split the data components from the UI components.
-
         private Item m_ship;
         private Plan m_plan;
         private Character m_character;
-        private SerializableLoadout m_selectedLoadout;
+        private ILoadoutInfo m_loadoutInfo;
+        private Loadout m_selectedLoadout;
         private readonly List<StaticSkillLevel> m_prerequisites = new List<StaticSkillLevel>();
         private readonly LoadoutListSorter m_columnSorter;
-        private static readonly Dictionary<string, string> s_typeMap = new Dictionary<string, string>();
 
 
         #region Initialization, loading, closing
@@ -71,57 +66,14 @@ namespace EVEMon.SkillPlanner
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
-            s_typeMap["high"] = "High Slots";
-            s_typeMap["med"] = "Medium Slots";
-            s_typeMap["lo"] = "Low Slots";
-            s_typeMap["rig"] = "Rig Slots";
-            s_typeMap["drone"] = "Drones";
-            s_typeMap["ammo"] = "Ammo";
-            s_typeMap["subSystem"] = "SubSystem";
-
             // Subscribe global events
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            Settings.LoadoutsProvider.Provider.LoadoutFeedUpdated += Provider_LoadoutFeedUpdated;
+            Settings.LoadoutsProvider.Provider.LoadoutUpdated += Provider_LoadoutUpdated;
         }
 
         /// <summary>
-        /// Query the loadouts feed for the current ship.
-        /// </summary>
-        private void QueryLoadoutsFeed()
-        {
-            // Wait cursor until we retrieved the loadout
-            Cursor.Current = Cursors.WaitCursor;
-            throbberLoadouts.State = ThrobberState.Rotating;
-            persistentSplitContainer.Visible = false;
-
-            // We clear previous data
-            lvLoadouts.Items.Clear();
-            tvLoadout.Nodes.Clear();
-            m_prerequisites.Clear();
-
-            // Download the eve image
-            eveImage.EveItem = m_ship;
-
-            // Download the loadouts feed
-            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
-                String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutsFeed,
-                    m_ship.ID)));
-            Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutFeedDownloaded, true);
-
-            // Set labels while the user wait
-            lblShipName.Text = m_ship.Name;
-            lblLoadoutName.Text = "No Loadout Selected";
-            lblAuthor.Text = String.Empty;
-            lblSubmitDate.Text = String.Empty;
-            lblPlanned.Text = String.Empty;
-            lblPlanned.Visible = false;
-            lblTrainTime.Text = "N/A";
-            lblTrainTime.Visible = true;
-            lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
-            btnPlan.Enabled = false;
-        }
-
-        /// <summary>
-        /// When the window is closing, we clean things up and notify the parent
+        /// When the window is closing, we clean things up
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -129,6 +81,8 @@ namespace EVEMon.SkillPlanner
         {
             // Unsubscribe global events
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
+            Settings.LoadoutsProvider.Provider.LoadoutFeedUpdated -= Provider_LoadoutFeedUpdated;
+            Settings.LoadoutsProvider.Provider.LoadoutUpdated -= Provider_LoadoutUpdated;
         }
 
         /// <summary>
@@ -145,8 +99,8 @@ namespace EVEMon.SkillPlanner
                 m_plan = value;
                 m_character = (Character)m_plan.Character;
                 Tag = value;
-                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - BattleClinic Loadout Selection",
-                                     value.Character, value.Name);
+                Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - {2} Loadout Selection",
+                                     value.Character, value.Name, Settings.LoadoutsProvider.Provider.Name);
 
                 UpdatePlanningControls();
             }
@@ -174,12 +128,44 @@ namespace EVEMon.SkillPlanner
         #region Downloads
 
         /// <summary>
-        /// Occurs when we downloaded a loadouts feed from BattleClinic.
+        /// Query the loadouts feed for the current ship.
         /// </summary>
-        /// <param name="feed"></param>
-        /// <param name="errorMessage"></param>
-        /// <returns></returns>
-        private void OnLoadoutFeedDownloaded(SerializableLoadoutFeed feed, string errorMessage)
+        private void QueryLoadoutsFeed()
+        {
+            // Wait cursor until we retrieved the loadout
+            Cursor.Current = Cursors.WaitCursor;
+            throbberLoadouts.State = ThrobberState.Rotating;
+            persistentSplitContainer.Visible = false;
+
+            // We clear previous data
+            lvLoadouts.Items.Clear();
+            tvLoadout.Nodes.Clear();
+            m_prerequisites.Clear();
+
+            // Download the eve image
+            eveImage.EveItem = m_ship;
+
+            // Download the loadouts feed
+            Settings.LoadoutsProvider.Provider.GetLoadoutsFeedAsync(m_ship);
+
+            // Set labels while the user wait
+            lblShipName.Text = m_ship.Name;
+            lblLoadoutName.Text = "No Loadout Selected";
+            lblAuthor.Text = String.Empty;
+            lblSubmitDate.Text = String.Empty;
+            lblPlanned.Text = String.Empty;
+            lblPlanned.Visible = false;
+            lblTrainTime.Text = "N/A";
+            lblTrainTime.Visible = true;
+            lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
+            btnPlan.Enabled = false;
+        }
+
+        /// <summary>
+        /// Updates the loadout feed information.
+        /// </summary>
+        /// <param name="e">The <see cref="LoadoutFeedEventArgs"/> instance containing the event data.</param>
+        private void UpdateLoadoutFeedInfo(LoadoutFeedEventArgs e)
         {
             if (IsDisposed)
                 return;
@@ -189,31 +175,34 @@ namespace EVEMon.SkillPlanner
             btnPlan.Enabled = false;
 
             // Was there an error ?
-            if (!String.IsNullOrEmpty(errorMessage))
+            if (e.HasError)
             {
                 throbberLoadouts.State = ThrobberState.Strobing;
                 lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
-                                                 "There was a problem connecting to BattleClinic, it may be down for maintainance.{0}{1}",
-                                                 Environment.NewLine, errorMessage);
+                    "There was a problem connecting to {0}, it may be down for maintainance.{1}{2}",
+                    Settings.LoadoutsProvider.Provider.Name, Environment.NewLine, e.Error.Message);
+
                 return;
             }
 
+            m_loadoutInfo = Settings.LoadoutsProvider.Provider.DeserializeLoadoutsFeed(m_ship, e.LoadoutFeed);
+
             // Are there no feeds ?
-            if (feed.Race == null || feed.Race.Loadouts.Count == 0)
+            if (!m_loadoutInfo.Loadouts.Any())
             {
                 throbberLoadouts.State = ThrobberState.Strobing;
                 lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
-                                                 "There are no loadouts for {0}, why not submit one to BattleClinic?", m_ship.Name);
+                    "There are no loadouts for {0}, why not submit one to {1}?", m_ship.Name,  Settings.LoadoutsProvider.Provider.Name);
                 return;
             }
 
             // Add the listview items for every loadout
-            foreach (SerializableLoadout loadout in feed.Race.Loadouts)
+            foreach (Loadout loadout in m_loadoutInfo.Loadouts)
             {
-                ListViewItem lvi = new ListViewItem(loadout.LoadoutName) { Text = loadout.LoadoutName, Tag = loadout };
+                ListViewItem lvi = new ListViewItem(loadout.Name) { Text = loadout.Name, Tag = loadout };
                 lvi.SubItems.Add(loadout.Author);
                 lvi.SubItems.Add(loadout.Rating.ToString(CultureConstants.DefaultCulture));
-                lvi.SubItems.Add(loadout.SubmissionDate.ToString());
+                lvi.SubItems.Add(loadout.SubmissionDate.ToString("G"));
                 lvLoadouts.Items.Add(lvi);
             }
 
@@ -235,7 +224,7 @@ namespace EVEMon.SkillPlanner
         /// Downloads the given loadout.
         /// </summary>
         /// <param name="loadout"></param>
-        private void DownloadLoadout(SerializableLoadout loadout)
+        private void DownloadLoadout(Loadout loadout)
         {
             // Prevent downloading the same loadout
             if (m_selectedLoadout == loadout)
@@ -253,25 +242,19 @@ namespace EVEMon.SkillPlanner
             m_selectedLoadout = loadout;
 
             // Set the headings
-            lblLoadoutName.Text = m_selectedLoadout.LoadoutName;
+            lblLoadoutName.Text = m_selectedLoadout.Name;
             lblAuthor.Text = m_selectedLoadout.Author;
-            lblSubmitDate.Text = m_selectedLoadout.SubmissionDate.ToString();
+            lblSubmitDate.Text = m_selectedLoadout.SubmissionDate.ToString("G");
 
             // Download the loadout details
-            Uri url =
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
-                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutDetails,
-                        m_selectedLoadout.LoadoutID)));
-            Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutDownloaded, true);
+            Settings.LoadoutsProvider.Provider.GetLoadoutByIDAsync(m_selectedLoadout.ID);
         }
 
         /// <summary>
-        /// Occurs when we downloaded a loadout from BattleClinic
+        /// Updates the loadout information.
         /// </summary>
-        /// <param name="loadoutFeed"></param>
-        /// <param name="errorMessage"></param>
-        /// <returns></returns>
-        private void OnLoadoutDownloaded(SerializableLoadoutFeed loadoutFeed, string errorMessage)
+        /// <param name="e">The <see cref="LoadoutEventArgs"/> instance containing the event data.</param>
+        private void UpdateLoadoutInfo(LoadoutEventArgs e)
         {
             if (IsDisposed)
                 return;
@@ -282,29 +265,40 @@ namespace EVEMon.SkillPlanner
             Cursor.Current = Cursors.Default;
 
             // Was there an error ?
-            if (!String.IsNullOrEmpty(errorMessage) || loadoutFeed.Race == null || loadoutFeed.Race.Loadouts.Count == 0)
+            if (e.HasError)
             {
                 throbberFitting.State = ThrobberState.Strobing;
                 lblTrainTime.Text = String.Format(CultureConstants.DefaultCulture, "Couldn't download that loadout.{0}{1}",
-                                                  Environment.NewLine, errorMessage);
+                                                  Environment.NewLine, e.Error.Message);
                 lblTrainTime.Visible = true;
                 return;
             }
 
+            Settings.LoadoutsProvider.Provider.DeserializeLoadout(m_selectedLoadout, e.Loadout);
+
             // Fill the items tree
-            IEnumerable<IGrouping<string, SerializableLoadoutSlot>> slotTypes =
-                loadoutFeed.Race.Loadouts.First().Slots.GroupBy(x => x.SlotType);
+            BuildTreeNodes(m_selectedLoadout.Items);
 
-            foreach (IGrouping<string, SerializableLoadoutSlot> slotType in slotTypes)
+            // Compute the training time
+            tvLoadout.ExpandAll();
+            UpdatePlanningControls();
+
+            throbberFitting.State = ThrobberState.Stopped;
+            throbberFitting.SendToBack();
+        }
+
+        /// <summary>
+        /// Builds the tree nodes.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        private void BuildTreeNodes(IEnumerable<Item> items)
+        {
+            foreach (IGrouping<string, Item> slotItems in items.GroupBy(LoadoutHelper.GetSlotByItem))
             {
-                TreeNode typeNode = new TreeNode(s_typeMap[slotType.Key]);
+                TreeNode typeNode = new TreeNode(slotItems.Key);
 
-                foreach (SerializableLoadoutSlot slot in slotType)
+                foreach (Item item in slotItems)
                 {
-                    Item item = StaticItems.GetItemByID(slot.ItemID);
-                    if (item == null)
-                        continue;
-
                     TreeNode slotNode = new TreeNode { Text = item.Name, Tag = item };
                     typeNode.Nodes.Add(slotNode);
 
@@ -314,12 +308,11 @@ namespace EVEMon.SkillPlanner
                 tvLoadout.Nodes.Add(typeNode);
             }
 
-            // Compute the training time
-            tvLoadout.ExpandAll();
-            UpdatePlanningControls();
-
-            throbberFitting.State = ThrobberState.Stopped;
-            throbberFitting.SendToBack();
+            // Order the nodes
+            TreeNode[] orderNodes = tvLoadout.Nodes.Cast<TreeNode>().OrderBy(
+                node => LoadoutHelper.OrderedSlotNames.IndexOf(String.Intern(node.Text))).ToArray();
+            tvLoadout.Nodes.Clear();
+            tvLoadout.Nodes.AddRange(orderNodes);
         }
 
         /// <summary>
@@ -438,6 +431,27 @@ namespace EVEMon.SkillPlanner
                 UpdatePlanningControls();
         }
 
+        /// <summary>
+        /// Occurs when the loadout feed from the provider updated.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void Provider_LoadoutFeedUpdated(object sender, LoadoutFeedEventArgs e)
+        {
+            UpdateLoadoutFeedInfo(e);
+        }
+
+        /// <summary>
+        /// Occurs when the loadout from the provider updated.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="LoadoutEventArgs"/> instance containing the event data.</param>
+        private void Provider_LoadoutUpdated(object sender, LoadoutEventArgs e)
+        {
+            UpdateLoadoutInfo(e);
+        }
+
         #endregion
 
 
@@ -453,7 +467,7 @@ namespace EVEMon.SkillPlanner
             if (lvLoadouts.SelectedItems.Count == 0)
                 return;
 
-            SerializableLoadout loadout = (SerializableLoadout)lvLoadouts.SelectedItems[0].Tag;
+            Loadout loadout = (Loadout)lvLoadouts.SelectedItems[0].Tag;
             DownloadLoadout(loadout);
         }
 
@@ -504,15 +518,13 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                Util.OpenURL(
-                    new Uri(String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutTopic,
-                            m_selectedLoadout.Topic)));
+                Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture,
+                    Settings.LoadoutsProvider.Provider.TopicUrl, m_selectedLoadout.TopicID)));
+                return;
             }
-            else
-            {
-                MessageBox.Show("Please select a loadout to discuss.", "No Loadout Selected", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-            }
+
+            MessageBox.Show(@"Please select a loadout to discuss.", @"No Loadout Selected", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
         }
 
         /// <summary>
@@ -522,7 +534,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void btnPlan_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryAddSet(m_prerequisites, m_selectedLoadout.LoadoutName);
+            IPlanOperation operation = m_plan.TryAddSet(m_prerequisites, m_selectedLoadout.Name);
             if (operation == null)
                 return;
 
@@ -590,132 +602,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void miExportToClipboard_Click(object sender, EventArgs e)
         {
-            ExportToClipboard();
-        }
-
-        #endregion
-
-
-        #region CLipboard Export Function
-
-        private void ExportToClipboard()
-        {
-            Dictionary<string, List<string>> items = GetItemsBySlots();
-            ExtractProperties(items);
-            string exportText = FormatForEFT(items);
-
-            // Copy to clipboard
-            try
-            {
-                Clipboard.Clear();
-                Clipboard.SetText(exportText);
-            }
-            catch (ExternalException ex)
-            {
-                // There is a bug that results in an exception being
-                // thrown when the clipboard is in use by another process
-                ExceptionHandler.LogException(ex, true);
-            }
-        }
-
-        private Dictionary<String, List<string>> GetItemsBySlots()
-        {
-            // Groups items by slots
-            Dictionary<String, List<string>> items = new Dictionary<string, List<string>>();
-            foreach (TreeNode typeNode in tvLoadout.Nodes)
-            {
-                items[typeNode.Text] = new List<string>();
-                foreach (TreeNode itemNode in typeNode.Nodes)
-                {
-                    items[typeNode.Text].Add(itemNode.Text);
-                }
-            }
-            return items;
-        }
-
-        private string FormatForEFT(IDictionary<string, List<string>> items)
-        {
-            // Build the output format for EFT
-            StringBuilder exportText = new StringBuilder();
-            exportText.AppendFormat(CultureConstants.DefaultCulture, "[{0}, EVEMon {1}]", m_ship.Name, lblLoadoutName.Text);
-            exportText.AppendLine();
-
-            if (items.ContainsKey(s_typeMap["lo"]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["lo"]].ToArray()));
-
-            if (items.ContainsKey(s_typeMap["med"]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["med"]].ToArray()));
-
-            if (items.ContainsKey(s_typeMap["high"]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["high"]].ToArray()));
-
-            if (items.ContainsKey(s_typeMap["rig"]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["rig"]].ToArray()));
-
-            if (items.ContainsKey(s_typeMap["subSystem"]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[s_typeMap["subSystem"]].ToArray()));
-
-            if (items.ContainsKey(s_typeMap["drone"]))
-            {
-                foreach (String s in items[s_typeMap["drone"]])
-                {
-                    exportText.AppendFormat(CultureConstants.DefaultCulture, "{0} x1", s);
-                    exportText.AppendLine();
-                }
-            }
-            return exportText.ToString();
-        }
-
-        /// <summary>
-        /// Extracts the properties.
-        /// </summary>
-        /// <param name="items">The items.</param>
-        private void ExtractProperties(IDictionary<string, List<string>> items)
-        {
-            // Add "empty slot" mentions for every slot type
-            foreach (EvePropertyValue prop in m_ship.Properties.Where(prop => prop.Property != null))
-            {
-                if (prop.Property.Name.Contains("High Slots"))
-                {
-                    int highSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
-                    while (items.ContainsKey("high") && items["high"].Count < highSlots)
-                    {
-                        items["high"].Add("[empty high slot]");
-                    }
-                }
-                else if (prop.Property.Name.Contains("Med Slots"))
-                {
-                    int medSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
-                    while (items.ContainsKey("med") && items["med"].Count < medSlots)
-                    {
-                        items["med"].Add("[empty med slot]");
-                    }
-                }
-                else if (prop.Property.Name.Contains("Low Slots"))
-                {
-                    int lowSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
-                    while (items.ContainsKey("lo") && items["lo"].Count < lowSlots)
-                    {
-                        items["lo"].Add("[empty low slot]");
-                    }
-                }
-                else if (prop.Property.Name.Contains("Rig Slots"))
-                {
-                    int rigsSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
-                    while (items.ContainsKey("rig") && items["rig"].Count < rigsSlots)
-                    {
-                        items["rig"].Add("[empty rig slot]");
-                    }
-                }
-                else if (prop.Property.Name.Contains("Sub System Slots"))
-                {
-                    int subSysSlots = Int32.Parse(Regex.Replace(prop.Value, @"[^\d]", String.Empty), CultureConstants.InvariantCulture);
-                    while (items.ContainsKey("subSystem") && items["subSystem"].Count < subSysSlots)
-                    {
-                        items["subSystem"].Add(String.Empty);
-                    }
-                }
-            }
+            LoadoutExporter.ExportToClipboard(m_loadoutInfo, m_selectedLoadout);
         }
 
         #endregion
@@ -771,8 +658,8 @@ namespace EVEMon.SkillPlanner
                     a = tmp;
                 }
 
-                SerializableLoadout sla = a.Tag as SerializableLoadout;
-                SerializableLoadout slb = b.Tag as SerializableLoadout;
+                Loadout loadoutA = a.Tag as Loadout;
+                Loadout loadoutB = b.Tag as Loadout;
 
                 switch (SortColumn)
                 {
@@ -783,14 +670,14 @@ namespace EVEMon.SkillPlanner
                         compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text, StringComparison.CurrentCulture);
                         break;
                     case 2: // Rating
-                        if (slb != null && (sla != null && sla.Rating < slb.Rating))
+                        if (loadoutB != null && (loadoutA != null && loadoutA.Rating < loadoutB.Rating))
                             compareResult = -1;
-                        else if (slb != null && (sla != null && sla.Rating > slb.Rating))
+                        else if (loadoutB != null && (loadoutA != null && loadoutA.Rating > loadoutB.Rating))
                             compareResult = 1;
                         break;
                     case 3: // Date
-                        if (sla != null && slb != null)
-                            compareResult = sla.SubmissionDate.CompareTo(slb.SubmissionDate);
+                        if (loadoutA != null && loadoutB != null)
+                            compareResult = loadoutA.SubmissionDate.CompareTo(loadoutB.SubmissionDate);
                         break;
                 }
 

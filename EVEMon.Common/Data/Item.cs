@@ -14,9 +14,16 @@ namespace EVEMon.Common.Data
     public class Item
     {
         private readonly FastList<StaticSkillLevel> m_prerequisites;
-
+        private static Item s_unknownItem;
 
         #region Constructors
+        /// <summary>
+        /// Constructor for an unknown static skill.
+        /// </summary>
+        private Item()
+            : this(Int32.MaxValue, EVEMonConstants.UnknownText)
+        {
+        }
 
         /// <summary>
         /// Base constructor for default items.
@@ -232,6 +239,17 @@ namespace EVEMon.Common.Data
                 }
                 return sb.ToString();
             }
+        }
+
+        /// <summary>
+        /// Gets the unknown item.
+        /// </summary>
+        /// <value>
+        /// The unknown item.
+        /// </value>
+        public static Item UnknownItem
+        {
+            get { return s_unknownItem ?? (s_unknownItem = new Item()); }
         }
 
         #endregion

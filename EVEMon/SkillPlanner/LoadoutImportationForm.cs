@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
@@ -18,7 +16,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.FittingXml;
 
 namespace EVEMon.SkillPlanner
 {
@@ -34,19 +31,12 @@ namespace EVEMon.SkillPlanner
         private readonly List<Item> m_objects = new List<Item>();
         private readonly List<StaticSkillLevel> m_skillsToAdd = new List<StaticSkillLevel>();
 
-        private readonly string[] m_orderedNodeNames = new[]
-                                                           {
-                                                               "High", "Med", "Low", "Rigs",
-                                                               "Subsystems", "Ammunition", "Drones"
-                                                           };
-
-        private static string[] s_lines;
-        private static SerializableFittings s_fittings;
 
         private Plan m_plan;
         private BaseCharacter m_character;
         private LoadoutFormat m_loadoutFormat;
-        private string m_loadoutName;
+        private ILoadoutInfo m_loadoutInfo;
+        private string m_clipboardText;
 
         #endregion
 
@@ -101,13 +91,13 @@ namespace EVEMon.SkillPlanner
             if (!Clipboard.ContainsText())
                 return;
 
-            string clipboardText = Clipboard.GetText();
+            m_clipboardText = Clipboard.GetText();
 
-            if (!IsLoadout(clipboardText))
+            if (!LoadoutHelper.IsLoadout(m_clipboardText, out m_loadoutFormat))
                 return;
 
             ExplanationLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                  "The parsed {0} formated loadout is shown below.", m_loadoutFormat);
+                "The parsed {0} formated loadout is shown below.", m_loadoutFormat);
             BuildTreeView();
         }
 
@@ -195,7 +185,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void btnPlan_Click(object sender, EventArgs e)
         {
-            IPlanOperation operation = m_plan.TryAddSet(m_skillsToAdd, m_loadoutName);
+            IPlanOperation operation = m_plan.TryAddSet(m_skillsToAdd, m_loadoutInfo.Loadouts.First().Name);
             if (operation == null)
                 return;
 
@@ -258,105 +248,6 @@ namespace EVEMon.SkillPlanner
 
         #region Helper Methods
 
-        private bool IsLoadout(string text)
-        {
-            if (IsEFTFormat(text))
-            {
-                m_loadoutFormat = LoadoutFormat.EFT;
-                return true;
-            }
-
-            if (IsXMLFormat(text))
-            {
-                m_loadoutFormat = LoadoutFormat.XML;
-                return true;
-            }
-
-            if (IsDNAFormat(text))
-            {
-                m_loadoutFormat = LoadoutFormat.DNA;
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Determines whether the loadout is in EFT format.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>
-        /// 	<c>true</c> if the loadout is in EFT format; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool IsEFTFormat(string text)
-        {
-            s_lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            // Nothing to evaluate
-            if (s_lines.Length == 0)
-                return false;
-
-            // Error on first line ?
-            string line = s_lines.First();
-            if (String.IsNullOrEmpty(line) || !line.StartsWith("[", StringComparison.CurrentCulture) || !line.Contains(","))
-                return false;
-
-            // Retrieve the ship
-            int commaIndex = line.IndexOf(',');
-            string shipTypeName = line.Substring(1, commaIndex - 1);
-
-            return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.Name == shipTypeName);
-        }
-
-        /// <summary>
-        /// Determines whether the loadout is in XML format.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>
-        /// 	<c>true</c> if the loadout is in XML format; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool IsXMLFormat(string text)
-        {
-            XmlRootAttribute xmlRoot = new SerializableFittings().GetType().GetCustomAttributes(
-                typeof(XmlRootAttribute), false).Cast<XmlRootAttribute>().FirstOrDefault();
-
-            if (xmlRoot == null)
-                return false;
-
-            using (TextReader reader = new StringReader(text))
-            {
-                if (Util.GetXmlRootElement(reader) != xmlRoot.ElementName)
-                    return false;
-            }
-
-            s_fittings = Util.DeserializeXmlFromString<SerializableFittings>(text);
-            return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.Name == s_fittings.Fitting.ShipType.Name);
-        }
-
-        /// <summary>
-        /// Determines whether the loadout is in DNA format.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>
-        /// 	<c>true</c> if the loadout is in DNA format; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool IsDNAFormat(string text)
-        {
-            s_lines = text.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            // Nothing to evaluate
-            if (s_lines.Length == 0)
-                return false;
-
-            // Error on first line ?
-            int shipID;
-            string line = s_lines.First();
-            if (String.IsNullOrEmpty(line) || !Int32.TryParse(line, out shipID))
-                return false;
-
-            return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.ID == shipID);
-        }
-
         /// <summary>
         /// Builds the tree view.
         /// </summary>
@@ -367,19 +258,32 @@ namespace EVEMon.SkillPlanner
 
             // Decode EFT format
             if (m_loadoutFormat == LoadoutFormat.EFT)
-                DecodeEFTFormat();
+                m_loadoutInfo = LoadoutHelper.DeserializeEFTFormat(m_clipboardText);
 
             // Decode XML format
             if (m_loadoutFormat == LoadoutFormat.XML)
-                DecodeXMLFormat();
+                m_loadoutInfo = LoadoutHelper.DeserializeXMLFormat(m_clipboardText);
 
             // Decode DNA format
             if (m_loadoutFormat == LoadoutFormat.DNA)
-                DecodeDNAFormat();
+                m_loadoutInfo = LoadoutHelper.DeserializeDNAFormat(m_clipboardText);
+
+            LoadoutNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Name: {0}{1}",
+                m_loadoutInfo.Loadouts.First().Name, m_loadoutFormat == LoadoutFormat.DNA ? " - DNA loadout" : String.Empty);
+
+            ShipTypeNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Ship: {0}",
+                m_loadoutInfo.Ship != null ? m_loadoutInfo.Ship.Name : String.Empty);
+
+            DescriptionLabel.Text = String.Format(CultureConstants.DefaultCulture, "Description: {0}",
+                m_loadoutInfo.Loadouts.First().Description);
+
+            m_objects.Add(m_loadoutInfo.Ship);
+
+            BuildTreeNodes(m_loadoutInfo.Loadouts.First().Items);
 
             // Order the nodes
             TreeNode[] orderNodes = ResultsTreeView.Nodes.Cast<TreeNode>().OrderBy(
-                node => m_orderedNodeNames.IndexOf(String.Intern(node.Name))).ToArray();
+                node => LoadoutHelper.OrderedSlotNames.IndexOf(String.Intern(node.Text))).ToArray();
             ResultsTreeView.Nodes.Clear();
             ResultsTreeView.Nodes.AddRange(orderNodes);
 
@@ -391,189 +295,68 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Decodes an EFT loadout text and adds the items to the TreeView.
+        /// Builds the tree nodes.
         /// </summary>
-        private void DecodeEFTFormat()
+        /// <param name="items">The items.</param>
+        private void BuildTreeNodes(IEnumerable<Item> items)
         {
-            foreach (string line in s_lines.Where(line => !String.IsNullOrEmpty(line)))
+            foreach (Item item in items)
             {
-                // Retrieve the ship
-                if (line == s_lines.First())
-                {
-                    // Retrieve the loadout name
-                    int commaIndex = line.IndexOf(',');
-                    m_loadoutName = line.Substring(commaIndex + 1, (line.Length - commaIndex - 2)).Trim();
-                    LoadoutNameLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                          "Loadout Name: {0}", m_loadoutName);
+                TreeNode slotNode;
+                string nodeName = LoadoutHelper.OrderedSlotNames[7];
 
-                    string shipTypeName = line.Substring(1, commaIndex - 1);
-                    ShipTypeNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Ship: {0}", shipTypeName);
-                    Item ship = StaticItems.ShipsMarketGroup.AllItems.First(x => x.Name == shipTypeName);
-                    m_objects.Add(ship);
+                // Regular item ?
+                if (!item.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID))
+                {
+                    // Retrieve the tree node name for the slot
+                    switch (item.FittingSlot)
+                    {
+                        case ItemSlot.High:
+                            nodeName = LoadoutHelper.OrderedSlotNames[0];
+                            break;
+                        case ItemSlot.Medium:
+                            nodeName = LoadoutHelper.OrderedSlotNames[1];
+                            break;
+                        case ItemSlot.Low:
+                            nodeName = LoadoutHelper.OrderedSlotNames[2];
+                            break;
+                    }
+
+                    // Is it a rig?
+                    if (item.MarketGroup.BelongsIn(DBConstants.ShipModificationsMarketGroupID))
+                        nodeName = LoadoutHelper.OrderedSlotNames[3];
+                    // Is it a subsystem?
+                    else if (item.MarketGroup.BelongsIn(DBConstants.SubsystemsMarketGroupID))
+                        nodeName = LoadoutHelper.OrderedSlotNames[4];
+                    // Is it a drone?
+                    else if (item.MarketGroup.BelongsIn(DBConstants.DronesMarketGroupID))
+                        nodeName = LoadoutHelper.OrderedSlotNames[6];
+
+                    // Gets or create the node for the slot
+                    slotNode = !ResultsTreeView.Nodes.ContainsKey(nodeName)
+                        ? ResultsTreeView.Nodes.Add(nodeName, nodeName)
+                        : ResultsTreeView.Nodes[nodeName];
+
+                    // Add a new node
+                    TreeNode itemNode = new TreeNode { Text = item.Name, Tag = item };
+                    slotNode.Nodes.Add(itemNode);
+
+                    m_objects.Add(item);
+
                     continue;
                 }
 
-                // Retrieve the item (might be a drone)
-                string itemName = line.Contains(",") ? line.Substring(0, line.LastIndexOf(',')) : line;
-                itemName = itemName.Contains(" x")
-                               ? itemName.Substring(0, line.LastIndexOf(" x", StringComparison.CurrentCulture))
-                               : itemName;
-                Item item = StaticItems.GetItemByName(itemName);
-
-                // Retrieve the charge
-                string chargeName = line.Contains(",") ? line.Substring(line.LastIndexOf(',') + 2) : null;
-                Item charge = !String.IsNullOrEmpty(chargeName) ? StaticItems.GetItemByName(chargeName) : null;
-
-                AddNode(item, charge);
-            }
-        }
-
-        /// <summary>
-        /// Decodes the XML loadout text and adds the items to the TreeView.
-        /// </summary>
-        private void DecodeXMLFormat()
-        {
-            // Retrieve the description
-            DescriptionLabel.Text = String.Format(CultureConstants.DefaultCulture,
-                                                  "Description: {0}", s_fittings.Fitting.Description.Text);
-
-            // Retrieve the loadout name
-            m_loadoutName = s_fittings.Fitting.Name;
-            LoadoutNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Loadout Name: {0}", m_loadoutName);
-
-            // Retrieve the ship
-            string shipTypeName = s_fittings.Fitting.ShipType.Name;
-            ShipTypeNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Ship: {0}", shipTypeName);
-            Item ship = StaticItems.ShipsMarketGroup.AllItems.First(x => x.Name == shipTypeName);
-            m_objects.Add(ship);
-
-            foreach (SerializableFittingHardware hardware in s_fittings.Fitting.FittingHardware)
-            {
-                // Retrieve the item
-                Item item = hardware.Item;
-
-                // Retrieve the charge
-                Item charge = hardware.Item.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID)
-                                  ? hardware.Item
-                                  : null;
-
-                // Reset item if it is a charge
-                if (charge != null)
-                    item = null;
-
-                AddNode(item, charge);
-            }
-        }
-
-        /// <summary>
-        /// Decodes the DNA loadout text and adds the items to the TreeView.
-        /// </summary>
-        private void DecodeDNAFormat()
-        {
-            foreach (string line in s_lines.Where(line => !String.IsNullOrEmpty(line)))
-            {
-                // Retrieve the ship
-                if (line == s_lines.First())
-                {
-                    int shipID = Int32.Parse(line, CultureConstants.InvariantCulture);
-                    Item ship = StaticItems.ShipsMarketGroup.AllItems.First(x => x.ID == shipID);
-                    ShipTypeNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Ship: {0}", ship.Name);
-                    LoadoutNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Loadout Name: {0} - DNA loadout",
-                                                          ship.Name);
-                    m_objects.Add(ship);
-                    continue;
-                }
-
-                // Retrieve the item
-                int itemID;
-                byte quantity = 0;
-                Item item = Int32.TryParse(line.Substring(0, line.LastIndexOf(';')), out itemID)
-                                ? StaticItems.GetItemByID(itemID)
-                                : null;
-
-                if (item != null)
-                    quantity = Byte.Parse(line.Substring(line.LastIndexOf(';') + 1), CultureConstants.InvariantCulture);
-
-                // Retrieve the charge
-                Item charge = item != null && item.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID)
-                                  ? item
-                                  : null;
-
-                // Reset item if it is a charge
-                if (charge != null)
-                    item = null;
-
-                for (int i = 0; i < quantity; i++)
-                {
-                    AddNode(item, charge);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adds the node to the TreeView.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <param name="charge">The charge.</param>
-        private void AddNode(Item item, Item charge)
-        {
-            TreeNode slotNode;
-            string nodeName = String.Empty;
-
-            // Regular item ?
-            if (item != null)
-            {
-                // Retrieve the tree node name for the slot
-                switch (item.FittingSlot)
-                {
-                    case ItemSlot.High:
-                        nodeName = m_orderedNodeNames[0];
-                        break;
-                    case ItemSlot.Medium:
-                        nodeName = m_orderedNodeNames[1];
-                        break;
-                    case ItemSlot.Low:
-                        nodeName = m_orderedNodeNames[2];
-                        break;
-                }
-
-                // Is it a rig?
-                if (item.MarketGroup.BelongsIn(DBConstants.ShipModificationsMarketGroupID))
-                    nodeName = m_orderedNodeNames[3];
-
-                // Is it a subsystem?
-                if (item.MarketGroup.BelongsIn(DBConstants.SubsystemsMarketGroupID))
-                    nodeName = m_orderedNodeNames[4];
-
-                // Is it a drone?
-                if (item.MarketGroup.BelongsIn(DBConstants.DronesMarketGroupID))
-                    nodeName = m_orderedNodeNames[6];
-
-                // Gets or create the node for the slot
+                // Item is a charge ? 
+                nodeName = LoadoutHelper.OrderedSlotNames[5];
                 slotNode = !ResultsTreeView.Nodes.ContainsKey(nodeName)
-                               ? ResultsTreeView.Nodes.Add(nodeName, nodeName)
-                               : ResultsTreeView.Nodes[nodeName];
+                    ? ResultsTreeView.Nodes.Add(nodeName, nodeName)
+                    : ResultsTreeView.Nodes[nodeName];
 
-                // Add a new node
-                TreeNode itemNode = new TreeNode { Text = item.Name, Tag = item };
-                slotNode.Nodes.Add(itemNode);
+                TreeNode ammoNode = new TreeNode { Text = item.Name, Tag = item };
+                slotNode.Nodes.Add(ammoNode);
 
                 m_objects.Add(item);
             }
-
-            // Has charges ? 
-            if (charge == null)
-                return;
-
-            nodeName = m_orderedNodeNames[5];
-            slotNode = !ResultsTreeView.Nodes.ContainsKey(nodeName)
-                           ? ResultsTreeView.Nodes.Add(nodeName, nodeName)
-                           : ResultsTreeView.Nodes[nodeName];
-
-            TreeNode ammoNode = new TreeNode { Text = charge.Name, Tag = charge };
-            slotNode.Nodes.Add(ammoNode);
-
-            m_objects.Add(charge);
         }
 
         /// <summary>
@@ -581,7 +364,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdatePlanStatus()
         {
-            if (s_lines.Length == 0)
+            if (m_loadoutFormat == LoadoutFormat.None)
                 return;
 
             // Compute the skills to add
@@ -602,7 +385,7 @@ namespace EVEMon.SkillPlanner
                 PlanedLabel.Text = "All skills already trained.";
                 TrainTimeLabel.Visible = false;
             }
-                // Are skills already planned ?
+            // Are skills already planned ?
             else if (m_plan.AreSkillsPlanned(m_skillsToAdd))
             {
                 AddToPlanButton.Enabled = false;
@@ -610,7 +393,7 @@ namespace EVEMon.SkillPlanner
                 PlanedLabel.Text = "All skills already trained or planned.";
                 TrainTimeLabel.Visible = false;
             }
-                // There is at least one untrained or non-planned skill
+            // There is at least one untrained or non-planned skill
             else
             {
                 AddToPlanButton.Enabled = true;
@@ -623,13 +406,6 @@ namespace EVEMon.SkillPlanner
                 TrainTimeLabel.Text = trainingTime.ToDescriptiveText(
                     DescriptiveTextOptions.IncludeCommas | DescriptiveTextOptions.SpaceText);
             }
-        }
-
-        private enum LoadoutFormat
-        {
-            EFT,
-            XML,
-            DNA
         }
 
         #endregion

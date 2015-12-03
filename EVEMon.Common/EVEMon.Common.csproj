@@ -101,6 +101,8 @@
     </Compile>
     <Compile Include="Constants\EveConstants.cs" />
     <Compile Include="Constants\EVEMonConstants.cs" />
+    <Compile Include="CustomEventArgs\LoadoutEventArgs.cs" />
+    <Compile Include="CustomEventArgs\LoadoutFeedEventArgs.cs" />
     <Compile Include="Data\MasteryCertificate.cs" />
     <Compile Include="Data\Mastery.cs" />
     <Compile Include="Data\MasteryShipCollection.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Enumerations\JobState.cs" />
     <Compile Include="Enumerations\KillGroup.cs" />
     <Compile Include="Enumerations\LearningOptions.cs" />
+    <Compile Include="Enumerations\LoadoutFormat.cs" />
     <Compile Include="Enumerations\MasteryStatus.cs" />
     <Compile Include="Enumerations\MedalGroup.cs" />
     <Compile Include="Enumerations\MinmatarMilitiaRank.cs" />
@@ -180,8 +183,17 @@
     <Compile Include="Enumerations\TransactionType.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
+    <Compile Include="Helpers\BaseLoadout.cs" />
     <Compile Include="Helpers\GAnalyticsTracker.cs" />
+    <Compile Include="Helpers\Loadout.cs" />
+    <Compile Include="Helpers\LoadoutExporter.cs" />
+    <Compile Include="Helpers\LoadoutInfo.cs" />
+    <Compile Include="Interfaces\ILoadoutInfo.cs" />
+    <Compile Include="Helpers\LoadoutHelper.cs" />
     <Compile Include="Helpers\PlanHelper.cs" />
+    <Compile Include="Loadouts\BattleClinic\BCLoadoutsProvider.cs" />
+    <Compile Include="Loadouts\LoadoutsProvider.cs" />
+    <Compile Include="Loadouts\Osmium\OsmiumLoadoutsProvider.cs" />
     <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
     <Compile Include="Helpers\ApiTesterUIHelper.cs" />
     <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
@@ -537,6 +549,7 @@
     <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
     <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />
+    <Compile Include="SettingsObjects\LoadoutsProviderSettings.cs" />
     <Compile Include="SettingsObjects\MarketPricerSettings.cs" />
     <Compile Include="SettingsObjects\PlanetarySettings.cs" />
     <Compile Include="SettingsObjects\PlanetaryColumn.cs" />

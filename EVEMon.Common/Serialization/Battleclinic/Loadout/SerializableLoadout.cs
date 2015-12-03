@@ -26,10 +26,10 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         /// </summary>
         /// <value>The name of the loadout.</value>
         [XmlAttribute("name")]
-        public string LoadoutNameXml
+        public string NameXml
         {
-            get { return LoadoutName; }
-            set { LoadoutName = value == null ? String.Empty : value.HtmlDecode(); }
+            get { return Name; }
+            set { Name = value == null ? String.Empty : value.HtmlDecode(); }
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         /// </summary>
         /// <value>The name of the loadout.</value>
         [XmlIgnore]
-        public string LoadoutName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the author from the xml.
@@ -69,7 +69,7 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         /// </summary>
         /// <value>The loadout id.</value>
         [XmlAttribute("loadoutID")]
-        public string LoadoutID { get; set; }
+        public int ID { get; set; }
 
         /// <summary>
         /// Gets or sets the submission date string.
@@ -94,11 +94,11 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         public DateTime SubmissionDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the topic.
+        /// Gets or sets the topic identifier.
         /// </summary>
         /// <value>The topic.</value>
         [XmlAttribute("topic")]
-        public int Topic { get; set; }
+        public int TopicID { get; set; }
 
         /// <summary>
         /// Gets the slots.

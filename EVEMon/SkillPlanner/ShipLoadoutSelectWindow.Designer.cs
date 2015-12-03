@@ -197,7 +197,7 @@ namespace EVEMon.SkillPlanner
             this.throbberFitting.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbberFitting.Name = "throbberFitting";
             this.throbberFitting.Size = new System.Drawing.Size(24, 24);
-            this.throbberFitting.State = ThrobberState.Stopped;
+            this.throbberFitting.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
             this.throbberFitting.TabIndex = 4;
             this.throbberFitting.TabStop = false;
             // 
@@ -210,7 +210,7 @@ namespace EVEMon.SkillPlanner
             this.throbberLoadouts.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbberLoadouts.Name = "throbberLoadouts";
             this.throbberLoadouts.Size = new System.Drawing.Size(24, 24);
-            this.throbberLoadouts.State = ThrobberState.Stopped;
+            this.throbberLoadouts.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
             this.throbberLoadouts.TabIndex = 6;
             this.throbberLoadouts.TabStop = false;
             // 
@@ -234,7 +234,6 @@ namespace EVEMon.SkillPlanner
             // 
             // lblForum
             // 
-            this.lblForum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblForum.AutoSize = true;
             this.lblForum.Location = new System.Drawing.Point(6, 100);
             this.lblForum.Name = "lblForum";
@@ -345,19 +344,19 @@ namespace EVEMon.SkillPlanner
             this.miShowInBrowser,
             this.miExportToClipboard});
             this.cmNode.Name = "cmNode";
-            this.cmNode.Size = new System.Drawing.Size(227, 70);
+            this.cmNode.Size = new System.Drawing.Size(226, 48);
             // 
             // miShowInBrowser
             // 
             this.miShowInBrowser.Name = "miShowInBrowser";
-            this.miShowInBrowser.Size = new System.Drawing.Size(226, 22);
+            this.miShowInBrowser.Size = new System.Drawing.Size(225, 22);
             this.miShowInBrowser.Text = "Show in Items Browser...";
             this.miShowInBrowser.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
             // miExportToClipboard
             // 
             this.miExportToClipboard.Name = "miExportToClipboard";
-            this.miExportToClipboard.Size = new System.Drawing.Size(226, 22);
+            this.miExportToClipboard.Size = new System.Drawing.Size(225, 22);
             this.miExportToClipboard.Text = "Export Loadout To Clipboard";
             this.miExportToClipboard.Click += new System.EventHandler(this.miExportToClipboard_Click);
             // 
@@ -396,7 +395,7 @@ namespace EVEMon.SkillPlanner
             this.MinimumSize = new System.Drawing.Size(744, 544);
             this.Name = "ShipLoadoutSelectWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "BattleClinic Loadout Selection";
+            this.Text = "Loadout Selection";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoadoutSelect_FormClosing);
             this.Load += new System.EventHandler(this.LoadoutSelect_Load);
             this.lowerPanel.ResumeLayout(false);

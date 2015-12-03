@@ -186,9 +186,9 @@ namespace EVEMon.SkillPlanner
             this.LoadoutNameLabel.AutoSize = true;
             this.LoadoutNameLabel.Location = new System.Drawing.Point(12, 40);
             this.LoadoutNameLabel.Name = "LoadoutNameLabel";
-            this.LoadoutNameLabel.Size = new System.Drawing.Size(80, 13);
+            this.LoadoutNameLabel.Size = new System.Drawing.Size(38, 13);
             this.LoadoutNameLabel.TabIndex = 2;
-            this.LoadoutNameLabel.Text = "Loadout Name:";
+            this.LoadoutNameLabel.Text = "Name:";
             // 
             // TreeViewPanel
             // 

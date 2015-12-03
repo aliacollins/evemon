@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.MarketPricer;
@@ -14,7 +15,8 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         public MarketPricerSettings()
         {
-            foreach (ItemPricer pricer in ItemPricer.Providers)
+            foreach (ItemPricer pricer in ItemPricer.Providers
+                .Where(provider => !String.IsNullOrWhiteSpace(provider.Name)))
             {
                 s_pricer[pricer.Name] = pricer;
             }
