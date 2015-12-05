@@ -51,9 +51,9 @@ namespace EVEMon.Common.MarketPricer
         /// <summary>
         /// Called when prices downloaded.
         /// </summary>
-        /// <param name="result">The result.</param>
+        /// <param name="pricesFeed">The prices feed.</param>
         /// <param name="errormessage">The errormessage.</param>
-        protected virtual void OnPricesDownloaded(object result, string errormessage)
+        protected virtual void OnPricesDownloaded(object pricesFeed, string errormessage)
         {
             if (ItemPricesUpdated != null)
                 ItemPricesUpdated(this, EventArgs.Empty);
