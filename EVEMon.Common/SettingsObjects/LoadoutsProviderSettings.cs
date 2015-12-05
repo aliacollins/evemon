@@ -34,10 +34,10 @@ namespace EVEMon.Common.SettingsObjects
         public string ProviderName { get; set; }
 
         /// <summary>
-        /// Gets the pricer.
+        /// Gets the provider.
         /// </summary>
         /// <value>
-        /// The pricer.
+        /// The provider.
         /// </value>
         [XmlIgnore]
         public LoadoutsProvider Provider

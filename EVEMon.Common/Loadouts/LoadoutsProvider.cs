@@ -86,15 +86,8 @@ namespace EVEMon.Common.Loadouts
         /// <param name="errorMessage">The error message.</param>
         protected virtual void OnLoadoutsFeedDownloaded(object loadoutFeed, string errorMessage)
         {
-            // Was there an error ?
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
-                if (LoadoutFeedUpdated != null)
-                    LoadoutFeedUpdated(this, new LoadoutFeedEventArgs { Error = new Exception(errorMessage) });
-            }
-
             if (LoadoutFeedUpdated != null)
-                LoadoutFeedUpdated(this, new LoadoutFeedEventArgs { LoadoutFeed = loadoutFeed });
+                LoadoutFeedUpdated(this, new LoadoutFeedEventArgs(loadoutFeed, errorMessage));
         }
 
         /// <summary>
@@ -104,15 +97,8 @@ namespace EVEMon.Common.Loadouts
         /// <param name="errorMessage">The error message.</param>
         protected virtual void OnLoadoutDownloaded(object loadout, string errorMessage)
         {
-            // Was there an error ?
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
-                if (LoadoutUpdated != null)
-                    LoadoutUpdated(this, new LoadoutEventArgs { Error = new Exception(errorMessage) });
-            }
-
             if (LoadoutUpdated != null)
-                LoadoutUpdated(this, new LoadoutEventArgs { Loadout = loadout });
+                LoadoutUpdated(this, new LoadoutEventArgs(loadout, errorMessage));
         }
     }
 }
