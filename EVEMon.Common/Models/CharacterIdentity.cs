@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Models
 {
@@ -161,7 +161,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>The API key with access to the specified method or null if non found.</returns>
-        public APIKey FindAPIKeyWithAccess(APICharacterMethods method)
+        public APIKey FindAPIKeyWithAccess(CCPAPICharacterMethods method)
         {
             return CharacterTypeAPIKeys.FirstOrDefault(apiKey => apiKey.Monitored &&
                                                                  (int)method == (apiKey.AccessMask & (int)method));
@@ -172,7 +172,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>The API key with access to the specified method or null if non found.</returns>
-        public APIKey FindAPIKeyWithAccess(APICorporationMethods method)
+        public APIKey FindAPIKeyWithAccess(CCPAPICorporationMethods method)
         {
             return CorporationTypeAPIKeys.FirstOrDefault(apiKey => apiKey.Monitored &&
                                                                    (int)method == (apiKey.AccessMask & (int)method));

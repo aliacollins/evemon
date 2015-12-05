@@ -2,13 +2,13 @@
 
 namespace EVEMon.Common.CustomEventArgs
 {
-    public sealed class BCAPIEventArgs : EventArgs
+    public sealed class CloudStorageServiceProviderEventArgs : EventArgs
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="errorMessage">The error message.</param>
-        public BCAPIEventArgs(string errorMessage)
+        public CloudStorageServiceProviderEventArgs(string errorMessage)
         {
             HasError = !String.IsNullOrEmpty(errorMessage);
             ErrorMessage = errorMessage;

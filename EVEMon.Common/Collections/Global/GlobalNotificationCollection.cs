@@ -121,7 +121,7 @@ namespace EVEMon.Common.Collections.Global
         /// Notifies a conquerable station list querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyConquerableStationListError(APIResult<SerializableAPIConquerableStationList> result)
+        internal void NotifyConquerableStationListError(CCPAPIResult<SerializableAPIConquerableStationList> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
@@ -137,7 +137,7 @@ namespace EVEMon.Common.Collections.Global
         /// Notifies an EVE factional warfare stats querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyEveFactionalWarfareStatsError(APIResult<SerializableAPIEveFactionalWarfareStats> result)
+        internal void NotifyEveFactionalWarfareStatsError(CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
@@ -153,7 +153,7 @@ namespace EVEMon.Common.Collections.Global
         /// Notifies a character Id to name querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterNameError(APIResult<SerializableAPICharacterName> result)
+        internal void NotifyCharacterNameError(CCPAPIResult<SerializableAPICharacterName> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
@@ -169,7 +169,7 @@ namespace EVEMon.Common.Collections.Global
         /// Notifies a refTypes querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyRefTypesError(APIResult<SerializableAPIRefTypes> result)
+        internal void NotifyRefTypesError(CCPAPIResult<SerializableAPIRefTypes> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
@@ -206,7 +206,7 @@ namespace EVEMon.Common.Collections.Global
         /// Notifies a server status querying error.
         /// </summary>
         /// <param name="result">The result.</param>
-        internal void NotifyServerStatusError(APIResult<SerializableAPIServerStatus> result)
+        internal void NotifyServerStatusError(CCPAPIResult<SerializableAPIServerStatus> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(null, result)
@@ -237,7 +237,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterListError(APIKey apiKey, APIResult<SerializableAPIKeyInfo> result)
+        internal void NotifyCharacterListError(APIKey apiKey, CCPAPIResult<SerializableAPIKeyInfo> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
@@ -269,7 +269,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyAccountStatusError(APIKey apiKey, APIResult<SerializableAPIAccountStatus> result)
+        internal void NotifyAccountStatusError(APIKey apiKey, CCPAPIResult<SerializableAPIAccountStatus> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(apiKey, result)
@@ -301,7 +301,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifySkillInTrainingError(CCPCharacter character, APIResult<SerializableAPISkillInTraining> result)
+        internal void NotifySkillInTrainingError(CCPCharacter character, CCPAPIResult<SerializableAPISkillInTraining> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -318,7 +318,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterSheetError(CCPCharacter character, APIResult<SerializableAPICharacterSheet> result)
+        internal void NotifyCharacterSheetError(CCPCharacter character, CCPAPIResult<SerializableAPICharacterSheet> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -335,7 +335,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterInfoError(CCPCharacter character, APIResult<SerializableAPICharacterInfo> result)
+        internal void NotifyCharacterInfoError(CCPCharacter character, CCPAPIResult<SerializableAPICharacterInfo> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -352,7 +352,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifySkillQueueError(CCPCharacter character, APIResult<SerializableAPISkillQueue> result)
+        internal void NotifySkillQueueError(CCPCharacter character, CCPAPIResult<SerializableAPISkillQueue> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -369,7 +369,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterStandingsError(CCPCharacter character, APIResult<SerializableAPIStandings> result)
+        internal void NotifyCharacterStandingsError(CCPCharacter character, CCPAPIResult<SerializableAPIStandings> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -387,7 +387,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterFactionalWarfareStatsError(CCPCharacter character,
-            APIResult<SerializableAPIFactionalWarfareStats> result)
+            CCPAPIResult<SerializableAPIFactionalWarfareStats> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -404,7 +404,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterAssetsError(CCPCharacter character, APIResult<SerializableAPIAssetList> result)
+        internal void NotifyCharacterAssetsError(CCPCharacter character, CCPAPIResult<SerializableAPIAssetList> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -421,7 +421,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIMarketOrders> result)
+        internal void NotifyCharacterMarketOrdersError(CCPCharacter character, CCPAPIResult<SerializableAPIMarketOrders> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -438,7 +438,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationMarketOrdersError(CCPCharacter character, APIResult<SerializableAPIMarketOrders> result)
+        internal void NotifyCorporationMarketOrdersError(CCPCharacter character, CCPAPIResult<SerializableAPIMarketOrders> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -455,7 +455,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContractsError(CCPCharacter character, APIResult<SerializableAPIContracts> result)
+        internal void NotifyCharacterContractsError(CCPCharacter character, CCPAPIResult<SerializableAPIContracts> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -472,7 +472,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationContractsError(CCPCharacter character, APIResult<SerializableAPIContracts> result)
+        internal void NotifyCorporationContractsError(CCPCharacter character, CCPAPIResult<SerializableAPIContracts> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -489,7 +489,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyContractItemsError(CCPCharacter character, APIResult<SerializableAPIContractItems> result)
+        internal void NotifyContractItemsError(CCPCharacter character, CCPAPIResult<SerializableAPIContractItems> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -506,7 +506,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContractBidsError(CCPCharacter character, APIResult<SerializableAPIContractBids> result)
+        internal void NotifyCharacterContractBidsError(CCPCharacter character, CCPAPIResult<SerializableAPIContractBids> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -523,7 +523,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationContractBidsError(CCPCharacter character, APIResult<SerializableAPIContractBids> result)
+        internal void NotifyCorporationContractBidsError(CCPCharacter character, CCPAPIResult<SerializableAPIContractBids> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -540,7 +540,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterWalletJournalError(CCPCharacter character, APIResult<SerializableAPIWalletJournal> result)
+        internal void NotifyCharacterWalletJournalError(CCPCharacter character, CCPAPIResult<SerializableAPIWalletJournal> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -558,7 +558,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterWalletTransactionsError(CCPCharacter character,
-            APIResult<SerializableAPIWalletTransactions> result)
+            CCPAPIResult<SerializableAPIWalletTransactions> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -575,7 +575,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIIndustryJobs> result)
+        internal void NotifyCharacterIndustryJobsError(CCPCharacter character, CCPAPIResult<SerializableAPIIndustryJobs> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -592,7 +592,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationIndustryJobsError(CCPCharacter character, APIResult<SerializableAPIIndustryJobs> result)
+        internal void NotifyCorporationIndustryJobsError(CCPCharacter character, CCPAPIResult<SerializableAPIIndustryJobs> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -609,7 +609,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyResearchPointsError(CCPCharacter character, APIResult<SerializableAPIResearch> result)
+        internal void NotifyResearchPointsError(CCPCharacter character, CCPAPIResult<SerializableAPIResearch> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -626,7 +626,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVEMailMessagesError(CCPCharacter character, APIResult<SerializableAPIMailMessages> result)
+        internal void NotifyEVEMailMessagesError(CCPCharacter character, CCPAPIResult<SerializableAPIMailMessages> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -643,7 +643,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVEMailBodiesError(CCPCharacter character, APIResult<SerializableAPIMailBodies> result)
+        internal void NotifyEVEMailBodiesError(CCPCharacter character, CCPAPIResult<SerializableAPIMailBodies> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -660,7 +660,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyMailingListsError(CCPCharacter character, APIResult<SerializableAPIMailingLists> result)
+        internal void NotifyMailingListsError(CCPCharacter character, CCPAPIResult<SerializableAPIMailingLists> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -677,7 +677,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVENotificationsError(CCPCharacter character, APIResult<SerializableAPINotifications> result)
+        internal void NotifyEVENotificationsError(CCPCharacter character, CCPAPIResult<SerializableAPINotifications> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -694,7 +694,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyEVENotificationTextsError(CCPCharacter character, APIResult<SerializableAPINotificationTexts> result)
+        internal void NotifyEVENotificationTextsError(CCPCharacter character, CCPAPIResult<SerializableAPINotificationTexts> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -711,7 +711,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterContactsError(CCPCharacter character, APIResult<SerializableAPIContactList> result)
+        internal void NotifyCharacterContactsError(CCPCharacter character, CCPAPIResult<SerializableAPIContactList> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -728,7 +728,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterMedalsError(CCPCharacter character, APIResult<SerializableAPIMedals> result)
+        internal void NotifyCharacterMedalsError(CCPCharacter character, CCPAPIResult<SerializableAPIMedals> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -745,7 +745,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCorporationMedalsError(CCPCharacter character, APIResult<SerializableAPIMedals> result)
+        internal void NotifyCorporationMedalsError(CCPCharacter character, CCPAPIResult<SerializableAPIMedals> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -763,7 +763,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterUpcomindCalendarEventsError(CCPCharacter character,
-            APIResult<SerializableAPIUpcomingCalendarEvents> result)
+            CCPAPIResult<SerializableAPIUpcomingCalendarEvents> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -781,7 +781,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterCalendarEventAttendeesError(CCPCharacter character,
-            APIResult<SerializableAPICalendarEventAttendees> result)
+            CCPAPIResult<SerializableAPICalendarEventAttendees> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -798,7 +798,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
-        internal void NotifyCharacterKillLogError(CCPCharacter character, APIResult<SerializableAPIKillLog> result)
+        internal void NotifyCharacterKillLogError(CCPCharacter character, CCPAPIResult<SerializableAPIKillLog> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -816,7 +816,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryColoniesError(CCPCharacter character,
-            APIResult<SerializableAPIPlanetaryColonies> result)
+            CCPAPIResult<SerializableAPIPlanetaryColonies> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -834,7 +834,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryPinsError(CCPCharacter character,
-            APIResult<SerializableAPIPlanetaryPins> result)
+            CCPAPIResult<SerializableAPIPlanetaryPins> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -852,7 +852,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryRoutesError(CCPCharacter character,
-            APIResult<SerializableAPIPlanetaryRoutes> result)
+            CCPAPIResult<SerializableAPIPlanetaryRoutes> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)
@@ -870,7 +870,7 @@ namespace EVEMon.Common.Collections.Global
         /// <param name="character">The character.</param>
         /// <param name="result">The result.</param>
         internal void NotifyCharacterPlanetaryLinksError(CCPCharacter character,
-            APIResult<SerializableAPIPlanetaryLinks> result)
+            CCPAPIResult<SerializableAPIPlanetaryLinks> result)
         {
             APIErrorNotificationEventArgs notification =
                 new APIErrorNotificationEventArgs(character, result)

@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
@@ -15,7 +15,7 @@ namespace EVEMon.Common.Models
     /// A delegate for query callbacks.
     /// </summary>
     /// <param name="result"></param>
-    public delegate void QueryCallback<T>(APIResult<T> result);
+    public delegate void QueryCallback<T>(CCPAPIResult<T> result);
 
     /// <summary>
     /// Serializable class abstracting an API queries provider and its configuration.
@@ -235,16 +235,16 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Query this method with the provided HTTP POST data.
         /// </summary>
-        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult&lt;T&gt;"/>).</typeparam>
+        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="CCPAPIResult{T}"/>).</typeparam>
         /// <param name="method">The method to query</param>
         /// <param name="postData">The http POST data</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <returns>The deserialized object</returns>
-        private APIResult<T> QueryMethod<T>(Enum method, string postData, XslCompiledTransform transform)
+        private CCPAPIResult<T> QueryMethod<T>(Enum method, string postData, XslCompiledTransform transform)
         {
             // Download
             Uri url = GetMethodUrl(method);
-            APIResult<T> result = Util.DownloadAPIResult<T>(url, SupportsCompressedResponse, postData, transform);
+            CCPAPIResult<T> result = Util.DownloadAPIResult<T>(url, SupportsCompressedResponse, postData, transform);
 
             // On failure with a custom method, fallback to CCP
             return ShouldRetryWithCCP(result) ? s_ccpProvider.QueryMethod<T>(method, postData, transform) : result;
@@ -253,7 +253,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Asynchrnoneously queries this method with the provided HTTP POST data.
         /// </summary>
-        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="APIResult&lt;T&gt;"/>).</typeparam>
+        /// <typeparam name="T">The subtype to deserialize (the deserialized type being <see cref="CCPAPIResult{T}"/>).</typeparam>
         /// <param name="method">The method to query</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         /// <param name="postData">The http POST data</param>
@@ -294,7 +294,7 @@ namespace EVEMon.Common.Models
         private bool ShouldRetryWithCCP(IAPIResult result)
         {
             return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
-                    result.ErrorType != APIError.CCP);
+                    result.ErrorType != CCPAPIErrors.CCP);
         }
 
         /// <summary>
@@ -307,17 +307,17 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         private static string GetPostDataString(Enum method, long keyId, string verificationCode, long id)
         {
-            if (method.Equals(APICharacterMethods.CharacterInfo) && keyId == 0 && string.IsNullOrEmpty(verificationCode))
+            if (method.Equals(CCPAPICharacterMethods.CharacterInfo) && keyId == 0 && string.IsNullOrEmpty(verificationCode))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly, id);
             }
 
-            if (method.Equals(APICorporationMethods.CorporationSheet) && keyId == 0 && string.IsNullOrEmpty(verificationCode))
+            if (method.Equals(CCPAPICorporationMethods.CorporationSheet) && keyId == 0 && string.IsNullOrEmpty(verificationCode))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCorporationIDOnly, id);
             }
 
-            if (method.Equals(APICharacterMethods.WalletJournal) || method.Equals(APICharacterMethods.WalletTransactions))
+            if (method.Equals(CCPAPICharacterMethods.WalletJournal) || method.Equals(CCPAPICharacterMethods.WalletTransactions))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndRowCount,
                                      keyId, verificationCode, id, 2560);
@@ -334,7 +334,7 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         private static string GetPostDataFormat(Enum method)
         {
-            if (method.GetType() == typeof(APIGenericMethods))
+            if (method.GetType() == typeof(CCPAPIGenericMethods))
             {
                 if (method.ToString().Contains("Contract"))
                     return NetworkConstants.PostDataWithCharIDAndContractID;

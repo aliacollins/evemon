@@ -2,14 +2,14 @@ using System.ComponentModel;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.SettingsObjects;
 
-namespace EVEMon.Common.Enumerations.API
+namespace EVEMon.Common.Enumerations.CCPAPI
 {
     /// <summary>
     /// Enumeration of the generic API methods. Those methods do not have access mask.
     /// Each method should have an entry in APIMethodsEnum and
     /// an equivalent string entry in NetworkConstants indicating the default path of the method.
     /// </summary>
-    public enum APIGenericMethods
+    public enum CCPAPIGenericMethods
     {
         /// <summary>
         /// The EVE server status.

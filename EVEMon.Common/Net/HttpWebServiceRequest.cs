@@ -47,18 +47,27 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// The <see cref="Stream"/> to which the response is written.
+        /// The <see cref="Stream" /> to which the response is written.
         /// </summary>
+        /// <value>
+        /// The response stream.
+        /// </value>
         internal Stream ResponseStream { get; private set; }
 
         /// <summary>
         /// The original url for the request.
         /// </summary>
+        /// <value>
+        /// The base URL.
+        /// </value>
         public Uri BaseUrl { get; private set; }
 
         /// <summary>
         /// Returns true if an asynchronous request was cancelled. When set to true, cancels the current asynchronous request.
         /// </summary>
+        /// <value>
+        ///   <c>true</c> if cancelled; otherwise, <c>false</c>.
+        /// </value>
         public bool Cancelled
         {
             get
@@ -84,6 +93,13 @@ namespace EVEMon.Common.Net
         /// If postData is supplied, the request is submitted as a POST request, otherwise it is submitted as a GET request
         /// The download process is broken into chunks for future implementation of asynchronous requests
         /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="postData">The post data.</param>
+        /// <param name="dataCompression">The data compression.</param>
+        /// <param name="responseStream">The response stream.</param>
+        /// <param name="acceptEncoding">if set to <c>true</c> [accept encoding].</param>
+        /// <param name="accept">The accept.</param>
         internal void GetResponse(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
                                   Stream responseStream, bool acceptEncoding, string accept)
         {
@@ -157,6 +173,14 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Asynchronously retrieve the response from the requested url to the specified response stream.
         /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="postData">The post data.</param>
+        /// <param name="dataCompression">The data compression.</param>
+        /// <param name="responseStream">The response stream.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> [accept encoded].</param>
+        /// <param name="accept">The accept.</param>
+        /// <param name="state">The state.</param>
         public void GetResponseAsync(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
                                      Stream responseStream, bool acceptEncoded, string accept, WebRequestAsyncState state)
         {
@@ -174,6 +198,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Callback method for asynchronous requests.
         /// </summary>
+        /// <param name="ar">The ar.</param>
         private void GetResponseAsyncCompleted(IAsyncResult ar)
         {
             GetResponseDelegate caller = (GetResponseDelegate)ar.AsyncState;
@@ -183,11 +208,12 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Callback method for asynchronous requests.
         /// </summary>
+        /// <param name="completion">The completion.</param>
         private void GetResponseAsyncCompletedCore(Action completion)
         {
             try
             {
-                completion();
+                completion.Invoke();
             }
             catch (HttpWebServiceException ex)
             {
@@ -226,6 +252,8 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Gets a redirected HttpWebResponse.
         /// </summary>
+        /// <param name="target">The target.</param>
+        /// <returns></returns>
         private HttpWebResponse GetRedirectedHttpResponse(string target)
         {
             if (m_redirectsRemaining-- <= 0)
@@ -239,6 +267,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Constructs an HttpWebRequest for the specified url and referer.
         /// </summary>
+        /// <returns></returns>
         private HttpWebRequest GetHttpWebRequest()
         {
             if (m_method == HttpMethod.Get && m_postData != null)
@@ -256,10 +285,11 @@ namespace EVEMon.Common.Net
             request.Method = HttpMethodToString(m_method);
 
             if (m_acceptEncoding)
+            {
                 request.Headers[HttpRequestHeader.AcceptEncoding] = String.Join(", ",
-                                                                                DataCompression.Gzip.ToString().ToLowerInvariant(),
-                                                                                DataCompression.Deflate.ToString().
-                                                                                    ToLowerInvariant());
+                    DataCompression.Gzip.ToString().ToLowerInvariant(),
+                    DataCompression.Deflate.ToString().ToLowerInvariant());
+            }
 
             if (m_referer != null)
                 request.Referer = m_referer;
@@ -298,8 +328,10 @@ namespace EVEMon.Common.Net
 
             // If we are going to send a compressed request set the appropriate header
             if (Enum.IsDefined(typeof(DataCompression), m_dataCompression) && m_dataCompression != DataCompression.None)
+            {
                 request.Headers[HttpRequestHeader.ContentEncoding] =
                     m_dataCompression.ToString().ToLower(CultureConstants.InvariantCulture);
+            }
 
             Stream requestStream = request.GetRequestStream();
             requestStream.Write(m_postData.Content.ToArray(), 0, m_postData.Length);

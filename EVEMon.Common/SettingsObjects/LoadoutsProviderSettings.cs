@@ -15,8 +15,7 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         public LoadoutsProviderSettings()
         {
-            foreach (LoadoutsProvider provider in LoadoutsProvider.Providers
-                .Where(provider => !String.IsNullOrWhiteSpace(provider.Name)))
+            foreach (LoadoutsProvider provider in LoadoutsProvider.Providers)
             {
                 s_loadoutsProviders[provider.Name] = provider;
             }

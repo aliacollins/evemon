@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using EVEMon.Common.Extensions;
 
-namespace EVEMon.Common.Serialization.BattleClinic
+namespace EVEMon.Common.Serialization.BattleClinic.CloudStorage
 {
     public sealed class SerializableFilesListItem
     {

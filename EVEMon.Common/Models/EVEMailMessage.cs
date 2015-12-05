@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.Eve;
@@ -256,12 +256,12 @@ namespace EVEMon.Common.Models
             m_queryPending = true;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.MailBodies);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailBodies);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailBodies>(
-                APICharacterMethods.MailBodies,
+                CCPAPICharacterMethods.MailBodies,
                 apiKey.ID,
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
@@ -273,12 +273,12 @@ namespace EVEMon.Common.Models
         /// Processes the queried EVE mail message mail body.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnEVEMailBodyDownloaded(APIResult<SerializableAPIMailBodies> result)
+        private void OnEVEMailBodyDownloaded(CCPAPIResult<SerializableAPIMailBodies> result)
         {
             m_queryPending = false;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MailBodies))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.MailBodies))
                 EveMonClient.Notifications.NotifyEVEMailBodiesError(m_ccpCharacter, result);
 
             // Quits if there is an error

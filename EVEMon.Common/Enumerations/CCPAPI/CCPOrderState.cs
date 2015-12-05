@@ -1,4 +1,4 @@
-﻿namespace EVEMon.Common.Enumerations.API
+﻿namespace EVEMon.Common.Enumerations.CCPAPI
 {
     /// <summary>
     /// The status of a market order.

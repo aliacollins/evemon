@@ -8,7 +8,6 @@ using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
@@ -161,25 +160,25 @@ namespace EVEMon.ApiErrorHandling
         {
             switch (result.ErrorType)
             {
-                case APIError.None:
+                case Common.Enumerations.CCPAPI.CCPAPIErrors.None:
                     return "No error specified";
 
-                case APIError.CCP:
-                    return String.Format(CultureConstants.DefaultCulture,
+                case Common.Enumerations.CCPAPI.CCPAPIErrors.CCP:
+                    return string.Format(CultureConstants.DefaultCulture,
                                          "CCP Error {0} : {1}",
                                          result.CCPError.ErrorCode,
                                          result.CCPError.ErrorMessage);
 
-                case APIError.Http:
-                    return String.Format(CultureConstants.DefaultCulture,
+                case Common.Enumerations.CCPAPI.CCPAPIErrors.Http:
+                    return string.Format(CultureConstants.DefaultCulture,
                                          "HTTP error: {0}", result.ErrorMessage);
 
-                case APIError.Xml:
-                    return String.Format(CultureConstants.DefaultCulture,
+                case Common.Enumerations.CCPAPI.CCPAPIErrors.Xml:
+                    return string.Format(CultureConstants.DefaultCulture,
                                          "XML error: {0}", result.ErrorMessage);
 
-                case APIError.Xslt:
-                    return String.Format(CultureConstants.DefaultCulture,
+                case Common.Enumerations.CCPAPI.CCPAPIErrors.Xslt:
+                    return string.Format(CultureConstants.DefaultCulture,
                                          "XSLT error: {0}", result.ErrorMessage);
 
                 default:

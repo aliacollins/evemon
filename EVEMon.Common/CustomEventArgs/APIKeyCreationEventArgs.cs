@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
 
@@ -18,7 +18,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// <param name="verificationCode">The verification code.</param>
         /// <param name="apiKeyInfo">The API key info.</param>
         public APIKeyCreationEventArgs(long id, string verificationCode,
-                                       APIResult<SerializableAPIKeyInfo> apiKeyInfo)
+                                       CCPAPIResult<SerializableAPIKeyInfo> apiKeyInfo)
         {
             if (apiKeyInfo == null)
                 throw new ArgumentNullException("apiKeyInfo");
@@ -33,10 +33,10 @@ namespace EVEMon.Common.CustomEventArgs
             Type = APIKey.GetCredentialsType(apiKeyInfo);
 
             // On error, retrieve the error message and quit
-            if (Type == APIKeyType.Unknown)
+            if (Type == CCPAPIKeyType.Unknown)
             {
                 KeyTestError = apiKeyInfo.ErrorMessage;
-                CCPError = apiKeyInfo.CCPError ?? new APICCPError();
+                CCPError = apiKeyInfo.CCPError ?? new CCPAPIError();
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        public APIKeyType Type { get; private set; }
+        public CCPAPIKeyType Type { get; private set; }
 
         /// <summary>
         /// Gets or sets the expiration.
@@ -117,12 +117,12 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets or sets the CCP error.
         /// </summary>
         /// <value>The CCP error.</value>
-        public APICCPError CCPError { get; private set; }
+        public CCPAPIError CCPError { get; private set; }
 
         /// <summary>
         /// Gets the result which occurred when the API key info was queried.
         /// </summary>
-        public APIResult<SerializableAPIKeyInfo> APIKeyInfo { get; private set; }
+        public CCPAPIResult<SerializableAPIKeyInfo> APIKeyInfo { get; private set; }
 
         /// <summary>
         /// Gets the list of identities available from this API key.

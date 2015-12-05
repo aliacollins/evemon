@@ -1,7 +1,7 @@
 using System;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.QueryMonitor;
 using EVEMon.Common.Serialization.Eve;
@@ -25,7 +25,7 @@ namespace EVEMon.Common.Models
         {
             m_status = ServerStatus.Online;
 
-            m_serverStatusMonitor = new QueryMonitor<SerializableAPIServerStatus>(APIGenericMethods.ServerStatus,
+            m_serverStatusMonitor = new QueryMonitor<SerializableAPIServerStatus>(CCPAPIGenericMethods.ServerStatus,
                                                                                   OnServerStatusMonitorUpdated) { Enabled = true };
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
@@ -86,7 +86,7 @@ namespace EVEMon.Common.Models
         /// Occurs when CCP returns new data.
         /// </summary>
         /// <param name="result"></param>
-        private void OnServerStatusMonitorUpdated(APIResult<SerializableAPIServerStatus> result)
+        private void OnServerStatusMonitorUpdated(CCPAPIResult<SerializableAPIServerStatus> result)
         {
             ServerStatus lastStatus = m_status;
 

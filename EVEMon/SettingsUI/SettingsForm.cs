@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
@@ -11,6 +10,7 @@ using System.Resources;
 using System.Security;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
@@ -68,7 +68,10 @@ namespace EVEMon.SettingsUI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SettingsForm_Load(object sender, EventArgs e)
-        {          
+        {
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             // Initialize members
             m_isLoading = true;
 
@@ -193,6 +196,9 @@ namespace EVEMon.SettingsUI
 
             // Market Price providers
             InitilizeMarketPriceProviderDropDown();
+
+            // Cloud Storage Service provider
+            InitializeCloudStorageServiceProviderDropDown();
 
             m_isLoading = false;
 
@@ -461,6 +467,9 @@ namespace EVEMon.SettingsUI
             // Market Price Provider
             m_settings.MarketPricer.ProviderName = cbProvidersList.SelectedItem.ToString();
 
+            // Cloud Storage Service Provider
+            m_settings.CloudStorageServiceProvider.ProviderName = cloudStorageProvidersComboBox.SelectedItem.ToString();
+
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
             m_settings.UI.MainWindow.TitleFormat = (MainWindowTitleFormat)cbWindowsTitleList.SelectedIndex + 1;
@@ -632,6 +641,28 @@ namespace EVEMon.SettingsUI
 
             if (cbProvidersList.SelectedIndex == -1)
                 cbProvidersList.SelectedIndex = 0;
+        }
+
+        /// <summary>
+        /// Populates the combobox for the cloud storage service providers.
+        /// </summary>
+        private void InitializeCloudStorageServiceProviderDropDown()
+        {
+            cloudStorageProvidersComboBox.Items.Clear();
+
+            cloudStorageProvidersComboBox.Items.AddRange(CloudStorageServiceProvider.Providers
+                .Select(provider => provider.Name)
+                .Cast<object>()
+                .ToArray());
+
+            var selectedItem = cloudStorageProvidersComboBox.Items.Cast<string>()
+                .FirstOrDefault(item => item == m_settings.CloudStorageServiceProvider.ProviderName);
+
+            if (selectedItem != null)
+                cloudStorageProvidersComboBox.SelectedIndex = cloudStorageProvidersComboBox.Items.IndexOf(selectedItem);
+
+            if (cloudStorageProvidersComboBox.SelectedIndex == -1)
+                cloudStorageProvidersComboBox.SelectedIndex = 0;
         }
 
         #endregion

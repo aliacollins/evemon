@@ -61,6 +61,8 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Cancels an asynchronous request in progress.
         /// </summary>
+        /// <param name="request">The request.</param>
+        /// <exception cref="System.ArgumentNullException">request</exception>
         public static void CancelRequest(object request)
         {
             if (request == null)

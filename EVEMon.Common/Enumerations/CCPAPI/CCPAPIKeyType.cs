@@ -1,9 +1,9 @@
-namespace EVEMon.Common.Enumerations.API
+namespace EVEMon.Common.Enumerations.CCPAPI
 {
     /// <summary>
     /// Enumeration of API key types.
     /// </summary>
-    public enum APIKeyType
+    public enum CCPAPIKeyType
     {
         /// <summary>
         /// The API key type wouldn't be checked because of an error.

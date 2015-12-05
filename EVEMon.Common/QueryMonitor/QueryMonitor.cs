@@ -1,7 +1,7 @@
 ﻿using System;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
@@ -108,7 +108,7 @@ namespace EVEMon.Common.QueryMonitor
                 {
                     // If it's not a CCP error we try again in five minutes
                     // thus preventing spamming the trace file
-                    if (LastResult.ErrorType != APIError.CCP && LastResult.CachedUntil == DateTime.MinValue)
+                    if (LastResult.ErrorType != CCPAPIErrors.CCP && LastResult.CachedUntil == DateTime.MinValue)
                         LastResult.CachedUntil = DateTime.UtcNow.AddMinutes(5);
 
                     // The 'return' condition have been placed to prevent any 'CCP screw up'
@@ -139,7 +139,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Gets the last result queried from the API provider.
         /// </summary>
-        public APIResult<T> LastResult { get; private set; }
+        public CCPAPIResult<T> LastResult { get; private set; }
 
         /// <summary>
         /// Gets true whether the method is curently being requeried.
@@ -205,7 +205,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <remarks>
         /// This method does not fire any event.
         /// </remarks>
-        internal void UpdateWith(APIResult<T> result)
+        internal void UpdateWith(CCPAPIResult<T> result)
         {
             LastResult = result;
             LastUpdate = DateTime.UtcNow;
@@ -290,7 +290,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Occurs when a new result has been queried.
         /// </summary>
         /// <param name="result">The downloaded result</param>
-        private void OnQueried(APIResult<T> result)
+        private void OnQueried(CCPAPIResult<T> result)
         {
             IsUpdating = false;
             Status = QueryStatus.Pending;

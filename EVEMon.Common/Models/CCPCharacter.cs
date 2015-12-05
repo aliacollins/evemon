@@ -6,7 +6,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Models.Extended;
@@ -33,7 +33,7 @@ namespace EVEMon.Common.Models
         private CorporationDataQuerying m_corporationDataQuerying;
         private List<SerializableAPIUpdate> m_lastAPIUpdates;
 
-        private Enum m_errorNotifiedMethod = APIMethodsEnum.None;
+        private Enum m_errorNotifiedMethod = CCPAPIMethodsEnum.None;
         private bool m_isFwEnlisted;
 
         #endregion
@@ -616,7 +616,7 @@ namespace EVEMon.Common.Models
             // Notify an error occurred
             if (result.HasError)
             {
-                if (!m_errorNotifiedMethod.Equals(APIMethodsEnum.None))
+                if (!m_errorNotifiedMethod.Equals(CCPAPIMethodsEnum.None))
                     return false;
 
                 m_errorNotifiedMethod = method;
@@ -628,7 +628,7 @@ namespace EVEMon.Common.Models
                 return false;
 
             EveMonClient.Notifications.InvalidateCharacterAPIError(this);
-            m_errorNotifiedMethod = APIMethodsEnum.None;
+            m_errorNotifiedMethod = CCPAPIMethodsEnum.None;
 
             return false;
         }
@@ -806,20 +806,20 @@ namespace EVEMon.Common.Models
             if (EveMonClient.APIKeys.Any(apiKey => !apiKey.IsProcessed))
                 return;
 
-            if (!Identity.APIKeys.Any() || Identity.APIKeys.Any(apiKey => apiKey.Type == APIKeyType.Unknown))
+            if (!Identity.APIKeys.Any() || Identity.APIKeys.Any(apiKey => apiKey.Type == CCPAPIKeyType.Unknown))
                 return;
 
             if (m_characterDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCharacterOrAccountType))
             {
                 m_characterDataQuerying = new CharacterDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICharacterMethods),
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(CCPAPICharacterMethods),
                                                                                         lastUpdate.Method)));
             }
 
             if (m_corporationDataQuerying == null && Identity.APIKeys.Any(apiKey => apiKey.IsCorporationType))
             {
                 m_corporationDataQuerying = new CorporationDataQuerying(this);
-                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(APICorporationMethods),
+                ResetLastAPIUpdates(m_lastAPIUpdates.Where(lastUpdate => Enum.IsDefined(typeof(CCPAPICorporationMethods),
                                                                                         lastUpdate.Method)));
             }
         }

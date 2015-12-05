@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.QueryMonitor
@@ -42,7 +42,7 @@ namespace EVEMon.Common.QueryMonitor
         {
             get
             {
-                m_apiKey = m_character.Identity.FindAPIKeyWithAccess((APICorporationMethods)Method);
+                m_apiKey = m_character.Identity.FindAPIKeyWithAccess((CCPAPICorporationMethods)Method);
                 return m_apiKey != null;
             }
         }

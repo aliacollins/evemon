@@ -99,6 +99,12 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CloudStorageServices\BattleClinic\BCCloudStorageServiceProvider.cs" />
+    <Compile Include="CloudStorageServices\CloudStorageServiceAPIError.cs" />
+    <Compile Include="CloudStorageServices\CloudStorageServiceAPIFile.cs" />
+    <Compile Include="CloudStorageServices\CloudStorageServiceAPIResult.cs" />
+    <Compile Include="CloudStorageServices\CloudStorageServiceProvider.cs" />
+    <Compile Include="CloudStorageServices\CloudStorageServiceAPICredentials.cs" />
     <Compile Include="Constants\EveConstants.cs" />
     <Compile Include="Constants\EVEMonConstants.cs" />
     <Compile Include="CustomEventArgs\LoadoutEventArgs.cs" />
@@ -113,14 +119,14 @@
     <Compile Include="Enumerations\AgentType.cs" />
     <Compile Include="Enumerations\AmarrMilitiaRank.cs" />
     <Compile Include="Enumerations\Ancestry.cs" />
-    <Compile Include="Enumerations\API\APICharacterMethods.cs" />
-    <Compile Include="Enumerations\API\APICorporationMethods.cs" />
-    <Compile Include="Enumerations\API\APIGenericMethods.cs" />
-    <Compile Include="Enumerations\API\APIKeyType.cs" />
-    <Compile Include="Enumerations\API\APIMethodsEnum.cs" />
-    <Compile Include="Enumerations\API\APIError.cs" />
-    <Compile Include="Enumerations\API\CCPJobCompletedStatus.cs" />
-    <Compile Include="Enumerations\API\CCPOrderState.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPAPICharacterMethods.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPAPICorporationMethods.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPAPIGenericMethods.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPAPIKeyType.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPAPIMethodsEnum.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPAPIErrors.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPJobCompletedStatus.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPOrderState.cs" />
     <Compile Include="Enumerations\Bloodline.cs" />
     <Compile Include="Enumerations\BlueprintActivity.cs" />
     <Compile Include="Enumerations\BlueprintType.cs" />
@@ -309,7 +315,7 @@
     <Compile Include="CustomEventArgs\APIKeyCreationEventArgs.cs" />
     <Compile Include="CustomEventArgs\APIKeyInfoChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\AttributeChangedEventArgs.cs" />
-    <Compile Include="CustomEventArgs\BCAPIEventArgs.cs" />
+    <Compile Include="CustomEventArgs\CloudStorageServiceProviderEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\CharacterIdentityChangedEventArgs.cs" />
     <Compile Include="CustomEventArgs\ContractsEventArgs.cs" />
@@ -478,22 +484,21 @@
     <Compile Include="Serialization\Eve\SerializableStandings.cs" />
     <Compile Include="Serialization\Eve\SerializableStandingsListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableAPICharacterInfo.cs" />
-    <Compile Include="Serialization\BattleClinic\BCAPI.cs" />
-    <Compile Include="Serialization\BattleClinic\BCAPIEnumerations.cs" />
-    <Compile Include="Serialization\BattleClinic\BCAPIError.cs" />
-    <Compile Include="Serialization\BattleClinic\BCAPIMethod.cs" />
-    <Compile Include="Serialization\BattleClinic\BCAPIResult.cs" />
-    <Compile Include="Serialization\BattleClinic\BCAPISettings.Designer.cs">
+    <Compile Include="CloudStorageServices\BattleClinic\BCAPIMethods.cs" />
+    <Compile Include="Serialization\BattleClinic\CloudStorage\BCAPIError.cs" />
+    <Compile Include="CloudStorageServices\BattleClinic\BCAPIMethod.cs" />
+    <Compile Include="Serialization\BattleClinic\CloudStorage\BCAPIResult.cs" />
+    <Compile Include="CloudStorageServices\CloudStorageServicesSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>BCAPISettings.settings</DependentUpon>
+      <DependentUpon>CloudStorageServicesSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="MarketPricer\BattleClinic\BCItemPricer.cs" />
     <Compile Include="Serialization\BattleClinic\MarketPricer\SerializableBCItemPrice.cs" />
     <Compile Include="Serialization\BattleClinic\MarketPricer\SerializableBCItemPrices.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableBCAPICredentials.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableBCAPIFiles.cs" />
-    <Compile Include="Serialization\BattleClinic\SerializableFilesListItem.cs" />
+    <Compile Include="Serialization\BattleClinic\CloudStorage\SerializableBCAPICredentials.cs" />
+    <Compile Include="Serialization\BattleClinic\CloudStorage\SerializableBCAPIFiles.cs" />
+    <Compile Include="Serialization\BattleClinic\CloudStorage\SerializableFilesListItem.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadout.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutRace.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutSlot.cs" />
@@ -548,6 +553,7 @@
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
     <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
     <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
+    <Compile Include="SettingsObjects\CloudStorageServiceProviderSettings.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />
     <Compile Include="SettingsObjects\LoadoutsProviderSettings.cs" />
     <Compile Include="SettingsObjects\MarketPricerSettings.cs" />
@@ -621,7 +627,7 @@
     <Compile Include="Models\Collections\ResearchPointCollection.cs" />
     <Compile Include="Models\Comparers\ResearchPointComparer.cs" />
     <Compile Include="Models\SellOrder.cs" />
-    <Compile Include="Enumerations\API\CCPContractStatus.cs" />
+    <Compile Include="Enumerations\CCPAPI\CCPContractStatus.cs" />
     <Compile Include="Serialization\Eve\SerializableAPIAccountBalance.cs" />
     <Compile Include="Serialization\Eve\SerializableAccountBalanceListItem.cs" />
     <Compile Include="Serialization\Eve\SerializableAPIAccountStatus.cs" />
@@ -698,7 +704,7 @@
     </Compile>
     <Compile Include="Models\APIMethod.cs" />
     <Compile Include="Service\AutoShrink.cs" />
-    <Compile Include="Serialization\Eve\APICCPError.cs" />
+    <Compile Include="Serialization\Eve\CCPAPIError.cs" />
     <Compile Include="Controls\CopySaveOptionsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -753,9 +759,9 @@
     <Compile Include="Util.cs" />
     <Compile Include="Factories\WeakReferenceOfT.cs" />
     <None Include="Serialization\Exportation\output-html.xslt" />
-    <None Include="Serialization\BattleClinic\BCAPISettings.settings">
+    <None Include="CloudStorageServices\CloudStorageServicesSettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>BCAPISettings.Designer.cs</LastGenOutput>
+      <LastGenOutput>CloudStorageServicesSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -967,7 +973,7 @@
     <Compile Include="Models\SkillLevelSet.cs" />
     <Compile Include="Models\SkillQueue.cs" />
     <Compile Include="Models\CharacterIdentity.cs" />
-    <Compile Include="Serialization\Eve\APIResult.cs" />
+    <Compile Include="Serialization\Eve\CCPAPIResult.cs" />
     <Compile Include="Collections\ReadonlyCollection.cs" />
     <Compile Include="Models\SkillLevel.cs" />
     <Compile Include="Threading\IActorTimer.cs" />

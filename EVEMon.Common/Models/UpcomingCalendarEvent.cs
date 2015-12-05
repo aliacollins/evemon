@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
@@ -114,12 +114,12 @@ namespace EVEMon.Common.Models
             m_queryPending = true;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.CalendarEventAttendees);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CalendarEventAttendees);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICalendarEventAttendees>(
-                APICharacterMethods.CalendarEventAttendees,
+                CCPAPICharacterMethods.CalendarEventAttendees,
                 apiKey.ID,
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
@@ -131,12 +131,12 @@ namespace EVEMon.Common.Models
         /// Processes the queried calendar event attendees.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnCalendarEventAttendeesDownloaded(APIResult<SerializableAPICalendarEventAttendees> result)
+        private void OnCalendarEventAttendeesDownloaded(CCPAPIResult<SerializableAPICalendarEventAttendees> result)
         {
             m_queryPending = false;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.CalendarEventAttendees))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.CalendarEventAttendees))
                 EveMonClient.Notifications.NotifyCharacterCalendarEventAttendeesError(m_ccpCharacter, result);
 
             // Quits if there is an error

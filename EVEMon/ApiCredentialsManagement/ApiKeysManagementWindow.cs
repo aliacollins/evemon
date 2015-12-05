@@ -8,7 +8,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 
@@ -391,7 +391,7 @@ namespace EVEMon.ApiCredentialsManagement
                             item.Group = noAPIKeyGroup;
                         else
                         {
-                            APIKey accountTypeAPIKey = apiKeys.FirstOrDefault(apiKey => apiKey.Type == APIKeyType.Account);
+                            APIKey accountTypeAPIKey = apiKeys.FirstOrDefault(apiKey => apiKey.Type == CCPAPIKeyType.Account);
                             item.Group = accountTypeAPIKey != null
                                              ? apiKeyGroups[accountTypeAPIKey]
                                              : apiKeyGroups[apiKeys.First()];

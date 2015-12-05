@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.BattleClinic
+namespace EVEMon.Common.Serialization.BattleClinic.CloudStorage
 {
     [XmlRoot("error", Namespace = "http://api.battleclinic.com")]
     public sealed class BCAPIError

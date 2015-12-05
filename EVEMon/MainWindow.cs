@@ -16,6 +16,7 @@ using EVEMon.BlankCharacter;
 using EVEMon.CharacterMonitoring;
 using EVEMon.CharactersComparison;
 using EVEMon.Common;
+using EVEMon.Common.CloudStorageServices.BattleClinic;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -1145,8 +1146,8 @@ namespace EVEMon
             // Save the settings to make sure we don't lose anything
             Settings.SaveImmediate();
 
-            // Save settings to BC storage
-            if (!BCAPI.UploadSettingsFile())
+            // Save settings to cloud storage service provider
+            if (!Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
                 return;
 
             // Stop IGB
@@ -1384,8 +1385,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Save settings to BC storage
-            if (!BCAPI.UploadSettingsFile())
+            // Save settings to cloud storage service provider
+            if (!Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
                 return;
 
             Application.Exit();
@@ -1983,8 +1984,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Save settings to BC storage
-            if (!BCAPI.UploadSettingsFile())
+            // Save settings to cloud storage service provider
+            if (!Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
                 return;
 
             Application.Exit();

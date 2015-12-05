@@ -1,6 +1,6 @@
 using System;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.QueryMonitor
@@ -31,10 +31,10 @@ namespace EVEMon.Common.QueryMonitor
         {
             get
             {
-                if (Method is APIGenericMethods)
+                if (Method is CCPAPIGenericMethods)
                     return true;
 
-                int method = (int)((APICharacterMethods)Method);
+                int method = (int)((CCPAPICharacterMethods)Method);
                 return method == (m_apiKey.AccessMask & method);
             }
         }

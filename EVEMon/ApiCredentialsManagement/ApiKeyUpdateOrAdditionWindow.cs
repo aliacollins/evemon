@@ -8,7 +8,7 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models;
 using EVEMon.Common.Properties;
 
@@ -234,17 +234,17 @@ namespace EVEMon.ApiCredentialsManagement
                     CharactersGroupBox.Text = "Error report";
                     ResultsMultiPanel.SelectedPage = GetErrorPage(e);
                     break;
-                case APIKeyType.Account:
+                case CCPAPIKeyType.Account:
                     KeyPicture.Image = Resources.AccountWide32;
                     KeyLabel.Text = "This is an 'Account' wide API key.";
                     ResultsMultiPanel.SelectedPage = CharactersListPage;
                     break;
-                case APIKeyType.Character:
+                case CCPAPIKeyType.Character:
                     KeyPicture.Image = Resources.DefaultCharacterImage32;
                     KeyLabel.Text = "This is a 'Character' restricted API key.";
                     ResultsMultiPanel.SelectedPage = CharactersListPage;
                     break;
-                case APIKeyType.Corporation:
+                case CCPAPIKeyType.Corporation:
                     KeyPicture.Image = Resources.DefaultCorporationImage32;
                     KeyLabel.Text = "This is a 'Corporation' API key.";
                     ResultsMultiPanel.SelectedPage = CharactersListPage;
@@ -270,7 +270,7 @@ namespace EVEMon.ApiCredentialsManagement
                 WarningLabel.Visible = true;
             }
                 // Issue a warning if the access of API key is less than needed for basic features
-            else if (e.Type != APIKeyType.Corporation && e.AccessMask < (int)APIMethodsEnum.BasicCharacterFeatures)
+            else if (e.Type != CCPAPIKeyType.Corporation && e.AccessMask < (int)CCPAPIMethodsEnum.BasicCharacterFeatures)
             {
                 WarningLabel.Text = "Beware! The data this API key provides does not suffice for basic features!";
                 WarningLabel.Visible = true;

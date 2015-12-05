@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Serialization.Settings
 {
@@ -25,7 +25,7 @@ namespace EVEMon.Common.Serialization.Settings
         public long AccessMask { get; set; }
 
         [XmlAttribute("type")]
-        public APIKeyType Type { get; set; }
+        public CCPAPIKeyType Type { get; set; }
 
         [XmlAttribute("expires")]
         public DateTime Expiration { get; set; }

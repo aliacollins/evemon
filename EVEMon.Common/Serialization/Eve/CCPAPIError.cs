@@ -6,7 +6,7 @@ namespace EVEMon.Common.Serialization.Eve
     /// CCP API error message handling - for application error messages within the xml.
     /// </summary>
     [XmlRoot("error")]
-    public sealed class APICCPError
+    public sealed class CCPAPIError
     {
         /// <summary>
         /// If this is non 0 then an error has occurred

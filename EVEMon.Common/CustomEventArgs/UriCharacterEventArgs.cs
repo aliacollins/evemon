@@ -10,7 +10,7 @@ namespace EVEMon.Common.CustomEventArgs
     /// </summary>
     public sealed class UriCharacterEventArgs : EventArgs
     {
-        private readonly APIResult<SerializableAPICharacterSheet> m_apiResult;
+        private readonly CCPAPIResult<SerializableAPICharacterSheet> m_apiResult;
         private readonly SerializableCharacterSheetBase m_result;
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace EVEMon.Common.CustomEventArgs
         /// </summary>
         /// <param name="uri">URI of the character</param>
         /// <param name="result">API Result</param>
-        public UriCharacterEventArgs(Uri uri, APIResult<SerializableAPICharacterSheet> result)
+        public UriCharacterEventArgs(Uri uri, CCPAPIResult<SerializableAPICharacterSheet> result)
         {
             if (result == null)
                 throw new ArgumentNullException("result");

@@ -8,7 +8,7 @@ using System.Windows.Forms.VisualStyles;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 using EVEMon.Common.Properties;
@@ -297,13 +297,13 @@ namespace EVEMon.ApiCredentialsManagement
                 default:
                     icon = Resources.KeyWrong32;
                     break;
-                case APIKeyType.Character:
+                case CCPAPIKeyType.Character:
                     icon = Resources.DefaultCharacterImage32;
                     break;
-                case APIKeyType.Corporation:
+                case CCPAPIKeyType.Corporation:
                     icon = Resources.DefaultCorporationImage32;
                     break;
-                case APIKeyType.Account:
+                case CCPAPIKeyType.Account:
                     icon = Resources.AccountWide32;
                     break;
             }

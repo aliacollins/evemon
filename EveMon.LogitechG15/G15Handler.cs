@@ -3,7 +3,7 @@ using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models;
 using EVEMon.Common.Threading;
 
@@ -228,8 +228,8 @@ namespace EVEMon.LogitechG15
                                       {
                                           ccpCharacter.QueryMonitors.Query(new Enum[]
                                                                                {
-                                                                                   APICharacterMethods.CharacterSheet,
-                                                                                   APICharacterMethods.SkillQueue
+                                                                                   CCPAPICharacterMethods.CharacterSheet,
+                                                                                   CCPAPICharacterMethods.SkillQueue
                                                                                });
                                       }
                                   });

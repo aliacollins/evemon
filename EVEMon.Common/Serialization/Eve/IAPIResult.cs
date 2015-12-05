@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml.XPath;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 
 namespace EVEMon.Common.Serialization.Eve
 {
@@ -22,10 +22,10 @@ namespace EVEMon.Common.Serialization.Eve
         bool EVEDatabaseError { get; }
 
         /// <summary>
-        /// Gets the type of the error or <see cref="APIError.None"/> when there was no error.
+        /// Gets the type of the error or <see cref="CCPAPIErrors.None"/> when there was no error.
         /// </summary>
         /// <value>The type of the error.</value>
-        APIError ErrorType { get; }
+        CCPAPIErrors ErrorType { get; }
 
         /// <summary>
         /// Gets the error message without bothering about its nature.
@@ -43,7 +43,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// Gets the error returned by CCP.
         /// </summary>
         /// <value>The CCP error.</value>
-        APICCPError CCPError { get; set; }
+        CCPAPIError CCPError { get; set; }
 
         /// <summary>
         /// Gets the returned XML document.

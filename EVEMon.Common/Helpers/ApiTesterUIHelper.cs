@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Extended;
 
@@ -21,22 +21,22 @@ namespace EVEMon.Common.Helpers
 
         private static readonly Enum[] s_apiMethodsHasIDOrName =
         {
-            APIGenericMethods.CharacterID,
-            APIGenericMethods.OwnerID,
-            APIGenericMethods.CharacterName,
-            APIGenericMethods.TypeName,
-            APIGenericMethods.CharacterAffiliation,
-            APIGenericMethods.ContractItems,
-            APIGenericMethods.CorporationContractItems,
-            APIGenericMethods.PlanetaryPins,
-            APIGenericMethods.PlanetaryRoutes,
-            APIGenericMethods.PlanetaryLinks,
-            APICharacterMethods.CalendarEventAttendees,
-            APICharacterMethods.Locations,
-            APICharacterMethods.MailBodies,
-            APICharacterMethods.NotificationTexts,
-            APICorporationMethods.CorporationLocations,
-            APICorporationMethods.CorporationStarbaseDetails
+            CCPAPIGenericMethods.CharacterID,
+            CCPAPIGenericMethods.OwnerID,
+            CCPAPIGenericMethods.CharacterName,
+            CCPAPIGenericMethods.TypeName,
+            CCPAPIGenericMethods.CharacterAffiliation,
+            CCPAPIGenericMethods.ContractItems,
+            CCPAPIGenericMethods.CorporationContractItems,
+            CCPAPIGenericMethods.PlanetaryPins,
+            CCPAPIGenericMethods.PlanetaryRoutes,
+            CCPAPIGenericMethods.PlanetaryLinks,
+            CCPAPICharacterMethods.CalendarEventAttendees,
+            CCPAPICharacterMethods.Locations,
+            CCPAPICharacterMethods.MailBodies,
+            CCPAPICharacterMethods.NotificationTexts,
+            CCPAPICorporationMethods.CorporationLocations,
+            CCPAPICorporationMethods.CorporationStarbaseDetails
         };
 
         #endregion
@@ -153,28 +153,28 @@ namespace EVEMon.Common.Helpers
             {
                 // List the API methods by type and name
                 // Add the Server Status method on top
-                List<Enum> apiMethods = new List<Enum> { APIGenericMethods.ServerStatus };
+                List<Enum> apiMethods = new List<Enum> { CCPAPIGenericMethods.ServerStatus };
 
                 // Add the non Account type methods
-                apiMethods.AddRange(APIMethods.Methods.OfType<APIGenericMethods>().Where(
+                apiMethods.AddRange(APIMethods.Methods.OfType<CCPAPIGenericMethods>().Where(
                     method => !apiMethods.Contains(method) &&
                               APIMethods.NonAccountGenericMethods.Contains(method)).Cast<Enum>().OrderBy(
                                   method => method.ToString()));
 
                 // Add the Account type methods
-                apiMethods.AddRange(APIMethods.Methods.OfType<APIGenericMethods>().Where(
+                apiMethods.AddRange(APIMethods.Methods.OfType<CCPAPIGenericMethods>().Where(
                     method => !apiMethods.Contains(method) && !APIMethods.NonAccountGenericMethods.Contains(method) &&
                               !APIMethods.AllSupplementalMethods.Contains(method)).Cast<Enum>().OrderBy(
                                   method => method.ToString()));
 
                 // Add the character methods
                 apiMethods.AddRange(
-                    APIMethods.Methods.OfType<APICharacterMethods>().Cast<Enum>().Concat(
+                    APIMethods.Methods.OfType<CCPAPICharacterMethods>().Cast<Enum>().Concat(
                         APIMethods.CharacterSupplementalMethods).OrderBy(method => method.ToString()));
 
                 // Add the corporation methods
                 apiMethods.AddRange(
-                    APIMethods.Methods.OfType<APICorporationMethods>().Cast<Enum>().Concat(
+                    APIMethods.Methods.OfType<CCPAPICorporationMethods>().Cast<Enum>().Concat(
                         APIMethods.CorporationSupplementalMethods).OrderBy(method => method.ToString()));
 
                 return apiMethods;
@@ -204,13 +204,13 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         private static string GetPostData()
         {
-            if (SelectedItem is APIGenericMethods)
+            if (SelectedItem is CCPAPIGenericMethods)
                 return GetPostDataForGenericAPIMethods();
 
-            if (SelectedItem is APICharacterMethods)
+            if (SelectedItem is CCPAPICharacterMethods)
                 return GetCharacterAPIMethodsPostData();
 
-            if (SelectedItem is APICorporationMethods)
+            if (SelectedItem is CCPAPICorporationMethods)
                 return GetCorporationAPIMethodsPostData();
 
             return String.Empty;
@@ -226,16 +226,16 @@ namespace EVEMon.Common.Helpers
                 return String.Empty;
 
             // Post data for character name, type name
-            if (SelectedItem.Equals(APIGenericMethods.CharacterName) ||
-                SelectedItem.Equals(APIGenericMethods.TypeName) ||
-                SelectedItem.Equals(APIGenericMethods.CharacterAffiliation))
+            if (SelectedItem.Equals(CCPAPIGenericMethods.CharacterName) ||
+                SelectedItem.Equals(CCPAPIGenericMethods.TypeName) ||
+                SelectedItem.Equals(CCPAPIGenericMethods.CharacterAffiliation))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly, IDOrNameText);
             }
 
             // Post data for character id
-            if (SelectedItem.Equals(APIGenericMethods.CharacterID) ||
-                SelectedItem.Equals(APIGenericMethods.OwnerID))
+            if (SelectedItem.Equals(CCPAPIGenericMethods.CharacterID) ||
+                SelectedItem.Equals(CCPAPIGenericMethods.OwnerID))
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataNamesOnly, IDOrNameText);
 
             // Post data for supplemental API methods
@@ -289,55 +289,55 @@ namespace EVEMon.Common.Helpers
 
                 // Find associated API key for corporation contracts
                 if (SelectedItem.ToString().StartsWith("CorporationContract", StringComparison.Ordinal))
-                    apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts);
+                    apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts);
 
                 // Find associated API key for corporation industry jobs history
                 if (SelectedItem.ToString().StartsWith("CorporationIndustryJobsHistory", StringComparison.Ordinal))
-                    apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationIndustryJobs);
+                    apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationIndustryJobs);
 
                 // Find associated API key for corporation blueprints
                 if (SelectedItem.ToString().StartsWith("CorporationBlueprints", StringComparison.Ordinal))
-                    apiKey = character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationAssetList);
+                    apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationAssetList);
 
                 // Find associated API key for character contracts
                 if (SelectedItem.ToString().StartsWith("Contract", StringComparison.Ordinal))
-                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
+                    apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
 
                 // Find associated API key for character industry jobs history
                 if (SelectedItem.ToString().StartsWith("IndustryJobsHistory", StringComparison.Ordinal))
-                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.IndustryJobs);
+                    apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.IndustryJobs);
 
                 // Find associated API key for character planetary interaction
                 if (SelectedItem.ToString().StartsWith("Planetary", StringComparison.Ordinal))
-                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
+                    apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AssetList);
 
                 // Find associated API key for character blueprints
                 if (SelectedItem.ToString().StartsWith("Blueprints", StringComparison.Ordinal))
-                    apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
+                    apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AssetList);
 
                 // No API key found
                 if (apiKey == null)
                     return NoAPIKeyWithAccess;
 
                 // Post data for contract items
-                if (SelectedItem.Equals(APIGenericMethods.ContractItems) ||
-                    SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
+                if (SelectedItem.Equals(CCPAPIGenericMethods.ContractItems) ||
+                    SelectedItem.Equals(CCPAPIGenericMethods.CorporationContractItems))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndContractID,
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
                 }
                 
                 // Post data for planetary colonies
-                if (SelectedItem.Equals(APIGenericMethods.PlanetaryColonies))
+                if (SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryColonies))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharID,
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
                 }
 
                 // Post data for planetary pins, routes, and links
-                if (SelectedItem.Equals(APIGenericMethods.PlanetaryPins) ||
-                    SelectedItem.Equals(APIGenericMethods.PlanetaryRoutes) ||
-                    SelectedItem.Equals(APIGenericMethods.PlanetaryLinks))
+                if (SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryPins) ||
+                    SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryRoutes) ||
+                    SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryLinks))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndPlanetID,
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
@@ -349,17 +349,17 @@ namespace EVEMon.Common.Helpers
             }
 
             // Post data for contract items
-            if (SelectedItem.Equals(APIGenericMethods.ContractItems) ||
-                SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
+            if (SelectedItem.Equals(CCPAPIGenericMethods.ContractItems) ||
+                SelectedItem.Equals(CCPAPIGenericMethods.CorporationContractItems))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndContractID,
                                      KeyID, VCode, CharID, IDOrNameText);
             }
 
             // Post data for planetary pins, routes, and links
-            if (SelectedItem.Equals(APIGenericMethods.PlanetaryPins) ||
-                SelectedItem.Equals(APIGenericMethods.PlanetaryRoutes) ||
-                SelectedItem.Equals(APIGenericMethods.PlanetaryLinks))
+            if (SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryPins) ||
+                SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryRoutes) ||
+                SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryLinks))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndPlanetID,
                                      KeyID, VCode, CharID, IDOrNameText);
@@ -386,17 +386,17 @@ namespace EVEMon.Common.Helpers
 
                 // Find associated API key
                 Character character = (Character)SelectedCharacter;
-                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APICharacterMethods)SelectedItem);
+                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((CCPAPICharacterMethods)SelectedItem);
 
                 // No API key found
                 if (apiKey == null)
                     return NoAPIKeyWithAccess;
 
                 // Post data for character calendarEventAttendees, locations, mailBodies, notificationTexts
-                if (SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees) ||
-                    SelectedItem.Equals(APICharacterMethods.Locations) ||
-                    SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                    SelectedItem.Equals(APICharacterMethods.NotificationTexts))
+                if (SelectedItem.Equals(CCPAPICharacterMethods.CalendarEventAttendees) ||
+                    SelectedItem.Equals(CCPAPICharacterMethods.Locations) ||
+                    SelectedItem.Equals(CCPAPICharacterMethods.MailBodies) ||
+                    SelectedItem.Equals(CCPAPICharacterMethods.NotificationTexts))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
@@ -408,7 +408,7 @@ namespace EVEMon.Common.Helpers
             }
 
             // Post data for character info
-            if (SelectedItem.Equals(APICharacterMethods.CharacterInfo) &&
+            if (SelectedItem.Equals(CCPAPICharacterMethods.CharacterInfo) &&
                 (KeyID.Length == 0 || VCode.Length == 0))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCharacterIDOnly,
@@ -416,10 +416,10 @@ namespace EVEMon.Common.Helpers
             }
 
             // Post data for character calendarEventAttendees, locations, mailBodies, notificationTexts
-            if (SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees) || 
-                SelectedItem.Equals(APICharacterMethods.Locations) ||
-                SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                SelectedItem.Equals(APICharacterMethods.NotificationTexts))
+            if (SelectedItem.Equals(CCPAPICharacterMethods.CalendarEventAttendees) || 
+                SelectedItem.Equals(CCPAPICharacterMethods.Locations) ||
+                SelectedItem.Equals(CCPAPICharacterMethods.MailBodies) ||
+                SelectedItem.Equals(CCPAPICharacterMethods.NotificationTexts))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
                                      KeyID, VCode, CharID, IDOrNameText);
@@ -446,34 +446,34 @@ namespace EVEMon.Common.Helpers
 
                 // Find associated API key
                 Character character = (Character)SelectedCharacter;
-                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((APICorporationMethods)SelectedItem);
+                APIKey apiKey = character.Identity.FindAPIKeyWithAccess((CCPAPICorporationMethods)SelectedItem);
 
                 // No API key found
                 if (apiKey == null)
                 {
                     // Post data for simple corporation sheet
-                    if (SelectedItem.Equals(APICorporationMethods.CorporationSheet))
+                    if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationSheet))
                         return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCorporationIDOnly,
                                              character.CorporationID);
                     return NoAPIKeyWithAccess;
                 }
 
                 // Post data for corporation location
-                if (SelectedItem.Equals(APICorporationMethods.CorporationLocations))
+                if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationLocations))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
                                          apiKey.ID, apiKey.VerificationCode, character.CharacterID, IDOrNameText);
                 }
 
                 // Post data for extended corporation member tracking
-                if (SelectedItem.Equals(APICorporationMethods.CorporationMemberTrackingExtended))
+                if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationMemberTrackingExtended))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithExtendedParameter,
                                          apiKey.ID, apiKey.VerificationCode);
                 }
 
                 // Post data for corporation starbase details
-                if (SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
+                if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationStarbaseDetails))
                 {
                     return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithItemID,
                                          apiKey.ID, apiKey.VerificationCode, IDOrNameText);
@@ -485,7 +485,7 @@ namespace EVEMon.Common.Helpers
             }
 
             // Post data for simple corporation sheet
-            if (SelectedItem.Equals(APICorporationMethods.CorporationSheet) &&
+            if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationSheet) &&
                 (KeyID.Length == 0 || VCode.Length == 0))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataCorporationIDOnly,
@@ -493,21 +493,21 @@ namespace EVEMon.Common.Helpers
             }
 
             // Post data for corporation location
-            if (SelectedItem.Equals(APICorporationMethods.CorporationLocations))
+            if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationLocations))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithCharIDAndIDS,
                                      KeyID, VCode, CharID, IDOrNameText);
             }
 
             // Post data for extended corporation member tracking
-            if (SelectedItem.Equals(APICorporationMethods.CorporationMemberTrackingExtended))
+            if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationMemberTrackingExtended))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithExtendedParameter,
                                      KeyID, VCode);
             }
 
             // Post data for corporation starbase details
-            if (SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
+            if (SelectedItem.Equals(CCPAPICorporationMethods.CorporationStarbaseDetails))
             {
                 return String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataWithItemID,
                                      KeyID, VCode, IDOrNameText);

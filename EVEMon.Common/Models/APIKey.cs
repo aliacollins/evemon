@@ -6,7 +6,7 @@ using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Net;
@@ -46,10 +46,10 @@ namespace EVEMon.Common.Models
         /// </summary>
         private APIKey()
         {
-            m_apiKeyInfoMonitor = new APIKeyQueryMonitor<SerializableAPIKeyInfo>(this, APIGenericMethods.APIKeyInfo,
+            m_apiKeyInfoMonitor = new APIKeyQueryMonitor<SerializableAPIKeyInfo>(this, CCPAPIGenericMethods.APIKeyInfo,
                                                                                  OnAPIKeyInfoUpdated);
 
-            m_accountStatusMonitor = new APIKeyQueryMonitor<SerializableAPIAccountStatus>(this, APICharacterMethods.AccountStatus,
+            m_accountStatusMonitor = new APIKeyQueryMonitor<SerializableAPIAccountStatus>(this, CCPAPICharacterMethods.AccountStatus,
                                                                                           OnAccountStatusUpdated);
 
             IdentityIgnoreList = new CharacterIdentityIgnoreList(this);
@@ -112,7 +112,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the type of the key.
         /// </summary>
         /// <value>The type of the key.</value>
-        public APIKeyType Type { get; private set; }
+        public CCPAPIKeyType Type { get; private set; }
 
         /// <summary>
         /// Gets or sets the key expiration.
@@ -204,7 +204,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public bool IsCorporationType
         {
-            get { return Type == APIKeyType.Corporation; }
+            get { return Type == CCPAPIKeyType.Corporation; }
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         public bool IsCharacterOrAccountType
         {
-            get { return Type == APIKeyType.Account || Type == APIKeyType.Character; }
+            get { return Type == CCPAPIKeyType.Account || Type == CCPAPIKeyType.Character; }
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace EVEMon.Common.Models
                 return;
 
             // Quits if not an 'Account' type API key
-            if (Type != APIKeyType.Account)
+            if (Type != CCPAPIKeyType.Account)
                 return;
 
             foreach (CharacterIdentity id in CharacterIdentities)
@@ -255,7 +255,7 @@ namespace EVEMon.Common.Models
                     m_skillInTrainingCache.Add(identity, new SkillInTrainingResponse());
 
                 EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPISkillInTraining>(
-                    APICharacterMethods.SkillInTraining, ID, VerificationCode, id.CharacterID,
+                    CCPAPICharacterMethods.SkillInTraining, ID, VerificationCode, id.CharacterID,
                     x => OnSkillInTrainingUpdated(x, identity));
             }
         }
@@ -306,7 +306,7 @@ namespace EVEMon.Common.Models
         /// Used when the API key info (character list) has been queried.
         /// </summary>
         /// <param name="result"></param>
-        private void OnAPIKeyInfoUpdated(APIResult<SerializableAPIKeyInfo> result)
+        private void OnAPIKeyInfoUpdated(CCPAPIResult<SerializableAPIKeyInfo> result)
         {
             m_queried = true;
 
@@ -347,7 +347,7 @@ namespace EVEMon.Common.Models
         /// Called when the account status has been updated.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnAccountStatusUpdated(APIResult<SerializableAPIAccountStatus> result)
+        private void OnAccountStatusUpdated(CCPAPIResult<SerializableAPIAccountStatus> result)
         {
             // Quit if the API key was deleted while it was updating
             if (!EveMonClient.APIKeys.Contains(this))
@@ -381,7 +381,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="characterName">The character's name.</param>
-        private void OnSkillInTrainingUpdated(APIResult<SerializableAPISkillInTraining> result, string characterName)
+        private void OnSkillInTrainingUpdated(CCPAPIResult<SerializableAPISkillInTraining> result, string characterName)
         {
             // Quit if the API key was deleted while it was updating
             if (!EveMonClient.APIKeys.Contains(this))
@@ -396,7 +396,7 @@ namespace EVEMon.Common.Models
             // Return on error
             if (result.HasError)
             {
-                if (ccpCharacter != null && ccpCharacter.ShouldNotifyError(result, APICharacterMethods.SkillInTraining))
+                if (ccpCharacter != null && ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.SkillInTraining))
                     EveMonClient.Notifications.NotifySkillInTrainingError(ccpCharacter, result);
 
                 m_skillInTrainingCache[characterName].State = ResponseState.InError;
@@ -527,24 +527,24 @@ namespace EVEMon.Common.Models
                                                EventHandler<APIKeyCreationEventArgs> callback)
         {
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIKeyInfo>(
-                APIGenericMethods.APIKeyInfo, id, verificationCode,
+                CCPAPIGenericMethods.APIKeyInfo, id, verificationCode,
                 result => callback(null, new APIKeyCreationEventArgs(id, verificationCode, result)));
         }
 
         /// <summary>
         /// Gets the credential level from the given result.
         /// </summary>
-        internal static APIKeyType GetCredentialsType(APIResult<SerializableAPIKeyInfo> apiKeyInfo)
+        internal static CCPAPIKeyType GetCredentialsType(CCPAPIResult<SerializableAPIKeyInfo> apiKeyInfo)
         {
             // An error occurred
             if (apiKeyInfo.HasError)
-                return APIKeyType.Unknown;
+                return CCPAPIKeyType.Unknown;
 
-            if (Enum.IsDefined(typeof(APIKeyType), apiKeyInfo.Result.Key.Type))
-                return (APIKeyType)Enum.Parse(typeof(APIKeyType), apiKeyInfo.Result.Key.Type);
+            if (Enum.IsDefined(typeof(CCPAPIKeyType), apiKeyInfo.Result.Key.Type))
+                return (CCPAPIKeyType)Enum.Parse(typeof(CCPAPIKeyType), apiKeyInfo.Result.Key.Type);
 
             // Another error occurred
-            return APIKeyType.Unknown;
+            return CCPAPIKeyType.Unknown;
         }
 
         /// <summary>
@@ -557,7 +557,7 @@ namespace EVEMon.Common.Models
         {
             message = String.Empty;
 
-            List<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == APIKeyType.Account &&
+            List<APIKey> accountsNotTraining = EveMonClient.APIKeys.Where(x => x.Type == CCPAPIKeyType.Account &&
                                                                                x.CharacterIdentities.Any() &&
                                                                                !x.HasCharacterInTraining).ToList();
 
@@ -595,7 +595,7 @@ namespace EVEMon.Common.Models
         /// Updates the API key info and characters list with the given CCP data.
         /// </summary>
         /// <param name="result"></param>
-        private void Import(APIResult<SerializableAPIKeyInfo> result)
+        private void Import(CCPAPIResult<SerializableAPIKeyInfo> result)
         {
             Type = GetCredentialsType(result);
             AccessMask = result.Result.Key.AccessMask;

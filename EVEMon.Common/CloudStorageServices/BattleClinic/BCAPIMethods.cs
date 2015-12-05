@@ -1,9 +1,5 @@
-﻿namespace EVEMon.Common.Serialization.BattleClinic
+﻿namespace EVEMon.Common.CloudStorageServices.BattleClinic
 {
-
-
-    #region BattleClinic API Methods
-
     public enum BCAPIMethods
     {
         None,
@@ -12,6 +8,4 @@
         FileGetByName,
         FileSave,
     }
-
-    #endregion
 }

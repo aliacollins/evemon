@@ -12,7 +12,7 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
@@ -236,7 +236,7 @@ namespace EVEMon.CharacterMonitoring
                                                          "Security Status: {0:N2}", m_character.SecurityStatus);
                 ActiveShipLabel.Text = GetActiveShipText();
 
-                APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterInfo);
+                APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
                 LocationInfoIndicationPictureBox.Visible =
                     apiKey != null && !String.IsNullOrWhiteSpace(m_character.LastKnownLocation);
             }
@@ -264,7 +264,7 @@ namespace EVEMon.CharacterMonitoring
             SuspendLayout();
             try
             {
-                APIKey apiKey = ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.AccountStatus);
+                APIKey apiKey = ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AccountStatus);
 
                 AccountActivityLabel.Text = apiKey == null || apiKey.AccountExpires == DateTime.MinValue
                                                 ? "???"
@@ -314,7 +314,7 @@ namespace EVEMon.CharacterMonitoring
             if (ccpCharacter == null)
                 return;
 
-            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
+            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[CCPAPICharacterMethods.MarketOrders];
             if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
             {
                 BalanceLabel.ForeColor = Color.Orange;
@@ -471,9 +471,9 @@ namespace EVEMon.CharacterMonitoring
             foreach (IQueryMonitor monitor in ccpCharacter.QueryMonitors.OrderedByUpdateTime.Where(
                 monitor => monitor.Method.HasHeader() && monitor.HasAccess).Where(
                     monitor =>
-                    (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(APICorporationMethods)) &&
+                    (!m_character.Identity.CanQueryCharacterInfo || monitor.Method.GetType() != typeof(CCPAPICorporationMethods)) &&
                     (m_character.Identity.CanQueryCharacterInfo || !m_character.Identity.CanQueryCorporationInfo ||
-                     monitor.Method.GetType() != typeof(APICharacterMethods))))
+                     monitor.Method.GetType() != typeof(CCPAPICharacterMethods))))
             {
                 output.AppendLine(GetStatusForMonitor(monitor));
             }
@@ -796,7 +796,7 @@ namespace EVEMon.CharacterMonitoring
             foreach (ToolStripMenuItem menuItem in ccpCharacter.QueryMonitors.Where(
                 monitor => monitor.Method.HasHeader() && monitor.HasAccess).Where(
                     monitor => !m_character.Identity.CanQueryCharacterInfo ||
-                               monitor.Method.GetType() != typeof(APICorporationMethods)).Select(
+                               monitor.Method.GetType() != typeof(CCPAPICorporationMethods)).Select(
                                    CreateNewMonitorToolStripMenuItem))
             {
                 ThrobberContextMenu.Items.Add(menuItem);
@@ -902,7 +902,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             // Show the tooltip on when the user provides api key
-            APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterInfo);
+            APIKey apiKey = m_character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
                 return;
 

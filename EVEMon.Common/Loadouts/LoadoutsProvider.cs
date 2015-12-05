@@ -47,9 +47,11 @@ namespace EVEMon.Common.Loadouts
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetTypes().Where(
-                    type => typeof(LoadoutsProvider).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null).Select(
-                        type => Activator.CreateInstance(type) as LoadoutsProvider).OrderBy(provider => provider.Name);
+                return Assembly.GetExecutingAssembly().GetTypes()
+                    .Where(type => typeof(LoadoutsProvider).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null)
+                    .Select(type => Activator.CreateInstance(type) as LoadoutsProvider)
+                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name))
+                    .OrderBy(provider => provider.Name);
             }
         }
 

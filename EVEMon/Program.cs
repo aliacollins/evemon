@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Helpers;
-using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Service;
 using EVEMon.Common.Threading;
 using EVEMon.ExceptionHandling;
@@ -64,8 +64,8 @@ namespace EVEMon
             // Ensures the installation file downloaded through the autoupdate is correctly deleted
             UpdateManager.DeleteInstallationFiles();
 
-            // Upgrades the BattleClinic API settings
-            BCAPI.UpgradeSettings();
+            // Upgrades the Cloud Storage Service Provider settings
+            CloudStorageServiceProvider.UpgradeSettings();
 
             // Initialization
             EveMonClient.Initialize();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
@@ -54,58 +54,58 @@ namespace EVEMon.Common.QueryMonitor
             m_characterQueryMonitors = new List<IQueryMonitorEx>();
 
             m_charSheetMonitor =
-                new CharacterQueryMonitor<SerializableAPICharacterSheet>(ccpCharacter, APICharacterMethods.CharacterSheet,
+                new CharacterQueryMonitor<SerializableAPICharacterSheet>(ccpCharacter, CCPAPICharacterMethods.CharacterSheet,
                     OnCharacterSheetUpdated);
             m_skillQueueMonitor =
-                new CharacterQueryMonitor<SerializableAPISkillQueue>(ccpCharacter, APICharacterMethods.SkillQueue,
+                new CharacterQueryMonitor<SerializableAPISkillQueue>(ccpCharacter, CCPAPICharacterMethods.SkillQueue,
                     OnSkillQueueUpdated);
             m_charStandingsMonitor =
-                new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, APICharacterMethods.Standings,
+                new CharacterQueryMonitor<SerializableAPIStandings>(ccpCharacter, CCPAPICharacterMethods.Standings,
                     OnStandingsUpdated) { QueryOnStartup = true };
             m_charContactsMonitor =
-                new CharacterQueryMonitor<SerializableAPIContactList>(ccpCharacter, APICharacterMethods.ContactList,
+                new CharacterQueryMonitor<SerializableAPIContactList>(ccpCharacter, CCPAPICharacterMethods.ContactList,
                     OnContactsUpdated) { QueryOnStartup = true };
             m_charFacWarStatsMonitor =
                 new CharacterQueryMonitor<SerializableAPIFactionalWarfareStats>(ccpCharacter,
-                    APICharacterMethods.FactionalWarfareStats, OnFactionalWarfareStatsUpdated) { QueryOnStartup = true };
+                    CCPAPICharacterMethods.FactionalWarfareStats, OnFactionalWarfareStatsUpdated) { QueryOnStartup = true };
             m_charMedalsMonitor =
-                new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, APICharacterMethods.Medals,
+                new CharacterQueryMonitor<SerializableAPIMedals>(ccpCharacter, CCPAPICharacterMethods.Medals,
                     OnMedalsUpdated) { QueryOnStartup = true };
             m_charKillLogMonitor =
-                new CharacterQueryMonitor<SerializableAPIKillLog>(ccpCharacter, APICharacterMethods.KillLog,
+                new CharacterQueryMonitor<SerializableAPIKillLog>(ccpCharacter, CCPAPICharacterMethods.KillLog,
                     OnKillLogUpdated) { QueryOnStartup = true };
             m_charAssetsMonitor =
-                new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, APICharacterMethods.AssetList,
+                new CharacterQueryMonitor<SerializableAPIAssetList>(ccpCharacter, CCPAPICharacterMethods.AssetList,
                     OnAssetsUpdated) { QueryOnStartup = true };
             m_charMarketOrdersMonitor =
-                new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, APICharacterMethods.MarketOrders,
+                new CharacterQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter, CCPAPICharacterMethods.MarketOrders,
                     OnMarketOrdersUpdated) { QueryOnStartup = true };
             m_charContractsMonitor =
-                new CharacterQueryMonitor<SerializableAPIContracts>(ccpCharacter, APICharacterMethods.Contracts,
+                new CharacterQueryMonitor<SerializableAPIContracts>(ccpCharacter, CCPAPICharacterMethods.Contracts,
                     OnContractsUpdated) { QueryOnStartup = true };
             m_charWalletJournalMonitor =
-                new CharacterQueryMonitor<SerializableAPIWalletJournal>(ccpCharacter, APICharacterMethods.WalletJournal,
+                new CharacterQueryMonitor<SerializableAPIWalletJournal>(ccpCharacter, CCPAPICharacterMethods.WalletJournal,
                     OnWalletJournalUpdated) { QueryOnStartup = true };
             m_charWalletTransactionsMonitor =
-                new CharacterQueryMonitor<SerializableAPIWalletTransactions>(ccpCharacter, APICharacterMethods.WalletTransactions,
+                new CharacterQueryMonitor<SerializableAPIWalletTransactions>(ccpCharacter, CCPAPICharacterMethods.WalletTransactions,
                     OnWalletTransactionsUpdated){ QueryOnStartup = true };
             m_charIndustryJobsMonitor =
-                new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, APICharacterMethods.IndustryJobs,
+                new CharacterQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter, CCPAPICharacterMethods.IndustryJobs,
                     OnIndustryJobsUpdated) { QueryOnStartup = true };
             m_charResearchPointsMonitor =
-                new CharacterQueryMonitor<SerializableAPIResearch>(ccpCharacter, APICharacterMethods.ResearchPoints,
+                new CharacterQueryMonitor<SerializableAPIResearch>(ccpCharacter, CCPAPICharacterMethods.ResearchPoints,
                     OnResearchPointsUpdated) { QueryOnStartup = true };
             m_charEVEMailMessagesMonitor =
-                new CharacterQueryMonitor<SerializableAPIMailMessages>(ccpCharacter, APICharacterMethods.MailMessages,
+                new CharacterQueryMonitor<SerializableAPIMailMessages>(ccpCharacter, CCPAPICharacterMethods.MailMessages,
                     OnEVEMailMessagesUpdated) { QueryOnStartup = true };
             m_charEVENotificationsMonitor =
-                new CharacterQueryMonitor<SerializableAPINotifications>(ccpCharacter, APICharacterMethods.Notifications,
+                new CharacterQueryMonitor<SerializableAPINotifications>(ccpCharacter, CCPAPICharacterMethods.Notifications,
                     OnEVENotificationsUpdated) { QueryOnStartup = true };
             m_charUpcomingCalendarEventsMonitor =
                 new CharacterQueryMonitor<SerializableAPIUpcomingCalendarEvents>(ccpCharacter,
-                    APICharacterMethods.UpcomingCalendarEvents, OnUpcomingCalendarEventsUpdated) { QueryOnStartup = true };
+                    CCPAPICharacterMethods.UpcomingCalendarEvents, OnUpcomingCalendarEventsUpdated) { QueryOnStartup = true };
             m_charPlanetaryColoniesMonitor =
-                new CharacterQueryMonitor<SerializableAPIPlanetaryColonies>(ccpCharacter, APIGenericMethods.PlanetaryColonies,
+                new CharacterQueryMonitor<SerializableAPIPlanetaryColonies>(ccpCharacter, CCPAPIGenericMethods.PlanetaryColonies,
                     OnPlanetaryColoniesUpdated) { QueryOnStartup = true };
 
             // Add the monitors in an order as they will appear in the throbber menu
@@ -132,9 +132,9 @@ namespace EVEMon.Common.QueryMonitor
             });
 
             m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
-                monitor => new { monitor, method = (APICharacterMethods)monitor.Method }).Where(
+                monitor => new { monitor, method = (CCPAPICharacterMethods)monitor.Method }).Where(
                     monitor =>
-                        (int)monitor.method == ((int)monitor.method & (int)APIMethodsEnum.BasicCharacterFeatures)).Select(
+                        (int)monitor.method == ((int)monitor.method & (int)CCPAPIMethodsEnum.BasicCharacterFeatures)).Select(
                             basicFeature => basicFeature.monitor).ToList();
 
             m_characterQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
@@ -226,12 +226,12 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.MailingLists);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.MailingLists);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIMailingLists>(
-                APICharacterMethods.MailingLists,
+                CCPAPICharacterMethods.MailingLists,
                 apiKey.ID,
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
@@ -248,12 +248,12 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterInfo);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterInfo);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterInfo>(
-                APICharacterMethods.CharacterInfo,
+                CCPAPICharacterMethods.CharacterInfo,
                 apiKey.ID,
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
@@ -270,12 +270,12 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractBids>(
-                APIGenericMethods.ContractBids,
+                CCPAPIGenericMethods.ContractBids,
                 apiKey.ID,
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
@@ -286,14 +286,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processed the queried character's skill queue information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnCharacterSheetUpdated(APIResult<SerializableAPICharacterSheet> result)
+        private void OnCharacterSheetUpdated(CCPAPIResult<SerializableAPICharacterSheet> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.CharacterSheet))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.CharacterSheet))
                 EveMonClient.Notifications.NotifyCharacterSheetError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -317,14 +317,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's info.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnCharacterInfoUpdated(APIResult<SerializableAPICharacterInfo> result)
+        private void OnCharacterInfoUpdated(CCPAPIResult<SerializableAPICharacterInfo> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.CharacterInfo))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.CharacterInfo))
                 EveMonClient.Notifications.NotifyCharacterInfoError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -339,14 +339,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's skill queue information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnSkillQueueUpdated(APIResult<SerializableAPISkillQueue> result)
+        private void OnSkillQueueUpdated(CCPAPIResult<SerializableAPISkillQueue> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.SkillQueue))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.SkillQueue))
                 EveMonClient.Notifications.NotifySkillQueueError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -357,7 +357,7 @@ namespace EVEMon.Common.QueryMonitor
             m_ccpCharacter.SkillQueue.Import(result.Result.Queue);
 
             // Check the account has a character in training (if API key of type "Account")
-            APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICharacterMethods.SkillInTraining);
+            APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.SkillInTraining);
             if (apikey != null)
                 apikey.CharacterInTraining();
 
@@ -375,14 +375,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's standings information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnStandingsUpdated(APIResult<SerializableAPIStandings> result)
+        private void OnStandingsUpdated(CCPAPIResult<SerializableAPIStandings> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Standings))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.Standings))
                 EveMonClient.Notifications.NotifyCharacterStandingsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -400,14 +400,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's factional warfare statistic information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnFactionalWarfareStatsUpdated(APIResult<SerializableAPIFactionalWarfareStats> result)
+        private void OnFactionalWarfareStatsUpdated(CCPAPIResult<SerializableAPIFactionalWarfareStats> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.FactionalWarfareStats))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.FactionalWarfareStats))
                 EveMonClient.Notifications.NotifyCharacterFactionalWarfareStatsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -438,14 +438,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's assets information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnAssetsUpdated(APIResult<SerializableAPIAssetList> result)
+        private void OnAssetsUpdated(CCPAPIResult<SerializableAPIAssetList> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.AssetList))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.AssetList))
                 EveMonClient.Notifications.NotifyCharacterAssetsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -464,14 +464,14 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" orders gets queried first</remarks>
-        private void OnMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
+        private void OnMarketOrdersUpdated(CCPAPIResult<SerializableAPIMarketOrders> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MarketOrders))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.MarketOrders))
                 EveMonClient.Notifications.NotifyCharacterMarketOrdersError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -493,14 +493,14 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" contracts gets queried first</remarks>
-        private void OnContractsUpdated(APIResult<SerializableAPIContracts> result)
+        private void OnContractsUpdated(CCPAPIResult<SerializableAPIContracts> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Contracts))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.Contracts))
                 EveMonClient.Notifications.NotifyCharacterContractsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -513,7 +513,7 @@ namespace EVEMon.Common.QueryMonitor
             result.Result.Contracts.ToList().ForEach(x =>
             {
                 x.IssuedFor = IssuedFor.Character;
-                x.APIMethod = APICharacterMethods.Contracts;
+                x.APIMethod = CCPAPICharacterMethods.Contracts;
             });
 
             // Import the data
@@ -528,14 +528,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's contract bids.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnContractBidsUpdated(APIResult<SerializableAPIContractBids> result)
+        private void OnContractBidsUpdated(CCPAPIResult<SerializableAPIContractBids> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APIGenericMethods.ContractBids))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPIGenericMethods.ContractBids))
                 EveMonClient.Notifications.NotifyCharacterContractBidsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -553,14 +553,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's wallet journal information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnWalletJournalUpdated(APIResult<SerializableAPIWalletJournal> result)
+        private void OnWalletJournalUpdated(CCPAPIResult<SerializableAPIWalletJournal> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.WalletJournal))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.WalletJournal))
                 EveMonClient.Notifications.NotifyCharacterWalletJournalError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -578,14 +578,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's wallet transactions information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnWalletTransactionsUpdated(APIResult<SerializableAPIWalletTransactions> result)
+        private void OnWalletTransactionsUpdated(CCPAPIResult<SerializableAPIWalletTransactions> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.WalletTransactions))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.WalletTransactions))
                 EveMonClient.Notifications.NotifyCharacterWalletTransactionsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -604,14 +604,14 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
-        private void OnIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
+        private void OnIndustryJobsUpdated(CCPAPIResult<SerializableAPIIndustryJobs> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.IndustryJobs))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.IndustryJobs))
                 EveMonClient.Notifications.NotifyCharacterIndustryJobsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -631,14 +631,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's research points.
         /// </summary>
         /// <param name="result"></param>
-        private void OnResearchPointsUpdated(APIResult<SerializableAPIResearch> result)
+        private void OnResearchPointsUpdated(CCPAPIResult<SerializableAPIResearch> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.ResearchPoints))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.ResearchPoints))
                 EveMonClient.Notifications.NotifyResearchPointsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -656,14 +656,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's EVE mail messages.
         /// </summary>
         /// <param name="result"></param>
-        private void OnEVEMailMessagesUpdated(APIResult<SerializableAPIMailMessages> result)
+        private void OnEVEMailMessagesUpdated(CCPAPIResult<SerializableAPIMailMessages> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MailMessages))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.MailMessages))
                 EveMonClient.Notifications.NotifyEVEMailMessagesError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -686,14 +686,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's EVE mailing lists.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnMailingListsUpdated(APIResult<SerializableAPIMailingLists> result)
+        private void OnMailingListsUpdated(CCPAPIResult<SerializableAPIMailingLists> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.MailingLists))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.MailingLists))
                 EveMonClient.Notifications.NotifyMailingListsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -708,14 +708,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's EVE notifications.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnEVENotificationsUpdated(APIResult<SerializableAPINotifications> result)
+        private void OnEVENotificationsUpdated(CCPAPIResult<SerializableAPINotifications> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Notifications))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.Notifications))
                 EveMonClient.Notifications.NotifyEVENotificationsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -735,14 +735,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's contact list.
         /// </summary>
         /// <param name="result"></param>
-        private void OnContactsUpdated(APIResult<SerializableAPIContactList> result)
+        private void OnContactsUpdated(CCPAPIResult<SerializableAPIContactList> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.ContactList))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.ContactList))
                 EveMonClient.Notifications.NotifyCharacterContactsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -760,14 +760,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's medals.
         /// </summary>
         /// <param name="result"></param>
-        private void OnMedalsUpdated(APIResult<SerializableAPIMedals> result)
+        private void OnMedalsUpdated(CCPAPIResult<SerializableAPIMedals> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.Medals))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.Medals))
                 EveMonClient.Notifications.NotifyCharacterMedalsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -785,14 +785,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's kill log.
         /// </summary>
         /// <param name="result"></param>
-        private void OnKillLogUpdated(APIResult<SerializableAPIKillLog> result)
+        private void OnKillLogUpdated(CCPAPIResult<SerializableAPIKillLog> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.KillLog))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.KillLog))
                 EveMonClient.Notifications.NotifyCharacterKillLogError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -801,7 +801,7 @@ namespace EVEMon.Common.QueryMonitor
 
             // Save the file to our cache
             string filename = String.Format(CultureConstants.InvariantCulture, "{0}-{1}", m_ccpCharacter.Name,
-                                            APICharacterMethods.KillLog);
+                                            CCPAPICharacterMethods.KillLog);
             LocalXmlCache.Save(filename, result.XmlDocument);
 
             // Import the data
@@ -815,14 +815,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's upcoming calendar events.
         /// </summary>
         /// <param name="result"></param>
-        private void OnUpcomingCalendarEventsUpdated(APIResult<SerializableAPIUpcomingCalendarEvents> result)
+        private void OnUpcomingCalendarEventsUpdated(CCPAPIResult<SerializableAPIUpcomingCalendarEvents> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICharacterMethods.UpcomingCalendarEvents))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICharacterMethods.UpcomingCalendarEvents))
                 EveMonClient.Notifications.NotifyCharacterUpcomindCalendarEventsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -840,14 +840,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's palnetary colonies.
         /// </summary>
         /// <param name="result"></param>
-        private void OnPlanetaryColoniesUpdated(APIResult<SerializableAPIPlanetaryColonies> result)
+        private void OnPlanetaryColoniesUpdated(CCPAPIResult<SerializableAPIPlanetaryColonies> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APIGenericMethods.PlanetaryColonies))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPIGenericMethods.PlanetaryColonies))
                 EveMonClient.Notifications.NotifyCharacterPlanetaryColoniesError(m_ccpCharacter, result);
 
             // Quits if there is an error

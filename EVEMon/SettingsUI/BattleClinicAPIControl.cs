@@ -1,13 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CloudStorageServices;
+using EVEMon.Common.CloudStorageServices.BattleClinic;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Factories;
-using EVEMon.Common.Serialization.BattleClinic;
 
 namespace EVEMon.SettingsUI
 {
@@ -30,51 +33,6 @@ namespace EVEMon.SettingsUI
         #endregion
 
 
-        #region Global Events
-
-        /// <summary>
-        /// When BattleClinic API credentials get checked, informs the user.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="BCAPIEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_BCAPICredentialsUpdated(object sender, BCAPIEventArgs e)
-        {
-            throbber.State = ThrobberState.Stopped;
-            throbber.Visible = false;
-
-            if (e.HasError)
-            {
-                apiResponseLabel.ForeColor = Color.Red;
-                apiResponseLabel.Text = e.ErrorMessage;
-                return;
-            }
-
-            apiResponseLabel.ForeColor = Color.Green;
-            apiResponseLabel.Text = "Authenticated.";
-        }
-
-        #endregion
-
-
-        #region Helper Methods
-
-        /// <summary>
-        /// Checks the BattleClinic API credentials.
-        /// </summary>
-        private void CheckAPICredentials()
-        {
-            uint bcUserID = Convert.ToUInt32(bcUserIDTextBox.Text, CultureConstants.DefaultCulture);
-            string bcAPIKey = bcAPIKeyTextBox.Text;
-
-            BCAPI.CheckAPICredentials(bcUserID, bcAPIKey);
-
-            throbber.Visible = true;
-            throbber.State = ThrobberState.Rotating;
-        }
-
-        #endregion
-
-
         #region Local Events
 
         /// <summary>
@@ -86,14 +44,14 @@ namespace EVEMon.SettingsUI
         {
             Font = FontFactory.GetFont("Tahoma");
 
-            EveMonClient.BCAPICredentialsUpdated += EveMonClient_BCAPICredentialsUpdated;
+            Settings.CloudStorageServiceProvider.Provider.CredentialsChecked += CloudStorageServiceProvider_CheckCredentials;
             Disposed += OnDisposed;
 
-            if (!BCAPI.HasCredentialsStored)
+            if (!Settings.CloudStorageServiceProvider.Provider.HasCredentialsStored)
                 return;
 
-            bcUserIDTextBox.Text = BCAPISettings.Default.BCUserID.ToString(CultureConstants.DefaultCulture);
-            bcAPIKeyTextBox.Text = BCAPISettings.Default.BCAPIKey;
+            bcUserIDTextBox.Text = CloudStorageServicesSettings.Default.BCUserID.ToString(CultureConstants.DefaultCulture);
+            bcAPIKeyTextBox.Text = CloudStorageServicesSettings.Default.BCAPIKey;
 
             CheckAPICredentials();
         }
@@ -105,7 +63,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.BCAPICredentialsUpdated -= EveMonClient_BCAPICredentialsUpdated;
+            Settings.CloudStorageServiceProvider.Provider.CredentialsChecked -= CloudStorageServiceProvider_CheckCredentials;
             Disposed -= OnDisposed;
         }
 
@@ -133,14 +91,10 @@ namespace EVEMon.SettingsUI
 
             bcUserIDTextBox.ResetText();
             bcAPIKeyTextBox.ResetText();
-            BCAPISettings.Default.Reset();
 
-            // Disables the settingsFileStorageControl
-            Control battleClinicServicePage = Parent.Parent;
-            Control settingsFileStorageGroupBox = battleClinicServicePage.Controls["settingsFileStorageGroupBox"];
-            Control settingsFileStorageControl = settingsFileStorageGroupBox.Controls["settingsFileStorageControl"];
-
-            settingsFileStorageControl.Enabled = BCAPI.HasCredentialsStored;
+            CloudStorageServicesSettings.Default.BCUserID = 0;
+            CloudStorageServicesSettings.Default.BCAPIKey = String.Empty;
+            CloudStorageServicesSettings.Default.Save();
         }
 
         /// <summary>
@@ -173,7 +127,7 @@ namespace EVEMon.SettingsUI
                 return;
             }
 
-            if (bcUserIDTextBox.TextLength == 1 && bcUserIDTextBox.Text == "0")
+            if (bcUserIDTextBox.TextLength == 1 && bcUserIDTextBox.Text == @"0")
             {
                 errorProvider.SetError(bcUserIDTextBox, "UserID must not be zero.");
                 e.Cancel = true;
@@ -231,6 +185,54 @@ namespace EVEMon.SettingsUI
         private void bcAPIKeyTextBox_Validated(object sender, EventArgs e)
         {
             errorProvider.SetError(bcAPIKeyTextBox, String.Empty);
+        }
+
+        #endregion
+
+
+        #region Global Events
+
+        /// <summary>
+        /// When BattleClinic API credentials get checked, informs the user.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void CloudStorageServiceProvider_CheckCredentials(object sender, CloudStorageServiceProviderEventArgs e)
+        {
+            throbber.State = ThrobberState.Stopped;
+            throbber.Visible = false;
+
+            if (e.HasError)
+            {
+                apiResponseLabel.ForeColor = Color.Red;
+                apiResponseLabel.Text = e.ErrorMessage;
+                return;
+            }
+
+            apiResponseLabel.ForeColor = Color.Green;
+            apiResponseLabel.Text = @"Authenticated.";
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Checks the BattleClinic API credentials.
+        /// </summary>
+        private void CheckAPICredentials()
+        {
+            if (!(Settings.CloudStorageServiceProvider.Provider is BCCloudStorageServiceProvider))
+                return;
+
+            throbber.Visible = true;
+            throbber.State = ThrobberState.Rotating;
+
+            uint bcUserID = Convert.ToUInt32(bcUserIDTextBox.Text, CultureConstants.DefaultCulture);
+            string bcAPIKey = bcAPIKeyTextBox.Text;
+
+            Settings.CloudStorageServiceProvider.Provider.CheckAPICredentialsAsync(bcUserID, bcAPIKey);
         }
 
         #endregion
