@@ -9,26 +9,15 @@ namespace EVEMon.Common.MarketPricer
 {
     public abstract class ItemPricer
     {
-
         /// <summary>
         /// Occurs when item prices updated.
         /// </summary>
-        public abstract event EventHandler ItemPricesUpdated;
+        public event EventHandler ItemPricesUpdated;
 
         /// <summary>
         /// Gets the name.
         /// </summary>
         public abstract string Name { get; }
-
-        /// <summary>
-        /// Gets the price by type ID.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
-        public virtual double GetPriceByTypeID(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// Gets the providers.
@@ -46,6 +35,30 @@ namespace EVEMon.Common.MarketPricer
             }
         }
 
+        /// <summary>
+        /// Gets the price by type ID.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public abstract double GetPriceByTypeID(int id);
+
+        /// <summary>
+        /// Gets the prices asynchronous.
+        /// </summary>
+        /// Gets the item prices list.
+        protected abstract void GetPricesAsync();
+
+        /// <summary>
+        /// Called when prices downloaded.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="errormessage">The errormessage.</param>
+        protected virtual void OnPricesDownloaded(object result, string errormessage)
+        {
+            if (ItemPricesUpdated != null)
+                ItemPricesUpdated(this, EventArgs.Empty);
+        }
+        
         /// <summary>
         /// Saves the xml document to the specified filename.
         /// </summary>
