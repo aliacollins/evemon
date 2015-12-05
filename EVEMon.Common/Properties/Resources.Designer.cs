@@ -144,8 +144,7 @@ namespace EVEMon.Common.Properties {
         ///    &lt;/xsl:copy&gt;
         ///  &lt;/xsl:template&gt;
         ///
-        ///  &lt;!-- Renaming attribute &apos;Name&apos; in items datafile to &apos;name&apos; --&gt;
-        ///  &lt;xs [rest of string was truncated]&quot;;.
+        ///  &lt;!-- Renaming root name &apos;blueprints&apos; in blueprints datafile to &apos;bluep [rest of string was truncated]&quot;;.
         /// </summary>
         public static string DatafilesXSLT {
             get {
@@ -255,7 +254,7 @@ namespace EVEMon.Common.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
-        ///&lt;invFlags xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+        ///&lt;invFlags xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
         ///  &lt;rowset name=&quot;flags&quot; key=&quot;flagID&quot; columns=&quot;flagID,flagName,flagText&quot;&gt;
         ///    &lt;row flagID=&quot;0&quot; flagName=&quot;None&quot; flagText=&quot;None&quot; /&gt;
         ///    &lt;row flagID=&quot;1&quot; flagName=&quot;Wallet&quot; flagText=&quot;Wallet&quot; /&gt;
@@ -362,12 +361,13 @@ namespace EVEMon.Common.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
-        ///&lt;NotificationRefTypes xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-        ///  &lt;rowset name=&quot;refTypes&quot; key=&quot;refTypeID&quot; columns=&quot;refTypeID,refTypeName,textLayout&quot;&gt;
-        ///    &lt;row refTypeID=&quot;1&quot; refTypeName=&quot;Legacy&quot; textLayout=&quot;&quot;/&gt;
-        ///    &lt;row refTypeID=&quot;2&quot; refTypeName=&quot;Character deleted&quot; textLayout=&quot;&quot;/&gt;
-        ///    &lt;row refTypeID=&quot;3&quot; refTypeName=&quot;Give medal to character&quot; textLayout=&quot;&quot;/&gt;
-        ///    &lt;row refTypeID=&quot;4&quot; refTypeName=&quot;Alliance maintenance bill&quot; textL [rest of string was truncated]&quot;;.
+        ///&lt;eveapi version=&quot;2&quot;&gt;
+        ///  &lt;currentTime&gt;&lt;/currentTime&gt;
+        ///  &lt;result&gt;
+        ///    &lt;rowset name=&quot;refTypes&quot; key=&quot;refTypeID&quot; columns=&quot;refTypeID,refTypeName,subjectLayout,textLayout&quot;&gt;
+        ///      &lt;row refTypeID=&quot;1&quot; refTypeName=&quot;Old Notifications&quot; subjectLayout=&quot;&quot; textLayout=&quot;&quot;/&gt;
+        ///      &lt;row refTypeID=&quot;2&quot; refTypeName=&quot;Member Biomassed&quot; subjectLayout=&quot;&quot; textLayout=&quot;&quot;/&gt;
+        ///      &lt;row refTypeID=&quot;3&quot; refTypeName=&quot;Medal Awarded&quot; subjectLayout=&quot;You have been awarded the {medalID}&quot; textLayout=&quot;The {medalID} decoratio [rest of string was truncated]&quot;;.
         /// </summary>
         public static string NotificationRefTypes {
             get {
