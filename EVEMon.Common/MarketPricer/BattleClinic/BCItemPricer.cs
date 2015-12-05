@@ -116,7 +116,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
             if (s_queryPending)
                 return;
 
-            EveMonClient.Trace("BCItemPricer.UpdateFile - begin");
+            EveMonClient.Trace("BCItemPricer.GetPricesAsync - begin");
 
             var url = new Uri(
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
@@ -130,10 +130,15 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         /// <summary>
         /// Called when prices downloaded.
         /// </summary>
-        /// <param name="result">The result.</param>
+        /// <param name="pricesFeed">The prices feed.</param>
         /// <param name="errormessage">The errormessage.</param>
-        private void OnPricesDownloaded(SerializableBCItemPrices result, string errormessage)
+        protected override void OnPricesDownloaded(object pricesFeed, string errormessage)
         {
+            SerializableBCItemPrices result = pricesFeed as SerializableBCItemPrices;
+
+            if (result == null)
+                return;
+
             if (!String.IsNullOrEmpty(errormessage))
             {
                 // Reset query pending flag
@@ -146,7 +151,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
             // Save the file in cache
             Save(Filename, Util.SerializeToXmlDocument(result));
 
-            EveMonClient.Trace("BCItemPricer.UpdateFile - done");
+            EveMonClient.Trace("BCItemPricer.GetPricesAsync - done");
 
             s_cachedUntil = result.CachedUntil.ToUniversalTime();
             Import(result.ItemPrices);
