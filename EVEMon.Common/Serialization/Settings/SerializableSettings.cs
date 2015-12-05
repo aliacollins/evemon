@@ -25,7 +25,8 @@ namespace EVEMon.Common.Serialization.Settings
             MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
             Notifications = new NotificationSettings();
             APIProviders = new APIProvidersSettings();
-            MarketPricer = new MarketPricerSettings(); 
+            LoadoutsProvider = new LoadoutsProviderSettings();
+            MarketPricer = new MarketPricerSettings();
             Exportation = new ExportationSettings();
             Scheduler = new SchedulerSettings();
             Calendar = new CalendarSettings();
@@ -95,8 +96,11 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlElement("marketUnifiedUploader")]
         public MarketUnifiedUploaderSettings MarketUnifiedUploader { get; set; }
 
-        [XmlElement("marketpricer")]
+        [XmlElement("marketPricer")]
         public MarketPricerSettings MarketPricer { get; set; }
+
+        [XmlElement("loadoutsProvider")]
+        public LoadoutsProviderSettings LoadoutsProvider { get; set; }
 
         [XmlElement("portableEveInstallations")]
         public PortableEveInstallationsSettings PortableEveInstallations { get; set; }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,7 +8,6 @@ using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
@@ -57,6 +55,7 @@ namespace EVEMon.Common
             Exportation = new ExportationSettings();
             MarketPricer = new MarketPricerSettings();
             Notifications = new NotificationSettings();
+            LoadoutsProvider = new LoadoutsProviderSettings();
             MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
             PortableEveInstallations = new PortableEveInstallationsSettings();
 
@@ -141,6 +140,11 @@ namespace EVEMon.Common
         /// </summary>
         public static MarketPricerSettings MarketPricer { get; private set; }
 
+        /// <summary>
+        /// Gets the loadouts provider settings.
+        /// </summary>
+        public static LoadoutsProviderSettings LoadoutsProvider { get; private set; }
+
         #endregion
 
 
@@ -196,6 +200,7 @@ namespace EVEMon.Common
                 Exportation = serial.Exportation;
                 Notifications = serial.Notifications;
                 MarketPricer = serial.MarketPricer;
+                LoadoutsProvider = serial.LoadoutsProvider;
                 MarketUnifiedUploader = serial.MarketUnifiedUploader;
                 PortableEveInstallations = serial.PortableEveInstallations;
 
@@ -335,6 +340,7 @@ namespace EVEMon.Common
                 Calendar = Calendar,
                 PortableEveInstallations = PortableEveInstallations,
                 MarketUnifiedUploader = MarketUnifiedUploader,
+                LoadoutsProvider = LoadoutsProvider,
                 MarketPricer = MarketPricer,
                 Notifications = Notifications,
                 Exportation = Exportation,
@@ -390,7 +396,10 @@ namespace EVEMon.Common
         /// <summary>
         /// Try to deserialize the settings from a storage server file, prompting the user for errors.
         /// </summary>
-        /// <returns><c>Null</c> if we have been unable to deserialize anything, the generated settings otherwise</returns>
+        /// <param name="fileContent">Content of the file.</param>
+        /// <returns>
+        ///   <c>Null</c> if we have been unable to deserialize anything, the generated settings otherwise
+        /// </returns>
         private static SerializableSettings TryDeserializeFromFileContent(string fileContent)
         {
             if (String.IsNullOrWhiteSpace(fileContent))

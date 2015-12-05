@@ -18,8 +18,7 @@ namespace EVEMon.Common.Serialization.FittingXml
             get { return Item.Name; }
             set
             {
-                if (!String.IsNullOrEmpty(value))
-                    Item = StaticItems.GetItemByName(value);
+                Item = StaticItems.GetItemByName(value) ?? Item.UnknownItem;
             }
         }
 
