@@ -54,17 +54,15 @@ namespace EVEMon.Common.Loadouts
         }
 
         /// <summary>
-        /// Gets the loadouts feed.
+        /// Gets the loadouts feed asynchronous.
         /// </summary>
         /// <param name="ship">The ship.</param>
-        /// <returns></returns>
         public abstract void GetLoadoutsFeedAsync(Item ship);
 
         /// <summary>
-        /// Gets the loadout by type ID.
+        /// Gets the loadout by identifier asynchronous.
         /// </summary>
         /// <param name="id">The id.</param>
-        /// <returns></returns>
         public abstract void GetLoadoutByIDAsync(int id);
 
         /// <summary>

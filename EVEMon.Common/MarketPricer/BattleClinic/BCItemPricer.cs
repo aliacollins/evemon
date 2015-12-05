@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.BattleClinic.MarketPricer;
 using EVEMon.Common.Service;
@@ -10,12 +9,6 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
 {
     public sealed class BCItemPricer : ItemPricer
     {
-        /// <summary>
-        /// Occurs when BattleClinic item prices updated.
-        /// </summary>
-        public override event EventHandler ItemPricesUpdated;
-
-
         #region Fields
 
         private static readonly Dictionary<int, double> s_priceByItemID = new Dictionary<int, double>();
@@ -64,7 +57,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
             // Update the file if we don't have it or the data have expired
             if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
             {
-                UpdateFile();
+                GetPricesAsync();
                 return;
             }
 
@@ -83,7 +76,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
             // In case the file has an error or it's an old one, we try to get a fresh copy
             if (result == null || s_cachedUntil < DateTime.UtcNow)
             {
-                UpdateFile();
+                GetPricesAsync();
                 return;
             }
 
@@ -94,6 +87,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         /// <summary>
         /// Import the query result list.
         /// </summary>
+        /// <param name="itemPrices">The item prices.</param>
         private static void Import(IEnumerable<SerializableBCItemPrice> itemPrices)
         {
             EveMonClient.Trace("BCItemPricer.Import - begin");
@@ -113,9 +107,10 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         }
 
         /// <summary>
-        /// Downloads the item prices list.
+        /// Gets the prices asynchronous.
         /// </summary>
-        private void UpdateFile()
+        /// Gets the item prices list.
+        protected override void GetPricesAsync()
         {
             // Quit if query is pending
             if (s_queryPending)
@@ -127,17 +122,17 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
                     NetworkConstants.BattleClinicItemPrices));
 
-            Util.DownloadXmlAsync<SerializableBCItemPrices>(url, OnDownloaded, true);
+            Util.DownloadXmlAsync<SerializableBCItemPrices>(url, OnPricesDownloaded, true);
 
             s_queryPending = true;
         }
 
         /// <summary>
-        /// Called when data downloaded.
+        /// Called when prices downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="errormessage">The errormessage.</param>
-        private void OnDownloaded(SerializableBCItemPrices result, string errormessage)
+        private void OnPricesDownloaded(SerializableBCItemPrices result, string errormessage)
         {
             if (!String.IsNullOrEmpty(errormessage))
             {
@@ -156,8 +151,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
             s_cachedUntil = result.CachedUntil.ToUniversalTime();
             Import(result.ItemPrices);
 
-            if (ItemPricesUpdated != null)
-                ItemPricesUpdated(null, EventArgs.Empty);
+            base.OnPricesDownloaded(result, errormessage);
         }
 
         #endregion

@@ -40,7 +40,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         }
 
         /// <summary>
-        /// Gets the loadouts feed.
+        /// Gets the loadouts feed asynchronous.
         /// </summary>
         /// <param name="ship">The ship.</param>
         public override void GetLoadoutsFeedAsync(Item ship)
@@ -58,10 +58,9 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         }
 
         /// <summary>
-        /// Gets the loadout by type ID.
+        /// Gets the loadout by identifier asynchronous.
         /// </summary>
         /// <param name="id">The id.</param>
-        /// <returns></returns>
         public override void GetLoadoutByIDAsync(int id)
         {
             // Quit if query is pending
