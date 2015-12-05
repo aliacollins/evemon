@@ -219,7 +219,7 @@
     <Compile Include="Models\Comparers\ContractComparer.cs" />
     <Compile Include="Models\Comparers\ContractItemComparer.cs" />
     <Compile Include="Models\Extended\APIMethods.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterCertificate.cs" />
+    <Compile Include="Serialization\Eve\SerializableCharacterCertificate.cs" />
     <Compile Include="Serialization\Datafiles\MasteriesDatafile.cs" />
     <Compile Include="Serialization\Datafiles\SerializableMastery.cs" />
     <Compile Include="Serialization\Datafiles\SerializableMasteryCertificate.cs" />
@@ -421,63 +421,63 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Serialization\API\SerializableAllianceListItem.cs" />
-    <Compile Include="Serialization\API\SerializableAPIAllianceList.cs" />
-    <Compile Include="Serialization\API\SerializableAPICalendarEventAttendees.cs" />
-    <Compile Include="Serialization\API\SerializableAPIContactList.cs" />
-    <Compile Include="Serialization\API\SerializableAPICorporationSheet.cs" />
-    <Compile Include="Serialization\API\SerializableAPIEveFactionalWarfareStats.cs" />
-    <Compile Include="Serialization\API\SerializableAPIAssetList.cs" />
-    <Compile Include="Serialization\API\SerializableAPIContractBids.cs" />
-    <Compile Include="Serialization\API\SerializableAPIContractItems.cs" />
-    <Compile Include="Serialization\API\SerializableAPIFactionalWarfareStats.cs" />
-    <Compile Include="Serialization\API\SerializableAPIKillLog.cs" />
-    <Compile Include="Serialization\API\SerializableAPIMedals.cs" />
-    <Compile Include="Serialization\API\SerializableAPIPlanetaryColonies.cs" />
-    <Compile Include="Serialization\API\SerializableAPIPlanetaryLinks.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterJumpClone.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterJumpCloneImplant.cs" />
-    <Compile Include="Serialization\API\SerializableNewImplant.cs" />
-    <Compile Include="Serialization\API\SerializablePlanetaryLink.cs" />
-    <Compile Include="Serialization\API\SerializablePlanetaryRoute.cs" />
-    <Compile Include="Serialization\API\SerializablePlanetaryColony.cs" />
-    <Compile Include="Serialization\API\SerializableAPIPlanetaryPins.cs" />
-    <Compile Include="Serialization\API\SerializablePlanetaryPin.cs" />
-    <Compile Include="Serialization\API\SerializableAPIPlanetaryRoutes.cs" />
-    <Compile Include="Serialization\API\SerializableAPIRefTypes.cs" />
-    <Compile Include="Serialization\API\SerializableAPIUpcomingCalendarEvents.cs" />
-    <Compile Include="Serialization\API\SerializableAPIWalletJournal.cs" />
-    <Compile Include="Serialization\API\SerializableCalendarEventAttendeeListItem.cs" />
-    <Compile Include="Serialization\API\SerializableContactListItem.cs" />
-    <Compile Include="Serialization\API\SerializableDivision.cs" />
-    <Compile Include="Serialization\API\SerializableEveFactionalWarfareStatsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableEveFactionWarsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableEveFacWarfareTotals.cs" />
-    <Compile Include="Serialization\API\SerializableKillLogAttackersListItem.cs" />
-    <Compile Include="Serialization\API\SerializableKillLogItemListItem.cs" />
-    <Compile Include="Serialization\API\SerializableKillLogListItem.cs" />
-    <Compile Include="Serialization\API\SerializableKillLogVictim.cs" />
-    <Compile Include="Serialization\API\SerializableMedalsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableMemberCorporation.cs" />
-    <Compile Include="Serialization\API\SerializableRefTypesListItem.cs" />
-    <Compile Include="Serialization\API\SerializableUpcomingCalendarEventsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableWalletDivision.cs" />
-    <Compile Include="Serialization\API\SerializableWalletJournalListItem.cs" />
-    <Compile Include="Serialization\API\SerializableAPIWalletTransactions.cs" />
-    <Compile Include="Serialization\API\SerializableWalletTransactionsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableAssetListItem.cs" />
-    <Compile Include="Serialization\API\SerializableContractBidsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableContractItemsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableAPIContracts.cs" />
-    <Compile Include="Serialization\API\SerializableAPIKeyInfo.cs" />
-    <Compile Include="Serialization\API\SerializableAPIKeyItem.cs" />
-    <Compile Include="Serialization\API\SerializableContractListItem.cs" />
-    <Compile Include="Serialization\API\SerializableEmploymentHistory.cs" />
-    <Compile Include="Serialization\API\SerializableAPIStandings.cs" />
-    <Compile Include="Serialization\API\SerializableEmploymentHistoryListItem.cs" />
-    <Compile Include="Serialization\API\SerializableStandings.cs" />
-    <Compile Include="Serialization\API\SerializableStandingsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableAPICharacterInfo.cs" />
+    <Compile Include="Serialization\Eve\SerializableAllianceListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIAllianceList.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPICalendarEventAttendees.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIContactList.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPICorporationSheet.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIEveFactionalWarfareStats.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIAssetList.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIContractBids.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIContractItems.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIFactionalWarfareStats.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIKillLog.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIMedals.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIPlanetaryColonies.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIPlanetaryLinks.cs" />
+    <Compile Include="Serialization\Eve\SerializableCharacterJumpClone.cs" />
+    <Compile Include="Serialization\Eve\SerializableCharacterJumpCloneImplant.cs" />
+    <Compile Include="Serialization\Eve\SerializableNewImplant.cs" />
+    <Compile Include="Serialization\Eve\SerializablePlanetaryLink.cs" />
+    <Compile Include="Serialization\Eve\SerializablePlanetaryRoute.cs" />
+    <Compile Include="Serialization\Eve\SerializablePlanetaryColony.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIPlanetaryPins.cs" />
+    <Compile Include="Serialization\Eve\SerializablePlanetaryPin.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIPlanetaryRoutes.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIRefTypes.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIUpcomingCalendarEvents.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIWalletJournal.cs" />
+    <Compile Include="Serialization\Eve\SerializableCalendarEventAttendeeListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableContactListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableDivision.cs" />
+    <Compile Include="Serialization\Eve\SerializableEveFactionalWarfareStatsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableEveFactionWarsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableEveFacWarfareTotals.cs" />
+    <Compile Include="Serialization\Eve\SerializableKillLogAttackersListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableKillLogItemListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableKillLogListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableKillLogVictim.cs" />
+    <Compile Include="Serialization\Eve\SerializableMedalsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableMemberCorporation.cs" />
+    <Compile Include="Serialization\Eve\SerializableRefTypesListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableUpcomingCalendarEventsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableWalletDivision.cs" />
+    <Compile Include="Serialization\Eve\SerializableWalletJournalListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIWalletTransactions.cs" />
+    <Compile Include="Serialization\Eve\SerializableWalletTransactionsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableAssetListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableContractBidsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableContractItemsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIContracts.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIKeyInfo.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIKeyItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableContractListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableEmploymentHistory.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIStandings.cs" />
+    <Compile Include="Serialization\Eve\SerializableEmploymentHistoryListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableStandings.cs" />
+    <Compile Include="Serialization\Eve\SerializableStandingsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPICharacterInfo.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPI.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIEnumerations.cs" />
     <Compile Include="Serialization\BattleClinic\BCAPIError.cs" />
@@ -622,29 +622,29 @@
     <Compile Include="Models\Comparers\ResearchPointComparer.cs" />
     <Compile Include="Models\SellOrder.cs" />
     <Compile Include="Enumerations\API\CCPContractStatus.cs" />
-    <Compile Include="Serialization\API\SerializableAPIAccountBalance.cs" />
-    <Compile Include="Serialization\API\SerializableAccountBalanceListItem.cs" />
-    <Compile Include="Serialization\API\SerializableAPIAccountStatus.cs" />
-    <Compile Include="Serialization\API\SerializableAPICharacterName.cs" />
-    <Compile Include="Serialization\API\SerializableAPIMailBodies.cs" />
-    <Compile Include="Serialization\API\SerializableAPIMailingLists.cs" />
-    <Compile Include="Serialization\API\SerializableAPIMailMessages.cs" />
-    <Compile Include="Serialization\API\SerializableAPINotifications.cs" />
-    <Compile Include="Serialization\API\SerializableAPINotificationTexts.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterNameListItem.cs" />
-    <Compile Include="Serialization\API\SerializableNotificationsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableAPIIndustryJobs.cs" />
-    <Compile Include="Serialization\API\SerializableAPIMarketOrders.cs" />
-    <Compile Include="Serialization\API\SerializableAPIResearch.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterListItem.cs" />
-    <Compile Include="Serialization\API\SerializableMailBodiesListItem.cs" />
-    <Compile Include="Serialization\API\SerializableMailingListsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableMailMessagesListItem.cs" />
-    <Compile Include="Serialization\API\SerializableNotificationTextsListItem.cs" />
-    <Compile Include="Serialization\API\SerializableOutpost.cs" />
-    <Compile Include="Serialization\API\SerializableQueuedSkill.cs" />
-    <Compile Include="Serialization\API\SerializableResearchListItem.cs" />
-    <Compile Include="Serialization\API\ISerializableCharacterIdentity.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIAccountBalance.cs" />
+    <Compile Include="Serialization\Eve\SerializableAccountBalanceListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIAccountStatus.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPICharacterName.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIMailBodies.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIMailingLists.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIMailMessages.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPINotifications.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPINotificationTexts.cs" />
+    <Compile Include="Serialization\Eve\SerializableCharacterNameListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableNotificationsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIIndustryJobs.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIMarketOrders.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIResearch.cs" />
+    <Compile Include="Serialization\Eve\SerializableCharacterListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableMailBodiesListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableMailingListsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableMailMessagesListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableNotificationTextsListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableOutpost.cs" />
+    <Compile Include="Serialization\Eve\SerializableQueuedSkill.cs" />
+    <Compile Include="Serialization\Eve\SerializableResearchListItem.cs" />
+    <Compile Include="Serialization\Eve\ISerializableCharacterIdentity.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIMethod.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIProvider.cs" />
     <Compile Include="Serialization\Settings\SerializableAPIUpdate.cs" />
@@ -698,7 +698,7 @@
     </Compile>
     <Compile Include="Models\APIMethod.cs" />
     <Compile Include="Service\AutoShrink.cs" />
-    <Compile Include="Serialization\API\APICCPError.cs" />
+    <Compile Include="Serialization\Eve\APICCPError.cs" />
     <Compile Include="Controls\CopySaveOptionsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -722,7 +722,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\API\SerializableAPISkillQueue.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPISkillQueue.cs" />
     <Compile Include="Controls\EVEMonForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -740,7 +740,7 @@
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\Plan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterSheetBase.cs" />
+    <Compile Include="Serialization\Eve\SerializableCharacterSheetBase.cs" />
     <Compile Include="Controls\SplitButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -883,12 +883,12 @@
     <Compile Include="MarketPricer\Pricer.cs" />
     <Compile Include="QueryMonitor\QueryMonitor.cs" />
     <Compile Include="QueryMonitor\QueryMonitorCollection.cs" />
-    <Compile Include="Serialization\API\IAPIResult.cs" />
-    <Compile Include="Serialization\API\SerializableJobListItem.cs" />
-    <Compile Include="Serialization\API\SerializableOrderListItem.cs" />
-    <Compile Include="Serialization\API\SerializableAPIConquerableStationList.cs" />
+    <Compile Include="Serialization\Eve\IAPIResult.cs" />
+    <Compile Include="Serialization\Eve\SerializableJobListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableOrderListItem.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIConquerableStationList.cs" />
     <Compile Include="Serialization\Datafiles\BlueprintsDatafile.cs" />
-    <Compile Include="Serialization\API\SerializableAPISkillInTraining.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPISkillInTraining.cs" />
     <Compile Include="Serialization\Datafiles\DatafileConstants.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -929,8 +929,8 @@
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
     <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutFeed.cs" />
-    <Compile Include="Serialization\API\SerializableAPICharacterSheet.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterAttributes.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPICharacterSheet.cs" />
+    <Compile Include="Serialization\Eve\SerializableCharacterAttributes.cs" />
     <Compile Include="Serialization\Settings\SerializableRecurringScheduleEntry.cs" />
     <Compile Include="Serialization\Settings\SerializableScheduleEntry.cs" />
     <Compile Include="SettingsObjects\CalendarSettings.cs" />
@@ -967,7 +967,7 @@
     <Compile Include="Models\SkillLevelSet.cs" />
     <Compile Include="Models\SkillQueue.cs" />
     <Compile Include="Models\CharacterIdentity.cs" />
-    <Compile Include="Serialization\API\APIResult.cs" />
+    <Compile Include="Serialization\Eve\APIResult.cs" />
     <Compile Include="Collections\ReadonlyCollection.cs" />
     <Compile Include="Models\SkillLevel.cs" />
     <Compile Include="Threading\IActorTimer.cs" />
@@ -978,11 +978,11 @@
     <Compile Include="Collections\Global\GlobalAPIProviderCollection.cs" />
     <Compile Include="Collections\Global\GlobalCharacterIdentityCollection.cs" />
     <Compile Include="Collections\Global\GlobalMonitoredCharacterCollection.cs" />
-    <Compile Include="Serialization\API\ISerializableWithLocalClock.cs" />
+    <Compile Include="Serialization\Eve\ISerializableWithLocalClock.cs" />
     <Compile Include="SettingsObjects\APIProvidersSettings.cs" />
-    <Compile Include="Serialization\API\SerializableCharacterSkill.cs" />
-    <Compile Include="Serialization\API\SerializableAPICharacters.cs" />
-    <Compile Include="Serialization\API\SerializableAPIServerStatus.cs" />
+    <Compile Include="Serialization\Eve\SerializableCharacterSkill.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPICharacters.cs" />
+    <Compile Include="Serialization\Eve\SerializableAPIServerStatus.cs" />
     <Compile Include="Models\QueuedSkill.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1068,7 +1068,7 @@
     <None Include="Resources\Skill_Select\Group8\Bars.resources">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Serialization\API\rowsets-transform.xslt">
+    <EmbeddedResource Include="Serialization\Eve\rowsets-transform.xslt">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Serialization\Datafiles\datafile-transform.xslt" />
