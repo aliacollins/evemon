@@ -1,6 +1,6 @@
 using System;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.CustomEventArgs

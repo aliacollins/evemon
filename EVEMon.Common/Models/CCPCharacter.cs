@@ -11,7 +11,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Models.Extended;
 using EVEMon.Common.QueryMonitor;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Models

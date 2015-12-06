@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.API;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
 {

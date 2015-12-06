@@ -6,7 +6,7 @@ using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.QueryMonitor

@@ -7,12 +7,12 @@ using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     [XmlRoot("eveapi")]
     public sealed class APIResult<T> : IAPIResult
     {
-        private APIError m_error = APIError.None;
+        private APIError m_error;
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
 

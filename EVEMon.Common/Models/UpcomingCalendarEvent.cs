@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Enumerations.API;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
 {

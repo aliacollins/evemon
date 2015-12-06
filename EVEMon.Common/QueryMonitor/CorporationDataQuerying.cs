@@ -5,7 +5,7 @@ using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.QueryMonitor
 {

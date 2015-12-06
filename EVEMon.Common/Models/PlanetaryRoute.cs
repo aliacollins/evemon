@@ -1,4 +1,4 @@
-﻿using EVEMon.Common.Serialization.API;
+﻿using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
 {

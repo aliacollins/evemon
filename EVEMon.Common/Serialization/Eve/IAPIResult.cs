@@ -2,7 +2,7 @@
 using System.Xml.XPath;
 using EVEMon.Common.Enumerations.API;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     /// <summary>
     /// Represents the result of an API operation.

@@ -18,7 +18,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.Notifications;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.DetailsWindow;
 

@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     /// <summary>
     /// CCP API error message handling - for application error messages within the xml.

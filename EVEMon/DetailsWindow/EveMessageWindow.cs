@@ -8,7 +8,7 @@ using EVEMon.Common.Enumerations;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.DetailsWindow
 {

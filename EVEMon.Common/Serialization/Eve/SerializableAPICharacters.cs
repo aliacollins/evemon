@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     /// <summary>
     /// Represents a serializable version of a character's list. Used for querying CCP.

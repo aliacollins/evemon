@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using EVEMon.Common.Extensions;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     /// <summary>
     /// Represents a serializable version of a character sheet. Used for settings.xml serialization and CCP querying

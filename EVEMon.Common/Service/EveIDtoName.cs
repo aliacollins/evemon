@@ -8,7 +8,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Service
 {
