@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Controls
 {

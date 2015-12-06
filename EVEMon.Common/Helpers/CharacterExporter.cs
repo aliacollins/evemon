@@ -10,7 +10,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Exportation;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;

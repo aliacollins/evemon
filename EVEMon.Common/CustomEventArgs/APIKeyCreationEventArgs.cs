@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.CustomEventArgs
 {

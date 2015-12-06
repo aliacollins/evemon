@@ -16,7 +16,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
-using EVEMon.Common.Serialization.API;
 using Region = EVEMon.Common.Data.Region;
 
 namespace EVEMon.DetailsWindow

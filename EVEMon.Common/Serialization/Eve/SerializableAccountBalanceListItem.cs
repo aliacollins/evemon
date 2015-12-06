@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     /// <summary>
     /// Represents the balance of a wallet

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     /// <summary>
     /// An interface for serializable classes which contains datetimes

@@ -4,7 +4,7 @@ using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Collections.Global

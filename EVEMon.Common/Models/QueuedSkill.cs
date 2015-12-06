@@ -2,7 +2,7 @@
 using System.Linq;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
 {

@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     /// <summary>
     /// Represents a serializable version of a server status. Used for querying CCP.

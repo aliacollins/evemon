@@ -12,7 +12,7 @@ using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.ApiErrorHandling
 {

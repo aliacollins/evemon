@@ -6,7 +6,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models.Extended;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 using YamlDotNet.RepresentationModel;
 

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Helpers
 {

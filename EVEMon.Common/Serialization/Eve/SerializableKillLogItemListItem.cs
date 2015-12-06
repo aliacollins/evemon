@@ -1,8 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
-using EVEMon.Common.Data;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     public sealed class SerializableKillLogItemListItem
     {

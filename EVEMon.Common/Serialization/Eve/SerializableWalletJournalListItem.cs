@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     public sealed class SerializableWalletJournalListItem
     {

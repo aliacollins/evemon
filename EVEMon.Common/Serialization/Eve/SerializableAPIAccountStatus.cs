@@ -2,7 +2,7 @@ using System;
 using System.Xml.Serialization;
 using EVEMon.Common.Extensions;
 
-namespace EVEMon.Common.Serialization.API
+namespace EVEMon.Common.Serialization.Eve
 {
     /// <summary>
     /// Represents a serializable version of the account status. Used for querying CCP.

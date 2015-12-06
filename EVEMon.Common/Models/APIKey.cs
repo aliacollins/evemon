@@ -12,7 +12,7 @@ using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.QueryMonitor;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Models

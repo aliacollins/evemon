@@ -4,7 +4,7 @@ using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Interfaces;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.QueryMonitor
 {

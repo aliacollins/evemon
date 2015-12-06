@@ -5,7 +5,7 @@ using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Models.Collections;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
 namespace EVEMon.Common.Models

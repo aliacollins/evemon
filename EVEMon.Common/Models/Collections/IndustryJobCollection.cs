@@ -5,7 +5,7 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Interfaces;
-using EVEMon.Common.Serialization.API;
+using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 
 namespace EVEMon.Common.Models.Collections
