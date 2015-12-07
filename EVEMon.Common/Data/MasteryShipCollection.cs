@@ -28,7 +28,7 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public MasteryShip GetMasteryShipByID(int id)
         {
-            return Items[id];
+            return Items.ContainsKey(id) ? Items[id] : null;
         }
 
         /// <summary>
