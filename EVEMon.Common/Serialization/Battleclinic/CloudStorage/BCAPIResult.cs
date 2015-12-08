@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
 using EVEMon.Common.Extensions;
-using EVEMon.Common.Interfaces;
 
 namespace EVEMon.Common.Serialization.BattleClinic.CloudStorage
 {

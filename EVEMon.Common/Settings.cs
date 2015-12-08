@@ -14,7 +14,6 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Models.Extended;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
-using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Serialization.BattleClinic.CloudStorage;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
