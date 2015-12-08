@@ -8,13 +8,14 @@ using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models.Extended;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.BattleClinic.CloudStorage;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 
@@ -58,6 +59,7 @@ namespace EVEMon.Common
             LoadoutsProvider = new LoadoutsProviderSettings();
             MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
             PortableEveInstallations = new PortableEveInstallationsSettings();
+            CloudStorageServiceProvider = new CloudStorageServiceProviderSettings();
 
             EveMonClient.TimerTick += EveMonClient_TimerTick;
         }
@@ -144,6 +146,11 @@ namespace EVEMon.Common
         /// Gets the loadouts provider settings.
         /// </summary>
         public static LoadoutsProviderSettings LoadoutsProvider { get; private set; }
+
+        /// <summary>
+        /// Gets the cloud storage service provider settings.
+        /// </summary>
+        public static CloudStorageServiceProviderSettings CloudStorageServiceProvider { get; private set; }
 
         #endregion
 
@@ -252,9 +259,9 @@ namespace EVEMon.Common
                 Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
 
                 // Bind the APIKeyInfo and CharacterList update period
-                if (method.Equals(APIGenericMethods.APIKeyInfo) &&
-                    Updates.Periods[APIGenericMethods.CharacterList.ToString()] != Updates.Periods[method.ToString()])
-                    Updates.Periods[method.ToString()] = Updates.Periods[APIGenericMethods.CharacterList.ToString()];
+                if (method.Equals(CCPAPIGenericMethods.APIKeyInfo) &&
+                    Updates.Periods[CCPAPIGenericMethods.CharacterList.ToString()] != Updates.Periods[method.ToString()])
+                    Updates.Periods[method.ToString()] = Updates.Periods[CCPAPIGenericMethods.CharacterList.ToString()];
             }
 
             // Initialize or add missing columns
@@ -381,7 +388,7 @@ namespace EVEMon.Common
         /// </remarks>
         public static void Initialize()
         {
-            SerializableFilesListItem settingsFile = BCAPI.DownloadSettingsFile();
+            SerializableFilesListItem settingsFile = (SerializableFilesListItem)CloudStorageServiceProvider.Provider.DownloadSettingsFile();
             SerializableSettings settings = settingsFile != null
                 ? TryDeserializeFromFileContent(settingsFile.FileContent)
                 : TryDeserializeFromFile();

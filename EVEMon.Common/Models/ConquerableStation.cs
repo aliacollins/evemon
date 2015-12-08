@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -92,7 +92,7 @@ namespace EVEMon.Common.Models
                 return;
 
             EveMonClient.APIProviders.CurrentProvider
-                .QueryMethodAsync<SerializableAPIConquerableStationList>(APIGenericMethods.ConquerableStationList, OnUpdated);
+                .QueryMethodAsync<SerializableAPIConquerableStationList>(CCPAPIGenericMethods.ConquerableStationList, OnUpdated);
 
             s_queryPending = true;
         }
@@ -100,7 +100,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Processes the conquerable station list.
         /// </summary>
-        private static void OnUpdated(APIResult<SerializableAPIConquerableStationList> result)
+        private static void OnUpdated(CCPAPIResult<SerializableAPIConquerableStationList> result)
         {
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
@@ -164,7 +164,7 @@ namespace EVEMon.Common.Models
             if (!File.Exists(filename))
                 return;
 
-            APIResult<SerializableAPIConquerableStationList> result =
+            CCPAPIResult<SerializableAPIConquerableStationList> result =
                 Util.DeserializeAPIResultFromFile<SerializableAPIConquerableStationList>(filename, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization

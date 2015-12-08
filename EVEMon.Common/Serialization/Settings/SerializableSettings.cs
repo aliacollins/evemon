@@ -21,6 +21,7 @@ namespace EVEMon.Common.Serialization.Settings
             m_apiKeys = new Collection<SerializableAPIKey>();
             m_characters = new Collection<SerializableSettingsCharacter>();
             m_monitoredCharacters = new Collection<MonitoredCharacterSettings>();
+            CloudStorageServiceProvider = new CloudStorageServiceProviderSettings();
             PortableEveInstallations = new PortableEveInstallationsSettings();
             MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
             Notifications = new NotificationSettings();
@@ -101,6 +102,9 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlElement("loadoutsProvider")]
         public LoadoutsProviderSettings LoadoutsProvider { get; set; }
+
+        [XmlElement("cloudStorageServiceProvider")]
+        public CloudStorageServiceProviderSettings CloudStorageServiceProvider { get; set; }
 
         [XmlElement("portableEveInstallations")]
         public PortableEveInstallationsSettings PortableEveInstallations { get; set; }

@@ -83,7 +83,7 @@ namespace EVEMon.Common.Collections.Global
                 switch (xmlRootElement.ToLower(CultureConstants.DefaultCulture))
                 {
                     case "eveapi":
-                        APIResult<SerializableAPICharacterSheet> apiResult =
+                        CCPAPIResult<SerializableAPICharacterSheet> apiResult =
                             Util.DeserializeAPIResultFromFile<SerializableAPICharacterSheet>(uri.LocalPath, APIProvider.RowsetsTransform);
                         callback(null, new UriCharacterEventArgs(uri, apiResult));
                         break;

@@ -811,8 +811,8 @@ namespace EVEMon.CharacterMonitoring
             if (notification == null)
                 return;
 
-            APIResult<SerializableAPINotificationTexts> notificationResult =
-                notification.Result as APIResult<SerializableAPINotificationTexts>;
+            CCPAPIResult<SerializableAPINotificationTexts> notificationResult =
+                notification.Result as CCPAPIResult<SerializableAPINotificationTexts>;
             if (notificationResult == null)
                 return;
 

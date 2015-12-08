@@ -4,7 +4,7 @@ using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
@@ -15,7 +15,7 @@ namespace EVEMon.Common.Models
     {
         private readonly List<ContractItem> m_contractItems = new List<ContractItem>();
         private ContractState m_state;
-        private APIGenericMethods m_apiMethod;
+        private CCPAPIGenericMethods m_apiMethod;
         private Enum m_method;
 
         private string m_issuer;
@@ -517,18 +517,18 @@ namespace EVEMon.Common.Models
             m_queryPending = true;
 
             // Special condition to identify corporation contracts in character query
-            APIKey apiKey = IssuedFor == IssuedFor.Corporation && APICorporationMethods.CorporationContracts.Equals(m_method)
-                                ? Character.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts)
-                                : Character.Identity.FindAPIKeyWithAccess(APICharacterMethods.Contracts);
+            APIKey apiKey = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
+                                ? Character.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts)
+                                : Character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
 
             // Quits if access denied
             if (apiKey == null)
                 return;
 
             // Special condition to identify corporation contracts in character query and determine the correct api method to call
-            m_apiMethod = IssuedFor == IssuedFor.Corporation && APICorporationMethods.CorporationContracts.Equals(m_method)
-                              ? APIGenericMethods.CorporationContractItems
-                              : APIGenericMethods.ContractItems;
+            m_apiMethod = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
+                              ? CCPAPIGenericMethods.CorporationContractItems
+                              : CCPAPIGenericMethods.ContractItems;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractItems>(
                 m_apiMethod, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, ID, OnContractItemsDownloaded);
@@ -538,7 +538,7 @@ namespace EVEMon.Common.Models
         /// Called when contract items downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnContractItemsDownloaded(APIResult<SerializableAPIContractItems> result)
+        private void OnContractItemsDownloaded(CCPAPIResult<SerializableAPIContractItems> result)
         {
             m_queryPending = false;
 
@@ -561,7 +561,7 @@ namespace EVEMon.Common.Models
             Import(result.Result.ContractItems);
 
             // Fires the event regarding contract items downloaded
-            if (m_apiMethod == APIGenericMethods.ContractItems)
+            if (m_apiMethod == CCPAPIGenericMethods.ContractItems)
                 EveMonClient.OnCharacterContractItemsDownloaded(Character);
             else
                 EveMonClient.OnCorporationContractItemsDownloaded(Character);

@@ -3,16 +3,16 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
 
 namespace EVEMon.Common.Serialization.Eve
 {
     [XmlRoot("eveapi")]
-    public sealed class APIResult<T> : IAPIResult
+    public sealed class CCPAPIResult<T> : IAPIResult
     {
-        private APIError m_error;
+        private Enumerations.CCPAPI.CCPAPIErrors m_error;
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
 
@@ -22,18 +22,18 @@ namespace EVEMon.Common.Serialization.Eve
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public APIResult()
+        public CCPAPIResult()
         {
-            m_error = APIError.None;
+            m_error = Enumerations.CCPAPI.CCPAPIErrors.None;
             m_errorMessage = String.Empty;
             m_exception = null;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="APIResult&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="CCPAPIResult{T}"/> class.
         /// </summary>
         /// <param name="exc">The exception.</param>
-        private APIResult(Exception exc)
+        private CCPAPIResult(Exception exc)
         {
             m_errorMessage = exc.Message;
             m_exception = exc;
@@ -43,42 +43,42 @@ namespace EVEMon.Common.Serialization.Eve
         /// Constructor from an http exception
         /// </summary>
         /// <param name="exc">The exception.</param>
-        public APIResult(HttpWebServiceException exc)
+        public CCPAPIResult(HttpWebServiceException exc)
             : this(exc as Exception)
         {
-            m_error = APIError.Http;
+            m_error = Enumerations.CCPAPI.CCPAPIErrors.Http;
         }
 
         /// <summary>
         /// Constructor from an XML exception
         /// </summary>
         /// <param name="exc">The exception.</param>
-        public APIResult(XmlException exc)
+        public CCPAPIResult(XmlException exc)
             : this((Exception)exc)
         {
-            m_error = APIError.Xml;
+            m_error = Enumerations.CCPAPI.CCPAPIErrors.Xml;
         }
 
         /// <summary>
         /// Constructor from an XSLT exception
         /// </summary>
         /// <param name="exc">The exception.</param>
-        public APIResult(XsltException exc)
+        public CCPAPIResult(XsltException exc)
             : this(exc as Exception)
         {
-            m_error = APIError.Xslt;
+            m_error = Enumerations.CCPAPI.CCPAPIErrors.Xslt;
         }
 
         /// <summary>
         /// Constructor from an XML serialization exception wrapped into an InvalidOperationException
         /// </summary>
         /// <param name="exc">The exception.</param>
-        public APIResult(InvalidOperationException exc)
+        public CCPAPIResult(InvalidOperationException exc)
         {
             if (exc == null)
                 throw new ArgumentNullException("exc");
 
-            m_error = APIError.Xml;
+            m_error = Enumerations.CCPAPI.CCPAPIErrors.Xml;
             m_errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
             m_exception = exc;
         }
@@ -88,7 +88,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// </summary>
         /// <param name="error">The error.</param>
         /// <param name="message">The message.</param>
-        public APIResult(APIError error, string message)
+        public CCPAPIResult(Enumerations.CCPAPI.CCPAPIErrors error, string message)
         {
             m_error = error;
             m_errorMessage = message;
@@ -113,7 +113,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// </summary>
         public bool HasError
         {
-            get { return CCPError != null || m_error != APIError.None; }
+            get { return CCPError != null || m_error != Enumerations.CCPAPI.CCPAPIErrors.None; }
         }
 
         /// <summary>
@@ -148,11 +148,11 @@ namespace EVEMon.Common.Serialization.Eve
         }
 
         /// <summary>
-        /// Gets the type of the error or <see cref="APIError.None"/> when there was no error.
+        /// Gets the type of the error or <see cref="CCPAPIErrors.None"/> when there was no error.
         /// </summary>
-        public APIError ErrorType
+        public CCPAPIErrors ErrorType
         {
-            get { return CCPError != null ? APIError.CCP : m_error; }
+            get { return CCPError != null ? CCPAPIErrors.CCP : m_error; }
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace EVEMon.Common.Serialization.Eve
         public DateTime CachedUntil { get; set; }
 
         [XmlElement("error")]
-        public APICCPError CCPError { get; set; }
+        public CCPAPIError CCPError { get; set; }
 
         [XmlElement("result")]
         public T Result { get; set; }

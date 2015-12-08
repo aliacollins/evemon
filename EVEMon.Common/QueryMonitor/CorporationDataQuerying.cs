@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
@@ -33,19 +33,19 @@ namespace EVEMon.Common.QueryMonitor
             // Initializes the query monitors 
             m_corpMedalsMonitor =
                 new CorporationQueryMonitor<SerializableAPIMedals>(ccpCharacter,
-                                                                         APICorporationMethods.CorporationMedals,
+                                                                         CCPAPICorporationMethods.CorporationMedals,
                                                                          OnMedalsUpdated) { QueryOnStartup = true };
             m_corpMarketOrdersMonitor =
                 new CorporationQueryMonitor<SerializableAPIMarketOrders>(ccpCharacter,
-                                                                         APICorporationMethods.CorporationMarketOrders,
+                                                                         CCPAPICorporationMethods.CorporationMarketOrders,
                                                                          OnMarketOrdersUpdated) { QueryOnStartup = true };
             m_corpContractsMonitor =
                 new CorporationQueryMonitor<SerializableAPIContracts>(ccpCharacter,
-                                                                      APICorporationMethods.CorporationContracts,
+                                                                      CCPAPICorporationMethods.CorporationContracts,
                                                                       OnContractsUpdated) { QueryOnStartup = true };
             m_corpIndustryJobsMonitor =
                 new CorporationQueryMonitor<SerializableAPIIndustryJobs>(ccpCharacter,
-                                                                         APICorporationMethods.CorporationIndustryJobs,
+                                                                         CCPAPICorporationMethods.CorporationIndustryJobs,
                                                                          OnIndustryJobsUpdated) { QueryOnStartup = true };
 
             // Add the monitors in an order as they will appear in the throbber menu
@@ -127,12 +127,12 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Quits if access denied
-            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(APICorporationMethods.CorporationContracts);
+            APIKey apiKey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts);
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractBids>(
-                APIGenericMethods.CorporationContractBids,
+                CCPAPIGenericMethods.CorporationContractBids,
                 apiKey.ID,
                 apiKey.VerificationCode,
                 m_ccpCharacter.CharacterID,
@@ -143,14 +143,14 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's corporation medals.
         /// </summary>
         /// <param name="result"></param>
-        private void OnMedalsUpdated(APIResult<SerializableAPIMedals> result)
+        private void OnMedalsUpdated(CCPAPIResult<SerializableAPIMedals> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationMedals))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationMedals))
                 EveMonClient.Notifications.NotifyCorporationMedalsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -169,14 +169,14 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which market orders gets queried first</remarks>
-        private void OnMarketOrdersUpdated(APIResult<SerializableAPIMarketOrders> result)
+        private void OnMarketOrdersUpdated(CCPAPIResult<SerializableAPIMarketOrders> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationMarketOrders))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationMarketOrders))
                 EveMonClient.Notifications.NotifyCorporationMarketOrdersError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -198,14 +198,14 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which contracts gets queried first</remarks>
-        private void OnContractsUpdated(APIResult<SerializableAPIContracts> result)
+        private void OnContractsUpdated(CCPAPIResult<SerializableAPIContracts> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationContracts))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationContracts))
                 EveMonClient.Notifications.NotifyCorporationContractsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -218,7 +218,7 @@ namespace EVEMon.Common.QueryMonitor
             result.Result.Contracts.ToList().ForEach(x =>
             {
                 x.IssuedFor = IssuedFor.Corporation;
-                x.APIMethod = APICorporationMethods.CorporationContracts;
+                x.APIMethod = CCPAPICorporationMethods.CorporationContracts;
             });
 
             // Import the data
@@ -232,14 +232,14 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Processes the queried character's corporation contract bids.
         /// </summary>
-        private void OnCorporationContractBidsUpdated(APIResult<SerializableAPIContractBids> result)
+        private void OnCorporationContractBidsUpdated(CCPAPIResult<SerializableAPIContractBids> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occured
-            if (m_ccpCharacter.ShouldNotifyError(result, APIGenericMethods.CorporationContractBids))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPIGenericMethods.CorporationContractBids))
                 EveMonClient.Notifications.NotifyCorporationContractBidsError(m_ccpCharacter, result);
 
             // Quits if there is an error
@@ -258,14 +258,14 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="result"></param>
         /// <remarks>This method is sensitive to which "issued for" jobs gets queried first</remarks>
-        private void OnIndustryJobsUpdated(APIResult<SerializableAPIIndustryJobs> result)
+        private void OnIndustryJobsUpdated(CCPAPIResult<SerializableAPIIndustryJobs> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
                 return;
 
             // Notify an error occurred
-            if (m_ccpCharacter.ShouldNotifyError(result, APICorporationMethods.CorporationIndustryJobs))
+            if (m_ccpCharacter.ShouldNotifyError(result, CCPAPICorporationMethods.CorporationIndustryJobs))
                 EveMonClient.Notifications.NotifyCorporationIndustryJobsError(m_ccpCharacter, result);
 
             // Quits if there is an error

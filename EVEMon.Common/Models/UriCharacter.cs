@@ -19,7 +19,7 @@ namespace EVEMon.Common.Models
         /// <param name="identity">The identitiy for this character</param>
         /// <param name="uri">The uri the provided deserialization object was acquired from</param>
         /// <param name="source">A deserialization object for characters</param>
-        internal UriCharacter(CharacterIdentity identity, Uri uri, APIResult<SerializableAPICharacterSheet> source)
+        internal UriCharacter(CharacterIdentity identity, Uri uri, CCPAPIResult<SerializableAPICharacterSheet> source)
             : base(identity, Guid.NewGuid())
         {
             m_uri = uri;
@@ -118,7 +118,7 @@ namespace EVEMon.Common.Models
         /// <param name="identity"></param>
         /// <param name="uri"></param>
         /// <param name="result"></param>
-        internal void Update(CharacterIdentity identity, Uri uri, APIResult<SerializableAPICharacterSheet> result)
+        internal void Update(CharacterIdentity identity, Uri uri, CCPAPIResult<SerializableAPICharacterSheet> result)
         {
             CharacterID = identity.CharacterID;
             Identity = identity;

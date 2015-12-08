@@ -1,4 +1,4 @@
-﻿namespace EVEMon.Common.Enumerations.API
+﻿namespace EVEMon.Common.Enumerations.CCPAPI
 {
     public enum CCPJobCompletedStatus
     {

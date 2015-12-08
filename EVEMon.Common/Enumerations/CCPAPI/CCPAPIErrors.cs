@@ -1,9 +1,9 @@
-namespace EVEMon.Common.Enumerations.API
+namespace EVEMon.Common.Enumerations.CCPAPI
 {
     /// <summary>
     /// Represents the category of error which can occur with the API.
     /// </summary>
-    public enum APIError
+    public enum CCPAPIErrors
     {
         /// <summary>
         /// There was no error.

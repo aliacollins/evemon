@@ -7,7 +7,7 @@ using System.Xml.Xsl;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization.Eve;
@@ -164,7 +164,7 @@ namespace EVEMon.Common.Helpers
                                      Environment.NewLine);
             }
 
-            APIKey apiKey = character.Identity.FindAPIKeyWithAccess(APICharacterMethods.CharacterSheet);
+            APIKey apiKey = character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.CharacterSheet);
             if (apiKey == null)
                 return builder.ToString();
 

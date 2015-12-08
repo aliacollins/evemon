@@ -8,7 +8,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
@@ -352,7 +352,7 @@ namespace EVEMon.Controls
             if (ccpCharacter == null)
                 return;
 
-            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[APICharacterMethods.MarketOrders];
+            IQueryMonitor marketMonitor = ccpCharacter.QueryMonitors[CCPAPICharacterMethods.MarketOrders];
             if (!Settings.UI.SafeForWork && !ccpCharacter.HasSufficientBalance && marketMonitor != null && marketMonitor.Enabled)
             {
                 lblBalance.ForeColor = Color.Orange;

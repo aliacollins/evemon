@@ -126,8 +126,8 @@ namespace EVEMon.DetailsWindow
             if (notification == null)
                 return;
 
-            APIResult<SerializableAPIMailBodies> eveMailBodiesResult = notification.Result as APIResult<SerializableAPIMailBodies>;
-            APIResult<SerializableAPINotificationTexts> notificationTextResult = notification.Result as APIResult<SerializableAPINotificationTexts>;
+            CCPAPIResult<SerializableAPIMailBodies> eveMailBodiesResult = notification.Result as CCPAPIResult<SerializableAPIMailBodies>;
+            CCPAPIResult<SerializableAPINotificationTexts> notificationTextResult = notification.Result as CCPAPIResult<SerializableAPINotificationTexts>;
             if (eveMailBodiesResult == null && notificationTextResult == null)
                 return;
 

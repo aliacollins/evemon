@@ -9,7 +9,7 @@ using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
@@ -96,13 +96,13 @@ namespace EVEMon.ApiTester
 
             CharIDLabel.Visible =
                 CharIDTextBox.Visible = ExternalInfoRadioButton.Checked && APIMethodComboBox.SelectedItem != null &&
-                                        (APIMethodComboBox.SelectedItem is APICharacterMethods ||
+                                        (APIMethodComboBox.SelectedItem is CCPAPICharacterMethods ||
                                          APIMethods.CharacterSupplementalMethods.Contains(APIMethodComboBox.SelectedItem) ||
-                                         APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet) ||
-                                         APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationLocations));
+                                         APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationSheet) ||
+                                         APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationLocations));
 
             CharIDLabel.Text = APIMethodComboBox.SelectedItem != null &&
-                               APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet)
+                               APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationSheet)
                                    ? "Corporation ID:"
                                    : "Character ID:";
 
@@ -135,38 +135,38 @@ namespace EVEMon.ApiTester
             if (!IDOrNameLabel.Visible || APIMethodComboBox.SelectedItem == null)
                 return;
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterName) ||
-                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterAffiliation))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterName) ||
+                APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterAffiliation))
                 IDOrNameLabel.Text = "IDs:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID) ||
-                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.OwnerID))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterID) ||
+                APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.OwnerID))
                 IDOrNameLabel.Text = "Names:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.TypeName))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.TypeName))
                 IDOrNameLabel.Text = "Type IDs:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.ContractItems) ||
-                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CorporationContractItems))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.ContractItems) ||
+                APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CorporationContractItems))
                 IDOrNameLabel.Text = "Contract ID:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.PlanetaryPins) ||
-                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.PlanetaryRoutes) ||
-                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.PlanetaryLinks))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryPins) ||
+                APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryRoutes) ||
+                APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryLinks))
                 IDOrNameLabel.Text = "Planet ID:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CalendarEventAttendees))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.CalendarEventAttendees))
                 IDOrNameLabel.Text = "Event IDs:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.MailBodies) ||
-                APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.NotificationTexts))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.MailBodies) ||
+                APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.NotificationTexts))
                 IDOrNameLabel.Text = "Message IDs:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.Locations) ||
-                APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationLocations))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.Locations) ||
+                APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationLocations))
                 IDOrNameLabel.Text = "Item IDs:";
 
-            if (APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationStarbaseDetails))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationStarbaseDetails))
                 IDOrNameLabel.Text = "Starbase ID:";
         }
 
@@ -408,8 +408,8 @@ namespace EVEMon.ApiTester
                 return;
 
             // Special condition in case user requests character info or corporation sheet without API credentials
-            if ((APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo) ||
-                 APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet)) &&
+            if ((APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.CharacterInfo) ||
+                 APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationSheet)) &&
                 textbox.Equals(KeyIDTextBox) && textbox.Text.Length == 0 && VCodeTextBox.Text.Length == 0)
                 return;
 
@@ -418,8 +418,8 @@ namespace EVEMon.ApiTester
             if (String.IsNullOrEmpty(textbox.Text))
             {
                 string errorText = String.Format(CultureConstants.DefaultCulture, "{0} can not be blank.",
-                                                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID) ||
-                                                 APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.OwnerID)
+                                                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterID) ||
+                                                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.OwnerID)
                                                      ? "Names"
                                                      : "IDs");
                 ErrorProvider.SetError(textbox, errorText);
@@ -427,8 +427,8 @@ namespace EVEMon.ApiTester
                 return;
             }
 
-            if (APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.CharacterID) ||
-                APIMethodComboBox.SelectedItem.Equals(APIGenericMethods.OwnerID))
+            if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterID) ||
+                APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.OwnerID))
                 return;
 
             if (ids.Any(id => id == "0"))
@@ -464,8 +464,8 @@ namespace EVEMon.ApiTester
                 return;
 
             // Special condition in case user requests character info without API credentials
-            if ((APIMethodComboBox.SelectedItem.Equals(APICharacterMethods.CharacterInfo) ||
-                 APIMethodComboBox.SelectedItem.Equals(APICorporationMethods.CorporationSheet)) &&
+            if ((APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.CharacterInfo) ||
+                 APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationSheet)) &&
                 KeyIDTextBox.Text.Length == 0 && VCodeTextBox.Text.Length == 0)
                 return;
 

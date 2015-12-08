@@ -2,16 +2,17 @@
 using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common;
+using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Factories;
-using EVEMon.Common.Serialization.BattleClinic;
 
 namespace EVEMon.SettingsUI
 {
     public partial class SettingsFileStorageControl : UserControl
     {
-        private bool m_queryPending;
+        private static bool s_queryPending;
+        private static CloudStorageServiceProvider s_provider;
 
 
         #region Constructor
@@ -31,21 +32,6 @@ namespace EVEMon.SettingsUI
         #endregion
 
 
-        #region Global Events
-
-        /// <summary>
-        /// Occurs when the BattleClinic API credentials get authenticated.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="BCAPIEventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_BCAPICredentialsUpdated(object sender, BCAPIEventArgs e)
-        {
-            Enabled = BCAPI.IsAuthenticated;
-        }
-
-        #endregion
-
-
         #region Local Events
 
         /// <summary>
@@ -56,13 +42,16 @@ namespace EVEMon.SettingsUI
         private void SettingsFileStorageControl_Load(object sender, EventArgs e)
         {
             Font = FontFactory.GetFont("Tahoma");
+            s_provider = Settings.CloudStorageServiceProvider.Provider;
 
-            EveMonClient.BCAPICredentialsUpdated += EveMonClient_BCAPICredentialsUpdated;
+            s_provider.CredentialsChecked += CloudStorageServiceProvider_CredentialsChecked;
+            s_provider.FileUploaded += CloudStorageServiceProvider_FileUploaded;
+            s_provider.FileDownloaded += CloudStorageServiceProvider_FileDownloaded;
             Disposed += OnDisposed;
 
-            alwaysUploadCheckBox.Checked = BCAPISettings.Default.UploadAlways;
-            alwaysDownloadCheckBox.Checked = BCAPISettings.Default.DownloadAlways;
-            useImmediatelyCheckBox.Checked = BCAPISettings.Default.UseImmediately;
+            alwaysUploadCheckBox.Checked = CloudStorageServicesSettings.Default.UploadAlways;
+            alwaysDownloadCheckBox.Checked = CloudStorageServicesSettings.Default.DownloadAlways;
+            useImmediatelyCheckBox.Checked = CloudStorageServicesSettings.Default.UseImmediately;
             useImmediatelyCheckBox.Enabled = alwaysDownloadCheckBox.Checked;
             Enabled = false;
         }
@@ -74,8 +63,19 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            EveMonClient.BCAPICredentialsUpdated -= EveMonClient_BCAPICredentialsUpdated;
+            s_provider.CredentialsChecked -= CloudStorageServiceProvider_CredentialsChecked;
+            s_provider.FileUploaded -= CloudStorageServiceProvider_FileUploaded;
+            s_provider.FileDownloaded -= CloudStorageServiceProvider_FileDownloaded;
             Disposed -= OnDisposed;
+        }
+
+        /// <summary>
+        /// When the control becomes visible again, we update the content.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            Enabled = Settings.CloudStorageServiceProvider.Provider.HasCredentialsStored;
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void alwaysUploadCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            BCAPISettings.Default.UploadAlways = alwaysUploadCheckBox.Checked;
-            BCAPISettings.Default.Save();
+            CloudStorageServicesSettings.Default.UploadAlways = alwaysUploadCheckBox.Checked;
+            CloudStorageServicesSettings.Default.Save();
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace EVEMon.SettingsUI
         private void alwaysDownloadCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             useImmediatelyCheckBox.Enabled = alwaysDownloadCheckBox.Checked;
-            BCAPISettings.Default.DownloadAlways = alwaysDownloadCheckBox.Checked;
-            BCAPISettings.Default.Save();
+            CloudStorageServicesSettings.Default.DownloadAlways = alwaysDownloadCheckBox.Checked;
+            CloudStorageServicesSettings.Default.Save();
         }
 
         /// <summary>
@@ -108,8 +108,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void useImmediatelyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            BCAPISettings.Default.UseImmediately = useImmediatelyCheckBox.Checked;
-            BCAPISettings.Default.Save();
+            CloudStorageServicesSettings.Default.UseImmediately = useImmediatelyCheckBox.Checked;
+            CloudStorageServicesSettings.Default.Save();
         }
 
         /// <summary>
@@ -122,18 +122,18 @@ namespace EVEMon.SettingsUI
             apiResponseLabel.ForeColor = SystemColors.ControlText;
             apiResponseLabel.Text = String.Empty;
 
-            if (m_queryPending)
+            if (s_queryPending)
                 return;
 
-            m_queryPending = true;
+            s_queryPending = true;
             throbber.Visible = true;
             throbber.State = ThrobberState.Rotating;
 
             Settings.SaveImmediate();
 
-            EveMonClient.Trace("BCAPI.UploadSettingsFile - Initiated");
+            EveMonClient.Trace("{0}.UploadSettingsFileAsync - Initiated", s_provider.Name);
 
-            BCAPI.FileSaveAsync(OnFileSave);
+            s_provider.UploadSettingsFileAsync();
         }
 
         /// <summary>
@@ -146,82 +146,78 @@ namespace EVEMon.SettingsUI
             apiResponseLabel.ForeColor = SystemColors.ControlText;
             apiResponseLabel.Text = String.Empty;
 
-            if (m_queryPending)
+            if (s_queryPending)
                 return;
 
-            m_queryPending = true;
+            s_queryPending = true;
             throbber.Visible = true;
             throbber.State = ThrobberState.Rotating;
 
-            EveMonClient.Trace("BCAPI.DownloadSettingsFile - Initiated");
+            EveMonClient.Trace("{0}.DownloadSettingsFileAsync - Initiated", s_provider.Name);
 
-            BCAPI.FileGetByNameAsync(OnFileGetByName);
+            s_provider.DownloadSettingsFileAsync();
         }
 
         #endregion
 
 
-        #region Querying helpers
+        #region Global Events
 
         /// <summary>
-        /// On settings file uploaded we inform the user.
+        /// Occurs when the cloud storage service provider credentials get authenticated.
         /// </summary>
-        /// <param name="result">The result.</param>
-        /// <param name="errorMessage">The error message.</param>
-        private void OnFileSave(BCAPIResult<SerializableBCAPIFiles> result, string errorMessage)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void CloudStorageServiceProvider_CredentialsChecked(object sender, EventArgs e)
         {
-            m_queryPending = false;
+            Enabled = s_provider.HasCredentialsStored;
+        }
+
+        /// <summary>
+        /// Occurs when the file has been uploaded to the cloud storage service provider.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CloudStorageServiceProviderEventArgs"/> instance containing the event data.</param>
+        private void CloudStorageServiceProvider_FileUploaded(object sender, CloudStorageServiceProviderEventArgs e)
+        {
+            s_queryPending = false;
 
             throbber.State = ThrobberState.Stopped;
             throbber.Visible = false;
-            apiResponseLabel.ForeColor = Color.Red;
 
-            if (!String.IsNullOrEmpty(errorMessage))
+            if (e.HasError)
             {
-                apiResponseLabel.Text = errorMessage;
-                return;
-            }
-
-            if (result.HasError)
-            {
-                apiResponseLabel.Text = result.Error.ErrorMessage;
+                apiResponseLabel.ForeColor = Color.Red;
+                apiResponseLabel.Text = e.ErrorMessage;
                 return;
             }
 
             apiResponseLabel.ForeColor = Color.Green;
-            apiResponseLabel.Text = "File uploaded successfully.";
+            apiResponseLabel.Text = @"File uploaded successfully.";
 
-            EveMonClient.Trace("BCAPI.UploadSettingsFile - Completed");
+            EveMonClient.Trace("{0}.UploadSettingsFileAsync - Completed", s_provider.Name);
         }
 
         /// <summary>
-        /// On settings file downloaded we inform the user.
+        /// Occurs when the file has been dwloaded from the cloud storage service provider.
         /// </summary>
-        /// <param name="result">The result.</param>
-        /// <param name="errorMessage">The error message.</param>
-        private void OnFileGetByName(BCAPIResult<SerializableBCAPIFiles> result, string errorMessage)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CloudStorageServiceProviderEventArgs"/> instance containing the event data.</param>
+        private void CloudStorageServiceProvider_FileDownloaded(object sender, CloudStorageServiceProviderEventArgs e)
         {
-            m_queryPending = false;
+            s_queryPending = false;
 
             throbber.State = ThrobberState.Stopped;
             throbber.Visible = false;
-            apiResponseLabel.ForeColor = Color.Red;
 
-            if (!String.IsNullOrEmpty(errorMessage))
+            if (e.HasError)
             {
-                apiResponseLabel.Text = errorMessage;
+                apiResponseLabel.ForeColor = Color.Red;
+                apiResponseLabel.Text = e.ErrorMessage;
                 return;
             }
 
-            if (result.HasError)
-            {
-                apiResponseLabel.Text = result.Error.ErrorMessage;
-                return;
-            }
-
-            EveMonClient.Trace("BCAPI.DownloadSettingsFile - Completed");
-
-            BCAPI.SaveSettingsFile(result.Result.Files[0]);
+            EveMonClient.Trace("{0}.DownloadSettingsFileAsync - Completed", s_provider.Name);
         }
 
         #endregion

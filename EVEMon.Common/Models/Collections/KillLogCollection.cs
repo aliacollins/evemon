@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -51,13 +51,13 @@ namespace EVEMon.Common.Models.Collections
         public void ImportFromCacheFile()
         {
             string filename = LocalXmlCache.GetFile(String.Format(CultureConstants.InvariantCulture, "{0}-{1}",
-                                                                  m_ccpCharacter.Name, APICharacterMethods.KillLog)).FullName;
+                                                                  m_ccpCharacter.Name, CCPAPICharacterMethods.KillLog)).FullName;
 
             // Abort if the file hasn't been obtained for any reason
             if (!File.Exists(filename))
                 return;
 
-            APIResult<SerializableAPIKillLog> result = Util.DeserializeAPIResultFromFile<SerializableAPIKillLog>(
+            CCPAPIResult<SerializableAPIKillLog> result = Util.DeserializeAPIResultFromFile<SerializableAPIKillLog>(
                 filename, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization

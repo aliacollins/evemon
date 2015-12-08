@@ -14,13 +14,14 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using EVEMon.Common.CloudStorageServices;
+using EVEMon.Common.CloudStorageServices.BattleClinic;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.BattleClinic;
+using EVEMon.Common.Serialization.BattleClinic.CloudStorage;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Threading;
 using ICSharpCode.SharpZipLib.GZip;
@@ -253,7 +254,7 @@ namespace EVEMon.Common
         /// <param name="text">The text.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <returns>The deserialized result</returns>
-        internal static APIResult<T> DeserializeAPIResultFromString<T>(string text, XslCompiledTransform transform = null)
+        internal static CCPAPIResult<T> DeserializeAPIResultFromString<T>(string text, XslCompiledTransform transform = null)
         {
             try
             {
@@ -264,7 +265,7 @@ namespace EVEMon.Common
             catch (XmlException exc)
             {
                 ExceptionHandler.LogException(exc, true);
-                return new APIResult<T>(exc);
+                return new CCPAPIResult<T>(exc);
             }
         }
 
@@ -275,7 +276,7 @@ namespace EVEMon.Common
         /// <param name="filename">The filename.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         /// <returns>The deserialized result</returns>
-        internal static APIResult<T> DeserializeAPIResultFromFile<T>(string filename, XslCompiledTransform transform = null)
+        internal static CCPAPIResult<T> DeserializeAPIResultFromFile<T>(string filename, XslCompiledTransform transform = null)
         {
             try
             {
@@ -286,7 +287,7 @@ namespace EVEMon.Common
             catch (XmlException exc)
             {
                 ExceptionHandler.LogException(exc, true);
-                return new APIResult<T>(exc);
+                return new CCPAPIResult<T>(exc);
             }
         }
 
@@ -309,8 +310,8 @@ namespace EVEMon.Common
                         try
                         {
                             // Was there an HTTP error ?
-                            APIResult<T> result = asyncResult.Error != null
-                                                      ? new APIResult<T>(asyncResult.Error)
+                            CCPAPIResult<T> result = asyncResult.Error != null
+                                                      ? new CCPAPIResult<T>(asyncResult.Error)
                                                       : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
 
                             // We got the result, let's invoke the callback on this actor
@@ -334,11 +335,11 @@ namespace EVEMon.Common
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static APIResult<T> DownloadAPIResult<T>(Uri url, bool acceptEncoded = false,
+        internal static CCPAPIResult<T> DownloadAPIResult<T>(Uri url, bool acceptEncoded = false,
                                                           string postData = null, XslCompiledTransform transform = null)
         {
-            APIResult<T> result = new APIResult<T>(APIError.Http,
-                                                   String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
+            CCPAPIResult<T> result = new CCPAPIResult<T>(Enumerations.CCPAPI.CCPAPIErrors.Http,
+                                                   string.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
 
             // Query async and wait
             EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
@@ -350,13 +351,13 @@ namespace EVEMon.Common
                         {
                             // Was there an HTTP error ?
                             result = asyncResult.Error != null
-                                         ? new APIResult<T>(asyncResult.Error)
+                                         ? new CCPAPIResult<T>(asyncResult.Error)
                                          : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
                         }
                         catch (Exception e)
                         {
                             ExceptionHandler.LogException(e, true);
-                            result = new APIResult<T>(APIError.Http, e.Message);
+                            result = new CCPAPIResult<T>(Enumerations.CCPAPI.CCPAPIErrors.Http, e.Message);
                             EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
                                                url.AbsoluteUri, postData, typeof(T).Name);
                         }
@@ -383,16 +384,16 @@ namespace EVEMon.Common
         /// <param name="transform">The XSL transformation to apply. May be <c>null</c>.</param>
         /// <param name="doc">The XML document to deserialize from.</param>
         /// <returns>The result of the deserialization.</returns>
-        private static APIResult<T> DeserializeAPIResultCore<T>(IXPathNavigable doc, XslCompiledTransform transform = null)
+        private static CCPAPIResult<T> DeserializeAPIResultCore<T>(IXPathNavigable doc, XslCompiledTransform transform = null)
         {
-            APIResult<T> result;
+            CCPAPIResult<T> result;
 
             try
             {
                 // Deserialization with a transform
                 using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(APIResult<T>));
+                    XmlSerializer xs = new XmlSerializer(typeof(CCPAPIResult<T>));
 
                     if (transform != null)
                     {
@@ -406,12 +407,12 @@ namespace EVEMon.Common
 
                             // Deserialize from the given stream
                             stream.Seek(0, SeekOrigin.Begin);
-                            result = (APIResult<T>)xs.Deserialize(stream);
+                            result = (CCPAPIResult<T>)xs.Deserialize(stream);
                         }
                     }
                         // Deserialization without transform
                     else
-                        result = (APIResult<T>)xs.Deserialize(reader);
+                        result = (CCPAPIResult<T>)xs.Deserialize(reader);
                 }
 
                 // Fix times
@@ -426,18 +427,18 @@ namespace EVEMon.Common
             catch (XsltException exc)
             {
                 ExceptionHandler.LogException(exc, true);
-                result = new APIResult<T>(exc);
+                result = new CCPAPIResult<T>(exc);
             }
                 // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
                 ExceptionHandler.LogException(exc, true);
-                result = new APIResult<T>(exc);
+                result = new CCPAPIResult<T>(exc);
             }
             catch (XmlException exc)
             {
                 ExceptionHandler.LogException(exc, true);
-                result = new APIResult<T>(exc);
+                result = new CCPAPIResult<T>(exc);
             }
 
             // Stores XMLDocument
@@ -515,7 +516,7 @@ namespace EVEMon.Common
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="dataCompression">The data compression.</param>
-        internal static void DownloadBCAPIResultAsync<T>(Uri url, Serialization.BattleClinic.QueryCallback<T> callback,
+        internal static void DownloadBCAPIResultAsync<T>(Uri url, QueryCallback<T> callback,
                                                          bool acceptEncoded = false, string postData = null,
                                                          DataCompression dataCompression = DataCompression.None)
         {

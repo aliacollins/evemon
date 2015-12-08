@@ -11,7 +11,7 @@ using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
@@ -401,8 +401,8 @@ namespace EVEMon.CharacterMonitoring
                     if (!monitor.QueryOnStartup || !monitor.Enabled || monitor.LastResult != null)
                         continue;
 
-                    if (monitor.Method is APICharacterMethods &&
-                        (APICharacterMethods)monitor.Method == APICharacterMethods.FactionalWarfareStats &&
+                    if (monitor.Method is CCPAPICharacterMethods &&
+                        (CCPAPICharacterMethods)monitor.Method == CCPAPICharacterMethods.FactionalWarfareStats &&
                         ccpCharacter.IsFactionalWarfareNotEnlisted)
                     {
                         monitor.Enabled = !ccpCharacter.IsFactionalWarfareNotEnlisted;
@@ -1649,24 +1649,24 @@ namespace EVEMon.CharacterMonitoring
             if (page == null)
                 return monitors;
 
-            if (Enum.IsDefined(typeof(APICharacterMethods), page.Tag))
+            if (Enum.IsDefined(typeof(CCPAPICharacterMethods), page.Tag))
             {
-                APICharacterMethods method = (APICharacterMethods)Enum.Parse(typeof(APICharacterMethods), (string)page.Tag);
+                CCPAPICharacterMethods method = (CCPAPICharacterMethods)Enum.Parse(typeof(CCPAPICharacterMethods), (string)page.Tag);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }
 
-            if (Enum.IsDefined(typeof(APIGenericMethods), page.Tag))
+            if (Enum.IsDefined(typeof(CCPAPIGenericMethods), page.Tag))
             {
-                APIGenericMethods method = (APIGenericMethods)Enum.Parse(typeof(APIGenericMethods), (string)page.Tag);
+                CCPAPIGenericMethods method = (CCPAPIGenericMethods)Enum.Parse(typeof(CCPAPIGenericMethods), (string)page.Tag);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }
 
             string corpMethod = String.Format(CultureConstants.InvariantCulture, "Corporation{0}", page.Tag);
-            if (Enum.IsDefined(typeof(APICorporationMethods), corpMethod))
+            if (Enum.IsDefined(typeof(CCPAPICorporationMethods), corpMethod))
             {
-                APICorporationMethods method = (APICorporationMethods)Enum.Parse(typeof(APICorporationMethods), corpMethod);
+                CCPAPICorporationMethods method = (CCPAPICorporationMethods)Enum.Parse(typeof(CCPAPICorporationMethods), corpMethod);
                 if (ccpCharacter.QueryMonitors[method] != null)
                     monitors.Add(ccpCharacter.QueryMonitors[method]);
             }

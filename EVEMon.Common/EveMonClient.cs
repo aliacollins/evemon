@@ -816,11 +816,6 @@ namespace EVEMon.Common
         public static event EventHandler<DataUpdateAvailableEventArgs> DataUpdateAvailable;
 
         /// <summary>
-        /// Occurs when  the BattleClinic API credentials is updated.
-        /// </summary>
-        public static event EventHandler<BCAPIEventArgs> BCAPICredentialsUpdated;
-
-        /// <summary>
         /// Called when settings changed.
         /// </summary>
         internal static void OnSettingsChanged()
@@ -1576,17 +1571,6 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
             if (DataUpdateAvailable != null)
                 DataUpdateAvailable(null, new DataUpdateAvailableEventArgs(changedFiles));
-        }
-
-        /// <summary>
-        /// Called when the BattleClinic API credentials is updated.
-        /// </summary>
-        /// <param name="errorMessage">The error message.</param>
-        internal static void OnBCAPICredentialsUpdated(string errorMessage)
-        {
-            Trace("EveMonClient.OnBCAPICredentialsUpdated");
-            if (BCAPICredentialsUpdated != null)
-                BCAPICredentialsUpdated(null, new BCAPIEventArgs(errorMessage));
         }
 
         #endregion

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
@@ -168,14 +168,14 @@ namespace EVEMon.Common.Models
             m_queryPinsPending = true;
 
             // Find the API key associated with planeatry pins
-            APIKey apiKey = Character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
+            APIKey apiKey = Character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AssetList);
 
             // Quits if access denied
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIPlanetaryPins>(
-                APIGenericMethods.PlanetaryPins, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, PlanetID,
+                CCPAPIGenericMethods.PlanetaryPins, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, PlanetID,
                 OnPlanetaryPinsUpdated);
         }
 
@@ -191,14 +191,14 @@ namespace EVEMon.Common.Models
             m_queryRoutesPending = true;
 
             // Find the API key associated with planeatry pins
-            APIKey apiKey = Character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
+            APIKey apiKey = Character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AssetList);
 
             // Quits if access denied
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIPlanetaryRoutes>(
-                APIGenericMethods.PlanetaryRoutes, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, PlanetID,
+                CCPAPIGenericMethods.PlanetaryRoutes, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, PlanetID,
                 OnPlanetaryRoutesUpdated);
         }
 
@@ -214,14 +214,14 @@ namespace EVEMon.Common.Models
             m_queryLinksPending = true;
 
             // Find the API key associated with planeatry pins
-            APIKey apiKey = Character.Identity.FindAPIKeyWithAccess(APICharacterMethods.AssetList);
+            APIKey apiKey = Character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.AssetList);
 
             // Quits if access denied
             if (apiKey == null)
                 return;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIPlanetaryLinks>(
-                APIGenericMethods.PlanetaryLinks, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, PlanetID,
+                CCPAPIGenericMethods.PlanetaryLinks, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, PlanetID,
                 OnPlanetaryLinksUpdated);
         }
 
@@ -229,12 +229,12 @@ namespace EVEMon.Common.Models
         /// Called when planetary pins updated.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnPlanetaryPinsUpdated(APIResult<SerializableAPIPlanetaryPins> result)
+        private void OnPlanetaryPinsUpdated(CCPAPIResult<SerializableAPIPlanetaryPins> result)
         {
             m_queryPinsPending = false;
 
             // Notify an error occured
-            if (Character.ShouldNotifyError(result, APIGenericMethods.PlanetaryPins))
+            if (Character.ShouldNotifyError(result, CCPAPIGenericMethods.PlanetaryPins))
                 EveMonClient.Notifications.NotifyCharacterPlanetaryPinsError(Character, result);
 
             // Quits if there is an error
@@ -252,12 +252,12 @@ namespace EVEMon.Common.Models
         /// Called when planetary routes updated.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnPlanetaryRoutesUpdated(APIResult<SerializableAPIPlanetaryRoutes> result)
+        private void OnPlanetaryRoutesUpdated(CCPAPIResult<SerializableAPIPlanetaryRoutes> result)
         {
             m_queryRoutesPending = false;
 
             // Notify an error occured
-            if (Character.ShouldNotifyError(result, APIGenericMethods.PlanetaryRoutes))
+            if (Character.ShouldNotifyError(result, CCPAPIGenericMethods.PlanetaryRoutes))
                 EveMonClient.Notifications.NotifyCharacterPlanetaryRoutesError(Character, result);
 
             // Quits if there is an error
@@ -275,12 +275,12 @@ namespace EVEMon.Common.Models
         /// Called when planetary links updated.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnPlanetaryLinksUpdated(APIResult<SerializableAPIPlanetaryLinks> result)
+        private void OnPlanetaryLinksUpdated(CCPAPIResult<SerializableAPIPlanetaryLinks> result)
         {
             m_queryPinsPending = false;
 
             // Notify an error occured
-            if (Character.ShouldNotifyError(result, APIGenericMethods.PlanetaryLinks))
+            if (Character.ShouldNotifyError(result, CCPAPIGenericMethods.PlanetaryLinks))
                 EveMonClient.Notifications.NotifyCharacterPlanetaryLinksError(Character, result);
 
             // Quits if there is an error

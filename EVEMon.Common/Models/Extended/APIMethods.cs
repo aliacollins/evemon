@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Models.Extended
@@ -15,11 +15,11 @@ namespace EVEMon.Common.Models.Extended
         /// </summary>
         internal static void Initialize()
         {
-            s_items.AddRange(EnumExtensions.GetValues<APIGenericMethods>().Cast<Enum>());
-            s_items.AddRange(EnumExtensions.GetValues<APICharacterMethods>().Where(
-                apiCharacterMethod => apiCharacterMethod != APICharacterMethods.None).Cast<Enum>());
-            s_items.AddRange(EnumExtensions.GetValues<APICorporationMethods>().Where(
-                apiCorporationMethod => apiCorporationMethod != APICorporationMethods.None).Cast<Enum>());
+            s_items.AddRange(EnumExtensions.GetValues<CCPAPIGenericMethods>().Cast<Enum>());
+            s_items.AddRange(EnumExtensions.GetValues<CCPAPICharacterMethods>().Where(
+                apiCharacterMethod => apiCharacterMethod != CCPAPICharacterMethods.None).Cast<Enum>());
+            s_items.AddRange(EnumExtensions.GetValues<CCPAPICorporationMethods>().Where(
+                apiCorporationMethod => apiCorporationMethod != CCPAPICorporationMethods.None).Cast<Enum>());
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace EVEMon.Common.Models.Extended
         {
             get
             {
-                return s_items.OfType<APIGenericMethods>().Where(
-                    method => method != APIGenericMethods.APIKeyInfo &&
-                              method != APIGenericMethods.CharacterList
+                return s_items.OfType<CCPAPIGenericMethods>().Where(
+                    method => method != CCPAPIGenericMethods.APIKeyInfo &&
+                              method != CCPAPIGenericMethods.CharacterList
                               && !AllSupplementalMethods.Contains(method)).Cast<Enum>();
             }
         }
@@ -54,15 +54,15 @@ namespace EVEMon.Common.Models.Extended
         {
             get
             {
-                return s_items.OfType<APIGenericMethods>().Where(
-                    method => method == APIGenericMethods.ContractItems ||
-                              method == APIGenericMethods.ContractBids ||
-                              method == APIGenericMethods.PlanetaryColonies ||
-                              method == APIGenericMethods.PlanetaryPins ||
-                              method == APIGenericMethods.PlanetaryRoutes ||
-                              method == APIGenericMethods.PlanetaryLinks ||
-                              method == APIGenericMethods.IndustryJobsHistory ||
-                              method == APIGenericMethods.Blueprints).Cast<Enum>();
+                return s_items.OfType<CCPAPIGenericMethods>().Where(
+                    method => method == CCPAPIGenericMethods.ContractItems ||
+                              method == CCPAPIGenericMethods.ContractBids ||
+                              method == CCPAPIGenericMethods.PlanetaryColonies ||
+                              method == CCPAPIGenericMethods.PlanetaryPins ||
+                              method == CCPAPIGenericMethods.PlanetaryRoutes ||
+                              method == CCPAPIGenericMethods.PlanetaryLinks ||
+                              method == CCPAPIGenericMethods.IndustryJobsHistory ||
+                              method == CCPAPIGenericMethods.Blueprints).Cast<Enum>();
             }
         }
 
@@ -74,12 +74,12 @@ namespace EVEMon.Common.Models.Extended
         {
             get
             {
-                return s_items.OfType<APIGenericMethods>().Where(
-                    method => method == APIGenericMethods.CorporationContractItems ||
-                              method == APIGenericMethods.CorporationContractBids ||
-                              method == APIGenericMethods.CorporationCustomsOffices ||
-                              method == APIGenericMethods.CorporationIndustryJobsHistory ||
-                              method == APIGenericMethods.CorporationBlueprints).Cast<Enum>();
+                return s_items.OfType<CCPAPIGenericMethods>().Where(
+                    method => method == CCPAPIGenericMethods.CorporationContractItems ||
+                              method == CCPAPIGenericMethods.CorporationContractBids ||
+                              method == CCPAPIGenericMethods.CorporationCustomsOffices ||
+                              method == CCPAPIGenericMethods.CorporationIndustryJobsHistory ||
+                              method == CCPAPIGenericMethods.CorporationBlueprints).Cast<Enum>();
             }
         }
 

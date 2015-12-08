@@ -75,6 +75,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Callback method for asynchronous requests.
         /// </summary>
+        /// <param name="state">The state.</param>
         private static void DownloadXmlAsyncCompleted(WebRequestAsyncState state)
         {
             XmlRequestAsyncState requestState = (XmlRequestAsyncState)state;
@@ -98,6 +99,8 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Helper method to return an Xml document from the completed request.
         /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         private static IXPathNavigable GetXmlDocument(HttpWebServiceRequest request)
         {
             if (request.ResponseStream == null)

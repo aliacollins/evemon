@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models.Extended;
@@ -71,24 +71,24 @@ namespace EVEMon.SettingsUI
 
                 // Group the methods by usage
                 List<Enum> methods =
-                    apiMethods.Where(method => method is APIGenericMethods && !APIGenericMethods.PlanetaryColonies.Equals(method))
+                    apiMethods.Where(method => method is CCPAPIGenericMethods && !CCPAPIGenericMethods.PlanetaryColonies.Equals(method))
                         .ToList();
 
-                methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
-                    method => (int)method == ((int)method & (int)(APIMethodsEnum.BasicCharacterFeatures))).Cast<Enum>());
+                methods.AddRange(apiMethods.OfType<CCPAPICharacterMethods>().Where(
+                    method => (int)method == ((int)method & (int)(CCPAPIMethodsEnum.BasicCharacterFeatures))).Cast<Enum>());
 
-                methods.AddRange(apiMethods.OfType<APICharacterMethods>().Where(
-                    method => (int)method == ((int)method & (int)APIMethodsEnum.AdvancedCharacterFeatures)).Cast<Enum>().
+                methods.AddRange(apiMethods.OfType<CCPAPICharacterMethods>().Where(
+                    method => (int)method == ((int)method & (int)CCPAPIMethodsEnum.AdvancedCharacterFeatures)).Cast<Enum>().
                                      OrderBy(method => method.GetHeader()));
 
                 // Add the planetary colonies method above the research points (a special case as CCP likes to brake patterns)
-                if (apiMethods.Any(method => method is APIGenericMethods && APIGenericMethods.PlanetaryColonies.Equals(method)))
+                if (apiMethods.Any(method => method is CCPAPIGenericMethods && CCPAPIGenericMethods.PlanetaryColonies.Equals(method)))
                 {
                     methods.Insert(
                         methods.FindIndex(
-                            method => method is APICharacterMethods && APICharacterMethods.ResearchPoints.Equals(method)),
+                            method => method is CCPAPICharacterMethods && CCPAPICharacterMethods.ResearchPoints.Equals(method)),
                         apiMethods.First(
-                            method => method is APIGenericMethods && APIGenericMethods.PlanetaryColonies.Equals(method)));
+                            method => method is CCPAPIGenericMethods && CCPAPIGenericMethods.PlanetaryColonies.Equals(method)));
                 }
 
                 // Uncomment upon implementing an exclicit corporation monitor feature
@@ -114,20 +114,20 @@ namespace EVEMon.SettingsUI
             if (combo.SelectedIndex < 0 || combo.SelectedIndex >= periods.Count)
                 return;
 
-            if (method.Equals(APICharacterMethods.Medals))
-                m_settings.Periods[APICorporationMethods.CorporationMedals.ToString()] = periods[combo.SelectedIndex];
+            if (method.Equals(CCPAPICharacterMethods.Medals))
+                m_settings.Periods[CCPAPICorporationMethods.CorporationMedals.ToString()] = periods[combo.SelectedIndex];
       
-            if (method.Equals(APICharacterMethods.MarketOrders))
-                m_settings.Periods[APICorporationMethods.CorporationMarketOrders.ToString()] = periods[combo.SelectedIndex];
+            if (method.Equals(CCPAPICharacterMethods.MarketOrders))
+                m_settings.Periods[CCPAPICorporationMethods.CorporationMarketOrders.ToString()] = periods[combo.SelectedIndex];
 
-            if (method.Equals(APICharacterMethods.Contracts))
-                m_settings.Periods[APICorporationMethods.CorporationContracts.ToString()] = periods[combo.SelectedIndex];
+            if (method.Equals(CCPAPICharacterMethods.Contracts))
+                m_settings.Periods[CCPAPICorporationMethods.CorporationContracts.ToString()] = periods[combo.SelectedIndex];
 
-            if (method.Equals(APICharacterMethods.IndustryJobs))
-                m_settings.Periods[APICorporationMethods.CorporationIndustryJobs.ToString()] = periods[combo.SelectedIndex];
+            if (method.Equals(CCPAPICharacterMethods.IndustryJobs))
+                m_settings.Periods[CCPAPICorporationMethods.CorporationIndustryJobs.ToString()] = periods[combo.SelectedIndex];
 
-            if (method.Equals(APIGenericMethods.CharacterList))
-                m_settings.Periods[APIGenericMethods.APIKeyInfo.ToString()] = periods[combo.SelectedIndex];
+            if (method.Equals(CCPAPIGenericMethods.CharacterList))
+                m_settings.Periods[CCPAPIGenericMethods.APIKeyInfo.ToString()] = periods[combo.SelectedIndex];
 
             m_settings.Periods[method.ToString()] = periods[combo.SelectedIndex];
         }
@@ -239,20 +239,20 @@ namespace EVEMon.SettingsUI
         {
             Bitmap icon = Resources.KeyGrey16;
             string iconToolTip = "This is a basic feature query.";
-            if (method is APICharacterMethods)
+            if (method is CCPAPICharacterMethods)
             {
-                APICharacterMethods apiMethod = (APICharacterMethods)method;
-                if ((int)apiMethod == ((int)apiMethod & (int)APIMethodsEnum.AdvancedCharacterFeatures))
+                CCPAPICharacterMethods apiMethod = (CCPAPICharacterMethods)method;
+                if ((int)apiMethod == ((int)apiMethod & (int)CCPAPIMethodsEnum.AdvancedCharacterFeatures))
                 {
                     icon = Resources.KeyGold16;
                     iconToolTip = "This is an advanced feature query.";
                 }
             }
 
-            if (method is APIGenericMethods)
+            if (method is CCPAPIGenericMethods)
             {
-                APIGenericMethods apiGenericMethod = (APIGenericMethods)method;
-                if (APIGenericMethods.PlanetaryColonies.Equals(apiGenericMethod))
+                CCPAPIGenericMethods apiGenericMethod = (CCPAPIGenericMethods)method;
+                if (CCPAPIGenericMethods.PlanetaryColonies.Equals(apiGenericMethod))
                 {
                     icon = Resources.KeyGold16;
                     iconToolTip = "This is an advanced feature query.";

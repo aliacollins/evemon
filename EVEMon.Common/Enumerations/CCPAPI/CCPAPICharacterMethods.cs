@@ -3,7 +3,7 @@ using System.ComponentModel;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.SettingsObjects;
 
-namespace EVEMon.Common.Enumerations.API
+namespace EVEMon.Common.Enumerations.CCPAPI
 {
     /// <summary>
     /// Enumeration of the character related API methods. Each method has an access mask.
@@ -11,7 +11,7 @@ namespace EVEMon.Common.Enumerations.API
     /// in NetworkConstants indicating the default path of the method.
     /// </summary>
     [Flags]
-    public enum APICharacterMethods
+    public enum CCPAPICharacterMethods
     {
         None = 0,
 

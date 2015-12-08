@@ -5,7 +5,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Serialization.Eve;
@@ -185,14 +185,14 @@ namespace EVEMon.Common.Service
             s_queriedIDs.AddRange(idsToQuery);
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPICharacterName>(
-                APIGenericMethods.CharacterName, ids, OnQueryAPICharacterNameUpdated);
+                CCPAPIGenericMethods.CharacterName, ids, OnQueryAPICharacterNameUpdated);
         }
 
         /// <summary>
         /// Called when the query updated.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnQueryAPICharacterNameUpdated(APIResult<SerializableAPICharacterName> result)
+        private static void OnQueryAPICharacterNameUpdated(CCPAPIResult<SerializableAPICharacterName> result)
         {
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)

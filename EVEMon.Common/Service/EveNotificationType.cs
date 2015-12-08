@@ -111,7 +111,7 @@ namespace EVEMon.Common.Service
             }
 
             // Deserialize the xml file
-            APIResult<SerializableNotificationRefTypes> result = Util.DeserializeAPIResultFromFile<SerializableNotificationRefTypes>(
+            CCPAPIResult<SerializableNotificationRefTypes> result = Util.DeserializeAPIResultFromFile<SerializableNotificationRefTypes>(
                 file, APIProvider.RowsetsTransform);
 
             // Import the data
@@ -161,7 +161,7 @@ namespace EVEMon.Common.Service
         /// Processes the queried notification ref type.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnDownloaded(APIResult<SerializableNotificationRefTypes> result)
+        private static void OnDownloaded(CCPAPIResult<SerializableNotificationRefTypes> result)
         {
             if (!String.IsNullOrEmpty(result.ErrorMessage))
             {

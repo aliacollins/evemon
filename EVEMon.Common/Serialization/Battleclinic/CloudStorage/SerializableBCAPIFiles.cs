@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
-namespace EVEMon.Common.Serialization.BattleClinic
+namespace EVEMon.Common.Serialization.BattleClinic.CloudStorage
 {
     public sealed class SerializableBCAPIFiles
     {
@@ -14,7 +14,7 @@ namespace EVEMon.Common.Serialization.BattleClinic
 
         [XmlArray("files")]
         [XmlArrayItem("file")]
-        public Collection<SerializableFilesListItem> Files
+        public  Collection<SerializableFilesListItem> Files
         {
             get { return m_files; }
         }

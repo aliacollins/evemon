@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models.Collections;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
@@ -145,7 +145,7 @@ namespace EVEMon.Common.Models
                 return;
 
             EveMonClient.APIProviders.CurrentProvider
-                .QueryMethodAsync<SerializableAPIEveFactionalWarfareStats>(APIGenericMethods.EVEFactionalWarfareStats, OnUpdated);
+                .QueryMethodAsync<SerializableAPIEveFactionalWarfareStats>(CCPAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated);
 
             s_queryPending = true;
         }
@@ -153,7 +153,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Processes the conquerable station list.
         /// </summary>
-        private static void OnUpdated(APIResult<SerializableAPIEveFactionalWarfareStats> result)
+        private static void OnUpdated(CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result)
         {
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)
@@ -217,7 +217,7 @@ namespace EVEMon.Common.Models
             if (!File.Exists(filename))
                 return;
 
-            APIResult<SerializableAPIEveFactionalWarfareStats> result =
+            CCPAPIResult<SerializableAPIEveFactionalWarfareStats> result =
                 Util.DeserializeAPIResultFromFile<SerializableAPIEveFactionalWarfareStats>(filename, APIProvider.RowsetsTransform);
 
             // In case the file has an error we prevent the deserialization

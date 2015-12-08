@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.Eve;
 
@@ -47,7 +47,7 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            IQueryMonitor charPlanetaryColoniesMonitor = m_ccpCharacter.QueryMonitors[APIGenericMethods.PlanetaryColonies];
+            IQueryMonitor charPlanetaryColoniesMonitor = m_ccpCharacter.QueryMonitors[CCPAPIGenericMethods.PlanetaryColonies];
 
             if (charPlanetaryColoniesMonitor == null || !charPlanetaryColoniesMonitor.Enabled)
                 return;

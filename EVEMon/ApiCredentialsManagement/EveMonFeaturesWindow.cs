@@ -3,7 +3,7 @@ using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Factories;
 
 namespace EVEMon.ApiCredentialsManagement
@@ -32,7 +32,7 @@ namespace EVEMon.ApiCredentialsManagement
                 new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}{2}", NetworkConstants.EVECommunityBase,
                     NetworkConstants.APICredentialsBase,
                     String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsPredefined,
-                        (int)APIMethodsEnum.BasicCharacterFeatures))));
+                        (int)CCPAPIMethodsEnum.BasicCharacterFeatures))));
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace EVEMon.ApiCredentialsManagement
                 new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}{2}", NetworkConstants.EVECommunityBase,
                     NetworkConstants.APICredentialsBase,
                     String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsPredefined,
-                        (int)APIMethodsEnum.AllCharacterFeatures))));
+                        (int)CCPAPIMethodsEnum.AllCharacterFeatures))));
         }
     }
 }

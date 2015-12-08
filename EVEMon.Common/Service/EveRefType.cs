@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations.API;
+using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Service
@@ -28,14 +28,14 @@ namespace EVEMon.Common.Service
 
             // Query the API
             EveMonClient.APIProviders.CurrentProvider
-                .QueryMethodAsync<SerializableAPIRefTypes>(APIGenericMethods.RefTypes, OnUpdated);
+                .QueryMethodAsync<SerializableAPIRefTypes>(CCPAPIGenericMethods.RefTypes, OnUpdated);
         }
 
         /// <summary>
         /// Processes the refTypes list.
         /// </summary>
         /// <param name="result">The result.</param>
-        private static void OnUpdated(APIResult<SerializableAPIRefTypes> result)
+        private static void OnUpdated(CCPAPIResult<SerializableAPIRefTypes> result)
         {
             // Checks if EVE database is out of service
             if (result.EVEDatabaseError)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Constants;
 
-namespace EVEMon.Common.Serialization.BattleClinic
+namespace EVEMon.Common.CloudStorageServices.BattleClinic
 {
     /// <summary>
     /// Serializable class for a Battleclinic's API method and its path.

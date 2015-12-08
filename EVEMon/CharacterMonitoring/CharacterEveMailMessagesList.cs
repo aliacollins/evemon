@@ -973,7 +973,7 @@ namespace EVEMon.CharacterMonitoring
             if (notification == null)
                 return;
 
-            APIResult<SerializableAPIMailBodies> notificationResult = notification.Result as APIResult<SerializableAPIMailBodies>;
+            CCPAPIResult<SerializableAPIMailBodies> notificationResult = notification.Result as CCPAPIResult<SerializableAPIMailBodies>;
             if (notificationResult == null)
                 return;
 

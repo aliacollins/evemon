@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace EVEMon.Common.Enumerations.API
+namespace EVEMon.Common.Enumerations.CCPAPI
 {
     public enum CCPContractStatus
     {

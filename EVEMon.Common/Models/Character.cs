@@ -541,7 +541,7 @@ namespace EVEMon.Common.Models
         /// Imports data from the given character sheet informations.
         /// </summary>
         /// <param name="serial">The serialized character sheet</param>
-        internal void Import(APIResult<SerializableAPICharacterSheet> serial)
+        internal void Import(CCPAPIResult<SerializableAPICharacterSheet> serial)
         {
             Import(serial.Result);
             EveMonClient.OnCharacterUpdated(this);
