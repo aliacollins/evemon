@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Data;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 
 namespace EVEMon.Common.Models

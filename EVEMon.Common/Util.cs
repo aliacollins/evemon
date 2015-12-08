@@ -14,7 +14,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.CloudStorageServices.BattleClinic;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
