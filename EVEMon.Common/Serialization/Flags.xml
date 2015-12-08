@@ -135,5 +135,19 @@
     <row flagID="155" flagName="FleetHangar" flagText="Fleet Hangar" />
     <row flagID="156" flagName="HiddenModifiers" flagText="Hidden Modifiers" />
     <row flagID="157" flagName="StructureOffline" flagText="Structure Offline" />
+    <row flagID="158" flagName="FighterBay" flagText="Fighter Bay" />
+    <row flagID="159" flagName="FighterTube0" flagText="Fighter Tube 0" />
+    <row flagID="160" flagName="FighterTube1" flagText="Fighter Tube 1" />
+    <row flagID="161" flagName="FighterTube2" flagText="Fighter Tube 2" />
+    <row flagID="162" flagName="FighterTube3" flagText="Fighter Tube 3" />
+    <row flagID="163" flagName="FighterTube4" flagText="Fighter Tube 4" />
+    <row flagID="164" flagName="StructureServiceSlot0" flagText="Structure service slot 1" />
+    <row flagID="165" flagName="StructureServiceSlot1" flagText="Structure service slot 2" />
+    <row flagID="166" flagName="StructureServiceSlot2" flagText="Structure service slot 3" />
+    <row flagID="167" flagName="StructureServiceSlot3" flagText="Structure service slot 4" />
+    <row flagID="168" flagName="StructureServiceSlot4" flagText="Structure service slot 5" />
+    <row flagID="169" flagName="StructureServiceSlot5" flagText="Structure service slot 6" />
+    <row flagID="170" flagName="StructureServiceSlot6" flagText="Structure service slot 7" />
+    <row flagID="171" flagName="StructureServiceSlot7" flagText="Structure service slot 8" />
   </rowset>
 </invFlags>
