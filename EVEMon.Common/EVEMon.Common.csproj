@@ -395,6 +395,9 @@
     <Compile Include="Models\Comparers\KillLogComparer.cs" />
     <Compile Include="Helpers\KillLogExporter.cs" />
     <Compile Include="Models\KillLogItem.cs" />
+    <Compile Include="MarketPricer\BattleClinic\BCItemPricer.cs" />
+    <Compile Include="MarketPricer\EveAddicts\EAItemPricer.cs" />
+    <Compile Include="MarketPricer\EveMarketData\EMDItemPricer.cs" />
     <Compile Include="MarketPricer\ItemPricer.cs" />
     <Compile Include="Models\Medal.cs" />
     <Compile Include="Models\Collections\MedalCollection.cs" />
@@ -493,7 +496,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>CloudStorageServicesSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="MarketPricer\BattleClinic\BCItemPricer.cs" />
     <Compile Include="Serialization\BattleClinic\MarketPricer\SerializableBCItemPrice.cs" />
     <Compile Include="Serialization\BattleClinic\MarketPricer\SerializableBCItemPrices.cs" />
     <Compile Include="Serialization\BattleClinic\CloudStorage\SerializableBCAPICredentials.cs" />
@@ -531,6 +533,9 @@
     <Compile Include="Serialization\Datafiles\SerializableSkillPrerequisite.cs" />
     <Compile Include="Serialization\Datafiles\SerializableSolarSystem.cs" />
     <Compile Include="Serialization\Datafiles\SerializableStation.cs" />
+    <Compile Include="Serialization\EveMarketData\MarketPricer\SerializableEMDItemPriceList.cs" />
+    <Compile Include="Serialization\EveMarketData\MarketPricer\SerializableEMDItemPriceListItem.cs" />
+    <Compile Include="Serialization\EveMarketData\MarketPricer\SerializableEMDItemPrices.cs" />
     <Compile Include="Serialization\Exportation\OutputAttributeEnhancer.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />

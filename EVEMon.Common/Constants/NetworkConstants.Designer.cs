@@ -1132,6 +1132,24 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/item_prices2.xml?char_name=evemon&amp;buysell=a.
+        /// </summary>
+        public static string EVEMarketDataAPIItemPrices {
+            get {
+                return ResourceManager.GetString("EVEMarketDataAPIItemPrices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://api.eve-marketdata.com/.
+        /// </summary>
+        public static string EVEMarketDataBaseUrl {
+            get {
+                return ResourceManager.GetString("EVEMarketDataBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://wiki.battleclinic.com/index.php/How_to_write_an_useful_bug_report_%28EVEMon%29_%3F.
         /// </summary>
         public static string EVEMonBugReport {
