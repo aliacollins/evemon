@@ -49,7 +49,6 @@ namespace EVEMon.SkillPlanner
             this.throbberLoadouts = new EVEMon.Common.Controls.Throbber();
             this.lblSubmitDate = new System.Windows.Forms.Label();
             this.SubDateLabel = new System.Windows.Forms.Label();
-            this.lblForum = new System.Windows.Forms.LinkLabel();
             this.AuthorLabel = new System.Windows.Forms.Label();
             this.LoadoutNameLabel = new System.Windows.Forms.Label();
             this.ShipLabel = new System.Windows.Forms.Label();
@@ -64,6 +63,7 @@ namespace EVEMon.SkillPlanner
             this.miShowInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.miExportToClipboard = new System.Windows.Forms.ToolStripMenuItem();
             this.eveImage = new EVEMon.Common.Controls.EveImage();
+            this.buttonForumTopic = new System.Windows.Forms.Button();
             this.lowerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.persistentSplitContainer)).BeginInit();
             this.persistentSplitContainer.Panel1.SuspendLayout();
@@ -232,17 +232,6 @@ namespace EVEMon.SkillPlanner
             this.SubDateLabel.TabIndex = 24;
             this.SubDateLabel.Text = "Submission Date:";
             // 
-            // lblForum
-            // 
-            this.lblForum.AutoSize = true;
-            this.lblForum.Location = new System.Drawing.Point(6, 100);
-            this.lblForum.Name = "lblForum";
-            this.lblForum.Size = new System.Drawing.Size(101, 13);
-            this.lblForum.TabIndex = 23;
-            this.lblForum.TabStop = true;
-            this.lblForum.Text = "Discuss this loadout";
-            this.lblForum.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblForum_LinkClicked);
-            // 
             // AuthorLabel
             // 
             this.AuthorLabel.AutoSize = true;
@@ -371,10 +360,21 @@ namespace EVEMon.SkillPlanner
             this.eveImage.SizeMode = EVEMon.Common.Enumerations.EveImageSizeMode.StretchImage;
             this.eveImage.TabIndex = 30;
             // 
+            // buttonForumTopic
+            // 
+            this.buttonForumTopic.Location = new System.Drawing.Point(6, 98);
+            this.buttonForumTopic.Name = "buttonForumTopic";
+            this.buttonForumTopic.Size = new System.Drawing.Size(113, 23);
+            this.buttonForumTopic.TabIndex = 31;
+            this.buttonForumTopic.Text = "Discuss this loadout";
+            this.buttonForumTopic.UseVisualStyleBackColor = true;
+            this.buttonForumTopic.Click += new System.EventHandler(this.buttonForumTopic_Click);
+            // 
             // ShipLoadoutSelectWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(728, 506);
+            this.Controls.Add(this.buttonForumTopic);
             this.Controls.Add(this.eveImage);
             this.Controls.Add(this.btnPlan);
             this.Controls.Add(this.lblPlanned);
@@ -385,7 +385,6 @@ namespace EVEMon.SkillPlanner
             this.Controls.Add(this.AuthorLabel);
             this.Controls.Add(this.LoadoutNameLabel);
             this.Controls.Add(this.ShipLabel);
-            this.Controls.Add(this.lblForum);
             this.Controls.Add(this.lblAuthor);
             this.Controls.Add(this.lblLoadoutName);
             this.Controls.Add(this.lblShipName);
@@ -424,7 +423,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel lowerPanel;
         private System.Windows.Forms.Label lblSubmitDate;
         private System.Windows.Forms.Label SubDateLabel;
-        private System.Windows.Forms.LinkLabel lblForum;
         private System.Windows.Forms.Label AuthorLabel;
         private System.Windows.Forms.Label LoadoutNameLabel;
         private System.Windows.Forms.Label ShipLabel;
@@ -443,5 +441,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ImageList ilIcons;
         private Throbber throbberLoadouts;
         private Throbber throbberFitting;
+        private System.Windows.Forms.Button buttonForumTopic;
     }
 }

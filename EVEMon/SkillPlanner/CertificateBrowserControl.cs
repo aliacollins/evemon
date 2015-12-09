@@ -44,6 +44,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
+            // Return on design mode
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             base.OnLoad(e);
 
             lblName.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);

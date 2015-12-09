@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
@@ -59,6 +60,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         protected override void OnLoad(EventArgs e)
         {
+            // Return on design mode
+            if (DesignMode || this.IsDesignModeHosted())
+                return;
+
             base.OnLoad(e);
 
             SetStyle(ControlStyles.AllPaintingInWmPaint |

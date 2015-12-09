@@ -39,6 +39,7 @@ namespace EVEMon.SkillPlanner
         private ShipLoadoutSelectWindow()
         {
             InitializeComponent();
+            UpdateControlsVisibility();
         }
 
         /// <summary>
@@ -68,8 +69,9 @@ namespace EVEMon.SkillPlanner
 
             // Subscribe global events
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
-            Settings.LoadoutsProvider.Provider.LoadoutFeedUpdated += Provider_LoadoutFeedUpdated;
-            Settings.LoadoutsProvider.Provider.LoadoutUpdated += Provider_LoadoutUpdated;
+            EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+            EveMonClient.LoadoutUpdated += EveMonClient_LoadoutUpdated;
+            EveMonClient.LoadoutFeedUpdated += EveMonClient_LoadoutFeedUpdated;
         }
 
         /// <summary>
@@ -81,8 +83,9 @@ namespace EVEMon.SkillPlanner
         {
             // Unsubscribe global events
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
-            Settings.LoadoutsProvider.Provider.LoadoutFeedUpdated -= Provider_LoadoutFeedUpdated;
-            Settings.LoadoutsProvider.Provider.LoadoutUpdated -= Provider_LoadoutUpdated;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.LoadoutUpdated -= EveMonClient_LoadoutUpdated;
+            EveMonClient.LoadoutFeedUpdated -= EveMonClient_LoadoutFeedUpdated;
         }
 
         /// <summary>
@@ -432,12 +435,22 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
+        /// Occurs when the settings changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        {
+            UpdateControlsVisibility();
+        }
+
+        /// <summary>
         /// Occurs when the loadout feed from the provider updated.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        private void Provider_LoadoutFeedUpdated(object sender, LoadoutFeedEventArgs e)
+        private void EveMonClient_LoadoutFeedUpdated(object sender, LoadoutFeedEventArgs e)
         {
             UpdateLoadoutFeedInfo(e);
         }
@@ -447,7 +460,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="LoadoutEventArgs"/> instance containing the event data.</param>
-        private void Provider_LoadoutUpdated(object sender, LoadoutEventArgs e)
+        private void EveMonClient_LoadoutUpdated(object sender, LoadoutEventArgs e)
         {
             UpdateLoadoutInfo(e);
         }
@@ -514,7 +527,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lblForum_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void buttonForumTopic_Click(object sender, EventArgs e)
         {
             if (m_selectedLoadout != null)
             {
@@ -607,6 +620,22 @@ namespace EVEMon.SkillPlanner
 
         #endregion
 
+
+        #region Helper methods
+
+
+        /// <summary>
+        /// Updates the controls visibility.
+        /// </summary>
+        private void UpdateControlsVisibility()
+        {
+            eveImage.Visible = !Settings.UI.SafeForWork;
+            if (!Settings.UI.SafeForWork && m_ship != null)
+                eveImage.EveItem = m_ship;
+        }
+
+
+        #endregion
 
         #region LoadoutListSorter
 

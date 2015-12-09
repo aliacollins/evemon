@@ -297,7 +297,8 @@ namespace EVEMon.Common.Controls
             }
 
             //expose an opportunity to modify the context menu
-            ContextMenuShowing(this, EventArgs.Empty);
+            if (ContextMenuShowing != null)
+                ContextMenuShowing(this, EventArgs.Empty);
 
             State = PushButtonState.Pressed;
             if (ContextMenuStrip == null)

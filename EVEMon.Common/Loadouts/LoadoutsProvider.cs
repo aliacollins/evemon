@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
@@ -11,16 +10,6 @@ namespace EVEMon.Common.Loadouts
 {
     public abstract class LoadoutsProvider
     {
-        /// <summary>
-        /// Occurs when the loadout feed updated.
-        /// </summary>
-        public event EventHandler<LoadoutFeedEventArgs> LoadoutFeedUpdated;
-
-        /// <summary>
-        /// Occurs when the loadout updated.
-        /// </summary>
-        public event EventHandler<LoadoutEventArgs> LoadoutUpdated;
-
         /// <summary>
         /// Gets the name.
         /// </summary>
@@ -43,7 +32,7 @@ namespace EVEMon.Common.Loadouts
         /// <value>
         /// The providers.
         /// </value>
-        internal static IEnumerable<LoadoutsProvider> Providers
+        public static IEnumerable<LoadoutsProvider> Providers
         {
             get
             {
@@ -80,27 +69,5 @@ namespace EVEMon.Common.Loadouts
         /// <param name="ship">The ship.</param>
         /// <param name="feed">The feed.</param>
         public abstract ILoadoutInfo DeserializeLoadoutsFeed(Item ship, object feed);
-
-        /// <summary>
-        /// Occurs when we downloaded a loadouts feed from the provider.
-        /// </summary>
-        /// <param name="loadoutFeed">The loadout feed.</param>
-        /// <param name="errorMessage">The error message.</param>
-        protected virtual void OnLoadoutsFeedDownloaded(object loadoutFeed, string errorMessage)
-        {
-            if (LoadoutFeedUpdated != null)
-                LoadoutFeedUpdated(this, new LoadoutFeedEventArgs(loadoutFeed, errorMessage));
-        }
-
-        /// <summary>
-        /// Occurs when we downloaded a loadout from the provider.
-        /// </summary>
-        /// <param name="loadout">The loadout.</param>
-        /// <param name="errorMessage">The error message.</param>
-        protected virtual void OnLoadoutDownloaded(object loadout, string errorMessage)
-        {
-            if (LoadoutUpdated != null)
-                LoadoutUpdated(this, new LoadoutEventArgs(loadout, errorMessage));
-        }
     }
 }

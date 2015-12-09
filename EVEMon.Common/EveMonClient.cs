@@ -816,6 +816,16 @@ namespace EVEMon.Common
         public static event EventHandler<DataUpdateAvailableEventArgs> DataUpdateAvailable;
 
         /// <summary>
+        /// Occurs when the loadout feed updated.
+        /// </summary>
+        public static event EventHandler<LoadoutFeedEventArgs> LoadoutFeedUpdated;
+
+        /// <summary>
+        /// Occurs when the loadout updated.
+        /// </summary>
+        public static event EventHandler<LoadoutEventArgs> LoadoutUpdated;
+
+        /// <summary>
         /// Called when settings changed.
         /// </summary>
         internal static void OnSettingsChanged()
@@ -1571,6 +1581,28 @@ namespace EVEMon.Common
             Trace("EveMonClient.OnDataUpdateAvailable(ChangedFiles = {0})", changedFiles.Count);
             if (DataUpdateAvailable != null)
                 DataUpdateAvailable(null, new DataUpdateAvailableEventArgs(changedFiles));
+        }
+
+        /// <summary>
+        /// Called when we downloaded a loadouts feed from the provider.
+        /// </summary>
+        /// <param name="loadoutFeed">The loadout feed.</param>
+        /// <param name="errorMessage">The error message.</param>
+        internal static void OnLoadoutsFeedDownloaded(object loadoutFeed, string errorMessage)
+        {
+            if (LoadoutFeedUpdated != null)
+                LoadoutFeedUpdated(null, new LoadoutFeedEventArgs(loadoutFeed, errorMessage));
+        }
+
+        /// <summary>
+        /// Called when we downloaded a loadout from the provider.
+        /// </summary>
+        /// <param name="loadout">The loadout.</param>
+        /// <param name="errorMessage">The error message.</param>
+        internal static void OnLoadoutDownloaded(object loadout, string errorMessage)
+        {
+            if (LoadoutUpdated != null)
+                LoadoutUpdated(null, new LoadoutEventArgs(loadout, errorMessage));
         }
 
         #endregion
