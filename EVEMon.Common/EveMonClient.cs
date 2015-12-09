@@ -826,6 +826,11 @@ namespace EVEMon.Common
         public static event EventHandler<LoadoutEventArgs> LoadoutUpdated;
 
         /// <summary>
+        /// Occurs when item prices updated.
+        /// </summary>
+        public static event EventHandler ItemPricesUpdated;
+
+        /// <summary>
         /// Called when settings changed.
         /// </summary>
         internal static void OnSettingsChanged()
@@ -1605,6 +1610,17 @@ namespace EVEMon.Common
                 LoadoutUpdated(null, new LoadoutEventArgs(loadout, errorMessage));
         }
 
+        /// <summary>
+        /// Called when prices downloaded.
+        /// </summary>
+        /// <param name="pricesFeed">The prices feed.</param>
+        /// <param name="errormessage">The errormessage.</param>
+        internal static void OnPricesDownloaded(object pricesFeed, string errormessage)
+        {
+            if (ItemPricesUpdated != null)
+                ItemPricesUpdated(null, EventArgs.Empty);
+        }
+
         #endregion
 
 
@@ -1623,7 +1639,9 @@ namespace EVEMon.Common
             string timeStr = String.Format(CultureConstants.DefaultCulture,
                 "{0:#0}d {1:#0}h {2:00}m {3:00}s > ", time.Days, time.Hours, time.Minutes, time.Seconds);
 
-            System.Diagnostics.Trace.WriteLine(String.Format(CultureConstants.DefaultCulture, "{0}{1}", timeStr, message));
+            System.Diagnostics.Trace
+                .WriteLine(String.Format(CultureConstants.DefaultCulture, "{0}{1}",
+                    timeStr, message.TrimEnd(Environment.NewLine.ToCharArray())));
         }
 
         /// <summary>
@@ -1683,7 +1701,7 @@ namespace EVEMon.Common
                     "EVEMon has encountered an error and needs to terminate.{0}" +
                     "The error message is:{0}{0}\"{1}\"",
                     Environment.NewLine, e.Message);
-                MessageBox.Show(text, "EVEMon Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(text, @"EVEMon Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
         }

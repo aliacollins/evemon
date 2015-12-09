@@ -95,7 +95,7 @@ namespace EVEMon.Controls
                 return;
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
-            Settings.MarketPricer.Pricer.ItemPricesUpdated += ItemPricer_ItemPricesUpdated;
+            EveMonClient.ItemPricesUpdated += EveMonClient_ItemPricesUpdated;
             Disposed += OnDisposed;
         }
 
@@ -482,11 +482,11 @@ namespace EVEMon.Controls
         }
 
         /// <summary>
-        /// Handles the BCItemPricesUpdated event of the BCItemPrices control.
+        /// Occurs when the item prices get updated.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void ItemPricer_ItemPricesUpdated(object sender, EventArgs e)
+        private void EveMonClient_ItemPricesUpdated(object sender, EventArgs e)
         {
             ItemsCostLabel.Text = GetTotalCost();
         }
@@ -499,7 +499,7 @@ namespace EVEMon.Controls
         private void OnDisposed(object sender, EventArgs e)
         {
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
-            Settings.MarketPricer.Pricer.ItemPricesUpdated -= ItemPricer_ItemPricesUpdated;
+            EveMonClient.ItemPricesUpdated -= EveMonClient_ItemPricesUpdated;
             Disposed -= OnDisposed;
         }
 

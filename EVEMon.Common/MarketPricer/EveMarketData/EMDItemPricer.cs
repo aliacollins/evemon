@@ -79,9 +79,18 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             if (Loaded)
                 return;
 
+            LoadFromFile(file);
+        }
+
+        /// <summary>
+        /// Loads from file.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        private void LoadFromFile(string file)
+        {
             CachedUntil = File.GetLastWriteTimeUtc(file).AddDays(1);
 
-            // In case the file has an error or it's an old one, we try to get a fresh copy
+            // In case the file is an old one, we try to get a fresh copy
             if (CachedUntil < DateTime.UtcNow)
             {
                 GetPricesAsync();
@@ -102,9 +111,9 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// Import the query result list.
         /// </summary>
         /// <param name="itemPrices">The item prices.</param>
-        private static void Import(IEnumerable<SerializableEMDItemPriceListItem> itemPrices)
+        private void Import(IEnumerable<SerializableEMDItemPriceListItem> itemPrices)
         {
-            EveMonClient.Trace("EMDItemPricer.Import - begin");
+            EveMonClient.Trace("{0}.Import - begin", GetType().Name);
 
             PriceByItemID.Clear();
             foreach (IGrouping<int, SerializableEMDItemPriceListItem> item in itemPrices.GroupBy(item => item.ID))
@@ -122,10 +131,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             Loaded = true;
 
-            // Reset query pending flag
-            s_queryPending = false;
-
-            EveMonClient.Trace("EMDItemPricer.Import - done");
+            EveMonClient.Trace("{0}.Import - done", GetType().Name);
         }
 
         /// <summary>
@@ -137,15 +143,15 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             if (s_queryPending)
                 return;
 
-            EveMonClient.Trace("EMDItemPricer.UpdateFile - begin");
+            s_queryPending = true;
+
+            EveMonClient.Trace("{0}.GetPricesAsync - begin", GetType().Name);
 
             var url = new Uri(
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEMarketDataBaseUrl,
                     NetworkConstants.EVEMarketDataAPIItemPrices));
 
             Util.DownloadXmlAsync<SerializableEMDItemPrices>(url, OnPricesDownloaded, true);
-
-            s_queryPending = true;
         }
 
         /// <summary>
@@ -155,6 +161,9 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// <param name="errormessage">The errormessage.</param>
         private void OnPricesDownloaded(SerializableEMDItemPrices result, string errormessage)
         {
+            if (result == null)
+                return;
+
             if (!String.IsNullOrEmpty(errormessage))
             {
                 // Reset query pending flag
@@ -164,33 +173,19 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
                 return;
             }
 
-            // Save the file in cache
-            Save(result);
-
-            EveMonClient.Trace("EMDItemPricer.UpdateFile - done");
-
-            CachedUntil = DateTime.UtcNow.AddDays(1);
+            EveMonClient.Trace("{0}.GetPricesAsync - done", GetType().Name);
 
             Import(result.Result.ItemPrices);
 
-            base.OnPricesDownloaded(result, errormessage);
-        }
+            // Reset query pending flag
+            s_queryPending = false;
 
-        /// <summary>
-        /// Saves the specified result.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        private static void Save(SerializableEMDItemPrices result)
-        {
-            EveMonClient.EnsureCacheDirInit();
-            FileHelper.OverwriteOrWarnTheUser(LocalXmlCache.GetFile(Filename).FullName,
-                fs =>
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(SerializableEMDItemPrices));
-                    xs.Serialize(fs, result);
-                    fs.Flush();
-                    return true;
-                });
+            // Save the file in cache
+            Save(Filename, Util.SerializeToXmlDocument(result));
+            
+            CachedUntil = DateTime.UtcNow.AddDays(1);
+
+            EveMonClient.OnPricesDownloaded(null, String.Empty);
         }
 
         #endregion

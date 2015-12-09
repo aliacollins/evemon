@@ -17,11 +17,6 @@ namespace EVEMon.Common.MarketPricer
         protected static bool Loaded;
 
         /// <summary>
-        /// Occurs when item prices updated.
-        /// </summary>
-        public event EventHandler ItemPricesUpdated;
-
-        /// <summary>
         /// Gets the name.
         /// </summary>
         public abstract string Name { get; }
@@ -56,17 +51,6 @@ namespace EVEMon.Common.MarketPricer
         /// </summary>
         /// Gets the item prices list.
         protected abstract void GetPricesAsync();
-
-        /// <summary>
-        /// Called when prices downloaded.
-        /// </summary>
-        /// <param name="pricesFeed">The prices feed.</param>
-        /// <param name="errormessage">The errormessage.</param>
-        protected virtual void OnPricesDownloaded(object pricesFeed, string errormessage)
-        {
-            if (ItemPricesUpdated != null)
-                ItemPricesUpdated(this, EventArgs.Empty);
-        }
         
         /// <summary>
         /// Saves the xml document to the specified filename.
