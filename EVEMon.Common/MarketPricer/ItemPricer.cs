@@ -9,6 +9,13 @@ namespace EVEMon.Common.MarketPricer
 {
     public abstract class ItemPricer
     {
+        protected static readonly Dictionary<int, double> PriceByItemID = new Dictionary<int, double>();
+
+        protected static DateTime CachedUntil;
+
+        protected static string SelectedProviderName;
+        protected static bool Loaded;
+
         /// <summary>
         /// Occurs when item prices updated.
         /// </summary>

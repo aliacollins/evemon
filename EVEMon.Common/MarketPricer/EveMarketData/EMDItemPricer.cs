@@ -12,15 +12,11 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 {
     public sealed class EMDItemPricer : ItemPricer
     {
-
         #region Fields
 
-        private static readonly Dictionary<int, double> s_priceByItemID = new Dictionary<int, double>();
+        private const string Filename = "emd_item_prices";
 
         private static bool s_queryPending;
-        private static bool s_loaded;
-
-        private static DateTime s_cachedUntil;
 
         #endregion
 
@@ -29,6 +25,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         {
             get { return "Eve-MarketData"; }
         }
+
         /// <summary>
         /// Gets the price by type ID.
         /// </summary>
@@ -40,7 +37,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             EnsureImportation();
 
             double result;
-            s_priceByItemID.TryGetValue(id, out result);
+            PriceByItemID.TryGetValue(id, out result);
             return result;
         }
 
@@ -52,23 +49,40 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// </summary>
         private void EnsureImportation()
         {
-            string file = LocalXmlCache.GetFile("emd_item_prices").FullName;
+            // Quit if query is pending
+            if (s_queryPending)
+                return;
+
+            // Check the selected provider
+            if (!String.IsNullOrWhiteSpace(SelectedProviderName))
+            {
+                if (SelectedProviderName != Name)
+                {
+                    Loaded = false;
+                    CachedUntil = DateTime.MinValue;
+                    SelectedProviderName = Name;
+                }
+            }
+            else
+                SelectedProviderName = Name;
+
+            string file = LocalXmlCache.GetFile(Filename).FullName;
 
             // Update the file if we don't have it or the data have expired
-            if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
+            if (!File.Exists(file) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
                 GetPricesAsync();
                 return;
             }
 
             // Exit if we have already imported the list
-            if (s_loaded)
+            if (Loaded)
                 return;
 
-            s_cachedUntil = File.GetLastWriteTimeUtc(file).AddDays(1);
+            CachedUntil = File.GetLastWriteTimeUtc(file).AddDays(1);
 
             // In case the file has an error or it's an old one, we try to get a fresh copy
-            if (s_cachedUntil < DateTime.UtcNow)
+            if (CachedUntil < DateTime.UtcNow)
             {
                 GetPricesAsync();
                 return;
@@ -76,6 +90,9 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             // Deserialize the xml file
             SerializableEMDItemPrices result = Util.DeserializeXmlFromFile<SerializableEMDItemPrices>(file);
+
+            if (result == null)
+                return;
 
             // Import the data
             Import(result.Result.ItemPrices);
@@ -89,21 +106,21 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         {
             EveMonClient.Trace("EMDItemPricer.Import - begin");
 
-            s_priceByItemID.Clear();
+            PriceByItemID.Clear();
             foreach (IGrouping<int, SerializableEMDItemPriceListItem> item in itemPrices.GroupBy(item => item.ID))
             {
                 double buyPrice = item.First(x => x.BuySell == "b").Price;
                 double sellPrice = item.First(x => x.BuySell == "s").Price;
 
                 if (Math.Abs(buyPrice) <= Double.Epsilon)
-                    s_priceByItemID[item.Key] = sellPrice;
+                    PriceByItemID[item.Key] = sellPrice;
                 else if (Math.Abs(sellPrice) <= Double.Epsilon)
-                    s_priceByItemID[item.Key] = buyPrice;
+                    PriceByItemID[item.Key] = buyPrice;
                 else
-                    s_priceByItemID[item.Key] = (buyPrice + sellPrice) / 2;
+                    PriceByItemID[item.Key] = (buyPrice + sellPrice) / 2;
             }
 
-            s_loaded = true;
+            Loaded = true;
 
             // Reset query pending flag
             s_queryPending = false;
@@ -152,7 +169,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             EveMonClient.Trace("EMDItemPricer.UpdateFile - done");
 
-            s_cachedUntil = DateTime.UtcNow.AddDays(1);
+            CachedUntil = DateTime.UtcNow.AddDays(1);
 
             Import(result.Result.ItemPrices);
 
@@ -166,7 +183,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         private static void Save(SerializableEMDItemPrices result)
         {
             EveMonClient.EnsureCacheDirInit();
-            FileHelper.OverwriteOrWarnTheUser(LocalXmlCache.GetFile("emd_item_prices").FullName,
+            FileHelper.OverwriteOrWarnTheUser(LocalXmlCache.GetFile(Filename).FullName,
                 fs =>
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableEMDItemPrices));
