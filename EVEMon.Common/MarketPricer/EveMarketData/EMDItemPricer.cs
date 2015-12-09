@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.EveMarketData.MarketPricer;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Common.MarketPricer.EveMarketdata
 {
     public sealed class EMDItemPricer : ItemPricer
     {
-        /// <summary>
-        /// Occurs when EVE Marketdata item prices updated.
-        /// </summary>
-        public override event EventHandler ItemPricesUpdated;
-
 
         #region Fields
 
@@ -59,7 +57,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             // Update the file if we don't have it or the data have expired
             if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
             {
-                UpdateFile();
+                GetPricesAsync();
                 return;
             }
 
@@ -72,7 +70,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             // In case the file has an error or it's an old one, we try to get a fresh copy
             if (s_cachedUntil < DateTime.UtcNow)
             {
-                UpdateFile();
+                GetPricesAsync();
                 return;
             }
 
@@ -86,6 +84,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// <summary>
         /// Import the query result list.
         /// </summary>
+        /// <param name="itemPrices">The item prices.</param>
         private static void Import(IEnumerable<SerializableEMDItemPriceListItem> itemPrices)
         {
             EveMonClient.Trace("EMDItemPricer.Import - begin");
@@ -115,7 +114,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// <summary>
         /// Downloads the item prices list.
         /// </summary>
-        private void UpdateFile()
+        protected override void GetPricesAsync()
         {
             // Quit if query is pending
             if (s_queryPending)
@@ -127,7 +126,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEMarketDataBaseUrl,
                     NetworkConstants.EVEMarketDataAPIItemPrices));
 
-            Util.DownloadXmlAsync<SerializableEMDItemPrices>(url, OnDownloaded, true);
+            Util.DownloadXmlAsync<SerializableEMDItemPrices>(url, OnPricesDownloaded, true);
 
             s_queryPending = true;
         }
@@ -137,7 +136,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="errormessage">The errormessage.</param>
-        private void OnDownloaded(SerializableEMDItemPrices result, string errormessage)
+        private void OnPricesDownloaded(SerializableEMDItemPrices result, string errormessage)
         {
             if (!String.IsNullOrEmpty(errormessage))
             {
@@ -157,8 +156,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             Import(result.Result.ItemPrices);
 
-            if (ItemPricesUpdated != null)
-                ItemPricesUpdated(null, EventArgs.Empty);
+            base.OnPricesDownloaded(result, errormessage);
         }
 
         /// <summary>

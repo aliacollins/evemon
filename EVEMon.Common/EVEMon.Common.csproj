@@ -396,7 +396,6 @@
     <Compile Include="Helpers\KillLogExporter.cs" />
     <Compile Include="Models\KillLogItem.cs" />
     <Compile Include="MarketPricer\BattleClinic\BCItemPricer.cs" />
-    <Compile Include="MarketPricer\EveAddicts\EAItemPricer.cs" />
     <Compile Include="MarketPricer\EveMarketData\EMDItemPricer.cs" />
     <Compile Include="MarketPricer\ItemPricer.cs" />
     <Compile Include="Models\Medal.cs" />
