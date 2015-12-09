@@ -32,7 +32,6 @@ namespace EVEMon.SkillPlanner
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShipBrowserControl));
-            this.lblBattleclinic = new System.Windows.Forms.LinkLabel();
             this.gbAttributes = new System.Windows.Forms.GroupBox();
             this.lvShipProperties = new System.Windows.Forms.ListView();
             this.chAttribute = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -56,6 +55,9 @@ namespace EVEMon.SkillPlanner
             this.tsPlanToLevelThree = new System.Windows.Forms.ToolStripMenuItem();
             this.tsPlanToLevelFour = new System.Windows.Forms.ToolStripMenuItem();
             this.tsPlanToLevelFive = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitButtonLoadouts = new EVEMon.Common.Controls.SplitButton();
+            this.LoadoutsProviderContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.lblViewLoadouts = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.scObjectBrowser)).BeginInit();
             this.scObjectBrowser.Panel1.SuspendLayout();
             this.scObjectBrowser.Panel2.SuspendLayout();
@@ -95,12 +97,14 @@ namespace EVEMon.SkillPlanner
             // 
             // pnlBrowserHeader
             // 
-            this.pnlBrowserHeader.Controls.Add(this.lblBattleclinic);
+            this.pnlBrowserHeader.Controls.Add(this.lblViewLoadouts);
+            this.pnlBrowserHeader.Controls.Add(this.splitButtonLoadouts);
             this.pnlBrowserHeader.Size = new System.Drawing.Size(597, 70);
             this.pnlBrowserHeader.Controls.SetChildIndex(this.lblEveObjName, 0);
-            this.pnlBrowserHeader.Controls.SetChildIndex(this.lblBattleclinic, 0);
             this.pnlBrowserHeader.Controls.SetChildIndex(this.lblEveObjCategory, 0);
             this.pnlBrowserHeader.Controls.SetChildIndex(this.eoImage, 0);
+            this.pnlBrowserHeader.Controls.SetChildIndex(this.splitButtonLoadouts, 0);
+            this.pnlBrowserHeader.Controls.SetChildIndex(this.lblViewLoadouts, 0);
             // 
             // scDetailsRight
             // 
@@ -133,17 +137,6 @@ namespace EVEMon.SkillPlanner
             // tbDescription
             // 
             this.tbDescription.Size = new System.Drawing.Size(234, 297);
-            // 
-            // lblBattleclinic
-            // 
-            this.lblBattleclinic.AutoSize = true;
-            this.lblBattleclinic.Location = new System.Drawing.Point(70, 54);
-            this.lblBattleclinic.Name = "lblBattleclinic";
-            this.lblBattleclinic.Size = new System.Drawing.Size(102, 13);
-            this.lblBattleclinic.TabIndex = 11;
-            this.lblBattleclinic.TabStop = true;
-            this.lblBattleclinic.Text = "BattleClinic loadouts";
-            this.lblBattleclinic.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblBattleclinic_LinkClicked);
             // 
             // gbAttributes
             // 
@@ -260,7 +253,7 @@ namespace EVEMon.SkillPlanner
             this.tbPgShipMastery.Location = new System.Drawing.Point(4, 22);
             this.tbPgShipMastery.Name = "tbPgShipMastery";
             this.tbPgShipMastery.Padding = new System.Windows.Forms.Padding(3);
-            this.tbPgShipMastery.Size = new System.Drawing.Size(345, 416);
+            this.tbPgShipMastery.Size = new System.Drawing.Size(230, 317);
             this.tbPgShipMastery.TabIndex = 1;
             this.tbPgShipMastery.Text = "Mastery";
             this.tbPgShipMastery.UseVisualStyleBackColor = true;
@@ -272,7 +265,7 @@ namespace EVEMon.SkillPlanner
             this.pnlMastery.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMastery.Location = new System.Drawing.Point(3, 3);
             this.pnlMastery.Name = "pnlMastery";
-            this.pnlMastery.Size = new System.Drawing.Size(339, 410);
+            this.pnlMastery.Size = new System.Drawing.Size(224, 311);
             this.pnlMastery.TabIndex = 2;
             // 
             // masteryTreeDisplayControl
@@ -283,7 +276,7 @@ namespace EVEMon.SkillPlanner
             this.masteryTreeDisplayControl.Name = "masteryTreeDisplayControl";
             this.masteryTreeDisplayControl.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
             this.masteryTreeDisplayControl.Plan = null;
-            this.masteryTreeDisplayControl.Size = new System.Drawing.Size(339, 385);
+            this.masteryTreeDisplayControl.Size = new System.Drawing.Size(224, 286);
             this.masteryTreeDisplayControl.TabIndex = 2;
             // 
             // tlStrpPlanTo
@@ -295,7 +288,7 @@ namespace EVEMon.SkillPlanner
             this.tsPlanToMenu});
             this.tlStrpPlanTo.Location = new System.Drawing.Point(0, 0);
             this.tlStrpPlanTo.Name = "tlStrpPlanTo";
-            this.tlStrpPlanTo.Size = new System.Drawing.Size(339, 25);
+            this.tlStrpPlanTo.Size = new System.Drawing.Size(224, 25);
             this.tlStrpPlanTo.TabIndex = 1;
             this.tlStrpPlanTo.Text = "toolStrip1";
             // 
@@ -328,37 +321,63 @@ namespace EVEMon.SkillPlanner
             // tsPlanToLevelOne
             // 
             this.tsPlanToLevelOne.Name = "tsPlanToLevelOne";
-            this.tsPlanToLevelOne.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelOne.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelOne.Text = "&Level I";
             this.tsPlanToLevelOne.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
             // tsPlanToLevelTwo
             // 
             this.tsPlanToLevelTwo.Name = "tsPlanToLevelTwo";
-            this.tsPlanToLevelTwo.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelTwo.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelTwo.Text = "&Level II";
             this.tsPlanToLevelTwo.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
             // tsPlanToLevelThree
             // 
             this.tsPlanToLevelThree.Name = "tsPlanToLevelThree";
-            this.tsPlanToLevelThree.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelThree.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelThree.Text = "&Level III";
             this.tsPlanToLevelThree.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
             // tsPlanToLevelFour
             // 
             this.tsPlanToLevelFour.Name = "tsPlanToLevelFour";
-            this.tsPlanToLevelFour.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFour.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelFour.Text = "&Level IV";
             this.tsPlanToLevelFour.Click += new System.EventHandler(this.tsPlanToLevel_Click);
             // 
             // tsPlanToLevelFive
             // 
             this.tsPlanToLevelFive.Name = "tsPlanToLevelFive";
-            this.tsPlanToLevelFive.Size = new System.Drawing.Size(152, 22);
+            this.tsPlanToLevelFive.Size = new System.Drawing.Size(114, 22);
             this.tsPlanToLevelFive.Text = "&Level V";
             this.tsPlanToLevelFive.Click += new System.EventHandler(this.tsPlanToLevel_Click);
+            // 
+            // splitButtonLoadouts
+            // 
+            this.splitButtonLoadouts.AutoSize = true;
+            this.splitButtonLoadouts.ContextMenuStrip = this.LoadoutsProviderContextMenuStrip;
+            this.splitButtonLoadouts.Location = new System.Drawing.Point(170, 44);
+            this.splitButtonLoadouts.Name = "splitButtonLoadouts";
+            this.splitButtonLoadouts.Size = new System.Drawing.Size(97, 23);
+            this.splitButtonLoadouts.TabIndex = 12;
+            this.splitButtonLoadouts.Text = "Select provider";
+            this.splitButtonLoadouts.UseVisualStyleBackColor = true;
+            this.splitButtonLoadouts.Click += new System.EventHandler(this.splitButtonLoadouts_Click);
+            // 
+            // LoadoutsProviderContextMenuStrip
+            // 
+            this.LoadoutsProviderContextMenuStrip.Name = "LoadoutsProviderContextMenuStrip";
+            this.LoadoutsProviderContextMenuStrip.Size = new System.Drawing.Size(61, 4);
+            // 
+            // lblViewLoadouts
+            // 
+            this.lblViewLoadouts.AutoSize = true;
+            this.lblViewLoadouts.Location = new System.Drawing.Point(70, 49);
+            this.lblViewLoadouts.Name = "lblViewLoadouts";
+            this.lblViewLoadouts.Size = new System.Drawing.Size(99, 13);
+            this.lblViewLoadouts.TabIndex = 13;
+            this.lblViewLoadouts.Text = "View loadouts from:";
             // 
             // ShipBrowserControl
             // 
@@ -406,10 +425,8 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ColumnHeader chValue;
         private ShipSelectControl shipSelectControl;
         private System.Windows.Forms.GroupBox gbAttributes;
-        private System.Windows.Forms.LinkLabel lblBattleclinic;
         private System.Windows.Forms.ContextMenuStrip ShipPropertiesContextMenu;
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
-        //private System.Windows.Forms.SplitContainer scDetailsLowerRight;
         private System.Windows.Forms.GroupBox gbRequiredSkills;
         private RequiredSkillsControl requiredSkillsControl;
         private System.Windows.Forms.TabControl tbCntrlShipInformation;
@@ -426,5 +443,8 @@ namespace EVEMon.SkillPlanner
         private MasteryTreeDisplayControl masteryTreeDisplayControl;
         private System.Windows.Forms.ToolStripLabel tslbTextForEligibility;
         private System.Windows.Forms.ToolStripLabel tslbEligible;
+        private Common.Controls.SplitButton splitButtonLoadouts;
+        private System.Windows.Forms.Label lblViewLoadouts;
+        private System.Windows.Forms.ContextMenuStrip LoadoutsProviderContextMenuStrip;
     }
 }

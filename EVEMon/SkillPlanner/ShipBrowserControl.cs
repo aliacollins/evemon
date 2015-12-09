@@ -10,6 +10,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
+using EVEMon.Common.Loadouts;
 using EVEMon.Common.Models;
 
 namespace EVEMon.SkillPlanner
@@ -27,6 +28,17 @@ namespace EVEMon.SkillPlanner
             scObjectBrowser.RememberDistanceKey = "ShipsBrowser_Left";
             SelectControl = shipSelectControl;
             PropertiesList = lvShipProperties;
+
+            ToolStripItem[] toolStripItems = LoadoutsProvider.Providers
+                .Select(provider => new ToolStripMenuItem(provider.Name))
+                .ToArray<ToolStripItem>();
+            LoadoutsProviderContextMenuStrip.Items.AddRange(toolStripItems);
+            foreach (ToolStripMenuItem toolStripItem in LoadoutsProviderContextMenuStrip.Items)
+            {
+                toolStripItem.Click += toolStripItem_Click;
+            }
+
+            splitButtonLoadouts.Text = Settings.LoadoutsProvider.ProviderName;
         }
 
         #endregion
@@ -71,6 +83,33 @@ namespace EVEMon.SkillPlanner
                 return;
 
             PlanHelper.SelectPerform(new PlanToOperationForm(operation), window, operation);
+        }
+
+        /// <summary>
+        /// Occurs when clicking a menu item.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void toolStripItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem control = sender as ToolStripMenuItem;
+
+            if (control == null)
+                return;
+
+            splitButtonLoadouts.Text = control.Text;
+            Settings.LoadoutsProvider.ProviderName = control.Text;
+        }
+
+        /// <summary>
+        /// Occurs when clicking the button.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void splitButtonLoadouts_Click(object sender, EventArgs e)
+        {
+            ShipLoadoutSelectWindow window = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Plan>(Plan);
+            window.Ship = SelectedObject;
         }
 
         #endregion
@@ -165,9 +204,13 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateControlVisibility()
         {
-            lblBattleclinic.Location = Settings.UI.SafeForWork
-                ? new Point(Pad, lblBattleclinic.Location.Y)
-                : new Point(eoImage.Width + Pad * 2, lblBattleclinic.Location.Y);
+            lblViewLoadouts.Location = Settings.UI.SafeForWork
+                ? new Point(Pad, lblViewLoadouts.Location.Y)
+                : new Point(eoImage.Width + Pad * 2, lblViewLoadouts.Location.Y);
+
+            splitButtonLoadouts.Location = Settings.UI.SafeForWork
+                ? new Point(Pad + lblViewLoadouts.Width, splitButtonLoadouts.Location.Y)
+                : new Point(eoImage.Width + lblViewLoadouts.Width + Pad * 2 , splitButtonLoadouts.Location.Y);
         }
 
         /// <summary>

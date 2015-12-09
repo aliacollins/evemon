@@ -17,6 +17,9 @@ namespace EVEMon.Common.Loadouts.BattleClinic
 
         #endregion
 
+
+        #region Public Properties
+
         /// <summary>
         /// Gets the name.
         /// </summary>
@@ -38,6 +41,12 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         {
             get { return NetworkConstants.BattleClinicLoadoutTopic; }
         }
+
+
+        #endregion
+
+
+        #region Inherited Methods
 
         /// <summary>
         /// Gets the loadouts feed asynchronous.
@@ -106,29 +115,31 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         }
 
         /// <summary>
-        /// Occurs when we downloaded a loadouts feed from BattleClinic.
+        /// Called when we downloaded a loadouts feed from BattleClinic.
         /// </summary>
         /// <param name="loadoutFeed"></param>
         /// <param name="errorMessage"></param>
         /// <returns></returns>
-        protected override void OnLoadoutsFeedDownloaded(object loadoutFeed, string errorMessage)
+        private static void OnLoadoutsFeedDownloaded(object loadoutFeed, string errorMessage)
         {
             s_queryFeedPending = false;
 
-            base.OnLoadoutsFeedDownloaded(loadoutFeed, errorMessage);
+            EveMonClient.OnLoadoutsFeedDownloaded(loadoutFeed, errorMessage);
         }
 
         /// <summary>
-        /// Occurs when we downloaded a loadout from BattleClinic
+        /// Called when we downloaded a loadout from BattleClinic
         /// </summary>
         /// <param name="loadout"></param>
         /// <param name="errorMessage"></param>
         /// <returns></returns>
-        protected override void OnLoadoutDownloaded(object loadout, string errorMessage)
+        private static void OnLoadoutDownloaded(object loadout, string errorMessage)
         {
             s_queryPending = false;
 
-            base.OnLoadoutDownloaded(loadout, errorMessage);
+            EveMonClient.OnLoadoutDownloaded(loadout, errorMessage);
         }
+
+        #endregion
     }
 }

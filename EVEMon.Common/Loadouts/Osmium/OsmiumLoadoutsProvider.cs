@@ -44,28 +44,6 @@ namespace EVEMon.Common.Loadouts.Osmium
         }
 
         /// <summary>
-        /// Occurs when we downloaded a loadouts feed from the provider.
-        /// </summary>
-        /// <param name="feed">The feed.</param>
-        /// <param name="errorMessage">The error message.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        protected override void OnLoadoutsFeedDownloaded(object feed, string errorMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Occurs when we downloaded a loadout from the provider.
-        /// </summary>
-        /// <param name="feed">The feed.</param>
-        /// <param name="errorMessage">The error message.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        protected override void OnLoadoutDownloaded(object feed, string errorMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Deserializes the loadout.
         /// </summary>
         /// <param name="loadout">The loadout.</param>
@@ -84,6 +62,28 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
         public override ILoadoutInfo DeserializeLoadoutsFeed(Item ship, object feed)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Occurs when we downloaded a loadouts feed from the provider.
+        /// </summary>
+        /// <param name="feed">The feed.</param>
+        /// <param name="errorMessage">The error message.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private static void OnLoadoutsFeedDownloaded(object feed, string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Occurs when we downloaded a loadout from the provider.
+        /// </summary>
+        /// <param name="loadout">The loadout.</param>
+        /// <param name="errorMessage">The error message.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private static void OnLoadoutDownloaded(object loadout, string errorMessage)
         {
             throw new NotImplementedException();
         }

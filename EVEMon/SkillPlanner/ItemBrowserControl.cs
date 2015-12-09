@@ -1,5 +1,4 @@
 using System;
-using EVEMon.Common;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.SkillPlanner
