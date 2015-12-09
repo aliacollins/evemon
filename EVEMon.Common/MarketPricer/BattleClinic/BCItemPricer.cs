@@ -11,14 +11,10 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
     {
         #region Fields
 
-        private static readonly Dictionary<int, double> s_priceByItemID = new Dictionary<int, double>();
-
         private const string Filename = "bc_item_prices";
 
         private static bool s_queryPending;
-        private static bool s_loaded;
 
-        private static DateTime s_cachedUntil;
 
         #endregion
 
@@ -27,8 +23,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         {
             get { return "BattleClinic"; }
         }
-
-
+        
         /// <summary>
         /// Gets the price by type ID.
         /// </summary>
@@ -40,7 +35,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
             EnsureImportation();
 
             double result;
-            s_priceByItemID.TryGetValue(id, out result);
+            PriceByItemID.TryGetValue(id, out result);
             return result;
         }
 
@@ -52,29 +47,46 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         /// </summary>
         private void EnsureImportation()
         {
+            // Quit if query is pending
+            if (s_queryPending)
+                return;
+
+            // Check the selected provider
+            if (!String.IsNullOrWhiteSpace(SelectedProviderName))
+            {
+                if (SelectedProviderName != Name)
+                {
+                    Loaded = false;
+                    CachedUntil = DateTime.MinValue;
+                    SelectedProviderName = Name;
+                }
+            }
+            else
+                SelectedProviderName = Name;
+
             string file = LocalXmlCache.GetFile(Filename).FullName;
 
             // Update the file if we don't have it or the data have expired
-            if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
+            if (!File.Exists(file) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
                 GetPricesAsync();
                 return;
             }
 
             // Exit if we have already imported the list
-            if (s_loaded)
+            if (Loaded)
                 return;
             
             SerializableBCItemPrices result = null;
 
             // Deserialize the xml file
-            if (s_cachedUntil == DateTime.MinValue)
+            if (CachedUntil == DateTime.MinValue)
                 result = Util.DeserializeXmlFromFile<SerializableBCItemPrices>(file);
 
-            s_cachedUntil = result != null ? result.CachedUntil.ToUniversalTime() : s_cachedUntil;
+            CachedUntil = result != null ? result.CachedUntil.ToUniversalTime() : CachedUntil;
 
             // In case the file has an error or it's an old one, we try to get a fresh copy
-            if (result == null || s_cachedUntil < DateTime.UtcNow)
+            if (result == null || CachedUntil < DateTime.UtcNow)
             {
                 GetPricesAsync();
                 return;
@@ -92,13 +104,13 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         {
             EveMonClient.Trace("BCItemPricer.Import - begin");
 
-            s_priceByItemID.Clear();
+            PriceByItemID.Clear();
             foreach (SerializableBCItemPrice item in itemPrices)
             {
-                s_priceByItemID[item.ID] = item.Price;
+                PriceByItemID[item.ID] = item.Price;
             }
 
-            s_loaded = true;
+            Loaded = true;
 
             // Reset query pending flag
             s_queryPending = false;
@@ -153,7 +165,7 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
 
             EveMonClient.Trace("BCItemPricer.GetPricesAsync - done");
 
-            s_cachedUntil = result.CachedUntil.ToUniversalTime();
+            CachedUntil = result.CachedUntil.ToUniversalTime();
             Import(result.ItemPrices);
 
             base.OnPricesDownloaded(result, errormessage);
