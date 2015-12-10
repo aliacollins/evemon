@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
@@ -14,7 +13,8 @@ namespace EVEMon.Common.Service
 {
     public static class EveIDToName
     {
-        private static readonly string s_file = LocalXmlCache.GetFile("EveIDToName").FullName;
+        private const string Filename = "EveIDToName";
+
         private static readonly Dictionary<long, string> s_cacheList = new Dictionary<long, string>();
         private static readonly List<string> s_listOfNames = new List<string>();
         private static readonly List<string> s_queriedIDs = new List<string>();
@@ -94,17 +94,20 @@ namespace EVEMon.Common.Service
         /// </summary>
         public static void InitializeFromFile()
         {
-            if (File.Exists(s_file) && !s_cacheList.Any())
-                ImportCacheFile();
+            string file = LocalXmlCache.GetFile(Filename).FullName;
+
+            if (File.Exists(file) && !s_cacheList.Any())
+                ImportCacheFile(file);
         }
 
         /// <summary>
         /// Imports the cache file.
         /// </summary>
-        private static void ImportCacheFile()
+        /// <param name="file">The file.</param>
+        private static void ImportCacheFile(string file)
         {
             // Deserialize the file
-            SerializableEveIDToName cache = Util.DeserializeXmlFromFile<SerializableEveIDToName>(s_file);
+            SerializableEveIDToName cache = Util.DeserializeXmlFromFile<SerializableEveIDToName>(file);
 
             // Reset the cache if anything went wrong
             if (cache == null || cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))
@@ -112,7 +115,7 @@ namespace EVEMon.Common.Service
                 EveMonClient.Trace("Deserializing EveIDToName failed. File may be corrupt. Deleting file.");
                 try
                 {
-                    File.Delete(s_file);
+                    File.Delete(file);
                 }
                 catch (ArgumentException ex)
                 {
@@ -174,6 +177,7 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Queries the API Character Name.
         /// </summary>
+        /// <param name="idsToQuery">The ids to query.</param>
         private static void QueryAPICharacterName(IList<string> idsToQuery)
         {
             string ids = string.Join(",", idsToQuery);
@@ -267,18 +271,8 @@ namespace EVEMon.Common.Service
         /// </summary>
         public static void SaveImmediate()
         {
-            SerializableEveIDToName serial = Export();
-
             // Save in file
-            EveMonClient.EnsureCacheDirInit();
-            FileHelper.OverwriteOrWarnTheUser(s_file,
-                fs =>
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(SerializableEveIDToName));
-                    xs.Serialize(fs, serial);
-                    fs.Flush();
-                    return true;
-                });
+            LocalXmlCache.Save(Filename, Util.SerializeToXmlDocument(Export()));
 
             // Reset savePending flag
             s_lastSaveTime = DateTime.UtcNow;
@@ -291,13 +285,16 @@ namespace EVEMon.Common.Service
         /// <returns></returns>
         private static SerializableEveIDToName Export()
         {
+            IEnumerable<SerializableEveIDToNameListItem> entitiesList = s_cacheList
+                .Select(
+                    item =>
+                        new SerializableEveIDToNameListItem
+                        {
+                            ID = item.Key,
+                            Name = item.Value,
+                        });
+
             SerializableEveIDToName serial = new SerializableEveIDToName();
-            IEnumerable<SerializableEveIDToNameListItem> entitiesList = s_cacheList.Select(
-                item => new SerializableEveIDToNameListItem
-                {
-                    ID = item.Key,
-                    Name = item.Value,
-                });
             serial.Entities.AddRange(entitiesList);
 
             return serial;

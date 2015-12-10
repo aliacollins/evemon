@@ -200,6 +200,7 @@
     <Compile Include="Loadouts\BattleClinic\BCLoadoutsProvider.cs" />
     <Compile Include="Loadouts\LoadoutsProvider.cs" />
     <Compile Include="Loadouts\Osmium\OsmiumLoadoutsProvider.cs" />
+    <Compile Include="MarketPricer\EveCentral\ECItemPricer.cs" />
     <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
     <Compile Include="Helpers\ApiTesterUIHelper.cs" />
     <Compile Include="Helpers\BlankCharacterUIHelper.cs" />
@@ -225,6 +226,9 @@
     <Compile Include="Models\Comparers\ContractComparer.cs" />
     <Compile Include="Models\Comparers\ContractItemComparer.cs" />
     <Compile Include="Models\Extended\APIMethods.cs" />
+    <Compile Include="Serialization\EveCentral\MarketPricer\SerializableECItemPriceItem.cs" />
+    <Compile Include="Serialization\EveCentral\MarketPricer\SerializableECItemPriceListItem.cs" />
+    <Compile Include="Serialization\EveCentral\MarketPricer\SerializableECItemPrices.cs" />
     <Compile Include="Serialization\Eve\SerializableCharacterCertificate.cs" />
     <Compile Include="Serialization\Datafiles\MasteriesDatafile.cs" />
     <Compile Include="Serialization\Datafiles\SerializableMastery.cs" />

@@ -1033,6 +1033,24 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /api/marketstat.
+        /// </summary>
+        public static string EVECentralAPIItemPrices {
+            get {
+                return ResourceManager.GetString("EVECentralAPIItemPrices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://api.eve-central.com.
+        /// </summary>
+        public static string EVECentralBaseUrl {
+            get {
+                return ResourceManager.GetString("EVECentralBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://community.eveonline.com.
         /// </summary>
         public static string EVECommunityBase {

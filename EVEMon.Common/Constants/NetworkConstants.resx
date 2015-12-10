@@ -562,4 +562,10 @@
   <data name="EVEMarketDataBaseUrl" xml:space="preserve">
     <value>http://api.eve-marketdata.com/</value>
   </data>
+  <data name="EVECentralAPIItemPrices" xml:space="preserve">
+    <value>/api/marketstat</value>
+  </data>
+  <data name="EVECentralBaseUrl" xml:space="preserve">
+    <value>http://api.eve-central.com</value>
+  </data>
 </root>
