@@ -284,15 +284,24 @@ namespace EVEMon
         /// <summary>
         /// Callback for time synchronization with BattleClinic check.
         /// </summary>
-        /// <param name="isSynchronised"></param>
-        /// <param name="serverTime"></param>
-        /// <param name="localTime"></param>
-        private void TimeCheckCallback(bool isSynchronised, DateTime serverTime, DateTime localTime)
+        /// <param name="isSynchronised">if set to <c>true</c> [is synchronised].</param>
+        /// <param name="serverTimeToLocalTime">The server time to local time.</param>
+        /// <param name="localTime">The local time.</param>
+        private void TimeCheckCallback(bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
         {
-            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised || serverTime == DateTime.MinValue)
-                return;
+            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised || (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime()))
+            {
+                if (!Settings.Updates.CheckTimeOnStartup)
+                    EveMonClient.Trace("EveMonClient.TimeSynchronization - Disabled");
+                else if (isSynchronised)
+                    EveMonClient.Trace("EveMonClient.TimeSynchronization - Synchronised");
+                else if (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime())
+                    EveMonClient.Trace("EveMonClient.TimeSynchronization - Failed");
 
-            using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))
+                return;
+            }
+
+            using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTimeToLocalTime, localTime))
             {
                 timeDialog.ShowDialog(this);
             }

@@ -74,15 +74,15 @@ namespace EVEMon.Common.Helpers
         {
             SyncState state = (SyncState)userState;
             bool isSynchronised = true;
-            DateTime serverTime = DateTime.MinValue;
+            DateTime serverTimeToLocalTime = DateTime.MinValue.ToLocalTime();
             DateTime localTime = DateTime.Now;
             if (!String.IsNullOrEmpty(e.Result))
             {
-                serverTime = e.Result.TimeStringToDateTime().ToLocalTime();
-                double timediff = Math.Abs(serverTime.Subtract(localTime).TotalSeconds);
+                serverTimeToLocalTime = e.Result.TimeStringToDateTime().ToLocalTime();
+                double timediff = Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds);
                 isSynchronised = timediff < 60;
             }
-            Dispatcher.Invoke(() => state.Callback(isSynchronised, serverTime, localTime));
+            Dispatcher.Invoke(() => state.Callback(isSynchronised, serverTimeToLocalTime, localTime));
         }
 
         /// <summary>
