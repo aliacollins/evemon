@@ -880,15 +880,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to /time.php.
-        /// </summary>
-        public static string BatlleClinicTimeSynch {
-            get {
-                return ResourceManager.GetString("BatlleClinicTimeSynch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /api_key.php.
         /// </summary>
         public static string BattleClinicAPIAccountCredentials {
@@ -1263,6 +1254,15 @@ namespace EVEMon.Common.Constants {
         public static string MyEVELevelImage {
             get {
                 return ResourceManager.GetString("MyEVELevelImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to tcp://time.nist.gov:13.
+        /// </summary>
+        public static string NISTTimeServer {
+            get {
+                return ResourceManager.GetString("NISTTimeServer", resourceCulture);
             }
         }
         
