@@ -16,7 +16,6 @@ using EVEMon.BlankCharacter;
 using EVEMon.CharacterMonitoring;
 using EVEMon.CharactersComparison;
 using EVEMon.Common;
-using EVEMon.Common.CloudStorageServices.BattleClinic;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -30,7 +29,6 @@ using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Properties;
 using EVEMon.Common.Scheduling;
-using EVEMon.Common.Serialization.BattleClinic;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
 using EVEMon.Common.SettingsObjects;
@@ -178,7 +176,7 @@ namespace EVEMon
             // Do it now if network available
             if (NetworkMonitor.IsNetworkAvailable)
             {
-                TimeCheck.CheckIsSynchronised(TimeCheckCallback);
+                TimeCheck.CheckIsSynchronisedToNistTime(TimeCheckCallback);
                 Dispatcher.Schedule(TimeSpan.FromDays(1), CheckTimeSynchronization);
                 return;
             }
@@ -291,7 +289,7 @@ namespace EVEMon
         /// <param name="localTime"></param>
         private void TimeCheckCallback(bool isSynchronised, DateTime serverTime, DateTime localTime)
         {
-            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised)
+            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised || serverTime == DateTime.MinValue)
                 return;
 
             using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTime, localTime))

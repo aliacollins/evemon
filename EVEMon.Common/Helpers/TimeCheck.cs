@@ -1,4 +1,8 @@
 using System;
+using System.Globalization;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
@@ -9,21 +13,55 @@ namespace EVEMon.Common.Helpers
     public delegate void TimeSynchronisationCallback(bool isSynchronised, DateTime serverTime, DateTime localTime);
 
     /// <summary>
-    /// Ensures synchronization of local time to a know time source.
+    /// Ensures synchronization of local time to a known time source.
     /// </summary>
     public static class TimeCheck
     {
         /// <summary>
-        /// Asynchronous method to determine if the user's clock is syncrhonized to BattleClinic time.
+        /// Asynchronous method to determine if the user's clock is syncrhonised to NIST time.
         /// </summary>
-        /// <param name="callback"></param>
-        /// <remarks>We are sending also a unique id to use for statistical purposes.</remarks>
-        public static void CheckIsSynchronised(TimeSynchronisationCallback callback)
+        /// <param name="callback">The callback.</param>
+        public static void CheckIsSynchronisedToNistTime(TimeSynchronisationCallback callback)
         {
-            SyncState state = new SyncState(callback);
-            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}",
-                NetworkConstants.BattleClinicBase, NetworkConstants.BatlleClinicTimeSynch));
-            HttpWebService.DownloadStringAsync(url, SyncDownloadCompleted, state);
+            GetNistTimeAsync(new Uri(NetworkConstants.NISTTimeServer), SyncDownloadCompleted, new SyncState(callback));
+        }
+
+        /// <summary>
+        /// Gets the nist time asynchronously.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="syncNistCompleted">The synchronize nist completed.</param>
+        /// <param name="state">The state.</param>
+        private static void GetNistTimeAsync(Uri url, DownloadStringCompletedCallback syncNistCompleted, SyncState state)
+        {
+            Dispatcher.BackgroundInvoke(() =>
+            {
+                DateTime dateTimeNowUtc = DateTime.MinValue;
+                HttpWebServiceException error = null;
+                try
+                {
+                    using (TcpClient tcpClient = new TcpClient(url.Host, url.Port))
+                    using (NetworkStream netStream = tcpClient.GetStream())
+                    {
+                        if (!netStream.CanRead)
+                            return;
+
+                        byte[] data = new byte[24];
+                        netStream.Read(data, 0, data.Length);
+                        data = data.Skip(7).Take(17).ToArray();
+
+                        dateTimeNowUtc = DateTime.ParseExact(Encoding.ASCII.GetString(data),
+                            "yy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture.DateTimeFormat);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    error = HttpWebServiceException.Exception(url, exc);
+                }
+
+                DownloadStringAsyncResult result = new DownloadStringAsyncResult(dateTimeNowUtc.DateTimeToTimeString(), error);
+                syncNistCompleted.Invoke(result, state);
+            });
         }
 
         /// <summary>

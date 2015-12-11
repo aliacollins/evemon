@@ -132,9 +132,6 @@
   <data name="APIBase" xml:space="preserve">
     <value>https://api.eveonline.com</value>
   </data>
-  <data name="BatlleClinicTimeSynch" xml:space="preserve">
-    <value>/time.php</value>
-  </data>
   <data name="BattleClinicLoadoutDetails" xml:space="preserve">
     <value>/ship_loadout_feed.php?id={0}</value>
   </data>
@@ -567,5 +564,8 @@
   </data>
   <data name="EVECentralBaseUrl" xml:space="preserve">
     <value>http://api.eve-central.com</value>
+  </data>
+  <data name="NISTTimeServer" xml:space="preserve">
+    <value>tcp://time.nist.gov:13</value>
   </data>
 </root>
