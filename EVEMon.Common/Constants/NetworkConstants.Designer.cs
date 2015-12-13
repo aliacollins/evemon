@@ -1141,7 +1141,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to api/item_prices2.xml?char_name=evemon&amp;buysell=a.
+        ///   Looks up a localized string similar to /api/item_prices2.xml?char_name=evemon&amp;buysell=a.
         /// </summary>
         public static string EVEMarketDataAPIItemPrices {
             get {
@@ -1150,7 +1150,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.eve-marketdata.com/.
+        ///   Looks up a localized string similar to http://api.eve-marketdata.com.
         /// </summary>
         public static string EVEMarketDataBaseUrl {
             get {
@@ -1272,6 +1272,42 @@ namespace EVEMon.Common.Constants {
         public static string NotificationRefTypes {
             get {
                 return ResourceManager.GetString("NotificationRefTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://o.smium.org.
+        /// </summary>
+        public static string OsmiumBaseUrl {
+            get {
+                return ResourceManager.GetString("OsmiumBaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /api/convert/{0}/eft.
+        /// </summary>
+        public static string OsmiumLoadoutDetails {
+            get {
+                return ResourceManager.GetString("OsmiumLoadoutDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /api/json/loadout/query/{0}?limit=50&amp;sortby=creationdate.
+        /// </summary>
+        public static string OsmiumLoadoutFeed {
+            get {
+                return ResourceManager.GetString("OsmiumLoadoutFeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /loadout/{0}.
+        /// </summary>
+        public static string OsmiumLoadoutTopic {
+            get {
+                return ResourceManager.GetString("OsmiumLoadoutTopic", resourceCulture);
             }
         }
         

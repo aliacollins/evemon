@@ -3,13 +3,13 @@
 namespace EVEMon.Common.Serialization.BattleClinic.Loadout
 {
     [XmlRoot("loadouts")]
-    public sealed class SerializableLoadoutFeed
+    public sealed class SerializableBCLoadoutFeed
     {
         /// <summary>
         /// Gets or sets the race.
         /// </summary>
         /// <value>The race.</value>
         [XmlElement("race")]
-        public SerializableLoadoutRace Race { get; set; }
+        public SerializableBCLoadoutRace Race { get; set; }
     }
 }

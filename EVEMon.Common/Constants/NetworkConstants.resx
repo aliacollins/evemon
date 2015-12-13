@@ -554,10 +554,10 @@
     <value>https://ssl.google-analytics.com/collect</value>
   </data>
   <data name="EVEMarketDataAPIItemPrices" xml:space="preserve">
-    <value>api/item_prices2.xml?char_name=evemon&amp;buysell=a</value>
+    <value>/api/item_prices2.xml?char_name=evemon&amp;buysell=a</value>
   </data>
   <data name="EVEMarketDataBaseUrl" xml:space="preserve">
-    <value>http://api.eve-marketdata.com/</value>
+    <value>http://api.eve-marketdata.com</value>
   </data>
   <data name="EVECentralAPIItemPrices" xml:space="preserve">
     <value>/api/marketstat</value>
@@ -567,5 +567,17 @@
   </data>
   <data name="NISTTimeServer" xml:space="preserve">
     <value>tcp://time.nist.gov:13</value>
+  </data>
+  <data name="OsmiumBaseUrl" xml:space="preserve">
+    <value>https://o.smium.org</value>
+  </data>
+  <data name="OsmiumLoadoutFeed" xml:space="preserve">
+    <value>/api/json/loadout/query/{0}?limit=50&amp;sortby=creationdate</value>
+  </data>
+  <data name="OsmiumLoadoutDetails" xml:space="preserve">
+    <value>/api/convert/{0}/eft</value>
+  </data>
+  <data name="OsmiumLoadoutTopic" xml:space="preserve">
+    <value>/loadout/{0}</value>
   </data>
 </root>

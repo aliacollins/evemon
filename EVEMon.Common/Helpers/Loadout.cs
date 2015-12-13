@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using EVEMon.Common.Data;
-using EVEMon.Common.Serialization.BattleClinic.Loadout;
 
 namespace EVEMon.Common.Helpers
 {
@@ -10,7 +9,7 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Prevents a default instance of the <see cref="Loadout"/> class from being created.
         /// </summary>
-        private Loadout()
+        public Loadout()
         {
             ID = 0;
             Name = String.Empty;
@@ -31,22 +30,6 @@ namespace EVEMon.Common.Helpers
         {
             Name = name;
             Description = description;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Loadout"/> class.
-        /// </summary>
-        /// <param name="loadout">The loadout.</param>
-        public Loadout(SerializableLoadout loadout)
-        {
-            ID = loadout.ID;
-            Name = loadout.Name;
-            Description = String.Empty;
-            Author = loadout.Author;
-            Rating = loadout.Rating;
-            TopicID = loadout.TopicID;
-            SubmissionDate = loadout.SubmissionDate;
-            Items = Enumerable.Empty<Item>();
         }
     }
 }

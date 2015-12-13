@@ -153,12 +153,12 @@ namespace EVEMon.SkillPlanner
 
             // Set labels while the user wait
             lblShipName.Text = m_ship.Name;
-            lblLoadoutName.Text = "No Loadout Selected";
+            lblLoadoutName.Text = @"No Loadout Selected";
             lblAuthor.Text = String.Empty;
             lblSubmitDate.Text = String.Empty;
             lblPlanned.Text = String.Empty;
             lblPlanned.Visible = false;
-            lblTrainTime.Text = "N/A";
+            lblTrainTime.Text = @"N/A";
             lblTrainTime.Visible = true;
             lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture, "Fetching loadouts for {0}", m_ship.Name);
             btnPlan.Enabled = false;
@@ -195,7 +195,7 @@ namespace EVEMon.SkillPlanner
             {
                 throbberLoadouts.State = ThrobberState.Strobing;
                 lblLoadouts.Text = String.Format(CultureConstants.DefaultCulture,
-                    "There are no loadouts for {0}, why not submit one to {1}?", m_ship.Name,  Settings.LoadoutsProvider.Provider.Name);
+                    "There are no loadouts for {0}, why not submit one to {1}?", m_ship.Name, Settings.LoadoutsProvider.Provider.Name);
                 return;
             }
 
@@ -331,7 +331,7 @@ namespace EVEMon.SkillPlanner
             {
                 btnPlan.Enabled = false;
                 lblPlanned.Visible = true;
-                lblPlanned.Text = "All skills already trained.";
+                lblPlanned.Text = @"All skills already trained.";
                 lblTrainTime.Visible = false;
                 return;
             }
@@ -341,7 +341,7 @@ namespace EVEMon.SkillPlanner
             {
                 btnPlan.Enabled = false;
                 lblPlanned.Visible = true;
-                lblPlanned.Text = "All skills already trained or planned.";
+                lblPlanned.Text = @"All skills already trained or planned.";
                 lblTrainTime.Visible = false;
                 return;
             }
@@ -531,8 +531,7 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture,
-                    Settings.LoadoutsProvider.Provider.TopicUrl, m_selectedLoadout.TopicID)));
+                Util.OpenURL(Settings.LoadoutsProvider.Provider.TopicUrl);
                 return;
             }
 

@@ -24,7 +24,7 @@ namespace EVEMon.Common.Loadouts
         /// <value>
         /// The topic URL.
         /// </value>
-        public abstract string TopicUrl { get; }
+        public abstract Uri TopicUrl { get; }
 
         /// <summary>
         /// Gets the providers.
@@ -54,7 +54,7 @@ namespace EVEMon.Common.Loadouts
         /// Gets the loadout by identifier asynchronous.
         /// </summary>
         /// <param name="id">The id.</param>
-        public abstract void GetLoadoutByIDAsync(int id);
+        public abstract void GetLoadoutByIDAsync(long id);
 
         /// <summary>
         /// Deserializes the loadout.

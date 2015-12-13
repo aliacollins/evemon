@@ -7,9 +7,11 @@ using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Serialization.BattleClinic.Loadout;
 using EVEMon.Common.Serialization.FittingXml;
+using EVEMon.Common.Serialization.Osmium.Loadout;
 
 namespace EVEMon.Common.Helpers
 {
@@ -147,6 +149,9 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         public static ILoadoutInfo DeserializeEFTFormat(string text)
         {
+            if (String.IsNullOrWhiteSpace(text))
+                throw new ArgumentNullException("text");
+
             string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             ILoadoutInfo loadoutInfo = new LoadoutInfo();
@@ -297,34 +302,70 @@ namespace EVEMon.Common.Helpers
             return loadoutInfo;
         }
 
-        /// <summary>
-        /// Deserializes the BattleClinic XML feed format.
-        /// </summary>
-        /// <param name="ship">The ship.</param>
-        /// <param name="feed">The feed.</param>
-        /// <returns></returns>
-        public static ILoadoutInfo DeserializeBCXMLFeedFormat(Item ship, SerializableLoadoutFeed feed)
+        public static ILoadoutInfo DeserializeOsmiumJsonFeedFormat(Item ship, List<SerializableOsmiumLoadoutFeed> feed)
         {
             ILoadoutInfo loadoutInfo = new LoadoutInfo
             {
                 Ship = ship
             };
 
-            loadoutInfo.Loadouts.AddRange(feed.Race.Loadouts.Select(serialLoadout => new Loadout(serialLoadout)));
+            loadoutInfo.Loadouts
+                .AddRange(feed
+                    .Select(serialLoadout =>
+                        new Loadout
+                        {
+                            ID = serialLoadout.ID,
+                            Name = serialLoadout.Name,
+                            Description = serialLoadout.RawDescription,
+                            Author = serialLoadout.Author.Name,
+                            Rating = serialLoadout.Rating,
+                            SubmissionDate = serialLoadout.CreationDate.UnixTimeStampToDateTime(),
+                            Items = Enumerable.Empty<Item>()
+                        }));
 
             return loadoutInfo;
         }
 
         /// <summary>
-        /// Deserializes the BattleClinic XML format.
+        /// Deserializes the BattleClinic XML feed format.
+        /// </summary>
+        /// <param name="ship">The ship.</param>
+        /// <param name="feed">The feed.</param>
+        /// <returns></returns>
+        public static ILoadoutInfo DeserializeBCXMLFeedFormat(Item ship, SerializableBCLoadoutFeed feed)
+        {
+            ILoadoutInfo loadoutInfo = new LoadoutInfo
+            {
+                Ship = ship
+            };
+
+            loadoutInfo.Loadouts
+                .AddRange(feed.Race.Loadouts
+                    .Select(serialLoadout =>
+                        new Loadout
+                        {
+                            ID = serialLoadout.ID,
+                            Name = serialLoadout.Name,
+                            Description = String.Empty,
+                            Author = serialLoadout.Author,
+                            Rating = serialLoadout.Rating,
+                            SubmissionDate = serialLoadout.SubmissionDate,
+                            Items = Enumerable.Empty<Item>()
+                        }));
+
+            return loadoutInfo;
+        }
+
+        /// <summary>
+        /// Deserializes the BattleClinic XML loadout format.
         /// </summary>
         /// <param name="loadout">The loadout.</param>
         /// <param name="slots">The slots.</param>
-        public static void DeserializeBCXMLFormat(Loadout loadout, IEnumerable<SerializableLoadoutSlot> slots)
+        public static void DeserializeBCXMLLoadoutFormat(Loadout loadout, IEnumerable<SerializableBCLoadoutSlot> slots)
         {
             var listOfItems = new List<Item>();
 
-            foreach (IGrouping<string, SerializableLoadoutSlot> slotType in slots.GroupBy(x => x.SlotType))
+            foreach (IGrouping<string, SerializableBCLoadoutSlot> slotType in slots.GroupBy(x => x.SlotType))
             {
                 listOfItems.AddRange(slotType.Where(slot => slot.ItemID != 0)
                     .Select(slot => StaticItems.GetItemByID(slot.ItemID))
