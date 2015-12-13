@@ -364,7 +364,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.buttonForumTopic.Location = new System.Drawing.Point(6, 98);
             this.buttonForumTopic.Name = "buttonForumTopic";
-            this.buttonForumTopic.Size = new System.Drawing.Size(113, 23);
+            this.buttonForumTopic.Size = new System.Drawing.Size(109, 23);
             this.buttonForumTopic.TabIndex = 31;
             this.buttonForumTopic.Text = "Discuss this loadout";
             this.buttonForumTopic.UseVisualStyleBackColor = true;

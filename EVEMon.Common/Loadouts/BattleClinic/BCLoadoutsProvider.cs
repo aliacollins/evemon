@@ -14,6 +14,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
 
         private static bool s_queryFeedPending;
         private static bool s_queryPending;
+        private static int s_selectedLoadoutTopicID;
 
         #endregion
 
@@ -37,12 +38,15 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         /// <value>
         /// The topic URL.
         /// </value>
-        public override string TopicUrl
+        public override Uri TopicUrl
         {
-            get { return NetworkConstants.BattleClinicLoadoutTopic; }
+            get
+            {
+                return new Uri(String.Format(CultureConstants.InvariantCulture,
+                    NetworkConstants.BattleClinicLoadoutTopic, s_selectedLoadoutTopicID));
+            }
         }
-
-
+        
         #endregion
 
 
@@ -61,7 +65,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
             Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
                 String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutsFeed, ship.ID)));
 
-            Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutsFeedDownloaded, true);
+            Util.DownloadXmlAsync<SerializableBCLoadoutFeed>(url, OnLoadoutsFeedDownloaded, true);
 
             s_queryFeedPending = true;
         }
@@ -70,7 +74,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         /// Gets the loadout by identifier asynchronous.
         /// </summary>
         /// <param name="id">The id.</param>
-        public override void GetLoadoutByIDAsync(int id)
+        public override void GetLoadoutByIDAsync(long id)
         {
             // Quit if query is pending
             if (s_queryPending)
@@ -79,7 +83,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
             Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BattleClinicEVEBase,
                 String.Format(CultureConstants.InvariantCulture, NetworkConstants.BattleClinicLoadoutDetails, id)));
 
-            Util.DownloadXmlAsync<SerializableLoadoutFeed>(url, OnLoadoutDownloaded, true);
+            Util.DownloadXmlAsync<SerializableBCLoadoutFeed>(url, OnLoadoutDownloaded, true);
 
             s_queryPending = true;
         }
@@ -91,12 +95,14 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         /// <param name="feed">The feed.</param>
         public override ILoadoutInfo DeserializeLoadoutsFeed(Item ship, object feed)
         {
-            SerializableLoadoutFeed loadoutFeed = feed as SerializableLoadoutFeed;
+            if (feed == null)
+                throw new ArgumentNullException("feed");
 
-            if (loadoutFeed == null)
-                return new LoadoutInfo();
+            SerializableBCLoadoutFeed loadoutFeed = feed as SerializableBCLoadoutFeed;
 
-            return LoadoutHelper.DeserializeBCXMLFeedFormat(ship, loadoutFeed);
+            return loadoutFeed == null
+                ? new LoadoutInfo()
+                : LoadoutHelper.DeserializeBCXMLFeedFormat(ship, loadoutFeed);
         }
 
         /// <summary>
@@ -106,20 +112,26 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         /// <param name="feed">The feed.</param>
         public override void DeserializeLoadout(Loadout loadout, object feed)
         {
-            SerializableLoadoutFeed loadoutFeed = feed as SerializableLoadoutFeed;
+            if (loadout == null)
+                throw new ArgumentNullException("loadout");
+
+            if (feed == null)
+                throw new ArgumentNullException("feed");
+
+            SerializableBCLoadoutFeed loadoutFeed = feed as SerializableBCLoadoutFeed;
 
             if (loadoutFeed == null)
                 return;
 
-            LoadoutHelper.DeserializeBCXMLFormat(loadout, loadoutFeed.Race.Loadouts.First().Slots);
+            s_selectedLoadoutTopicID = loadoutFeed.Race.Loadouts.First().TopicID;
+            LoadoutHelper.DeserializeBCXMLLoadoutFormat(loadout, loadoutFeed.Race.Loadouts.First().Slots);
         }
 
         /// <summary>
         /// Called when we downloaded a loadouts feed from BattleClinic.
         /// </summary>
-        /// <param name="loadoutFeed"></param>
-        /// <param name="errorMessage"></param>
-        /// <returns></returns>
+        /// <param name="loadoutFeed">The loadout feed.</param>
+        /// <param name="errorMessage">The error message.</param>
         private static void OnLoadoutsFeedDownloaded(object loadoutFeed, string errorMessage)
         {
             s_queryFeedPending = false;
@@ -130,9 +142,8 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         /// <summary>
         /// Called when we downloaded a loadout from BattleClinic
         /// </summary>
-        /// <param name="loadout"></param>
-        /// <param name="errorMessage"></param>
-        /// <returns></returns>
+        /// <param name="loadout">The loadout.</param>
+        /// <param name="errorMessage">The error message.</param>
         private static void OnLoadoutDownloaded(object loadout, string errorMessage)
         {
             s_queryPending = false;

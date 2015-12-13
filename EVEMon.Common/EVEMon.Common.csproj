@@ -200,6 +200,8 @@
     <Compile Include="Loadouts\BattleClinic\BCLoadoutsProvider.cs" />
     <Compile Include="Loadouts\LoadoutsProvider.cs" />
     <Compile Include="Loadouts\Osmium\OsmiumLoadoutsProvider.cs" />
+    <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutAuthor.cs" />
+    <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutFeed.cs" />
     <Compile Include="MarketPricer\EveCentral\ECItemPricer.cs" />
     <Compile Include="MarketPricer\PricerMarketOrdersQueryResult.cs" />
     <Compile Include="Helpers\ApiTesterUIHelper.cs" />
@@ -504,9 +506,9 @@
     <Compile Include="Serialization\BattleClinic\CloudStorage\SerializableBCAPICredentials.cs" />
     <Compile Include="Serialization\BattleClinic\CloudStorage\SerializableBCAPIFiles.cs" />
     <Compile Include="Serialization\BattleClinic\CloudStorage\SerializableFilesListItem.cs" />
-    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadout.cs" />
-    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutRace.cs" />
-    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutSlot.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableBCLoadout.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableBCLoadoutRace.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableBCLoadoutSlot.cs" />
     <Compile Include="Serialization\Datafiles\CertificatesDatafile.cs" />
     <Compile Include="Serialization\Datafiles\SerializableAgent.cs" />
     <Compile Include="Serialization\Datafiles\SerializableBlueprint.cs" />
@@ -942,7 +944,7 @@
     <Compile Include="Scheduling\ScheduleEntryTitleComparer.cs" />
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Scheduling\SimpleScheduleEntry.cs" />
-    <Compile Include="Serialization\BattleClinic\Loadout\SerializableLoadoutFeed.cs" />
+    <Compile Include="Serialization\BattleClinic\Loadout\SerializableBCLoadoutFeed.cs" />
     <Compile Include="Serialization\Eve\SerializableAPICharacterSheet.cs" />
     <Compile Include="Serialization\Eve\SerializableCharacterAttributes.cs" />
     <Compile Include="Serialization\Settings\SerializableRecurringScheduleEntry.cs" />

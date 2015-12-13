@@ -7,16 +7,16 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
     /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
     /// Don't use auto-property with private setter for the collections as it does not work with XmlSerializer.
     /// </remarks>
-    public sealed class SerializableLoadoutRace
+    public sealed class SerializableBCLoadoutRace
     {
-        private readonly Collection<SerializableLoadout> m_loadouts;
+        private readonly Collection<SerializableBCLoadout> m_loadouts;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SerializableLoadoutRace"/> class.
+        /// Initializes a new instance of the <see cref="SerializableBCLoadoutRace"/> class.
         /// </summary>
-        public SerializableLoadoutRace()
+        public SerializableBCLoadoutRace()
         {
-            m_loadouts = new Collection<SerializableLoadout>();
+            m_loadouts = new Collection<SerializableBCLoadout>();
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         /// <value>The loadouts.</value>
         [XmlArray("ship")]
         [XmlArrayItem("loadout")]
-        public Collection<SerializableLoadout> Loadouts
+        public Collection<SerializableBCLoadout> Loadouts
         {
             get { return m_loadouts; }
         }

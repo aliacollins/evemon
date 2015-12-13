@@ -2,7 +2,7 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.BattleClinic.Loadout
 {
-    public sealed class SerializableLoadoutSlot
+    public sealed class SerializableBCLoadoutSlot
     {
         /// <summary>
         /// Gets or sets the type of the slot.

@@ -43,9 +43,6 @@ namespace EVEMon.Common.Helpers
                     using (TcpClient tcpClient = new TcpClient(url.Host, url.Port))
                     using (NetworkStream netStream = tcpClient.GetStream())
                     {
-                        if (!netStream.CanRead)
-                            return;
-
                         byte[] data = new byte[24];
                         netStream.Read(data, 0, data.Length);
                         data = data.Skip(7).Take(17).ToArray();

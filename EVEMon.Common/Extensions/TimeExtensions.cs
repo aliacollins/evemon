@@ -20,6 +20,16 @@ namespace EVEMon.Common.Extensions
         }
 
         /// <summary>
+        /// Converts a Unix timestamp to <see cref="System.DateTime"/>.
+        /// </summary>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <returns></returns>
+        public static DateTime UnixTimeStampToDateTime(this long timestamp)
+        {
+            return new DateTime(1970, 1, 1).AddSeconds(timestamp);
+        }
+
+        /// <summary>
         /// Converts a DateTime to the API date/time string.
         /// </summary>
         /// <param name="time"></param>

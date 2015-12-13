@@ -9,16 +9,16 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
     /// This is the optimized way to implement the object as serializable and satisfy all FxCop rules.
     /// Don't use auto-property with private setter for the collections as it does not work with XmlSerializer.
     /// </remarks>
-    public sealed class SerializableLoadout
+    public sealed class SerializableBCLoadout
     {
-        private readonly Collection<SerializableLoadoutSlot> m_slots;
+        private readonly Collection<SerializableBCLoadoutSlot> m_slots;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SerializableLoadout"/> class.
+        /// Initializes a new instance of the <see cref="SerializableBCLoadout"/> class.
         /// </summary>
-        public SerializableLoadout()
+        public SerializableBCLoadout()
         {
-            m_slots = new Collection<SerializableLoadoutSlot>();
+            m_slots = new Collection<SerializableBCLoadoutSlot>();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         /// </summary>
         /// <value>The loadout id.</value>
         [XmlAttribute("loadoutID")]
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         /// <summary>
         /// Gets or sets the submission date string.
@@ -105,7 +105,7 @@ namespace EVEMon.Common.Serialization.BattleClinic.Loadout
         /// </summary>
         /// <value>The slots.</value>
         [XmlElement("slot")]
-        public Collection<SerializableLoadoutSlot> Slots
+        public Collection<SerializableBCLoadoutSlot> Slots
         {
             get { return m_slots; }
         }

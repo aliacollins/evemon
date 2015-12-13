@@ -610,45 +610,85 @@ namespace EVEMon.Common
                 url,
                 // Callback
                 (asyncResult, userState) =>
-                    {
-                        T result = null;
-                        string errorMessage = String.Empty;
+                {
+                    T result = null;
+                    string errorMessage = String.Empty;
 
-                        // Was there an HTTP error ??
-                        if (asyncResult.Error != null)
-                            errorMessage = asyncResult.Error.Message;
-                        else
+                    // Was there an HTTP error ??
+                    if (asyncResult.Error != null)
+                        errorMessage = asyncResult.Error.Message;
+                    else
+                    {
+                        // No http error, let's try to deserialize
+                        try
                         {
-                            // No http error, let's try to deserialize
-                            try
+                            // Deserialize
+                            using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)asyncResult.Result))
                             {
-                                // Deserialize
-                                using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)asyncResult.Result))
-                                {
-                                    XmlSerializer xs = new XmlSerializer(typeof(T));
-                                    result = (T)xs.Deserialize(reader);
-                                }
-                            }
-                            catch (InvalidOperationException exc)
-                            {
-                                // An error occurred during the deserialization
-                                ExceptionHandler.LogException(exc, true);
-                                errorMessage = (exc.InnerException == null
-                                                    ? exc.Message
-                                                    : exc.InnerException.Message);
-                            }
-                            catch (XmlException exc)
-                            {
-                                ExceptionHandler.LogException(exc, true);
-                                errorMessage = (exc.InnerException == null
-                                                    ? exc.Message
-                                                    : exc.InnerException.Message);
+                                XmlSerializer xs = new XmlSerializer(typeof(T));
+                                result = (T)xs.Deserialize(reader);
                             }
                         }
+                        catch (InvalidOperationException exc)
+                        {
+                            // An error occurred during the deserialization
+                            ExceptionHandler.LogException(exc, true);
+                            errorMessage = (exc.InnerException == null
+                                ? exc.Message
+                                : exc.InnerException.Message);
+                        }
+                        catch (XmlException exc)
+                        {
+                            ExceptionHandler.LogException(exc, true);
+                            errorMessage = (exc.InnerException == null
+                                ? exc.Message
+                                : exc.InnerException.Message);
+                        }
+                    }
 
-                        // We got the result, let's invoke the callback on this actor
-                        Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
-                    },
+                    // We got the result, let's invoke the callback on this actor
+                    Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
+                },
+                null, HttpMethod.Post, acceptEncoded, postData);
+        }
+
+        public static void DownloadJsonAsync<T>(Uri url, DownloadCallback<T> callback, bool acceptEncoded = false,
+                                                string postData = null) 
+            where T : class
+        {
+            HttpWebService.DownloadStringAsync(
+                url,
+                // Callback
+                (asyncResult, userState) =>
+                {
+                    T result = null;
+                    string errorMessage = String.Empty;
+                    
+                    // Was there an HTTP error ??
+                    if (asyncResult.Error != null)
+                        errorMessage = asyncResult.Error.Message;
+                    else
+                    {
+                        // No http error, let's try to deserialize
+                        try
+                        {
+                            // Deserialize
+                            result = new JavaScriptSerializer().Deserialize<T>(asyncResult.Result);
+                        }
+                        catch (InvalidOperationException exc)
+                        {
+                            // An error occurred during the deserialization
+                            ExceptionHandler.LogException(exc, true);
+                            errorMessage = (exc.InnerException == null
+                                ? exc.Message
+                                : exc.InnerException.Message);
+                        }
+                    }
+
+                    // We got the result, let's invoke the callback on this actor
+                    Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
+
+                },
                 null, HttpMethod.Post, acceptEncoded, postData);
         }
 
@@ -907,7 +947,10 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets a memory stream.
         /// </summary>
-        /// <returns>A new memory stream</returns>
+        /// <param name="buffer">The buffer.</param>
+        /// <returns>
+        /// A new memory stream
+        /// </returns>
         public static MemoryStream GetMemoryStream(byte[] buffer = null)
         {
             return buffer == null ? new MemoryStream() : new MemoryStream(buffer);
