@@ -320,6 +320,7 @@ namespace EVEMon.Common.Helpers
                             Author = serialLoadout.Author.Name,
                             Rating = serialLoadout.Rating,
                             SubmissionDate = serialLoadout.CreationDate.UnixTimeStampToDateTime(),
+                            TopicUrl = new Uri(serialLoadout.Uri),
                             Items = Enumerable.Empty<Item>()
                         }));
 
@@ -350,6 +351,9 @@ namespace EVEMon.Common.Helpers
                             Author = serialLoadout.Author,
                             Rating = serialLoadout.Rating,
                             SubmissionDate = serialLoadout.SubmissionDate,
+                            TopicUrl = new Uri(
+                                String.Format(CultureConstants.InvariantCulture,
+                                    NetworkConstants.BattleClinicLoadoutTopic, serialLoadout.TopicID)),
                             Items = Enumerable.Empty<Item>()
                         }));
 

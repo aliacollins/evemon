@@ -31,21 +31,6 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         {
             get { return "BattleClinic"; }
         }
-
-        /// <summary>
-        /// Gets the topic URL.
-        /// </summary>
-        /// <value>
-        /// The topic URL.
-        /// </value>
-        public override Uri TopicUrl
-        {
-            get
-            {
-                return new Uri(String.Format(CultureConstants.InvariantCulture,
-                    NetworkConstants.BattleClinicLoadoutTopic, s_selectedLoadoutTopicID));
-            }
-        }
         
         #endregion
 
