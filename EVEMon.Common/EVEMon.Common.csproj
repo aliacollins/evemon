@@ -189,7 +189,7 @@
     <Compile Include="Enumerations\TransactionType.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\IReadonlyKeyedCollection.cs" />
-    <Compile Include="Helpers\BaseLoadout.cs" />
+    <Compile Include="Helpers\LoadoutBase.cs" />
     <Compile Include="Helpers\GAnalyticsTracker.cs" />
     <Compile Include="Helpers\Loadout.cs" />
     <Compile Include="Helpers\LoadoutExporter.cs" />

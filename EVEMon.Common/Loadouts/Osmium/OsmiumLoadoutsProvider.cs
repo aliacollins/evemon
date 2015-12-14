@@ -35,21 +35,6 @@ namespace EVEMon.Common.Loadouts.Osmium
             get { return "Osmium"; }
         }
 
-        /// <summary>
-        /// Gets the topic URL.
-        /// </summary>
-        /// <value>
-        /// The topic URL.
-        /// </value>
-        public override Uri TopicUrl
-        {
-            get
-            {
-                return new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.OsmiumBaseUrl,
-                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutTopic, s_selectedLoadout.ID)));
-            }
-        }
-
         #endregion
 
 

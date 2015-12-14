@@ -4,7 +4,7 @@ using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Helpers
 {
-    public abstract class BaseLoadout
+    public abstract class LoadoutBase
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -53,6 +53,14 @@ namespace EVEMon.Common.Helpers
         /// The submission date.
         /// </value>
         public DateTimeOffset SubmissionDate { get; internal set; }
+
+        /// <summary>
+        /// Gets the topic URL.
+        /// </summary>
+        /// <value>
+        /// The topic URL.
+        /// </value>
+        public Uri TopicUrl { get; internal set; }
 
         /// <summary>
         /// Gets or sets the items.

@@ -4,7 +4,7 @@ using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Helpers
 {
-    public sealed class Loadout : BaseLoadout
+    public sealed class Loadout : LoadoutBase
     {
         /// <summary>
         /// Prevents a default instance of the <see cref="Loadout"/> class from being created.

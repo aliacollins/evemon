@@ -531,7 +531,7 @@ namespace EVEMon.SkillPlanner
         {
             if (m_selectedLoadout != null)
             {
-                Util.OpenURL(Settings.LoadoutsProvider.Provider.TopicUrl);
+                Util.OpenURL(m_selectedLoadout.TopicUrl);
                 return;
             }
 

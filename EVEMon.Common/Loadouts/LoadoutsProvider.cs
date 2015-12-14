@@ -19,14 +19,6 @@ namespace EVEMon.Common.Loadouts
         public abstract string Name { get; }
 
         /// <summary>
-        /// Gets the topic URL.
-        /// </summary>
-        /// <value>
-        /// The topic URL.
-        /// </value>
-        public abstract Uri TopicUrl { get; }
-
-        /// <summary>
         /// Gets the providers.
         /// </summary>
         /// <value>
