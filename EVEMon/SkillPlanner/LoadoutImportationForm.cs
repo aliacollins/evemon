@@ -258,24 +258,36 @@ namespace EVEMon.SkillPlanner
 
             // Decode EFT format
             if (m_loadoutFormat == LoadoutFormat.EFT)
-                m_loadoutInfo = LoadoutHelper.DeserializeEFTFormat(m_clipboardText);
+                m_loadoutInfo = LoadoutHelper.DeserializeEftFormat(m_clipboardText);
 
             // Decode XML format
             if (m_loadoutFormat == LoadoutFormat.XML)
-                m_loadoutInfo = LoadoutHelper.DeserializeXMLFormat(m_clipboardText);
+                m_loadoutInfo = LoadoutHelper.DeserializeXmlFormat(m_clipboardText);
 
             // Decode DNA format
             if (m_loadoutFormat == LoadoutFormat.DNA)
-                m_loadoutInfo = LoadoutHelper.DeserializeDNAFormat(m_clipboardText);
+                m_loadoutInfo = LoadoutHelper.DeserializeDnaFormat(m_clipboardText);
+
+            // Decode CLF format
+            if (m_loadoutFormat == LoadoutFormat.CLF)
+                m_loadoutInfo = LoadoutHelper.DeserializeClfFormat(m_clipboardText);
+
+            if (m_loadoutInfo == null || !m_loadoutInfo.Loadouts.Any())
+                return;
 
             LoadoutNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Name: {0}{1}",
-                m_loadoutInfo.Loadouts.First().Name, m_loadoutFormat == LoadoutFormat.DNA ? " - DNA loadout" : String.Empty);
+                m_loadoutInfo.Loadouts.First().Name, m_loadoutFormat == LoadoutFormat.DNA
+                    ? " - DNA loadout"
+                    : String.Empty)
+                .WordWrap(55);
 
             ShipTypeNameLabel.Text = String.Format(CultureConstants.DefaultCulture, "Ship: {0}",
-                m_loadoutInfo.Ship != null ? m_loadoutInfo.Ship.Name : String.Empty);
+                m_loadoutInfo.Ship != null ? m_loadoutInfo.Ship.Name : String.Empty)
+                .WordWrap(55);
 
             DescriptionLabel.Text = String.Format(CultureConstants.DefaultCulture, "Description: {0}",
-                m_loadoutInfo.Loadouts.First().Description);
+                m_loadoutInfo.Loadouts.First().Description)
+                .WordWrap(55);
 
             m_objects.Add(m_loadoutInfo.Ship);
 

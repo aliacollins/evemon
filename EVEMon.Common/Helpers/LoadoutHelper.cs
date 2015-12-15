@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Extensions;
 using EVEMon.Common.Interfaces;
-using EVEMon.Common.Serialization.BattleClinic.Loadout;
+using EVEMon.Common.Serialization.FittingClf;
 using EVEMon.Common.Serialization.FittingXml;
-using EVEMon.Common.Serialization.Osmium.Loadout;
 
 namespace EVEMon.Common.Helpers
 {
@@ -62,6 +59,12 @@ namespace EVEMon.Common.Helpers
                 return true;
             }
 
+            if (IsCLFFormat(text))
+            {
+                format = LoadoutFormat.CLF;
+                return true;
+            }
+
             format = LoadoutFormat.None;
             return false;
         }
@@ -73,7 +76,7 @@ namespace EVEMon.Common.Helpers
         /// <returns>
         /// 	<c>true</c> if the loadout is in EFT format; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsEFTFormat(string text)
+        internal static bool IsEFTFormat(string text)
         {
             string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
@@ -100,9 +103,9 @@ namespace EVEMon.Common.Helpers
         /// <returns>
         /// 	<c>true</c> if the loadout is in XML format; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsXMLFormat(string text)
+        internal static bool IsXMLFormat(string text)
         {
-            XmlRootAttribute xmlRoot = new SerializableFittings().GetType().GetCustomAttributes(
+            XmlRootAttribute xmlRoot = new SerializableXmlFittings().GetType().GetCustomAttributes(
                 typeof(XmlRootAttribute), false).Cast<XmlRootAttribute>().FirstOrDefault();
 
             if (xmlRoot == null)
@@ -114,7 +117,7 @@ namespace EVEMon.Common.Helpers
                     return false;
             }
 
-            SerializableFittings fittings = Util.DeserializeXmlFromString<SerializableFittings>(text);
+            SerializableXmlFittings fittings = Util.DeserializeXmlFromString<SerializableXmlFittings>(text);
             return StaticItems.ShipsMarketGroup.AllItems.Any(x => x.Name == fittings.Fitting.ShipType.Name);
         }
 
@@ -125,7 +128,7 @@ namespace EVEMon.Common.Helpers
         /// <returns>
         /// 	<c>true</c> if the loadout is in DNA format; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsDNAFormat(string text)
+        internal static bool IsDNAFormat(string text)
         {
             string[] lines = text.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
@@ -143,11 +146,23 @@ namespace EVEMon.Common.Helpers
         }
 
         /// <summary>
+        /// Determines whether whether the loadout is in CLF format.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>
+        /// 	<c>true</c> if the loadout is in CLF format; otherwise, <c>false</c>.
+        /// </returns>
+        internal static bool IsCLFFormat(string text)
+        {
+            return text.Length != 0 && text.StartsWith("{\"clf-version\":", StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
         /// Deserializes an EFT loadout text.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        public static ILoadoutInfo DeserializeEFTFormat(string text)
+        public static ILoadoutInfo DeserializeEftFormat(string text)
         {
             if (String.IsNullOrWhiteSpace(text))
                 throw new ArgumentNullException("text");
@@ -183,14 +198,23 @@ namespace EVEMon.Common.Helpers
                 }
 
                 // Retrieve the item (might be a drone)
-                string itemName = line.Contains(",") ? line.Substring(0, line.LastIndexOf(',')) : line;
-                itemName = itemName.Contains(" x")
-                    ? itemName.Substring(0, line.LastIndexOf(" x", StringComparison.CurrentCulture))
-                    : itemName;
+                string itemName = line.Contains(",")
+                    ? line.Substring(0, line.LastIndexOf(','))
+                    : line.Contains(" x")
+                        ? line.Substring(0, line.LastIndexOf(" x", StringComparison.CurrentCulture))
+                        : line;
+
+                int quantity = line.Contains(" x")
+                    ? Int32.Parse(line.Substring(line.LastIndexOf(" x", StringComparison.CurrentCulture) + 2,
+                        line.Length - (line.LastIndexOf(" x", StringComparison.CurrentCulture) + 2)))
+                    : 1;
 
                 Item item = StaticItems.GetItemByName(itemName) ?? Item.UnknownItem;
 
-                listOfItems.Add(item);
+                for (int i = 0; i < quantity; i++)
+                {
+                    listOfItems.Add(item);
+                }
 
                 // Retrieve the charge
                 string chargeName = line.Contains(",") ? line.Substring(line.LastIndexOf(',') + 2) : null;
@@ -213,13 +237,13 @@ namespace EVEMon.Common.Helpers
         }
 
         /// <summary>
-        /// Deserializes the XML loadout text.
+        /// Deserializes an XML loadout text.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        public static ILoadoutInfo DeserializeXMLFormat(string text)
+        public static ILoadoutInfo DeserializeXmlFormat(string text)
         {
-            SerializableFittings fittings = Util.DeserializeXmlFromString<SerializableFittings>(text);
+            SerializableXmlFittings fittings = Util.DeserializeXmlFromString<SerializableXmlFittings>(text);
 
             ILoadoutInfo loadoutInfo = new LoadoutInfo();
 
@@ -236,21 +260,35 @@ namespace EVEMon.Common.Helpers
             Loadout loadout = new Loadout(fittings.Fitting.Name, fittings.Fitting.Description.Text);
 
             IEnumerable<Item> listOfItems = fittings.Fitting.FittingHardware
-                .Where(hardware => hardware != null && hardware.Item != null)
+                .Where(hardware => hardware != null && hardware.Item != null && hardware.Slot != "drone bay")
                 .Select(hardware => hardware.Item);
 
-            loadout.Items = listOfItems;
+            IEnumerable<SerializableXmlFittingHardware> listOfXmlDrones = fittings.Fitting.FittingHardware
+                .Where(hardware => hardware != null &&
+                                   hardware.Item != null &&
+                                   hardware.Slot == "drone bay");
+
+            var listOfDrones = new List<Item>();
+            foreach (SerializableXmlFittingHardware drone in listOfXmlDrones)
+            {
+                for (int i = 0; i < drone.Quantity; i++)
+                {
+                    listOfDrones.Add(drone.Item);
+                }
+            }
+
+            loadout.Items = listOfItems.Concat(listOfDrones);
             loadoutInfo.Loadouts.Add(loadout);
 
             return loadoutInfo;
         }
 
         /// <summary>
-        /// Deserializes the DNA loadout text.
+        /// Deserializes a DNA loadout text.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        public static ILoadoutInfo DeserializeDNAFormat(string text)
+        public static ILoadoutInfo DeserializeDnaFormat(string text)
         {
             string[] lines = text.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
@@ -285,7 +323,12 @@ namespace EVEMon.Common.Helpers
                     ? StaticItems.GetItemByID(itemID) ?? Item.UnknownItem
                     : Item.UnknownItem;
 
-                byte quantity = Byte.Parse(line.Substring(line.LastIndexOf(';') + 1), CultureConstants.InvariantCulture);
+                // Retrieve the quantity
+                int quantity = Int32.Parse(line.Substring(line.LastIndexOf(';') + 1), CultureConstants.InvariantCulture);
+
+                // Trim excess ammo & charges, no need to display more than the max number of modules
+                if (item.MarketGroup.BelongsIn(DBConstants.AmmosAndChargesMarketGroupID) && quantity > 8)
+                    quantity = 1;
 
                 for (int i = 0; i < quantity; i++)
                 {
@@ -302,81 +345,60 @@ namespace EVEMon.Common.Helpers
             return loadoutInfo;
         }
 
-        public static ILoadoutInfo DeserializeOsmiumJsonFeedFormat(Item ship, List<SerializableOsmiumLoadoutFeed> feed)
-        {
-            ILoadoutInfo loadoutInfo = new LoadoutInfo
-            {
-                Ship = ship
-            };
-
-            loadoutInfo.Loadouts
-                .AddRange(feed
-                    .Select(serialLoadout =>
-                        new Loadout
-                        {
-                            ID = serialLoadout.ID,
-                            Name = serialLoadout.Name,
-                            Description = serialLoadout.RawDescription,
-                            Author = serialLoadout.Author.Name,
-                            Rating = serialLoadout.Rating,
-                            SubmissionDate = serialLoadout.CreationDate.UnixTimeStampToDateTime(),
-                            TopicUrl = new Uri(serialLoadout.Uri),
-                            Items = Enumerable.Empty<Item>()
-                        }));
-
-            return loadoutInfo;
-        }
-
         /// <summary>
-        /// Deserializes the BattleClinic XML feed format.
+        /// Deserializes a CLF loadout text.
         /// </summary>
-        /// <param name="ship">The ship.</param>
-        /// <param name="feed">The feed.</param>
+        /// <param name="text">The text.</param>
         /// <returns></returns>
-        public static ILoadoutInfo DeserializeBCXMLFeedFormat(Item ship, SerializableBCLoadoutFeed feed)
+        public static ILoadoutInfo DeserializeClfFormat(string text)
         {
-            ILoadoutInfo loadoutInfo = new LoadoutInfo
+            ILoadoutInfo loadoutInfo = new LoadoutInfo();
+
+            // Nothing to evaluate
+            if (text.Length == 0)
+                return loadoutInfo;
+
+            SerializableClfFitting clfFitting = Util.DeserializeJson<SerializableClfFitting>(text);
+
+            // Nothing to evaluate
+            if (clfFitting == null)
+                return loadoutInfo;
+
+            // Retrieve the ship
+            loadoutInfo.Ship = clfFitting.Ship.Item;
+
+            if (loadoutInfo.Ship == null)
+                return loadoutInfo;
+
+            Loadout loadout = new Loadout(clfFitting.MetaData.Title, clfFitting.MetaData.Description);
+
+            IEnumerable<Item> listOfItems = clfFitting.Presets.SelectMany(x => x.Modules)
+                .Where(module => module != null && module.Item != null)
+                .Select(module => module.Item);
+
+            IEnumerable<Item> listOfCharges = clfFitting.Presets.SelectMany(x => x.Modules)
+                .SelectMany(module => module.Charges)
+                .Where(module => module != null && module.Item != null)
+                .Select(module => module.Item);
+
+            IEnumerable<SerializableClfFittingDroneType> listOfClfDrones = clfFitting.Drones.SelectMany(x => x.InBay)
+                .Concat(clfFitting.Drones.SelectMany(x => x.InSpace))
+                .Where(drone => drone != null && drone.Item != null)
+                .Select(drone => drone);
+
+            var listOfDrones = new List<Item>();
+            foreach (SerializableClfFittingDroneType clfDrone in listOfClfDrones)
             {
-                Ship = ship
-            };
-
-            loadoutInfo.Loadouts
-                .AddRange(feed.Race.Loadouts
-                    .Select(serialLoadout =>
-                        new Loadout
-                        {
-                            ID = serialLoadout.ID,
-                            Name = serialLoadout.Name,
-                            Description = String.Empty,
-                            Author = serialLoadout.Author,
-                            Rating = serialLoadout.Rating,
-                            SubmissionDate = serialLoadout.SubmissionDate,
-                            TopicUrl = new Uri(
-                                String.Format(CultureConstants.InvariantCulture,
-                                    NetworkConstants.BattleClinicLoadoutTopic, serialLoadout.TopicID)),
-                            Items = Enumerable.Empty<Item>()
-                        }));
-
-            return loadoutInfo;
-        }
-
-        /// <summary>
-        /// Deserializes the BattleClinic XML loadout format.
-        /// </summary>
-        /// <param name="loadout">The loadout.</param>
-        /// <param name="slots">The slots.</param>
-        public static void DeserializeBCXMLLoadoutFormat(Loadout loadout, IEnumerable<SerializableBCLoadoutSlot> slots)
-        {
-            var listOfItems = new List<Item>();
-
-            foreach (IGrouping<string, SerializableBCLoadoutSlot> slotType in slots.GroupBy(x => x.SlotType))
-            {
-                listOfItems.AddRange(slotType.Where(slot => slot.ItemID != 0)
-                    .Select(slot => StaticItems.GetItemByID(slot.ItemID))
-                    .Where(item => item != null));
+                for (int i = 0; i < clfDrone.Quantity; i++)
+                {
+                    listOfDrones.Add(clfDrone.Item);
+                }
             }
 
-            loadout.Items = listOfItems;
+            loadout.Items = listOfItems.Concat(listOfCharges).Concat(listOfDrones);
+            loadoutInfo.Loadouts.Add(loadout);
+
+            return loadoutInfo;
         }
 
         /// <summary>

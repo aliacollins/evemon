@@ -2,9 +2,9 @@ using System.Xml.Serialization;
 
 namespace EVEMon.Common.Serialization.FittingXml
 {
-    public sealed class SerializableFittingDescription
+    public sealed class SerializableXmlFittingShipType
     {
         [XmlAttribute("value")]
-        public string Text { get; set; }
+        public string Name { get; set; }
     }
 }

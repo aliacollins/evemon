@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Net;
@@ -17,7 +19,6 @@ namespace EVEMon.Common.Loadouts.Osmium
 
         private static bool s_queryFeedPending;
         private static bool s_queryPending;
-        private Loadout s_selectedLoadout;
 
         #endregion
 
@@ -91,7 +92,7 @@ namespace EVEMon.Common.Loadouts.Osmium
 
             return loadoutFeed == null
                 ? new LoadoutInfo()
-                : LoadoutHelper.DeserializeOsmiumJsonFeedFormat(ship, loadoutFeed);
+                : DeserializeOsmiumJsonFeedFormat(ship, loadoutFeed);
         }
 
         /// <summary>
@@ -107,9 +108,7 @@ namespace EVEMon.Common.Loadouts.Osmium
             if (feed == null)
                 throw new ArgumentNullException("feed");
 
-            s_selectedLoadout = loadout;
-
-            loadout.Items = LoadoutHelper.DeserializeEFTFormat(feed as string).Loadouts.First().Items;
+            loadout.Items = LoadoutHelper.DeserializeEftFormat(feed as string).Loadouts.First().Items;
         }
 
         /// <summary>
@@ -137,6 +136,37 @@ namespace EVEMon.Common.Loadouts.Osmium
 
                 EveMonClient.OnLoadoutDownloaded(e.Result, e.Error?.Message);
             });
+        }
+
+        /// <summary>
+        /// Deserializes the Osmium Json feed format.
+        /// </summary>
+        /// <param name="ship">The ship.</param>
+        /// <param name="feed">The feed.</param>
+        /// <returns></returns>
+        private static ILoadoutInfo DeserializeOsmiumJsonFeedFormat(Item ship, IEnumerable<SerializableOsmiumLoadoutFeed> feed)
+        {
+            ILoadoutInfo loadoutInfo = new LoadoutInfo
+            {
+                Ship = ship
+            };
+
+            loadoutInfo.Loadouts
+                .AddRange(feed
+                    .Select(serialLoadout =>
+                        new Loadout
+                        {
+                            ID = serialLoadout.ID,
+                            Name = serialLoadout.Name,
+                            Description = serialLoadout.RawDescription,
+                            Author = serialLoadout.Author.Name,
+                            Rating = serialLoadout.Rating,
+                            SubmissionDate = serialLoadout.CreationDate.UnixTimeStampToDateTime(),
+                            TopicUrl = new Uri(serialLoadout.Uri),
+                            Items = Enumerable.Empty<Item>()
+                        }));
+
+            return loadoutInfo;
         }
 
         #endregion

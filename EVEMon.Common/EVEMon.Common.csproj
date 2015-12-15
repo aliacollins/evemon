@@ -82,6 +82,7 @@
       <HintPath>..\packages\NetOffice.Outlook.Net40.1.7.2.0\lib\net40\OutlookApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="YamlDotNet, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\YamlDotNet.3.7.0\lib\net35\YamlDotNet.dll</HintPath>
       <Private>True</Private>
@@ -200,6 +201,14 @@
     <Compile Include="Loadouts\BattleClinic\BCLoadoutsProvider.cs" />
     <Compile Include="Loadouts\LoadoutsProvider.cs" />
     <Compile Include="Loadouts\Osmium\OsmiumLoadoutsProvider.cs" />
+    <Compile Include="Serialization\FittingClf\SerializableClfFittingChargeType.cs" />
+    <Compile Include="Serialization\FittingClf\SerializableClfFittingDroneType.cs" />
+    <Compile Include="Serialization\FittingClf\SerializableClfFittingDroneSet.cs" />
+    <Compile Include="Serialization\FittingClf\SerializableClfFitting.cs" />
+    <Compile Include="Serialization\FittingClf\SerializableClfFittingMetaData.cs" />
+    <Compile Include="Serialization\FittingClf\SerializableClfFittingModule.cs" />
+    <Compile Include="Serialization\FittingClf\SerializableClfFittingPreset.cs" />
+    <Compile Include="Serialization\FittingClf\SerializableClfFittingShipType.cs" />
     <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutAuthor.cs" />
     <Compile Include="Serialization\Osmium\Loadout\SerializableOsmiumLoadoutFeed.cs" />
     <Compile Include="MarketPricer\EveCentral\ECItemPricer.cs" />
@@ -544,11 +553,11 @@
     <Compile Include="Serialization\Exportation\OutputAttributeEnhancer.cs" />
     <Compile Include="Serialization\Exportation\OutputPlans.cs" />
     <Compile Include="Serialization\Exportation\OutputSkill.cs" />
-    <Compile Include="Serialization\FittingXml\SerializableFitting.cs" />
-    <Compile Include="Serialization\FittingXml\SerializableFittingDescription.cs" />
-    <Compile Include="Serialization\FittingXml\SerializableFittingHardware.cs" />
-    <Compile Include="Serialization\FittingXml\SerializableFittings.cs" />
-    <Compile Include="Serialization\FittingXml\SerializableFittingShipType.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableXmlFitting.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableXmlFittingDescription.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableXmlFittingHardware.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableXmlFittings.cs" />
+    <Compile Include="Serialization\FittingXml\SerializableXmlFittingShipType.cs" />
     <Compile Include="Serialization\PatchXml\SerializableDatafile.cs" />
     <Compile Include="Serialization\PatchXml\SerializablePatch.cs" />
     <Compile Include="Serialization\PatchXml\SerializableRelease.cs" />

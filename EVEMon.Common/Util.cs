@@ -5,6 +5,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -1092,6 +1094,36 @@ namespace EVEMon.Common
             byte[] data = ZlibUncompress(stream.ToArray()) as byte[];
 
             return data == null ? inputStream : new MemoryStream(data);
+        }
+
+        /// <summary>
+        /// Deserializes a JSON string to the passed object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json">The json.</param>
+        /// <returns></returns>
+        public static T DeserializeJson<T>(string json)
+            where T : class
+        {
+            try
+            {
+                using (MemoryStream stream = GetMemoryStream(Encoding.Unicode.GetBytes(json)))
+                {
+                    DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(T));
+                    return (T)js.ReadObject(stream);
+                }
+            }
+            catch (InvalidOperationException exc)
+            {
+                // An error occurred during the deserialization
+                ExceptionHandler.LogException(exc, true);
+                return null;
+            }
+            catch (SerializationException exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+                return null;
+            }
         }
 
         /// <summary>

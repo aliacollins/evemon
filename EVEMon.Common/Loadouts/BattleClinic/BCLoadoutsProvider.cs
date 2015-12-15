@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
@@ -14,7 +16,6 @@ namespace EVEMon.Common.Loadouts.BattleClinic
 
         private static bool s_queryFeedPending;
         private static bool s_queryPending;
-        private static int s_selectedLoadoutTopicID;
 
         #endregion
 
@@ -87,7 +88,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
 
             return loadoutFeed == null
                 ? new LoadoutInfo()
-                : LoadoutHelper.DeserializeBCXMLFeedFormat(ship, loadoutFeed);
+                : DeserializeBCXMLFeedFormat(ship, loadoutFeed);
         }
 
         /// <summary>
@@ -108,8 +109,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
             if (loadoutFeed == null)
                 return;
 
-            s_selectedLoadoutTopicID = loadoutFeed.Race.Loadouts.First().TopicID;
-            LoadoutHelper.DeserializeBCXMLLoadoutFormat(loadout, loadoutFeed.Race.Loadouts.First().Slots);
+            DeserializeBCXMLLoadoutFormat(loadout, loadoutFeed.Race.Loadouts.First().Slots);
         }
 
         /// <summary>
@@ -134,6 +134,58 @@ namespace EVEMon.Common.Loadouts.BattleClinic
             s_queryPending = false;
 
             EveMonClient.OnLoadoutDownloaded(loadout, errorMessage);
+        }
+
+        /// <summary>
+        /// Deserializes the BattleClinic XML feed format.
+        /// </summary>
+        /// <param name="ship">The ship.</param>
+        /// <param name="feed">The feed.</param>
+        /// <returns></returns>
+        private static ILoadoutInfo DeserializeBCXMLFeedFormat(Item ship, SerializableBCLoadoutFeed feed)
+        {
+            ILoadoutInfo loadoutInfo = new LoadoutInfo
+            {
+                Ship = ship
+            };
+
+            loadoutInfo.Loadouts
+                .AddRange(feed.Race.Loadouts
+                    .Select(serialLoadout =>
+                        new Loadout
+                        {
+                            ID = serialLoadout.ID,
+                            Name = serialLoadout.Name,
+                            Description = String.Empty,
+                            Author = serialLoadout.Author,
+                            Rating = serialLoadout.Rating,
+                            SubmissionDate = serialLoadout.SubmissionDate,
+                            TopicUrl = new Uri(
+                                String.Format(CultureConstants.InvariantCulture,
+                                    NetworkConstants.BattleClinicLoadoutTopic, serialLoadout.TopicID)),
+                            Items = Enumerable.Empty<Item>()
+                        }));
+
+            return loadoutInfo;
+        }
+
+        /// <summary>
+        /// Deserializes the BattleClinic XML loadout format.
+        /// </summary>
+        /// <param name="loadout">The loadout.</param>
+        /// <param name="slots">The slots.</param>
+        private static void DeserializeBCXMLLoadoutFormat(Loadout loadout, IEnumerable<SerializableBCLoadoutSlot> slots)
+        {
+            var listOfItems = new List<Item>();
+
+            foreach (IGrouping<string, SerializableBCLoadoutSlot> slotType in slots.GroupBy(x => x.SlotType))
+            {
+                listOfItems.AddRange(slotType.Where(slot => slot.ItemID != 0)
+                    .Select(slot => StaticItems.GetItemByID(slot.ItemID))
+                    .Where(item => item != null));
+            }
+
+            loadout.Items = listOfItems;
         }
 
         #endregion
