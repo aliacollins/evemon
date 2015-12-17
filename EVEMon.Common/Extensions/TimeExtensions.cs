@@ -32,12 +32,15 @@ namespace EVEMon.Common.Extensions
         /// <summary>
         /// Converts a DateTime to the API date/time string.
         /// </summary>
-        /// <param name="time"></param>
+        /// <param name="time">The time.</param>
+        /// <param name="format">The format.</param>
         /// <returns></returns>
-        public static string DateTimeToTimeString(this DateTime time)
+        public static string DateTimeToTimeString(this DateTime time, string format = null)
         {
             // 'time' can be any predefined or custom format
-            return time.ToString("u", CultureConstants.DefaultCulture.DateTimeFormat).TrimEnd('Z');
+            return !String.IsNullOrWhiteSpace(format)
+                ? time.ToString(format, CultureConstants.InvariantCulture.DateTimeFormat)
+                : time.ToString("u", CultureConstants.InvariantCulture.DateTimeFormat).TrimEnd('Z');
         }
 
         /// <summary>

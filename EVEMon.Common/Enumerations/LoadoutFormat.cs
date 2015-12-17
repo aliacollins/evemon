@@ -8,6 +8,7 @@
         None,
         EFT,
         XML,
-        DNA
+        DNA,
+        CLF
     }
 }

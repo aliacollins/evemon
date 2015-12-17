@@ -3,7 +3,7 @@ using EVEMon.Common.Data;
 
 namespace EVEMon.Common.Serialization.FittingXml
 {
-    public sealed class SerializableFittingHardware
+    public sealed class SerializableXmlFittingHardware
     {
         [XmlAttribute("qty")]
         public int Quantity { get; set; }

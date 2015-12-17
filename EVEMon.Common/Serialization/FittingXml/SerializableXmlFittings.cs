@@ -3,9 +3,9 @@
 namespace EVEMon.Common.Serialization.FittingXml
 {
     [XmlRoot("fittings")]
-    public sealed class SerializableFittings
+    public sealed class SerializableXmlFittings
     {
         [XmlElement("fitting")]
-        public SerializableFitting Fitting { get; set; }
+        public SerializableXmlFitting Fitting { get; set; }
     }
 }

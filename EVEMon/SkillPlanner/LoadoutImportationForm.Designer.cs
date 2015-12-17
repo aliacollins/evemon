@@ -57,12 +57,12 @@ namespace EVEMon.SkillPlanner
             this.RightClickContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ShowInBrowserMenuItem});
             this.RightClickContextMenuStrip.Name = "cmNode";
-            this.RightClickContextMenuStrip.Size = new System.Drawing.Size(198, 26);
+            this.RightClickContextMenuStrip.Size = new System.Drawing.Size(189, 26);
             // 
             // ShowInBrowserMenuItem
             // 
             this.ShowInBrowserMenuItem.Name = "ShowInBrowserMenuItem";
-            this.ShowInBrowserMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.ShowInBrowserMenuItem.Size = new System.Drawing.Size(188, 22);
             this.ShowInBrowserMenuItem.Text = "Show in &Item Browser";
             this.ShowInBrowserMenuItem.Click += new System.EventHandler(this.tvLoadout_DoubleClick);
             // 
@@ -138,7 +138,7 @@ namespace EVEMon.SkillPlanner
             this.ExplanationLabel.Padding = new System.Windows.Forms.Padding(2, 5, 2, 5);
             this.ExplanationLabel.Size = new System.Drawing.Size(374, 23);
             this.ExplanationLabel.TabIndex = 1;
-            this.ExplanationLabel.Text = "Copy an EFT, XML or DNA formated loadout into the clipboard.";
+            this.ExplanationLabel.Text = "Copy an EFT, XML, CLF or DNA formated loadout into the clipboard.";
             this.ExplanationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ResultsTreeView
@@ -146,13 +146,14 @@ namespace EVEMon.SkillPlanner
             this.ResultsTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultsTreeView.Location = new System.Drawing.Point(5, 5);
             this.ResultsTreeView.Name = "ResultsTreeView";
-            this.ResultsTreeView.Size = new System.Drawing.Size(364, 278);
+            this.ResultsTreeView.Size = new System.Drawing.Size(364, 294);
             this.ResultsTreeView.TabIndex = 1;
             this.ResultsTreeView.DoubleClick += new System.EventHandler(this.tvLoadout_DoubleClick);
             this.ResultsTreeView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tvLoadout_MouseUp);
             // 
             // HeaderPanel
             // 
+            this.HeaderPanel.AutoSize = true;
             this.HeaderPanel.Controls.Add(this.DescriptionLabel);
             this.HeaderPanel.Controls.Add(this.ShipTypeNameLabel);
             this.HeaderPanel.Controls.Add(this.LoadoutNameLabel);
@@ -160,7 +161,7 @@ namespace EVEMon.SkillPlanner
             this.HeaderPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.HeaderPanel.Location = new System.Drawing.Point(0, 0);
             this.HeaderPanel.Name = "HeaderPanel";
-            this.HeaderPanel.Size = new System.Drawing.Size(374, 82);
+            this.HeaderPanel.Size = new System.Drawing.Size(374, 66);
             this.HeaderPanel.TabIndex = 3;
             // 
             // DescriptionLabel
@@ -194,10 +195,10 @@ namespace EVEMon.SkillPlanner
             // 
             this.TreeViewPanel.Controls.Add(this.ResultsTreeView);
             this.TreeViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TreeViewPanel.Location = new System.Drawing.Point(0, 82);
+            this.TreeViewPanel.Location = new System.Drawing.Point(0, 66);
             this.TreeViewPanel.Name = "TreeViewPanel";
             this.TreeViewPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.TreeViewPanel.Size = new System.Drawing.Size(374, 288);
+            this.TreeViewPanel.Size = new System.Drawing.Size(374, 304);
             this.TreeViewPanel.TabIndex = 4;
             // 
             // LoadoutImportationForm
@@ -219,6 +220,7 @@ namespace EVEMon.SkillPlanner
             this.HeaderPanel.PerformLayout();
             this.TreeViewPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
