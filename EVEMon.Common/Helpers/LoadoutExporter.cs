@@ -140,30 +140,35 @@ namespace EVEMon.Common.Helpers
 
             // Low Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[2]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[2]].ToArray()));
+                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[2]].ToArray()))
+                    .AppendLine();
 
             // Medium Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[1]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[1]].ToArray()));
+                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[1]].ToArray()))
+                    .AppendLine();
 
             // High Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[0]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[0]].ToArray()));
+                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[0]].ToArray()))
+                    .AppendLine();
 
             // Rig Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[3]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[3]].ToArray()));
+                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[3]].ToArray()))
+                    .AppendLine();
 
             // Subsystem Slots
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[4]))
-                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[4]].ToArray()));
+                exportText.AppendLine(String.Join(Environment.NewLine, items[LoadoutHelper.OrderedSlotNames[4]].ToArray()))
+                    .AppendLine();
 
             // Drones
             if (items.ContainsKey(LoadoutHelper.OrderedSlotNames[6]))
             {
-                foreach (String itemName in items[LoadoutHelper.OrderedSlotNames[6]])
+                foreach (IGrouping<string, string> itemName in items[LoadoutHelper.OrderedSlotNames[6]].GroupBy(itemName => itemName))
                 {
-                    exportText.AppendFormat(CultureConstants.DefaultCulture, "{0} x1", itemName);
+                    exportText.AppendFormat(CultureConstants.DefaultCulture, "{0} x{1}", itemName.Key, itemName.Count());
                     exportText.AppendLine();
                 }
             }
