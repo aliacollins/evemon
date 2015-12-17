@@ -257,6 +257,10 @@ namespace EVEMon.Common.Helpers
             if (loadoutInfo.Ship == null)
                 return loadoutInfo;
 
+            // Special case to avoid displaying gzCLF block from Osmium
+            if (fittings.Fitting.Description.Text.StartsWith("BEGIN gzCLF BLOCK", StringComparison.InvariantCultureIgnoreCase))
+                fittings.Fitting.Description.Text = String.Empty;
+
             Loadout loadout = new Loadout(fittings.Fitting.Name, fittings.Fitting.Description.Text);
 
             IEnumerable<Item> listOfItems = fittings.Fitting.FittingHardware
