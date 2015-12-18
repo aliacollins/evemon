@@ -134,6 +134,13 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
+        /// Checks the API credentials asynchronously.
+        /// </summary>
+        /// <param name="userID">The user identifier.</param>
+        /// <param name="apiKey">The API key.</param>
+        public abstract void CheckAPICredentialsAsync(uint userID, string apiKey);
+
+        /// <summary>
         /// Uploads the settings file.
         /// </summary>
         public abstract bool UploadSettingsFile();
@@ -152,13 +159,6 @@ namespace EVEMon.Common.CloudStorageServices
         /// Downloads the settings file asynchronously.
         /// </summary>
         public abstract void DownloadSettingsFileAsync();
-
-        /// <summary>
-        /// Checks the API credentials asynchronously.
-        /// </summary>
-        /// <param name="userID">The user identifier.</param>
-        /// <param name="apiKey">The API key.</param>
-        public abstract void CheckAPICredentialsAsync(uint userID, string apiKey);
 
         /// <summary>
         /// Occurs when the credentials get checked.
@@ -256,9 +256,9 @@ namespace EVEMon.Common.CloudStorageServices
 
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
-                saveFileDialog.Title = "EVEMon Settings Backup File Save";
+                saveFileDialog.Title = @"EVEMon Settings Backup File Save";
                 saveFileDialog.DefaultExt = "bak";
-                saveFileDialog.Filter = "EVEMon Settings Backup Files (*.bak)|*.bak";
+                saveFileDialog.Filter = @"EVEMon Settings Backup Files (*.bak)|*.bak";
                 saveFileDialog.FilterIndex = 1;
                 saveFileDialog.RestoreDirectory = true;
 

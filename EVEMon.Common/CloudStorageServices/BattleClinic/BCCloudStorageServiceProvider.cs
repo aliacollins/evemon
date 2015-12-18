@@ -191,36 +191,6 @@ namespace EVEMon.Common.CloudStorageServices.BattleClinic
             DownloadSettingsFileAsync(OnDownloadSettingsFileAsync);
         }
 
-        /// <summary>
-        /// Uploads the settings file asynchronously.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        private void UploadSettingsFileAsync(QueryCallback<SerializableBCAPIFiles> callback)
-        {
-            string postData = String.Format(CultureConstants.InvariantCulture,
-                "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
-                CloudStorageServicesSettings.Default.BCUserID, CloudStorageServicesSettings.Default.BCAPIKey,
-                CloudStorageServicesSettings.Default.BCApplicationKey,
-                EveMonClient.SettingsFileName, SettingsFileContent);
-
-            QueryMethodAsync(BCAPIMethods.FileSave, callback, postData, DataCompression.Gzip);
-        }
-
-        /// <summary>
-        /// Downloads the settings file asynchronous.
-        /// </summary>
-        /// <param name="callback">The callback.</param>
-        private void DownloadSettingsFileAsync(QueryCallback<SerializableBCAPIFiles> callback)
-        {
-            string postData = String.Format(CultureConstants.InvariantCulture,
-                "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
-                CloudStorageServicesSettings.Default.BCUserID, CloudStorageServicesSettings.Default.BCAPIKey,
-                CloudStorageServicesSettings.Default.BCApplicationKey,
-                EveMonClient.SettingsFileName);
-
-            QueryMethodAsync(BCAPIMethods.FileGetByName, callback, postData, DataCompression.Gzip);
-        }
-
         #endregion
 
 
@@ -390,6 +360,36 @@ namespace EVEMon.Common.CloudStorageServices.BattleClinic
 
 
         #region Querying helpers
+
+        /// <summary>
+        /// Uploads the settings file asynchronously.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        private void UploadSettingsFileAsync(QueryCallback<SerializableBCAPIFiles> callback)
+        {
+            string postData = String.Format(CultureConstants.InvariantCulture,
+                "userID={0}&apiKey={1}&applicationKey={2}&id=0&name={3}&content={4}",
+                CloudStorageServicesSettings.Default.BCUserID, CloudStorageServicesSettings.Default.BCAPIKey,
+                CloudStorageServicesSettings.Default.BCApplicationKey,
+                EveMonClient.SettingsFileName, SettingsFileContent);
+
+            QueryMethodAsync(BCAPIMethods.FileSave, callback, postData, DataCompression.Gzip);
+        }
+
+        /// <summary>
+        /// Downloads the settings file asynchronous.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        private void DownloadSettingsFileAsync(QueryCallback<SerializableBCAPIFiles> callback)
+        {
+            string postData = String.Format(CultureConstants.InvariantCulture,
+                "userID={0}&apiKey={1}&applicationKey={2}&fileName={3}",
+                CloudStorageServicesSettings.Default.BCUserID, CloudStorageServicesSettings.Default.BCAPIKey,
+                CloudStorageServicesSettings.Default.BCApplicationKey,
+                EveMonClient.SettingsFileName);
+
+            QueryMethodAsync(BCAPIMethods.FileGetByName, callback, postData, DataCompression.Gzip);
+        }
 
         /// <summary>
         /// Query this method with the provided HTTP POST data.
