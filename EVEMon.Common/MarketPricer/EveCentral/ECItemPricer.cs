@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -95,17 +94,11 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         {
             CachedUntil = File.GetLastWriteTimeUtc(file).AddDays(1);
 
-            // In case the file is an old one, we try to get a fresh copy
-            if (CachedUntil < DateTime.UtcNow)
-            {
-                GetPricesAsync();
-                return;
-            }
-
             // Deserialize the xml file
             SerializableECItemPrices result = Util.DeserializeXmlFromFile<SerializableECItemPrices>(file);
 
-            if (result == null)
+            // In case the file is an old one, we try to get a fresh copy
+            if (result == null || CachedUntil < DateTime.UtcNow)
                 return;
 
             PriceByItemID.Clear();
@@ -147,7 +140,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             PriceByItemID.Clear();
 
-            var marketItems = StaticItems.AllItems
+            IOrderedEnumerable<int> marketItems = StaticItems.AllItems
                 .Where(item =>
                     !item.MarketGroup.BelongsIn(DBConstants.RootNonMarketGroupID) &&
                     !item.MarketGroup.BelongsIn(DBConstants.BlueprintRootNonMarketGroupID) &&
@@ -217,7 +210,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             if (CheckQueryStatus(result, errormessage))
                 return;
 
-            if (Debugger.IsAttached)
+            if (EveMonClient.IsDebugBuild)
                 EveMonClient.Trace(@"Remaining ids: {0}", String.Join(", ", s_queryMonitorList));
 
             EveMonClient.Trace("{0}.GetPricesAsync - done", GetType().Name);
@@ -249,7 +242,10 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
                 // Reset query pending flag
                 if (s_queryCounter == 0)
+                {
                     s_queryPending = false;
+                    EveMonClient.OnPricesDownloaded(null, String.Empty);
+                }
                 else
                     return true;
             }
