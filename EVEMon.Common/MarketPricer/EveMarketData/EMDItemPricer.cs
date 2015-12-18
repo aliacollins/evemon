@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.EveMarketData.MarketPricer;
 using EVEMon.Common.Service;
 
@@ -90,18 +88,17 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         {
             CachedUntil = File.GetLastWriteTimeUtc(file).AddDays(1);
 
+            // Deserialize the xml file
+            SerializableEMDItemPrices result = Util.DeserializeXmlFromFile<SerializableEMDItemPrices>(file);
+
             // In case the file is an old one, we try to get a fresh copy
-            if (CachedUntil < DateTime.UtcNow)
+            if (result == null || CachedUntil < DateTime.UtcNow)
             {
                 GetPricesAsync();
                 return;
             }
 
-            // Deserialize the xml file
-            SerializableEMDItemPrices result = Util.DeserializeXmlFromFile<SerializableEMDItemPrices>(file);
-
-            if (result == null)
-                return;
+            PriceByItemID.Clear();
 
             // Import the data
             Import(result.Result.ItemPrices);
@@ -115,7 +112,6 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         {
             EveMonClient.Trace("{0}.Import - begin", GetType().Name);
 
-            PriceByItemID.Clear();
             foreach (IGrouping<int, SerializableEMDItemPriceListItem> item in itemPrices.GroupBy(item => item.ID))
             {
                 double buyPrice = item.First(x => x.BuySell == "b").Price;
@@ -145,6 +141,8 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             s_queryPending = true;
 
+            PriceByItemID.Clear();
+
             EveMonClient.Trace("{0}.GetPricesAsync - begin", GetType().Name);
 
             var url = new Uri(
@@ -167,6 +165,8 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
                 s_queryPending = false;
 
                 EveMonClient.Trace(errormessage);
+                EveMonClient.OnPricesDownloaded(null, String.Empty);
+
                 return;
             }
 

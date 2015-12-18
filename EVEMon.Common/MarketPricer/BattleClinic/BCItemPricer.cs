@@ -100,6 +100,8 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
                 return;
             }
 
+            PriceByItemID.Clear();
+
             // Import the data
             Import(result.ItemPrices);
         }
@@ -112,7 +114,6 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         {
             EveMonClient.Trace("{0}.Import - begin", GetType().Name);
 
-            PriceByItemID.Clear();
             foreach (SerializableBCItemPrice item in itemPrices)
             {
                 PriceByItemID[item.ID] = item.Price;
@@ -134,6 +135,8 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
                 return;
 
             s_queryPending = true;
+
+            PriceByItemID.Clear();
 
             EveMonClient.Trace("{0}.GetPricesAsync - begin", GetType().Name);
 
@@ -157,6 +160,8 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
                 s_queryPending = false;
 
                 EveMonClient.Trace(errormessage);
+                EveMonClient.OnPricesDownloaded(null, String.Empty);
+
                 return;
             }
 
