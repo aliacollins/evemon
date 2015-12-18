@@ -151,9 +151,6 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         /// <param name="errormessage">The errormessage.</param>
         private void OnPricesDownloaded(SerializableBCItemPrices result, string errormessage)
         {
-            if (result == null)
-                return;
-
             if (!String.IsNullOrEmpty(errormessage))
             {
                 // Reset query pending flag
@@ -162,6 +159,9 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
                 EveMonClient.Trace(errormessage);
                 return;
             }
+
+            if (result == null)
+                return;
 
             EveMonClient.Trace("{0}.GetPricesAsync - done", GetType().Name);
 
