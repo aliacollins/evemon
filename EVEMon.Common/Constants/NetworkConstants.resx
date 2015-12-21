@@ -494,7 +494,7 @@
     <value>http://eve.battleclinic.com</value>
   </data>
   <data name="BitBucketWikiBase" xml:space="preserve">
-    <value>https://bitbucket.org/BattleClinic/evemon/wiki</value>
+    <value>https://bitbucket.org/EVEMonDevTeam/evemon/wiki</value>
   </data>
   <data name="EVECommunityBase" xml:space="preserve">
     <value>https://community.eveonline.com</value>
