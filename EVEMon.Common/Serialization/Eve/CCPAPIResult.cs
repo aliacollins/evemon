@@ -12,7 +12,7 @@ namespace EVEMon.Common.Serialization.Eve
     [XmlRoot("eveapi")]
     public sealed class CCPAPIResult<T> : IAPIResult
     {
-        private Enumerations.CCPAPI.CCPAPIErrors m_error;
+        private CCPAPIErrors m_error;
         private readonly string m_errorMessage;
         private readonly Exception m_exception;
 
@@ -24,7 +24,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// </summary>
         public CCPAPIResult()
         {
-            m_error = Enumerations.CCPAPI.CCPAPIErrors.None;
+            m_error = CCPAPIErrors.None;
             m_errorMessage = String.Empty;
             m_exception = null;
         }
@@ -46,7 +46,7 @@ namespace EVEMon.Common.Serialization.Eve
         public CCPAPIResult(HttpWebServiceException exc)
             : this(exc as Exception)
         {
-            m_error = Enumerations.CCPAPI.CCPAPIErrors.Http;
+            m_error = CCPAPIErrors.Http;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace EVEMon.Common.Serialization.Eve
         public CCPAPIResult(XmlException exc)
             : this((Exception)exc)
         {
-            m_error = Enumerations.CCPAPI.CCPAPIErrors.Xml;
+            m_error = CCPAPIErrors.Xml;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace EVEMon.Common.Serialization.Eve
         public CCPAPIResult(XsltException exc)
             : this(exc as Exception)
         {
-            m_error = Enumerations.CCPAPI.CCPAPIErrors.Xslt;
+            m_error = CCPAPIErrors.Xslt;
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace EVEMon.Common.Serialization.Eve
             if (exc == null)
                 throw new ArgumentNullException("exc");
 
-            m_error = Enumerations.CCPAPI.CCPAPIErrors.Xml;
+            m_error = CCPAPIErrors.Xml;
             m_errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
             m_exception = exc;
         }
@@ -88,7 +88,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// </summary>
         /// <param name="error">The error.</param>
         /// <param name="message">The message.</param>
-        public CCPAPIResult(Enumerations.CCPAPI.CCPAPIErrors error, string message)
+        public CCPAPIResult(CCPAPIErrors error, string message)
         {
             m_error = error;
             m_errorMessage = message;
@@ -113,7 +113,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// </summary>
         public bool HasError
         {
-            get { return CCPError != null || m_error != Enumerations.CCPAPI.CCPAPIErrors.None; }
+            get { return CCPError != null || m_error != CCPAPIErrors.None || Result == null; }
         }
 
         /// <summary>
