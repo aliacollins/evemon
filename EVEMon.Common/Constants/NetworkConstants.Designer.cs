@@ -988,7 +988,7 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://bitbucket.org/BattleClinic/evemon/wiki.
+        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/wiki.
         /// </summary>
         public static string BitBucketWikiBase {
             get {
