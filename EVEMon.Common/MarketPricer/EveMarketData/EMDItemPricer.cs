@@ -21,7 +21,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
         public override string Name
         {
-            get { return "Eve-MarketData"; }
+            get { return ""; /*"Eve-MarketData"*/ }
         }
 
         /// <summary>
