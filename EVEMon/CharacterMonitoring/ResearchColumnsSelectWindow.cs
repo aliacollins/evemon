@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.SettingsObjects;

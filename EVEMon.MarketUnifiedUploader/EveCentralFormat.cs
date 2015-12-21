@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using EVEMon.Common;
 using EVEMon.Common.Constants;
 
 namespace EVEMon.MarketUnifiedUploader

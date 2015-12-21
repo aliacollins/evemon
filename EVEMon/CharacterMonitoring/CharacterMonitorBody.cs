@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -17,7 +16,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
-using EVEMon.Common.QueryMonitor;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.DetailsWindow;
 

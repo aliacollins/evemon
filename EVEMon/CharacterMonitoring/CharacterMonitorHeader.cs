@@ -18,7 +18,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
-using EVEMon.Common.QueryMonitor;
 
 namespace EVEMon.CharacterMonitoring
 {
