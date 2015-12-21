@@ -16,6 +16,8 @@ namespace EVEMon.Common.Helpers
     {
         private static readonly GampParameters s_parameters;
 
+        private const string DailyStartText = "Daily-Start";
+
         /// <summary>
         /// Initializes the <see cref="GAnalyticsTracker"/> class.
         /// </summary>
@@ -24,7 +26,8 @@ namespace EVEMon.Common.Helpers
             s_parameters = new GampParameters
             {
                 ProtocolVersion = "1",
-                TrackerId = "UA-69119088-1",
+                TrackerId = String.Format(CultureConstants.InvariantCulture, "UA-71610557-{0}",
+                    EveMonClient.IsDebugBuild ? "2" : "1"),
                 AnonymizeIp = true,
                 ClientId = Util.CreateSHA1SumFromMacAddress(),
                 ApplicationName = Assembly.GetEntryAssembly().GetName().Name,
@@ -42,7 +45,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         public static void TrackStart(Type type)
         {
-            TrackEventAsync(type, "ApplicationLifeCycle", SessionStatus.Start.ToString());
+            TrackEventAsync(type, "ApplicationLifecycle", SessionStatus.Start.ToString());
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         public static void TrackEnd(Type type)
         {
-            TrackEventAsync(type, "ApplicationLifeCycle", SessionStatus.End.ToString());
+            TrackEventAsync(type, "ApplicationLifecycle", SessionStatus.End.ToString());
         }
 
         /// <summary>
@@ -61,10 +64,10 @@ namespace EVEMon.Common.Helpers
         /// <param name="category">The category.</param>
         /// <param name="action">The action.</param>
         /// <param name="callback">The callback.</param>
-        public static void TrackEventAsync(Type type, string category, string action, DownloadImageCompletedCallback callback = null)
+        private static void TrackEventAsync(Type type, string category, string action, DownloadImageCompletedCallback callback = null)
         {
             if (EveMonClient.IsDebugBuild)
-                return;
+                EveMonClient.Trace("GAnalyticsTracker.{0} - {1}", category, action);
 
             s_parameters.HitType = GaHitType.Event;
             s_parameters.ScreenName = type.Name;
@@ -85,10 +88,10 @@ namespace EVEMon.Common.Helpers
                 HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
                     callback, null, HttpMethod.Post, postdata: BuildQueryString());
 
-                if (action != SessionStatus.Start.ToString() && action != "Daily-Start")
+                if (action != SessionStatus.Start.ToString() && action != DailyStartText)
                     return;
 
-                Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, "Daily-Start"));
+                Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, DailyStartText));
 
                 return;
             }
@@ -108,7 +111,9 @@ namespace EVEMon.Common.Helpers
 
             foreach (KeyValuePair<string, string> parameter in parameters)
             {
-                sb.Append(String.Format("{0}={1}", parameter.Key, Uri.EscapeDataString(parameter.Value)));
+                sb.Append(String.Format(CultureConstants.InvariantCulture, "{0}={1}",
+                    parameter.Key, Uri.EscapeDataString(parameter.Value)));
+
                 if (parameters.Keys.Last() != parameter.Key)
                     sb.Append("&");
             }
@@ -138,7 +143,10 @@ namespace EVEMon.Common.Helpers
                 if (value == null)
                 {
                     if (attribute.IsRequired)
-                        throw new ArgumentNullException(prop.Name, String.Format("{0} is a required parameter", prop.Name));
+                    {
+                        throw new ArgumentNullException(prop.Name,
+                            String.Format(CultureConstants.InvariantCulture, "{0} is a required parameter", prop.Name));
+                    }
 
                     continue;
                 }
