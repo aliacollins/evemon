@@ -32,7 +32,7 @@ namespace EVEMon.Common.Serialization.BattleClinic.CloudStorage
         [XmlIgnore]
         public bool HasError
         {
-            get { return Error != null; }
+            get { return Error != null || Result == null; }
         }
     }
 }
