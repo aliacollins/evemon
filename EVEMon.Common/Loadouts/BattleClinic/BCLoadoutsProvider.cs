@@ -88,7 +88,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
 
             return loadoutFeed == null
                 ? new LoadoutInfo()
-                : DeserializeBCXMLFeedFormat(ship, loadoutFeed);
+                : DeserializeBCXmlFeedFormat(ship, loadoutFeed);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
             if (loadoutFeed == null)
                 return;
 
-            DeserializeBCXMLLoadoutFormat(loadout, loadoutFeed.Race.Loadouts.First().Slots);
+            DeserializeBCXmlLoadoutFormat(loadout, loadoutFeed.Race.Loadouts.First().Slots);
         }
 
         /// <summary>
@@ -142,12 +142,15 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         /// <param name="ship">The ship.</param>
         /// <param name="feed">The feed.</param>
         /// <returns></returns>
-        private static ILoadoutInfo DeserializeBCXMLFeedFormat(Item ship, SerializableBCLoadoutFeed feed)
+        private static ILoadoutInfo DeserializeBCXmlFeedFormat(Item ship, SerializableBCLoadoutFeed feed)
         {
             ILoadoutInfo loadoutInfo = new LoadoutInfo
             {
                 Ship = ship
             };
+
+            if (feed.Race == null || feed.Race.Loadouts == null)
+                return loadoutInfo;
 
             loadoutInfo.Loadouts
                 .AddRange(feed.Race.Loadouts
@@ -174,7 +177,7 @@ namespace EVEMon.Common.Loadouts.BattleClinic
         /// </summary>
         /// <param name="loadout">The loadout.</param>
         /// <param name="slots">The slots.</param>
-        private static void DeserializeBCXMLLoadoutFormat(Loadout loadout, IEnumerable<SerializableBCLoadoutSlot> slots)
+        private static void DeserializeBCXmlLoadoutFormat(Loadout loadout, IEnumerable<SerializableBCLoadoutSlot> slots)
         {
             var listOfItems = new List<Item>();
 

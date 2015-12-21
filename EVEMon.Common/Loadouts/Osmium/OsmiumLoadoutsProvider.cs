@@ -151,6 +151,9 @@ namespace EVEMon.Common.Loadouts.Osmium
                 Ship = ship
             };
 
+            if (feed == null)
+                return loadoutInfo;
+
             loadoutInfo.Loadouts
                 .AddRange(feed
                     .Select(serialLoadout =>
