@@ -1,35 +1,40 @@
 ﻿<?xml version="1.0"?>
 <evemon xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <newest>
-    <date>16 November 2015</date>
-    <version>2.2.1.4022</version>
-    <md5>b2af8d2bcc6f4bb63be50d9d1de48026</md5>
-    <url>http://forum.battleclinic.com/index.php?topic=189212.0</url>
-    <autopatchurl>https://bitbucket.org/BattleClinic/evemon/downloads/EVEMon-install-2.2.1.exe</autopatchurl>
+    <date>21 December 2015</date>
+    <version>2.2.2.4104</version>
+    <md5>7a1fad1269389f98c0c77b59671c5760</md5>
+    <url>http://forum.battleclinic.com/index.php?topic=189359.0</url>
+    <autopatchurl>https://bitbucket.org/EVEMonDevTeam/evemon/downloads/EVEMon-install-2.2.2.exe</autopatchurl>
     <autopatchargs>/S /AUTORUN /SKIPDOTNET</autopatchargs>
     <additionalargs>/D=%EVEMON_EXECUTABLE_PATH%</additionalargs>
     <message><![CDATA[== Contributors for this version ==
 
- * Jimi
+ * Jimi 
 
 == Bug Fixes ==
 
-  * Fixed an issue with using search throughout the application.
-
-== Enhancements ==
-
-  * Added POS facilities for manufacturing rigs.
-  
-== Misc ==
+ * Included lookup for certificates and masteries data files when there is a data files update.
  
-  * Several improvements have been done to the codebase to make EVEMon a better application.]]></message>
+== Enhancements ==
+ 
+ * Improved the handling of the "DOWNTIME" indicator. Indicator will show only if there is only one skill in skill queue and training ends between DT.
+ * Added support for parsing contact notification.
+ * Added support of Osmium loadouts. 
+ * Added support of Common Loadout Format (CLF).
+ * Improved the exported EFT format of a loadout.
+ 
+== Misc ==
+
+ * Switched time check server from BattleClinic to NIST.
+ * Several improvements have been done to the codebase to make EVEMon a better application.]]></message>
   </newest>
   <datafiles>
     <datafile>
       <name>eve-blueprints-en-US.xml.gzip</name>
       <date>08 December 2015</date>
       <md5>6de28a6ec8dc4fbfe35ca1f53436f11d</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Frostline/988883</url>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Frostline/988883</url>
       <message><![CDATA[Frostline 1.0 (988883) blueprints data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
@@ -37,7 +42,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <name>eve-certificates-en-US.xml.gzip</name>
       <date>08 December 2015</date>
       <md5>40d8f71cfd282fc796e84b2551c8350b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Frostline/988883</url>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Frostline/988883</url>
       <message><![CDATA[Frostline 1.0 (988883) certificates data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
@@ -45,7 +50,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <name>eve-geography-en-US.xml.gzip</name>
       <date>08 December 2015</date>
       <md5>c60dd6b987340ff7d848f7eedc5a39c4</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Frostline/988883</url>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Frostline/988883</url>
       <message><![CDATA[Frostline 1.0 (988883) geography data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
@@ -53,7 +58,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <name>eve-items-en-US.xml.gzip</name>
       <date>08 December 2015</date>
       <md5>fcdb5af1a3d05f1f7dfefd06a439ec83</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Frostline/988883</url>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Frostline/988883</url>
       <message><![CDATA[Frostline 1.0 (988883) items data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
@@ -61,7 +66,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <name>eve-masteries-en-US.xml.gzip</name>
       <date>08 December 2015</date>
       <md5>ee06afd1103702eb05e0f1da930f8a6b</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Frostline/988883</url>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Frostline/988883</url>
       <message><![CDATA[Frostline 1.0 (988883) masteries data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
@@ -69,7 +74,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <name>eve-properties-en-US.xml.gzip</name>
       <date>08 December 2015</date>
       <md5>516a2cba339f40a5fbb70e4000a23a33</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Frostline/988883</url>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Frostline/988883</url>
       <message><![CDATA[Frostline 1.0 (988883) properties data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
@@ -77,7 +82,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <name>eve-reprocessing-en-US.xml.gzip</name>
       <date>08 December 2015</date>
       <md5>2ed449a5edee013317538788ea0e2263</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Frostline/988883</url>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Frostline/988883</url>
       <message><![CDATA[Frostline 1.0 (988883) reprocessing data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
@@ -85,7 +90,7 @@ NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
       <name>eve-skills-en-US.xml.gzip</name>
       <date>08 December 2015</date>
       <md5>d2aba9bade5c32055f2423c6d04118b2</md5>
-      <url>https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/Frostline/988883</url>
+      <url>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/Frostline/988883</url>
       <message><![CDATA[Frostline 1.0 (988883) skills data file by the EVEMon Development Team
 NOT COMPATIBLE with EVEMon prior to version 2.2.0]]></message>
     </datafile>
