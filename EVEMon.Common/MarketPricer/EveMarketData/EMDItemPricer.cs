@@ -21,7 +21,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
         public override string Name
         {
-            get { return ""; /*"Eve-MarketData"*/ }
+            get { return "" /*"Eve-MarketData"*/; }
         }
 
         /// <summary>
@@ -159,19 +159,24 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// <param name="errormessage">The errormessage.</param>
         private void OnPricesDownloaded(SerializableEMDItemPrices result, string errormessage)
         {
-            if (!String.IsNullOrEmpty(errormessage))
-            {
-                // Reset query pending flag
-                s_queryPending = false;
+            // Reset query pending flag
+            s_queryPending = false;
 
-                EveMonClient.Trace(errormessage);
+            if (!String.IsNullOrEmpty(errormessage) || result == null || result.Result == null || !result.Result.ItemPrices.Any())
+            {
+                if (!String.IsNullOrEmpty(errormessage))
+                    EveMonClient.Trace(errormessage);
+                else if (result == null || result.Result == null)
+                    EveMonClient.Trace("{0}.GetPricesAsync - no result", GetType().Name);
+                else if (!result.Result.ItemPrices.Any())
+                    EveMonClient.Trace("{0}.GetPricesAsync - empty result", GetType().Name);
+                else 
+                    EveMonClient.Trace("{0}.GetPricesAsync - failed", GetType().Name);
+
                 EveMonClient.OnPricesDownloaded(null, String.Empty);
 
                 return;
             }
-
-            if (result == null)
-                return;
 
             EveMonClient.Trace("{0}.GetPricesAsync - done", GetType().Name);
 

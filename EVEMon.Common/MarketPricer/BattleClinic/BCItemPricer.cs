@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.BattleClinic.MarketPricer;
 using EVEMon.Common.Service;
@@ -154,26 +155,28 @@ namespace EVEMon.Common.MarketPricer.BattleClinic
         /// <param name="errormessage">The errormessage.</param>
         private void OnPricesDownloaded(SerializableBCItemPrices result, string errormessage)
         {
-            if (!String.IsNullOrEmpty(errormessage))
-            {
-                // Reset query pending flag
-                s_queryPending = false;
+            // Reset query pending flag
+            s_queryPending = false;
 
-                EveMonClient.Trace(errormessage);
+            if (!String.IsNullOrEmpty(errormessage) || result == null || !result.ItemPrices.Any())
+            {
+                if (!String.IsNullOrEmpty(errormessage))
+                    EveMonClient.Trace(errormessage);
+                else if (result == null)
+                    EveMonClient.Trace("{0}.GetPricesAsync - no result", GetType().Name);
+                else if (!result.ItemPrices.Any())
+                    EveMonClient.Trace("{0}.GetPricesAsync - empty result", GetType().Name);
+                else
+                    EveMonClient.Trace("{0}.GetPricesAsync - failed", GetType().Name);
+
                 EveMonClient.OnPricesDownloaded(null, String.Empty);
 
                 return;
             }
 
-            if (result == null)
-                return;
-
             EveMonClient.Trace("{0}.GetPricesAsync - done", GetType().Name);
 
             Import(result.ItemPrices);
-
-            // Reset query pending flag
-            s_queryPending = false;
 
             // Save the file in cache
             Save(Filename, Util.SerializeToXmlDocument(result));
