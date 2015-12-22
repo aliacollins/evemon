@@ -109,7 +109,7 @@ namespace EVEMon.InstallBuilder
         {
             if (String.IsNullOrWhiteSpace(s_solutionDir))
             {
-                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
+                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=tools)",
                                             RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
             }
             return s_solutionDir;
@@ -150,7 +150,7 @@ namespace EVEMon.InstallBuilder
         {
             if (String.IsNullOrWhiteSpace(s_sourceFilesDir))
             {
-                s_sourceFilesDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory(), @"EVEMon\", GetOutputPath()));
+                s_sourceFilesDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory(), @"src\EVEMon\", GetOutputPath()));
             }
             return s_sourceFilesDir;
         }
@@ -351,7 +351,7 @@ namespace EVEMon.InstallBuilder
             try
             {
                 string nsisScript = Path.Combine(GetProjectDirectory(), GetOutputPath(), "EVEMonInstallerScript.nsi");
-                string resourcesDir = Path.Combine(GetSolutionDirectory(), @"EVEMon.Common\Resources");
+                string resourcesDir = Path.Combine(GetSolutionDirectory(), @"src\\EVEMon.Common\Resources");
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 string appCopyright =
                     ((AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute)))
