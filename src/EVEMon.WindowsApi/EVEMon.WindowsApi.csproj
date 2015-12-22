@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8C4A87A0-780E-4765-ADD0-146091FE26F4}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{D942D976-6185-4ECD-A83B-60260100D12E}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EVEMon.Watchdog</RootNamespace>
-    <AssemblyName>EVEMon.Watchdog</AssemblyName>
+    <RootNamespace>EVEMon.WindowsApi</RootNamespace>
+    <AssemblyName>EVEMon.WindowsApi</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,38 +46,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharedAssemblyInfo.cs">
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="WatchdogWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WatchdogWindow.Designer.cs">
-      <DependentUpon>WatchdogWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="OSFeatureCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="WatchdogWindow.resx">
-      <DependentUpon>WatchdogWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\time.png" />
+    <Compile Include="SafeNativeMethods.cs" />
+    <Compile Include="Windows7.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

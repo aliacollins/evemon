@@ -4,7 +4,7 @@ using System.Text;
 using EVEMon.Common;
 using Xunit;
 
-namespace Tests.EVEMon
+namespace Tests.EVEMon.Common
 {
     public static class CompressionUncompressionTests
     {

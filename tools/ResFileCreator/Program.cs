@@ -47,7 +47,7 @@ namespace EVEMon.ResFileCreator
         {
             Directory.SetCurrentDirectory(GetSolutionDirectory());
 
-            var assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"EVEMon\Properties\AssemblyInfo.cs"));
+            var assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"src\EVEMon\Properties\AssemblyInfo.cs"));
             s_dictionary["AssemblyTitle"] = GetValueOf(assemblyInfoFileContent, "AssemblyTitle");
 
             assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"SharedAssemblyInfo.cs"));
@@ -80,7 +80,7 @@ namespace EVEMon.ResFileCreator
         private static bool GenerateRcFile()
         {
             s_resScriptfile = Path.GetFullPath(String.Format(CultureInfo.InvariantCulture,
-                "EVEMon\\{0}.rc", s_dictionary["AssemblyTitle"]));
+                "src\\EVEMon\\{0}.rc", s_dictionary["AssemblyTitle"]));
 
             StringBuilder sb = new StringBuilder();
 
@@ -156,7 +156,7 @@ namespace EVEMon.ResFileCreator
         /// <param name="sb">The sb.</param>
         private static void AddManifest(StringBuilder sb)
         {
-            const string ManifestFile = @"EVEMon\\app.manifest";
+            const string ManifestFile = @"src\EVEMon\\app.manifest";
 
             if (!File.Exists(ManifestFile))
                 return;
@@ -172,7 +172,7 @@ namespace EVEMon.ResFileCreator
         /// <param name="sb">The sb.</param>
         private static void AddIcons(StringBuilder sb)
         {
-            const string IconsDir = @"EVEMon.Common\Resources\Icons";
+            const string IconsDir = @"src\EVEMon.Common\Resources\Icons";
             List<string> iconFilesPath = new List<string>();
 
             if (Directory.Exists(IconsDir))
@@ -255,7 +255,7 @@ namespace EVEMon.ResFileCreator
         {
             if (String.IsNullOrWhiteSpace(s_solutionDir))
             {
-                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
+                s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=tools)",
                                             RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
             }
             return s_solutionDir;
