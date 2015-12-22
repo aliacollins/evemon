@@ -8,7 +8,7 @@ namespace Tests.EVEMon.Common
 {
     public static class CompressionUncompressionTests
     {
-        private static readonly byte[] s_data = Encoding.UTF8.GetBytes("Data to compressed and uncompressed.");
+        private static readonly byte[] s_data = Encoding.UTF8.GetBytes("Data to compress and uncompress.");
 
 
         #region Tests
