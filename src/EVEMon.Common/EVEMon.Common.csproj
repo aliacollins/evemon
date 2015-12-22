@@ -11,7 +11,7 @@
     <AssemblyName>EVEMon.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -1149,9 +1149,9 @@
       <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />
     </SGen>
   </Target>
-  <UsingTask TaskName="GitVersionFile" AssemblyFile="..\Tools\MSBuildVersioning\MSBuildVersioning.dll" />
+  <UsingTask TaskName="GitVersionFile" AssemblyFile="..\..\tools\MSBuildVersioning\MSBuildVersioning.dll" />
   <Target Name="BeforeBuild" Condition=" '$(Configuration)' == 'Release' OR '$(Configuration)' == 'Snapshot' ">
-    <GitVersionFile TemplateFile="..\SharedAssemblyInfo.template.cs" DestinationFile="..\SharedAssemblyInfo.cs" />
+    <GitVersionFile TemplateFile="..\..\SharedAssemblyInfo.template.cs" DestinationFile="..\..\SharedAssemblyInfo.cs" />
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="GenerateSerializationAssembliesForAllTypes">
   </Target>

@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 // Friend assembly for unit testing
-[assembly: InternalsVisibleTo("Tests.EVEMon")]
+[assembly: InternalsVisibleTo("Tests.EVEMon.Common")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
