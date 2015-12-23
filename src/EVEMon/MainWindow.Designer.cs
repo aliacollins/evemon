@@ -617,6 +617,7 @@ namespace EVEMon
             this.forumsMenuItem.Name = "forumsMenuItem";
             this.forumsMenuItem.Size = new System.Drawing.Size(229, 22);
             this.forumsMenuItem.Text = "&Forums";
+            this.forumsMenuItem.Visible = false;
             this.forumsMenuItem.Click += new System.EventHandler(this.forumsMenu_Click);
             // 
             // userVoiceMenuItem
