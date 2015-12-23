@@ -113,10 +113,12 @@ namespace EVEMon.Common.Net
                 int index = 0;
                 while (index < s_subscribers.Count)
                 {
-                    WeakReference<INetworkChangeSubscriber> reference = s_subscribers[index];
                     INetworkChangeSubscriber target;
-                    if (reference.TryGetTarget(out target) && target.SetNetworkStatus == e.IsAvailable)
+                    if (s_subscribers[index].TryGetTarget(out target))
+                    {
+                        target.SetNetworkStatus = e.IsAvailable;
                         index++;
+                    }
                     else
                         s_subscribers.RemoveAt(index);
                 }

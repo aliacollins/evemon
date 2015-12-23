@@ -780,7 +780,6 @@
     <Compile Include="Threading\Actor.cs" />
     <Compile Include="UpdateManager.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="Factories\WeakReferenceOfT.cs" />
     <None Include="Serialization\Exportation\output-html.xslt" />
     <None Include="CloudStorageServices\CloudStorageServicesSettings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
