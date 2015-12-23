@@ -295,11 +295,11 @@ Section "Install EVEMon"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
 				 "DisplayIcon" "$INSTDIR\EVEMon.exe"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-				 "Publisher" "battleclinic.com"
+				 "Publisher" "EVEMon Development Team"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-				 "URLUpdateInfo" "http://evemon.battleclinic.com/"
+				 "URLUpdateInfo" "http://"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
-				 "URLInfoAbout" "http://evemon.battleclinic.com/"
+				 "URLInfoAbout" "http://"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \
 				 "DisplayVersion" "${VERSION}"
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EVEMon" \

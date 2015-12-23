@@ -98,7 +98,7 @@ namespace EVEMon.About
             this.HeaderLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.HeaderLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderLayoutPanel.Name = "HeaderLayoutPanel";
-            this.HeaderLayoutPanel.Size = new System.Drawing.Size(263, 100);
+            this.HeaderLayoutPanel.Size = new System.Drawing.Size(251, 100);
             this.HeaderLayoutPanel.TabIndex = 0;
             this.HeaderLayoutPanel.WrapContents = false;
             // 
@@ -128,7 +128,7 @@ namespace EVEMon.About
             this.VerCopyLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.VerCopyLayoutPanel.Name = "VerCopyLayoutPanel";
             this.VerCopyLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 17, 0, 0);
-            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(163, 100);
+            this.VerCopyLayoutPanel.Size = new System.Drawing.Size(151, 100);
             this.VerCopyLayoutPanel.TabIndex = 8;
             this.VerCopyLayoutPanel.WrapContents = false;
             // 
@@ -173,10 +173,11 @@ namespace EVEMon.About
             this.HomePageLinkLabel.AutoSize = true;
             this.HomePageLinkLabel.Location = new System.Drawing.Point(3, 69);
             this.HomePageLinkLabel.Name = "HomePageLinkLabel";
-            this.HomePageLinkLabel.Size = new System.Drawing.Size(157, 13);
+            this.HomePageLinkLabel.Size = new System.Drawing.Size(38, 13);
             this.HomePageLinkLabel.TabIndex = 0;
             this.HomePageLinkLabel.TabStop = true;
-            this.HomePageLinkLabel.Text = "http://evemon.battleclinic.com/";
+            this.HomePageLinkLabel.Text = "http://";
+            this.HomePageLinkLabel.Visible = false;
             this.HomePageLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llHomePage_LinkClicked);
             // 
             // BodyLayoutPanel
@@ -330,6 +331,7 @@ namespace EVEMon.About
             this.battleclinicLinkLabel.Size = new System.Drawing.Size(238, 19);
             this.battleclinicLinkLabel.TabIndex = 11;
             this.battleclinicLinkLabel.Text = "BattleClinic, which hosts and supports EVEMon.";
+            this.battleclinicLinkLabel.Visible = false;
             this.battleclinicLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
             // eveCentralLinkLabel
@@ -407,8 +409,8 @@ namespace EVEMon.About
             this.forgotLabel.Size = new System.Drawing.Size(261, 58);
             this.forgotLabel.TabIndex = 14;
             this.forgotLabel.Text = "And also the ones we forgot, the ones who lurk in the shadows of the forums to he" +
-    "lp us deal with users, all the people who reported bugs to the BC forums and the" +
-    " ones who dared to test our betas.";
+    "lp us deal with users, all the people who reported bugs to the forums and the on" +
+    "es who dared to test our betas.";
             // 
             // AboutWindow
             // 
