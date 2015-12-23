@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Text;
-using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.Common.Net
@@ -115,7 +114,8 @@ namespace EVEMon.Common.Net
                 while (index < s_subscribers.Count)
                 {
                     WeakReference<INetworkChangeSubscriber> reference = s_subscribers[index];
-                    if (reference.TryDo(x => x.SetNetworkStatus = e.IsAvailable))
+                    INetworkChangeSubscriber target;
+                    if (reference.TryGetTarget(out target) && target.SetNetworkStatus == e.IsAvailable)
                         index++;
                     else
                         s_subscribers.RemoveAt(index);
