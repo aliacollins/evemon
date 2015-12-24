@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
-using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Helpers;
+using EVEMon.Common.Controls;
+using EVEMon.Common.Data;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Service;
 
 namespace EVEMon.Sales
 {
@@ -13,7 +15,8 @@ namespace EVEMon.Sales
         public event EventHandler<EventArgs> SubtotalChanged;
         public event EventHandler<EventArgs> MineralPriceChanged;
 
-        private string m_mineralName;
+        private Item m_mineral;
+        private EveImageSize m_imageSize = EveImageSize.x64;
 
 
         #region Constructor
@@ -28,7 +31,7 @@ namespace EVEMon.Sales
 
         #endregion
 
-
+        
         #region Public Properties
 
         /// <summary>
@@ -37,12 +40,16 @@ namespace EVEMon.Sales
         /// <value>The name of the mineral.</value>
         public String MineralName
         {
-            get { return m_mineralName; }
+            get { return m_mineral?.Name ?? groupBox.Text; }
             set
             {
-                m_mineralName = value;
                 groupBox.Text = value;
-                SetIconByName(value);
+
+                if (DesignMode || this.IsDesignModeHosted())
+                    return;
+
+                m_mineral = StaticItems.GetItemByName(value);
+                GetImageFromCCP();
             }
         }
 
@@ -50,6 +57,7 @@ namespace EVEMon.Sales
         /// Gets or sets the quantity.
         /// </summary>
         /// <value>The quantity.</value>
+        [Browsable(false)]
         public long Quantity
         {
             get { return Int64.Parse(txtStock.Text, CultureConstants.DefaultCulture); }
@@ -60,6 +68,7 @@ namespace EVEMon.Sales
         /// Gets or sets the price per unit.
         /// </summary>
         /// <value>The price per unit.</value>
+        [Browsable(false)]
         public Decimal PricePerUnit
         {
             get { return Decimal.Parse(txtLastSell.Text, CultureConstants.DefaultCulture); }
@@ -70,6 +79,7 @@ namespace EVEMon.Sales
         /// Gets or sets a value indicating whether [price locked].
         /// </summary>
         /// <value><c>true</c> if [price locked]; otherwise, <c>false</c>.</value>
+        [Browsable(false)]
         public bool PriceLocked
         {
             get { return txtLastSell.ReadOnly; }
@@ -84,6 +94,7 @@ namespace EVEMon.Sales
         /// Gets or sets the subtotal.
         /// </summary>
         /// <value>The subtotal.</value>
+        [Browsable(false)]
         public decimal Subtotal { get; private set; }
 
         #endregion
@@ -92,33 +103,72 @@ namespace EVEMon.Sales
         #region Helper Methods
 
         /// <summary>
-        /// Sets the icon by mineral name.
+        /// Gets the image from CCP's image server.
         /// </summary>
-        /// <param name="value">The value.</param>
-        private void SetIconByName(string value)
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        private void GetImageFromCCP(bool useFallbackUri = false)
         {
-            Stream stream = null;
-            Image image = null;
-
-            try
+            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
             {
-                stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("EVEMon.Sales.icons." + value + ".png");
-                if (stream != null)
-                    image = Image.FromStream(stream, true, true);
+                if (img == null)
+                {
+                    GetImageFromCCP(true);
+                    return;
+                }
 
+                GotImage(m_mineral.ID, img);
+            });
+        }
+
+        /// <summary>
+        /// Gets the image URL.
+        /// </summary>
+        /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
+        /// <returns></returns>
+        private Uri GetImageUrl(bool useFallbackUri)
+        {
+            string path = String.Format(CultureConstants.InvariantCulture,
+                NetworkConstants.CCPIconsFromImageServer,
+                (int)m_imageSize > 64 ? "render" : "type",
+                m_mineral.ID, (int)m_imageSize);
+
+            return useFallbackUri
+                ? ImageService.GetImageServerBaseUri(path)
+                : ImageService.GetImageServerCdnUri(path);
+        }
+
+        /// <summary>
+        /// Callback method for asynchronous web requests.
+        /// </summary>
+        /// <param name="id">EveObject id for retrieved image</param>
+        /// <param name="image">Image object retrieved</param>
+        private void GotImage(long id, Image image)
+        {
+            // Only display the image if the id matches the current EveObject
+            if (image != null && m_mineral.ID == id)
                 icon.Image = image;
-            }
-            catch (BadImageFormatException e)
+            else
+                ShowBlankImage();
+        }
+
+        /// <summary>
+        /// Renders a BackColor square as a placeholder for the image.
+        /// </summary>
+        private void ShowBlankImage()
+        {
+            Bitmap bmp;
+            using (Bitmap tempBitmap = new Bitmap(icon.ClientSize.Width, icon.ClientSize.Height))
             {
-                ExceptionHandler.LogException(e, true);
-                if (image != null)
-                    image.Dispose();
-
-                if (stream != null)
-                    stream.Dispose();
-
-                icon.Image = null;
+                bmp = (Bitmap)tempBitmap.Clone();
             }
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            using (SolidBrush brush = new SolidBrush(BackColor))
+            {
+                g.FillRectangle(brush, new Rectangle(0, 0, bmp.Width, bmp.Height));
+            }
+
+            icon.Image = bmp;
         }
 
         /// <summary>

@@ -28,6 +28,7 @@ namespace EVEMon.Sales
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MineralWorksheet));
             this.MineralWorksheetToolStrip = new System.Windows.Forms.ToolStrip();
             this.btnLockPrices = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -71,7 +72,7 @@ namespace EVEMon.Sales
             // 
             // btnLockPrices
             // 
-            this.btnLockPrices.Image = global::EVEMon.Sales.Properties.Resources.Lock;
+            this.btnLockPrices.Image = ((System.Drawing.Image)(resources.GetObject("btnLockPrices.Image")));
             this.btnLockPrices.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLockPrices.Name = "btnLockPrices";
             this.btnLockPrices.Size = new System.Drawing.Size(86, 22);
@@ -85,7 +86,7 @@ namespace EVEMon.Sales
             // 
             // tsddFetch
             // 
-            this.tsddFetch.Image = global::EVEMon.Sales.Properties.Resources.Online;
+            this.tsddFetch.Image = ((System.Drawing.Image)(resources.GetObject("tsddFetch.Image")));
             this.tsddFetch.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsddFetch.Name = "tsddFetch";
             this.tsddFetch.Size = new System.Drawing.Size(137, 22);
@@ -93,7 +94,7 @@ namespace EVEMon.Sales
             // 
             // btnReset
             // 
-            this.btnReset.Image = global::EVEMon.Sales.Properties.Resources.reset;
+            this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
             this.btnReset.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(112, 22);
@@ -105,10 +106,10 @@ namespace EVEMon.Sales
             this.copyTotalDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyFormattedTotalToolStripMenuItem,
             this.copyUnformattedTotalToolStripMenuItem});
-            this.copyTotalDropDownButton.Image = global::EVEMon.Sales.Properties.Resources.Copy;
+            this.copyTotalDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("copyTotalDropDownButton.Image")));
             this.copyTotalDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.copyTotalDropDownButton.Name = "copyTotalDropDownButton";
-            this.copyTotalDropDownButton.Size = new System.Drawing.Size(94, 22);
+            this.copyTotalDropDownButton.Size = new System.Drawing.Size(93, 22);
             this.copyTotalDropDownButton.Text = "Copy Total";
             this.copyTotalDropDownButton.DropDownOpening += new System.EventHandler(this.copyTotalDropDownButton_DropDownOpening);
             // 
@@ -142,12 +143,12 @@ namespace EVEMon.Sales
             // TotalValueToolStripStatusLabel
             // 
             this.TotalValueToolStripStatusLabel.Name = "TotalValueToolStripStatusLabel";
-            this.TotalValueToolStripStatusLabel.Size = new System.Drawing.Size(69, 17);
+            this.TotalValueToolStripStatusLabel.Size = new System.Drawing.Size(67, 17);
             this.TotalValueToolStripStatusLabel.Text = "Total Value:";
             // 
             // tslTotal
             // 
-            this.tslTotal.Image = global::EVEMon.Sales.Properties.Resources.Money;
+            this.tslTotal.Image = ((System.Drawing.Image)(resources.GetObject("tslTotal.Image")));
             this.tslTotal.Margin = new System.Windows.Forms.Padding(5, 3, 0, 2);
             this.tslTotal.Name = "tslTotal";
             this.tslTotal.Size = new System.Drawing.Size(63, 17);
@@ -155,7 +156,7 @@ namespace EVEMon.Sales
             // 
             // tslCourtesy
             // 
-            this.tslCourtesy.Image = global::EVEMon.Sales.Properties.Resources.Online;
+            this.tslCourtesy.Image = ((System.Drawing.Image)(resources.GetObject("tslCourtesy.Image")));
             this.tslCourtesy.IsLink = true;
             this.tslCourtesy.Margin = new System.Windows.Forms.Padding(15, 3, 0, 2);
             this.tslCourtesy.Name = "tslCourtesy";
@@ -168,7 +169,7 @@ namespace EVEMon.Sales
             // 
             this.mt_mexallon.AutoSize = true;
             this.mt_mexallon.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_mexallon.Location = new System.Drawing.Point(4, 238);
+            this.mt_mexallon.Location = new System.Drawing.Point(4, 230);
             this.mt_mexallon.Margin = new System.Windows.Forms.Padding(4);
             this.mt_mexallon.MineralName = "Mexallon";
             this.mt_mexallon.Name = "mt_mexallon";
@@ -178,8 +179,8 @@ namespace EVEMon.Sales
             0,
             0,
             131072});
-            this.mt_mexallon.Quantity = 0;
-            this.mt_mexallon.Size = new System.Drawing.Size(261, 109);
+            this.mt_mexallon.Quantity = ((long)(0));
+            this.mt_mexallon.Size = new System.Drawing.Size(261, 105);
             this.mt_mexallon.TabIndex = 3;
             this.mt_mexallon.MineralPriceChanged += new System.EventHandler<System.EventArgs>(this.mt_MineralPriceChanged);
             // 
@@ -187,7 +188,7 @@ namespace EVEMon.Sales
             // 
             this.mt_pyerite.AutoSize = true;
             this.mt_pyerite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_pyerite.Location = new System.Drawing.Point(4, 121);
+            this.mt_pyerite.Location = new System.Drawing.Point(4, 117);
             this.mt_pyerite.Margin = new System.Windows.Forms.Padding(4);
             this.mt_pyerite.MineralName = "Pyerite";
             this.mt_pyerite.Name = "mt_pyerite";
@@ -197,8 +198,8 @@ namespace EVEMon.Sales
             0,
             0,
             131072});
-            this.mt_pyerite.Quantity = 0;
-            this.mt_pyerite.Size = new System.Drawing.Size(261, 109);
+            this.mt_pyerite.Quantity = ((long)(0));
+            this.mt_pyerite.Size = new System.Drawing.Size(261, 105);
             this.mt_pyerite.TabIndex = 2;
             this.mt_pyerite.MineralPriceChanged += new System.EventHandler<System.EventArgs>(this.mt_MineralPriceChanged);
             // 
@@ -206,7 +207,7 @@ namespace EVEMon.Sales
             // 
             this.mt_megacyte.AutoSize = true;
             this.mt_megacyte.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_megacyte.Location = new System.Drawing.Point(273, 238);
+            this.mt_megacyte.Location = new System.Drawing.Point(273, 230);
             this.mt_megacyte.Margin = new System.Windows.Forms.Padding(4);
             this.mt_megacyte.MineralName = "Megacyte";
             this.mt_megacyte.Name = "mt_megacyte";
@@ -216,8 +217,8 @@ namespace EVEMon.Sales
             0,
             0,
             131072});
-            this.mt_megacyte.Quantity = 0;
-            this.mt_megacyte.Size = new System.Drawing.Size(261, 109);
+            this.mt_megacyte.Quantity = ((long)(0));
+            this.mt_megacyte.Size = new System.Drawing.Size(261, 105);
             this.mt_megacyte.TabIndex = 7;
             this.mt_megacyte.MineralPriceChanged += new System.EventHandler<System.EventArgs>(this.mt_MineralPriceChanged);
             // 
@@ -225,7 +226,7 @@ namespace EVEMon.Sales
             // 
             this.mt_isogen.AutoSize = true;
             this.mt_isogen.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_isogen.Location = new System.Drawing.Point(4, 355);
+            this.mt_isogen.Location = new System.Drawing.Point(4, 343);
             this.mt_isogen.Margin = new System.Windows.Forms.Padding(4);
             this.mt_isogen.MineralName = "Isogen";
             this.mt_isogen.Name = "mt_isogen";
@@ -235,8 +236,8 @@ namespace EVEMon.Sales
             0,
             0,
             131072});
-            this.mt_isogen.Quantity = 0;
-            this.mt_isogen.Size = new System.Drawing.Size(261, 109);
+            this.mt_isogen.Quantity = ((long)(0));
+            this.mt_isogen.Size = new System.Drawing.Size(261, 105);
             this.mt_isogen.TabIndex = 4;
             this.mt_isogen.MineralPriceChanged += new System.EventHandler<System.EventArgs>(this.mt_MineralPriceChanged);
             // 
@@ -244,7 +245,7 @@ namespace EVEMon.Sales
             // 
             this.mt_zydrine.AutoSize = true;
             this.mt_zydrine.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_zydrine.Location = new System.Drawing.Point(273, 121);
+            this.mt_zydrine.Location = new System.Drawing.Point(273, 117);
             this.mt_zydrine.Margin = new System.Windows.Forms.Padding(4);
             this.mt_zydrine.MineralName = "Zydrine";
             this.mt_zydrine.Name = "mt_zydrine";
@@ -254,8 +255,8 @@ namespace EVEMon.Sales
             0,
             0,
             131072});
-            this.mt_zydrine.Quantity = 0;
-            this.mt_zydrine.Size = new System.Drawing.Size(261, 109);
+            this.mt_zydrine.Quantity = ((long)(0));
+            this.mt_zydrine.Size = new System.Drawing.Size(261, 105);
             this.mt_zydrine.TabIndex = 6;
             this.mt_zydrine.MineralPriceChanged += new System.EventHandler<System.EventArgs>(this.mt_MineralPriceChanged);
             // 
@@ -263,7 +264,7 @@ namespace EVEMon.Sales
             // 
             this.mt_morphite.AutoSize = true;
             this.mt_morphite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.mt_morphite.Location = new System.Drawing.Point(273, 355);
+            this.mt_morphite.Location = new System.Drawing.Point(273, 343);
             this.mt_morphite.Margin = new System.Windows.Forms.Padding(4);
             this.mt_morphite.MineralName = "Morphite";
             this.mt_morphite.Name = "mt_morphite";
@@ -273,8 +274,8 @@ namespace EVEMon.Sales
             0,
             0,
             131072});
-            this.mt_morphite.Quantity = 0;
-            this.mt_morphite.Size = new System.Drawing.Size(261, 109);
+            this.mt_morphite.Quantity = ((long)(0));
+            this.mt_morphite.Size = new System.Drawing.Size(261, 105);
             this.mt_morphite.TabIndex = 8;
             this.mt_morphite.MineralPriceChanged += new System.EventHandler<System.EventArgs>(this.mt_MineralPriceChanged);
             // 
@@ -292,8 +293,8 @@ namespace EVEMon.Sales
             0,
             0,
             131072});
-            this.mt_nocxium.Quantity = 0;
-            this.mt_nocxium.Size = new System.Drawing.Size(261, 109);
+            this.mt_nocxium.Quantity = ((long)(0));
+            this.mt_nocxium.Size = new System.Drawing.Size(261, 105);
             this.mt_nocxium.TabIndex = 5;
             this.mt_nocxium.MineralPriceChanged += new System.EventHandler<System.EventArgs>(this.mt_MineralPriceChanged);
             // 
@@ -311,8 +312,8 @@ namespace EVEMon.Sales
             0,
             0,
             131072});
-            this.mt_tritanium.Quantity = 0;
-            this.mt_tritanium.Size = new System.Drawing.Size(261, 109);
+            this.mt_tritanium.Quantity = ((long)(0));
+            this.mt_tritanium.Size = new System.Drawing.Size(261, 105);
             this.mt_tritanium.TabIndex = 1;
             this.mt_tritanium.MineralPriceChanged += new System.EventHandler<System.EventArgs>(this.mt_MineralPriceChanged);
             // 
