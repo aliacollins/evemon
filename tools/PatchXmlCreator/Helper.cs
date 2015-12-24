@@ -52,7 +52,7 @@ namespace EVEMon.PatchXmlCreator
             {
                 if (String.IsNullOrWhiteSpace(s_solutionDir))
                 {
-                    s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=Tools)",
+                    s_solutionDir = Regex.Match(Directory.GetCurrentDirectory(), @"[a-zA-Z]+:.*\\(?=tools)",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase).ToString();
                 }
                 return s_solutionDir;
@@ -80,7 +80,7 @@ namespace EVEMon.PatchXmlCreator
         /// Gets the output path.
         /// </summary>
         /// <returns></returns>
-        private static string GetOutputPath
+        internal static string GetOutputPath
         {
             get
             {
@@ -102,7 +102,7 @@ namespace EVEMon.PatchXmlCreator
             {
                 if (String.IsNullOrWhiteSpace(s_sourceFilesDir))
                 {
-                    s_sourceFilesDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory, @"EVEMon\", GetOutputPath));
+                    s_sourceFilesDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory, @"src\EVEMon\", GetOutputPath));
                 }
                 return s_sourceFilesDir;
             }
@@ -118,7 +118,7 @@ namespace EVEMon.PatchXmlCreator
             {
                 if (String.IsNullOrWhiteSpace(s_dataFilesDir))
                 {
-                    s_dataFilesDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory, @"EVEMon.Common\Resources"));
+                    s_dataFilesDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory, @"src\EVEMon.Common\Resources"));
                 }
                 return s_dataFilesDir;
             }
@@ -134,7 +134,7 @@ namespace EVEMon.PatchXmlCreator
             {
                 if (String.IsNullOrWhiteSpace(s_patchDir))
                 {
-                    s_patchDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory, @"Tools\Website"));
+                    s_patchDir = Path.GetFullPath(Path.Combine(GetSolutionDirectory, @"tools\Website"));
                 }
                 return s_patchDir;
             }

@@ -52,6 +52,7 @@ namespace EVEMon.PatchXmlCreator
         private PatchXmlCreatorWindow()
         {
             InitializeComponent();
+
             lblEVEMonReleaseDate.Font = FontFactory.GetFont("Tahoma");
             lblVersion.Font = FontFactory.GetFont("Tahoma");
             dtpRelease.Font = FontFactory.GetFont("Tahoma");
@@ -78,6 +79,9 @@ namespace EVEMon.PatchXmlCreator
             tbExpansion.Font = FontFactory.GetFont("Tahoma");
             lblUrl.Font = FontFactory.GetFont("Tahoma");
             datafileControl.Font = FontFactory.GetFont("Tahoma");
+
+            rtbReleaseUrl.Text = NetworkConstants.BitBucketDownloadsBase;
+            rtbDatafileUrl.Text = NetworkConstants.BitBucketDatafilesBase;
         }
 
         /// <summary>
@@ -144,6 +148,7 @@ namespace EVEMon.PatchXmlCreator
         /// <summary>
         /// Gets EVEMon's assembly version without revision.
         /// </summary>
+        /// <param name="version">The version.</param>
         /// <returns></returns>
         private static string GetAssemblyVersionWithoutRevision(string version)
         {
@@ -177,8 +182,9 @@ namespace EVEMon.PatchXmlCreator
         {
             string installerFile = String.Format(CultureConstants.InvariantCulture, InstallerFilename,
                 GetAssemblyVersionWithoutRevision(GetAssemblyVersion()));
-            string installerPath = String.Format(CultureConstants.InvariantCulture, "{1}{0}{2}", Path.DirectorySeparatorChar,
-                Helper.GetSourceFilesDirectory.Replace("Release", "Installbuilder\\Installer"), installerFile);
+            string installerPath =
+                Path.Combine(Helper.GetSourceFilesDirectory.Replace(Helper.GetOutputPath, "bin\\Installbuilder\\Installer\\"),
+                    installerFile);
             return new FileInfo(installerPath);
         }
 

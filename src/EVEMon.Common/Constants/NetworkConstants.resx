@@ -580,4 +580,10 @@
   <data name="OsmiumLoadoutTopic" xml:space="preserve">
     <value>/loadout/{0}</value>
   </data>
+  <data name="BitBucketDownloadsBase" xml:space="preserve">
+    <value>https://bitbucket.org/EVEMonDevTeam/evemon/downloads/</value>
+  </data>
+  <data name="BitBucketDatafilesBase" xml:space="preserve">
+    <value>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/</value>
+  </data>
 </root>

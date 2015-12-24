@@ -988,6 +988,24 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/.
+        /// </summary>
+        public static string BitBucketDatafilesBase {
+            get {
+                return ResourceManager.GetString("BitBucketDatafilesBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/downloads/.
+        /// </summary>
+        public static string BitBucketDownloadsBase {
+            get {
+                return ResourceManager.GetString("BitBucketDownloadsBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/wiki.
         /// </summary>
         public static string BitBucketWikiBase {

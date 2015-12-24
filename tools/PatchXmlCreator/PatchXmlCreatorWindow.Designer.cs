@@ -35,7 +35,6 @@ namespace EVEMon.PatchXmlCreator
             this.dtpRelease = new System.Windows.Forms.DateTimePicker();
             this.lblEVEMonVersion = new System.Windows.Forms.Label();
             this.gbRelease = new System.Windows.Forms.GroupBox();
-            this.lblMD5Sum = new System.Windows.Forms.Label();
             this.btnInstallerClear = new System.Windows.Forms.Button();
             this.btnLoadReleaseInfo = new System.Windows.Forms.Button();
             this.lblMessage = new System.Windows.Forms.Label();
@@ -44,11 +43,13 @@ namespace EVEMon.PatchXmlCreator
             this.lblInstallerUrl = new System.Windows.Forms.Label();
             this.rtbTopicUrl = new System.Windows.Forms.RichTextBox();
             this.lblForumUrl = new System.Windows.Forms.Label();
+            this.lblMD5Sum = new System.Windows.Forms.Label();
             this.btPaste = new System.Windows.Forms.Button();
             this.gbDatafiles = new System.Windows.Forms.GroupBox();
             this.lblExpVersion = new System.Windows.Forms.Label();
             this.tbExpVersion = new System.Windows.Forms.TextBox();
             this.btnDatafilesClear = new System.Windows.Forms.Button();
+            this.datafileControl = new EVEMon.PatchXmlCreator.DatafileControl();
             this.btnLoadDatafileInfo = new System.Windows.Forms.Button();
             this.lblRevision = new System.Windows.Forms.Label();
             this.tbExpRevision = new System.Windows.Forms.TextBox();
@@ -58,7 +59,6 @@ namespace EVEMon.PatchXmlCreator
             this.lblUrl = new System.Windows.Forms.Label();
             this.pnlButtons = new System.Windows.Forms.Panel();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
-            this.datafileControl = new DatafileControl();
             this.gbRelease.SuspendLayout();
             this.gbDatafiles.SuspendLayout();
             this.pnlButtons.SuspendLayout();
@@ -109,7 +109,7 @@ namespace EVEMon.PatchXmlCreator
             this.lblVersion.AutoSize = true;
             this.lblVersion.Location = new System.Drawing.Point(258, 20);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(49, 13);
+            this.lblVersion.Size = new System.Drawing.Size(48, 13);
             this.lblVersion.TabIndex = 3;
             this.lblVersion.Text = "Version :";
             this.lblVersion.Click += new System.EventHandler(this.OnClick);
@@ -120,7 +120,7 @@ namespace EVEMon.PatchXmlCreator
             this.dtpRelease.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpRelease.Location = new System.Drawing.Point(86, 16);
             this.dtpRelease.Name = "dtpRelease";
-            this.dtpRelease.Size = new System.Drawing.Size(166, 21);
+            this.dtpRelease.Size = new System.Drawing.Size(166, 20);
             this.dtpRelease.TabIndex = 4;
             this.dtpRelease.Value = new System.DateTime(2010, 1, 1, 0, 0, 0, 0);
             this.dtpRelease.MouseCaptureChanged += new System.EventHandler(this.OnClick);
@@ -162,18 +162,6 @@ namespace EVEMon.PatchXmlCreator
             this.gbRelease.Text = "Release Info";
             this.gbRelease.MouseCaptureChanged += new System.EventHandler(this.OnClick);
             // 
-            // lblMD5Sum
-            // 
-            this.lblMD5Sum.AutoSize = true;
-            this.lblMD5Sum.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblMD5Sum.Location = new System.Drawing.Point(342, 17);
-            this.lblMD5Sum.Name = "lblMD5Sum";
-            this.lblMD5Sum.Padding = new System.Windows.Forms.Padding(0, 70, 0, 0);
-            this.lblMD5Sum.Size = new System.Drawing.Size(51, 83);
-            this.lblMD5Sum.TabIndex = 13;
-            this.lblMD5Sum.Text = "MD5 Sum";
-            this.lblMD5Sum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // btnInstallerClear
             // 
             this.btnInstallerClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -209,9 +197,9 @@ namespace EVEMon.PatchXmlCreator
             // 
             // rtbReleaseMessage
             // 
-            this.rtbReleaseMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbReleaseMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbReleaseMessage.DetectUrls = false;
             this.rtbReleaseMessage.Location = new System.Drawing.Point(7, 116);
             this.rtbReleaseMessage.Name = "rtbReleaseMessage";
@@ -224,15 +212,15 @@ namespace EVEMon.PatchXmlCreator
             // 
             // rtbReleaseUrl
             // 
-            this.rtbReleaseUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbReleaseUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbReleaseUrl.DetectUrls = false;
             this.rtbReleaseUrl.Location = new System.Drawing.Point(37, 63);
             this.rtbReleaseUrl.Multiline = false;
             this.rtbReleaseUrl.Name = "rtbReleaseUrl";
             this.rtbReleaseUrl.Size = new System.Drawing.Size(352, 21);
             this.rtbReleaseUrl.TabIndex = 10;
-            this.rtbReleaseUrl.Text = "https://bitbucket.org/BattleClinic/evemon/downloads/";
+            this.rtbReleaseUrl.Text = "";
             this.rtbReleaseUrl.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
             this.rtbReleaseUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbReleaseUrl.Leave += new System.EventHandler(this.Control_Leave);
@@ -242,22 +230,22 @@ namespace EVEMon.PatchXmlCreator
             this.lblInstallerUrl.AutoSize = true;
             this.lblInstallerUrl.Location = new System.Drawing.Point(5, 66);
             this.lblInstallerUrl.Name = "lblInstallerUrl";
-            this.lblInstallerUrl.Size = new System.Drawing.Size(27, 13);
+            this.lblInstallerUrl.Size = new System.Drawing.Size(26, 13);
             this.lblInstallerUrl.TabIndex = 9;
             this.lblInstallerUrl.Text = "Url :";
             this.lblInstallerUrl.Click += new System.EventHandler(this.OnClick);
             // 
             // rtbTopicUrl
             // 
-            this.rtbTopicUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbTopicUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbTopicUrl.DetectUrls = false;
             this.rtbTopicUrl.Location = new System.Drawing.Point(65, 40);
             this.rtbTopicUrl.Multiline = false;
             this.rtbTopicUrl.Name = "rtbTopicUrl";
             this.rtbTopicUrl.Size = new System.Drawing.Size(324, 21);
             this.rtbTopicUrl.TabIndex = 7;
-            this.rtbTopicUrl.Text = "http://forum.battleclinic.com/index.php/topic,######";
+            this.rtbTopicUrl.Text = "";
             this.rtbTopicUrl.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
             this.rtbTopicUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbTopicUrl.Leave += new System.EventHandler(this.Control_Leave);
@@ -267,10 +255,22 @@ namespace EVEMon.PatchXmlCreator
             this.lblForumUrl.AutoSize = true;
             this.lblForumUrl.Location = new System.Drawing.Point(5, 44);
             this.lblForumUrl.Name = "lblForumUrl";
-            this.lblForumUrl.Size = new System.Drawing.Size(55, 13);
+            this.lblForumUrl.Size = new System.Drawing.Size(56, 13);
             this.lblForumUrl.TabIndex = 6;
             this.lblForumUrl.Text = "Topic Url :";
             this.lblForumUrl.Click += new System.EventHandler(this.OnClick);
+            // 
+            // lblMD5Sum
+            // 
+            this.lblMD5Sum.AutoSize = true;
+            this.lblMD5Sum.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblMD5Sum.Location = new System.Drawing.Point(339, 16);
+            this.lblMD5Sum.Name = "lblMD5Sum";
+            this.lblMD5Sum.Padding = new System.Windows.Forms.Padding(0, 70, 0, 0);
+            this.lblMD5Sum.Size = new System.Drawing.Size(54, 83);
+            this.lblMD5Sum.TabIndex = 13;
+            this.lblMD5Sum.Text = "MD5 Sum";
+            this.lblMD5Sum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btPaste
             // 
@@ -312,7 +312,7 @@ namespace EVEMon.PatchXmlCreator
             this.lblExpVersion.AutoSize = true;
             this.lblExpVersion.Location = new System.Drawing.Point(180, 43);
             this.lblExpVersion.Name = "lblExpVersion";
-            this.lblExpVersion.Size = new System.Drawing.Size(49, 13);
+            this.lblExpVersion.Size = new System.Drawing.Size(48, 13);
             this.lblExpVersion.TabIndex = 22;
             this.lblExpVersion.Text = "Version :";
             // 
@@ -320,7 +320,7 @@ namespace EVEMon.PatchXmlCreator
             // 
             this.tbExpVersion.Location = new System.Drawing.Point(229, 40);
             this.tbExpVersion.Name = "tbExpVersion";
-            this.tbExpVersion.Size = new System.Drawing.Size(49, 21);
+            this.tbExpVersion.Size = new System.Drawing.Size(49, 20);
             this.tbExpVersion.TabIndex = 19;
             this.tbExpVersion.Text = "Version";
             this.tbExpVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -338,6 +338,16 @@ namespace EVEMon.PatchXmlCreator
             this.btnDatafilesClear.Text = "Clear All";
             this.btnDatafilesClear.UseVisualStyleBackColor = true;
             this.btnDatafilesClear.Click += new System.EventHandler(this.btnDatafilesClear_Click);
+            // 
+            // datafileControl
+            // 
+            this.datafileControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.datafileControl.AutoSize = true;
+            this.datafileControl.Location = new System.Drawing.Point(9, 65);
+            this.datafileControl.Name = "datafileControl";
+            this.datafileControl.Size = new System.Drawing.Size(427, 91);
+            this.datafileControl.TabIndex = 21;
             // 
             // btnLoadDatafileInfo
             // 
@@ -365,7 +375,7 @@ namespace EVEMon.PatchXmlCreator
             // 
             this.tbExpRevision.Location = new System.Drawing.Point(346, 40);
             this.tbExpRevision.Name = "tbExpRevision";
-            this.tbExpRevision.Size = new System.Drawing.Size(78, 21);
+            this.tbExpRevision.Size = new System.Drawing.Size(78, 20);
             this.tbExpRevision.TabIndex = 20;
             this.tbExpRevision.Text = "Exp. Revision";
             this.tbExpRevision.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -378,22 +388,22 @@ namespace EVEMon.PatchXmlCreator
             this.lblExpansion.AutoSize = true;
             this.lblExpansion.Location = new System.Drawing.Point(12, 43);
             this.lblExpansion.Name = "lblExpansion";
-            this.lblExpansion.Size = new System.Drawing.Size(63, 13);
+            this.lblExpansion.Size = new System.Drawing.Size(62, 13);
             this.lblExpansion.TabIndex = 17;
             this.lblExpansion.Text = "Expansion :";
             this.lblExpansion.Click += new System.EventHandler(this.OnClick);
             // 
             // rtbDatafileUrl
             // 
-            this.rtbDatafileUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbDatafileUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbDatafileUrl.DetectUrls = false;
             this.rtbDatafileUrl.Location = new System.Drawing.Point(46, 16);
             this.rtbDatafileUrl.Multiline = false;
             this.rtbDatafileUrl.Name = "rtbDatafileUrl";
             this.rtbDatafileUrl.Size = new System.Drawing.Size(390, 21);
             this.rtbDatafileUrl.TabIndex = 15;
-            this.rtbDatafileUrl.Text = "https://bitbucket.org/BattleClinic/evemon/wiki/updates/datafiles/";
+            this.rtbDatafileUrl.Text = "";
             this.rtbDatafileUrl.DoubleClick += new System.EventHandler(this.Control_DoubleClick);
             this.rtbDatafileUrl.Enter += new System.EventHandler(this.Control_Enter);
             this.rtbDatafileUrl.Leave += new System.EventHandler(this.Control_Leave);
@@ -402,7 +412,7 @@ namespace EVEMon.PatchXmlCreator
             // 
             this.tbExpansion.Location = new System.Drawing.Point(75, 40);
             this.tbExpansion.Name = "tbExpansion";
-            this.tbExpansion.Size = new System.Drawing.Size(91, 21);
+            this.tbExpansion.Size = new System.Drawing.Size(91, 20);
             this.tbExpansion.TabIndex = 18;
             this.tbExpansion.Text = "Expansion Name";
             this.tbExpansion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -415,7 +425,7 @@ namespace EVEMon.PatchXmlCreator
             this.lblUrl.AutoSize = true;
             this.lblUrl.Location = new System.Drawing.Point(13, 19);
             this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(27, 13);
+            this.lblUrl.Size = new System.Drawing.Size(26, 13);
             this.lblUrl.TabIndex = 14;
             this.lblUrl.Text = "Url :";
             this.lblUrl.Click += new System.EventHandler(this.OnClick);
@@ -456,16 +466,6 @@ namespace EVEMon.PatchXmlCreator
             this.splitContainer.SplitterDistance = 411;
             this.splitContainer.TabIndex = 10;
             this.splitContainer.Click += new System.EventHandler(this.OnClick);
-            // 
-            // datafileControl
-            // 
-            this.datafileControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.datafileControl.AutoSize = true;
-            this.datafileControl.Location = new System.Drawing.Point(9, 65);
-            this.datafileControl.Name = "datafileControl";
-            this.datafileControl.Size = new System.Drawing.Size(427, 91);
-            this.datafileControl.TabIndex = 21;
             // 
             // PatchXmlCreatorWindow
             // 
