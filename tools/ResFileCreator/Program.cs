@@ -47,14 +47,16 @@ namespace EVEMon.ResFileCreator
         {
             Directory.SetCurrentDirectory(GetSolutionDirectory());
 
-            var assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"src\EVEMon\Properties\AssemblyInfo.cs"));
+            string assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"src\EVEMon\Properties\AssemblyInfo.cs"));
             s_dictionary["AssemblyTitle"] = GetValueOf(assemblyInfoFileContent, "AssemblyTitle");
 
             assemblyInfoFileContent = File.ReadAllText(Path.GetFullPath(@"SharedAssemblyInfo.cs"));
+            s_dictionary["AssemblyDescription"] = GetValueOf(assemblyInfoFileContent, "AssemblyDescription");
             s_dictionary["AssemblyCompany"] = GetValueOf(assemblyInfoFileContent, "AssemblyCompany");
             s_dictionary["AssemblyProduct"] = GetValueOf(assemblyInfoFileContent, "AssemblyProduct");
             s_dictionary["AssemblyCopyright"] = GetValueOf(assemblyInfoFileContent, "AssemblyCopyright");
-            s_dictionary["AssemblyVersion"] = new Version(GetValueOf(assemblyInfoFileContent, "AssemblyVersion"));
+            s_dictionary["AssemblyFileVersion"] = GetValueOf(assemblyInfoFileContent, "AssemblyFileVersion");
+            s_dictionary["AssemblyInformationalVersion"] = GetValueOf(assemblyInfoFileContent, "AssemblyInformationalVersion");
         }
 
         /// <summary>
@@ -108,16 +110,12 @@ namespace EVEMon.ResFileCreator
         /// <param name="sb">The sb.</param>
         private static void AddVersionInfo(StringBuilder sb)
         {
-            Version version = (Version)s_dictionary["AssemblyVersion"];
-            string commaVersion = String.Format(CultureInfo.InvariantCulture,
-                "{0},{1},{2},{3}", version.Major, version.Minor, version.Build, version.Revision);
-            string dotVersion = String.Format(CultureInfo.InvariantCulture,
-                "{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+            string commaFileVersion = s_dictionary["AssemblyFileVersion"].ToString().Replace(".", ",");
 
             sb.AppendLine("// Version");
             sb.AppendLine("1 VERSIONINFO");
-            sb.AppendFormat(" FILEVERSION {0}", commaVersion).AppendLine();
-            sb.AppendFormat(" PRODUCTVERSION {0}", commaVersion).AppendLine();
+            sb.AppendFormat(" FILEVERSION {0}", commaFileVersion).AppendLine();
+            sb.AppendFormat(" PRODUCTVERSION {0}", commaFileVersion).AppendLine();
             sb.AppendLine(" FILEFLAGSMASK 0x3fL");
             sb.AppendLine("#ifdef _DEBUG");
             sb.AppendLine(" FILEFLAGS 0x1L");
@@ -134,13 +132,13 @@ namespace EVEMon.ResFileCreator
             sb.AppendLine("        BLOCK \"000004b0\"");
             sb.AppendLine("        BEGIN");
             sb.AppendFormat("            VALUE \"CompanyName\", \"{0}\"", s_dictionary["AssemblyCompany"]).AppendLine();
-            sb.AppendFormat("            VALUE \"FileDescription\", \"{0}\"", s_dictionary["AssemblyTitle"]).AppendLine();
-            sb.AppendFormat("            VALUE \"FileVersion\", \"{0}\"", dotVersion).AppendLine();
-            sb.AppendFormat("            VALUE \"InternalName\", \"{0}.exe\"", s_dictionary["AssemblyTitle"]).AppendLine();
+            sb.AppendFormat("            VALUE \"FileDescription\", \"{0}\"", s_dictionary["AssemblyDescription"]).AppendLine();
+            sb.AppendFormat("            VALUE \"FileVersion\", \"{0}\"", s_dictionary["AssemblyFileVersion"]).AppendLine();
+            sb.AppendFormat("            VALUE \"InternalName\", \"{0}.exe\"", s_dictionary["AssemblyProduct"]).AppendLine();
             sb.AppendFormat("            VALUE \"LegalCopyright\", \"{0}\"", s_dictionary["AssemblyCopyright"]).AppendLine();
-            sb.AppendFormat("            VALUE \"OriginalFilename\", \"{0}.exe\"", s_dictionary["AssemblyTitle"]).AppendLine();
+            sb.AppendFormat("            VALUE \"OriginalFilename\", \"{0}.exe\"", s_dictionary["AssemblyProduct"]).AppendLine();
             sb.AppendFormat("            VALUE \"ProductName\", \"{0}\"", s_dictionary["AssemblyProduct"]).AppendLine();
-            sb.AppendFormat("            VALUE \"ProductVersion\", \"{0}\"", dotVersion).AppendLine();
+            sb.AppendFormat("            VALUE \"ProductVersion\", \"{0}\"", s_dictionary["AssemblyInformationalVersion"]).AppendLine();
             sb.AppendLine("        END");
             sb.AppendLine("    END");
             sb.AppendLine("    BLOCK \"VarFileInfo\"");

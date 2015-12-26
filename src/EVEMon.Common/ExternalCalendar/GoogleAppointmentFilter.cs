@@ -41,7 +41,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// </summary>
         internal GoogleAppointmentFilter()
         {
-            m_service = new CalendarService(Application.ProductName);
+            m_service = new CalendarService(EveMonClient.FileVersionInfo.ProductName);
 
             UserName = String.Empty;
             Password = String.Empty;

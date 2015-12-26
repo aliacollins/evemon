@@ -140,7 +140,7 @@ namespace EVEMon
             // Notify Gooogle Analytics about start up
             GAnalyticsTracker.TrackStart(GetType());
 
-            trayIcon.Text = Application.ProductName;
+            trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
             // Prepare control's visibility
@@ -929,7 +929,7 @@ namespace EVEMon
             // If character's trainings must be displayed in title
             if (!Settings.UI.MainWindow.ShowCharacterInfoInTitleBar)
             {
-                Text = Application.ProductName;
+                Text = EveMonClient.FileVersionInfo.ProductName;
                 return;
             }
 
@@ -1015,7 +1015,7 @@ namespace EVEMon
             while (builder.Length > MaxTitleLength && trimTimeSpanComponents < 3);
 
             // Adds EVEMon at the end if there is space in the title bar
-            string appSuffix = String.Format(CultureConstants.DefaultCulture, " - {0}", Application.ProductName);
+            string appSuffix = String.Format(CultureConstants.DefaultCulture, " - {0}", EveMonClient.FileVersionInfo.ProductName);
             if (builder.Length + appSuffix.Length <= MaxTitleLength)
                 builder.Append(appSuffix);
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -197,21 +198,22 @@ namespace EVEMon.About
         /// <returns></returns>
         private string GetVersionText()
         {
+            FileVersionInfo version = EveMonClient.FileVersionInfo;
+
             // Adds environment process info
             VersionLabel.Text += String.Format(CultureConstants.InvariantCulture, " ({0} bit)",
                 Environment.Is64BitProcess ? "64" : "32");
 
             // Returns the product version if the build is in SNAPSHOT
             if (EveMonClient.IsSnapshotBuild)
-                return String.Format(CultureConstants.DefaultCulture, VersionLabel.Text, Application.ProductVersion);
+                return String.Format(CultureConstants.InvariantCulture, VersionLabel.Text, version.ProductVersion);
             
             // Adds " (Debug)" to the version number if the build is in DEBUG
             if (EveMonClient.IsDebugBuild)
-                return String.Format(CultureConstants.DefaultCulture, VersionLabel.Text + " (Debug)", Application.ProductVersion);
+                return String.Format(CultureConstants.InvariantCulture, VersionLabel.Text + " (Debug)", version.FileVersion);
 
-            // Returns only the Major, Minor and Build of the version number
-            return String.Format(CultureConstants.DefaultCulture, VersionLabel.Text,
-                Application.ProductVersion.Remove(Application.ProductVersion.LastIndexOf(".", StringComparison.Ordinal)));
+            // Returns only the application product version (AssemblyInformationalVersion)
+            return version.ProductVersion;
         }
 
         /// <summary>

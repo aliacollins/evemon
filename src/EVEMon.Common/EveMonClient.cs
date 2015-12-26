@@ -165,6 +165,25 @@ namespace EVEMon.Common
         #endregion
 
 
+        #region Version
+
+        /// <summary>
+        /// Gets the file version information.
+        /// </summary>
+        /// <value>
+        /// The file version.
+        /// </value>
+        public static FileVersionInfo FileVersionInfo
+        {
+            get
+            {
+                return FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location);
+            }
+        }
+        
+        #endregion
+
+
         #region File paths
 
         /// <summary>

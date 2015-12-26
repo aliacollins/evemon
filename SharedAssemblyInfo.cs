@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: 4104 Repository URL: https://bitbucket.org/EVEMonDevTeam/evemon")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Repository URL: https://bitbucket.org/EVEMonDevTeam/evemon")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]

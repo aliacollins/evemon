@@ -33,7 +33,11 @@ namespace EVEMon.Common.Net
         /// </summary>
         public static string UserAgent
         {
-            get { return string.Concat(Application.ProductName, Path.AltDirectorySeparatorChar, Application.ProductVersion); }
+            get
+            {
+                return string.Concat(EveMonClient.FileVersionInfo.ProductName, Path.AltDirectorySeparatorChar,
+                    EveMonClient.FileVersionInfo.FileVersion);
+            }
         }
 
         /// <summary>

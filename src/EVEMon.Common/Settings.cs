@@ -375,7 +375,7 @@ namespace EVEMon.Common
         /// </summary>
         internal static int Revision
         {
-            get { return Version.Parse(Application.ProductVersion).Revision; }
+            get { return Version.Parse(EveMonClient.FileVersionInfo.FileVersion).Revision; }
         }
 
         /// <summary>
