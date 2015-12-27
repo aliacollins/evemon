@@ -138,7 +138,7 @@ namespace EVEMon
             CheckTimeSynchronization();
 
             // Notify Gooogle Analytics about start up
-            GAnalyticsTracker.TrackStart(GetType());
+            GAnalyticsTracker.TrackStartAsync(GetType());
 
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
