@@ -44,9 +44,24 @@ namespace EVEMon.Common.Helpers
         /// Tracks the starting of the application asynchronously.
         /// </summary>
         /// <param name="type">The type.</param>
-        public static void TrackStartAsync(Type type)
+        /// <param name="action">The action.</param>
+        /// <remarks>Default action is 'Start'</remarks>
+        public static void TrackStartAsync(Type type, string action = null)
         {
-            TrackEventAsync(type, "ApplicationLifecycle", SessionStatus.Start.ToString());
+            if (String.IsNullOrWhiteSpace(action))
+                action = SessionStatus.Start.ToString();
+
+            if (action != SessionStatus.Start.ToString() && action != DailyStartText)
+            {
+                throw new ArgumentException(String.Format(CultureConstants.DefaultCulture,
+                    "Only actions '{0}' and '{1}' are allowed.", SessionStatus.Start, DailyStartText));
+            }
+
+            TrackEventAsync(type, "ApplicationLifecycle", action,
+                (e, args) =>
+                {
+                    Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackStartAsync(type, DailyStartText));
+                });
         }
 
         /// <summary>
@@ -85,16 +100,11 @@ namespace EVEMon.Common.Helpers
                     wait.WaitOne();
                 }
 
-                if (action != SessionStatus.Start.ToString() && action != DailyStartText)
-                    return;
-
-                Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, DailyStartText));
-
                 return;
             }
 
             // Reschedule later otherwise
-            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action));
+            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEvent(type, category, action));
         }
 
         /// <summary>
@@ -117,16 +127,11 @@ namespace EVEMon.Common.Helpers
                 HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
                     callback, null, HttpMethod.Post, postdata: BuildQueryString());
 
-                if (action != SessionStatus.Start.ToString() && action != DailyStartText)
-                    return;
-
-                Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, DailyStartText));
-
                 return;
             }
 
             // Reschedule later otherwise
-            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action));
+            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action, callback));
         }
 
         /// <summary>
