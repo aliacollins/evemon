@@ -103,7 +103,7 @@ namespace EVEMon.SkillPlanner
                 m_character = (Character)m_plan.Character;
                 Tag = value;
                 Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - {2} Loadout Selection",
-                                     value.Character, value.Name, Settings.LoadoutsProvider.Provider.Name);
+                                     value.Character, value.Name, Settings.LoadoutsProvider.Provider?.Name);
 
                 UpdatePlanningControls();
             }
@@ -135,6 +135,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void QueryLoadoutsFeed()
         {
+            if (Settings.LoadoutsProvider.Provider == null)
+                return;
+
             // Wait cursor until we retrieved the loadout
             Cursor.Current = Cursors.WaitCursor;
             throbberLoadouts.State = ThrobberState.Rotating;
@@ -176,6 +179,9 @@ namespace EVEMon.SkillPlanner
             // Restore the default cursor instead of the waiting one
             Cursor.Current = Cursors.Default;
             btnPlan.Enabled = false;
+
+            if (Settings.LoadoutsProvider.Provider == null)
+                return;
 
             // Was there an error ?
             if (e.HasError)
@@ -233,6 +239,9 @@ namespace EVEMon.SkillPlanner
             if (m_selectedLoadout == loadout)
                 return;
 
+            if (Settings.LoadoutsProvider.Provider == null)
+                return;
+
             // Reset controls and set the cursor to wait
             btnPlan.Enabled = false;
             lblTrainTime.Visible = false;
@@ -266,6 +275,9 @@ namespace EVEMon.SkillPlanner
             m_prerequisites.Clear();
             tvLoadout.Nodes.Clear();
             Cursor.Current = Cursors.Default;
+
+            if (Settings.LoadoutsProvider.Provider == null)
+                return;
 
             // Was there an error ?
             if (e.HasError)

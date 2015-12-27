@@ -38,7 +38,7 @@ namespace EVEMon.SkillPlanner
                 toolStripItem.Click += toolStripItem_Click;
             }
 
-            splitButtonLoadouts.Text = Settings.LoadoutsProvider.ProviderName;
+            splitButtonLoadouts.Text = Settings.LoadoutsProvider.Provider?.Name;
         }
 
         #endregion
@@ -97,6 +97,9 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void splitButtonLoadouts_Click(object sender, EventArgs e)
         {
+            if (Settings.LoadoutsProvider.Provider == null)
+                return;
+
             ShipLoadoutSelectWindow window = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Plan>(Plan);
             window.Ship = SelectedObject;
         }

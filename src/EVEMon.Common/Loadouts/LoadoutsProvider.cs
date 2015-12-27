@@ -19,6 +19,14 @@ namespace EVEMon.Common.Loadouts
         public abstract string Name { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this <see cref="LoadoutsProvider"/> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        protected abstract bool Enabled { get; }
+
+        /// <summary>
         /// Gets the providers.
         /// </summary>
         /// <value>
@@ -31,7 +39,7 @@ namespace EVEMon.Common.Loadouts
                 return Assembly.GetExecutingAssembly().GetTypes()
                     .Where(type => typeof(LoadoutsProvider).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null)
                     .Select(type => Activator.CreateInstance(type) as LoadoutsProvider)
-                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name))
+                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
                     .OrderBy(provider => provider.Name);
             }
         }

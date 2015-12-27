@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.Loadouts;
@@ -19,7 +20,7 @@ namespace EVEMon.Common.SettingsObjects
                 s_loadoutsProviders[provider.Name] = provider;
             }
 
-            ProviderName = s_loadoutsProviders.First().Key;
+            ProviderName = s_loadoutsProviders.FirstOrDefault().Key ?? String.Empty;
         }
 
         /// <summary>
@@ -45,8 +46,9 @@ namespace EVEMon.Common.SettingsObjects
                 if (s_loadoutsProviders.ContainsKey(ProviderName))
                     return s_loadoutsProviders[ProviderName];
 
-                ProviderName = s_loadoutsProviders.First().Key;
-                return s_loadoutsProviders.First().Value;
+                ProviderName = s_loadoutsProviders.FirstOrDefault().Key ?? String.Empty;
+
+                return s_loadoutsProviders.FirstOrDefault().Value;
             }
         }
     }
