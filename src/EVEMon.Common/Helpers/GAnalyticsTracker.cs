@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
@@ -40,10 +41,10 @@ namespace EVEMon.Common.Helpers
         }
 
         /// <summary>
-        /// Tracks the starting of the application.
+        /// Tracks the starting of the application asynchronously.
         /// </summary>
         /// <param name="type">The type.</param>
-        public static void TrackStart(Type type)
+        public static void TrackStartAsync(Type type)
         {
             TrackEventAsync(type, "ApplicationLifecycle", SessionStatus.Start.ToString());
         }
@@ -54,7 +55,46 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         public static void TrackEnd(Type type)
         {
-            TrackEventAsync(type, "ApplicationLifecycle", SessionStatus.End.ToString());
+            TrackEvent(type, "ApplicationLifecycle", SessionStatus.End.ToString());
+        }
+
+        /// <summary>
+        /// Tracks the event.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="category">The category.</param>
+        /// <param name="action">The action.</param>
+        private static void TrackEvent(Type type, string category, string action)
+        {
+            InitEvent(type, category, action);
+
+            if (NetworkMonitor.IsNetworkAvailable)
+            {
+                // Query async and wait
+                using (EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset))
+                {
+                    HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
+                        (e, args) =>
+                        {
+                            // We got the result, so we resume the calling thread
+                            wait.Set();
+                        },
+                        null, HttpMethod.Post, postdata: BuildQueryString());
+
+                    // Wait for the completion of the background thread
+                    wait.WaitOne();
+                }
+
+                if (action != SessionStatus.Start.ToString() && action != DailyStartText)
+                    return;
+
+                Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackEventAsync(type, category, DailyStartText));
+
+                return;
+            }
+
+            // Reschedule later otherwise
+            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action));
         }
 
         /// <summary>
@@ -66,18 +106,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="callback">The callback.</param>
         private static void TrackEventAsync(Type type, string category, string action, DownloadImageCompletedCallback callback = null)
         {
-            if (EveMonClient.IsDebugBuild)
-                EveMonClient.Trace("GAnalyticsTracker.{0} - {1}", category, action);
-
-            s_parameters.HitType = GaHitType.Event;
-            s_parameters.ScreenName = type.Name;
-            s_parameters.EventCategory = category;
-            s_parameters.EventAction = action;
-
-            SessionStatus status;
-            s_parameters.SessionControl = Enum.TryParse(action, true, out status)
-                ? status.ToString().ToLowerInvariant()
-                : null;
+            InitEvent(type, category, action);
 
             if (callback == null)
                 callback = (e, args) => { };
@@ -98,6 +127,28 @@ namespace EVEMon.Common.Helpers
 
             // Reschedule later otherwise
             Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action));
+        }
+
+        /// <summary>
+        /// Initializes the event.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="category">The category.</param>
+        /// <param name="action">The action.</param>
+        private static void InitEvent(Type type, string category, string action)
+        {
+            if (EveMonClient.IsDebugBuild)
+                EveMonClient.Trace("GAnalyticsTracker.{0} - {1}", category, action);
+
+            s_parameters.HitType = GaHitType.Event;
+            s_parameters.ScreenName = type.Name;
+            s_parameters.EventCategory = category;
+            s_parameters.EventAction = action;
+
+            SessionStatus status;
+            s_parameters.SessionControl = Enum.TryParse(action, true, out status)
+                ? status.ToString().ToLowerInvariant()
+                : null;
         }
 
         /// <summary>

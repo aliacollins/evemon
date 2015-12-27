@@ -204,10 +204,6 @@ namespace EVEMon
 
             try
             {
-                // Shutdown EveMonClient timer in case that was causing the crash
-                // so we don't get multiple crashes
-                EveMonClient.Shutdown();
-
                 // Some exceptions may be thrown on a worker thread so we need to invoke them to the UI thread,
                 // if we are already on the UI thread nothing changes
                 Dispatcher.Invoke(() =>
@@ -216,20 +212,25 @@ namespace EVEMon
                     {
                         form.ShowDialog(s_mainWindow);
                     }
+
+                    // Notify Gooogle Analytics about ending via the Unhandled Exception window
+                    GAnalyticsTracker.TrackEnd(typeof(Program));
                 });
             }
-            catch
+            catch (Exception e)
             {
                 StringBuilder messageBuilder = new StringBuilder();
                 messageBuilder.AppendLine(
-                    "An error occurred and EVEMon was unable to handle the error message gracefully");
+                    @"An error occurred and EVEMon was unable to handle the error message gracefully");
                 messageBuilder.AppendLine();
-                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, "The exception encountered was '{0}'.",
-                    ex.Message);
+                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, @"The exception encountered was '{0}'.",
+                    e.Message);
+                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, @"The original exception encountered was '{0}'.",
+                  ex.Message);
                 messageBuilder.AppendLine();
                 messageBuilder.AppendLine();
-                messageBuilder.AppendLine("Please report this on the EVEMon forums.");
-                MessageBox.Show(messageBuilder.ToString(), "EVEMon Error Occurred", MessageBoxButtons.OK,
+                messageBuilder.AppendLine(@"Please report this on the EVEMon forums.");
+                MessageBox.Show(messageBuilder.ToString(), @"EVEMon Error Occurred", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 throw;
             }
