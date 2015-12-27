@@ -23,7 +23,6 @@ namespace EVEMon.Common.Serialization.Settings
             m_monitoredCharacters = new Collection<MonitoredCharacterSettings>();
             CloudStorageServiceProvider = new CloudStorageServiceProviderSettings();
             PortableEveInstallations = new PortableEveInstallationsSettings();
-            MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
             Notifications = new NotificationSettings();
             APIProviders = new APIProvidersSettings();
             LoadoutsProvider = new LoadoutsProviderSettings();
@@ -93,9 +92,6 @@ namespace EVEMon.Common.Serialization.Settings
 
         [XmlElement("exportation")]
         public ExportationSettings Exportation { get; set; }
-
-        [XmlElement("marketUnifiedUploader")]
-        public MarketUnifiedUploaderSettings MarketUnifiedUploader { get; set; }
 
         [XmlElement("marketPricer")]
         public MarketPricerSettings MarketPricer { get; set; }

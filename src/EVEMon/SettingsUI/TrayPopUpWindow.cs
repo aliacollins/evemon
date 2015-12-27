@@ -13,7 +13,6 @@ using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Controls;
-using EVEMon.MarketUnifiedUploader;
 
 namespace EVEMon.SettingsUI
 {
@@ -28,7 +27,6 @@ namespace EVEMon.SettingsUI
     {
         private readonly Label m_eveTimeLabel = new Label();
         private readonly Label m_serverStatusLabel = new Label();
-        private readonly Label m_uploaderStatusLabel = new Label();
 
 
         #region Inherited Events
@@ -46,7 +44,6 @@ namespace EVEMon.SettingsUI
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.ServerStatusUpdated += EveMonClient_ServerStatusUpdated;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-            Uploader.StatusChanged += Uploader_StatusChanged;
 
             base.OnLoad(e);
         }
@@ -264,11 +261,6 @@ namespace EVEMon.SettingsUI
                 MainFlowLayoutPanel.Controls.Add(m_eveTimeLabel);
                 UpdateEveTimeLabel();
             }
-
-            // Market Uploader
-            m_uploaderStatusLabel.AutoSize = true;
-            MainFlowLayoutPanel.Controls.Add(m_uploaderStatusLabel);
-            UpdateUploaderStatusLabel();
         }
 
         /// <summary>
@@ -393,17 +385,6 @@ namespace EVEMon.SettingsUI
                 m_serverStatusLabel.Text = EveMonClient.EVEServer.StatusText;
         }
 
-        /// <summary>
-        /// Updates the uploader status label.
-        /// </summary>
-        private void UpdateUploaderStatusLabel()
-        {
-            if (!Visible || m_uploaderStatusLabel == null)
-                return;
-
-            m_uploaderStatusLabel.Text = String.Format(CultureConstants.DefaultCulture, "Uploader Status: {0}", Uploader.Status);
-        }
-
         #endregion
 
 
@@ -437,16 +418,6 @@ namespace EVEMon.SettingsUI
         private void EveMonClient_QueuedSkillsCompleted(object sender, QueuedSkillsEventArgs e)
         {
             UpdateContent();
-        }
-
-        /// <summary>
-        /// Updates the uploader status message.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void Uploader_StatusChanged(object sender, EventArgs e)
-        {
-            UpdateUploaderStatusLabel();
         }
 
         #endregion

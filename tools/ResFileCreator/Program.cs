@@ -174,7 +174,7 @@ namespace EVEMon.ResFileCreator
             List<string> iconFilesPath = new List<string>();
 
             if (Directory.Exists(IconsDir))
-                iconFilesPath = Directory.GetFiles(IconsDir, "*.ico", SearchOption.AllDirectories).ToList();
+                iconFilesPath = Directory.GetFiles(IconsDir, "EVEMon.ico", SearchOption.AllDirectories).ToList();
 
             if (!iconFilesPath.Any())
                 return;

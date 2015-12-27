@@ -44,7 +44,6 @@ namespace EVEMon
             this.lblTraining = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.UploaderToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.mainMenuBar = new System.Windows.Forms.MenuStrip();
@@ -136,7 +135,6 @@ namespace EVEMon
             this.overview = new EVEMon.Controls.Overview();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
             this.tabCreationLabel = new System.Windows.Forms.Label();
-            this.UploaderStatusImageList = new System.Windows.Forms.ImageList(this.components);
             this.noCharactersLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.Controls.NotificationList();
             this.trayIconContextMenuStrip.SuspendLayout();
@@ -222,8 +220,7 @@ namespace EVEMon
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblTraining,
             this.lblStatus,
-            this.lblServerStatus,
-            this.UploaderToolStripStatusLabel});
+            this.lblServerStatus});
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.ShowItemToolTips = true;
@@ -248,17 +245,6 @@ namespace EVEMon
             this.lblServerStatus.Name = "lblServerStatus";
             this.lblServerStatus.Size = new System.Drawing.Size(141, 17);
             this.lblServerStatus.Text = "// Server Status Unknown";
-            // 
-            // UploaderToolStripStatusLabel
-            // 
-            this.UploaderToolStripStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("UploaderToolStripStatusLabel.Image")));
-            this.UploaderToolStripStatusLabel.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.UploaderToolStripStatusLabel.ImageTransparentColor = System.Drawing.Color.Transparent;
-            this.UploaderToolStripStatusLabel.Name = "UploaderToolStripStatusLabel";
-            this.UploaderToolStripStatusLabel.Size = new System.Drawing.Size(162, 17);
-            this.UploaderToolStripStatusLabel.Text = "// Market Uploader Status:";
-            this.UploaderToolStripStatusLabel.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
-            this.UploaderToolStripStatusLabel.ToolTipText = "Disabled";
             // 
             // saveFileDialog
             // 
@@ -1080,15 +1066,6 @@ namespace EVEMon
             this.tabCreationLabel.Text = "Tab pages creation in progress.\r\n\r\nPlease wait.";
             this.tabCreationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // UploaderStatusImageList
-            // 
-            this.UploaderStatusImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("UploaderStatusImageList.ImageStream")));
-            this.UploaderStatusImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.UploaderStatusImageList.Images.SetKeyName(0, "Disabled.png");
-            this.UploaderStatusImageList.Images.SetKeyName(1, "Initialize.png");
-            this.UploaderStatusImageList.Images.SetKeyName(2, "Idle.png");
-            this.UploaderStatusImageList.Images.SetKeyName(3, "Uploading.png");
-            // 
             // noCharactersLabel
             // 
             this.noCharactersLabel.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -1251,8 +1228,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton tsbImplantGroups;
         private System.Windows.Forms.ToolStripButton tsbShowOwned;
         private System.Windows.Forms.Label tabCreationLabel;
-        private System.Windows.Forms.ToolStripStatusLabel UploaderToolStripStatusLabel;
-        private System.Windows.Forms.ImageList UploaderStatusImageList;
         private System.Windows.Forms.Label noCharactersLabel;
         private System.Windows.Forms.TabPage tpOverview;
         private Controls.Overview overview;
