@@ -22,6 +22,14 @@ namespace EVEMon.Common.MarketPricer
         public abstract string Name { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this <see cref="ItemPricer"/> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        protected abstract bool Enabled { get; }
+        
+        /// <summary>
         /// Gets the providers.
         /// </summary>
         /// <value>
@@ -34,7 +42,7 @@ namespace EVEMon.Common.MarketPricer
                 return Assembly.GetExecutingAssembly().GetTypes()
                     .Where(type => typeof(ItemPricer).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null)
                     .Select(type => Activator.CreateInstance(type) as ItemPricer)
-                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name))
+                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
                     .OrderBy(pricer => pricer.Name);
             }
         }

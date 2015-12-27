@@ -39,6 +39,14 @@ namespace EVEMon.Common.CloudStorageServices
         public abstract string Name { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this <see cref="CloudStorageServiceProvider"/> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        protected abstract bool Enabled { get; }
+
+        /// <summary>
         /// Gets a value indicating whether the user is authenticated with the provider.
         /// </summary>
         /// <value>
@@ -83,7 +91,7 @@ namespace EVEMon.Common.CloudStorageServices
                     .Where(type => typeof(CloudStorageServiceProvider).IsAssignableFrom(type) &&
                                    type.GetConstructor(Type.EmptyTypes) != null)
                     .Select(type => Activator.CreateInstance(type) as CloudStorageServiceProvider)
-                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name))
+                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
                     .OrderBy(provider => provider.Name);
             }
         }

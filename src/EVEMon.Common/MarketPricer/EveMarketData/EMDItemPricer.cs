@@ -19,9 +19,23 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         #endregion
 
 
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
         public override string Name
         {
-            get { return "" /*"Eve-MarketData"*/; }
+            get { return "Eve-MarketData"; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="ItemPricer" /> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        protected override bool Enabled
+        {
+            get { return true; }
         }
 
         /// <summary>

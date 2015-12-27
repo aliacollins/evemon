@@ -31,7 +31,18 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// </summary>
         public override string Name
         {
-            get { return "" /*"EVE-Central"*/; }
+            get { return "EVE-Central"; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="ItemPricer" /> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        protected override bool Enabled
+        {
+            get { return false; }
         }
 
         /// <summary>
