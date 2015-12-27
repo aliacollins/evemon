@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
+using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
@@ -14,7 +15,6 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Models.Extended;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Scheduling;
-using EVEMon.Common.Serialization.BattleClinic.CloudStorage;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
 
@@ -379,7 +379,7 @@ namespace EVEMon.Common
         /// </remarks>
         public static void Initialize()
         {
-            SerializableFilesListItem settingsFile = (SerializableFilesListItem)CloudStorageServiceProvider.Provider.DownloadSettingsFile();
+            CloudStorageServiceAPIFile settingsFile = CloudStorageServiceProvider.Provider?.DownloadSettingsFile();
             SerializableSettings settings = settingsFile != null
                 ? TryDeserializeFromFileContent(settingsFile.FileContent)
                 : TryDeserializeFromFile();

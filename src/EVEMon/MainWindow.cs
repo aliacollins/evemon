@@ -132,7 +132,7 @@ namespace EVEMon
             // Start the one-second timer 
             EveMonClient.Run(this);
 
-            // Check with BattleClinic the local clock is synchronized
+            // Check with NIST that the local clock is synchronized
             CheckTimeSynchronization();
 
             // Notify Gooogle Analytics about start up
@@ -279,7 +279,7 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Callback for time synchronization with BattleClinic check.
+        /// Callback for time synchronization with NIST check.
         /// </summary>
         /// <param name="isSynchronised">if set to <c>true</c> [is synchronised].</param>
         /// <param name="serverTimeToLocalTime">The server time to local time.</param>
@@ -1151,8 +1151,11 @@ namespace EVEMon
             Settings.SaveImmediate();
 
             // Save settings to cloud storage service provider
-            if (!Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
+            if (Settings.CloudStorageServiceProvider.Provider != null &&
+                !Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
+            {
                 return;
+            }
 
             // Stop IGB
             if (m_igbServer != null)
@@ -1390,8 +1393,11 @@ namespace EVEMon
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save settings to cloud storage service provider
-            if (!Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
+            if (Settings.CloudStorageServiceProvider.Provider != null &&
+                !Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
+            {
                 return;
+            }
 
             Application.Exit();
         }
@@ -1989,8 +1995,11 @@ namespace EVEMon
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Save settings to cloud storage service provider
-            if (!Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
+            if (Settings.CloudStorageServiceProvider.Provider != null &&
+                !Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
+            {
                 return;
+            }
 
             Application.Exit();
         }

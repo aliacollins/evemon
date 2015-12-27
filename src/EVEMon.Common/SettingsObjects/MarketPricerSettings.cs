@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.MarketPricer;
@@ -19,7 +20,7 @@ namespace EVEMon.Common.SettingsObjects
                 s_pricer[pricer.Name] = pricer;
             }
 
-            ProviderName = s_pricer.First().Key;
+            ProviderName = s_pricer.FirstOrDefault().Key ?? String.Empty;
         }
 
         /// <summary>
@@ -45,8 +46,9 @@ namespace EVEMon.Common.SettingsObjects
                 if (s_pricer.ContainsKey(ProviderName))
                     return s_pricer[ProviderName];
 
-                ProviderName = s_pricer.First().Key;
-                return s_pricer.First().Value;
+                ProviderName = s_pricer.FirstOrDefault().Key ?? String.Empty;
+
+                return s_pricer.FirstOrDefault().Value;
             }
         }
     }

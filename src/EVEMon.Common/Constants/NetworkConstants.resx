@@ -132,15 +132,6 @@
   <data name="APIBase" xml:space="preserve">
     <value>https://api.eveonline.com</value>
   </data>
-  <data name="BattleClinicLoadoutDetails" xml:space="preserve">
-    <value>/ship_loadout_feed.php?id={0}</value>
-  </data>
-  <data name="BattleClinicLoadoutsFeed" xml:space="preserve">
-    <value>/ship_loadout_feed.php?typeID={0}</value>
-  </data>
-  <data name="BattleClinicLoadoutTopic" xml:space="preserve">
-    <value>http://forum.battleclinic.com/index.php/topic,{0}.0.html</value>
-  </data>
   <data name="EVEMonUpdates" xml:space="preserve">
     <value>/updates/patch.xml</value>
   </data>
@@ -225,27 +216,6 @@
   <data name="CCPIconsFromImageServer" xml:space="preserve">
     <value>/{0}/{1}_{2}.png</value>
     <comment>Icons from CCP's image server</comment>
-  </data>
-  <data name="BattleClinicBase" xml:space="preserve">
-    <value>http://www.battleclinic.com</value>
-  </data>
-  <data name="BattleClinicAPIAccountCredentials" xml:space="preserve">
-    <value>/api_key.php</value>
-  </data>
-  <data name="BattleClinicAPIBase" xml:space="preserve">
-    <value>http://api.battleclinic.com</value>
-  </data>
-  <data name="BattleClinicAPICheckCredentials" xml:space="preserve">
-    <value>/account/checkAPICredentials.php</value>
-  </data>
-  <data name="BattleClinicAPIFileGet" xml:space="preserve">
-    <value>/files/fileGet.php</value>
-  </data>
-  <data name="BattleClinicAPIFileSave" xml:space="preserve">
-    <value>/files/fileSave.php</value>
-  </data>
-  <data name="BattleClinicAPIFileGetByName" xml:space="preserve">
-    <value>/files/fileGetByName.php</value>
   </data>
   <data name="EVEGateMailOpen" xml:space="preserve">
     <value>/Mail/ReadMessage/{0}</value>
@@ -485,13 +455,6 @@
   </data>
   <data name="PostDataWithCharIDAndRowCount" xml:space="preserve">
     <value>keyID={0}&amp;vCode={1}&amp;characterID={2}&amp;rowCount={3}</value>
-  </data>
-  <data name="BattleClinicItemPrices" xml:space="preserve">
-    <value>/xml_item_prices.php</value>
-    <comment>Used for fetching item prices from BattleClinic</comment>
-  </data>
-  <data name="BattleClinicEVEBase" xml:space="preserve">
-    <value>http://eve.battleclinic.com</value>
   </data>
   <data name="BitBucketWikiBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon/wiki</value>

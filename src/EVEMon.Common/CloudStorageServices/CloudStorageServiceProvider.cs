@@ -148,7 +148,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Downloads the settings file.
         /// </summary>
-        public abstract object DownloadSettingsFile();
+        public abstract CloudStorageServiceAPIFile DownloadSettingsFile();
 
         /// <summary>
         /// Uploads the settings file asynchronously.

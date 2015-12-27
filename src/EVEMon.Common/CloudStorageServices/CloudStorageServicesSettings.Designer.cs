@@ -25,39 +25,6 @@ namespace EVEMon.Common.CloudStorageServices {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public uint BCUserID {
-            get {
-                return ((uint)(this["BCUserID"]));
-            }
-            set {
-                this["BCUserID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BCAPIKey {
-            get {
-                return ((string)(this["BCAPIKey"]));
-            }
-            set {
-                this["BCAPIKey"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3C3490E986D448B1E5379147115E887E4E045554")]
-        public string BCApplicationKey {
-            get {
-                return ((string)(this["BCApplicationKey"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool UploadAlways {
             get {

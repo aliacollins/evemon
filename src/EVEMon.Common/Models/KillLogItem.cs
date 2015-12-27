@@ -96,7 +96,12 @@ namespace EVEMon.Common.Models
         /// </summary>
         public double Price
         {
-            get { return Settings.MarketPricer.Pricer.GetPriceByTypeID(m_typeID); }
+            get
+            {
+                return Settings.MarketPricer.Pricer != null
+                    ? Settings.MarketPricer.Pricer.GetPriceByTypeID(m_typeID)
+                    : 0;
+            }
         }
 
         /// <summary>

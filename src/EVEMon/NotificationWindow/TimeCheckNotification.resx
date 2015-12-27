@@ -159,6 +159,6 @@
 </value>
   </data>
   <data name="uxMessageLabel1.Text" xml:space="preserve">
-    <value>EVEMon checked your system's time compared to BattleClinic.com and found that they do not agree on what your current time is. This may be because your Time Zone is not set correctly, or your clock is set to the wrong time. </value>
+    <value>EVEMon checked your system's time compared to NIST and found that they do not agree on what your current time is. This may be because your Time Zone is not set correctly, or your clock is set to the wrong time. </value>
   </data>
 </root>

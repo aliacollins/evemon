@@ -31,13 +31,13 @@ namespace EVEMon.Common.SettingsObjects
         }
 
         /// <summary>
-        /// When true, EVEMon will check its version from BattleClinic
+        /// When true, EVEMon will check its version from repo
         /// </summary>
         [XmlElement("checkEVEMonVersion")]
         public bool CheckEVEMonVersion { get; set; }
 
         /// <summary>
-        /// When true, EVEMon will check its version from BattleClinic
+        /// When true, EVEMon will check its time from NIST
         /// </summary>
         [XmlElement("checkTimeOnStartup")]
         public bool CheckTimeOnStartup { get; set; }

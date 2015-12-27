@@ -44,9 +44,12 @@ namespace EVEMon.SettingsUI
             Font = FontFactory.GetFont("Tahoma");
             s_provider = Settings.CloudStorageServiceProvider.Provider;
 
-            s_provider.CredentialsChecked += CloudStorageServiceProvider_CredentialsChecked;
-            s_provider.FileUploaded += CloudStorageServiceProvider_FileUploaded;
-            s_provider.FileDownloaded += CloudStorageServiceProvider_FileDownloaded;
+            if (s_provider != null)
+            {
+                s_provider.CredentialsChecked += CloudStorageServiceProvider_CredentialsChecked;
+                s_provider.FileUploaded += CloudStorageServiceProvider_FileUploaded;
+                s_provider.FileDownloaded += CloudStorageServiceProvider_FileDownloaded;
+            }
             Disposed += OnDisposed;
 
             alwaysUploadCheckBox.Checked = CloudStorageServicesSettings.Default.UploadAlways;
@@ -63,9 +66,12 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            s_provider.CredentialsChecked -= CloudStorageServiceProvider_CredentialsChecked;
-            s_provider.FileUploaded -= CloudStorageServiceProvider_FileUploaded;
-            s_provider.FileDownloaded -= CloudStorageServiceProvider_FileDownloaded;
+            if (s_provider != null)
+            {
+                s_provider.CredentialsChecked -= CloudStorageServiceProvider_CredentialsChecked;
+                s_provider.FileUploaded -= CloudStorageServiceProvider_FileUploaded;
+                s_provider.FileDownloaded -= CloudStorageServiceProvider_FileDownloaded;
+            }
             Disposed -= OnDisposed;
         }
 
@@ -75,7 +81,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            Enabled = Settings.CloudStorageServiceProvider.Provider.HasCredentialsStored;
+            Enabled = Settings.CloudStorageServiceProvider.Provider != null &&
+                      Settings.CloudStorageServiceProvider.Provider.HasCredentialsStored;
         }
 
         /// <summary>
@@ -131,9 +138,9 @@ namespace EVEMon.SettingsUI
 
             Settings.SaveImmediate();
 
-            EveMonClient.Trace("{0}.UploadSettingsFileAsync - Initiated", s_provider.Name);
+            EveMonClient.Trace("{0}.UploadSettingsFileAsync - Initiated", s_provider?.Name);
 
-            s_provider.UploadSettingsFileAsync();
+            s_provider?.UploadSettingsFileAsync();
         }
 
         /// <summary>
@@ -153,9 +160,9 @@ namespace EVEMon.SettingsUI
             throbber.Visible = true;
             throbber.State = ThrobberState.Rotating;
 
-            EveMonClient.Trace("{0}.DownloadSettingsFileAsync - Initiated", s_provider.Name);
+            EveMonClient.Trace("{0}.DownloadSettingsFileAsync - Initiated", s_provider?.Name);
 
-            s_provider.DownloadSettingsFileAsync();
+            s_provider?.DownloadSettingsFileAsync();
         }
 
         #endregion
@@ -170,7 +177,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void CloudStorageServiceProvider_CredentialsChecked(object sender, EventArgs e)
         {
-            Enabled = s_provider.HasCredentialsStored;
+            Enabled = s_provider != null && s_provider.HasCredentialsStored;
         }
 
         /// <summary>
@@ -195,7 +202,7 @@ namespace EVEMon.SettingsUI
             apiResponseLabel.ForeColor = Color.Green;
             apiResponseLabel.Text = @"File uploaded successfully.";
 
-            EveMonClient.Trace("{0}.UploadSettingsFileAsync - Completed", s_provider.Name);
+            EveMonClient.Trace("{0}.UploadSettingsFileAsync - Completed", s_provider?.Name);
         }
 
         /// <summary>
@@ -217,7 +224,7 @@ namespace EVEMon.SettingsUI
                 return;
             }
 
-            EveMonClient.Trace("{0}.DownloadSettingsFileAsync - Completed", s_provider.Name);
+            EveMonClient.Trace("{0}.DownloadSettingsFileAsync - Completed", s_provider?.Name);
         }
 
         #endregion

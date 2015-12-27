@@ -129,8 +129,10 @@ namespace EVEMon.Common.Models
             get
             {
                 return TypeOfBlueprint != BlueprintType.Copy.ToString()
-                           ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
-                           : 0;
+                    ? Settings.MarketPricer.Pricer != null
+                        ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
+                        : 0
+                    : 0;
             }
         }
 

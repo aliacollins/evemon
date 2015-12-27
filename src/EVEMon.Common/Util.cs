@@ -16,13 +16,11 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using EVEMon.Common.CloudStorageServices.BattleClinic;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
-using EVEMon.Common.Serialization.BattleClinic.CloudStorage;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Threading;
 using ICSharpCode.SharpZipLib.GZip;
@@ -444,155 +442,6 @@ namespace EVEMon.Common
 
             // Stores XMLDocument
             result.XmlDocument = doc;
-            return result;
-        }
-
-        /// <summary>
-        /// Synchronously download an XML and deserializes it into the specified type.
-        /// </summary>
-        /// <typeparam name="T">The inner type to deserialize</typeparam>
-        /// <param name="url">The url to query</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The post data.</param>
-        /// <param name="dataCompression">The data compression.</param>
-        /// <returns></returns>
-        internal static BCAPIResult<T> DownloadBCAPIResult<T>(Uri url, bool acceptEncoded = false, string postData = null,
-                                                              DataCompression dataCompression = DataCompression.None)
-        {
-            string errorMessage = String.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url);
-            BCAPIError error = new BCAPIError { ErrorCode = "0", ErrorMessage = errorMessage };
-            BCAPIResult<T> result = new BCAPIResult<T> { Error = error };
-
-            // Query async and wait
-            EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
-            HttpWebService.DownloadXmlAsync(
-                url,
-                (asyncResult, userState) =>
-                    {
-                        try
-                        {
-                            // Was there an HTTP error ?
-                            if (asyncResult.Error != null)
-                            {
-                                errorMessage = asyncResult.Error.InnerException == null
-                                                   ? asyncResult.Error.Message
-                                                   : asyncResult.Error.InnerException.Message;
-                                error.ErrorMessage = errorMessage;
-                            }
-                            else
-                                result = DeserializeBCAPIResultCore<T>(asyncResult.Result);
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHandler.LogException(e, true);
-                            errorMessage = e.InnerException == null
-                                               ? e.Message
-                                               : e.InnerException.Message;
-                            error.ErrorMessage = errorMessage;
-                            EveMonClient.Trace("Method: DownloadBCAPIResult, url: {0}, postdata: {1}, type: {2}",
-                                               url.AbsoluteUri, postData, typeof(T).Name);
-                        }
-                        finally
-                        {
-                            // We got the result, so we resume the calling thread
-                            wait.Set();
-                        }
-                    },
-                null, HttpMethod.Post, acceptEncoded, postData, dataCompression);
-
-            // Wait for the completion of the background thread
-            wait.WaitOne();
-            wait.Close();
-
-            // Returns
-            return result;
-        }
-
-        /// <summary>
-        /// Asynchronously download an XML and deserializes it into the specified type.
-        /// </summary>
-        /// <typeparam name="T">The inner type to deserialize</typeparam>
-        /// <param name="url">The url to query</param>
-        /// <param name="callback">The callback to call once the query has been completed.</param>
-        /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
-        /// <param name="postData">The post data.</param>
-        /// <param name="dataCompression">The data compression.</param>
-        internal static void DownloadBCAPIResultAsync<T>(Uri url, QueryCallback<T> callback,
-                                                         bool acceptEncoded = false, string postData = null,
-                                                         DataCompression dataCompression = DataCompression.None)
-        {
-            HttpWebService.DownloadXmlAsync(
-                url,
-                (asyncResult, userState) =>
-                    {
-                        try
-                        {
-                            BCAPIResult<T> result = asyncResult.Error != null
-                                                        ? null
-                                                        : DeserializeBCAPIResultCore<T>(asyncResult.Result);
-
-                            string errorMessage = asyncResult.Error == null
-                                                      ? String.Empty
-                                                      : asyncResult.Error.InnerException == null
-                                                            ? asyncResult.Error.Message
-                                                            : asyncResult.Error.InnerException.Message;
-
-                            // We got the result, let's invoke the callback on this actor
-                            Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHandler.LogException(e, false);
-                            EveMonClient.Trace("Method: DownloadBCAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
-                                               url.AbsoluteUri, postData, typeof(T).Name);
-                        }
-                    },
-                null, HttpMethod.Post, acceptEncoded, postData, dataCompression);
-        }
-
-        /// <summary>
-        /// Process XML document.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize from the document</typeparam>
-        /// <param name="doc">The XML document to deserialize from.</param>
-        /// <returns>The result of the deserialization.</returns>
-        private static BCAPIResult<T> DeserializeBCAPIResultCore<T>(IXPathNavigable doc)
-        {
-            BCAPIResult<T> result;
-
-            try
-            {
-                // Deserialization
-                using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)doc))
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(BCAPIResult<T>));
-                    result = (BCAPIResult<T>)xs.Deserialize(reader);
-                }
-            }
-                // An error occurred during the deserialization
-            catch (InvalidOperationException exc)
-            {
-                ExceptionHandler.LogException(exc, true);
-                BCAPIError error = new BCAPIError
-                    {
-                        ErrorMessage = exc.InnerException == null
-                                           ? exc.Message
-                                           : exc.InnerException.Message
-                    };
-                result = new BCAPIResult<T> { Error = error };
-            }
-            catch (XmlException exc)
-            {
-                ExceptionHandler.LogException(exc, true);
-                BCAPIError error = new BCAPIError
-                    {
-                        ErrorMessage = exc.InnerException == null
-                                           ? exc.Message
-                                           : exc.InnerException.Message
-                    };
-                result = new BCAPIResult<T> { Error = error };
-            }
-
             return result;
         }
 
