@@ -55,8 +55,8 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 7, 7);
             System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 4, 4);
             System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 3, 3);
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Portable EVE Clients", 17, 17);
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Market Price Providers", 18, 18);
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Portable EVE Clients", 16, 16);
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Market Price Providers", 17, 17);
             System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("General", 10, 10, new System.Windows.Forms.TreeNode[] {
             treeNode10,
             treeNode11,
@@ -78,9 +78,8 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Notifications", 9, 9, new System.Windows.Forms.TreeNode[] {
             treeNode24});
             System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("BattleClinic", 15, 15);
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Cloud Storage Service", 19, 19, new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Cloud Storage Service", 18, 18, new System.Windows.Forms.TreeNode[] {
             treeNode26});
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Market Unified Uploader", 16, 16);
             this.systemTrayIconGroupBox = new System.Windows.Forms.GroupBox();
             this.rbSystemTrayOptionsNever = new System.Windows.Forms.RadioButton();
             this.rbSystemTrayOptionsAlways = new System.Windows.Forms.RadioButton();
@@ -266,10 +265,6 @@ namespace EVEMon.SettingsUI
             this.BattleClinicLinkLabel = new System.Windows.Forms.LinkLabel();
             this.bcCredentialsGroupBox = new System.Windows.Forms.GroupBox();
             this.battleClinicAPIControl = new EVEMon.SettingsUI.BattleClinicAPIControl();
-            this.marketUnifiedUploaderPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.marketUnifiedUploaderControl = new EVEMon.SettingsUI.MarketUnifiedUploaderControl();
-            this.marketUnifiedUploaderCheckBox = new System.Windows.Forms.CheckBox();
-            this.marketUnifiedUploaderPageLabel = new System.Windows.Forms.Label();
             this.portableEveClientsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.lblPECIDescription = new System.Windows.Forms.Label();
             this.PECIGroupBox = new System.Windows.Forms.GroupBox();
@@ -331,7 +326,6 @@ namespace EVEMon.SettingsUI
             this.ObsoleteEntryRemovalGroupBox.SuspendLayout();
             this.battleClinicServicePage.SuspendLayout();
             this.bcCredentialsGroupBox.SuspendLayout();
-            this.marketUnifiedUploaderPage.SuspendLayout();
             this.portableEveClientsPage.SuspendLayout();
             this.PECIGroupBox.SuspendLayout();
             this.marketPriceProvidersPage.SuspendLayout();
@@ -1099,14 +1093,14 @@ namespace EVEMon.SettingsUI
             treeNode13.SelectedImageIndex = 3;
             treeNode13.Tag = "igbServerPage";
             treeNode13.Text = "IGB Server";
-            treeNode14.ImageIndex = 17;
+            treeNode14.ImageIndex = 16;
             treeNode14.Name = "PortableEveClientsNode";
-            treeNode14.SelectedImageIndex = 17;
+            treeNode14.SelectedImageIndex = 16;
             treeNode14.Tag = "portableEveClientsPage";
             treeNode14.Text = "Portable EVE Clients";
-            treeNode15.ImageIndex = 18;
+            treeNode15.ImageIndex = 17;
             treeNode15.Name = "MarketPriceProvidersNode";
-            treeNode15.SelectedImageIndex = 18;
+            treeNode15.SelectedImageIndex = 17;
             treeNode15.Tag = "marketPriceProvidersPage";
             treeNode15.Text = "Market Price Providers";
             treeNode16.ImageIndex = 10;
@@ -1164,16 +1158,11 @@ namespace EVEMon.SettingsUI
             treeNode26.SelectedImageIndex = 15;
             treeNode26.Tag = "battleClinicServicePage";
             treeNode26.Text = "BattleClinic";
-            treeNode27.ImageIndex = 19;
+            treeNode27.ImageIndex = 18;
             treeNode27.Name = "CloudStorageServiceNode";
-            treeNode27.SelectedImageIndex = 19;
+            treeNode27.SelectedImageIndex = 18;
             treeNode27.Tag = "cloudStorageServicePage";
             treeNode27.Text = "Cloud Storage Service";
-            treeNode28.ImageIndex = 16;
-            treeNode28.Name = "MarketUnifiedUploaderNode";
-            treeNode28.SelectedImageIndex = 16;
-            treeNode28.Tag = "marketUnifiedUploaderPage";
-            treeNode28.Text = "Market Unified Uploader";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode16,
             treeNode17,
@@ -1181,8 +1170,7 @@ namespace EVEMon.SettingsUI
             treeNode21,
             treeNode23,
             treeNode25,
-            treeNode27,
-            treeNode28});
+            treeNode27});
             this.treeView.SelectedImageIndex = 0;
             this.treeView.ShowLines = false;
             this.treeView.ShowPlusMinus = false;
@@ -1211,10 +1199,9 @@ namespace EVEMon.SettingsUI
             this.imageList.Images.SetKeyName(13, "book");
             this.imageList.Images.SetKeyName(14, "messagebox");
             this.imageList.Images.SetKeyName(15, "BattleClinic");
-            this.imageList.Images.SetKeyName(16, "EMUU");
-            this.imageList.Images.SetKeyName(17, "EveClient");
-            this.imageList.Images.SetKeyName(18, "Wallet");
-            this.imageList.Images.SetKeyName(19, "CloudStorage");
+            this.imageList.Images.SetKeyName(16, "EveClient");
+            this.imageList.Images.SetKeyName(17, "Wallet");
+            this.imageList.Images.SetKeyName(18, "CloudStorage");
             // 
             // leftPanel
             // 
@@ -1245,7 +1232,6 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Controls.Add(this.iconsPage);
             this.multiPanel.Controls.Add(this.messagesPage);
             this.multiPanel.Controls.Add(this.battleClinicServicePage);
-            this.multiPanel.Controls.Add(this.marketUnifiedUploaderPage);
             this.multiPanel.Controls.Add(this.portableEveClientsPage);
             this.multiPanel.Controls.Add(this.marketPriceProvidersPage);
             this.multiPanel.Controls.Add(this.cloudStorageServicePage);
@@ -2619,49 +2605,6 @@ namespace EVEMon.SettingsUI
             this.battleClinicAPIControl.Size = new System.Drawing.Size(416, 164);
             this.battleClinicAPIControl.TabIndex = 0;
             // 
-            // marketUnifiedUploaderPage
-            // 
-            this.marketUnifiedUploaderPage.Controls.Add(this.marketUnifiedUploaderControl);
-            this.marketUnifiedUploaderPage.Controls.Add(this.marketUnifiedUploaderCheckBox);
-            this.marketUnifiedUploaderPage.Controls.Add(this.marketUnifiedUploaderPageLabel);
-            this.marketUnifiedUploaderPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.marketUnifiedUploaderPage.Location = new System.Drawing.Point(5, 5);
-            this.marketUnifiedUploaderPage.Name = "marketUnifiedUploaderPage";
-            this.marketUnifiedUploaderPage.Size = new System.Drawing.Size(435, 426);
-            this.marketUnifiedUploaderPage.TabIndex = 19;
-            this.marketUnifiedUploaderPage.Text = "marketUnifiedUploaderPage";
-            // 
-            // marketUnifiedUploaderControl
-            // 
-            this.marketUnifiedUploaderControl.Location = new System.Drawing.Point(6, 68);
-            this.marketUnifiedUploaderControl.Name = "marketUnifiedUploaderControl";
-            this.marketUnifiedUploaderControl.Size = new System.Drawing.Size(422, 347);
-            this.marketUnifiedUploaderControl.TabIndex = 22;
-            // 
-            // marketUnifiedUploaderCheckBox
-            // 
-            this.marketUnifiedUploaderCheckBox.AutoSize = true;
-            this.marketUnifiedUploaderCheckBox.Location = new System.Drawing.Point(6, 48);
-            this.marketUnifiedUploaderCheckBox.Name = "marketUnifiedUploaderCheckBox";
-            this.marketUnifiedUploaderCheckBox.Size = new System.Drawing.Size(163, 17);
-            this.marketUnifiedUploaderCheckBox.TabIndex = 21;
-            this.marketUnifiedUploaderCheckBox.Text = "Use Market Unified Uploader";
-            this.marketUnifiedUploaderCheckBox.UseVisualStyleBackColor = true;
-            this.marketUnifiedUploaderCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // marketUnifiedUploaderPageLabel
-            // 
-            this.marketUnifiedUploaderPageLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.marketUnifiedUploaderPageLabel.AutoSize = true;
-            this.marketUnifiedUploaderPageLabel.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.marketUnifiedUploaderPageLabel.Location = new System.Drawing.Point(3, 18);
-            this.marketUnifiedUploaderPageLabel.Name = "marketUnifiedUploaderPageLabel";
-            this.marketUnifiedUploaderPageLabel.Size = new System.Drawing.Size(423, 26);
-            this.marketUnifiedUploaderPageLabel.TabIndex = 20;
-            this.marketUnifiedUploaderPageLabel.Text = "EVEMon can send market data, from your EVE installation cache, to certified onlin" +
-    "e and \r\nspecified localhost endpoints.";
-            // 
             // portableEveClientsPage
             // 
             this.portableEveClientsPage.Controls.Add(this.lblPECIDescription);
@@ -2921,8 +2864,6 @@ namespace EVEMon.SettingsUI
             this.ObsoleteEntryRemovalGroupBox.PerformLayout();
             this.battleClinicServicePage.ResumeLayout(false);
             this.bcCredentialsGroupBox.ResumeLayout(false);
-            this.marketUnifiedUploaderPage.ResumeLayout(false);
-            this.marketUnifiedUploaderPage.PerformLayout();
             this.portableEveClientsPage.ResumeLayout(false);
             this.PECIGroupBox.ResumeLayout(false);
             this.marketPriceProvidersPage.ResumeLayout(false);
@@ -3123,10 +3064,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.TextBox tbCalendarPath;
         private System.Windows.Forms.Label calendarPathLabel;
         private System.Windows.Forms.Label calendarPathExampleLabel;
-        private MultiPanelPage marketUnifiedUploaderPage;
-        private System.Windows.Forms.CheckBox marketUnifiedUploaderCheckBox;
-        private System.Windows.Forms.Label marketUnifiedUploaderPageLabel;
-        private MarketUnifiedUploaderControl marketUnifiedUploaderControl;
         private MultiPanelPage portableEveClientsPage;
         private System.Windows.Forms.Label lblPECIDescription;
         private System.Windows.Forms.GroupBox PECIGroupBox;

@@ -592,7 +592,6 @@
     <Compile Include="SettingsObjects\ContractColumn.cs" />
     <Compile Include="SettingsObjects\ContractColumnSettings.cs" />
     <Compile Include="SettingsObjects\ContractSettings.cs" />
-    <Compile Include="SettingsObjects\MarketUnifiedUploaderSettings.cs" />
     <Compile Include="SettingsObjects\ModifiedSerializableDictionary.cs" />
     <Compile Include="SettingsObjects\EveNotificationColumn.cs" />
     <Compile Include="SettingsObjects\EveNotificationColumnSettings.cs" />

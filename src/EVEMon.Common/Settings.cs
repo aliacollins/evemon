@@ -56,7 +56,6 @@ namespace EVEMon.Common
             MarketPricer = new MarketPricerSettings();
             Notifications = new NotificationSettings();
             LoadoutsProvider = new LoadoutsProviderSettings();
-            MarketUnifiedUploader = new MarketUnifiedUploaderSettings();
             PortableEveInstallations = new PortableEveInstallationsSettings();
             CloudStorageServiceProvider = new CloudStorageServiceProviderSettings();
 
@@ -105,11 +104,6 @@ namespace EVEMon.Common
         /// Gets the settings for the notifications (alerts).
         /// </summary>
         public static NotificationSettings Notifications { get; private set; }
-
-        /// <summary>
-        /// Gets the settings for the market unified uploader.
-        /// </summary>
-        public static MarketUnifiedUploaderSettings MarketUnifiedUploader { get; private set; }
 
         /// <summary>
         /// Gets the settings for the portable EVE installations.
@@ -207,7 +201,6 @@ namespace EVEMon.Common
                 Notifications = serial.Notifications;
                 MarketPricer = serial.MarketPricer;
                 LoadoutsProvider = serial.LoadoutsProvider;
-                MarketUnifiedUploader = serial.MarketUnifiedUploader;
                 PortableEveInstallations = serial.PortableEveInstallations;
 
                 // Import the characters, API keys and plans
@@ -345,7 +338,6 @@ namespace EVEMon.Common
                 Scheduler = Scheduler.Export(),
                 Calendar = Calendar,
                 PortableEveInstallations = PortableEveInstallations,
-                MarketUnifiedUploader = MarketUnifiedUploader,
                 LoadoutsProvider = LoadoutsProvider,
                 MarketPricer = MarketPricer,
                 Notifications = Notifications,

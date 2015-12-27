@@ -35,7 +35,6 @@ using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 using EVEMon.DetailsWindow;
 using EVEMon.ImplantControls;
-using EVEMon.MarketUnifiedUploader;
 using EVEMon.NotificationWindow;
 using EVEMon.PieChart;
 using EVEMon.Sales;
@@ -56,7 +55,6 @@ namespace EVEMon
 
         private Form m_trayPopup;
         private IgbServer m_igbServer;
-        private UploaderStatus m_uploaderStatus;
         private DateTime m_nextPopupUpdate = DateTime.UtcNow;
 
         private string m_apiProviderName = EveMonClient.APIProviders.CurrentProvider.Name;
@@ -155,7 +153,6 @@ namespace EVEMon
             EveMonClient.QueuedSkillsCompleted += EveMonClient_QueuedSkillsCompleted;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
-            Uploader.StatusChanged += Uploader_StatusChanged;
 
             // Update the content
             UpdateTabs();
@@ -2025,40 +2022,6 @@ namespace EVEMon
             Activate();
         }
 
-        /// <summary>
-        /// Updates the tray icon.
-        /// </summary>
-        private void UpdateTrayIcon()
-        {
-            trayIcon.Icon = m_uploaderStatus == UploaderStatus.Uploading
-                                ? Resources.EMUU
-                                : Resources.EVEMon;
-        }
-
-        #endregion
-
-
-        #region Market Unified Uploader
-
-        private void Uploader_StatusChanged(object sender, EventArgs e)
-        {
-            UpdateUploaderStatus();
-            UpdateTrayIcon();
-        }
-
-        /// <summary>
-        /// Updates the uploader status.
-        /// </summary>
-        private void UpdateUploaderStatus()
-        {
-            if (Uploader.Status == m_uploaderStatus)
-                return;
-
-            m_uploaderStatus = Uploader.Status;
-            UploaderToolStripStatusLabel.Image = UploaderStatusImageList.Images[(int)Uploader.Status];
-            UploaderToolStripStatusLabel.ToolTipText = Uploader.Status.ToString();
-        }
-
         #endregion
 
 
@@ -2083,12 +2046,6 @@ namespace EVEMon
             trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
                                 || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
                                     WindowState == FormWindowState.Minimized));
-
-            // Enable/Disable Uploader
-            if (Settings.MarketUnifiedUploader.Enabled)
-                Uploader.Start();
-            else
-                Uploader.Stop();
 
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;
