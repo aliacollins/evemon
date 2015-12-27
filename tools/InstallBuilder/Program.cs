@@ -369,18 +369,13 @@ namespace EVEMon.InstallBuilder
             {
                 string nsisScript = Path.Combine(ProjectDirectory, OutputPath, "EVEMonInstallerScript.nsi");
                 string resourcesDir = Path.Combine(SolutionDirectory, @"src\\EVEMon.Common\Resources");
-                Assembly assembly = typeof(Program).Assembly;
                 string appCopyright =
-                    ((AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCopyrightAttribute)))
+                    ((AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(AssemblyCopyrightAttribute)))
                         .Copyright;
-                string appDescription =
-                    ((AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute)))
-                        .Description;
-
                 string productName = String.Format(CultureInfo.InvariantCulture, "/DPRODUCTNAME=\"{0}\"", Application.ProductName);
                 string companyName = String.Format(CultureInfo.InvariantCulture, "/DCOMPANYNAME=\"{0}\"", Application.CompanyName);
                 string copyright = String.Format(CultureInfo.InvariantCulture, "/DCOPYRIGHT=\"{0}\"", appCopyright);
-                string description = String.Format(CultureInfo.InvariantCulture, "/DDESCRIPTION=\"{0}\"", appDescription);
+                string description = String.Format(CultureInfo.InvariantCulture, "/DDESCRIPTION=\"{0}\"", Application.ProductName);
                 string version = String.Format(CultureInfo.InvariantCulture, "/DVERSION={0}", s_fileVersionInfo.ProductVersion);
                 string fullVersion = String.Format(CultureInfo.InvariantCulture, "/DFULLVERSION={0}", s_fileVersionInfo.FileVersion);
                 string installerDir = String.Format(CultureInfo.InvariantCulture, "/DOUTDIR={0}", InstallerDirectory);

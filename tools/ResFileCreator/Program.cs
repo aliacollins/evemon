@@ -132,7 +132,7 @@ namespace EVEMon.ResFileCreator
             sb.AppendLine("        BLOCK \"000004b0\"");
             sb.AppendLine("        BEGIN");
             sb.AppendFormat("            VALUE \"CompanyName\", \"{0}\"", s_dictionary["AssemblyCompany"]).AppendLine();
-            sb.AppendFormat("            VALUE \"FileDescription\", \"{0}\"", s_dictionary["AssemblyDescription"]).AppendLine();
+            sb.AppendFormat("            VALUE \"FileDescription\", \"{0}\"", s_dictionary["AssemblyTitle"]).AppendLine();
             sb.AppendFormat("            VALUE \"FileVersion\", \"{0}\"", s_dictionary["AssemblyFileVersion"]).AppendLine();
             sb.AppendFormat("            VALUE \"InternalName\", \"{0}.exe\"", s_dictionary["AssemblyProduct"]).AppendLine();
             sb.AppendFormat("            VALUE \"LegalCopyright\", \"{0}\"", s_dictionary["AssemblyCopyright"]).AppendLine();
