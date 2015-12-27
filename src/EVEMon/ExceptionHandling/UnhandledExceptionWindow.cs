@@ -79,7 +79,7 @@ namespace EVEMon.ExceptionHandling
                 StringBuilder exceptionReport = new StringBuilder();
                 OperatingSystem os = Environment.OSVersion;
 
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}{1}", Application.ProductVersion,
+                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}{1}", EveMonClient.FileVersionInfo.FileVersion,
                                              Environment.NewLine);
                 exceptionReport.AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}{1}", Environment.Version,
                                              Environment.NewLine);

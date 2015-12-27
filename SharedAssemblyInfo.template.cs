@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyDescription("EVEMon Offline Character Utility. Revision Number: $REVNUM$ Repository URL: https://bitbucket.org/EVEMonDevTeam/evemon")]
+[assembly: AssemblyDescription("EVEMon Offline Character Utility. Repository URL: https://bitbucket.org/EVEMonDevTeam/evemon")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Development Team")]
 [assembly: AssemblyProduct("EVEMon")]
@@ -29,7 +29,9 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.2.2.$REVNUM$")]
+[assembly: AssemblyVersion("3.0.*")]
+[assembly: AssemblyFileVersion("3.0.0.$REVNUM$")]
+[assembly: AssemblyInformationalVersion("3.0.0-alpha")]
 
 // Neutral Language
 [assembly: NeutralResourcesLanguage("en-US")]

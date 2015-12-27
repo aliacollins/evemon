@@ -223,7 +223,7 @@ namespace EVEMon.ApiErrorHandling
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.AppendFormat("EVEMon {0} API Error:{1}", Application.ProductVersion, Environment.NewLine);
+            builder.AppendFormat("EVEMon {0} API Error:{1}", EveMonClient.FileVersionInfo.FileVersion, Environment.NewLine);
             builder.AppendLine();
             builder.AppendLine(GetErrorLabelText(Notification));
             builder.AppendLine();
