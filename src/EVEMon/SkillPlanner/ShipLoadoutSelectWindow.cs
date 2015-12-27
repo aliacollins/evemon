@@ -295,7 +295,6 @@ namespace EVEMon.SkillPlanner
             BuildTreeNodes(m_selectedLoadout.Items);
 
             // Compute the training time
-            tvLoadout.ExpandAll();
             UpdatePlanningControls();
 
             throbberFitting.State = ThrobberState.Stopped;
@@ -326,8 +325,23 @@ namespace EVEMon.SkillPlanner
             // Order the nodes
             TreeNode[] orderNodes = tvLoadout.Nodes.Cast<TreeNode>().OrderBy(
                 node => LoadoutHelper.OrderedSlotNames.IndexOf(String.Intern(node.Text))).ToArray();
-            tvLoadout.Nodes.Clear();
-            tvLoadout.Nodes.AddRange(orderNodes);
+
+            tvLoadout.BeginUpdate();
+            try
+            {
+                tvLoadout.Nodes.Clear();
+                tvLoadout.Nodes.AddRange(orderNodes);
+                tvLoadout.ExpandAll();
+
+                IList<TreeNode> tvNodes = tvLoadout.Nodes.Cast<TreeNode>().ToList();
+
+                if (tvNodes.Any())
+                    tvNodes.First().EnsureVisible();
+            }
+            finally
+            {
+                tvLoadout.EndUpdate();
+            }
         }
 
         /// <summary>

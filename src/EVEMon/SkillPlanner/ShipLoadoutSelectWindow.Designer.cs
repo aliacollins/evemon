@@ -138,6 +138,7 @@ namespace EVEMon.SkillPlanner
             this.colDate});
             this.lvLoadouts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvLoadouts.FullRowSelect = true;
+            this.lvLoadouts.HideSelection = false;
             this.lvLoadouts.Location = new System.Drawing.Point(0, 0);
             this.lvLoadouts.MinimumSize = new System.Drawing.Size(300, 190);
             this.lvLoadouts.MultiSelect = false;
@@ -181,6 +182,7 @@ namespace EVEMon.SkillPlanner
             // tvLoadout
             // 
             this.tvLoadout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvLoadout.HideSelection = false;
             this.tvLoadout.Location = new System.Drawing.Point(0, 0);
             this.tvLoadout.Name = "tvLoadout";
             this.tvLoadout.Size = new System.Drawing.Size(339, 342);

@@ -129,7 +129,7 @@ namespace EVEMon.Common.Controls
             if (control == null)
                 throw new ArgumentNullException("control");
 
-            SendMessage(new HandleRef(null, control.Handle), (uint)ListViewMessages.LVM_SCROLL, IntPtr.Zero, (IntPtr)position);
+            SendMessage(new HandleRef(control, control.Handle), (uint)ListViewMessages.LVM_SCROLL, IntPtr.Zero, (IntPtr)position);
         }
 
         [StructLayout(LayoutKind.Sequential)]
