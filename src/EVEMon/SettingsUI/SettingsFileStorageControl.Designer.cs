@@ -90,7 +90,7 @@ namespace EVEMon.SettingsUI
             this.apiResponseLabel.Name = "apiResponseLabel";
             this.apiResponseLabel.Size = new System.Drawing.Size(405, 31);
             this.apiResponseLabel.TabIndex = 8;
-            this.apiResponseLabel.Text = "BattleClinic\r\nAPI Response";
+            this.apiResponseLabel.Text = "API Response";
             this.apiResponseLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // useImmediatelyCheckBox

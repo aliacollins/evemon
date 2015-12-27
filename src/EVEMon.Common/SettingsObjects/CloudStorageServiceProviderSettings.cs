@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using EVEMon.Common.CloudStorageServices;
@@ -17,7 +18,7 @@ namespace EVEMon.Common.SettingsObjects
                 s_cloudStorageServiceProviders[provider.Name] = provider;
             }
 
-            ProviderName = s_cloudStorageServiceProviders.First().Key;
+            ProviderName = s_cloudStorageServiceProviders.FirstOrDefault().Key ?? String.Empty;
         }
 
         /// <summary>
@@ -43,8 +44,9 @@ namespace EVEMon.Common.SettingsObjects
                 if (s_cloudStorageServiceProviders.ContainsKey(ProviderName))
                     return s_cloudStorageServiceProviders[ProviderName];
 
-                ProviderName = s_cloudStorageServiceProviders.First().Key;
-                return s_cloudStorageServiceProviders.First().Value;
+                ProviderName = s_cloudStorageServiceProviders.FirstOrDefault().Key ?? String.Empty;
+
+                return s_cloudStorageServiceProviders.FirstOrDefault().Value;
             }
         }
     }

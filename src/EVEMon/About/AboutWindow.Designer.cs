@@ -50,7 +50,6 @@ namespace EVEMon.About
             this.CredentialsLabels = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.ccpGamesLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.battleclinicLinkLabel = new System.Windows.Forms.LinkLabel();
             this.eveCentralLinkLabel = new System.Windows.Forms.LinkLabel();
             this.eveDevLinkLabel = new System.Windows.Forms.LinkLabel();
             this.googleDataLinkLabel = new System.Windows.Forms.LinkLabel();
@@ -293,7 +292,6 @@ namespace EVEMon.About
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.ccpGamesLinkLabel);
-            this.flowLayoutPanel1.Controls.Add(this.battleclinicLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.eveCentralLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.eveDevLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.googleDataLinkLabel);
@@ -319,20 +317,6 @@ namespace EVEMon.About
             this.ccpGamesLinkLabel.TabIndex = 7;
             this.ccpGamesLinkLabel.Text = "CCP Games for their efforts towards community developers.";
             this.ccpGamesLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
-            // 
-            // battleclinicLinkLabel
-            // 
-            this.battleclinicLinkLabel.AutoSize = true;
-            this.battleclinicLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.battleclinicLinkLabel.Location = new System.Drawing.Point(0, 32);
-            this.battleclinicLinkLabel.Margin = new System.Windows.Forms.Padding(0);
-            this.battleclinicLinkLabel.Name = "battleclinicLinkLabel";
-            this.battleclinicLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.battleclinicLinkLabel.Size = new System.Drawing.Size(238, 19);
-            this.battleclinicLinkLabel.TabIndex = 11;
-            this.battleclinicLinkLabel.Text = "BattleClinic, which hosts and supports EVEMon.";
-            this.battleclinicLinkLabel.Visible = false;
-            this.battleclinicLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
             // eveCentralLinkLabel
             // 
@@ -473,7 +457,6 @@ namespace EVEMon.About
         private System.Windows.Forms.LinkLabel ccpGamesLinkLabel;
         private System.Windows.Forms.LinkLabel eveDevLinkLabel;
         private System.Windows.Forms.LinkLabel googleDataLinkLabel;
-        private System.Windows.Forms.LinkLabel battleclinicLinkLabel;
         private System.Windows.Forms.LinkLabel eveCentralLinkLabel;
         private System.Windows.Forms.Label forgotLabel;
         private System.Windows.Forms.LinkLabel lironLeviLinkLabel;

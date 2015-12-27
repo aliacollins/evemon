@@ -184,7 +184,9 @@ namespace EVEMon.Controls
         /// <returns></returns>
         private string GetTotalCost()
         {
-            double shipCost = Settings.MarketPricer.Pricer.GetPriceByTypeID(m_killLog.Victim.ShipTypeID);
+            double shipCost = Settings.MarketPricer.Pricer != null
+                ? Settings.MarketPricer.Pricer.GetPriceByTypeID(m_killLog.Victim.ShipTypeID)
+                : 0;
             bool unknownCost = m_killLog.Victim.ShipTypeID != DBConstants.CapsuleID && Math.Abs(shipCost) < double.Epsilon;
             double totalCost = shipCost;
 

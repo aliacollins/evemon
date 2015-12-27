@@ -373,12 +373,6 @@
     <Compile Include="CharacterMonitoring\ResearchColumnsSelectWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsUI\BattleClinicAPIControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SettingsUI\BattleClinicAPIControl.Designer.cs">
-      <DependentUpon>BattleClinicAPIControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="SettingsUI\EmailNotificationsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -641,9 +635,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CharacterMonitoring\CharacterResearchPointsList.resx">
       <DependentUpon>CharacterResearchPointsList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingsUI\BattleClinicAPIControl.resx">
-      <DependentUpon>BattleClinicAPIControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\EmailNotificationsControl.resx">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>

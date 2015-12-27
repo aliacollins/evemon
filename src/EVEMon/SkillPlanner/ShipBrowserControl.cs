@@ -47,17 +47,6 @@ namespace EVEMon.SkillPlanner
         #region Local Event Handlers
 
         /// <summary>
-        /// Opens the BattleClinic Loadout window.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lblBattleclinic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ShipLoadoutSelectWindow window = WindowsFactory.ShowByTag<ShipLoadoutSelectWindow, Plan>(Plan);
-            window.Ship = SelectedObject;
-        }
-
-        /// <summary>
         /// Exports item info to CSV format.
         /// </summary>
         /// <param name="sender"></param>

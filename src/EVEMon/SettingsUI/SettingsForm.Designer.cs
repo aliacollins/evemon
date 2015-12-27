@@ -55,8 +55,8 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Network", 7, 7);
             System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Logitech Keyboards", 4, 4);
             System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("IGB Server", 3, 3);
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Portable EVE Clients", 16, 16);
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Market Price Providers", 17, 17);
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Portable EVE Clients", 15, 15);
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Market Price Providers", 16, 16);
             System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("General", 10, 10, new System.Windows.Forms.TreeNode[] {
             treeNode10,
             treeNode11,
@@ -77,9 +77,7 @@ namespace EVEMon.SettingsUI
             System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Skill Completion Mails", 12, 12);
             System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Notifications", 9, 9, new System.Windows.Forms.TreeNode[] {
             treeNode24});
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("BattleClinic", 15, 15);
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Cloud Storage Service", 18, 18, new System.Windows.Forms.TreeNode[] {
-            treeNode26});
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Cloud Storage Service", 17, 17);
             this.systemTrayIconGroupBox = new System.Windows.Forms.GroupBox();
             this.rbSystemTrayOptionsNever = new System.Windows.Forms.RadioButton();
             this.rbSystemTrayOptionsAlways = new System.Windows.Forms.RadioButton();
@@ -261,10 +259,6 @@ namespace EVEMon.SettingsUI
             this.alwaysAskRadioButton = new System.Windows.Forms.RadioButton();
             this.removeAllRadioButton = new System.Windows.Forms.RadioButton();
             this.removeConfirmedRadioButton = new System.Windows.Forms.RadioButton();
-            this.battleClinicServicePage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.BattleClinicLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.bcCredentialsGroupBox = new System.Windows.Forms.GroupBox();
-            this.battleClinicAPIControl = new EVEMon.SettingsUI.BattleClinicAPIControl();
             this.portableEveClientsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.lblPECIDescription = new System.Windows.Forms.Label();
             this.PECIGroupBox = new System.Windows.Forms.GroupBox();
@@ -324,8 +318,6 @@ namespace EVEMon.SettingsUI
             this.messagesPage.SuspendLayout();
             this.gbMessageBox.SuspendLayout();
             this.ObsoleteEntryRemovalGroupBox.SuspendLayout();
-            this.battleClinicServicePage.SuspendLayout();
-            this.bcCredentialsGroupBox.SuspendLayout();
             this.portableEveClientsPage.SuspendLayout();
             this.PECIGroupBox.SuspendLayout();
             this.marketPriceProvidersPage.SuspendLayout();
@@ -910,7 +902,7 @@ namespace EVEMon.SettingsUI
             this.lblIconsPage.Size = new System.Drawing.Size(424, 32);
             this.lblIconsPage.TabIndex = 15;
             this.lblIconsPage.Text = "You can customize the icons used in the skill planner; if you have a good idea fo" +
-    "r a set of icons instructions to create your own can be found on BattleClinic.";
+    "r a set of icons instructions to create your own can be found on wiki.";
             // 
             // gbSkillBrowserIconSet
             // 
@@ -1093,14 +1085,14 @@ namespace EVEMon.SettingsUI
             treeNode13.SelectedImageIndex = 3;
             treeNode13.Tag = "igbServerPage";
             treeNode13.Text = "IGB Server";
-            treeNode14.ImageIndex = 16;
+            treeNode14.ImageIndex = 15;
             treeNode14.Name = "PortableEveClientsNode";
-            treeNode14.SelectedImageIndex = 16;
+            treeNode14.SelectedImageIndex = 15;
             treeNode14.Tag = "portableEveClientsPage";
             treeNode14.Text = "Portable EVE Clients";
-            treeNode15.ImageIndex = 17;
+            treeNode15.ImageIndex = 16;
             treeNode15.Name = "MarketPriceProvidersNode";
-            treeNode15.SelectedImageIndex = 17;
+            treeNode15.SelectedImageIndex = 16;
             treeNode15.Tag = "marketPriceProvidersPage";
             treeNode15.Text = "Market Price Providers";
             treeNode16.ImageIndex = 10;
@@ -1153,16 +1145,11 @@ namespace EVEMon.SettingsUI
             treeNode25.SelectedImageIndex = 9;
             treeNode25.Tag = "notificationsPage";
             treeNode25.Text = "Notifications";
-            treeNode26.ImageIndex = 15;
-            treeNode26.Name = "BattleClinicWebServiceNode";
-            treeNode26.SelectedImageIndex = 15;
-            treeNode26.Tag = "battleClinicServicePage";
-            treeNode26.Text = "BattleClinic";
-            treeNode27.ImageIndex = 18;
-            treeNode27.Name = "CloudStorageServiceNode";
-            treeNode27.SelectedImageIndex = 18;
-            treeNode27.Tag = "cloudStorageServicePage";
-            treeNode27.Text = "Cloud Storage Service";
+            treeNode26.ImageIndex = 17;
+            treeNode26.Name = "CloudStorageServiceNode";
+            treeNode26.SelectedImageIndex = 17;
+            treeNode26.Tag = "cloudStorageServicePage";
+            treeNode26.Text = "Cloud Storage Service";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode16,
             treeNode17,
@@ -1170,7 +1157,7 @@ namespace EVEMon.SettingsUI
             treeNode21,
             treeNode23,
             treeNode25,
-            treeNode27});
+            treeNode26});
             this.treeView.SelectedImageIndex = 0;
             this.treeView.ShowLines = false;
             this.treeView.ShowPlusMinus = false;
@@ -1198,10 +1185,9 @@ namespace EVEMon.SettingsUI
             this.imageList.Images.SetKeyName(12, "Email");
             this.imageList.Images.SetKeyName(13, "book");
             this.imageList.Images.SetKeyName(14, "messagebox");
-            this.imageList.Images.SetKeyName(15, "BattleClinic");
-            this.imageList.Images.SetKeyName(16, "EveClient");
-            this.imageList.Images.SetKeyName(17, "Wallet");
-            this.imageList.Images.SetKeyName(18, "CloudStorage");
+            this.imageList.Images.SetKeyName(15, "EveClient");
+            this.imageList.Images.SetKeyName(16, "Wallet");
+            this.imageList.Images.SetKeyName(17, "CloudStorage");
             // 
             // leftPanel
             // 
@@ -1231,7 +1217,6 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Controls.Add(this.igbServerPage);
             this.multiPanel.Controls.Add(this.iconsPage);
             this.multiPanel.Controls.Add(this.messagesPage);
-            this.multiPanel.Controls.Add(this.battleClinicServicePage);
             this.multiPanel.Controls.Add(this.portableEveClientsPage);
             this.multiPanel.Controls.Add(this.marketPriceProvidersPage);
             this.multiPanel.Controls.Add(this.cloudStorageServicePage);
@@ -2560,51 +2545,6 @@ namespace EVEMon.SettingsUI
             this.removeConfirmedRadioButton.Text = "Remove confirmed entry (Recommended)";
             this.removeConfirmedRadioButton.UseVisualStyleBackColor = true;
             // 
-            // battleClinicServicePage
-            // 
-            this.battleClinicServicePage.CausesValidation = false;
-            this.battleClinicServicePage.Controls.Add(this.BattleClinicLinkLabel);
-            this.battleClinicServicePage.Controls.Add(this.bcCredentialsGroupBox);
-            this.battleClinicServicePage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.battleClinicServicePage.Location = new System.Drawing.Point(5, 5);
-            this.battleClinicServicePage.Name = "battleClinicServicePage";
-            this.battleClinicServicePage.Size = new System.Drawing.Size(435, 426);
-            this.battleClinicServicePage.TabIndex = 18;
-            this.battleClinicServicePage.Text = "battleClinicServicePage";
-            // 
-            // BattleClinicLinkLabel
-            // 
-            this.BattleClinicLinkLabel.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.BattleClinicLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(228, 12);
-            this.BattleClinicLinkLabel.Location = new System.Drawing.Point(6, 18);
-            this.BattleClinicLinkLabel.Name = "BattleClinicLinkLabel";
-            this.BattleClinicLinkLabel.Size = new System.Drawing.Size(419, 45);
-            this.BattleClinicLinkLabel.TabIndex = 2;
-            this.BattleClinicLinkLabel.TabStop = true;
-            this.BattleClinicLinkLabel.Text = resources.GetString("BattleClinicLinkLabel.Text");
-            this.BattleClinicLinkLabel.UseCompatibleTextRendering = true;
-            this.BattleClinicLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.BattleClinicLinkLabel_LinkClicked);
-            // 
-            // bcCredentialsGroupBox
-            // 
-            this.bcCredentialsGroupBox.Controls.Add(this.battleClinicAPIControl);
-            this.bcCredentialsGroupBox.Location = new System.Drawing.Point(6, 78);
-            this.bcCredentialsGroupBox.Name = "bcCredentialsGroupBox";
-            this.bcCredentialsGroupBox.Size = new System.Drawing.Size(422, 183);
-            this.bcCredentialsGroupBox.TabIndex = 1;
-            this.bcCredentialsGroupBox.TabStop = false;
-            this.bcCredentialsGroupBox.Text = "BattleClinic API Credentials";
-            // 
-            // battleClinicAPIControl
-            // 
-            this.battleClinicAPIControl.CausesValidation = false;
-            this.battleClinicAPIControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.battleClinicAPIControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.battleClinicAPIControl.Location = new System.Drawing.Point(3, 16);
-            this.battleClinicAPIControl.Name = "battleClinicAPIControl";
-            this.battleClinicAPIControl.Size = new System.Drawing.Size(416, 164);
-            this.battleClinicAPIControl.TabIndex = 0;
-            // 
             // portableEveClientsPage
             // 
             this.portableEveClientsPage.Controls.Add(this.lblPECIDescription);
@@ -2862,8 +2802,6 @@ namespace EVEMon.SettingsUI
             this.gbMessageBox.PerformLayout();
             this.ObsoleteEntryRemovalGroupBox.ResumeLayout(false);
             this.ObsoleteEntryRemovalGroupBox.PerformLayout();
-            this.battleClinicServicePage.ResumeLayout(false);
-            this.bcCredentialsGroupBox.ResumeLayout(false);
             this.portableEveClientsPage.ResumeLayout(false);
             this.PECIGroupBox.ResumeLayout(false);
             this.marketPriceProvidersPage.ResumeLayout(false);
@@ -3011,8 +2949,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.GroupBox gbMessageBox;
         private System.Windows.Forms.Label lblPrioritesConflict;
         private System.Windows.Forms.Button btnPrioritiesReset;
-        private MultiPanelPage battleClinicServicePage;
-        private System.Windows.Forms.LinkLabel BattleClinicLinkLabel;
         private System.Windows.Forms.CheckBox cbLastQueuedSkillOnly;
         private System.Windows.Forms.GroupBox gbReminder;
         private System.Windows.Forms.Label lblEarlyReminder;
@@ -3080,7 +3016,5 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox cloudStorageProvidersComboBox;
         private System.Windows.Forms.Label lblSelectedProvider;
-        private System.Windows.Forms.GroupBox bcCredentialsGroupBox;
-        private BattleClinicAPIControl battleClinicAPIControl;
     }
 }

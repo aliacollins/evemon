@@ -50,7 +50,6 @@ namespace EVEMon.SettingsUI
             alwaysAskRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             removeAllRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
             removeConfirmedRadioButton.Font = FontFactory.GetFont("Tahoma", 8.25F, FontStyle.Bold);
-            battleClinicAPIControl.Font = FontFactory.GetFont("Tahoma", 8.25F);
             settingsFileStorageControl.Font = FontFactory.GetFont("Tahoma", 8.25F);
 
             m_settings = Settings.Export();
@@ -455,10 +454,10 @@ namespace EVEMon.SettingsUI
                 m_settings.UI.MainWindowCloseBehaviour = CloseBehaviour.Exit;
 
             // Market Price Provider
-            m_settings.MarketPricer.ProviderName = cbProvidersList.SelectedItem.ToString();
+            m_settings.MarketPricer.ProviderName = cbProvidersList.SelectedItem?.ToString() ?? String.Empty;
 
             // Cloud Storage Service Provider
-            m_settings.CloudStorageServiceProvider.ProviderName = cloudStorageProvidersComboBox.SelectedItem.ToString();
+            m_settings.CloudStorageServiceProvider.ProviderName = cloudStorageProvidersComboBox.SelectedItem?.ToString() ?? String.Empty;
 
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
@@ -629,7 +628,7 @@ namespace EVEMon.SettingsUI
             if (selectedItem != null)
                 cbProvidersList.SelectedIndex = cbProvidersList.Items.IndexOf(selectedItem);
 
-            if (cbProvidersList.SelectedIndex == -1)
+            if (cbProvidersList.SelectedIndex == -1 && cbProvidersList.Items.Count > 0)
                 cbProvidersList.SelectedIndex = 0;
         }
 
@@ -651,7 +650,7 @@ namespace EVEMon.SettingsUI
             if (selectedItem != null)
                 cloudStorageProvidersComboBox.SelectedIndex = cloudStorageProvidersComboBox.Items.IndexOf(selectedItem);
 
-            if (cloudStorageProvidersComboBox.SelectedIndex == -1)
+            if (cloudStorageProvidersComboBox.SelectedIndex == -1 && cloudStorageProvidersComboBox.Items.Count > 0)
                 cloudStorageProvidersComboBox.SelectedIndex = 0;
         }
 
@@ -952,7 +951,7 @@ namespace EVEMon.SettingsUI
             string name = (string)cbAPIServer.SelectedItem;
             DialogResult result =
                 MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Delete API Server configuration \"{0}\"?", name),
-                                "Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                @"Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                                 MessageBoxDefaultButton.Button2);
 
             if (result != DialogResult.Yes)
@@ -1165,16 +1164,6 @@ namespace EVEMon.SettingsUI
 
             ACycleTimesInterval.Maximum = Math.Max(ACycleInterval.Value / 2, 1);
             panelCycleQueueInfo.Enabled = true;
-        }
-
-        /// <summary>
-        /// Opens a browser to the BattleClinic's main web page.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BattleClinicLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Util.OpenURL(new Uri(NetworkConstants.BattleClinicBase));
         }
 
         #endregion

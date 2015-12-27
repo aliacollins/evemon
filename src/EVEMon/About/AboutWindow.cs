@@ -184,7 +184,6 @@ namespace EVEMon.About
             AddDevelopersToListView();
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
-            AddLinkToLabel(battleclinicLinkLabel, "BattleClinic", "http://www.battleclinic.com/");
             AddLinkToLabel(eveCentralLinkLabel, "EVE-Central", "http://www.eve-central.com/");
             AddLinkToLabel(eveDevLinkLabel, "EVEDev", "http://wiki.eve-id.net/Main_Page");
             AddLinkToLabel(googleDataLinkLabel, "Google.Data", "http://code.google.com/apis/gdata/client-cs.html");

@@ -62,8 +62,8 @@ namespace EVEMon.Common.Helpers
         }
 
         /// <summary>
-        /// Callback method for synchronisation check. The user's clock is deemed to be in sync with BattleClinic time
-        /// if it is no more than 60 seconds different to BattleClinic time as local time.
+        /// Callback method for synchronisation check. The user's clock is deemed to be in sync with NIST time
+        /// if it is no more than 60 seconds different to NIST time as local time.
         /// </summary>
         /// <param name="e"></param>
         /// <param name="userState"></param>
