@@ -77,30 +77,30 @@ namespace EVEMon.ExceptionHandling
             try
             {
                 StringBuilder exceptionReport = new StringBuilder();
-                OperatingSystem os = Environment.OSVersion;
 
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}{1}", EveMonClient.FileVersionInfo.FileVersion,
-                                             Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}{1}", Environment.Version,
-                                             Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Operating System: {0}{1}", os.VersionString,
-                                             Environment.NewLine);
-                exceptionReport.AppendFormat(CultureConstants.DefaultCulture, "Executable Path: {0}{1}", Environment.CommandLine,
-                                             Environment.NewLine);
-                exceptionReport.AppendLine();
-                exceptionReport.Append(GetRecursiveStackTrace()).AppendLine();
-                exceptionReport.AppendLine();
-                exceptionReport.Append(GetDatafileReport()).AppendLine();
-                exceptionReport.AppendLine();
-                exceptionReport.Append("Diagnostic Log:").AppendLine();
-                exceptionReport.Append(GetTraceLog().Trim()).AppendLine();
+                exceptionReport
+                    .AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}",
+                        EveMonClient.FileVersionInfo.FileVersion).AppendLine()
+                    .AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}",
+                        Environment.Version).AppendLine()
+                    .AppendFormat(CultureConstants.DefaultCulture, "Operating System: {0}",
+                        Environment.OSVersion.VersionString).AppendLine()
+                    .AppendFormat(CultureConstants.DefaultCulture, "Executable Path: {0}",
+                        Environment.CommandLine).AppendLine()
+                    .AppendLine()
+                    .Append(GetRecursiveStackTrace()).AppendLine()
+                    .AppendLine()
+                    .Append(GetDatafileReport()).AppendLine()
+                    .AppendLine()
+                    .Append("Diagnostic Log:").AppendLine()
+                    .Append(GetTraceLog().Trim()).AppendLine();
 
                 TechnicalDetailsTextBox.Text = exceptionReport.ToString();
             }
             catch (InvalidOperationException ex)
             {
                 ExceptionHandler.LogException(ex, true);
-                TechnicalDetailsTextBox.Text = "Error retrieving error data. Wow, things are *really* screwed up!";
+                TechnicalDetailsTextBox.Text = @"Error retrieving error data. Wow, things are *really* screwed up!";
             }
         }
 
