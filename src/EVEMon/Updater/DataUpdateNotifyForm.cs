@@ -47,8 +47,8 @@ namespace EVEMon.Updater
             foreach (SerializableDatafile versionDatafile in m_args.ChangedFiles)
             {
                 changedFiles.AppendFormat(CultureConstants.InvariantCulture,
-                                          "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
-                                          versionDatafile.Name, versionDatafile.Date, versionDatafile.Address, Environment.NewLine);
+                    "Filename: {0}\t\tDated: {1}{3}Url: {2}/{0}{3}{3}",
+                    versionDatafile.Name, versionDatafile.Date, versionDatafile.Address, Environment.NewLine);
                 notes.AppendLine(versionDatafile.Message).AppendLine();
             }
             tbFiles.Lines = changedFiles.ToString().Split('\n');
@@ -77,10 +77,10 @@ namespace EVEMon.Updater
 
                 // One or more files failed
                 string message = String.Format(CultureConstants.InvariantCulture,
-                                               "{0} file{1} failed to download, do you wish to try again?",
-                                               m_args.ChangedFiles.Count, m_args.ChangedFiles.Count == 1 ? String.Empty : "s");
+                    "{0} file{1} failed to download, do you wish to try again?",
+                    m_args.ChangedFiles.Count, m_args.ChangedFiles.Count == 1 ? String.Empty : "s");
 
-                result = MessageBox.Show(message, "Failed Download", MessageBoxButtons.YesNo);
+                result = MessageBox.Show(message, @"Failed Download", MessageBoxButtons.YesNo);
             }
 
             // If no files were updated, abort the update process
@@ -102,7 +102,6 @@ namespace EVEMon.Updater
             foreach (SerializableDatafile versionDatafile in datafiles)
             {
                 // Work out the new names of the files
-                string url = String.Format(CultureConstants.InvariantCulture, "{0}/{1}", versionDatafile.Address, versionDatafile.Name);
                 string oldFilename = Path.Combine(EveMonClient.EVEMonDataDir, versionDatafile.Name);
                 string newFilename = String.Format(CultureConstants.InvariantCulture, "{0}.tmp", oldFilename);
 
@@ -127,8 +126,11 @@ namespace EVEMon.Updater
                     }
                 }
 
+                Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}/{1}", versionDatafile.Address,
+                    versionDatafile.Name));
+
                 // Show the download dialog, which will download the file
-                using (UpdateDownloadForm form = new UpdateDownloadForm(new Uri(url), newFilename))
+                using (UpdateDownloadForm form = new UpdateDownloadForm(url, newFilename))
                 {
                     if (form.ShowDialog() != DialogResult.OK)
                         continue;

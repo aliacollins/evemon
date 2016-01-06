@@ -4,7 +4,7 @@ using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Net
 {
-    public delegate void DownloadProgressChangedCallback(DownloadProgressChangedArgs e);
+    //public delegate void DownloadProgressChangedCallback(DownloadProgressChangedArgs e);
 
     /// <summary>
     /// HttpWebService provides all HTTP-based download services.
@@ -58,19 +58,19 @@ namespace EVEMon.Common.Net
             return true;
         }
 
-        /// <summary>
-        /// Cancels an asynchronous request in progress.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <exception cref="System.ArgumentNullException">request</exception>
-        public static void CancelRequest(object request)
-        {
-            if (request == null)
-                throw new ArgumentNullException("request");
+        ///// <summary>
+        ///// Cancels an asynchronous request in progress.
+        ///// </summary>
+        ///// <param name="request">The request.</param>
+        ///// <exception cref="System.ArgumentNullException">request</exception>
+        //public static void CancelRequest(object request)
+        //{
+        //    if (request == null)
+        //        throw new ArgumentNullException("request");
 
-            if (request.GetType() == typeof(HttpWebServiceRequest))
-                ((HttpWebServiceRequest)request).Cancelled = true;
-        }
+        //    if (request.GetType() == typeof(HttpWebServiceRequest))
+        //        ((HttpWebServiceRequest)request).Cancelled = true;
+        //}
 
         /// <summary>
         /// Factory method to construct an EVEMonWebRequest instance.

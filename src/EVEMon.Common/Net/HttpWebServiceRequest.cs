@@ -137,15 +137,15 @@ namespace EVEMon.Common.Net
                         continue;
 
                     ResponseStream.Write(buffer, 0, bytesRead);
-                    if (m_asyncState == null || m_asyncState.ProgressCallback == null)
-                        continue;
+                    //if (m_asyncState == null || m_asyncState.ProgressCallback == null)
+                    //    continue;
 
-                    totalBytesRead += bytesRead;
-                    int progressPercentage = webResponse.ContentLength == 0
-                                                 ? 0
-                                                 : (int)((totalBytesRead * 100) / webResponse.ContentLength);
-                    m_asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead,
-                                                                                  progressPercentage));
+                    //totalBytesRead += bytesRead;
+                    //int progressPercentage = webResponse.ContentLength == 0
+                    //                             ? 0
+                    //                             : (int)((totalBytesRead * 100) / webResponse.ContentLength);
+                    //m_asyncState.ProgressCallback(new DownloadProgressChangedArgs(webResponse.ContentLength, totalBytesRead,
+                    //                                                              progressPercentage));
                 } while (bytesRead > 0 && !Cancelled);
             }
             catch (HttpWebServiceException)
