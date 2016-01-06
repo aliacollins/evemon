@@ -1185,7 +1185,7 @@
       <Name>EVEMon.Common</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\EveMon.LogitechG15\EVEMon.LogitechG15.csproj">
+    <ProjectReference Include="..\EVEMon.LogitechG15\EVEMon.LogitechG15.csproj">
       <Project>{3067BDFB-C02D-4CAF-96AA-4D8F9F986180}</Project>
       <Name>EVEMon.LogitechG15</Name>
       <Private>True</Private>
