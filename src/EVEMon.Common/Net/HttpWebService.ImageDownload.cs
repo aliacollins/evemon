@@ -67,8 +67,7 @@ namespace EVEMon.Common.Net
             ImageRequestAsyncState state = new ImageRequestAsyncState(callback, DownloadImageAsyncCompleted, userState);
             HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpWebServiceRequest request = GetRequest();
-            MemoryStream responseStream = Util.GetMemoryStream();
-            request.GetResponseAsync(url, method, postData, dataCompression, responseStream, acceptEncoded, ImageAccept, state);
+            request.GetResponseAsync(url, method, postData, dataCompression, Util.GetMemoryStream(), acceptEncoded, ImageAccept, state);
         }
 
         /// <summary>

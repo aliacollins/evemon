@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Net;
+using EVEMon.Common.Net2;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Helpers
@@ -35,8 +36,7 @@ namespace EVEMon.Common.Helpers
                 ApplicationVersion = EveMonClient.FileVersionInfo.FileVersion,
                 ScreenResolution = String.Format(CultureConstants.InvariantCulture, "{0}x{1}",
                     Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height),
-                UserAgent = String.Format(CultureConstants.InvariantCulture, "{0} ({1}; {2})", HttpWebServiceState.UserAgent,
-                    Environment.OSVersion.VersionString, Environment.Is64BitOperatingSystem ? "x64" : "x86"),
+                UserAgent = HttpWebServiceState.UserAgent
             };
         }
 
@@ -46,7 +46,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         /// <param name="action">The action.</param>
         /// <remarks>Default action is 'Start'</remarks>
-        public static void TrackStartAsync(Type type, string action = null)
+        public static async void TrackStartAsync(Type type, string action = null)
         {
             if (String.IsNullOrWhiteSpace(action))
                 action = SessionStatus.Start.ToString();
@@ -57,11 +57,8 @@ namespace EVEMon.Common.Helpers
                     "Only actions '{0}' and '{1}' are allowed.", SessionStatus.Start, DailyStartText));
             }
 
-            TrackEventAsync(type, "ApplicationLifecycle", action,
-                (e, args) =>
-                {
-                    Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackStartAsync(type, DailyStartText));
-                });
+            await TrackEventAsync(type, "ApplicationLifecycle", action);
+            Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackStartAsync(type, DailyStartText));
         }
 
         /// <summary>
@@ -85,20 +82,8 @@ namespace EVEMon.Common.Helpers
 
             if (NetworkMonitor.IsNetworkAvailable)
             {
-                // Query async and wait
-                using (EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset))
-                {
-                    HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
-                        (e, args) =>
-                        {
-                            // We got the result, so we resume the calling thread
-                            wait.Set();
-                        },
-                        null, HttpMethod.Post, postdata: BuildQueryString());
-
-                    // Wait for the completion of the background thread
-                    wait.WaitOne();
-                }
+                HttpWebClientService.DownloadImage(new Uri(NetworkConstants.GoogleAnalyticsUrl),
+                    HttpMethod.Post, postdata: BuildQueryString());
 
                 return;
             }
@@ -113,25 +98,24 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         /// <param name="category">The category.</param>
         /// <param name="action">The action.</param>
-        /// <param name="callback">The callback.</param>
-        private static void TrackEventAsync(Type type, string category, string action, DownloadImageCompletedCallback callback = null)
+        private static async Task TrackEventAsync(Type type, string category, string action)
         {
             InitEvent(type, category, action);
-
-            if (callback == null)
-                callback = (e, args) => { };
-
+            
             // Sent notification
             if (NetworkMonitor.IsNetworkAvailable)
             {
-                HttpWebService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
-                    callback, null, HttpMethod.Post, postdata: BuildQueryString());
+                await HttpWebClientService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
+                    HttpMethod.Post, postdata: BuildQueryString());
+
+                if (EveMonClient.IsDebugBuild)
+                    EveMonClient.Trace("GAnalyticsTracker.{0} - {1}", category, action);
 
                 return;
             }
 
             // Reschedule later otherwise
-            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action, callback));
+            Dispatcher.Schedule(TimeSpan.FromMinutes(1), async () => await TrackEventAsync(type, category, action));
         }
 
         /// <summary>
@@ -142,9 +126,6 @@ namespace EVEMon.Common.Helpers
         /// <param name="action">The action.</param>
         private static void InitEvent(Type type, string category, string action)
         {
-            if (EveMonClient.IsDebugBuild)
-                EveMonClient.Trace("GAnalyticsTracker.{0} - {1}", category, action);
-
             s_parameters.HitType = GaHitType.Event;
             s_parameters.ScreenName = type.Name;
             s_parameters.EventCategory = category;

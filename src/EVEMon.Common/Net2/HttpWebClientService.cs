@@ -5,16 +5,31 @@ using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Net2
 {
-    public abstract class HttpWebClientService
+    public static partial class HttpWebClientService
     {
+        /// <summary>
+        /// Initializes the <see cref="HttpWebClientService"/> class.
+        /// </summary>
         static HttpWebClientService()
         {
             ServicePointManager.Expect100Continue = false;
         }
 
+        /// <summary>
+        /// Gets the web client.
+        /// </summary>
+        /// <returns></returns>
         public static WebClient GetWebClient() => new WebClient();
 
-        public static HttpClient GetHttpClient() => new HttpClient();
+        /// <summary>
+        /// Gets the HTTP client.
+        /// </summary>
+        /// <param name="httpClientHandler">The HTTP client handler.</param>
+        /// <returns></returns>
+        public static HttpClient GetHttpClient(HttpClientHandler httpClientHandler = null) =>
+            httpClientHandler == null
+                ? new HttpClient()
+                : new HttpClient(httpClientHandler);
 
         /// <summary>
         /// Validates a Url as acceptable for an HttpWebServiceRequest.

@@ -120,7 +120,7 @@ namespace EVEMon.Common.Net
                 webResponse = GetHttpResponse();
                 webResponseStream = webResponse.GetResponseStream();
                 int bytesRead = 0;
-                long totalBytesRead = 0;
+                //long totalBytesRead = 0;
                 long rawBufferSize = webResponse.ContentLength / 100;
                 int bufferSize = (int)(rawBufferSize > HttpWebServiceState.MaxBufferSize
                                            ? HttpWebServiceState.MaxBufferSize

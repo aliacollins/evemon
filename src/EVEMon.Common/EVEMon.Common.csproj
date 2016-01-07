@@ -204,6 +204,8 @@
     <Compile Include="Helpers\PlanHelper.cs" />
     <Compile Include="Loadouts\LoadoutsProvider.cs" />
     <Compile Include="Loadouts\Osmium\OsmiumLoadoutsProvider.cs" />
+    <Compile Include="Net2\DownloadImageAsyncResult.cs" />
+    <Compile Include="Net2\HttpClientServiceRequest.cs" />
     <Compile Include="Net2\HttpWebClientService.cs" />
     <Compile Include="Serialization\FittingClf\SerializableClfFittingChargeType.cs" />
     <Compile Include="Serialization\FittingClf\SerializableClfFittingDroneType.cs" />
@@ -608,6 +610,7 @@
     <Compile Include="Factories\WindowsFactory.cs" />
     <Compile Include="Extensions\WinFormsExtensions.cs" />
     <None Include="app.config" />
+    <Compile Include="Net2\HttpWebClientService.ImageDownload.cs" />
     <None Include="packages.config" />
     <Compile Include="Models\BuyOrder.cs" />
     <Compile Include="Data\Datafile.cs" />
@@ -686,10 +689,8 @@
     <Compile Include="Threading\IActor.cs" />
     <Compile Include="Threading\UIActor.cs" />
     <Compile Include="Helpers\TimeCheck.cs" />
-    <Compile Include="Net\DownloadImageAsyncResult.cs" />
     <Compile Include="Net\DownloadStringAsyncResult.cs" />
     <Compile Include="Net\DownloadXmlAsyncResult.cs" />
-    <Compile Include="Net\HttpWebService.ImageDownload.cs" />
     <Compile Include="Net\HttpWebService.XmlDownload.cs" />
     <Compile Include="Net\HttpWebServiceException.cs" />
     <Compile Include="Net\HttpWebServiceExceptionStatus.cs" />

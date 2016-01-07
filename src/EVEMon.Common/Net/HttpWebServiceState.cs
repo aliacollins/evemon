@@ -1,5 +1,4 @@
-using System.IO;
-using System.Windows.Forms;
+using System;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Net
@@ -35,8 +34,12 @@ namespace EVEMon.Common.Net
         {
             get
             {
-                return string.Concat(EveMonClient.FileVersionInfo.ProductName, Path.AltDirectorySeparatorChar,
-                    EveMonClient.FileVersionInfo.FileVersion);
+                var architecture = Environment.Is64BitOperatingSystem
+                    ? "x64"
+                    : "x86";
+
+                return $"{EveMonClient.FileVersionInfo.ProductName}/{EveMonClient.FileVersionInfo.FileVersion}" +
+                       $" ({Environment.OSVersion.VersionString}; {architecture})";
             }
         }
 

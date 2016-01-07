@@ -8,8 +8,9 @@ using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
-using EVEMon.Common.Net;
+using EVEMon.Common.Net2;
 using EVEMon.Common.Threading;
+using DownloadImageAsyncResult = EVEMon.Common.Net2.DownloadImageAsyncResult;
 
 namespace EVEMon.Common.Service
 {
@@ -129,12 +130,15 @@ namespace EVEMon.Common.Service
         /// <param name="url">The URL.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
-        public static void GetImageAsync(Uri url, GetImageCallback callback, bool useCache = true)
+        public static async void GetImageAsync(Uri url, GetImageCallback callback, bool useCache = true)
         {
+            DownloadImageAsyncResult result;
+            
             // Cache not to be used ?
             if (!useCache)
             {
-                HttpWebService.DownloadImageAsync(url, GotImage, callback);
+                result = await HttpWebClientService.DownloadImageAsync(url);
+                GotImage(result, callback);
                 return;
             }
 
@@ -178,14 +182,14 @@ namespace EVEMon.Common.Service
             }
 
             // Downloads the image and adds it to cache
-            HttpWebService.DownloadImageAsync(url, GotImage,
-                (GetImageCallback)(img =>
-                {
-                    if (img != null)
-                        AddImageToCache(url, img);
+            result = await HttpWebClientService.DownloadImageAsync(url);
+            GotImage(result, (GetImageCallback)(img =>
+            {
+                if (img != null)
+                    AddImageToCache(url, img);
 
-                    callback(img);
-                }));
+                callback(img);
+            }));
         }
 
         /// <summary>
@@ -256,7 +260,7 @@ namespace EVEMon.Common.Service
             }
             else
             {
-                if (e.Error.Status == HttpWebServiceExceptionStatus.Timeout)
+                if (e.Error.Status == Net.HttpWebServiceExceptionStatus.Timeout)
                     EveMonClient.Trace("ImageService: {0}", e.Error.Message);
                 else
                     ExceptionHandler.LogException(e.Error, true);
