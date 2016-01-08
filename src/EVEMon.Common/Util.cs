@@ -513,11 +513,11 @@ namespace EVEMon.Common
                 await HttpWebClientService.DownloadStringAsync(url, System.Net.Http.HttpMethod.Post, acceptEncoded, postData);
 
             T result = null;
-            string errorMessage = String.Empty;
+            HttpWebServiceException error = null;
 
             // Was there an HTTP error ??
             if (asyncResult.Error != null)
-                errorMessage = asyncResult.Error.Message;
+                error = asyncResult.Error;
             else
             {
                 // No http error, let's try to deserialize
@@ -530,17 +530,17 @@ namespace EVEMon.Common
                 {
                     // An error occurred during the deserialization
                     ExceptionHandler.LogException(exc, true);
-                    errorMessage = exc.InnerException?.Message ?? exc.Message;
+                    error = new HttpWebServiceException(exc.InnerException?.Message ?? exc.Message);
                 }
                 catch (InvalidOperationException exc)
                 {
                     // An error occurred during the deserialization
                     ExceptionHandler.LogException(exc, true);
-                    errorMessage = exc.InnerException?.Message ?? exc.Message;
+                    error = new HttpWebServiceException(exc.InnerException?.Message ?? exc.Message);
                 }
             }
 
-            return new DownloadAsyncResult<T>(result, new HttpWebServiceException(errorMessage));
+            return new DownloadAsyncResult<T>(result, error);
         }
 
         /// <summary>
