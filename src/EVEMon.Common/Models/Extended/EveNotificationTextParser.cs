@@ -6,6 +6,7 @@ using EVEMon.Common.Net;
 using EVEMon.Common.Service;
 using EVEMon.Common.Threading;
 using YamlDotNet.RepresentationModel;
+using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Models.Extended
 {
@@ -50,7 +51,7 @@ namespace EVEMon.Common.Models.Extended
         /// <summary>
         /// Gets the external parser.
         /// </summary>
-        private static void GetExternalParser()
+        private static async void GetExternalParser()
         {
             if (s_queryPending)
                 return;
@@ -60,31 +61,30 @@ namespace EVEMon.Common.Models.Extended
             Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
                 NetworkConstants.ExternalEveNotificationTextParser));
 
-            HttpWebService.DownloadStringAsync(url, OnDownloaded, null);
-
             s_queryPending = true;
+
+            OnDownloaded(await HttpWebClientService.DownloadStringAsync(url));
         }
 
         /// <summary>
         /// Processes the queried notification text parser.
         /// </summary>
-        /// <param name="e">The e.</param>
-        /// <param name="userstate">The userstate.</param>
-        private static void OnDownloaded(DownloadStringAsyncResult e, object userstate)
+        /// <param name="result">The result.</param>
+        private static void OnDownloaded(DownloadAsyncResult<String> result)
         {
-            if (e.Error != null)
+            if (result.Error != null)
             {
                 // Reset query pending flag
                 s_queryPending = false;
 
                 EveMonClient.Trace("EveNotificationTextParser.GetExternalParser - failed");
-                EveMonClient.Trace(e.Error.Message);
+                EveMonClient.Trace(result.Error.Message);
                 return;
             }
 
             s_cachedUntil = s_cachedUntil.AddHours(12);
 
-            s_parser = new CodeCompiler(s_referenceAssemblies).CreateInstanceFrom<EveNotificationTextParser>(e.Result);
+            s_parser = new CodeCompiler(s_referenceAssemblies).CreateInstanceFrom<EveNotificationTextParser>(result.Result);
 
             EveMonClient.Trace("EveNotificationTextParser.GetExternalParser - done");
 

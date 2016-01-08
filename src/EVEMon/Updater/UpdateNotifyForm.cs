@@ -71,7 +71,7 @@ namespace EVEMon.Updater
                     string message = String.Format(CultureConstants.DefaultCulture,
                                                    "File failed to download correctly, do you wish to try again?");
 
-                    result = MessageBox.Show(message, "Failed Download", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(message, @"Failed Download", MessageBoxButtons.YesNo);
                 }
             }
             else

@@ -141,7 +141,7 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Updates the file.
         /// </summary>
-        private static void UpdateFile()
+        private static async void UpdateFile()
         {
             // Quit if query is pending
             if (s_queryPending)
@@ -151,10 +151,12 @@ namespace EVEMon.Common.Service
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
                     NetworkConstants.NotificationRefTypes));
 
-            Util.DownloadAPIResultAsync<SerializableNotificationRefTypes>(url, OnDownloaded, true,
-                transform: APIProvider.RowsetsTransform);
-
             s_queryPending = true;
+
+            CCPAPIResult<SerializableNotificationRefTypes> result =
+                await Util.DownloadAPIResultAsync<SerializableNotificationRefTypes>(url, acceptEncoded: true,
+                    transform: APIProvider.RowsetsTransform);
+            OnDownloaded(result);
         }
 
         /// <summary>

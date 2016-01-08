@@ -43,7 +43,7 @@ namespace EVEMon.Common.Serialization.Eve
         /// Constructor from an http exception
         /// </summary>
         /// <param name="exc">The exception.</param>
-        public CCPAPIResult(HttpWebServiceException exc)
+        public CCPAPIResult(HttpWebClientServiceException exc)
             : this(exc as Exception)
         {
             m_error = CCPAPIErrors.Http;

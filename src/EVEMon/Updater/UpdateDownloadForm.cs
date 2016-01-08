@@ -1,5 +1,7 @@
 using System;
+using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
@@ -13,7 +15,7 @@ namespace EVEMon.Updater
     {
         private readonly Uri m_url;
         private readonly string m_fileName;
-        private object m_request;
+        private WebClient m_client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateDownloadForm"/> class.
@@ -42,9 +44,30 @@ namespace EVEMon.Updater
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void UpdateDownloadForm_Shown(object sender, EventArgs e)
         {
+            string urlValidationError;
+            if (!HttpWebClientService.IsValidURL(m_url, out urlValidationError))
+                throw new ArgumentException(urlValidationError);
+
             try
             {
-                m_request = HttpWebService.DownloadFileAsync(m_url, m_fileName, DownloadCompleted, ProgressChanged);
+                using (m_client = HttpWebClientService.GetWebClient())
+                {
+                    m_client.DownloadFileCompleted += DownloadCompleted;
+                    m_client.DownloadProgressChanged += ProgressChanged;
+
+                    try
+                    {
+                        m_client.DownloadFileAsync(m_url, m_fileName);
+                    }
+                    catch (WebException ex)
+                    {
+                        throw HttpWebClientServiceException.WebException(m_url, ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw HttpWebClientServiceException.Exception(m_url, ex);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -56,12 +79,13 @@ namespace EVEMon.Updater
         /// <summary>
         /// Progresses the changed.
         /// </summary>
-        /// <param name="e">The event.</param>
-        private void ProgressChanged(DownloadProgressChangedArgs e)
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="DownloadProgressChangedEventArgs"/> instance containing the event data.</param>
+        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             if (InvokeRequired)
             {
-                Dispatcher.Invoke(() => ProgressChanged(e));
+                Dispatcher.Invoke(() => ProgressChanged(sender, e));
                 return;
             }
 
@@ -92,12 +116,13 @@ namespace EVEMon.Updater
         /// <summary>
         /// Called when download is completed.
         /// </summary>
-        /// <param name="e">The event.</param>
-        private void DownloadCompleted(DownloadFileAsyncResult e)
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="AsyncCompletedEventArgs"/> instance containing the event data.</param>
+        private void DownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (InvokeRequired)
             {
-                Dispatcher.Invoke(() => DownloadCompleted(e));
+                Dispatcher.Invoke(() => DownloadCompleted(sender, e));
                 return;
             }
 
@@ -142,8 +167,7 @@ namespace EVEMon.Updater
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btCancel_Click(object sender, EventArgs e)
         {
-            if (m_request != null)
-                HttpWebService.CancelRequest(m_request);
+            m_client?.CancelAsync();
         }
 
         /// <summary>
@@ -159,8 +183,7 @@ namespace EVEMon.Updater
                 return;
             }
 
-            if (m_request != null)
-                HttpWebService.CancelRequest(m_request);
+            m_client?.CancelAsync();
         }
     }
 }

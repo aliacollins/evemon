@@ -258,32 +258,28 @@ namespace EVEMon.Common.Models
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         /// <param name="postData">The http POST data</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        private void QueryMethodAsync<T>(Enum method, QueryCallback<T> callback, string postData, XslCompiledTransform transform)
+        private async void QueryMethodAsync<T>(Enum method, QueryCallback<T> callback, string postData, XslCompiledTransform transform)
         {
             // Check callback not null
             if (callback == null)
-                throw new ArgumentNullException("callback", "The callback cannot be null.");
+                throw new ArgumentNullException("callback", @"The callback cannot be null.");
 
             // Lazy download
             Uri url = GetMethodUrl(method);
-            Util.DownloadAPIResultAsync<T>(
-                url,
-                result =>
-                    {
-                        // On failure with a custom provider, fallback to CCP
-                        if (ShouldRetryWithCCP(result))
-                        {
-                            APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
-                                                          ? s_ccpProvider
-                                                          : s_ccpTestProvider;
-                            ccpProvider.QueryMethodAsync(method, callback, postData, transform);
-                            return;
-                        }
+            CCPAPIResult<T> result = await Util.DownloadAPIResultAsync<T>(url, SupportsCompressedResponse, postData, transform);
 
-                        // Invokes the callback
-                        callback(result);
-                    },
-                    SupportsCompressedResponse, postData, transform);
+            // On failure with a custom provider, fallback to CCP
+            if (ShouldRetryWithCCP(result))
+            {
+                APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
+                    ? s_ccpProvider
+                    : s_ccpTestProvider;
+                ccpProvider.QueryMethodAsync(method, callback, postData, transform);
+                return;
+            }
+
+            // Invokes the callback
+            callback(result);
         }
 
         /// <summary>

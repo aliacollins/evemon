@@ -10,6 +10,7 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Osmium.Loadout;
 using EVEMon.Common.Threading;
+using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Loadouts.Osmium
 {
@@ -56,7 +57,7 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// Gets the loadouts feed.
         /// </summary>
         /// <param name="ship">The ship.</param>
-        public override void GetLoadoutsFeedAsync(Item ship)
+        public override async void GetLoadoutsFeedAsync(Item ship)
         {
             // Quit if query is pending
             if (s_queryFeedPending)
@@ -65,16 +66,18 @@ namespace EVEMon.Common.Loadouts.Osmium
             Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.OsmiumBaseUrl,
                 String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutFeed, ship.Name)));
 
-            Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url, OnLoadoutsFeedDownloaded, true);
-
             s_queryFeedPending = true;
+
+            DownloadAsyncResult<List<SerializableOsmiumLoadoutFeed>> result =
+                await Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url, acceptEncoded: true);
+            OnLoadoutsFeedDownloaded(result.Result, result.Error?.Message);
         }
 
         /// <summary>
         /// Gets the loadout by type ID.
         /// </summary>
         /// <param name="id">The id.</param>
-        public override void GetLoadoutByIDAsync(long id)
+        public override async void GetLoadoutByIDAsync(long id)
         {
             // Quit if query is pending
             if (s_queryPending)
@@ -83,9 +86,9 @@ namespace EVEMon.Common.Loadouts.Osmium
             Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.OsmiumBaseUrl,
                 String.Format(CultureConstants.InvariantCulture, NetworkConstants.OsmiumLoadoutDetails, id)));
 
-            HttpWebService.DownloadStringAsync(url, OnLoadoutDownloaded, null);
-
             s_queryPending = true;
+
+            OnLoadoutDownloaded(await HttpWebClientService.DownloadStringAsync(url));
         }
 
         /// <summary>
@@ -137,15 +140,14 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// <summary>
         /// Occurs when we downloaded a loadout from the provider.
         /// </summary>
-        /// <param name="e">The e.</param>
-        /// <param name="userstate">The userstate.</param>
-        private static void OnLoadoutDownloaded(DownloadStringAsyncResult e, object userstate)
+        /// <param name="result">The result.</param>
+        private static void OnLoadoutDownloaded(DownloadAsyncResult<String> result)
         {
             Dispatcher.Invoke(() =>
             {
                 s_queryPending = false;
 
-                EveMonClient.OnLoadoutDownloaded(e.Result, e.Error?.Message);
+                EveMonClient.OnLoadoutDownloaded(result.Result, result.Error?.Message);
             });
         }
 

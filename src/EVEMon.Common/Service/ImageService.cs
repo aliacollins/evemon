@@ -10,6 +10,7 @@ using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
+using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Service
 {
@@ -129,12 +130,12 @@ namespace EVEMon.Common.Service
         /// <param name="url">The URL.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <param name="callback">Callback that will be invoked on the UI thread.</param>
-        public static void GetImageAsync(Uri url, GetImageCallback callback, bool useCache = true)
-        {
+        public static async void GetImageAsync(Uri url, GetImageCallback callback, bool useCache = true)
+        {          
             // Cache not to be used ?
             if (!useCache)
             {
-                HttpWebService.DownloadImageAsync(url, GotImage, callback);
+                GotImage(await HttpWebClientService.DownloadImageAsync(url), callback);
                 return;
             }
 
@@ -178,14 +179,13 @@ namespace EVEMon.Common.Service
             }
 
             // Downloads the image and adds it to cache
-            HttpWebService.DownloadImageAsync(url, GotImage,
-                (GetImageCallback)(img =>
-                {
-                    if (img != null)
-                        AddImageToCache(url, img);
+            GotImage(await HttpWebClientService.DownloadImageAsync(url), (GetImageCallback)(img =>
+            {
+                if (img != null)
+                    AddImageToCache(url, img);
 
-                    callback(img);
-                }));
+                callback(img);
+            }));
         }
 
         /// <summary>
@@ -243,23 +243,23 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Callback used when images are downloaded, it takes care to invoke another callback provided as our user state.
         /// </summary>
-        /// <param name="e"></param>
-        /// <param name="state"></param>
-        private static void GotImage(DownloadImageAsyncResult e, object state)
+        /// <param name="result">The result.</param>
+        /// <param name="state">The state.</param>
+        private static void GotImage(DownloadAsyncResult<Image> result, object state)
         {
             GetImageCallback callback = (GetImageCallback)state;
 
-            if (e.Error == null)
+            if (result.Error == null)
             {
                 // Invokes on the UI thread
-                Dispatcher.BeginInvoke(() => callback(e.Result));
+                Dispatcher.BeginInvoke(() => callback(result.Result));
             }
             else
             {
-                if (e.Error.Status == HttpWebServiceExceptionStatus.Timeout)
-                    EveMonClient.Trace("ImageService: {0}", e.Error.Message);
+                if (result.Error.Status == Net.HttpWebClientServiceExceptionStatus.Timeout)
+                    EveMonClient.Trace("ImageService: {0}", result.Error.Message);
                 else
-                    ExceptionHandler.LogException(e.Error, true);
+                    ExceptionHandler.LogException(result.Error, true);
 
                 callback(null);
             }

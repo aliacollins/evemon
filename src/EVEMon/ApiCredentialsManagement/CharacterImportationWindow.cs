@@ -126,7 +126,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// Try to download a character XML from the given URI.
         /// </summary>
         /// <param name="uri"></param>
-        private void TryUri(string uri)
+        private async void TryUri(string uri)
         {
             m_version++;
             m_args = null;
@@ -139,28 +139,25 @@ namespace EVEMon.ApiCredentialsManagement
 
             // Starts querying the web or the hard drive, and invokes the given callback on result
             int version = m_version;
-            GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(uri),
-                                                               (sender, args) =>
-                                                                   {
-                                                                       if (version != m_version)
-                                                                           return;
+            var result = await GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(uri));
+            if (version != m_version)
+                return;
 
-                                                                       urlThrobber.State = ThrobberState.Stopped;
+            urlThrobber.State = ThrobberState.Stopped;
 
-                                                                       // Was there an error ?
-                                                                       if (args.HasError)
-                                                                       {
-                                                                           okButton.Enabled = false;
-                                                                           errorPanel.Visible = true;
-                                                                           labelError.Text = args.Error;
-                                                                           return;
-                                                                       }
+            // Was there an error ?
+            if (result.HasError)
+            {
+                okButton.Enabled = false;
+                errorPanel.Visible = true;
+                labelError.Text = result.Error;
+                return;
+            }
 
-                                                                       nameTextBox.Text = args.CharacterName;
-                                                                       namePanel.Visible = true;
-                                                                       okButton.Enabled = true;
-                                                                       m_args = args;
-                                                                   });
+            nameTextBox.Text = result.CharacterName;
+            namePanel.Visible = true;
+            okButton.Enabled = true;
+            m_args = result;
         }
 
         /// <summary>

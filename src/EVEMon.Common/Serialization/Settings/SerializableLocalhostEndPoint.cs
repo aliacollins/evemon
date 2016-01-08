@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Xml.Serialization;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
@@ -24,12 +25,12 @@ namespace EVEMon.Common.Serialization.Settings
         [XmlAttribute("method")]
         public string MethodXml
         {
-            get { return Method.ToString(); }
+            get { return HttpMethod.Method; }
             set
             {
                 if (!String.IsNullOrEmpty(value) &&
                     Enum.IsDefined(typeof(HttpMethod), value.ToTitleCase()))
-                    Method = (HttpMethod)Enum.Parse(typeof(HttpMethod), value.ToTitleCase());
+                    HttpMethod = (HttpMethod)Enum.Parse(typeof(HttpMethod), value.ToTitleCase());
             }
         }
 
@@ -49,7 +50,7 @@ namespace EVEMon.Common.Serialization.Settings
         public Uri Url { get; set; }
 
         [XmlIgnore]
-        public HttpMethod Method { get; set; }
+        public HttpMethod HttpMethod { get; set; }
 
         [XmlIgnore]
         public DataCompression DataCompression { get; set; }

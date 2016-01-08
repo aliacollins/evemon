@@ -3,12 +3,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Windows.Forms;
 using System.Xml.XPath;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
@@ -21,7 +21,6 @@ namespace EVEMon.ApiTester
     {
         private Uri m_url;
         private Uri m_defaultUri;
-        private IXPathNavigable m_result;
 
 
         #region Constructor
@@ -137,37 +136,37 @@ namespace EVEMon.ApiTester
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterName) ||
                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterAffiliation))
-                IDOrNameLabel.Text = "IDs:";
+                IDOrNameLabel.Text = @"IDs:";
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterID) ||
                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.OwnerID))
-                IDOrNameLabel.Text = "Names:";
+                IDOrNameLabel.Text = @"Names:";
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.TypeName))
-                IDOrNameLabel.Text = "Type IDs:";
+                IDOrNameLabel.Text = @"Type IDs:";
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.ContractItems) ||
                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CorporationContractItems))
-                IDOrNameLabel.Text = "Contract ID:";
+                IDOrNameLabel.Text = @"Contract ID:";
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryPins) ||
                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryRoutes) ||
                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.PlanetaryLinks))
-                IDOrNameLabel.Text = "Planet ID:";
+                IDOrNameLabel.Text = @"Planet ID:";
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.CalendarEventAttendees))
-                IDOrNameLabel.Text = "Event IDs:";
+                IDOrNameLabel.Text = @"Event IDs:";
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.MailBodies) ||
                 APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.NotificationTexts))
-                IDOrNameLabel.Text = "Message IDs:";
+                IDOrNameLabel.Text = @"Message IDs:";
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPICharacterMethods.Locations) ||
                 APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationLocations))
-                IDOrNameLabel.Text = "Item IDs:";
+                IDOrNameLabel.Text = @"Item IDs:";
 
             if (APIMethodComboBox.SelectedItem.Equals(CCPAPICorporationMethods.CorporationStarbaseDetails))
-                IDOrNameLabel.Text = "Starbase ID:";
+                IDOrNameLabel.Text = @"Starbase ID:";
         }
 
         /// <summary>
@@ -194,26 +193,10 @@ namespace EVEMon.ApiTester
             ErrorProvider.SetError(UrlLabel, errorText);
 
             UrlLabel.Text = url != m_defaultUri
-                                ? String.Format(CultureConstants.InvariantCulture, "URL: {0}", url.AbsoluteUri)
-                                : String.Empty;
+                ? String.Format(CultureConstants.InvariantCulture, "URL: {0}", url.AbsoluteUri)
+                : String.Empty;
 
             m_url = url;
-
-            // Get the raw xml document to use when saving
-            if (m_url != m_defaultUri)
-            {
-                APIProvider provider = EveMonClient.APIProviders.CurrentProvider;
-                Uri nUrl = provider.GetMethodUrl((Enum)ApiTesterUIHelper.SelectedItem);
-                string postData = m_url.Query.Replace("?", String.Empty);
-                try
-                {
-                    m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, provider.SupportsCompressedResponse, postData);
-                }
-                catch (HttpWebServiceException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-            }
 
             // Show the xml document using the webbrowser control
             WebBrowser.Navigate(url);
@@ -389,11 +372,30 @@ namespace EVEMon.ApiTester
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            if (m_result == null)
+            IXPathNavigable result = null;
+
+            // Get the raw xml document to use when saving
+            if (m_url != m_defaultUri)
+            {
+                APIProvider provider = EveMonClient.APIProviders.CurrentProvider;
+                Uri nUrl = provider.GetMethodUrl((Enum)ApiTesterUIHelper.SelectedItem);
+                string postData = m_url.Query.Replace("?", String.Empty);
+                try
+                {
+                    result = HttpWebClientService.DownloadXml(nUrl, HttpMethod.Post,
+                        provider.SupportsCompressedResponse, postData).Result;
+                }
+                catch (HttpWebClientServiceException ex)
+                {
+                    ExceptionHandler.LogException(ex, false);
+                }
+            }
+
+            if (result == null)
                 return;
 
             string filename = Path.GetFileNameWithoutExtension(WebBrowser.Url.AbsoluteUri);
-            ApiTesterUIHelper.SaveDocument(filename, m_result);
+            ApiTesterUIHelper.SaveDocument(filename, result);
         }
 
         /// <summary>

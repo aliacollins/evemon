@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -11,7 +12,6 @@ using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
-using EVEMon.Common.Net;
 using EVEMon.Common.SettingsObjects;
 using EVEMon.Common.Threading;
 
@@ -191,7 +191,8 @@ namespace EVEMon.Common.IGBService
         /// <param name="headers">dictionary of headers</param>
         /// <param name="request">the requested method</param>
         /// <param name="requestPath">url to respond to</param>
-        private void SendOutputToClient(IgbTcpClient client, IDictionary<string, string> headers, string request, string requestPath)
+        private void SendOutputToClient(IgbTcpClient client, IDictionary<string, string> headers, string request,
+            string requestPath)
         {
             MemoryStream stream = Util.GetMemoryStream();
             using (StreamWriter sw = new StreamWriter(stream))
@@ -203,17 +204,17 @@ namespace EVEMon.Common.IGBService
 
                 // We should support only the "GET" method
                 client.Write(String.Format(CultureConstants.InvariantCulture, "HTTP/1.1 {0}\n",
-                                           request.Equals(HttpWebServiceRequest.HttpMethodToString(HttpMethod.Get))
-                                               ? "200 OK"
-                                               : "501 Not Implemented"));
+                    request.Equals(HttpMethod.Get.Method)
+                        ? "200 OK"
+                        : "501 Not Implemented"));
                 client.Write("Server: EVEMon/1.0\n");
                 client.Write("Content-Type: text/html; charset=utf-8\n");
                 if (headers.ContainsKey("eve_trusted") &&
                     headers["eve_trusted"].ToLower(CultureConstants.InvariantCulture) == "no")
                 {
                     client.Write(String.Format(CultureConstants.InvariantCulture,
-                                               "eve.trustme: {0}/::EVEMon needs your character information.\n",
-                                               BuildHostAndPort(headers["host"])));
+                        "eve.trustme: {0}/::EVEMon needs your character information.\n",
+                        BuildHostAndPort(headers["host"])));
                 }
 
                 client.Write("Connection: close\n");
@@ -330,7 +331,7 @@ namespace EVEMon.Common.IGBService
         {
             WriteDocumentHeader(sw);
 
-            if (!request.Equals(HttpWebServiceRequest.HttpMethodToString(HttpMethod.Get)))
+            if (!request.Equals(HttpMethod.Get.Method))
             {
                 sw.WriteLine("<h1>Error loading requested URL</h1>" +
                              "The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",

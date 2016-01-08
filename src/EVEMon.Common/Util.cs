@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -18,25 +19,16 @@ using System.Xml.XPath;
 using System.Xml.Xsl;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Eve;
-using EVEMon.Common.Threading;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using YamlDotNet.RepresentationModel;
+using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common
 {
-    /// <summary>
-    /// A delegate for downloads.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="result"></param>
-    /// <param name="errorMessage"></param>
-    public delegate void DownloadCallback<in T>(T result, string errorMessage);
-
     /// <summary>
     /// A collection of helper methods for downloads and deserialization.
     /// </summary>
@@ -295,35 +287,36 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T">The inner type to deserialize</typeparam>
         /// <param name="url">The url to query</param>
-        /// <param name="callback">The callback to call once the query has been completed.</param>
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static void DownloadAPIResultAsync<T>(Uri url, Models.QueryCallback<T> callback, bool acceptEncoded = false,
-                                                       string postData = null, XslCompiledTransform transform = null)
+        internal static async Task<CCPAPIResult<T>> DownloadAPIResultAsync<T>(Uri url, bool acceptEncoded = false, string postData = null,
+            XslCompiledTransform transform = null)
         {
-            HttpWebService.DownloadXmlAsync(
-                url,
-                (asyncResult, userState) =>
-                    {
-                        try
-                        {
-                            // Was there an HTTP error ?
-                            CCPAPIResult<T> result = asyncResult.Error != null
-                                                      ? new CCPAPIResult<T>(asyncResult.Error)
-                                                      : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
+            DownloadAsyncResult<IXPathNavigable> asyncResult =
+                await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
 
-                            // We got the result, let's invoke the callback on this actor
-                            Dispatcher.Invoke(() => callback.Invoke(result));
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHandler.LogException(e, false);
-                            EveMonClient.Trace("Method: DownloadAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
-                                               url.AbsoluteUri, postData, typeof(T).Name);
-                        }
-                    },
-                null, HttpMethod.Post, acceptEncoded, postData);
+            CCPAPIResult<T> result;
+            try
+            {
+                // Was there an HTTP error ?
+                result = asyncResult.Error != null
+                    ? new CCPAPIResult<T>(asyncResult.Error)
+                    : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
+
+                // We got the result
+                return result;
+            }
+            catch (Exception e)
+            {
+                result = new CCPAPIResult<T>(HttpWebClientServiceException.Exception(url, e));
+
+                ExceptionHandler.LogException(e, false);
+                EveMonClient.Trace("Method: DownloadAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
+                    url.AbsoluteUri, postData, typeof(T).Name);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -335,42 +328,26 @@ namespace EVEMon.Common
         /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
         internal static CCPAPIResult<T> DownloadAPIResult<T>(Uri url, bool acceptEncoded = false,
-                                                          string postData = null, XslCompiledTransform transform = null)
+            string postData = null, XslCompiledTransform transform = null)
         {
-            CCPAPIResult<T> result = new CCPAPIResult<T>(Enumerations.CCPAPI.CCPAPIErrors.Http,
-                                                   string.Format(CultureConstants.DefaultCulture, "Time out on querying {0}", url));
+            CCPAPIResult<T> result;
+            
+            try
+            {
+                var apiResult = HttpWebClientService.DownloadXml(url, HttpMethod.Post, acceptEncoded, postData);
 
-            // Query async and wait
-            EventWaitHandle wait = new EventWaitHandle(false, EventResetMode.AutoReset);
-            HttpWebService.DownloadXmlAsync(
-                url,
-                (asyncResult, userState) =>
-                    {
-                        try
-                        {
-                            // Was there an HTTP error ?
-                            result = asyncResult.Error != null
-                                         ? new CCPAPIResult<T>(asyncResult.Error)
-                                         : DeserializeAPIResultCore<T>(asyncResult.Result, transform);
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHandler.LogException(e, true);
-                            result = new CCPAPIResult<T>(Enumerations.CCPAPI.CCPAPIErrors.Http, e.Message);
-                            EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
-                                               url.AbsoluteUri, postData, typeof(T).Name);
-                        }
-                        finally
-                        {
-                            // We got the result, so we resume the calling thread
-                            wait.Set();
-                        }
-                    },
-                null, HttpMethod.Post, acceptEncoded, postData);
-
-            // Wait for the completion of the background thread
-            wait.WaitOne();
-            wait.Close();
+                // Was there an HTTP error ?
+                result = apiResult.Error != null
+                    ? new CCPAPIResult<T>(apiResult.Error)
+                    : DeserializeAPIResultCore<T>(apiResult.Result, transform);
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, true);
+                result = new CCPAPIResult<T>(Enumerations.CCPAPI.CCPAPIErrors.Http, e.Message);
+                EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
+                    url.AbsoluteUri, postData, typeof(T).Name);
+            }
 
             // Returns
             return result;
@@ -450,97 +427,93 @@ namespace EVEMon.Common
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="url">The url to download from</param>
-        /// <param name="callback">A callback invoked on the UI thread.</param>
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The http POST data to pass with the url. May be null.</param>
-        public static void DownloadXmlAsync<T>(Uri url, DownloadCallback<T> callback, bool acceptEncoded = false,
-                                               string postData = null)
+        public static async Task<DownloadAsyncResult<T>> DownloadXmlAsync<T>(Uri url, bool acceptEncoded = false,
+            string postData = null)
             where T : class
         {
-            HttpWebService.DownloadXmlAsync(
-                url,
-                // Callback
-                (asyncResult, userState) =>
+            DownloadAsyncResult<IXPathNavigable> asyncResult =
+                await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
+
+            T result = null;
+            HttpWebClientServiceException error = null;
+
+            // Was there an HTTP error ??
+            if (asyncResult.Error != null)
+                error = asyncResult.Error;
+            else
+            {
+                // No http error, let's try to deserialize
+                try
                 {
-                    T result = null;
-                    string errorMessage = String.Empty;
-
-                    // Was there an HTTP error ??
-                    if (asyncResult.Error != null)
-                        errorMessage = asyncResult.Error.Message;
-                    else
+                    // Deserialize
+                    using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)asyncResult.Result))
                     {
-                        // No http error, let's try to deserialize
-                        try
-                        {
-                            // Deserialize
-                            using (XmlNodeReader reader = new XmlNodeReader((XmlDocument)asyncResult.Result))
-                            {
-                                XmlSerializer xs = new XmlSerializer(typeof(T));
-                                result = (T)xs.Deserialize(reader);
-                            }
-                        }
-                        catch (InvalidOperationException exc)
-                        {
-                            // An error occurred during the deserialization
-                            ExceptionHandler.LogException(exc, true);
-                            errorMessage = (exc.InnerException == null
-                                ? exc.Message
-                                : exc.InnerException.Message);
-                        }
-                        catch (XmlException exc)
-                        {
-                            ExceptionHandler.LogException(exc, true);
-                            errorMessage = (exc.InnerException == null
-                                ? exc.Message
-                                : exc.InnerException.Message);
-                        }
+                        XmlSerializer xs = new XmlSerializer(typeof(T));
+                        result = (T)xs.Deserialize(reader);
                     }
+                }
+                catch (InvalidOperationException exc)
+                {
+                    // An error occurred during the deserialization
+                    ExceptionHandler.LogException(exc, true);
+                    error = new HttpWebClientServiceException(exc.InnerException?.Message ?? exc.Message);
+                }
+                catch (XmlException exc)
+                {
+                    ExceptionHandler.LogException(exc, true);
+                    error = new HttpWebClientServiceException(exc.InnerException?.Message ?? exc.Message);
+                }
+            }
 
-                    // We got the result, let's invoke the callback on this actor
-                    Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
-                },
-                null, HttpMethod.Post, acceptEncoded, postData);
+            return new DownloadAsyncResult<T>(result, error);
         }
 
-        public static void DownloadJsonAsync<T>(Uri url, DownloadCallback<T> callback, bool acceptEncoded = false,
-                                                string postData = null) 
+        /// <summary>
+        /// Asynchronously download an object from a JSON stream.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="url">The URL.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> [accept encoded].</param>
+        /// <param name="postData">The post data.</param>
+        /// <returns></returns>
+        public static async Task<DownloadAsyncResult<T>> DownloadJsonAsync<T>(Uri url, bool acceptEncoded = false,
+            string postData = null)
             where T : class
         {
-            HttpWebService.DownloadStringAsync(
-                url,
-                // Callback
-                (asyncResult, userState) =>
+            DownloadAsyncResult<String> asyncResult =
+                await HttpWebClientService.DownloadStringAsync(url, HttpMethod.Post, acceptEncoded, postData);
+
+            T result = null;
+            HttpWebClientServiceException error = null;
+
+            // Was there an HTTP error ??
+            if (asyncResult.Error != null)
+                error = asyncResult.Error;
+            else
+            {
+                // No http error, let's try to deserialize
+                try
                 {
-                    T result = null;
-                    string errorMessage = String.Empty;
-                    
-                    // Was there an HTTP error ??
-                    if (asyncResult.Error != null)
-                        errorMessage = asyncResult.Error.Message;
-                    else
-                    {
-                        // No http error, let's try to deserialize
-                        try
-                        {
-                            // Deserialize
-                            result = new JavaScriptSerializer().Deserialize<T>(asyncResult.Result);
-                        }
-                        catch (InvalidOperationException exc)
-                        {
-                            // An error occurred during the deserialization
-                            ExceptionHandler.LogException(exc, true);
-                            errorMessage = (exc.InnerException == null
-                                ? exc.Message
-                                : exc.InnerException.Message);
-                        }
-                    }
+                    // Deserialize
+                    result = new JavaScriptSerializer().Deserialize<T>(asyncResult.Result);
+                }
+                catch (ArgumentException exc)
+                {
+                    // An error occurred during the deserialization
+                    ExceptionHandler.LogException(exc, true);
+                    error = new HttpWebClientServiceException(exc.InnerException?.Message ?? exc.Message);
+                }
+                catch (InvalidOperationException exc)
+                {
+                    // An error occurred during the deserialization
+                    ExceptionHandler.LogException(exc, true);
+                    error = new HttpWebClientServiceException(exc.InnerException?.Message ?? exc.Message);
+                }
+            }
 
-                    // We got the result, let's invoke the callback on this actor
-                    Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
-
-                },
-                null, HttpMethod.Post, acceptEncoded, postData);
+            return new DownloadAsyncResult<T>(result, error);
         }
 
         /// <summary>

@@ -90,9 +90,9 @@ namespace EVEMon.Sales
             string content = String.Empty;
             try
             {
-                content = HttpWebService.DownloadString(parser.URL);
+                content = HttpWebClientService.DownloadString(parser.URL).Result;
             }
-            catch (HttpWebServiceException ex)
+            catch (HttpWebClientServiceException ex)
             {
                 ExceptionHandler.LogException(ex, false);
             }

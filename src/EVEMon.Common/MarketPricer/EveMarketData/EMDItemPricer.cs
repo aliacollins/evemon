@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.EveMarketData.MarketPricer;
 using EVEMon.Common.Service;
 
@@ -22,10 +23,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public override string Name
-        {
-            get { return "Eve-MarketData"; }
-        }
+        public override string Name => "Eve-MarketData";
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ItemPricer" /> is enabled.
@@ -33,10 +31,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        protected override bool Enabled
-        {
-            get { return true; }
-        }
+        protected override bool Enabled => true;
 
         /// <summary>
         /// Gets the price by type ID.
@@ -147,7 +142,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// <summary>
         /// Downloads the item prices list.
         /// </summary>
-        protected override void GetPricesAsync()
+        protected override async void GetPricesAsync()
         {
             // Quit if query is pending
             if (s_queryPending)
@@ -163,28 +158,29 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEMarketDataBaseUrl,
                     NetworkConstants.EVEMarketDataAPIItemPrices));
 
-            Util.DownloadXmlAsync<SerializableEMDItemPrices>(url, OnPricesDownloaded, true);
+            DownloadAsyncResult<SerializableEMDItemPrices> result =
+                await Util.DownloadXmlAsync<SerializableEMDItemPrices>(url, acceptEncoded: true);
+            OnPricesDownloaded(result);
         }
 
         /// <summary>
         /// Called when data downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="errormessage">The errormessage.</param>
-        private void OnPricesDownloaded(SerializableEMDItemPrices result, string errormessage)
+        private void OnPricesDownloaded(DownloadAsyncResult<SerializableEMDItemPrices> result)
         {
             // Reset query pending flag
             s_queryPending = false;
 
-            if (!String.IsNullOrEmpty(errormessage) || result == null || result.Result == null || !result.Result.ItemPrices.Any())
+            if (result == null || result.Error != null || result.Result.Result == null || !result.Result.Result.ItemPrices.Any())
             {
-                if (!String.IsNullOrEmpty(errormessage))
-                    EveMonClient.Trace(errormessage);
-                else if (result == null || result.Result == null)
+                if (result?.Result == null)
                     EveMonClient.Trace("{0}.GetPricesAsync - no result", GetType().Name);
-                else if (!result.Result.ItemPrices.Any())
+                else if (result.Error != null)
+                    EveMonClient.Trace(result.Error.Message);
+                else if (result.Result.Result == null || !result.Result.Result.ItemPrices.Any())
                     EveMonClient.Trace("{0}.GetPricesAsync - empty result", GetType().Name);
-                else 
+                else
                     EveMonClient.Trace("{0}.GetPricesAsync - failed", GetType().Name);
 
                 EveMonClient.OnPricesDownloaded(null, String.Empty);
@@ -194,14 +190,14 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             EveMonClient.Trace("{0}.GetPricesAsync - done", GetType().Name);
 
-            Import(result.Result.ItemPrices);
+            Import(result.Result.Result.ItemPrices);
 
             // Reset query pending flag
             s_queryPending = false;
 
             // Save the file in cache
-            Save(Filename, Util.SerializeToXmlDocument(result));
-            
+            Save(Filename, Util.SerializeToXmlDocument(result.Result));
+
             CachedUntil = DateTime.UtcNow.AddDays(1);
 
             EveMonClient.OnPricesDownloaded(null, String.Empty);
