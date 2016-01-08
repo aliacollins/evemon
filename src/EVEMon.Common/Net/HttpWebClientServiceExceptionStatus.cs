@@ -3,7 +3,7 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// Status types for an HttpWebServiceException
     /// </summary>
-    public enum HttpWebServiceExceptionStatus
+    public enum HttpWebClientServiceExceptionStatus
     {
         Exception,
         WebException,

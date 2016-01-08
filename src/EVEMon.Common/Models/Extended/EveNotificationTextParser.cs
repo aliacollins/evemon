@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Net2;
+using EVEMon.Common.Net;
 using EVEMon.Common.Service;
 using EVEMon.Common.Threading;
 using YamlDotNet.RepresentationModel;
+using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Models.Extended
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Models;
@@ -69,68 +70,61 @@ namespace EVEMon.Common.Collections.Global
         /// Asynchronously adds a character from the given uri, adding a new identity when needed.
         /// </summary>
         /// <param name="uri">The uri to load the character sheet from</param>
-        /// <param name="callback">A callback invoked on the UI thread (whatever the result, success or failure)</param>
-        public static void TryAddOrUpdateFromUriAsync(Uri uri, EventHandler<UriCharacterEventArgs> callback)
+        public static async Task<UriCharacterEventArgs> TryAddOrUpdateFromUriAsync(Uri uri)
         {
             if (uri == null)
                 throw new ArgumentNullException("uri");
 
-            // We have a file, let's just deserialize it synchronously
-            if (uri.IsFile)
+            // It's a web address, let's do it in an async way
+            if (!uri.IsFile)
             {
-                string xmlRootElement = Util.GetXmlRootElement(uri);
-
-                switch (xmlRootElement.ToLower(CultureConstants.DefaultCulture))
-                {
-                    case "eveapi":
-                        CCPAPIResult<SerializableAPICharacterSheet> apiResult =
-                            Util.DeserializeAPIResultFromFile<SerializableAPICharacterSheet>(uri.LocalPath, APIProvider.RowsetsTransform);
-                        callback(null, new UriCharacterEventArgs(uri, apiResult));
-                        break;
-                    case "serializableccpcharacter":
-                        try
-                        {
-                            SerializableCCPCharacter ccpResult =
-                                Util.DeserializeXmlFromFile<SerializableCCPCharacter>(uri.LocalPath);
-                            callback(null, new UriCharacterEventArgs(uri, ccpResult));
-                        }
-                        catch (NullReferenceException ex)
-                        {
-                            callback(null,
-                                     new UriCharacterEventArgs(uri,
-                                                               String.Format(CultureConstants.DefaultCulture,
-                                                                             "Unable to load file (SerializableCCPCharacter). ({0})",
-                                                                             ex.Message)));
-                        }
-                        break;
-                    case "serializableuricharacter":
-                        try
-                        {
-                            SerializableUriCharacter uriCharacterResult =
-                                Util.DeserializeXmlFromFile<SerializableUriCharacter>(uri.LocalPath);
-                            callback(null, new UriCharacterEventArgs(uri, uriCharacterResult));
-                        }
-                        catch (NullReferenceException ex)
-                        {
-                            callback(null,
-                                     new UriCharacterEventArgs(uri,
-                                                               String.Format(CultureConstants.DefaultCulture,
-                                                                             "Unable to load file (SerializableUriCharacter). ({0})",
-                                                                             ex.Message)));
-                        }
-                        break;
-                    default:
-                        callback(null, new UriCharacterEventArgs(uri, "Format Not Recognized"));
-                        break;
-                }
-                return;
+                CCPAPIResult<SerializableAPICharacterSheet> result =
+                    await
+                        Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri, false, null, APIProvider.RowsetsTransform);
+                return new UriCharacterEventArgs(uri, result);
             }
 
-            // So, it's a web address, let's do it in an async way
-            Util.DownloadAPIResultAsync<SerializableAPICharacterSheet>(uri,
-                                                                       result =>
-                                                                       callback(null, new UriCharacterEventArgs(uri, result)),
-                                                                       false, null, APIProvider.RowsetsTransform);
+            // We have a file, let's just deserialize it synchronously
+            string xmlRootElement = Util.GetXmlRootElement(uri);
+
+            switch (xmlRootElement.ToLower(CultureConstants.DefaultCulture))
+            {
+                case "eveapi":
+                    CCPAPIResult<SerializableAPICharacterSheet> apiResult =
+                        Util.DeserializeAPIResultFromFile<SerializableAPICharacterSheet>(uri.LocalPath,
+                            APIProvider.RowsetsTransform);
+                    return new UriCharacterEventArgs(uri, apiResult);
+                case "serializableccpcharacter":
+                    try
+                    {
+                        SerializableCCPCharacter ccpResult =
+                            Util.DeserializeXmlFromFile<SerializableCCPCharacter>(uri.LocalPath);
+                        return new UriCharacterEventArgs(uri, ccpResult);
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        return new UriCharacterEventArgs(uri,
+                            String.Format(CultureConstants.DefaultCulture,
+                                "Unable to load file (SerializableCCPCharacter). ({0})",
+                                ex.Message));
+                    }
+                case "serializableuricharacter":
+                    try
+                    {
+                        SerializableUriCharacter uriCharacterResult =
+                            Util.DeserializeXmlFromFile<SerializableUriCharacter>(uri.LocalPath);
+                        return new UriCharacterEventArgs(uri, uriCharacterResult);
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        return new UriCharacterEventArgs(uri,
+                            String.Format(CultureConstants.DefaultCulture,
+                                "Unable to load file (SerializableUriCharacter). ({0})",
+                                ex.Message));
+                    }
+                default:
+                    return new UriCharacterEventArgs(uri, "Format Not Recognized");
+            }
         }
 
         /// <summary>

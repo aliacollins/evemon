@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using EVEMon.Common.Constants;
 
-namespace EVEMon.Common.Net2
+namespace EVEMon.Common.Net
 {
     public static partial class HttpWebClientService
     {

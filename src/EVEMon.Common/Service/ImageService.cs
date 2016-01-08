@@ -8,8 +8,9 @@ using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
-using EVEMon.Common.Net2;
+using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
+using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Service
 {
@@ -255,7 +256,7 @@ namespace EVEMon.Common.Service
             }
             else
             {
-                if (result.Error.Status == Net.HttpWebServiceExceptionStatus.Timeout)
+                if (result.Error.Status == Net.HttpWebClientServiceExceptionStatus.Timeout)
                     EveMonClient.Trace("ImageService: {0}", result.Error.Message);
                 else
                     ExceptionHandler.LogException(result.Error, true);

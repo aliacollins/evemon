@@ -439,7 +439,7 @@ namespace EVEMon.Common
         /// </summary>
         private static void UpdateSettings()
         {
-            HttpWebServiceState.Proxy = Settings.Proxy;
+            HttpWebClientServiceState.Proxy = Settings.Proxy;
         }
 
         #endregion

@@ -6,11 +6,9 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Net;
 using EVEMon.Common.SettingsObjects;
-using HttpMethod = System.Net.Http.HttpMethod;
 
-namespace EVEMon.Common.Net2
+namespace EVEMon.Common.Net
 {
     internal class HttpClientServiceRequest
     {
@@ -33,7 +31,7 @@ namespace EVEMon.Common.Net2
         /// </summary>
         public HttpClientServiceRequest()
         {
-            m_redirectsRemaining = HttpWebServiceState.MaxRedirects;
+            m_redirectsRemaining = HttpWebClientServiceState.MaxRedirects;
 
             // Pull the timeout from the settings
             TimeSpan timeoutSetting = TimeSpan.FromSeconds(Settings.Updates.HttpTimeout);
@@ -81,18 +79,18 @@ namespace EVEMon.Common.Net2
                     HttpRequestMessage request = GetHttpRequest();
                     response = await GetHttpResponseAsync(httpClientHandler, request);
                 }
-                catch (HttpWebServiceException)
+                catch (HttpWebClientServiceException)
                 {
                     throw;
                 }
                 catch (WebException ex)
                 {
                     // Aborted, time out or error while processing the request
-                    throw HttpWebServiceException.WebException(url, ex);
+                    throw HttpWebClientServiceException.WebException(url, ex);
                 }
                 catch (Exception ex)
                 {
-                    throw HttpWebServiceException.Exception(url, ex);
+                    throw HttpWebClientServiceException.Exception(url, ex);
                 }
 
                 if (response.StatusCode != HttpStatusCode.Redirect && response.StatusCode != HttpStatusCode.Moved &&
@@ -106,7 +104,7 @@ namespace EVEMon.Common.Net2
                 response.Dispose();
 
                 if (m_redirectsRemaining-- <= 0)
-                    throw HttpWebServiceException.RedirectsExceededException(m_url);
+                    throw HttpWebClientServiceException.RedirectsExceededException(m_url);
 
                 m_referrer = m_url;
                 m_url = new Uri(m_url, target);
@@ -123,14 +121,14 @@ namespace EVEMon.Common.Net2
             HttpClientHandler httpClientHandler = new HttpClientHandler
             {
                 AllowAutoRedirect = false,
-                MaxAutomaticRedirections = HttpWebServiceState.MaxRedirects,
+                MaxAutomaticRedirections = HttpWebClientServiceState.MaxRedirects,
             };
 
-            if (!HttpWebServiceState.Proxy.Enabled)
+            if (!HttpWebClientServiceState.Proxy.Enabled)
                 return httpClientHandler;
 
-            WebProxy proxy = new WebProxy(HttpWebServiceState.Proxy.Host, HttpWebServiceState.Proxy.Port);
-            switch (HttpWebServiceState.Proxy.Authentication)
+            WebProxy proxy = new WebProxy(HttpWebClientServiceState.Proxy.Host, HttpWebClientServiceState.Proxy.Port);
+            switch (HttpWebClientServiceState.Proxy.Authentication)
             {
                 case ProxyAuthentication.None:
                     proxy.UseDefaultCredentials = false;
@@ -141,9 +139,9 @@ namespace EVEMon.Common.Net2
                     break;
                 case ProxyAuthentication.Specified:
                     proxy.UseDefaultCredentials = false;
-                    proxy.Credentials = new NetworkCredential(HttpWebServiceState.Proxy.Username,
-                        Util.Decrypt(HttpWebServiceState.Proxy.Password,
-                            HttpWebServiceState.Proxy.Username));
+                    proxy.Credentials = new NetworkCredential(HttpWebClientServiceState.Proxy.Username,
+                        Util.Decrypt(HttpWebClientServiceState.Proxy.Password,
+                            HttpWebClientServiceState.Proxy.Username));
                     break;
             }
 
@@ -185,7 +183,7 @@ namespace EVEMon.Common.Net2
             request.Headers.AcceptCharset.TryParseAdd("ISO-8859-1,utf-8;q=0.8,*;q=0.7");
             request.Headers.AcceptLanguage.TryParseAdd("en-us,en;q=0.5");
             request.Headers.Pragma.TryParseAdd("no-cache");
-            request.Headers.UserAgent.TryParseAdd(HttpWebServiceState.UserAgent);
+            request.Headers.UserAgent.TryParseAdd(HttpWebClientServiceState.UserAgent);
             request.Headers.Accept.ParseAdd(m_accept);
 
             if (m_acceptEncoded)

@@ -297,20 +297,18 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Adds the blank character.
         /// </summary>
-        public static void AddBlankCharacter(Action callback)
+        public static async void AddBlankCharacter(Action callback)
         {
             // Add blank character
-            GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(s_filename),
-                (sender, e) =>
-                {
-                    if (e == null || e.HasError)
-                        return;
+            var result = await GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(s_filename));
 
-                    UriCharacter character = e.CreateCharacter();
-                    character.Monitored = true;
+            if (result == null || result.HasError)
+                return;
 
-                    callback.Invoke();
-                });
+            UriCharacter character = result.CreateCharacter();
+            character.Monitored = true;
+
+            callback.Invoke();
         }
 
         #endregion

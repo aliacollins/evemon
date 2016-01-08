@@ -8,7 +8,6 @@ using System.Xml.XPath;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
-using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
@@ -194,8 +193,8 @@ namespace EVEMon.ApiTester
             ErrorProvider.SetError(UrlLabel, errorText);
 
             UrlLabel.Text = url != m_defaultUri
-                                ? String.Format(CultureConstants.InvariantCulture, "URL: {0}", url.AbsoluteUri)
-                                : String.Empty;
+                ? String.Format(CultureConstants.InvariantCulture, "URL: {0}", url.AbsoluteUri)
+                : String.Empty;
 
             m_url = url;
 
@@ -207,9 +206,10 @@ namespace EVEMon.ApiTester
                 string postData = m_url.Query.Replace("?", String.Empty);
                 try
                 {
-                    m_result = HttpWebService.DownloadXml(nUrl, HttpMethod.Post, provider.SupportsCompressedResponse, postData);
+                    m_result = HttpWebClientService.DownloadXml(nUrl, System.Net.Http.HttpMethod.Post,
+                            provider.SupportsCompressedResponse, postData).Result;
                 }
-                catch (HttpWebServiceException ex)
+                catch (HttpWebClientServiceException ex)
                 {
                     ExceptionHandler.LogException(ex, false);
                 }

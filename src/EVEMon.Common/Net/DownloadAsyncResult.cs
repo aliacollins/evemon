@@ -1,6 +1,4 @@
-using EVEMon.Common.Net;
-
-namespace EVEMon.Common.Net2
+namespace EVEMon.Common.Net
 {
     /// <summary>
     /// Container class to return the result of an asynchronous string download
@@ -12,7 +10,7 @@ namespace EVEMon.Common.Net2
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="error">The error.</param>
-        public DownloadAsyncResult(T result, HttpWebServiceException error)
+        public DownloadAsyncResult(T result, HttpWebClientServiceException error)
         {
             Error = error;
             Result = result;
@@ -28,6 +26,6 @@ namespace EVEMon.Common.Net2
         /// Gets or sets the error.
         /// </summary>
         /// <value>The error.</value>
-        public HttpWebServiceException Error { get; }
+        public HttpWebClientServiceException Error { get; }
     }
 }

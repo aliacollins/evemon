@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
-using EVEMon.Common.Net2;
 
 namespace EVEMon.Sales
 {
@@ -93,7 +92,7 @@ namespace EVEMon.Sales
             {
                 content = HttpWebClientService.DownloadString(parser.URL).Result;
             }
-            catch (HttpWebServiceException ex)
+            catch (HttpWebClientServiceException ex)
             {
                 ExceptionHandler.LogException(ex, false);
             }

@@ -3,15 +3,12 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Net;
-using HttpMethod = System.Net.Http.HttpMethod;
 
-namespace EVEMon.Common.Net2
+namespace EVEMon.Common.Net
 {
     static partial class HttpWebClientService
     {
-        private const string StringAccept =
-            "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,*/*;q=0.5";
+        private const string StringAccept = "text/html;q=0.9,text/plain;q=0.8,*/*;q=0.5";
 
         /// <summary>
         /// Synchronously downloads a string from the specified url.
@@ -46,10 +43,17 @@ namespace EVEMon.Common.Net2
 
             HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpClientServiceRequest request = new HttpClientServiceRequest();
-            HttpResponseMessage response =
-                await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, StringAccept);
-            Stream stream = await response.Content.ReadAsStreamAsync();
-            return GetString(request, stream);
+            try
+            {
+                HttpResponseMessage response =
+                    await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, StringAccept);
+                Stream stream = await response.Content.ReadAsStreamAsync();
+                return GetString(request, stream);
+            }
+            catch (HttpWebClientServiceException ex)
+            {
+                return new DownloadAsyncResult<String>(String.Empty, ex);
+            }
         }
 
         /// <summary>
@@ -60,11 +64,15 @@ namespace EVEMon.Common.Net2
         /// <returns></returns>
         private static DownloadAsyncResult<String> GetString(HttpClientServiceRequest request, Stream stream)
         {
-            if (stream == null)
-                return null;
+            String text = String.Empty;
+            HttpWebClientServiceException error = null;
 
-            String text = null;
-            HttpWebServiceException error = null;
+            if (stream == null)
+            {
+                error = HttpWebClientServiceException.Exception(request.BaseUrl, new ArgumentNullException("stream"));
+                return new DownloadAsyncResult<String>(text, error);
+            }
+
             try
             {
                 using (StreamReader reader = new StreamReader(Util.ZlibUncompress(stream)))
@@ -72,9 +80,9 @@ namespace EVEMon.Common.Net2
             }
             catch (ArgumentException ex)
             {
-                error = HttpWebServiceException.Exception(request.BaseUrl, ex);
+                error = HttpWebClientServiceException.Exception(request.BaseUrl, ex);
             }
-            
+
             return new DownloadAsyncResult<String>(text, error);
         }
     }

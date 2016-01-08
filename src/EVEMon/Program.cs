@@ -226,7 +226,7 @@ namespace EVEMon
                 messageBuilder.AppendFormat(CultureConstants.DefaultCulture, @"The exception encountered was '{0}'.",
                     e.Message);
                 messageBuilder.AppendFormat(CultureConstants.DefaultCulture, @"The original exception encountered was '{0}'.",
-                  ex.Message);
+                    ex.Message);
                 messageBuilder.AppendLine();
                 messageBuilder.AppendLine();
                 messageBuilder.AppendLine(@"Please report this on the EVEMon forums.");

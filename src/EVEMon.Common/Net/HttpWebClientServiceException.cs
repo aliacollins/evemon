@@ -10,53 +10,53 @@ namespace EVEMon.Common.Net
     /// Exception class for all exceptions thrown by HttpWebService requests.
     /// </summary>
     [Serializable]
-    public sealed class HttpWebServiceException : Exception
+    public sealed class HttpWebClientServiceException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
+        /// Initializes a new instance of the <see cref="HttpWebClientServiceException"/> class.
         /// </summary>
-        public HttpWebServiceException()
+        public HttpWebClientServiceException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
+        /// Initializes a new instance of the <see cref="HttpWebClientServiceException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public HttpWebServiceException(string message)
+        public HttpWebClientServiceException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
+        /// Initializes a new instance of the <see cref="HttpWebClientServiceException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="ex">The ex.</param>
-        public HttpWebServiceException(string message, Exception ex)
+        public HttpWebClientServiceException(string message, Exception ex)
             : base(message, ex)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
+        /// Initializes a new instance of the <see cref="HttpWebClientServiceException"/> class.
         /// </summary>
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
         /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
-        private HttpWebServiceException(SerializationInfo info, StreamingContext context)
+        private HttpWebClientServiceException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
+        /// Initializes a new instance of the <see cref="HttpWebClientServiceException"/> class.
         /// </summary>
         /// <param name="status">The status.</param>
         /// <param name="url">The URL.</param>
         /// <param name="message">The message.</param>
-        private HttpWebServiceException(HttpWebServiceExceptionStatus status, Uri url, string message)
+        private HttpWebClientServiceException(HttpWebClientServiceExceptionStatus status, Uri url, string message)
             : base(message)
         {
             Status = status;
@@ -64,13 +64,13 @@ namespace EVEMon.Common.Net
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpWebServiceException"/> class.
+        /// Initializes a new instance of the <see cref="HttpWebClientServiceException"/> class.
         /// </summary>
         /// <param name="status">The status.</param>
         /// <param name="ex">The ex.</param>
         /// <param name="url">The URL.</param>
         /// <param name="message">The message.</param>
-        private HttpWebServiceException(HttpWebServiceExceptionStatus status, Exception ex, Uri url, string message)
+        private HttpWebClientServiceException(HttpWebClientServiceExceptionStatus status, Exception ex, Uri url, string message)
             : base(message, ex)
         {
             Status = status;
@@ -81,7 +81,7 @@ namespace EVEMon.Common.Net
         /// Gets or sets the status.
         /// </summary>
         /// <value>The status.</value>
-        public HttpWebServiceExceptionStatus Status { get; private set; }
+        public HttpWebClientServiceExceptionStatus Status { get; private set; }
 
         /// <summary>
         /// Gets or sets the URL.
@@ -104,12 +104,12 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown</param>
         /// <returns></returns>
-        public static HttpWebServiceException Exception(Uri url, Exception ex)
+        public static HttpWebClientServiceException Exception(Uri url, Exception ex)
         {
             if (url == null)
                 throw new ArgumentNullException("url");
 
-            return new HttpWebServiceException(HttpWebServiceExceptionStatus.Exception, ex, url, "An Exception occurred.");
+            return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.Exception, ex, url, "An Exception occurred.");
         }
 
         /// <summary>
@@ -117,12 +117,12 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The url of the request that failed</param>
         /// <returns></returns>
-        public static HttpWebServiceException RedirectsExceededException(Uri url)
+        public static HttpWebClientServiceException RedirectsExceededException(Uri url)
         {
             if (url == null)
                 throw new ArgumentNullException("url");
 
-            return new HttpWebServiceException(HttpWebServiceExceptionStatus.RedirectsExceeded, url,
+            return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.RedirectsExceeded, url,
                                                String.Format(CultureConstants.DefaultCulture,
                                                              ExceptionMessages.RedirectsExceeded, url.Host));
         }
@@ -132,12 +132,12 @@ namespace EVEMon.Common.Net
         /// </summary>
         /// <param name="url">The url of the request that failed</param>
         /// <returns></returns>
-        public static HttpWebServiceException RequestsDisabledException(Uri url)
+        public static HttpWebClientServiceException RequestsDisabledException(Uri url)
         {
             if (url == null)
                 throw new ArgumentNullException("url");
 
-            return new HttpWebServiceException(HttpWebServiceExceptionStatus.RequestsDisabled, url,
+            return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.RequestsDisabled, url,
                                                String.Format(CultureConstants.DefaultCulture,
                                                              ExceptionMessages.RequestsDisabled, url.Host));
         }
@@ -150,20 +150,20 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The WebException that was thrown</param>
         /// <returns></returns>
-        public static HttpWebServiceException WebException(Uri url, WebException ex)
+        public static HttpWebClientServiceException WebException(Uri url, WebException ex)
         {
-            string proxyHost = HttpWebServiceState.Proxy.Enabled
-                                   ? HttpWebServiceState.Proxy.Host
+            string proxyHost = HttpWebClientServiceState.Proxy.Enabled
+                                   ? HttpWebClientServiceState.Proxy.Host
                                    : WebRequest.DefaultWebProxy.GetProxy(url).Host;
 
-            HttpWebServiceExceptionStatus status;
+            HttpWebClientServiceExceptionStatus status;
 
             string msg = ParseWebException(ex, url, proxyHost, out status);
-            return new HttpWebServiceException(status, ex, url, msg);
+            return new HttpWebClientServiceException(status, ex, url, msg);
         }
 
         /// <summary>
-        /// Parses a web exception to get an error message and a <see cref="HttpWebServiceExceptionStatus"/> status code.
+        /// Parses a web exception to get an error message and a <see cref="HttpWebClientServiceExceptionStatus"/> status code.
         /// </summary>
         /// <param name="ex"></param>
         /// <param name="url"></param>
@@ -171,7 +171,7 @@ namespace EVEMon.Common.Net
         /// <param name="status"></param>
         /// <returns></returns>
         private static string ParseWebException(WebException ex, Uri url, string proxyHost,
-                                                out HttpWebServiceExceptionStatus status)
+                                                out HttpWebClientServiceExceptionStatus status)
         {
             StringBuilder messageBuilder = new StringBuilder();
             switch (ex.Status)
@@ -181,42 +181,42 @@ namespace EVEMon.Common.Net
                     switch (response.StatusCode)
                     {
                         case HttpStatusCode.ProxyAuthenticationRequired:
-                            status = HttpWebServiceExceptionStatus.ProxyError;
+                            status = HttpWebClientServiceExceptionStatus.ProxyError;
                             messageBuilder.AppendFormat(
                                 ExceptionMessages.ProxyAuthenticationFailure, proxyHost, url.Host);
                             break;
 
                         default:
-                            status = HttpWebServiceExceptionStatus.ServerError;
+                            status = HttpWebClientServiceExceptionStatus.ServerError;
                             messageBuilder.AppendFormat(ExceptionMessages.ServerError, url.Host);
                             messageBuilder.AppendLine(response.StatusDescription);
                             break;
                     }
                     break;
                 case WebExceptionStatus.ProxyNameResolutionFailure:
-                    status = HttpWebServiceExceptionStatus.ProxyError;
+                    status = HttpWebClientServiceExceptionStatus.ProxyError;
                     messageBuilder.AppendFormat(
                         ExceptionMessages.ProxyNameResolutionFailure, proxyHost);
                     break;
                 case WebExceptionStatus.RequestProhibitedByProxy:
-                    status = HttpWebServiceExceptionStatus.ProxyError;
+                    status = HttpWebClientServiceExceptionStatus.ProxyError;
                     messageBuilder.AppendFormat(ExceptionMessages.RequestProhibitedByProxy, url.Host, proxyHost);
                     break;
                 case WebExceptionStatus.NameResolutionFailure:
-                    status = HttpWebServiceExceptionStatus.NameResolutionFailure;
+                    status = HttpWebClientServiceExceptionStatus.NameResolutionFailure;
                     messageBuilder.AppendFormat(ExceptionMessages.NameResolutionFailure,
                                                 proxyHost);
                     break;
                 case WebExceptionStatus.ConnectFailure:
-                    status = HttpWebServiceExceptionStatus.ConnectFailure;
+                    status = HttpWebClientServiceExceptionStatus.ConnectFailure;
                     messageBuilder.AppendFormat(ExceptionMessages.ConnectFailure, url.Host);
                     break;
                 case WebExceptionStatus.Timeout:
-                    status = HttpWebServiceExceptionStatus.Timeout;
+                    status = HttpWebClientServiceExceptionStatus.Timeout;
                     messageBuilder.AppendFormat(ExceptionMessages.Timeout, url.Host);
                     break;
                 default:
-                    status = HttpWebServiceExceptionStatus.WebException;
+                    status = HttpWebClientServiceExceptionStatus.WebException;
                     messageBuilder.AppendFormat(ExceptionMessages.UnknownWebException, url.Host, ex.Status);
                     break;
             }
@@ -230,12 +230,12 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The XmlException that was thrown</param>
         /// <returns></returns>
-        public static HttpWebServiceException XmlException(Uri url, Exception ex)
+        public static HttpWebClientServiceException XmlException(Uri url, Exception ex)
         {
             if (url == null)
                 throw new ArgumentNullException("url");
 
-            return new HttpWebServiceException(HttpWebServiceExceptionStatus.XmlException, ex, url,
+            return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.XmlException, ex, url,
                                                String.Format(CultureConstants.DefaultCulture,
                                                              ExceptionMessages.XmlException, url.Host));
         }
@@ -246,12 +246,12 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown loading the image</param>
         /// <returns></returns>
-        public static HttpWebServiceException ImageException(Uri url, Exception ex)
+        public static HttpWebClientServiceException ImageException(Uri url, Exception ex)
         {
             if (url == null)
                 throw new ArgumentNullException("url");
 
-            return new HttpWebServiceException(HttpWebServiceExceptionStatus.ImageException, ex, url,
+            return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.ImageException, ex, url,
                                                String.Format(CultureConstants.DefaultCulture,
                                                              ExceptionMessages.ImageException, url.Host));
         }
@@ -262,12 +262,12 @@ namespace EVEMon.Common.Net
         /// <param name="url">The url of the request that failed</param>
         /// <param name="ex">The exception that was thrown creating the file</param>
         /// <returns></returns>
-        public static HttpWebServiceException FileError(Uri url, Exception ex)
+        public static HttpWebClientServiceException FileError(Uri url, Exception ex)
         {
             if (url == null)
                 throw new ArgumentNullException("url");
 
-            return new HttpWebServiceException(HttpWebServiceExceptionStatus.FileError, ex, url,
+            return new HttpWebClientServiceException(HttpWebClientServiceExceptionStatus.FileError, ex, url,
                                                String.Format(CultureConstants.DefaultCulture,
                                                              ExceptionMessages.FileException, url.Host));
         }

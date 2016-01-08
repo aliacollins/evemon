@@ -6,7 +6,7 @@ namespace EVEMon.Common.Net
     /// <summary>
     /// Conainer class for HttpWebService settings and state
     /// </summary>
-    public static class HttpWebServiceState
+    public static class HttpWebClientServiceState
     {
         private static readonly object s_syncLock = new object();
         private static ProxySettings s_proxy = new ProxySettings();

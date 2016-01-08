@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Net;
-using EVEMon.Common.Net2;
 using EVEMon.Common.Threading;
+using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Helpers
 {
@@ -36,7 +36,7 @@ namespace EVEMon.Common.Helpers
                 ApplicationVersion = EveMonClient.FileVersionInfo.FileVersion,
                 ScreenResolution = String.Format(CultureConstants.InvariantCulture, "{0}x{1}",
                     Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height),
-                UserAgent = HttpWebServiceState.UserAgent
+                UserAgent = HttpWebClientServiceState.UserAgent
             };
         }
 

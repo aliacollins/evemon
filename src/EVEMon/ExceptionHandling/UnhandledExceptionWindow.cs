@@ -227,7 +227,7 @@ namespace EVEMon.ExceptionHandling
         /// Handles the Click event of the CloseButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void CloseButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
@@ -238,21 +238,21 @@ namespace EVEMon.ExceptionHandling
         /// Handles the LinkClicked event of the CopyDetailsLinkLabel control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void CopyDetailsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
                 Clipboard.SetText(TechnicalDetailsTextBox.Text, TextDataFormat.Text);
-                MessageBox.Show("The error details have been copied to the clipboard.", "Copy", MessageBoxButtons.OK,
+                MessageBox.Show(@"The error details have been copied to the clipboard.", "Copy", MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
             }
             catch (ExternalException ex)
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process. " +
-                                "Wait a few moments and try again.");
+                MessageBox.Show(@"Couldn't complete the operation, the clipboard is being used by another process. " +
+                                @"Wait a few moments and try again.");
             }
         }
 
@@ -260,7 +260,7 @@ namespace EVEMon.ExceptionHandling
         /// Handles the Click event of the DataDirectoryButton control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void DataDirectoryButton_Click(object sender, EventArgs e)
         {
             Util.OpenURL(new Uri(EveMonClient.EVEMonDataDir));
@@ -270,7 +270,7 @@ namespace EVEMon.ExceptionHandling
         /// Handles the LinkClicked event of the llblReport control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblReport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(new Uri(NetworkConstants.EVEMonBugReport));
@@ -280,7 +280,7 @@ namespace EVEMon.ExceptionHandling
         /// Handles the LinkClicked event of the llblKnownProblems control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblKnownProblems_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(new Uri(NetworkConstants.EVEMonKnownProblems));
@@ -290,7 +290,7 @@ namespace EVEMon.ExceptionHandling
         /// Handles the LinkClicked event of the llblLatestBinaries control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblLatestBinaries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(new Uri(NetworkConstants.EVEMonMainPage));

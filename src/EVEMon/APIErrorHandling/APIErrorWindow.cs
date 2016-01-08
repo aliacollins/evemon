@@ -83,12 +83,12 @@ namespace EVEMon.ApiErrorHandling
             if (exception == null)
                 return null;
 
-            HttpWebServiceException httpException = exception as HttpWebServiceException;
+            HttpWebClientServiceException httpException = exception as HttpWebClientServiceException;
 
             if (httpException == null)
                 return null;
 
-            return httpException.Status == HttpWebServiceExceptionStatus.Timeout ? m_httpTimeoutTroubleshooter : null;
+            return httpException.Status == HttpWebClientServiceExceptionStatus.Timeout ? m_httpTimeoutTroubleshooter : null;
         }
 
         /// <summary>

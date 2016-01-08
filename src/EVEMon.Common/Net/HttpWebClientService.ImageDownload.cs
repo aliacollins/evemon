@@ -4,13 +4,12 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EVEMon.Common.Enumerations;
-using EVEMon.Common.Net;
 
-namespace EVEMon.Common.Net2
+namespace EVEMon.Common.Net
 {
     static partial class HttpWebClientService
     {
-        private const string ImageAccept = "image/*";
+        private const string ImageAccept = "image/*,*/*;q=0.5";
 
         /// <summary>
         /// Synchronously downloads an image from the specified url.
@@ -43,10 +42,17 @@ namespace EVEMon.Common.Net2
 
             HttpPostData postData = String.IsNullOrWhiteSpace(postdata) ? null : new HttpPostData(postdata, dataCompression);
             HttpClientServiceRequest request = new HttpClientServiceRequest();
-            HttpResponseMessage response =
-                await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, ImageAccept);
-            Stream stream = await response.Content.ReadAsStreamAsync();
-            return GetImage(request, stream);
+            try
+            {
+                HttpResponseMessage response =
+                    await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, ImageAccept);
+                Stream stream = await response.Content.ReadAsStreamAsync();
+                return GetImage(request, stream);
+            }
+            catch (HttpWebClientServiceException ex)
+            {
+                return new DownloadAsyncResult<Image>(null, ex);
+            }
         }
 
         /// <summary>
@@ -57,14 +63,21 @@ namespace EVEMon.Common.Net2
         private static DownloadAsyncResult<Image> GetImage(HttpClientServiceRequest request, Stream stream)
         {
             Image image = null;
-            HttpWebServiceException error = null;
+            HttpWebClientServiceException error = null;
+
+            if (stream == null)
+            {
+                error = HttpWebClientServiceException.Exception(request.BaseUrl, new ArgumentNullException("stream"));
+                return new DownloadAsyncResult<Image>(null, error);
+            }
+
             try
             {
                 image = Image.FromStream(Util.ZlibUncompress(stream), true);
             }
             catch (ArgumentException ex)
             {
-                error = HttpWebServiceException.ImageException(request.BaseUrl, ex);
+                error = HttpWebClientServiceException.ImageException(request.BaseUrl, ex);
             }
 
             return new DownloadAsyncResult<Image>(image, error);

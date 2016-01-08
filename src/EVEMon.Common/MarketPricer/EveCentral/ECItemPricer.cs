@@ -6,6 +6,7 @@ using System.Text;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
+using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.EveCentral.MarketPricer;
 using EVEMon.Common.Service;
 
@@ -29,10 +30,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public override string Name
-        {
-            get { return "EVE-Central"; }
-        }
+        public override string Name => "EVE-Central";
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ItemPricer" /> is enabled.
@@ -40,10 +38,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        protected override bool Enabled
-        {
-            get { return false; }
-        }
+        protected override bool Enabled => false;
 
         /// <summary>
         /// Gets the price by type ID.
@@ -167,7 +162,11 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             QueryIDs();
         }
 
-        private void QueryIDs()
+        /// <summary>
+        /// Queries the ids.
+        /// </summary>
+        /// <returns></returns>
+        private async void QueryIDs()
         {
             var idsToQuery = new List<int>();
             var url = new Uri(
@@ -187,10 +186,17 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
                 s_queryCounter++;
 
-                Util.DownloadXmlAsync<SerializableECItemPrices>(url, OnPricesDownloaded, postData: GetPostData(idsToQuery));
+                DownloadAsyncResult<SerializableECItemPrices> result =
+                    await Util.DownloadXmlAsync<SerializableECItemPrices>(url, postData: GetPostData(idsToQuery), acceptEncoded: true);
+                OnPricesDownloaded(result);
             }
         }
 
+        /// <summary>
+        /// Gets the post data.
+        /// </summary>
+        /// <param name="idsToQuery">The ids to query.</param>
+        /// <returns></returns>
         private static string GetPostData(List<int> idsToQuery)
         {
             StringBuilder sb = new StringBuilder();
@@ -215,10 +221,9 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// Called when prices downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="errormessage">The errormessage.</param>
-        private void OnPricesDownloaded(SerializableECItemPrices result, string errormessage)
+        private void OnPricesDownloaded(DownloadAsyncResult<SerializableECItemPrices> result)
         {
-            if (CheckQueryStatus(result, errormessage))
+            if (CheckQueryStatus(result))
                 return;
 
             if (EveMonClient.IsDebugBuild)
@@ -241,15 +246,15 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// Checks the query status.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="errormessage">The errormessage.</param>
         /// <returns></returns>
-        private bool CheckQueryStatus(SerializableECItemPrices result, string errormessage)
+        private bool CheckQueryStatus(DownloadAsyncResult<SerializableECItemPrices> result)
         {
             s_queryCounter--;
 
-            if (!String.IsNullOrEmpty(errormessage))
+            if (result == null || result.Error != null)
             {
-                EveMonClient.Trace(errormessage);
+                if (result?.Error != null)
+                    EveMonClient.Trace(result.Error.Message);
 
                 // Reset query pending flag
                 if (s_queryCounter == 0)
@@ -259,17 +264,20 @@ namespace EVEMon.Common.MarketPricer.EveCentral
                 }
                 else
                     return true;
+
+                if (result == null)
+                    return false;
             }
 
             // When the query succeeds import the data and remove the ids from the monitoring list
-            if (result != null)
+            if (result.Result != null)
             {
-                foreach (SerializableECItemPriceListItem item in result.ItemPrices)
+                foreach (SerializableECItemPriceListItem item in result.Result.ItemPrices)
                 {
                     s_queryMonitorList.Remove(item.ID);
                 }
 
-                Import(result.ItemPrices);
+                Import(result.Result.ItemPrices);
             }
 
             if (s_queryCounter != 0)

@@ -7,7 +7,6 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
-using EVEMon.Common.Net2;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Updater
@@ -62,11 +61,11 @@ namespace EVEMon.Updater
                     }
                     catch (WebException ex)
                     {
-                        throw HttpWebServiceException.WebException(m_url, ex);
+                        throw HttpWebClientServiceException.WebException(m_url, ex);
                     }
                     catch (Exception ex)
                     {
-                        throw HttpWebServiceException.Exception(m_url, ex);
+                        throw HttpWebClientServiceException.Exception(m_url, ex);
                     }
                 }
             }

@@ -104,7 +104,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <remarks>Invoked on the UI thread the first time and on some background thread the rest of the time.</remarks>
         /// <returns></returns>
-        private static void BeginCheck()
+        private static async void BeginCheck()
         {
             // If update manager has been disabled since the last
             // update was triggered quit out here
@@ -125,29 +125,29 @@ namespace EVEMon.Common
 
             // Otherwise, query for the patch file
             // First look up for an emergency patch
-            Util.DownloadXmlAsync<SerializablePatch>(
-                new Uri(String.Format(CultureConstants.DefaultCulture,
-                                      "{0}-emergency.xml", Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))),
-                (result, errorMessage) =>
-                    {
-                        // If no emergency patch found proceed with the regular
-                        if (!String.IsNullOrEmpty(errorMessage))
-                        {
-                            Util.DownloadXmlAsync<SerializablePatch>(new Uri(Settings.Updates.UpdatesAddress), OnCheckCompleted);
-                            return;
-                        }
+            await Util.DownloadXmlAsync<SerializablePatch>(
+                new Uri(String.Format(CultureConstants.DefaultCulture, "{0}-emergency2.xml",
+                    Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))))
+                .ContinueWith(async task =>
+                {
+                    DownloadAsyncResult<SerializablePatch> result = task.Result;
 
-                        // Proccess the emergency patch
-                        OnCheckCompleted(result, errorMessage);
-                    });
+                    // If no emergency patch found proceed with the regular
+                    if (task.Result.Error != null)
+                    {
+                        result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(Settings.Updates.UpdatesAddress));
+                    }
+
+                    // Proccess the result
+                    OnCheckCompleted(result);
+                });
         }
 
         /// <summary>
         /// Called when patch file check completed.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="errorMessage">The error message.</param>
-        private static void OnCheckCompleted(SerializablePatch result, string errorMessage)
+        private static void OnCheckCompleted(DownloadAsyncResult<SerializablePatch> result)
         {
             // If update manager has been disabled since the last
             // update was triggered quit out here
@@ -158,10 +158,10 @@ namespace EVEMon.Common
             }
 
             // Was there an error ?
-            if (!String.IsNullOrEmpty(errorMessage))
+            if (result.Error != null)
             {
                 // Logs the error and reschedule
-                EveMonClient.Trace("UpdateManager: {0}", errorMessage);
+                EveMonClient.Trace("UpdateManager: {0}", result.Error.Message);
                 ScheduleCheck(s_frequency);
                 return;
             }
@@ -169,7 +169,7 @@ namespace EVEMon.Common
             // No error, let's try to deserialize
             try
             {
-                ScanUpdateFeed(result);
+                ScanUpdateFeed(result.Result);
             }
                 // An error occurred during the deserialization
             catch (InvalidOperationException exc)
