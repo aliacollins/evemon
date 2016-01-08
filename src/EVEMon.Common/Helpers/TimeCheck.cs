@@ -1,11 +1,11 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Extensions;
-using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Helpers
@@ -21,90 +21,100 @@ namespace EVEMon.Common.Helpers
         /// Asynchronous method to determine if the user's clock is syncrhonised to NIST time.
         /// </summary>
         /// <param name="callback">The callback.</param>
-        public static void CheckIsSynchronisedToNistTime(TimeSynchronisationCallback callback)
+        public static async void CheckIsSynchronisedToNistTime(TimeSynchronisationCallback callback)
         {
-            GetNistTimeAsync(new Uri(NetworkConstants.NISTTimeServer), SyncDownloadCompleted, new SyncState(callback));
+            SyncResult result = await GetNistTimeAsync(new Uri(NetworkConstants.NISTTimeServer));
+            Dispatcher.Invoke(() => callback.Invoke(result.IsSynchronised, result.ServerTimeToLocalTime, result.LocalTime));
         }
 
         /// <summary>
         /// Gets the nist time asynchronously.
         /// </summary>
         /// <param name="url">The URL.</param>
-        /// <param name="syncNistCompleted">The synchronize nist completed.</param>
-        /// <param name="state">The state.</param>
-        private static void GetNistTimeAsync(Uri url, DownloadStringCompletedCallback syncNistCompleted, SyncState state)
+        private static async Task<SyncResult> GetNistTimeAsync(Uri url)
         {
-            Dispatcher.BackgroundInvoke(() =>
-            {
-                DateTime dateTimeNowUtc = DateTime.MinValue;
-                HttpWebServiceException error = null;
-                try
-                {
-                    using (TcpClient tcpClient = new TcpClient(url.Host, url.Port))
-                    using (NetworkStream netStream = tcpClient.GetStream())
-                    {
-                        byte[] data = new byte[24];
-                        netStream.Read(data, 0, data.Length);
-                        data = data.Skip(7).Take(17).ToArray();
-
-                        dateTimeNowUtc = DateTime.ParseExact(Encoding.ASCII.GetString(data),
-                            "yy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture.DateTimeFormat);
-                    }
-                }
-                catch (Exception exc)
-                {
-                    error = HttpWebServiceException.Exception(url, exc);
-                }
-
-                DownloadStringAsyncResult result = new DownloadStringAsyncResult(dateTimeNowUtc.DateTimeToTimeString(), error);
-                syncNistCompleted.Invoke(result, state);
-            });
-        }
-
-        /// <summary>
-        /// Callback method for synchronisation check. The user's clock is deemed to be in sync with NIST time
-        /// if it is no more than 60 seconds different to NIST time as local time.
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="userState"></param>
-        private static void SyncDownloadCompleted(DownloadStringAsyncResult e, object userState)
-        {
-            SyncState state = (SyncState)userState;
-            bool isSynchronised = true;
             DateTime serverTimeToLocalTime = DateTime.MinValue.ToLocalTime();
             DateTime localTime = DateTime.Now;
-            if (!String.IsNullOrEmpty(e.Result))
+            TimeSpan timediff = TimeSpan.Zero;
+
+            try
             {
-                serverTimeToLocalTime = e.Result.TimeStringToDateTime().ToLocalTime();
-                double timediff = Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds);
-                isSynchronised = timediff < 60;
+                await Dns.GetHostAddressesAsync(url.Host)
+                    .ContinueWith(async task1 =>
+                    {
+                        if (task1.Result.Any())
+                        {
+                            DateTime dateTimeNowUtc;
+
+                            using (TcpClient tcpClient = new TcpClient())
+                            {
+                                await tcpClient.ConnectAsync(task1.Result.First(), url.Port);
+
+                                using (NetworkStream netStream = tcpClient.GetStream())
+                                {
+                                    byte[] data = new byte[24];
+                                    netStream.Read(data, 0, data.Length);
+                                    data = data.Skip(7).Take(17).ToArray();
+
+                                    dateTimeNowUtc = DateTime.ParseExact(Encoding.ASCII.GetString(data),
+                                        "yy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture.DateTimeFormat);
+                                }
+                            }
+
+                            serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
+                            timediff = TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
+                        }
+                    });
             }
-            Dispatcher.Invoke(() => state.Callback(isSynchronised, serverTimeToLocalTime, localTime));
+            catch (Exception exc)
+            {
+                ExceptionHandler.LogException(exc, true);
+            }
+
+            return new SyncResult(timediff < TimeSpan.FromSeconds(60), serverTimeToLocalTime, localTime);
         }
 
-        /// <summary>
-        /// Helper class for asyncronous time sync requests.
-        /// </summary>
-        private class SyncState
+        ///// <summary>
+        ///// Helper class for the result of asyncronous time sync requests.
+        ///// </summary>
+        private class SyncResult
         {
-            private readonly TimeSynchronisationCallback m_callback;
-
             /// <summary>
-            /// Initializes a new instance of the <see cref="SyncState"/> class.
+            /// Initializes a new instance of the <see cref="SyncResult"/> class.
             /// </summary>
-            /// <param name="callback">The callback.</param>
-            internal SyncState(TimeSynchronisationCallback callback)
+            /// <param name="isSynchronised">if set to <c>true</c> the user's machine is synchronised.</param>
+            /// <param name="serverTimeToLocalTime">The server time to local time.</param>
+            /// <param name="localTime">The local time.</param>
+            internal SyncResult(bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
             {
-                m_callback = callback;
+                IsSynchronised = isSynchronised;
+                ServerTimeToLocalTime = serverTimeToLocalTime;
+                LocalTime = localTime;
             }
 
             /// <summary>
-            /// Gets the callback.
+            /// Gets a value indicating whether this instance is synchronised.
             /// </summary>
-            internal TimeSynchronisationCallback Callback
-            {
-                get { return m_callback; }
-            }
+            /// <value>
+            /// <c>true</c> if this instance is synchronised; otherwise, <c>false</c>.
+            /// </value>
+            public bool IsSynchronised { get; }
+
+            /// <summary>
+            /// Gets the server time to local time.
+            /// </summary>
+            /// <value>
+            /// The server time to local time.
+            /// </value>
+            public DateTime ServerTimeToLocalTime { get; }
+
+            /// <summary>
+            /// Gets the local time.
+            /// </summary>
+            /// <value>
+            /// The local time.
+            /// </value>
+            public DateTime LocalTime { get; }
         }
     }
 }
