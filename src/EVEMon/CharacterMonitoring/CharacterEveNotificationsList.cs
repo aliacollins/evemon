@@ -410,8 +410,8 @@ namespace EVEMon.CharacterMonitoring
             foreach (IGrouping<TKey, EveNotification> group in groups)
             {
                 string groupText;
-                if (group.Key is EVEMailState)
-                    groupText = ((EVEMailState)(Object)group.Key).GetHeader();
+                if (group.Key is EveMailState)
+                    groupText = ((EveMailState)(Object)group.Key).GetHeader();
                 else if (group.Key is DateTime)
                     groupText = ((DateTime)(Object)group.Key).ToShortDateString();
                 else

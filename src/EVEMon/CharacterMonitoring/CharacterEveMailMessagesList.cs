@@ -365,12 +365,12 @@ namespace EVEMon.CharacterMonitoring
             switch (m_grouping)
             {
                 case EVEMailMessagesGrouping.State:
-                    IOrderedEnumerable<IGrouping<EVEMailState, EveMailMessage>> groups0 =
+                    IOrderedEnumerable<IGrouping<EveMailState, EveMailMessage>> groups0 =
                         eveMailMessages.GroupBy(x => x.State).OrderBy(x => (int)x.Key);
                     UpdateContent(groups0);
                     break;
                 case EVEMailMessagesGrouping.StateDesc:
-                    IOrderedEnumerable<IGrouping<EVEMailState, EveMailMessage>> groups1 =
+                    IOrderedEnumerable<IGrouping<EveMailState, EveMailMessage>> groups1 =
                         eveMailMessages.GroupBy(x => x.State).OrderByDescending(x => (int)x.Key);
                     UpdateContent(groups1);
                     break;
@@ -451,8 +451,8 @@ namespace EVEMon.CharacterMonitoring
             foreach (IGrouping<TKey, EveMailMessage> group in groups)
             {
                 string groupText;
-                if (group.Key is EVEMailState)
-                    groupText = ((EVEMailState)(Object)group.Key).GetHeader();
+                if (group.Key is EveMailState)
+                    groupText = ((EveMailState)(Object)group.Key).GetHeader();
                 else if (group.Key is DateTime)
                     groupText = ((DateTime)(Object)group.Key).ToShortDateString();
                 else
