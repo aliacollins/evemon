@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -21,6 +22,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
+using EVEMon.Common.Net2;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Threading;
 using ICSharpCode.SharpZipLib.GZip;
@@ -503,44 +505,42 @@ namespace EVEMon.Common
                 null, HttpMethod.Post, acceptEncoded, postData);
         }
 
-        public static void DownloadJsonAsync<T>(Uri url, DownloadCallback<T> callback, bool acceptEncoded = false,
-                                                string postData = null) 
+        public static async Task<DownloadAsyncResult<T>> DownloadJsonAsync<T>(Uri url, bool acceptEncoded = false,
+            string postData = null)
             where T : class
         {
-            HttpWebService.DownloadStringAsync(
-                url,
-                // Callback
-                (asyncResult, userState) =>
+            DownloadAsyncResult<String> asyncResult =
+                await HttpWebClientService.DownloadStringAsync(url, System.Net.Http.HttpMethod.Post, acceptEncoded, postData);
+
+            T result = null;
+            string errorMessage = String.Empty;
+
+            // Was there an HTTP error ??
+            if (asyncResult.Error != null)
+                errorMessage = asyncResult.Error.Message;
+            else
+            {
+                // No http error, let's try to deserialize
+                try
                 {
-                    T result = null;
-                    string errorMessage = String.Empty;
-                    
-                    // Was there an HTTP error ??
-                    if (asyncResult.Error != null)
-                        errorMessage = asyncResult.Error.Message;
-                    else
-                    {
-                        // No http error, let's try to deserialize
-                        try
-                        {
-                            // Deserialize
-                            result = new JavaScriptSerializer().Deserialize<T>(asyncResult.Result);
-                        }
-                        catch (InvalidOperationException exc)
-                        {
-                            // An error occurred during the deserialization
-                            ExceptionHandler.LogException(exc, true);
-                            errorMessage = (exc.InnerException == null
-                                ? exc.Message
-                                : exc.InnerException.Message);
-                        }
-                    }
+                    // Deserialize
+                    result = new JavaScriptSerializer().Deserialize<T>(asyncResult.Result);
+                }
+                catch (ArgumentException exc)
+                {
+                    // An error occurred during the deserialization
+                    ExceptionHandler.LogException(exc, true);
+                    errorMessage = exc.InnerException?.Message ?? exc.Message;
+                }
+                catch (InvalidOperationException exc)
+                {
+                    // An error occurred during the deserialization
+                    ExceptionHandler.LogException(exc, true);
+                    errorMessage = exc.InnerException?.Message ?? exc.Message;
+                }
+            }
 
-                    // We got the result, let's invoke the callback on this actor
-                    Dispatcher.Invoke(() => callback.Invoke(result, errorMessage));
-
-                },
-                null, HttpMethod.Post, acceptEncoded, postData);
+            return new DownloadAsyncResult<T>(result, new HttpWebServiceException(errorMessage));
         }
 
         /// <summary>

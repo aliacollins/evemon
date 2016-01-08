@@ -204,9 +204,10 @@
     <Compile Include="Helpers\PlanHelper.cs" />
     <Compile Include="Loadouts\LoadoutsProvider.cs" />
     <Compile Include="Loadouts\Osmium\OsmiumLoadoutsProvider.cs" />
-    <Compile Include="Net2\DownloadImageAsyncResult.cs" />
+    <Compile Include="Net2\DownloadAsyncResult.cs" />
     <Compile Include="Net2\HttpClientServiceRequest.cs" />
     <Compile Include="Net2\HttpWebClientService.cs" />
+    <Compile Include="Net2\HttpWebClientService.StringDownload.cs" />
     <Compile Include="Serialization\FittingClf\SerializableClfFittingChargeType.cs" />
     <Compile Include="Serialization\FittingClf\SerializableClfFittingDroneType.cs" />
     <Compile Include="Serialization\FittingClf\SerializableClfFittingDroneSet.cs" />
