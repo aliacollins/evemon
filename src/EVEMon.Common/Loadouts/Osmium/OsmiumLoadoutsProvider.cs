@@ -69,7 +69,7 @@ namespace EVEMon.Common.Loadouts.Osmium
 
             DownloadAsyncResult<List<SerializableOsmiumLoadoutFeed>> result =
                 await Util.DownloadJsonAsync<List<SerializableOsmiumLoadoutFeed>>(url, acceptEncoded: true);
-            OnLoadoutsFeedDownloaded(result.Result, result.Error.Message);
+            OnLoadoutsFeedDownloaded(result.Result, result.Error?.Message);
         }
 
         /// <summary>
