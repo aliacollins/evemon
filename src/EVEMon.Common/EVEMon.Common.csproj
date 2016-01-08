@@ -152,7 +152,7 @@
     <Compile Include="Enumerations\EveAttribute.cs" />
     <Compile Include="Enumerations\EveImageSize.cs" />
     <Compile Include="Enumerations\EveImageSizeMode.cs" />
-    <Compile Include="Enumerations\EVEMailState.cs" />
+    <Compile Include="Enumerations\EveMailState.cs" />
     <Compile Include="Enumerations\GallenteMilitiaRank.cs" />
     <Compile Include="Enumerations\Gender.cs" />
     <Compile Include="Enumerations\ImplantSlots.cs" />
@@ -564,7 +564,6 @@
     <Compile Include="Serialization\Settings\SerializableContract.cs" />
     <Compile Include="Serialization\Settings\SerializableContractBid.cs" />
     <Compile Include="Serialization\Settings\SerializableEndPoint.cs" />
-    <Compile Include="Serialization\Settings\SerializableLocalhostEndPoint.cs" />
     <Compile Include="SettingsObjects\CertificateBrowserSettings.cs" />
     <Compile Include="SettingsObjects\CloudStorageServiceProviderSettings.cs" />
     <Compile Include="SettingsObjects\CombatLogSettings.cs" />

@@ -381,12 +381,6 @@
     <Compile Include="SettingsUI\EmailNotificationsControl.Designer.cs">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsUI\LocalhostSettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SettingsUI\LocalhostSettingsForm.Designer.cs">
-      <DependentUpon>LocalhostSettingsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="SettingsUI\PortableEveClientsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -640,9 +634,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\EmailNotificationsControl.resx">
       <DependentUpon>EmailNotificationsControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingsUI\LocalhostSettingsForm.resx">
-      <DependentUpon>LocalhostSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsUI\PortableEveClientsControl.resx">
       <DependentUpon>PortableEveClientsControl.cs</DependentUpon>

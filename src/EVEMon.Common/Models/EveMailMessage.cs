@@ -35,8 +35,8 @@ namespace EVEMon.Common.Models
             m_source = src;
 
             State = (src.SenderID != ccpCharacter.CharacterID
-                ? EVEMailState.Inbox
-                : EVEMailState.SentItem);
+                ? EveMailState.Inbox
+                : EveMailState.SentItem);
             MessageID = src.MessageID;
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();
@@ -60,7 +60,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the EVE mail state.
         /// </summary>
         /// <value>The state.</value>
-        public EVEMailState State { get; private set; }
+        public EveMailState State { get; private set; }
 
         /// <summary>
         /// Gets or sets the EVE mail message ID.

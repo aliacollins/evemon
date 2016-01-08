@@ -6,7 +6,7 @@ namespace EVEMon.Common.Enumerations
     /// The status of an EVE mail message.
     /// </summary>
     /// <remarks>The integer value determines the sort order in "Group by...".</remarks>
-    public enum EVEMailState
+    public enum EveMailState
     {
         [Header("Inbox")]
         Inbox = 0,
