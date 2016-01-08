@@ -85,6 +85,9 @@ namespace EVEMon.Common.Helpers
                 HttpWebClientService.DownloadImage(new Uri(NetworkConstants.GoogleAnalyticsUrl),
                     HttpMethod.Post, postdata: BuildQueryString());
 
+                if (EveMonClient.IsDebugBuild)
+                    EveMonClient.Trace("GAnalyticsTracker.{0} - {1}", category, action);
+
                 return;
             }
 
