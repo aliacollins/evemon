@@ -19,7 +19,7 @@ namespace EVEMon.Common.Net
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The post data compression method.</param>
-        public static DownloadAsyncResult<Image> DownloadImage(Uri url, System.Net.Http.HttpMethod method = null,
+        public static DownloadAsyncResult<Image> DownloadImage(Uri url, HttpMethod method = null,
             bool acceptEncoded = false, string postdata = null, DataCompression dataCompression = DataCompression.None)
             => Task.Run(
                 async () => await DownloadImageAsync(url, method, acceptEncoded, postdata, dataCompression))
@@ -33,7 +33,7 @@ namespace EVEMon.Common.Net
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The post data compression method.</param>
-        public static async Task<DownloadAsyncResult<Image>> DownloadImageAsync(Uri url, System.Net.Http.HttpMethod method = null,
+        public static async Task<DownloadAsyncResult<Image>> DownloadImageAsync(Uri url, HttpMethod method = null,
             bool acceptEncoded = false, string postdata = null, DataCompression dataCompression = DataCompression.None)
         {
             string urlValidationError;

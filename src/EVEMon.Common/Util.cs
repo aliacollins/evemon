@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -293,7 +294,7 @@ namespace EVEMon.Common
             XslCompiledTransform transform = null)
         {
             DownloadAsyncResult<IXPathNavigable> asyncResult =
-                await HttpWebClientService.DownloadXmlAsync(url, System.Net.Http.HttpMethod.Post, acceptEncoded, postData);
+                await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
 
             CCPAPIResult<T> result;
             try
@@ -333,7 +334,7 @@ namespace EVEMon.Common
             
             try
             {
-                var apiResult = HttpWebClientService.DownloadXml(url, System.Net.Http.HttpMethod.Post, acceptEncoded, postData);
+                var apiResult = HttpWebClientService.DownloadXml(url, HttpMethod.Post, acceptEncoded, postData);
 
                 // Was there an HTTP error ?
                 result = apiResult.Error != null
@@ -433,7 +434,7 @@ namespace EVEMon.Common
             where T : class
         {
             DownloadAsyncResult<IXPathNavigable> asyncResult =
-                await HttpWebClientService.DownloadXmlAsync(url, System.Net.Http.HttpMethod.Post, acceptEncoded, postData);
+                await HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData);
 
             T result = null;
             HttpWebClientServiceException error = null;
@@ -469,12 +470,20 @@ namespace EVEMon.Common
             return new DownloadAsyncResult<T>(result, error);
         }
 
+        /// <summary>
+        /// Asynchronously download an object from a JSON stream.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="url">The URL.</param>
+        /// <param name="acceptEncoded">if set to <c>true</c> [accept encoded].</param>
+        /// <param name="postData">The post data.</param>
+        /// <returns></returns>
         public static async Task<DownloadAsyncResult<T>> DownloadJsonAsync<T>(Uri url, bool acceptEncoded = false,
             string postData = null)
             where T : class
         {
             DownloadAsyncResult<String> asyncResult =
-                await HttpWebClientService.DownloadStringAsync(url, System.Net.Http.HttpMethod.Post, acceptEncoded, postData);
+                await HttpWebClientService.DownloadStringAsync(url, HttpMethod.Post, acceptEncoded, postData);
 
             T result = null;
             HttpWebClientServiceException error = null;
