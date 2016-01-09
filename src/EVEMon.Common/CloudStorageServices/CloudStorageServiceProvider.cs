@@ -18,17 +18,22 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Occurs when the credentials get checked with the cloud storage service provider.
         /// </summary>
-        public event EventHandler<CloudStorageServiceProviderEventArgs> CredentialsChecked;
+        public static event EventHandler<CloudStorageServiceProviderEventArgs> CredentialsChecked;
+
+        /// <summary>
+        /// Occurs when the credentials of the cloud storage service provider get reset.
+        /// </summary>
+        public static event EventHandler<CloudStorageServiceProviderEventArgs> SettingsReset;
 
         /// <summary>
         /// Occurs when the file gets uploaded to the cloud storage service provider.
         /// </summary>
-        public event EventHandler<CloudStorageServiceProviderEventArgs> FileUploaded;
+        public static event EventHandler<CloudStorageServiceProviderEventArgs> FileUploaded;
 
         /// <summary>
         /// Occurs when the file gets uploaded to the cloud storage service provider.
         /// </summary>
-        public event EventHandler<CloudStorageServiceProviderEventArgs> FileDownloaded;
+        public static event EventHandler<CloudStorageServiceProviderEventArgs> FileDownloaded;
 
         /// <summary>
         /// Gets the name of the provider.
@@ -61,10 +66,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <value>
         /// 	<c>true</c> if the provider API credentials are stored; otherwise, <c>false</c>.
         /// </value>
-        public virtual bool HasCredentialsStored
-        {
-            get { return false; }
-        }
+        public virtual bool HasCredentialsStored => false;
 
         /// <summary>
         /// Gets a value indicating whether the provider supports compressed responses.
@@ -72,10 +74,23 @@ namespace EVEMon.Common.CloudStorageServices
         /// <value>
         /// 	<c>true</c> if the provider supports compressed responses; otherwise, <c>false</c>.
         /// </value>
-        protected virtual bool SupportsDataCompression
-        {
-            get { return false; }
-        }
+        protected virtual bool SupportsDataCompression => false;
+
+        /// <summary>
+        /// Gets the settings.
+        /// </summary>
+        /// <value>
+        /// The settings.
+        /// </value>
+        protected virtual ApplicationSettingsBase Settings => CloudStorageServiceSettings.Default;
+
+        /// <summary>
+        /// Gets the refferal link.
+        /// </summary>
+        /// <value>
+        /// The refferal link.
+        /// </value>
+        public virtual Uri RefferalLink => null;
 
         /// <summary>
         /// Gets the providers.
@@ -121,20 +136,58 @@ namespace EVEMon.Common.CloudStorageServices
             if (settings.HasFile)
                 return;
 
-            // Find the parent directories of the settings file
-            string configFileParentDir = Directory.GetParent(settings.FilePath).FullName;
-            string configFileParentParentDir = Directory.GetParent(configFileParentDir).FullName;
+            // Find the parent directory of the settings file
+            DirectoryInfo configFileParentDir = Directory.GetParent(settings.FilePath);
 
-            // Quits if the parent directory doesn't exist
-            if (!Directory.Exists(configFileParentParentDir))
+            // Find the parent directory of the settings file directory
+            DirectoryInfo configFileParentParentDir = configFileParentDir.Parent;
+
+            // Quits if there is no parent directory
+            if (configFileParentParentDir == null)
                 return;
 
-            // Upgrade the settings file to the current version
-            CloudStorageServicesSettings.Default.Upgrade();
+            // If the parent directory doesn't exist delete all old settings folders
+            if (!Directory.Exists(configFileParentParentDir.FullName))
+            {
+                if (configFileParentDir.Parent == null)
+                    return;
 
-            // Delete all old settings files
-            foreach (string directory in Directory.GetDirectories(configFileParentParentDir).Where(
-                directory => directory != configFileParentDir))
+                // Delete all old settings folders
+                DeleteOldSettingsFolders(configFileParentParentDir);
+
+                return;
+            }
+
+            // Upgrade the settings file to the current version
+            CloudStorageServiceSettings.Default.Upgrade();
+            foreach (CloudStorageServiceProvider provider in Providers)
+            {
+                provider.Settings.Upgrade();
+            }
+
+            // Delete all old settings files inside the settings folder
+            foreach (string directory in Directory.GetDirectories(configFileParentParentDir.FullName)
+                .Where(directory => directory != configFileParentDir.FullName))
+            {
+                // Delete the folder recursively
+                Directory.Delete(directory, true);
+            }
+
+            // Delete all old settings folders
+            DeleteOldSettingsFolders(configFileParentParentDir);
+        }
+
+        /// <summary>
+        /// Deletes the old settings folders.
+        /// </summary>
+        /// <param name="configFileParentParentDir">The configuration file parent parent dir.</param>
+        private static void DeleteOldSettingsFolders(DirectoryInfo configFileParentParentDir)
+        {
+            if (configFileParentParentDir.Parent == null)
+                return;
+
+            foreach (string directory in Directory.GetDirectories(configFileParentParentDir.Parent.FullName)
+                .Where(directory => directory != configFileParentParentDir.FullName))
             {
                 // Delete the folder recursively
                 Directory.Delete(directory, true);
@@ -142,11 +195,44 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
-        /// Checks the API credentials asynchronously.
+        /// Synchronously checks the API authentication with credentials.
         /// </summary>
         /// <param name="userID">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
-        public abstract void CheckAPICredentialsAsync(uint userID, string apiKey);
+        public abstract void CheckAPIAuthWithCredentials(uint userID, string apiKey);
+
+        /// <summary>
+        /// Asynchronously checks the API authentication with credentials.
+        /// </summary>
+        /// <param name="userID">The user identifier.</param>
+        /// <param name="apiKey">The API key.</param>
+        public abstract void CheckAPIAuthWithCredentialsAsync(uint userID, string apiKey);
+
+        /// <summary>
+        /// Synchronously checks the API authentication.
+        /// </summary>
+        public abstract bool CheckAPIAuth();
+
+        /// <summary>
+        /// Asynchronously checks the API authentication.
+        /// </summary>
+        public abstract void CheckAPIAuthAsync();
+
+        /// <summary>
+        /// Asynchronously requests an authentication code.
+        /// </summary>
+        public abstract void RequestAuthCodeAsync();
+
+        /// <summary>
+        /// Asynchronously checks the authentication code.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        public abstract void CheckAuthCodeAsync(string code);
+
+        /// <summary>
+        /// Resets the settings.
+        /// </summary>
+        public abstract void ResetSettings();
 
         /// <summary>
         /// Uploads the settings file.
@@ -172,95 +258,78 @@ namespace EVEMon.Common.CloudStorageServices
         /// Occurs when the credentials get checked.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="errorMessage">The error message.</param>
-        protected virtual void OnCredentialsChecked(SerializableAPIResult<CloudStorageServiceAPICredentials> result, string errorMessage)
+        protected virtual void OnCredentialsChecked(SerializableAPIResult<CloudStorageServiceAPICredentials> result)
         {
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
-                if (CredentialsChecked != null)
-                    CredentialsChecked(this, new CloudStorageServiceProviderEventArgs(errorMessage));
-
-                return;
-            }
+            if (result == null)
+                throw new ArgumentNullException(nameof(result));
 
             if (result.HasError)
             {
-                if (CredentialsChecked != null)
-                    CredentialsChecked(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
+                IsAuthenticated = false;
+
+                CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
 
                 return;
             }
 
             IsAuthenticated = true;
 
-            if (CredentialsChecked != null)
-                CredentialsChecked(this, new CloudStorageServiceProviderEventArgs(String.Empty));
+            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - Completed");
+
+            CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
+        }
+
+        /// <summary>
+        /// Occurs when the settings get reset.
+        /// </summary>
+        protected virtual void OnSettingsReset()
+        {
+            EveMonClient.Trace($"{Name}.SettingsReset - Completed");
+
+            SettingsReset?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
         }
 
         /// <summary>
         /// Occurs when the file got uploaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="errorMessage">The error message.</param>
-        protected virtual void OnFileUploaded(SerializableAPIResult<CloudStorageServiceAPIFile> result, string errorMessage)
+        protected virtual void OnFileUploaded(SerializableAPIResult<CloudStorageServiceAPIFile> result)
         {
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
-                if (FileUploaded != null)
-                    FileUploaded(this, new CloudStorageServiceProviderEventArgs(errorMessage));
-
-                return;
-            }
-
             if (result.HasError)
             {
-                if (FileUploaded != null)
-                    FileUploaded(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
+                FileUploaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
 
                 return;
             }
 
-            if (FileUploaded != null)
-                FileUploaded(this, new CloudStorageServiceProviderEventArgs(String.Empty));
+            FileUploaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
         }
 
         /// <summary>
         /// Occurs when the file got downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <param name="errorMessage">The error message.</param>
-        protected virtual void OnFileDownloaded(SerializableAPIResult<CloudStorageServiceAPIFile> result, string errorMessage)
+        protected virtual void OnFileDownloaded(SerializableAPIResult<CloudStorageServiceAPIFile> result)
         {
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
-                if (FileDownloaded != null)
-                    FileDownloaded(this, new CloudStorageServiceProviderEventArgs(errorMessage));
-
-                return;
-            }
-
             if (result.HasError)
             {
-                if (FileDownloaded != null)
-                    FileDownloaded(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
+                FileDownloaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
 
                 return;
             }
 
-            if (FileDownloaded != null)
-                FileDownloaded(this, new CloudStorageServiceProviderEventArgs(String.Empty));
+            FileDownloaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
         }
 
         /// <summary>
         /// Saves the queried settings file.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="result">The result.</param>
         /// <exception cref="System.ArgumentNullException">settingsFile</exception>
         protected static void SaveSettingsFile(CloudStorageServiceAPIFile result)
         {
             if (result == null)
-                throw new ArgumentNullException("result");
+                throw new ArgumentNullException(nameof(result));
 
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {

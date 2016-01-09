@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -87,6 +88,7 @@
       <Project>{C0665275-3E0B-4117-81B0-751206ED03CD}</Project>
       <Name>EVEMon.Common</Name>
       <Private>True</Private>
+      <Properties>SkipValidatePackageReferences=true</Properties>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -97,6 +99,8 @@ del "$(TargetDir)"*office*
 del "$(TargetDir)"*outlook*
 del "$(TargetDir)"*SharpZipLib*
 del "$(TargetDir)"YamlDotNet*
+del "$(TargetDir)"Dropbox*
+del "$(TargetDir)"Microsoft*
 if exist "$(TargetDir)"stdole.dll del "$(TargetDir)"stdole.dll</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common;
@@ -12,7 +13,6 @@ namespace EVEMon.SettingsUI
     public partial class SettingsFileStorageControl : UserControl
     {
         private static bool s_queryPending;
-        private static CloudStorageServiceProvider s_provider;
 
 
         #region Constructor
@@ -32,6 +32,20 @@ namespace EVEMon.SettingsUI
         #endregion
 
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the provider.
+        /// </summary>
+        /// <value>
+        /// The provider.
+        /// </value>
+        [Browsable(false)]
+        private static CloudStorageServiceProvider Provider => Settings.CloudStorageServiceProvider.Provider;
+
+        #endregion
+
+
         #region Local Events
 
         /// <summary>
@@ -42,19 +56,17 @@ namespace EVEMon.SettingsUI
         private void SettingsFileStorageControl_Load(object sender, EventArgs e)
         {
             Font = FontFactory.GetFont("Tahoma");
-            s_provider = Settings.CloudStorageServiceProvider.Provider;
 
-            if (s_provider != null)
-            {
-                s_provider.CredentialsChecked += CloudStorageServiceProvider_CredentialsChecked;
-                s_provider.FileUploaded += CloudStorageServiceProvider_FileUploaded;
-                s_provider.FileDownloaded += CloudStorageServiceProvider_FileDownloaded;
-            }
+            CloudStorageServiceProvider.CredentialsChecked += CloudStorageServiceProvider_CredentialsChecked;
+            CloudStorageServiceProvider.SettingsReset += CloudStorageServiceProvider_SettingsReset;
+            CloudStorageServiceProvider.FileUploaded += CloudStorageServiceProvider_FileUploaded;
+            CloudStorageServiceProvider.FileDownloaded += CloudStorageServiceProvider_FileDownloaded;
+
             Disposed += OnDisposed;
 
-            alwaysUploadCheckBox.Checked = CloudStorageServicesSettings.Default.UploadAlways;
-            alwaysDownloadCheckBox.Checked = CloudStorageServicesSettings.Default.DownloadAlways;
-            useImmediatelyCheckBox.Checked = CloudStorageServicesSettings.Default.UseImmediately;
+            alwaysUploadCheckBox.Checked = CloudStorageServiceSettings.Default.UploadAlways;
+            alwaysDownloadCheckBox.Checked = CloudStorageServiceSettings.Default.DownloadAlways;
+            useImmediatelyCheckBox.Checked = CloudStorageServiceSettings.Default.UseImmediately;
             useImmediatelyCheckBox.Enabled = alwaysDownloadCheckBox.Checked;
             Enabled = false;
         }
@@ -66,12 +78,11 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnDisposed(object sender, EventArgs e)
         {
-            if (s_provider != null)
-            {
-                s_provider.CredentialsChecked -= CloudStorageServiceProvider_CredentialsChecked;
-                s_provider.FileUploaded -= CloudStorageServiceProvider_FileUploaded;
-                s_provider.FileDownloaded -= CloudStorageServiceProvider_FileDownloaded;
-            }
+            CloudStorageServiceProvider.CredentialsChecked -= CloudStorageServiceProvider_CredentialsChecked;
+            CloudStorageServiceProvider.SettingsReset -= CloudStorageServiceProvider_SettingsReset;
+            CloudStorageServiceProvider.FileUploaded -= CloudStorageServiceProvider_FileUploaded;
+            CloudStorageServiceProvider.FileDownloaded -= CloudStorageServiceProvider_FileDownloaded;
+
             Disposed -= OnDisposed;
         }
 
@@ -81,8 +92,9 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            Enabled = Settings.CloudStorageServiceProvider.Provider != null &&
-                      Settings.CloudStorageServiceProvider.Provider.HasCredentialsStored;
+            ResetTextAndColor();
+
+            Enabled = Provider != null && Provider.HasCredentialsStored && Provider.IsAuthenticated;
         }
 
         /// <summary>
@@ -92,8 +104,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void alwaysUploadCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CloudStorageServicesSettings.Default.UploadAlways = alwaysUploadCheckBox.Checked;
-            CloudStorageServicesSettings.Default.Save();
+            CloudStorageServiceSettings.Default.UploadAlways = alwaysUploadCheckBox.Checked;
+            CloudStorageServiceSettings.Default.Save();
         }
 
         /// <summary>
@@ -104,8 +116,8 @@ namespace EVEMon.SettingsUI
         private void alwaysDownloadCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             useImmediatelyCheckBox.Enabled = alwaysDownloadCheckBox.Checked;
-            CloudStorageServicesSettings.Default.DownloadAlways = alwaysDownloadCheckBox.Checked;
-            CloudStorageServicesSettings.Default.Save();
+            CloudStorageServiceSettings.Default.DownloadAlways = alwaysDownloadCheckBox.Checked;
+            CloudStorageServiceSettings.Default.Save();
         }
 
         /// <summary>
@@ -115,8 +127,8 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void useImmediatelyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CloudStorageServicesSettings.Default.UseImmediately = useImmediatelyCheckBox.Checked;
-            CloudStorageServicesSettings.Default.Save();
+            CloudStorageServiceSettings.Default.UseImmediately = useImmediatelyCheckBox.Checked;
+            CloudStorageServiceSettings.Default.Save();
         }
 
         /// <summary>
@@ -126,8 +138,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void uploadSettingsFileButton_Click(object sender, EventArgs e)
         {
-            apiResponseLabel.ForeColor = SystemColors.ControlText;
-            apiResponseLabel.Text = String.Empty;
+            ResetTextAndColor();
 
             if (s_queryPending)
                 return;
@@ -138,9 +149,9 @@ namespace EVEMon.SettingsUI
 
             Settings.SaveImmediate();
 
-            EveMonClient.Trace("{0}.UploadSettingsFileAsync - Initiated", s_provider?.Name);
+            EveMonClient.Trace($"{Provider?.Name}.UploadSettingsFileAsync - Initiated");
 
-            s_provider?.UploadSettingsFileAsync();
+            Provider?.UploadSettingsFileAsync();
         }
 
         /// <summary>
@@ -150,8 +161,7 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void downloadSettingsFileButton_Click(object sender, EventArgs e)
         {
-            apiResponseLabel.ForeColor = SystemColors.ControlText;
-            apiResponseLabel.Text = String.Empty;
+            ResetTextAndColor();
 
             if (s_queryPending)
                 return;
@@ -160,9 +170,9 @@ namespace EVEMon.SettingsUI
             throbber.Visible = true;
             throbber.State = ThrobberState.Rotating;
 
-            EveMonClient.Trace("{0}.DownloadSettingsFileAsync - Initiated", s_provider?.Name);
+            EveMonClient.Trace($"{Provider?.Name}.DownloadSettingsFileAsync - Initiated");
 
-            s_provider?.DownloadSettingsFileAsync();
+            Provider?.DownloadSettingsFileAsync();
         }
 
         #endregion
@@ -175,9 +185,23 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void CloudStorageServiceProvider_CredentialsChecked(object sender, EventArgs e)
+        private void CloudStorageServiceProvider_CredentialsChecked(object sender, CloudStorageServiceProviderEventArgs e)
         {
-            Enabled = s_provider != null && s_provider.HasCredentialsStored;
+            ResetTextAndColor();
+
+            Enabled = Provider != null && Provider.HasCredentialsStored && Provider.IsAuthenticated;
+        }
+
+        /// <summary>
+        /// Occurs when the cloud storage service provider credentials get authenticated.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void CloudStorageServiceProvider_SettingsReset(object sender, CloudStorageServiceProviderEventArgs e)
+        {
+            ResetTextAndColor();
+
+            Enabled = Provider != null && Provider.HasCredentialsStored;
         }
 
         /// <summary>
@@ -192,17 +216,11 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Stopped;
             throbber.Visible = false;
 
-            if (e.HasError)
-            {
-                apiResponseLabel.ForeColor = Color.Red;
-                apiResponseLabel.Text = e.ErrorMessage;
-                return;
-            }
+            apiResponseLabel.ForeColor = e.HasError ? Color.Red : Color.Green;
+            apiResponseLabel.Text = e.HasError ? e.ErrorMessage : @"File uploaded successfully";
 
-            apiResponseLabel.ForeColor = Color.Green;
-            apiResponseLabel.Text = @"File uploaded successfully.";
-
-            EveMonClient.Trace("{0}.UploadSettingsFileAsync - Completed", s_provider?.Name);
+            string resultText = e.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Provider?.Name}.UploadSettingsFileAsync - {resultText}");
         }
 
         /// <summary>
@@ -221,10 +239,24 @@ namespace EVEMon.SettingsUI
             {
                 apiResponseLabel.ForeColor = Color.Red;
                 apiResponseLabel.Text = e.ErrorMessage;
-                return;
             }
 
-            EveMonClient.Trace("{0}.DownloadSettingsFileAsync - Completed", s_provider?.Name);
+            string resultText = e.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Provider?.Name}.DownloadSettingsFileAsync - {resultText}");
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+        
+        /// <summary>
+        /// Resets the color of the text and.
+        /// </summary>
+        private void ResetTextAndColor()
+        {
+            apiResponseLabel.ResetForeColor();
+            apiResponseLabel.ResetText();
         }
 
         #endregion

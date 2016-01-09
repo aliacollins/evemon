@@ -106,12 +106,13 @@ namespace EVEMon.SettingsUI
             // 
             // throbber
             // 
+            this.throbber.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.throbber.Location = new System.Drawing.Point(190, 33);
             this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
             this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
             this.throbber.Name = "throbber";
             this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = ThrobberState.Stopped;
+            this.throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
             this.throbber.TabIndex = 9;
             this.throbber.TabStop = false;
             // 

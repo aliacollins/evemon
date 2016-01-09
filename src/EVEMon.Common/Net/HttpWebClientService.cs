@@ -1,6 +1,8 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.Net
@@ -13,7 +15,21 @@ namespace EVEMon.Common.Net
         static HttpWebClientService()
         {
             ServicePointManager.Expect100Continue = false;
+
+            if (EveMonClient.IsDebugBuild)
+                ServicePointManager.ServerCertificateValidationCallback = DummyCertificateValidationCallback;
         }
+
+        /// <summary>
+        /// A dummy certificate validation callback.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="certificate">The certificate.</param>
+        /// <param name="chain">The chain.</param>
+        /// <param name="sslpolicyerrors">The sslpolicyerrors.</param>
+        /// <returns></returns>
+        internal static bool DummyCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain,
+            SslPolicyErrors sslpolicyerrors) => true;
 
         /// <summary>
         /// Gets the web client.
