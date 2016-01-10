@@ -830,6 +830,9 @@ namespace EVEMon.SettingsUI
                 cbShowPrereqMetSkills.Enabled = true;
                 cbShowPrereqMetSkills.Checked = m_settings.UI.MainWindow.ShowPrereqMetSkills;
             }
+
+            // Cloud Storage Service Provider Authentiation
+            providerAuthenticationGroupBox.Visible = CloudStorageServiceProvider.Providers.Any();
         }
 
         #endregion

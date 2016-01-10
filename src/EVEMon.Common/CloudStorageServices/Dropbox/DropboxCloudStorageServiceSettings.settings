@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EVEMon.Common.CloudStorageServices.Dropbox" GeneratedClassName="DropboxCloudStorageServiceSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DropboxAccessToken" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DropboxAPIKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">wl5cnynos0cjcqs</Value>
+    </Setting>
+    <Setting Name="DropBoxAppSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">9uzbh99aut85br5</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

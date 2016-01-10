@@ -13,11 +13,11 @@ namespace EVEMon.Common.CloudStorageServices {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
-    public sealed partial class CloudStorageServicesSettings : global::System.Configuration.ApplicationSettingsBase {
+    public sealed partial class CloudStorageServiceSettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static CloudStorageServicesSettings defaultInstance = ((CloudStorageServicesSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new CloudStorageServicesSettings())));
+        private static CloudStorageServiceSettings defaultInstance = ((CloudStorageServiceSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new CloudStorageServiceSettings())));
         
-        public static CloudStorageServicesSettings Default {
+        public static CloudStorageServiceSettings Default {
             get {
                 return defaultInstance;
             }

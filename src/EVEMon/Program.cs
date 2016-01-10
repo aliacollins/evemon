@@ -58,9 +58,6 @@ namespace EVEMon
             // Make our windows nice
             MakeWindowsJuicy();
 
-            // Check arguments
-            bool startMinimized = Environment.GetCommandLineArgs().Contains("-startMinimized");
-
             // Ensures the installation file downloaded through the autoupdate is correctly deleted
             UpdateManager.DeleteInstallationFiles();
 
@@ -79,6 +76,9 @@ namespace EVEMon
             // Did something requested an exit before we entered Run() ?
             if (s_exitRequested)
                 return;
+
+            // Check arguments
+            bool startMinimized = Environment.GetCommandLineArgs().Contains("-startMinimized");
 
             try
             {
