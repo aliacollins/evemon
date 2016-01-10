@@ -16,6 +16,7 @@ using EVEMon.BlankCharacter;
 using EVEMon.CharacterMonitoring;
 using EVEMon.CharactersComparison;
 using EVEMon.Common;
+using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
@@ -2137,8 +2138,11 @@ namespace EVEMon
             if (Settings.CloudStorageServiceProvider.Provider == null)
                 return false;
 
-            lblCSSProviderStatus.Text = $"Uploading to {Settings.CloudStorageServiceProvider.Provider.Name}";
-            lblCSSProviderStatus.Visible = true;
+            if (CloudStorageServiceSettings.Default.UploadAlways)
+            {
+                lblCSSProviderStatus.Text = $"Uploading to {Settings.CloudStorageServiceProvider.Provider.Name}";
+                lblCSSProviderStatus.Visible = true;
+            }
 
             if (Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
                 return false;
