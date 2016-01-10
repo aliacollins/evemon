@@ -44,6 +44,8 @@ namespace EVEMon
             this.lblTraining = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblCSSProviderStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.mainMenuBar = new System.Windows.Forms.MenuStrip();
@@ -220,7 +222,9 @@ namespace EVEMon
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblTraining,
             this.lblStatus,
-            this.lblServerStatus});
+            this.lblServerStatus,
+            this.toolStripStatusLabel1,
+            this.lblCSSProviderStatus});
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.ShowItemToolTips = true;
@@ -245,6 +249,19 @@ namespace EVEMon
             this.lblServerStatus.Name = "lblServerStatus";
             this.lblServerStatus.Size = new System.Drawing.Size(141, 17);
             this.lblServerStatus.Text = "// Server Status Unknown";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(211, 17);
+            this.toolStripStatusLabel1.Spring = true;
+            // 
+            // lblCSSProviderStatus
+            // 
+            this.lblCSSProviderStatus.Name = "lblCSSProviderStatus";
+            this.lblCSSProviderStatus.Size = new System.Drawing.Size(143, 17);
+            this.lblCSSProviderStatus.Text = "Uploading to CSSProvider";
+            this.lblCSSProviderStatus.Visible = false;
             // 
             // saveFileDialog
             // 
@@ -1231,5 +1248,7 @@ namespace EVEMon
         private System.Windows.Forms.Label noCharactersLabel;
         private System.Windows.Forms.TabPage tpOverview;
         private Controls.Overview overview;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel lblCSSProviderStatus;
     }
 }

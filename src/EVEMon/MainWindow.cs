@@ -190,9 +190,9 @@ namespace EVEMon
         {
             // Welcome message
             TipWindow.ShowTip(this, "startup",
-                              "Getting Started",
-                              "To begin using EVEMon, click the File|Add API key... menu option, " +
-                              "enter your CCP API information and choose the characters to monitor.");
+                "Getting Started",
+                "To begin using EVEMon, click the File|Add API key... menu option, " +
+                "enter your CCP API information and choose the characters to monitor.");
         }
 
         /// <summary>
@@ -286,7 +286,8 @@ namespace EVEMon
         /// <param name="localTime">The local time.</param>
         private void TimeCheckCallback(bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
         {
-            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised || (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime()))
+            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised ||
+                (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime()))
             {
                 if (!Settings.Updates.CheckTimeOnStartup)
                     EveMonClient.Trace("EveMonClient.TimeSynchronization - Disabled");
@@ -644,24 +645,24 @@ namespace EVEMon
             // Group by API key
             IEnumerable<IGrouping<long, NotificationEventArgs>> groups = m_popupNotifications.GroupBy(
                 x =>
-                    {
-                        // It's an API server related notification
-                        if (x.Sender == null)
-                            return 0;
+                {
+                    // It's an API server related notification
+                    if (x.Sender == null)
+                        return 0;
 
-                        // It's an API key related notification
-                        if (x.SenderAPIKey != null)
-                            return x.SenderAPIKey.ID;
+                    // It's an API key related notification
+                    if (x.SenderAPIKey != null)
+                        return x.SenderAPIKey.ID;
 
-                        // It's a corporation related notification
-                        if (x.SenderCorporation != null)
-                            return x.SenderCorporation.ID;
+                    // It's a corporation related notification
+                    if (x.SenderCorporation != null)
+                        return x.SenderCorporation.ID;
 
-                        // It's a character related notification
-                        return x.SenderCharacter is UriCharacter
-                                   ? 1
-                                   : x.SenderCharacter.CharacterID;
-                    });
+                    // It's a character related notification
+                    return x.SenderCharacter is UriCharacter
+                        ? 1
+                        : x.SenderCharacter.CharacterID;
+                });
 
             // Add every group, order by character's name, accounts being on top
             List<NotificationEventArgs> newList = new List<NotificationEventArgs>();
@@ -677,16 +678,16 @@ namespace EVEMon
             if (behaviour == ToolTipNotificationBehaviour.Once)
             {
                 Dispatcher.Schedule(TimeSpan.FromSeconds(60),
-                                    () =>
-                                        {
-                                            if (!m_popupNotifications.Contains(e))
-                                                return;
+                    () =>
+                    {
+                        if (!m_popupNotifications.Contains(e))
+                            return;
 
-                                            m_popupNotifications.Remove(e);
+                        m_popupNotifications.Remove(e);
 
-                                            if (m_popupNotifications.Count == 0)
-                                                niAlertIcon.Visible = false;
-                                        });
+                        if (m_popupNotifications.Count == 0)
+                            niAlertIcon.Visible = false;
+                    });
             }
 
             // Now check whether we must 
@@ -750,28 +751,28 @@ namespace EVEMon
                         {
                             case 0:
                                 tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " for {0}.",
-                                                                                     senderIsCharacter
-                                                                                         ? notification.SenderCharacter.Name
-                                                                                         : notification.SenderCorporation.Name));
+                                    senderIsCharacter
+                                        ? notification.SenderCharacter.Name
+                                        : notification.SenderCorporation.Name));
                                 break;
                             case 1:
                                 tooltipText = tooltipText.Replace("This character", senderIsCharacter
-                                                                                        ? notification.SenderCharacter.Name
-                                                                                        : notification.SenderCorporation.Name);
+                                    ? notification.SenderCharacter.Name
+                                    : notification.SenderCorporation.Name);
 
                                 break;
                             case 2:
                                 tooltipText = tooltipText.Replace(".", String.Format(CultureConstants.DefaultCulture, " of {0}.",
-                                                                                     senderIsCharacter
-                                                                                         ? notification.SenderCharacter.Name
-                                                                                         : notification.SenderCorporation.Name));
+                                    senderIsCharacter
+                                        ? notification.SenderCharacter.Name
+                                        : notification.SenderCorporation.Name));
                                 break;
                         }
                     }
 
                     builder.AppendLine(tooltipText);
                 }
-                    // When the text gets too long we add an informative text once
+                // When the text gets too long we add an informative text once
                 else if (count == 0)
                 {
                     builder.AppendLine("\r\nMore notifications are available.\nCheck character monitor for more information.");
@@ -912,7 +913,7 @@ namespace EVEMon
             DateTime serverTime = EveMonClient.EVEServer.ServerDateTime;
             lblStatus.Text = String.Format(CultureConstants.DefaultCulture, "EVE Time: {0:HH:mm}", serverTime);
             lblStatus.ToolTipText = String.Format(CultureConstants.DefaultCulture, "YC{0} ({1})",
-                                                  serverTime.Year - 1898, serverTime.Date.ToShortDateString());
+                serverTime.Year - 1898, serverTime.Date.ToShortDateString());
         }
 
         /// <summary>
@@ -961,27 +962,27 @@ namespace EVEMon
 
                     switch (Settings.UI.MainWindow.TitleFormat)
                     {
-                            // (Default) Single Char - finishing skill next
+                        // (Default) Single Char - finishing skill next
                         case MainWindowTitleFormat.Default:
                         case MainWindowTitleFormat.NextCharToFinish:
                             if (builder.Length == 0)
                                 builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                            // Single Char - selected char
+                        // Single Char - selected char
                         case MainWindowTitleFormat.SelectedChar:
                             if (selectedChar == character)
                                 builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                            // Multi Char - finishing skill next first
+                        // Multi Char - finishing skill next first
                         case MainWindowTitleFormat.AllCharacters:
                             if (builder.Length > 0)
                                 builder.Append(" | ");
                             builder.Append(AppendCharacterTrainingTime(character, trimmedTime));
                             break;
 
-                            // Multi Char - selected char first
+                        // Multi Char - selected char first
                         case MainWindowTitleFormat.AllCharactersButSelectedOneAhead:
                             // Selected char ? Insert at the beginning
                             if (selectedChar == character)
@@ -995,7 +996,7 @@ namespace EVEMon
                                 // Insert it at the beginning
                                 builder.Insert(0, subBuilder.ToString());
                             }
-                                // Non-selected char ? Same as "3"
+                            // Non-selected char ? Same as "3"
                             else
                             {
                                 if (builder.Length > 0)
@@ -1150,12 +1151,9 @@ namespace EVEMon
             // Save the settings to make sure we don't lose anything
             Settings.SaveImmediate();
 
-            // Save settings to cloud storage service provider
-            if (Settings.CloudStorageServiceProvider.Provider != null &&
-                !Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
-            {
+            // Try to save settings to cloud storage service provider
+            if (TryUploadToCloudStorageProvider())
                 return;
-            }
 
             // Stop IGB
             if (m_igbServer != null)
@@ -1182,11 +1180,11 @@ namespace EVEMon
         private static void StartProcess(string executable, string[] arguments)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
-                                             {
-                                                 FileName = executable,
-                                                 Arguments = String.Join(" ", arguments),
-                                                 UseShellExecute = false
-                                             };
+            {
+                FileName = executable,
+                Arguments = String.Join(" ", arguments),
+                UseShellExecute = false
+            };
 
             using (Process process = new Process())
             {
@@ -1343,8 +1341,9 @@ namespace EVEMon
         private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show("Are you sure you want to clear the cache ?", "Confirm Cache Clearing",
-                                              MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(@"Are you sure you want to clear the cache ?",
+                @"Confirm Cache Clearing",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr == DialogResult.Yes)
                 EveMonClient.ClearCache();
@@ -1359,9 +1358,10 @@ namespace EVEMon
         private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show("Are you sure you want to reset the settings ?\r\n" +
-                                              "Everything will be lost, including the plans.", "Confirm Settings Reseting",
-                                              MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(@"Are you sure you want to reset the settings ?\r\n" +
+                                              @"Everything will be lost, including the plans.",
+                @"Confirm Settings Reseting",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -1392,12 +1392,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Save settings to cloud storage service provider
-            if (Settings.CloudStorageServiceProvider.Provider != null &&
-                !Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
-            {
+            // Try to save settings to cloud storage service provider
+            if (TryUploadToCloudStorageProvider())
                 return;
-            }
 
             Application.Exit();
         }
@@ -1435,7 +1432,7 @@ namespace EVEMon
             {
                 // Occurs when another process is using the clipboard
                 ExceptionHandler.LogException(ex, true);
-                MessageBox.Show("Couldn't complete the operation, the clipboard is being used by another process.");
+                MessageBox.Show(@"Couldn't complete the operation, the clipboard is being used by another process.");
             }
         }
 
@@ -1483,7 +1480,7 @@ namespace EVEMon
 
             // Ask the user for a new name
             string planName,
-                   planDescription;
+                planDescription;
             using (NewPlanWindow npw = new NewPlanWindow())
             {
                 DialogResult dr = npw.ShowDialog();
@@ -1994,12 +1991,9 @@ namespace EVEMon
         /// <param name="e"></param>
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Save settings to cloud storage service provider
-            if (Settings.CloudStorageServiceProvider.Provider != null &&
-                !Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
-            {
+            // Try to save settings to cloud storage service provider
+            if (TryUploadToCloudStorageProvider())
                 return;
-            }
 
             Application.Exit();
         }
@@ -2132,6 +2126,30 @@ namespace EVEMon
         #endregion
 
 
+        #region Helper Methods
+
+        /// <summary>
+        /// Tries to upload to cloud storage provider.
+        /// </summary>
+        /// <returns></returns>
+        private bool TryUploadToCloudStorageProvider()
+        {
+            if (Settings.CloudStorageServiceProvider.Provider == null)
+                return false;
+
+            lblCSSProviderStatus.Text = $"Uploading to {Settings.CloudStorageServiceProvider.Provider.Name}";
+            lblCSSProviderStatus.Visible = true;
+
+            if (Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
+                return false;
+
+            lblCSSProviderStatus.Visible = false;
+            return true;
+        }
+
+        #endregion
+
+
         #region Testing Functions
 
         /// <summary>
@@ -2183,11 +2201,11 @@ namespace EVEMon
         private void testNotificationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             NotificationEventArgs notification = new NotificationEventArgs(null, NotificationCategory.TestNofitication)
-                                                     {
-                                                         Priority = NotificationPriority.Information,
-                                                         Behaviour = NotificationBehaviour.Overwrite,
-                                                         Description = "Test Notification"
-                                                     };
+            {
+                Priority = NotificationPriority.Information,
+                Behaviour = NotificationBehaviour.Overwrite,
+                Description = "Test Notification"
+            };
             EveMonClient.Notifications.Notify(notification);
         }
 

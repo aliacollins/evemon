@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -87,39 +86,39 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         #region Implementation Methods
 
         /// <summary>
-        /// Synchronously checks the API authentication with credentials.
+        /// Synchronously checks the API authentication with credentials is valid.
         /// </summary>
         /// <param name="userID">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public override void CheckAPIAuthWithCredentials(uint userID, string apiKey)
+        public override void CheckAPIAuthWithCredentialsIsValid(uint userID, string apiKey)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Asynchronously checks the API authentication with credentials.
+        /// Asynchronously checks the API authentication with credentials is valid.
         /// </summary>
         /// <param name="userID">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public override void CheckAPIAuthWithCredentialsAsync(uint userID, string apiKey)
+        public override void CheckAPIAuthWithCredentialsIsValidAsync(uint userID, string apiKey)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Synchronously checks the API authentication credentials.
+        /// Synchronously checks that API authentication is valid.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        public override bool CheckAPIAuth() =>
+        public override bool CheckAPIAuthIsValid() =>
             !Task.Run(async () => await CheckAccessTokenAsync()).Result.HasError;
 
         /// <summary>
-        /// Asynchronously checks the API authentication.
+        /// Asynchronously checks that API authentication is valid.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        public override async void CheckAPIAuthAsync()
+        public override async void CheckAPIAuthIsValidAsync()
         {
             if (s_queryPending)
                 return;
@@ -203,7 +202,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 return true;
 
             // Quit if user is not authenticated
-            if (!IsAuthenticated || !CheckAPIAuth())
+            if (!IsAuthenticated && !CheckAPIAuthIsValid())
             {
                 MessageBox.Show($"The {Name} API credentials could not be authenticated.", $"{Name} API Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -250,7 +249,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             if (!CloudStorageServiceSettings.Default.DownloadAlways || !HasCredentialsStored)
                 return null;
 
-            if (!IsAuthenticated || !CheckAPIAuth())
+            if (!IsAuthenticated && !CheckAPIAuthIsValid())
             {
                 MessageBox.Show($"The {Name} API credentials could not be authenticated.",
                     $"The {Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

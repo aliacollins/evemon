@@ -96,7 +96,7 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Rotating;
             throbber.Visible = true;
 
-            Provider?.CheckAPIAuthAsync();
+            Provider?.CheckAPIAuthIsValidAsync();
         }
 
         /// <summary>
