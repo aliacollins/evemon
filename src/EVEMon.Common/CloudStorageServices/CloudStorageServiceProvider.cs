@@ -192,28 +192,28 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
-        /// Synchronously checks the API authentication with credentials.
+        /// Synchronously checks the API authentication with credentials is valid.
         /// </summary>
         /// <param name="userID">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
-        public abstract void CheckAPIAuthWithCredentials(uint userID, string apiKey);
+        public abstract void CheckAPIAuthWithCredentialsIsValid(uint userID, string apiKey);
 
         /// <summary>
-        /// Asynchronously checks the API authentication with credentials.
+        /// Asynchronously checks the API authentication with credentials is valid.
         /// </summary>
         /// <param name="userID">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
-        public abstract void CheckAPIAuthWithCredentialsAsync(uint userID, string apiKey);
+        public abstract void CheckAPIAuthWithCredentialsIsValidAsync(uint userID, string apiKey);
 
         /// <summary>
-        /// Synchronously checks the API authentication.
+        /// Synchronously checks that API authentication is valid.
         /// </summary>
-        public abstract bool CheckAPIAuth();
+        public abstract bool CheckAPIAuthIsValid();
 
         /// <summary>
-        /// Asynchronously checks the API authentication.
+        /// Asynchronously checks that API authentication is valid.
         /// </summary>
-        public abstract void CheckAPIAuthAsync();
+        public abstract void CheckAPIAuthIsValidAsync();
 
         /// <summary>
         /// Asynchronously requests an authentication code.
