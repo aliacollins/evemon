@@ -262,7 +262,7 @@ namespace EVEMon.Common.Controls
         {
             ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
             {
-                if (img == null)
+                if (img == null && !useFallbackUri)
                 {
                     GetImageFromCCP(true);
                     return;

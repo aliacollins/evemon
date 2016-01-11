@@ -110,7 +110,7 @@ namespace EVEMon.Sales
         {
             ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
             {
-                if (img == null)
+                if (img == null && !useFallbackUri)
                 {
                     GetImageFromCCP(true);
                     return;

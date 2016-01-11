@@ -96,7 +96,13 @@ namespace EVEMon.Controls
             ImageService.GetImageAsync(GetImageUrl(pictureBox, useFallbackUri), img =>
             {
                 if (img == null)
+                {
+                    if (useFallbackUri)
+                        return;
+
+                    GetImageFor(pictureBox, true);
                     return;
+                }
 
                 pictureBox.Image = img;
             });

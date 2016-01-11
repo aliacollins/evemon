@@ -89,6 +89,9 @@ namespace EVEMon.Controls
             {
                 if (img == null)
                 {
+                    if (useFallbackUri)
+                        return;
+
                     GetImageFor(pictureBox, true);
                     return;
                 }
