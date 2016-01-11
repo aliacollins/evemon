@@ -104,6 +104,9 @@ namespace EVEMon.Common.Models
             {
                 if (img == null)
                 {
+                    if (useFallbackUri)
+                        return;
+
                     GetImage(true);
                     return;
                 }

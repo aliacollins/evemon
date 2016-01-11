@@ -137,6 +137,9 @@ namespace EVEMon.Common.Models
             {
                 if (img == null)
                 {
+                    if (useFallbackUri)
+                        return;
+
                     GetVictimShipImage(true);
                     return;
                 }

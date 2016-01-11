@@ -52,7 +52,7 @@ namespace EVEMon.Common.Service
             string path = String.Format(CultureConstants.InvariantCulture,
                 NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128);
 
-            GetImageAsync(GetImageServerCdnUri(path), (img =>
+            GetImageAsync(GetImageServerCdnUri(path), img =>
             {
                 if (img == null)
                 {
@@ -61,7 +61,7 @@ namespace EVEMon.Common.Service
                 }
 
                 callback(img);
-            }), false);
+            }, false);
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace EVEMon.Common.Service
             }
             else
             {
-                if (result.Error.Status == Net.HttpWebClientServiceExceptionStatus.Timeout)
+                if (result.Error.Status == HttpWebClientServiceExceptionStatus.Timeout)
                     EveMonClient.Trace("ImageService: {0}", result.Error.Message);
                 else
                     ExceptionHandler.LogException(result.Error, true);
