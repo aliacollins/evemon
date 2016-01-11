@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,14 +20,6 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
     public sealed class DropboxCloudStorageServiceProvider : CloudStorageServiceProvider
     {
         private static bool s_queryPending;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DropboxCloudStorageServiceProvider"/> class.
-        /// </summary>
-        public DropboxCloudStorageServiceProvider()
-        {
-            InitializeCertPinning();
-        }
 
 
         #region Properties
@@ -452,19 +445,26 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// </summary>
         private static void InitializeCertPinning()
         {
-            if (EveMonClient.IsDebugBuild)
-            {
-                ServicePointManager.ServerCertificateValidationCallback = HttpWebClientService.DummyCertificateValidationCallback;
-                return;
-            }
+            ServicePointManager.ServerCertificateValidationCallback = EveMonClient.IsDebugBuild
+                ? HttpWebClientService.DummyCertificateValidationCallback
+                : (RemoteCertificateValidationCallback)DropboxCertificateValidationCallback;
+        }
 
-            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
-            {
-                X509ChainElement root = chain.ChainElements[chain.ChainElements.Count - 1];
-                string publicKey = root.Certificate.GetPublicKeyString();
+        /// <summary>
+        /// The Dropbox certificate validation callback.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="certificate">The certificate.</param>
+        /// <param name="chain">The chain.</param>
+        /// <param name="sslpolicyerrors">The sslpolicyerrors.</param>
+        /// <returns></returns>
+        private static bool DropboxCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain,
+            SslPolicyErrors sslpolicyerrors)
+        {
+            X509ChainElement root = chain.ChainElements[chain.ChainElements.Count - 1];
+            string publicKey = root.Certificate.GetPublicKeyString();
 
-                return DropboxCertHelper.IsKnownRootCertPublicKey(publicKey);
-            };
+            return DropboxCertHelper.IsKnownRootCertPublicKey(publicKey);
         }
 
         /// <summary>
@@ -472,9 +472,12 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// </summary>
         /// <returns></returns>
         private static DropboxClient GetClient()
-            => new DropboxClient(DropboxCloudStorageServiceSettings.Default.DropboxAccessToken,
-                userAgent: HttpWebClientServiceState.UserAgent);
+        {
+            InitializeCertPinning();
 
+            return new DropboxClient(DropboxCloudStorageServiceSettings.Default.DropboxAccessToken,
+                userAgent: HttpWebClientServiceState.UserAgent);
+        }
 
         /// <summary>
         /// Gets the mapped API file.
