@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Windows.Forms;
 using Dropbox.Api;
 using Dropbox.Api.Babel;
@@ -252,39 +252,40 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             if (!IsAuthenticated && !CheckAPIAuthIsValid())
             {
                 MessageBox.Show($"The {Name} API credentials could not be authenticated.",
-                    $"The {Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    $"{Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                 return null;
             }
 
             EveMonClient.Trace($"{Name}.DownloadSettingsFile - Initiated");
 
-            CloudStorageServiceAPIFile settingsFile = null;
+            SerializableAPIResult<CloudStorageServiceAPIFile> result = DownloadFile();
+            OnFileDownloaded(result);
+
             if (CloudStorageServiceSettings.Default.UseImmediately)
             {
-                SerializableAPIResult<CloudStorageServiceAPIFile> result = DownloadFile();
                 if (result.HasError)
                 {
                     MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                        "File could not be downloaded.\n\nThe error was:\n{0}",
-                        result.Error.ErrorMessage),
-                        $"The {Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        $"File could not be downloaded.\n\nThe error was:\n{result.Error.ErrorMessage}"),
+                        $"{Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    settingsFile = result.Result;
-                    EveMonClient.Trace($"{Name} .DownloadSettingsFile - Completed");
+                    EveMonClient.Trace($"{Name}.DownloadSettingsFile - Completed");
+                    return result.Result;
                 }
             }
             else
             {
-             #pragma warning disable 4014
-                // Deliberately not using await here
-                DownloadFileAsync();
-             #pragma warning restore 4014
+                var actionText = result.HasError ? "Failed" : "Completed";
+                EveMonClient.Trace($"{Name}.DownloadSettingsFile - {actionText}");
+
+                if (!result.HasError)
+                    SaveSettingsFile(result.Result);
             }
 
-            return settingsFile;
+            return null;
         }
 
         /// <summary>
@@ -351,6 +352,13 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 IsAuthenticated = false;
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
             }
+            catch (AuthException exc)
+            {
+                Dictionary<string, object> json = Util.DeserializeJsonToObject(exc.Message);
+                string errorMessage = json[".tag"] as string ?? exc.Message;
+                IsAuthenticated = false;
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+            }
             catch (Exception exc)
             {
                 IsAuthenticated = false;
@@ -383,9 +391,12 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
 
             try
             {
-                CommitInfo commitInfo = new CommitInfo($"/{EveMonClient.SettingsFileName}", WriteMode.Overwrite.Instance);
+                byte[] content = Util.GZipCompress(SettingsFileContentByteArray).ToArray();
+                CommitInfo commitInfo = new CommitInfo($"/{Path.GetFileNameWithoutExtension(EveMonClient.SettingsFileName)}",
+                    WriteMode.Overwrite.Instance);
+
                 using (DropboxClient client = GetClient())
-                using (MemoryStream stream = Util.GetMemoryStream(Encoding.UTF8.GetBytes(SettingsFileContent)))
+                using (MemoryStream stream = Util.GetMemoryStream(content))
                 {
                     await client.Files.UploadAsync(commitInfo, stream);
                     return result;
@@ -412,7 +423,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
 
             try
             {
-                DownloadArg arg = new DownloadArg($"/{EveMonClient.SettingsFileName}");
+                DownloadArg arg = new DownloadArg($"/{Path.GetFileNameWithoutExtension(EveMonClient.SettingsFileName)}");
                 using (DropboxClient client = GetClient())
                 {
                     IDownloadResponse<FileMetadata> response = await client.Files.DownloadAsync(arg);
@@ -461,9 +472,8 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// </summary>
         /// <returns></returns>
         private static DropboxClient GetClient()
-            =>
-                new DropboxClient(DropboxCloudStorageServiceSettings.Default.DropboxAccessToken,
-                    userAgent: HttpWebClientServiceState.UserAgent);
+            => new DropboxClient(DropboxCloudStorageServiceSettings.Default.DropboxAccessToken,
+                userAgent: HttpWebClientServiceState.UserAgent);
 
 
         /// <summary>
@@ -477,12 +487,14 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             if (response == null)
                 return null;
 
-            return await response.GetContentAsStringAsync().ContinueWith(task =>
+            return await response.GetContentAsStreamAsync().ContinueWith(task =>
             {
-                string content = HttpUtility.UrlDecode(task.Result);
-
                 SerializableAPIResult<CloudStorageServiceAPIFile> result =
                     new SerializableAPIResult<CloudStorageServiceAPIFile>();
+
+                string content;
+                using (StreamReader reader = new StreamReader(Util.ZlibUncompress(task.Result)))
+                    content = reader.ReadToEnd();
 
                 if (String.IsNullOrWhiteSpace(content))
                 {
@@ -496,7 +508,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 result.Result = response.Response != null
                     ? new CloudStorageServiceAPIFile
                     {
-                        FileName = response.Response.Name,
+                        FileName = $"{response.Response.Name}.xml",
                         FileContent = content
                     }
                     : null;

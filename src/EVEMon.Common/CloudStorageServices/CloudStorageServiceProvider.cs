@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Web;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -112,17 +113,22 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
-        /// Gets the content of the settings file.
+        /// Gets the content of the settings file url encoded.
         /// </summary>
-        /// <value>The content of the settings file.</value>
-        protected static string SettingsFileContent
-        {
-            get
-            {
-                string settingsFileContent = File.ReadAllText(EveMonClient.SettingsFileNameFullPath);
-                return HttpUtility.UrlEncode(settingsFileContent);
-            }
-        }
+        /// <value>
+        /// The settings file content URL encode.
+        /// </value>
+        protected static string SettingsFileContentUrlEncode
+            => HttpUtility.UrlEncode(File.ReadAllText(EveMonClient.SettingsFileNameFullPath));
+
+        /// <summary>
+        /// Gets the content of the settings file in a byte array.
+        /// </summary>
+        /// <value>
+        /// The settings file content byte array.
+        /// </value>
+        protected static byte[] SettingsFileContentByteArray
+            => Encoding.UTF8.GetBytes(File.ReadAllText(EveMonClient.SettingsFileNameFullPath));
 
         /// <summary>
         /// Upgrades the settings.
