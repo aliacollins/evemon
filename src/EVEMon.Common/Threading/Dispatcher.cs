@@ -33,8 +33,7 @@ namespace EVEMon.Common.Threading
         {
             get
             {
-                IActor actor = Actor;
-                return actor == null || actor.HasAccess;
+                return Actor == null || Actor.HasAccess;
             }
         }
 
@@ -78,11 +77,10 @@ namespace EVEMon.Common.Threading
             if (action == null)
                 throw new ArgumentNullException("action");
 
-            IActor actor = Actor;
-            if (HasAccess || (actor == null))
+            if (HasAccess)
                 action();
             else
-                actor.Invoke(action);
+                Actor.Invoke(action);
         }
 
         /// <summary>
@@ -95,11 +93,10 @@ namespace EVEMon.Common.Threading
             if (action == null)
                 throw new ArgumentNullException("action");
 
-            IActor actor = Actor;
-            if (HasAccess || (actor == null))
+            if (HasAccess)
                 action();
             else
-                actor.BeginInvoke(action);
+                Actor.BeginInvoke(action);
         }
 
         /// <summary>
@@ -188,9 +185,8 @@ namespace EVEMon.Common.Threading
         /// </summary>
         public static void AssertAccess()
         {
-            IActor actor = Actor;
-            if (actor != null)
-                actor.AssertAccess();
+            if (Actor != null)
+                Actor.AssertAccess();
         }
 
         /// <summary>
