@@ -21,9 +21,8 @@ namespace EVEMon.SettingsUI
         {
             InitializeComponent();
             apiResponseLabel.Font = FontFactory.GetFont("Tahoma", FontStyle.Bold);
-            apiResponseLabel.Text = String.Empty;
+            apiResponseLabel.ResetText();
 
-            apiResponseLabel.Visible = false;
             throbber.Visible = false;
             throbber.BringToFront();
 
@@ -82,12 +81,22 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            if (!Visible)
+                return;
+
             m_authCodeRequested = false;
 
             UpdateControlsVisibility();
 
-            if ((Provider != null) && (!Provider.HasCredentialsStored || Provider.IsAuthenticated))
+            if (Provider == null || !Provider.HasCredentialsStored)
                 return;
+
+            if (CloudStorageServiceProvider.IsAuthenticated)
+            {
+                apiResponseLabel.ForeColor = Color.Green;
+                apiResponseLabel.Text = @"Authenticated";
+                return;
+            }
 
             EveMonClient.Trace($"{Provider?.Name}.CheckCredentialsAsync - Initiated");
 
@@ -176,9 +185,12 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Stopped;
             throbber.Visible = false;
 
-            apiResponseLabel.ForeColor = e.HasError ? Color.Red : Color.Green;
-            apiResponseLabel.Text = e.HasError ? e.ErrorMessage : @"Authenticated";
-            apiResponseLabel.Visible = true;
+            apiResponseLabel.ForeColor = e.HasError || !CloudStorageServiceProvider.IsAuthenticated ? Color.Red : Color.Green;
+            apiResponseLabel.Text = e.HasError
+                ? e.ErrorMessage
+                : CloudStorageServiceProvider.IsAuthenticated
+                    ? @"Authenticated"
+                    : @"Not Authenticated";
 
             if (!e.HasError)
             {
