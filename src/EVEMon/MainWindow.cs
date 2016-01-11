@@ -1359,8 +1359,8 @@ namespace EVEMon
         private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
-            DialogResult dr = MessageBox.Show(@"Are you sure you want to reset the settings ?\r\n" +
-                                              @"Everything will be lost, including the plans.",
+            DialogResult dr = MessageBox.Show(
+                $"Are you sure you want to reset the settings ?{Environment.NewLine}Everything will be lost, including the plans.",
                 @"Confirm Settings Reseting",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
@@ -2138,7 +2138,8 @@ namespace EVEMon
             if (Settings.CloudStorageServiceProvider.Provider == null)
                 return false;
 
-            if (CloudStorageServiceSettings.Default.UploadAlways)
+            if (CloudStorageServiceSettings.Default.UploadAlways &&
+                Settings.CloudStorageServiceProvider.Provider.HasCredentialsStored)
             {
                 lblCSSProviderStatus.Text = $"Uploading to {Settings.CloudStorageServiceProvider.Provider.Name}";
                 lblCSSProviderStatus.Visible = true;
