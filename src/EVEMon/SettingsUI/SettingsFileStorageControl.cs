@@ -92,9 +92,12 @@ namespace EVEMon.SettingsUI
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected override void OnVisibleChanged(EventArgs e)
         {
+            if (!Visible)
+                return;
+
             ResetTextAndColor();
 
-            Enabled = Provider != null && Provider.HasCredentialsStored && Provider.IsAuthenticated;
+            Enabled = Provider != null && Provider.HasCredentialsStored && CloudStorageServiceProvider.IsAuthenticated;
         }
 
         /// <summary>
@@ -189,7 +192,7 @@ namespace EVEMon.SettingsUI
         {
             ResetTextAndColor();
 
-            Enabled = Provider != null && Provider.HasCredentialsStored && Provider.IsAuthenticated;
+            Enabled = Provider != null && Provider.HasCredentialsStored && CloudStorageServiceProvider.IsAuthenticated;
         }
 
         /// <summary>

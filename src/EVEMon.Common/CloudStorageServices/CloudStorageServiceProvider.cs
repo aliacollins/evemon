@@ -59,7 +59,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <c>true</c> if the user is authenticated with the provider; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
-        public bool IsAuthenticated { get; protected set; }
+        public static bool IsAuthenticated { get; protected set; }
 
         /// <summary>
         /// Gets a value indicating whether the provider API credentials are stored.
