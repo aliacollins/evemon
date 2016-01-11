@@ -133,7 +133,7 @@ namespace EVEMon.Common
                     DownloadAsyncResult<SerializablePatch> result = task.Result;
 
                     // If no emergency patch found proceed with the regular
-                    if (task.Result.Error != null)
+                    if (result.Error != null)
                     {
                         result = await Util.DownloadXmlAsync<SerializablePatch>(new Uri(Settings.Updates.UpdatesAddress));
                     }
