@@ -135,11 +135,9 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             s_queryPending = true;
             IsAuthenticated = false;
 
-            string oauth2State = Guid.NewGuid().ToString("N");
-            Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(OAuthResponseType.Code,
+            Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(
                 Util.Decrypt(DropboxCloudStorageServiceSettings.Default.DropboxAPIKey,
-                    CultureConstants.InvariantCulture.NativeName),
-                String.Empty, oauth2State);
+                    CultureConstants.InvariantCulture.NativeName));
 
             Util.OpenURL(authorizeUri);
 
