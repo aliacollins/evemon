@@ -1227,7 +1227,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.generalPage;
+            this.multiPanel.SelectedPage = this.cloudStorageServicePage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -2606,18 +2606,18 @@ namespace EVEMon.SettingsUI
             this.gbMarketPriceProviders.Controls.Add(this.SelectedProviderLabel);
             this.gbMarketPriceProviders.Location = new System.Drawing.Point(3, 68);
             this.gbMarketPriceProviders.Name = "gbMarketPriceProviders";
-            this.gbMarketPriceProviders.Size = new System.Drawing.Size(242, 67);
+            this.gbMarketPriceProviders.Size = new System.Drawing.Size(214, 67);
             this.gbMarketPriceProviders.TabIndex = 22;
             this.gbMarketPriceProviders.TabStop = false;
-            this.gbMarketPriceProviders.Text = "Market Price Providers";
+            this.gbMarketPriceProviders.Text = "Market Price Provider";
             // 
             // cbProvidersList
             // 
             this.cbProvidersList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbProvidersList.FormattingEnabled = true;
-            this.cbProvidersList.Location = new System.Drawing.Point(107, 28);
+            this.cbProvidersList.Location = new System.Drawing.Point(61, 28);
             this.cbProvidersList.Name = "cbProvidersList";
-            this.cbProvidersList.Size = new System.Drawing.Size(130, 21);
+            this.cbProvidersList.Size = new System.Drawing.Size(147, 21);
             this.cbProvidersList.TabIndex = 1;
             // 
             // SelectedProviderLabel
@@ -2625,9 +2625,9 @@ namespace EVEMon.SettingsUI
             this.SelectedProviderLabel.AutoSize = true;
             this.SelectedProviderLabel.Location = new System.Drawing.Point(6, 31);
             this.SelectedProviderLabel.Name = "SelectedProviderLabel";
-            this.SelectedProviderLabel.Size = new System.Drawing.Size(97, 13);
+            this.SelectedProviderLabel.Size = new System.Drawing.Size(49, 13);
             this.SelectedProviderLabel.TabIndex = 0;
-            this.SelectedProviderLabel.Text = "Selected Provider :";
+            this.SelectedProviderLabel.Text = "Provider:";
             // 
             // marketPriceProviderPageLabel
             // 
@@ -2666,11 +2666,11 @@ namespace EVEMon.SettingsUI
             // 
             // cloudStorageServiceControl
             // 
-            this.cloudStorageServiceControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cloudStorageServiceControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cloudStorageServiceControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.cloudStorageServiceControl.Location = new System.Drawing.Point(3, 16);
             this.cloudStorageServiceControl.Name = "cloudStorageServiceControl";
-            this.cloudStorageServiceControl.Size = new System.Drawing.Size(415, 103);
+            this.cloudStorageServiceControl.Size = new System.Drawing.Size(415, 109);
             this.cloudStorageServiceControl.TabIndex = 0;
             // 
             // groupBox1
@@ -2679,28 +2679,29 @@ namespace EVEMon.SettingsUI
             this.groupBox1.Controls.Add(this.lblSelectedProvider);
             this.groupBox1.Location = new System.Drawing.Point(6, 81);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(242, 67);
+            this.groupBox1.Size = new System.Drawing.Size(232, 67);
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Cloud Storage Providers";
+            this.groupBox1.Text = "Cloud Storage Provider";
             // 
             // cloudStorageProvidersComboBox
             // 
             this.cloudStorageProvidersComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cloudStorageProvidersComboBox.FormattingEnabled = true;
-            this.cloudStorageProvidersComboBox.Location = new System.Drawing.Point(103, 28);
+            this.cloudStorageProvidersComboBox.Location = new System.Drawing.Point(61, 28);
             this.cloudStorageProvidersComboBox.Name = "cloudStorageProvidersComboBox";
-            this.cloudStorageProvidersComboBox.Size = new System.Drawing.Size(130, 21);
+            this.cloudStorageProvidersComboBox.Size = new System.Drawing.Size(165, 21);
             this.cloudStorageProvidersComboBox.TabIndex = 1;
+            this.cloudStorageProvidersComboBox.SelectedIndexChanged += new System.EventHandler(this.cloudStorageProvidersComboBox_SelectedIndexChanged);
             // 
             // lblSelectedProvider
             // 
             this.lblSelectedProvider.AutoSize = true;
             this.lblSelectedProvider.Location = new System.Drawing.Point(6, 31);
             this.lblSelectedProvider.Name = "lblSelectedProvider";
-            this.lblSelectedProvider.Size = new System.Drawing.Size(97, 13);
+            this.lblSelectedProvider.Size = new System.Drawing.Size(49, 13);
             this.lblSelectedProvider.TabIndex = 0;
-            this.lblSelectedProvider.Text = "Selected Provider :";
+            this.lblSelectedProvider.Text = "Provider:";
             // 
             // linkLabel1
             // 

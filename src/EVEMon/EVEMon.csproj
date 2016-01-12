@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup>
     <Win32Resource>EVEMon.res</Win32Resource>
@@ -56,7 +58,6 @@
   <PropertyGroup />
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
@@ -1100,6 +1101,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="app.manifest" />
     <None Include="SkillPlanner\BrowserClasses.cd" />
     <EmbeddedResource Include="ApiErrorHandling\ApiErrorWindow.resx">
@@ -1230,6 +1232,7 @@ EVEMonResFileCreator.exe</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>del "$(ProjectDir)"EVEMon.res
+if exist "$(TargetDir)"EVEMon.exe.config del "$(TargetDir)"EVEMon.exe.config
 if exist "$(TargetDir)"stdole.dll del "$(TargetDir)"stdole.dll</PostBuildEvent>
   </PropertyGroup>
 </Project>

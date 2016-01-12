@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -13,9 +14,13 @@ using EVEMon.Common.CustomEventArgs;
 
 namespace EVEMon.Common.CloudStorageServices
 {
-
     public abstract class CloudStorageServiceProvider
     {
+        private static bool s_queryPending;
+
+
+        #region Event Handlers
+
         /// <summary>
         /// Occurs when the credentials get checked with the cloud storage service provider.
         /// </summary>
@@ -36,6 +41,11 @@ namespace EVEMon.Common.CloudStorageServices
         /// </summary>
         public static event EventHandler<CloudStorageServiceProviderEventArgs> FileDownloaded;
 
+        #endregion
+
+
+        #region Properties
+
         /// <summary>
         /// Gets the name of the provider.
         /// </summary>
@@ -43,6 +53,14 @@ namespace EVEMon.Common.CloudStorageServices
         /// The name.
         /// </value>
         public abstract string Name { get; }
+
+        /// <summary>
+        /// Gets the authentication steps.
+        /// </summary>
+        /// <value>
+        /// The authentication steps.
+        /// </value>
+        public abstract AuthenticationSteps AuthenticationSteps { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="CloudStorageServiceProvider"/> is enabled.
@@ -131,6 +149,65 @@ namespace EVEMon.Common.CloudStorageServices
             => Encoding.UTF8.GetBytes(File.ReadAllText(EveMonClient.SettingsFileNameFullPath));
 
         /// <summary>
+        /// Gets the settings file name without extension.
+        /// </summary>
+        /// <value>
+        /// The settings file name without extension.
+        /// </value>
+        protected static string SettingsFileNameWithoutExtension
+            => Path.GetFileNameWithoutExtension(EveMonClient.SettingsFileName);
+
+        #endregion
+
+
+        #region Abstract Methods
+
+        /// <summary>
+        /// Asynchronously checks that the provider authentication with credentials is valid.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="apiKey">The API key.</param>
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>>
+            CheckProviderAuthWithCredentialsIsValidAsync(uint userId, string apiKey);
+
+        /// <summary>
+        /// Asynchronously requests the provider an authentication code.
+        /// </summary>
+        protected abstract void RequestProviderAuthCodeAsync();
+
+        /// <summary>
+        /// Asynchronously checks the provider authentication code.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckProviderAuthCodeAsync(string code);
+
+        /// <summary>
+        /// Asynchronously checks the access token.
+        /// </summary>
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAccessTokenAsync();
+
+        /// <summary>
+        /// Asynchronously revokes the access token.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RevokeAccessTokenAsync();
+
+        /// <summary>
+        /// Uploads the file asynchronously.
+        /// </summary>
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPIFile>> UploadFileAsync();
+
+        /// <summary>
+        /// Downloads the file asynchronously.
+        /// </summary>
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPIFile>> DownloadFileAsync();
+
+        #endregion
+
+
+        #region Public Methods
+
+        /// <summary>
         /// Upgrades the settings.
         /// </summary>
         public static void UpgradeSettings()
@@ -181,6 +258,283 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
+        /// Asynchronously requests an authentication code.
+        /// </summary>
+        public void RequestAuthCodeAsync()
+        {
+            if (s_queryPending || HasCredentialsStored)
+                return;
+
+            s_queryPending = true;
+
+            IsAuthenticated = false;
+
+            RequestProviderAuthCodeAsync();
+
+            s_queryPending = false;
+        }
+
+        /// <summary>
+        /// Asynchronously checks the authentication code.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        public async void CheckAuthCodeAsync(string code)
+        {
+            if (s_queryPending)
+                return;
+
+            s_queryPending = true;
+
+            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - Initiated");
+
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckProviderAuthCodeAsync(code);
+            
+            if (!result.HasError)
+                Settings.Save();
+
+            IsAuthenticated = !result.HasError && HasCredentialsStored;
+
+            CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+
+            s_queryPending = false;
+
+            var actionText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - {actionText}");
+        }
+
+        /// <summary>
+        /// Synchronously checks the API authentication with credentials is valid.
+        /// </summary>
+        /// <param name="userID">The user identifier.</param>
+        /// <param name="apiKey">The API key.</param>
+        public bool CheckAPIAuthWithCredentialsIsValid(uint userID, string apiKey)
+            => !Task.Run(async () => await CheckProviderAuthWithCredentialsIsValidAsync(userID, apiKey)).Result.HasError;
+
+        /// <summary>
+        /// Asynchronously checks the API authentication with credentials is valid.
+        /// </summary>
+        /// <param name="userID">The user identifier.</param>
+        /// <param name="apiKey">The API key.</param>
+        public async void CheckAPIAuthWithCredentialsIsValidAsync(uint userID, string apiKey)
+        {
+            if (s_queryPending)
+                return;
+
+            s_queryPending = true;
+
+            EveMonClient.Trace($"{Name}.CheckAuthWithCredentialsAsync - Initiated");
+
+            IsAuthenticated = false;
+
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result =
+                await CheckProviderAuthWithCredentialsIsValidAsync(userID, apiKey);
+
+            IsAuthenticated = !result.HasError;
+            CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+            s_queryPending = false;
+
+            var actionText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Name}.CheckAuthWithCredentialsAsync - {actionText}");
+        }
+
+        /// <summary>
+        /// Synchronously checks that API authentication is valid.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public bool CheckAPIAuthIsValid()
+            => !Task.Run(async () => await CheckAccessTokenAsync()).Result.HasError;
+
+        /// <summary>
+        /// Asynchronously checks that API authentication is valid.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public async void CheckAPIAuthIsValidAsync()
+        {
+            if (s_queryPending)
+                return;
+
+            s_queryPending = true;
+
+            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - Initiated");
+
+            IsAuthenticated = false;
+
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckAccessTokenAsync();
+
+            IsAuthenticated = !result.HasError && HasCredentialsStored;
+
+            CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+
+            s_queryPending = false;
+
+            var actionText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - {actionText}");
+        }
+
+        /// <summary>
+        /// Asynchronously resets the settings.
+        /// </summary>
+        public async void ResetSettingsAsync()
+        {
+            EveMonClient.Trace($"{Name}.SettingsReset - Initiated");
+
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await RevokeAccessTokenAsync();
+
+            if (!result.HasError)
+                Settings.Reset();
+
+            SettingsReset?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
+
+            var actionText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Name}.DownloadSettingsFile - {actionText}");
+        }
+
+        /// <summary>
+        /// Uploads the settings file.
+        /// </summary>
+        /// <returns></returns>
+        public bool UploadSettingsFile()
+        {
+            if (!CloudStorageServiceSettings.Default.UploadAlways || !HasCredentialsStored)
+                return true;
+
+            // Quit if user is not authenticated
+            if (!IsAuthenticated && !CheckAPIAuthIsValid())
+            {
+                MessageBox.Show($"The {Name} API credentials could not be authenticated.", $"{Name} API Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return false;
+            }
+
+            EveMonClient.Trace($"{Name}.UploadSettingsFile - Initiated");
+
+            // Ask for user action if uploading fails
+            while (true)
+            {
+                SerializableAPIResult<CloudStorageServiceAPIFile> result = Task.Run(async () => await UploadFileAsync()).Result;
+                FileUploaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+
+                if (!result.HasError)
+                {
+                    EveMonClient.Trace($"{Name}.UploadSettingsFile - Completed");
+                    return true;
+                }
+
+                DialogResult dialogResult = MessageBox.Show(result.Error?.ErrorMessage, $"{Name} API Error",
+                    MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+
+                switch (dialogResult)
+                {
+                    case DialogResult.Abort:
+                        EveMonClient.Trace($"{Name}.UploadSettingsFile - Failed and Aborted");
+                        return false;
+                    case DialogResult.Retry:
+                        continue;
+                }
+
+                EveMonClient.Trace($"{Name}.UploadSettingsFile - Failed and Ignored", Name);
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Downloads the settings file.
+        /// </summary>
+        /// <returns></returns>
+        public CloudStorageServiceAPIFile DownloadSettingsFile()
+        {
+            if (!CloudStorageServiceSettings.Default.DownloadAlways || !HasCredentialsStored)
+                return null;
+
+            if (!IsAuthenticated && !CheckAPIAuthIsValid())
+            {
+                MessageBox.Show($"The {Name} API credentials could not be authenticated.",
+                    $"{Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return null;
+            }
+
+            EveMonClient.Trace($"{Name}.DownloadSettingsFile - Initiated");
+
+            SerializableAPIResult<CloudStorageServiceAPIFile> result = Task.Run(async () => await DownloadFileAsync()).Result;
+            FileDownloaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+
+            if (CloudStorageServiceSettings.Default.UseImmediately)
+            {
+                if (result.HasError)
+                {
+                    MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
+                        $"File could not be downloaded.\n\nThe error was:\n{result.Error?.ErrorMessage}"),
+                        $"{Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    EveMonClient.Trace($"{Name}.DownloadSettingsFile - Completed");
+                    return result.Result;
+                }
+            }
+            else
+            {
+                var actionText = result.HasError ? "Failed" : "Completed";
+                EveMonClient.Trace($"{Name}.DownloadSettingsFile - {actionText}");
+
+                if (!result.HasError)
+                    SaveSettingsFile(result.Result);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Uploads the settings file asynchronously.
+        /// </summary>
+        public async void UploadSettingsFileAsync()
+        {
+            if (s_queryPending)
+                return;
+
+            s_queryPending = true;
+
+            EveMonClient.Trace($"{Name}.UploadSettingsFileAsync - Initiated");
+
+            SerializableAPIResult<CloudStorageServiceAPIFile> result = await UploadFileAsync();
+            FileUploaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+            s_queryPending = false;
+
+            string resultText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Name}.UploadSettingsFileAsync - {resultText}");
+        }
+
+        /// <summary>
+        /// Downloads the settings file asynchronously.
+        /// </summary>
+        public async void DownloadSettingsFileAsync()
+        {
+            if (s_queryPending)
+                return;
+
+            s_queryPending = true;
+
+            EveMonClient.Trace($"{Name}.DownloadSettingsFileAsync - Initiated");
+
+            SerializableAPIResult<CloudStorageServiceAPIFile> result = await DownloadFileAsync();
+            FileDownloaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+            s_queryPending = false;
+
+            string resultText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Name}.DownloadSettingsFileAsync - {resultText}");
+
+            if (!result.HasError)
+                SaveSettingsFile(result.Result);
+        }
+
+        #endregion
+
+
+        #region Helper Methods
+
+        /// <summary>
         /// Deletes the old settings folders.
         /// </summary>
         /// <param name="configFileParentParentDir">The configuration file parent parent dir.</param>
@@ -198,138 +552,11 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
-        /// Synchronously checks the API authentication with credentials is valid.
-        /// </summary>
-        /// <param name="userID">The user identifier.</param>
-        /// <param name="apiKey">The API key.</param>
-        public abstract void CheckAPIAuthWithCredentialsIsValid(uint userID, string apiKey);
-
-        /// <summary>
-        /// Asynchronously checks the API authentication with credentials is valid.
-        /// </summary>
-        /// <param name="userID">The user identifier.</param>
-        /// <param name="apiKey">The API key.</param>
-        public abstract void CheckAPIAuthWithCredentialsIsValidAsync(uint userID, string apiKey);
-
-        /// <summary>
-        /// Synchronously checks that API authentication is valid.
-        /// </summary>
-        public abstract bool CheckAPIAuthIsValid();
-
-        /// <summary>
-        /// Asynchronously checks that API authentication is valid.
-        /// </summary>
-        public abstract void CheckAPIAuthIsValidAsync();
-
-        /// <summary>
-        /// Asynchronously requests an authentication code.
-        /// </summary>
-        public abstract void RequestAuthCodeAsync();
-
-        /// <summary>
-        /// Asynchronously checks the authentication code.
-        /// </summary>
-        /// <param name="code">The code.</param>
-        public abstract void CheckAuthCodeAsync(string code);
-
-        /// <summary>
-        /// Resets the settings.
-        /// </summary>
-        public abstract void ResetSettings();
-
-        /// <summary>
-        /// Uploads the settings file.
-        /// </summary>
-        public abstract bool UploadSettingsFile();
-
-        /// <summary>
-        /// Downloads the settings file.
-        /// </summary>
-        public abstract CloudStorageServiceAPIFile DownloadSettingsFile();
-
-        /// <summary>
-        /// Uploads the settings file asynchronously.
-        /// </summary>
-        public abstract void UploadSettingsFileAsync();
-
-        /// <summary>
-        /// Downloads the settings file asynchronously.
-        /// </summary>
-        public abstract void DownloadSettingsFileAsync();
-
-        /// <summary>
-        /// Occurs when the credentials get checked.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        protected virtual void OnCredentialsChecked(SerializableAPIResult<CloudStorageServiceAPICredentials> result)
-        {
-            if (result == null)
-                throw new ArgumentNullException(nameof(result));
-
-            if (result.HasError)
-            {
-                IsAuthenticated = false;
-
-                CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
-
-                return;
-            }
-
-            IsAuthenticated = true;
-
-            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - Completed");
-
-            CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
-        }
-
-        /// <summary>
-        /// Occurs when the settings get reset.
-        /// </summary>
-        protected virtual void OnSettingsReset()
-        {
-            EveMonClient.Trace($"{Name}.SettingsReset - Completed");
-
-            SettingsReset?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
-        }
-
-        /// <summary>
-        /// Occurs when the file got uploaded.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        protected virtual void OnFileUploaded(SerializableAPIResult<CloudStorageServiceAPIFile> result)
-        {
-            if (result.HasError)
-            {
-                FileUploaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
-
-                return;
-            }
-
-            FileUploaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
-        }
-
-        /// <summary>
-        /// Occurs when the file got downloaded.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        protected virtual void OnFileDownloaded(SerializableAPIResult<CloudStorageServiceAPIFile> result)
-        {
-            if (result.HasError)
-            {
-                FileDownloaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error.ErrorMessage));
-
-                return;
-            }
-
-            FileDownloaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
-        }
-
-        /// <summary>
         /// Saves the queried settings file.
         /// </summary>
         /// <param name="result">The result.</param>
         /// <exception cref="System.ArgumentNullException">settingsFile</exception>
-        protected static void SaveSettingsFile(CloudStorageServiceAPIFile result)
+        private static void SaveSettingsFile(CloudStorageServiceAPIFile result)
         {
             if (result == null)
                 throw new ArgumentNullException(nameof(result));
@@ -355,5 +582,7 @@ namespace EVEMon.Common.CloudStorageServices
                 File.WriteAllText(saveFileDialog.FileName, result.FileContent);
             }
         }
+
+        #endregion
     }
 }

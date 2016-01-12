@@ -41,11 +41,11 @@
             // btnRequestApply
             // 
             this.btnRequestApply.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnRequestApply.Location = new System.Drawing.Point(139, 67);
+            this.btnRequestApply.Location = new System.Drawing.Point(126, 67);
             this.btnRequestApply.Name = "btnRequestApply";
-            this.btnRequestApply.Size = new System.Drawing.Size(116, 23);
+            this.btnRequestApply.Size = new System.Drawing.Size(145, 23);
             this.btnRequestApply.TabIndex = 0;
-            this.btnRequestApply.Text = "Request Auth Code";
+            this.btnRequestApply.Text = "Request Authentication";
             this.btnRequestApply.UseVisualStyleBackColor = true;
             this.btnRequestApply.Click += new System.EventHandler(this.btnRequestApply_Click);
             // 
