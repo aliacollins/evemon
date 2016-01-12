@@ -6,10 +6,10 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DropboxAPIKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">wl5cnynos0cjcqs</Value>
+      <Value Profile="(Default)">EtR+7IGX0c33DEX3I/td5A==</Value>
     </Setting>
     <Setting Name="DropBoxAppSecret" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">9uzbh99aut85br5</Value>
+      <Value Profile="(Default)">vjAI3MH5c/3jEisSqOH8AA==</Value>
     </Setting>
   </Settings>
 </SettingsFile>
