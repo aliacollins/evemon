@@ -137,7 +137,9 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
 
             string oauth2State = Guid.NewGuid().ToString("N");
             Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(OAuthResponseType.Code,
-                DropboxCloudStorageServiceSettings.Default.DropboxAPIKey, String.Empty, oauth2State);
+                Util.Decrypt(DropboxCloudStorageServiceSettings.Default.DropboxAPIKey,
+                    CultureConstants.InvariantCulture.NativeName),
+                String.Empty, oauth2State);
 
             Util.OpenURL(authorizeUri);
 
@@ -158,8 +160,10 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             try
             {
                 OAuth2Response response = await DropboxOAuth2Helper.ProcessCodeFlowAsync(code,
-                    DropboxCloudStorageServiceSettings.Default.DropboxAPIKey,
-                    DropboxCloudStorageServiceSettings.Default.DropBoxAppSecret);
+                    Util.Decrypt(DropboxCloudStorageServiceSettings.Default.DropboxAPIKey,
+                        CultureConstants.InvariantCulture.NativeName),
+                    Util.Decrypt(DropboxCloudStorageServiceSettings.Default.DropBoxAppSecret,
+                        CultureConstants.InvariantCulture.NativeName));
 
                 DropboxCloudStorageServiceSettings.Default.DropboxAccessToken = response.AccessToken;
                 Settings.Save();
@@ -326,7 +330,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <summary>
         /// Asynchronously checks the access token.
         /// </summary>
-        private async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAccessTokenAsync()
+        private static async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAccessTokenAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPICredentials> result =
                 new SerializableAPIResult<CloudStorageServiceAPICredentials>();

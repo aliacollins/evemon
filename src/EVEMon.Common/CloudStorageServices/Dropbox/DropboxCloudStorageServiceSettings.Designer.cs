@@ -37,7 +37,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("wl5cnynos0cjcqs")]
+        [global::System.Configuration.DefaultSettingValueAttribute("EtR+7IGX0c33DEX3I/td5A==")]
         public string DropboxAPIKey {
             get {
                 return ((string)(this["DropboxAPIKey"]));
@@ -46,7 +46,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9uzbh99aut85br5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("vjAI3MH5c/3jEisSqOH8AA==")]
         public string DropBoxAppSecret {
             get {
                 return ((string)(this["DropBoxAppSecret"]));
