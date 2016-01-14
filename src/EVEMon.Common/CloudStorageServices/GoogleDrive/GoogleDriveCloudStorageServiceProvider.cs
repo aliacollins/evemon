@@ -100,8 +100,11 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <summary>
         /// Asynchronously requests the provider an authentication code.
         /// </summary>
-        protected override async void RequestProviderAuthCodeAsync()
+        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RequestProviderAuthCodeAsync()
         {
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result =
+                new SerializableAPIResult<CloudStorageServiceAPICredentials>();
+
             var clientSecrets = new ClientSecrets
             {
                 ClientId = Util.Decrypt(GoogleDriveCloudStorageServiceSettings.Default.AppKey,
@@ -110,10 +113,24 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     CultureConstants.InvariantCulture.NativeName)
             };
 
-            s_credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets,
-                new[] { DriveService.Scope.DriveAppdata }, "user", CancellationToken.None);
+            try
+            {
+                s_credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets,
+                    new[] { DriveService.Scope.DriveAppdata }, "user", CancellationToken.None);
 
-            CheckAuthCodeAsync(String.Empty);
+                CheckAuthCodeAsync(String.Empty);
+            }
+            catch (TokenResponseException exc)
+            {
+                string errorMessage = GetErrorMessageDescription(exc);
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+            }
+            catch (Exception exc)
+            {
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -124,11 +141,14 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <exception cref="System.NotImplementedException"></exception>
         protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckProviderAuthCodeAsync(
             string code)
-            => await Task.Run(() =>
-            {
+        {
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckAccessTokenAsync();
+
+            if (!result.HasError)
                 GoogleDriveCloudStorageServiceSettings.Default.AccessToken = s_credential.Token.AccessToken;
-                return new SerializableAPIResult<CloudStorageServiceAPICredentials>();
-            });
+
+            return result;
+        }
 
         /// <summary>
         /// Asynchronously checks the access token.
@@ -167,14 +187,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             }
             catch (TokenResponseException exc)
             {
-                string errorMessage = exc.Message;
-                if (errorMessage.StartsWith("error", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if (!errorMessage.StartsWith("{", StringComparison.InvariantCulture))
-                        errorMessage = $"{{{errorMessage}}}";
-                    Dictionary<string, object> json = Util.DeserializeJsonToObject(errorMessage);
-                    errorMessage = json["Description"] as string ?? exc.Message;
-                }
+                string errorMessage = GetErrorMessageDescription(exc);
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
             }
             catch (Exception exc)
@@ -261,6 +274,11 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     }
                 }
             }
+            catch (TokenResponseException exc)
+            {
+                string errorMessage = GetErrorMessageDescription(exc);
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+            }
             catch (Exception ex)
             {
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = ex.Message };
@@ -296,6 +314,11 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
                     result.Error = new CloudStorageServiceAPIError { ErrorMessage = response.Exception.Message };
                 }
+            }
+            catch (TokenResponseException exc)
+            {
+                string errorMessage = GetErrorMessageDescription(exc);
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
             }
             catch (Exception ex)
             {
@@ -378,6 +401,26 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                 };
                 return result;
             });
+        }
+
+        /// <summary>
+        /// Gets the error message description.
+        /// </summary>
+        /// <param name="exc">The exc.</param>
+        /// <returns></returns>
+        private static string GetErrorMessageDescription(Exception exc)
+        {
+            string errorMessage = exc.Message;
+            if (!errorMessage.StartsWith("error", StringComparison.InvariantCultureIgnoreCase))
+                return errorMessage;
+
+            if (!errorMessage.StartsWith("{", StringComparison.InvariantCulture))
+                errorMessage = $"{{{errorMessage}}}";
+
+            Dictionary<string, object> json = Util.DeserializeJsonToObject(errorMessage);
+            errorMessage = json["Description"] as string ?? exc.Message;
+
+            return errorMessage;
         }
 
         #endregion

@@ -89,14 +89,27 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <summary>
         /// Asynchronously requests the provider an authentication code.
         /// </summary>
-        protected override void RequestProviderAuthCodeAsync()
-        {
-            Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(
-                Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppKey,
-                    CultureConstants.InvariantCulture.NativeName));
+        protected override Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RequestProviderAuthCodeAsync()
+            => Task.Run(() =>
+            {
+                SerializableAPIResult<CloudStorageServiceAPICredentials> result =
+                    new SerializableAPIResult<CloudStorageServiceAPICredentials>();
 
-            Util.OpenURL(authorizeUri);
-        }
+                try
+                {
+                    Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(
+                        Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppKey,
+                            CultureConstants.InvariantCulture.NativeName));
+
+                    Util.OpenURL(authorizeUri);
+                }
+                catch (Exception exc)
+                {
+                    result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+                }
+
+                return result;
+            });
 
         /// <summary>
         /// Asynchronously checks the provider authentication code.
@@ -116,7 +129,10 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                     Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppSecret,
                         CultureConstants.InvariantCulture.NativeName));
 
-                DropboxCloudStorageServiceSettings.Default.AccessToken = response.AccessToken;
+                result = await CheckAccessTokenAsync();
+
+                if (!result.HasError)
+                    DropboxCloudStorageServiceSettings.Default.AccessToken = response.AccessToken;
             }
             catch (OAuth2Exception exc)
             {
