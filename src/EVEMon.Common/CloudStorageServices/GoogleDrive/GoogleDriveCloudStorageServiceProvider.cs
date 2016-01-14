@@ -44,7 +44,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <value>
         /// The authentication steps.
         /// </value>
-        public override AuthenticationSteps AuthenticationSteps => AuthenticationSteps.One;
+        public override AuthenticationSteps AuthSteps => AuthenticationSteps.One;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="CloudStorageServiceProvider" /> is enabled.
@@ -164,6 +164,18 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
                 if (s_credential == null && HasCredentialsStored)
                     ResetSettingsAsync();
+            }
+            catch (TokenResponseException exc)
+            {
+                string errorMessage = exc.Message;
+                if (errorMessage.StartsWith("error", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (!errorMessage.StartsWith("{", StringComparison.InvariantCulture))
+                        errorMessage = $"{{{errorMessage}}}";
+                    Dictionary<string, object> json = Util.DeserializeJsonToObject(errorMessage);
+                    errorMessage = json["Description"] as string ?? exc.Message;
+                }
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
             }
             catch (Exception exc)
             {

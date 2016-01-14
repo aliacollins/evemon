@@ -35,7 +35,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <value>
         /// The authentication steps.
         /// </value>
-        public override AuthenticationSteps AuthenticationSteps => AuthenticationSteps.Two;
+        public override AuthenticationSteps AuthSteps => AuthenticationSteps.Two;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="CloudStorageServiceProvider" /> is enabled.

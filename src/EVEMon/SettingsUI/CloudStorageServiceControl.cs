@@ -125,7 +125,7 @@ namespace EVEMon.SettingsUI
             {
                 Provider.RequestAuthCodeAsync();
 
-                if (Provider.AuthenticationSteps == AuthenticationSteps.One)
+                if (Provider.AuthSteps == AuthenticationSteps.One)
                 {
                     btnRequestApply.Enabled = false;
                     return;

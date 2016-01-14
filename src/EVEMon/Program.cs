@@ -181,7 +181,7 @@ namespace EVEMon
         /// Occurs when the application tries to resolve an assembly dependency.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="args">The <see cref="ResolveEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="ResolveEventArgs"/> instance containing the event data.</param>
         /// <returns></returns>
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs e)
         {

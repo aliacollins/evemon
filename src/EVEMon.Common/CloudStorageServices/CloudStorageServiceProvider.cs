@@ -60,7 +60,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <value>
         /// The authentication steps.
         /// </value>
-        public abstract AuthenticationSteps AuthenticationSteps { get; }
+        public abstract AuthenticationSteps AuthSteps { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="CloudStorageServiceProvider"/> is enabled.
@@ -280,7 +280,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <param name="code">The code.</param>
         public async void CheckAuthCodeAsync(string code)
         {
-            if (s_queryPending)
+            if (s_queryPending && AuthSteps == AuthenticationSteps.Two)
                 return;
 
             s_queryPending = true;
