@@ -16,7 +16,7 @@ namespace EVEMon.Common.CloudStorageServices
 {
     public abstract class CloudStorageServiceProvider
     {
-        private static bool s_queryPending;
+        private bool m_queryPending;
 
 
         #region Event Handlers
@@ -173,7 +173,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Asynchronously requests the provider an authentication code.
         /// </summary>
-        protected abstract void RequestProviderAuthCodeAsync();
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RequestProviderAuthCodeAsync();
 
         /// <summary>
         /// Asynchronously checks the provider authentication code.
@@ -260,18 +260,25 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Asynchronously requests an authentication code.
         /// </summary>
-        public void RequestAuthCodeAsync()
+        public async void RequestAuthCodeAsync()
         {
-            if (s_queryPending || HasCredentialsStored)
+            if (m_queryPending || HasCredentialsStored)
                 return;
 
-            s_queryPending = true;
+            m_queryPending = true;
+
+            EveMonClient.Trace($"{Name}.RequestAuthenticationAsync - Initiated");
 
             IsAuthenticated = false;
 
-            RequestProviderAuthCodeAsync();
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await RequestProviderAuthCodeAsync();
 
-            s_queryPending = false;
+            CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+
+            m_queryPending = false;
+
+            var actionText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"{Name}.RequestAuthenticationAsync - {actionText}");
         }
 
         /// <summary>
@@ -280,12 +287,12 @@ namespace EVEMon.Common.CloudStorageServices
         /// <param name="code">The code.</param>
         public async void CheckAuthCodeAsync(string code)
         {
-            if (s_queryPending && AuthSteps == AuthenticationSteps.Two)
+            if (m_queryPending && AuthSteps == AuthenticationSteps.Two)
                 return;
 
-            s_queryPending = true;
+            m_queryPending = true;
 
-            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - Initiated");
+            EveMonClient.Trace($"{Name}.CheckAuthenticationAsync - Initiated");
 
             SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckProviderAuthCodeAsync(code);
             
@@ -296,10 +303,10 @@ namespace EVEMon.Common.CloudStorageServices
 
             CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
 
-            s_queryPending = false;
+            m_queryPending = false;
 
             var actionText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - {actionText}");
+            EveMonClient.Trace($"{Name}.CheckAuthenticationAsync - {actionText}");
         }
 
         /// <summary>
@@ -317,10 +324,10 @@ namespace EVEMon.Common.CloudStorageServices
         /// <param name="apiKey">The API key.</param>
         public async void CheckAPIAuthWithCredentialsIsValidAsync(uint userID, string apiKey)
         {
-            if (s_queryPending)
+            if (m_queryPending)
                 return;
 
-            s_queryPending = true;
+            m_queryPending = true;
 
             EveMonClient.Trace($"{Name}.CheckAuthWithCredentialsAsync - Initiated");
 
@@ -331,7 +338,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             IsAuthenticated = !result.HasError;
             CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
-            s_queryPending = false;
+            m_queryPending = false;
 
             var actionText = result.HasError ? "Failed" : "Completed";
             EveMonClient.Trace($"{Name}.CheckAuthWithCredentialsAsync - {actionText}");
@@ -350,12 +357,12 @@ namespace EVEMon.Common.CloudStorageServices
         /// <exception cref="System.NotImplementedException"></exception>
         public async void CheckAPIAuthIsValidAsync()
         {
-            if (s_queryPending)
+            if (m_queryPending)
                 return;
 
-            s_queryPending = true;
+            m_queryPending = true;
 
-            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - Initiated");
+            EveMonClient.Trace($"{Name}.CheckAuthenticationValidAsync - Initiated");
 
             IsAuthenticated = false;
 
@@ -365,10 +372,10 @@ namespace EVEMon.Common.CloudStorageServices
 
             CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
 
-            s_queryPending = false;
+            m_queryPending = false;
 
             var actionText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - {actionText}");
+            EveMonClient.Trace($"{Name}.CheckAuthenticationValidAsync - {actionText}");
         }
 
         /// <summary>
@@ -386,7 +393,7 @@ namespace EVEMon.Common.CloudStorageServices
             SettingsReset?.Invoke(this, new CloudStorageServiceProviderEventArgs(null));
 
             var actionText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace($"{Name}.DownloadSettingsFile - {actionText}");
+            EveMonClient.Trace($"{Name}.SettingsReset - {actionText}");
         }
 
         /// <summary>
@@ -491,16 +498,16 @@ namespace EVEMon.Common.CloudStorageServices
         /// </summary>
         public async void UploadSettingsFileAsync()
         {
-            if (s_queryPending)
+            if (m_queryPending)
                 return;
 
-            s_queryPending = true;
+            m_queryPending = true;
 
             EveMonClient.Trace($"{Name}.UploadSettingsFileAsync - Initiated");
 
             SerializableAPIResult<CloudStorageServiceAPIFile> result = await UploadFileAsync();
             FileUploaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
-            s_queryPending = false;
+            m_queryPending = false;
 
             string resultText = result.HasError ? "Failed" : "Completed";
             EveMonClient.Trace($"{Name}.UploadSettingsFileAsync - {resultText}");
@@ -511,22 +518,30 @@ namespace EVEMon.Common.CloudStorageServices
         /// </summary>
         public async void DownloadSettingsFileAsync()
         {
-            if (s_queryPending)
+            if (m_queryPending)
                 return;
 
-            s_queryPending = true;
+            m_queryPending = true;
 
             EveMonClient.Trace($"{Name}.DownloadSettingsFileAsync - Initiated");
 
             SerializableAPIResult<CloudStorageServiceAPIFile> result = await DownloadFileAsync();
             FileDownloaded?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
-            s_queryPending = false;
+            m_queryPending = false;
 
             string resultText = result.HasError ? "Failed" : "Completed";
             EveMonClient.Trace($"{Name}.DownloadSettingsFileAsync - {resultText}");
 
             if (!result.HasError)
                 SaveSettingsFile(result.Result);
+        }
+
+        /// <summary>
+        /// Cancels the pending queries.
+        /// </summary>
+        public void CancelPendingQueries()
+        {
+            m_queryPending = false;
         }
 
         #endregion

@@ -89,6 +89,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             CheckAPIAuthIsValid(s_forceAuthOnLoad);
+
             s_forceAuthOnLoad = false;
         }
 
@@ -182,11 +183,13 @@ namespace EVEMon.SettingsUI
                     ? @"Authenticated"
                     : String.Empty;
 
-            if (e.HasError)
-                return;
+            if (!e.HasError && (Provider.AuthSteps != AuthenticationSteps.One) && m_authCodeRequested &&
+                CloudStorageServiceProvider.IsAuthenticated)
+            {
+                m_authCodeRequested = false;
+            }
 
             UpdateControlsVisibility();
-            m_authCodeRequested = false;
         }
 
         /// <summary>
@@ -233,6 +236,9 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Rotating;
             throbber.Visible = true;
 
+            if (forceRecheck)
+                Provider.CancelPendingQueries();
+
             Provider?.CheckAPIAuthIsValidAsync();
         }
 
@@ -250,7 +256,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateControlsVisibility()
         {
-            if (Provider == null)
+            if (Provider == null || m_authCodeRequested)
                 return;
 
             if (!Provider.HasCredentialsStored)
