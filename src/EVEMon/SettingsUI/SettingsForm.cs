@@ -89,11 +89,11 @@ namespace EVEMon.SettingsUI
             overviewPortraitSizeComboBox.Items.AddRange(
                 Enum.GetValues(typeof(PortraitSizes)).Cast<PortraitSizes>().Select(
                     x =>
-                        {
-                            // Transforms x64 to 64 by 64
-                            string size = x.ToString().Substring(1);
-                            return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
-                        }).ToArray<object>());
+                    {
+                        // Transforms x64 to 64 by 64
+                        string size = x.ToString().Substring(1);
+                        return String.Format(CultureConstants.InvariantCulture, "{0} by {0}", size);
+                    }).ToArray<object>());
 
             // Expands the left panel and selects the first page and node
             treeView.ExpandAll();
@@ -166,8 +166,8 @@ namespace EVEMon.SettingsUI
             // Skill Browser Icon Set
             cbSkillIconSet.SelectedIndex = (m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count &&
                                             m_settings.UI.SkillBrowser.IconsGroupIndex > 0
-                                                ? m_settings.UI.SkillBrowser.IconsGroupIndex - 1
-                                                : 0);
+                ? m_settings.UI.SkillBrowser.IconsGroupIndex - 1
+                : 0);
 
             // System tray popup/tooltip
             trayPopupRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm);
@@ -457,7 +457,8 @@ namespace EVEMon.SettingsUI
             m_settings.MarketPricer.ProviderName = cbProvidersList.SelectedItem?.ToString() ?? String.Empty;
 
             // Cloud Storage Service Provider
-            m_settings.CloudStorageServiceProvider.ProviderName = cloudStorageProvidersComboBox.SelectedItem?.ToString() ?? String.Empty;
+            m_settings.CloudStorageServiceProvider.ProviderName =
+                cloudStorageProvidersComboBox.SelectedItem?.ToString() ?? String.Empty;
 
             // Main window
             m_settings.UI.MainWindow.ShowCharacterInfoInTitleBar = cbTitleToTime.Checked;
@@ -535,8 +536,8 @@ namespace EVEMon.SettingsUI
             m_settings.Calendar.GooglePassword = Util.Encrypt(tbGooglePassword.Text.Trim(), tbGoogleEmail.Text.Trim());
             m_settings.Calendar.GoogleAddress = tbGoogleURI.Text.Trim();
             m_settings.Calendar.GoogleReminder = cbGoogleReminder.SelectedIndex != -1
-                                                     ? (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex
-                                                     : GoogleCalendarReminder.None;
+                ? (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex
+                : GoogleCalendarReminder.None;
 
             m_settings.Calendar.UseReminding = cbSetReminder.Checked;
             m_settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text, CultureConstants.DefaultCulture);
@@ -559,7 +560,7 @@ namespace EVEMon.SettingsUI
             if (runAtStartupComboBox.Checked)
             {
                 rk.SetValue("EVEMon", String.Format(CultureConstants.DefaultCulture,
-                                                    "\"{0}\" {1}", Application.ExecutablePath, "-startMinimized"));
+                    "\"{0}\" {1}", Application.ExecutablePath, "-startMinimized"));
             }
             else
                 rk.DeleteValue("EVEMon", false);
@@ -909,10 +910,10 @@ namespace EVEMon.SettingsUI
             SerializableAPIProvider newProvider = new SerializableAPIProvider();
             newProvider.Methods.AddRange(APIMethod.CreateDefaultSet().Select(
                 apiMethod => new SerializableAPIMethod
-                                 {
-                                     MethodName = apiMethod.Method.ToString(),
-                                     Path = apiMethod.Path
-                                 }));
+                {
+                    MethodName = apiMethod.Method.ToString(),
+                    Path = apiMethod.Path
+                }));
 
             using (APISettingsForm apiForm = new APISettingsForm(m_settings.APIProviders, newProvider))
             {
@@ -954,8 +955,8 @@ namespace EVEMon.SettingsUI
             string name = (string)cbAPIServer.SelectedItem;
             DialogResult result =
                 MessageBox.Show(String.Format(CultureConstants.DefaultCulture, "Delete API Server configuration \"{0}\"?", name),
-                                @"Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                                MessageBoxDefaultButton.Button2);
+                    @"Delete API Server?", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
 
             if (result != DialogResult.Yes)
                 return;
@@ -1016,16 +1017,16 @@ namespace EVEMon.SettingsUI
             }
 
             if ((!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                                                                                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                                                                Path.DirectorySeparatorChar,
-                                                                                AppDomain.CurrentDomain.BaseDirectory,
-                                                                                (cbSkillIconSet.SelectedIndex + 1),
-                                                                                groupname)))
+                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                Path.DirectorySeparatorChar,
+                AppDomain.CurrentDomain.BaseDirectory,
+                (cbSkillIconSet.SelectedIndex + 1),
+                groupname)))
                 ||
                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                                           "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                           Path.DirectorySeparatorChar,
-                                           AppDomain.CurrentDomain.BaseDirectory)))
+                    "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                    Path.DirectorySeparatorChar,
+                    AppDomain.CurrentDomain.BaseDirectory)))
                 groupname = String.Empty;
 
             if (String.IsNullOrEmpty(groupname))
@@ -1042,9 +1043,9 @@ namespace EVEMon.SettingsUI
                 try
                 {
                     defaultGroupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                                                                          "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                                                          Path.DirectorySeparatorChar,
-                                                                          AppDomain.CurrentDomain.BaseDirectory));
+                        "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                        Path.DirectorySeparatorChar,
+                        AppDomain.CurrentDomain.BaseDirectory));
 
                     basicx = defaultGroupReader.GetEnumerator();
 
@@ -1063,11 +1064,11 @@ namespace EVEMon.SettingsUI
                 try
                 {
                     groupReader = new ResourceReader(String.Format(CultureConstants.InvariantCulture,
-                                                                   "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                                                   Path.DirectorySeparatorChar,
-                                                                   AppDomain.CurrentDomain.BaseDirectory,
-                                                                   (cbSkillIconSet.SelectedIndex + 1),
-                                                                   groupname));
+                        "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                        Path.DirectorySeparatorChar,
+                        AppDomain.CurrentDomain.BaseDirectory,
+                        (cbSkillIconSet.SelectedIndex + 1),
+                        groupname));
 
                     basicx = groupReader.GetEnumerator();
 
@@ -1112,15 +1113,15 @@ namespace EVEMon.SettingsUI
                 return;
 
             TreeNode gtn = new TreeNode("Book", tvlist.ImageList.Images.IndexOfKey("book"),
-                                        tvlist.ImageList.Images.IndexOfKey("book"));
+                tvlist.ImageList.Images.IndexOfKey("book"));
             gtn.Nodes.Add(new TreeNode("Pre-Reqs NOT met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet"),
-                                       tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet")));
+                tvlist.ImageList.Images.IndexOfKey("PrereqsNOTMet")));
             gtn.Nodes.Add(new TreeNode("Pre-Reqs met (Rank)", tvlist.ImageList.Images.IndexOfKey("PrereqsMet"),
-                                       tvlist.ImageList.Images.IndexOfKey("PrereqsMet")));
+                tvlist.ImageList.Images.IndexOfKey("PrereqsMet")));
             for (int i = 0; i < 6; i++)
             {
                 gtn.Nodes.Add(new TreeNode("Level " + i + " (Rank)", tvlist.ImageList.Images.IndexOfKey("lvl" + i),
-                                           tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
+                    tvlist.ImageList.Images.IndexOfKey("lvl" + i)));
             }
             gtn.Expand();
             tvlist.Nodes.Add(gtn);
@@ -1167,6 +1168,21 @@ namespace EVEMon.SettingsUI
 
             ACycleTimesInterval.Maximum = Math.Max(ACycleInterval.Value / 2, 1);
             panelCycleQueueInfo.Enabled = true;
+        }
+
+        /// <summary>
+        /// Cloud Storage Service > Provider selection.
+        /// Checks the provider authorization.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cloudStorageProvidersComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (m_isLoading)
+                return;
+
+            m_settings.CloudStorageServiceProvider.ProviderName = cloudStorageProvidersComboBox.SelectedItem?.ToString();
+            cloudStorageServiceControl.CheckAPIAuthIsValid(forceRecheck: true);
         }
 
         #endregion

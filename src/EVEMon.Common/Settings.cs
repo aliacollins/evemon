@@ -202,6 +202,7 @@ namespace EVEMon.Common
                 MarketPricer = serial.MarketPricer;
                 LoadoutsProvider = serial.LoadoutsProvider;
                 PortableEveInstallations = serial.PortableEveInstallations;
+                CloudStorageServiceProvider = serial.CloudStorageServiceProvider;
 
                 // Import the characters, API keys and plans
                 if (!preferencesOnly)
@@ -337,6 +338,7 @@ namespace EVEMon.Common
                 APIProviders = EveMonClient.APIProviders.Export(),
                 Scheduler = Scheduler.Export(),
                 Calendar = Calendar,
+                CloudStorageServiceProvider = CloudStorageServiceProvider,
                 PortableEveInstallations = PortableEveInstallations,
                 LoadoutsProvider = LoadoutsProvider,
                 MarketPricer = MarketPricer,
