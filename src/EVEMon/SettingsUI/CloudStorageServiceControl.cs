@@ -13,6 +13,7 @@ namespace EVEMon.SettingsUI
     public partial class CloudStorageServiceControl : UserControl
     {
         private bool m_authCodeRequested;
+        private static bool s_forceAuthOnLoad;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudStorageServiceControl"/> class.
@@ -32,6 +33,7 @@ namespace EVEMon.SettingsUI
             btnReset.Enabled = false;
 
             createAccountLinkLabel.Visible = Provider?.RefferalLink != null;
+            s_forceAuthOnLoad = true;
         }
 
         #region Properties
@@ -61,8 +63,9 @@ namespace EVEMon.SettingsUI
             Disposed += OnDisposed;
 
             CloudStorageServiceProvider.CredentialsChecked += CloudStorageServiceProvider_CheckCredentials;
+            CloudStorageServiceProvider.SettingsReset += CloudStorageServiceProvider_SettingsReset;
         }
-        
+
         /// <summary>
         /// Occurs when the control gets disposed.
         /// </summary>
@@ -71,6 +74,7 @@ namespace EVEMon.SettingsUI
         private void OnDisposed(object sender, EventArgs e)
         {
             CloudStorageServiceProvider.CredentialsChecked -= CloudStorageServiceProvider_CheckCredentials;
+            CloudStorageServiceProvider.SettingsReset -= CloudStorageServiceProvider_SettingsReset;
 
             Disposed -= OnDisposed;
         }
@@ -84,28 +88,8 @@ namespace EVEMon.SettingsUI
             if (!Visible)
                 return;
 
-            m_authCodeRequested = false;
-
-            UpdateControlsVisibility();
-
-            if (Provider == null || !Provider.HasCredentialsStored)
-                return;
-
-            if (CloudStorageServiceProvider.IsAuthenticated)
-            {
-                apiResponseLabel.ForeColor = Color.Green;
-                apiResponseLabel.Text = @"Authenticated";
-                return;
-            }
-
-            EveMonClient.Trace($"{Provider?.Name}.CheckCredentialsAsync - Initiated");
-
-            ResetTextAndColor();
-
-            throbber.State = ThrobberState.Rotating;
-            throbber.Visible = true;
-
-            Provider?.CheckAPIAuthIsValidAsync();
+            CheckAPIAuthIsValid(s_forceAuthOnLoad);
+            s_forceAuthOnLoad = false;
         }
 
         /// <summary>
@@ -119,11 +103,10 @@ namespace EVEMon.SettingsUI
 
             txtBoxAuthCode.ResetText();
 
-            EveMonClient.Trace($"{Provider?.Name}.SettingsReset - Initiated");
+            throbber.State = ThrobberState.Rotating;
+            throbber.Visible = true;
 
-            Provider?.ResetSettings();
-
-            UpdateControlsVisibility();
+            Provider?.ResetSettingsAsync();
         }
 
         /// <summary>
@@ -138,9 +121,16 @@ namespace EVEMon.SettingsUI
             if (Provider == null)
                 return;
 
-            if (!Provider.HasCredentialsStored && !m_authCodeRequested)
+            if (!m_authCodeRequested && !Provider.HasCredentialsStored)
             {
                 Provider.RequestAuthCodeAsync();
+
+                if (Provider.AuthSteps == AuthenticationSteps.One)
+                {
+                    btnRequestApply.Enabled = false;
+                    return;
+                }
+
                 btnRequestApply.Text = @"Apply Auth Code";
                 lblAuthCode.Enabled = txtBoxAuthCode.Enabled = btnRequestApply.Enabled =
                     !Provider.HasCredentialsStored;
@@ -185,27 +175,66 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Stopped;
             throbber.Visible = false;
 
-            apiResponseLabel.ForeColor = e.HasError || !CloudStorageServiceProvider.IsAuthenticated ? Color.Red : Color.Green;
+            apiResponseLabel.ForeColor = e.HasError ? Color.Red : Color.Green;
             apiResponseLabel.Text = e.HasError
                 ? e.ErrorMessage
                 : CloudStorageServiceProvider.IsAuthenticated
                     ? @"Authenticated"
-                    : @"Not Authenticated";
+                    : String.Empty;
 
-            if (!e.HasError)
-            {
-                UpdateControlsVisibility();
-                m_authCodeRequested = false;
-            }
+            if (e.HasError)
+                return;
 
-            string resultText = e.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace($"{Provider?.Name}.CheckCredentialsAsync - {resultText}");
+            UpdateControlsVisibility();
+            m_authCodeRequested = false;
+        }
+
+        /// <summary>
+        /// Occurs when provider's API credentials get reset.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CloudStorageServiceProviderEventArgs"/> instance containing the event data.</param>
+        private void CloudStorageServiceProvider_SettingsReset(object sender, CloudStorageServiceProviderEventArgs e)
+        {
+            throbber.State = ThrobberState.Stopped;
+            throbber.Visible = false;
+
+            UpdateControlsVisibility();
         }
 
         #endregion
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Checks the API authentication is valid.
+        /// </summary>
+        /// <param name="forceRecheck">if set to <c>true</c> forces an authentication recheck.</param>
+        internal void CheckAPIAuthIsValid(bool forceRecheck = false)
+        {
+            m_authCodeRequested = false;
+
+            UpdateControlsVisibility();
+
+            if (Provider == null || (!forceRecheck && !Provider.HasCredentialsStored))
+                return;
+
+            if (!forceRecheck && CloudStorageServiceProvider.IsAuthenticated)
+            {
+                apiResponseLabel.ForeColor = Color.Green;
+                apiResponseLabel.Text = @"Authenticated";
+                return;
+            }
+
+            ResetTextAndColor();
+            txtBoxAuthCode.ResetText();
+
+            throbber.State = ThrobberState.Rotating;
+            throbber.Visible = true;
+
+            Provider?.CheckAPIAuthIsValidAsync();
+        }
 
         /// <summary>
         /// Resets the color of the text and.
@@ -226,14 +255,15 @@ namespace EVEMon.SettingsUI
 
             if (!Provider.HasCredentialsStored)
             {
-                btnRequestApply.Text = @"Request Auth Code";
+                btnRequestApply.Text = @"Request Authentication";
                 btnRequestApply.Enabled = !Provider.HasCredentialsStored;
-                lblAuthCode.Enabled = txtBoxAuthCode.Enabled = btnReset.Enabled = 
+                lblAuthCode.Enabled = txtBoxAuthCode.Enabled = btnReset.Enabled =
                     Provider.HasCredentialsStored;
 
                 return;
             }
 
+            btnRequestApply.Text = @"Request Authentication";
             lblAuthCode.Enabled = txtBoxAuthCode.Enabled = btnRequestApply.Enabled =
                 !Provider.HasCredentialsStored;
             btnReset.Enabled = Provider.HasCredentialsStored;

@@ -147,12 +147,10 @@ namespace EVEMon.SettingsUI
                 return;
 
             s_queryPending = true;
-            throbber.Visible = true;
             throbber.State = ThrobberState.Rotating;
+            throbber.Visible = true;
 
             Settings.SaveImmediate();
-
-            EveMonClient.Trace($"{Provider?.Name}.UploadSettingsFileAsync - Initiated");
 
             Provider?.UploadSettingsFileAsync();
         }
@@ -170,10 +168,8 @@ namespace EVEMon.SettingsUI
                 return;
 
             s_queryPending = true;
-            throbber.Visible = true;
             throbber.State = ThrobberState.Rotating;
-
-            EveMonClient.Trace($"{Provider?.Name}.DownloadSettingsFileAsync - Initiated");
+            throbber.Visible = true;
 
             Provider?.DownloadSettingsFileAsync();
         }
@@ -221,9 +217,6 @@ namespace EVEMon.SettingsUI
 
             apiResponseLabel.ForeColor = e.HasError ? Color.Red : Color.Green;
             apiResponseLabel.Text = e.HasError ? e.ErrorMessage : @"File uploaded successfully";
-
-            string resultText = e.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace($"{Provider?.Name}.UploadSettingsFileAsync - {resultText}");
         }
 
         /// <summary>
@@ -238,14 +231,11 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Stopped;
             throbber.Visible = false;
 
-            if (e.HasError)
-            {
-                apiResponseLabel.ForeColor = Color.Red;
-                apiResponseLabel.Text = e.ErrorMessage;
-            }
+            if (!e.HasError)
+                return;
 
-            string resultText = e.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace($"{Provider?.Name}.DownloadSettingsFileAsync - {resultText}");
+            apiResponseLabel.ForeColor = Color.Red;
+            apiResponseLabel.Text = e.ErrorMessage;
         }
 
         #endregion

@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Dropbox.Api;
 using Dropbox.Api.Babel;
 using Dropbox.Api.Files;
@@ -19,8 +18,6 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
 {
     public sealed class DropboxCloudStorageServiceProvider : CloudStorageServiceProvider
     {
-        private static bool s_queryPending;
-
 
         #region Properties
 
@@ -33,12 +30,20 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         public override string Name => "Dropbox";
 
         /// <summary>
+        /// Gets the authentication steps.
+        /// </summary>
+        /// <value>
+        /// The authentication steps.
+        /// </value>
+        public override AuthenticationSteps AuthSteps => AuthenticationSteps.Two;
+
+        /// <summary>
         /// Gets a value indicating whether this <see cref="CloudStorageServiceProvider" /> is enabled.
         /// </summary>
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        protected override bool Enabled => EveMonClient.IsDebugBuild;
+        protected override bool Enabled => EveMonClient.IsDebugBuild || EveMonClient.IsSnapshotBuild;
 
         /// <summary>
         /// Gets a value indicating whether the provider API credentials are stored.
@@ -47,15 +52,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <c>true</c> if the provider API credentials are stored; otherwise, <c>false</c>.
         /// </value>
         public override bool HasCredentialsStored
-            => !String.IsNullOrEmpty(DropboxCloudStorageServiceSettings.Default.DropboxAccessToken);
-
-        /// <summary>
-        /// Gets a value indicating whether the provider API credentials are stored.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the provider API credentials are stored; otherwise, <c>false</c>.
-        /// </value>
-        protected override bool SupportsDataCompression => true;
+            => !String.IsNullOrEmpty(DropboxCloudStorageServiceSettings.Default.AccessToken);
 
         /// <summary>
         /// Gets the settings.
@@ -64,7 +61,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// The settings.
         /// </value>
         protected override ApplicationSettingsBase Settings => DropboxCloudStorageServiceSettings.Default;
-        
+
         /// <summary>
         /// Gets the refferal link.
         /// </summary>
@@ -79,80 +76,34 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         #region Implementation Methods
 
         /// <summary>
-        /// Synchronously checks the API authentication with credentials is valid.
+        /// Asynchronously checks that the provider authentication with credentials is valid.
         /// </summary>
-        /// <param name="userID">The user identifier.</param>
+        /// <param name="userId">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public override void CheckAPIAuthWithCredentialsIsValid(uint userID, string apiKey)
+        protected override Task<SerializableAPIResult<CloudStorageServiceAPICredentials>>
+            CheckProviderAuthWithCredentialsIsValidAsync(uint userId, string apiKey)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Asynchronously checks the API authentication with credentials is valid.
+        /// Asynchronously requests the provider an authentication code.
         /// </summary>
-        /// <param name="userID">The user identifier.</param>
-        /// <param name="apiKey">The API key.</param>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public override void CheckAPIAuthWithCredentialsIsValidAsync(uint userID, string apiKey)
+        protected override void RequestProviderAuthCodeAsync()
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Synchronously checks that API authentication is valid.
-        /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public override bool CheckAPIAuthIsValid() =>
-            !Task.Run(async () => await CheckAccessTokenAsync()).Result.HasError;
-
-        /// <summary>
-        /// Asynchronously checks that API authentication is valid.
-        /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public override async void CheckAPIAuthIsValidAsync()
-        {
-            if (s_queryPending)
-                return;
-
-            s_queryPending = true;
-            IsAuthenticated = false;
-            
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckAccessTokenAsync();
-            OnCredentialsChecked(result);
-            s_queryPending = false;
-        }
-
-        /// <summary>
-        /// Asynchronously requests an authentication code.
-        /// </summary>
-        public override void RequestAuthCodeAsync()
-        {
-            if (s_queryPending || HasCredentialsStored)
-                return;
-
-            s_queryPending = true;
-            IsAuthenticated = false;
-
-            string oauth2State = Guid.NewGuid().ToString("N");
-            Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(OAuthResponseType.Code,
-                Util.Decrypt(DropboxCloudStorageServiceSettings.Default.DropboxAPIKey,
-                    CultureConstants.InvariantCulture.NativeName),
-                String.Empty, oauth2State);
+            Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(
+                Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppKey,
+                    CultureConstants.InvariantCulture.NativeName));
 
             Util.OpenURL(authorizeUri);
-
-            s_queryPending = false;
-
-            EveMonClient.Trace($"{Name}.CheckCredentialsAsync - Initiated");
         }
 
         /// <summary>
-        /// Asynchronously checks the authentication code.
+        /// Asynchronously checks the provider authentication code.
         /// </summary>
         /// <param name="code">The code.</param>
-        public override async void CheckAuthCodeAsync(string code)
+        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckProviderAuthCodeAsync(
+            string code)
         {
             SerializableAPIResult<CloudStorageServiceAPICredentials> result =
                 new SerializableAPIResult<CloudStorageServiceAPICredentials>();
@@ -160,205 +111,19 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             try
             {
                 OAuth2Response response = await DropboxOAuth2Helper.ProcessCodeFlowAsync(code,
-                    Util.Decrypt(DropboxCloudStorageServiceSettings.Default.DropboxAPIKey,
+                    Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppKey,
                         CultureConstants.InvariantCulture.NativeName),
-                    Util.Decrypt(DropboxCloudStorageServiceSettings.Default.DropBoxAppSecret,
+                    Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppSecret,
                         CultureConstants.InvariantCulture.NativeName));
 
-                DropboxCloudStorageServiceSettings.Default.DropboxAccessToken = response.AccessToken;
-                Settings.Save();
+                DropboxCloudStorageServiceSettings.Default.AccessToken = response.AccessToken;
             }
-            catch (Exception exc)
+            catch (OAuth2Exception exc)
             {
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
             }
-            finally
-            {
-                s_queryPending = false;
-
-                OnCredentialsChecked(result);
-            }
-        }
-
-        /// <summary>
-        /// Resets the settings.
-        /// </summary>
-        public override void ResetSettings()
-        {
-            Settings.Reset();
-            OnSettingsReset();
-        }
-
-        /// <summary>
-        /// Uploads the settings file.
-        /// </summary>
-        /// <returns></returns>
-        public override bool UploadSettingsFile()
-        {
-            if (!CloudStorageServiceSettings.Default.UploadAlways || !HasCredentialsStored)
-                return true;
-
-            // Quit if user is not authenticated
-            if (!IsAuthenticated && !CheckAPIAuthIsValid())
-            {
-                MessageBox.Show($"The {Name} API credentials could not be authenticated.", $"{Name} API Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                return false;
-            }
-
-            EveMonClient.Trace($"{Name}.UploadSettingsFile - Initiated");
-
-            // Ask for user action if uploading fails
-            while (true)
-            {
-                SerializableAPIResult<CloudStorageServiceAPIFile> result = UploadFile();
-
-                if (!result.HasError)
-                {
-                    EveMonClient.Trace($"{Name}.UploadSettingsFile - Completed");
-                    return true;
-                }
-
-                DialogResult dialogResult = MessageBox.Show(result.Error.ErrorMessage, $"{Name} API Error",
-                    MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
-
-                switch (dialogResult)
-                {
-                    case DialogResult.Abort:
-                        EveMonClient.Trace($"{Name}.UploadSettingsFile - Failed and Aborted");
-                        return false;
-                    case DialogResult.Retry:
-                        continue;
-                }
-
-                EveMonClient.Trace($"{Name}.UploadSettingsFile - Failed and Ignored", Name);
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Downloads the settings file.
-        /// </summary>
-        /// <returns></returns>
-        public override CloudStorageServiceAPIFile DownloadSettingsFile()
-        {
-            if (!CloudStorageServiceSettings.Default.DownloadAlways || !HasCredentialsStored)
-                return null;
-
-            if (!IsAuthenticated && !CheckAPIAuthIsValid())
-            {
-                MessageBox.Show($"The {Name} API credentials could not be authenticated.",
-                    $"{Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-                return null;
-            }
-
-            EveMonClient.Trace($"{Name}.DownloadSettingsFile - Initiated");
-
-            SerializableAPIResult<CloudStorageServiceAPIFile> result = DownloadFile();
-            OnFileDownloaded(result);
-
-            if (CloudStorageServiceSettings.Default.UseImmediately)
-            {
-                if (result.HasError)
-                {
-                    MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                        $"File could not be downloaded.\n\nThe error was:\n{result.Error.ErrorMessage}"),
-                        $"{Name} API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    EveMonClient.Trace($"{Name}.DownloadSettingsFile - Completed");
-                    return result.Result;
-                }
-            }
-            else
-            {
-                var actionText = result.HasError ? "Failed" : "Completed";
-                EveMonClient.Trace($"{Name}.DownloadSettingsFile - {actionText}");
-
-                if (!result.HasError)
-                    SaveSettingsFile(result.Result);
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Uploads the settings file asynchronously.
-        /// </summary>
-        public override async void UploadSettingsFileAsync()
-        {
-            if (s_queryPending)
-                return;
-
-            s_queryPending = true;
-
-            SerializableAPIResult<CloudStorageServiceAPIFile> result = await UploadFileAsync();
-            OnFileUploaded(result);
-
-            s_queryPending = false;
-        }
-
-        /// <summary>
-        /// Downloads the settings file asynchronously.
-        /// </summary>
-        public override async void DownloadSettingsFileAsync()
-        {
-            if (s_queryPending)
-                return;
-
-            s_queryPending = true;
-
-            SerializableAPIResult<CloudStorageServiceAPIFile> result = await DownloadFileAsync();
-            OnFileDownloaded(result);
-
-            s_queryPending = false;
-
-            if (result.HasError)
-                return;
-
-            SaveSettingsFile(result.Result);
-        }
-
-        #endregion
-
-
-        #region Queries
-
-        /// <summary>
-        /// Asynchronously checks the access token.
-        /// </summary>
-        private static async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAccessTokenAsync()
-        {
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result =
-                new SerializableAPIResult<CloudStorageServiceAPICredentials>();
-
-            try
-            {
-                using (DropboxClient client = GetClient())
-                {
-                    await client.Users.GetCurrentAccountAsync();
-                    IsAuthenticated = true;
-                    return result;
-                }
-            }
-            catch (ApiException<GetAccountError> exc)
-            {
-                IsAuthenticated = false;
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
-            }
-            catch (AuthException exc)
-            {
-                Dictionary<string, object> json = Util.DeserializeJsonToObject(exc.Message);
-                string errorMessage = json[".tag"] as string ?? exc.Message;
-                IsAuthenticated = false;
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
-            }
             catch (Exception exc)
             {
-                IsAuthenticated = false;
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
             }
 
@@ -366,30 +131,66 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         }
 
         /// <summary>
-        /// Uploads the file.
+        /// Asynchronously checks the access token.
         /// </summary>
-        /// <returns></returns>
-        private static SerializableAPIResult<CloudStorageServiceAPIFile> UploadFile() =>
-            Task.Run(async () => await UploadFileAsync()).Result;
+        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAccessTokenAsync()
+        {
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result =
+                new SerializableAPIResult<CloudStorageServiceAPICredentials>();
+
+            try
+            {
+                if (!HasCredentialsStored)
+                    return result;
+
+                using (DropboxClient client = GetClient())
+                {
+                    await client.Users.GetCurrentAccountAsync();
+                }
+            }
+            catch (ApiException<GetAccountError> exc)
+            {
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+            }
+            catch (AuthException exc)
+            {
+                Dictionary<string, object> json = Util.DeserializeJsonToObject(exc.Message);
+                string errorMessage = json[".tag"] as string ?? exc.Message;
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+
+                if (HasCredentialsStored)
+                    ResetSettingsAsync();
+            }
+            catch (BadInputException exc)
+            {
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+            }
+            catch (Exception exc)
+            {
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+            }
+
+            return result;
+        }
 
         /// <summary>
-        /// Downloads the file.
+        /// Asynchronously revokes the access token.
         /// </summary>
         /// <returns></returns>
-        private SerializableAPIResult<CloudStorageServiceAPIFile> DownloadFile() =>
-            Task.Run(async () => await DownloadFileAsync()).Result;
+        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RevokeAccessTokenAsync()
+            => await Task.Run(() => new SerializableAPIResult<CloudStorageServiceAPICredentials>());
 
         /// <summary>
         /// Uploads the file asynchronously.
         /// </summary>
-        private static async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> UploadFileAsync()
+        protected override async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> UploadFileAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPIFile> result = new SerializableAPIResult<CloudStorageServiceAPIFile>();
 
             try
             {
                 byte[] content = Util.GZipCompress(SettingsFileContentByteArray).ToArray();
-                CommitInfo commitInfo = new CommitInfo($"/{Path.GetFileNameWithoutExtension(EveMonClient.SettingsFileName)}",
+                CommitInfo commitInfo = new CommitInfo($"/{SettingsFileNameWithoutExtension}",
                     WriteMode.Overwrite.Instance);
 
                 using (DropboxClient client = GetClient())
@@ -403,6 +204,18 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             {
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = ex.Message };
             }
+            catch (AuthException exc)
+            {
+                Dictionary<string, object> json = Util.DeserializeJsonToObject(exc.Message);
+                string errorMessage = json[".tag"] as string ?? exc.Message;
+                IsAuthenticated = false;
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+            }
+            catch (BadInputException exc)
+            {
+                IsAuthenticated = false;
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+            }
             catch (Exception ex)
             {
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = ex.Message };
@@ -414,22 +227,34 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <summary>
         /// Downloads the file asynchronously.
         /// </summary>
-        private async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> DownloadFileAsync()
+        protected override async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> DownloadFileAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPIFile> result = new SerializableAPIResult<CloudStorageServiceAPIFile>();
 
             try
             {
-                DownloadArg arg = new DownloadArg($"/{Path.GetFileNameWithoutExtension(EveMonClient.SettingsFileName)}");
+                DownloadArg arg = new DownloadArg($"/{SettingsFileNameWithoutExtension}");
                 using (DropboxClient client = GetClient())
                 {
                     IDownloadResponse<FileMetadata> response = await client.Files.DownloadAsync(arg);
-                    result = await GetMappedAPIFile(response);
+                    return await GetMappedAPIFile(result, response);
                 }
             }
             catch (ApiException<DownloadError> ex)
             {
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = ex.Message };
+            }
+            catch (AuthException exc)
+            {
+                Dictionary<string, object> json = Util.DeserializeJsonToObject(exc.Message);
+                string errorMessage = json[".tag"] as string ?? exc.Message;
+                IsAuthenticated = false;
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+            }
+            catch (BadInputException exc)
+            {
+                IsAuthenticated = false;
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
             }
             catch (Exception ex)
             {
@@ -479,26 +304,24 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         {
             InitializeCertPinning();
 
-            return new DropboxClient(DropboxCloudStorageServiceSettings.Default.DropboxAccessToken,
+            return new DropboxClient(DropboxCloudStorageServiceSettings.Default.AccessToken,
                 userAgent: HttpWebClientServiceState.UserAgent);
         }
 
         /// <summary>
         /// Gets the mapped API file.
         /// </summary>
+        /// <param name="result">The result.</param>
         /// <param name="response">The response.</param>
         /// <returns></returns>
-        private async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFile(
-            IDownloadResponse<FileMetadata> response)
+        private static async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFile(
+            SerializableAPIResult<CloudStorageServiceAPIFile> result, IDownloadResponse<FileMetadata> response)
         {
             if (response == null)
                 return null;
 
             return await response.GetContentAsStreamAsync().ContinueWith(task =>
             {
-                SerializableAPIResult<CloudStorageServiceAPIFile> result =
-                    new SerializableAPIResult<CloudStorageServiceAPIFile>();
-
                 string content;
                 using (StreamReader reader = new StreamReader(Util.ZlibUncompress(task.Result)))
                     content = reader.ReadToEnd();

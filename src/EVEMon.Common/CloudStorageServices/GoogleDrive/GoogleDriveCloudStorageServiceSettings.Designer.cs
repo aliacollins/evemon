@@ -8,16 +8,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EVEMon.Common.CloudStorageServices.Dropbox {
+namespace EVEMon.Common.CloudStorageServices.GoogleDrive {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
-    internal sealed partial class DropboxCloudStorageServiceSettings : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class GoogleDriveCloudStorageServiceSettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static DropboxCloudStorageServiceSettings defaultInstance = ((DropboxCloudStorageServiceSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new DropboxCloudStorageServiceSettings())));
+        private static GoogleDriveCloudStorageServiceSettings defaultInstance = ((GoogleDriveCloudStorageServiceSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new GoogleDriveCloudStorageServiceSettings())));
         
-        public static DropboxCloudStorageServiceSettings Default {
+        public static GoogleDriveCloudStorageServiceSettings Default {
             get {
                 return defaultInstance;
             }
@@ -37,7 +37,8 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("EtR+7IGX0c33DEX3I/td5A==")]
+        [global::System.Configuration.DefaultSettingValueAttribute("8BvIlzHHSodUmiKJYYZAZt0G+0e3FAPudDgGnisxIPlRhL6OtAuJ0rLrvcABqSjZbpUiNTD7HO+9jMyFB" +
+            "fO1eNCKLg1j/GOfC/huJ6LXspc=")]
         public string AppKey {
             get {
                 return ((string)(this["AppKey"]));
@@ -46,7 +47,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("vjAI3MH5c/3jEisSqOH8AA==")]
+        [global::System.Configuration.DefaultSettingValueAttribute("N08mlOe0XcXZLP2EZRKwLGbaOCKnEp6iTDNLNCAse0A=")]
         public string AppSecret {
             get {
                 return ((string)(this["AppSecret"]));
