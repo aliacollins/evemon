@@ -37,8 +37,8 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("GlgKCJmzGR1BhIyLTLd/GRGJuNRpb4bYk/dsVKiuhMycsTeeromr36d8LSx020rBf2kerBtbqQL2RTf5l" +
-            "Q1fNAzZvwNn8KIBGWx0FjEW7vE=")]
+        [global::System.Configuration.DefaultSettingValueAttribute("8BvIlzHHSodUmiKJYYZAZt0G+0e3FAPudDgGnisxIPlRhL6OtAuJ0rLrvcABqSjZbpUiNTD7HO+9jMyFB" +
+            "fO1eNCKLg1j/GOfC/huJ6LXspc=")]
         public string AppKey {
             get {
                 return ((string)(this["AppKey"]));
@@ -47,7 +47,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("+rvzyujyHEmSRX3v7PKAYvI2/K2LjWCJxuNAmJKAmxQ=")]
+        [global::System.Configuration.DefaultSettingValueAttribute("N08mlOe0XcXZLP2EZRKwLGbaOCKnEp6iTDNLNCAse0A=")]
         public string AppSecret {
             get {
                 return ((string)(this["AppSecret"]));
