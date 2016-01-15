@@ -126,7 +126,7 @@ namespace EVEMon.Common
             // Otherwise, query for the patch file
             // First look up for an emergency patch
             await Util.DownloadXmlAsync<SerializablePatch>(
-                new Uri(String.Format(CultureConstants.DefaultCulture, "{0}-emergency2.xml",
+                new Uri(String.Format(CultureConstants.DefaultCulture, "{0}-emergency.xml",
                     Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))))
                 .ContinueWith(async task =>
                 {

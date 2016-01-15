@@ -40,15 +40,15 @@ namespace EVEMon.Common.Helpers
             try
             {
                 await Dns.GetHostAddressesAsync(url.Host)
-                    .ContinueWith(async task1 =>
+                    .ContinueWith(async task =>
                     {
-                        if (task1.Result.Any())
+                        if (task.Result.Any())
                         {
                             DateTime dateTimeNowUtc;
 
                             using (TcpClient tcpClient = new TcpClient())
                             {
-                                await tcpClient.ConnectAsync(task1.Result.First(), url.Port);
+                                await tcpClient.ConnectAsync(task.Result.First(), url.Port);
 
                                 using (NetworkStream netStream = tcpClient.GetStream())
                                 {
