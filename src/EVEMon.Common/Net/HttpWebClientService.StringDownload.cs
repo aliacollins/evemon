@@ -45,10 +45,11 @@ namespace EVEMon.Common.Net
             HttpClientServiceRequest request = new HttpClientServiceRequest();
             try
             {
-                HttpResponseMessage response =
-                    await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, StringAccept);
-                Stream stream = await response.Content.ReadAsStreamAsync();
-                return GetString(request, stream);
+                using (HttpResponseMessage response = await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, StringAccept))
+                {
+                    Stream stream = await response.Content.ReadAsStreamAsync();
+                    return GetString(request, stream);
+                }
             }
             catch (HttpWebClientServiceException ex)
             {
