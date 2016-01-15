@@ -46,10 +46,11 @@ namespace EVEMon.Common.Net
             HttpClientServiceRequest request = new HttpClientServiceRequest();
             try
             {
-                HttpResponseMessage response =
-                    await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, XmlAccept);
-                Stream stream = await response.Content.ReadAsStreamAsync();
-                return GetXmlDocument(request, stream);
+                using (HttpResponseMessage response = await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, XmlAccept))
+                {
+                    Stream stream = await response.Content.ReadAsStreamAsync();
+                    return GetXmlDocument(request, stream);
+                }
             }
             catch (HttpWebClientServiceException ex)
             {
