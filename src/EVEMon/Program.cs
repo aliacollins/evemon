@@ -270,9 +270,9 @@ namespace EVEMon
                 if (requestedAssembly.Version < assembly.Version)
                     return Assembly.Load(assembly);
             }
-            catch (Exception exc)
+            catch (Exception)
             {
-                ExceptionHandler.LogException(exc, true);
+                return null;
             }
             return Assembly.Load(e.Name);
         }
