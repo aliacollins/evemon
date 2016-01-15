@@ -164,7 +164,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     return result;
 
                 if (s_credential == null)
-                    RequestAuthCodeAsync();
+                    return await RequestProviderAuthCodeAsync();
 
                 using (DriveService client = GetClient())
                 {
