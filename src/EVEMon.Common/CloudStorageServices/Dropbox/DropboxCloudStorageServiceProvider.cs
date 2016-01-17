@@ -43,7 +43,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        protected override bool Enabled => EveMonClient.IsDebugBuild || EveMonClient.IsSnapshotBuild;
+        protected override bool Enabled => true;
 
         /// <summary>
         /// Gets a value indicating whether the provider API credentials are stored.
