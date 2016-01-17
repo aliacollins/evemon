@@ -118,17 +118,12 @@ namespace EVEMon.Common.CloudStorageServices
         /// The providers.
         /// </value>
         public static IEnumerable<CloudStorageServiceProvider> Providers
-        {
-            get
-            {
-                return Assembly.GetExecutingAssembly().GetTypes()
-                    .Where(type => typeof(CloudStorageServiceProvider).IsAssignableFrom(type) &&
-                                   type.GetConstructor(Type.EmptyTypes) != null)
-                    .Select(type => Activator.CreateInstance(type) as CloudStorageServiceProvider)
-                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
-                    .OrderBy(provider => provider.Name);
-            }
-        }
+            => Assembly.GetExecutingAssembly().GetTypes()
+                .Where(type => typeof(CloudStorageServiceProvider).IsAssignableFrom(type) &&
+                               type.GetConstructor(Type.EmptyTypes) != null)
+                .Select(type => Activator.CreateInstance(type) as CloudStorageServiceProvider)
+                .Where(provider => !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
+                .OrderBy(provider => provider.Name);
 
         /// <summary>
         /// Gets the content of the settings file url encoded.
@@ -596,6 +591,42 @@ namespace EVEMon.Common.CloudStorageServices
                 // Save the file to destination
                 File.WriteAllText(saveFileDialog.FileName, result.FileContent);
             }
+        }
+
+        /// <summary>
+        /// Gets the mapped API file.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="response">The response.</param>
+        /// <returns></returns>
+        protected static async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFile(
+            SerializableAPIResult<CloudStorageServiceAPIFile> result, Stream response)
+        {
+            if (response == null)
+                return null;
+
+            return await Task.Run(() =>
+            {
+                string content;
+                using (StreamReader reader = new StreamReader(Util.ZlibUncompress(response)))
+                    content = reader.ReadToEnd();
+
+                if (String.IsNullOrWhiteSpace(content))
+                {
+                    result.Error = new CloudStorageServiceAPIError
+                    {
+                        ErrorMessage = @"The settings file was not in a correct format."
+                    };
+                    return result;
+                }
+
+                result.Result = new CloudStorageServiceAPIFile
+                {
+                    FileName = $"{SettingsFileNameWithoutExtension}.xml",
+                    FileContent = content
+                };
+                return result;
+            });
         }
 
         #endregion

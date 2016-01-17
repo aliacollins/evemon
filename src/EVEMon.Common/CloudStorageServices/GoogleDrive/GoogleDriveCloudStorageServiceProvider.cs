@@ -368,42 +368,6 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         }
 
         /// <summary>
-        /// Gets the mapped API file.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        /// <param name="response">The response.</param>
-        /// <returns></returns>
-        private static async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFile(
-            SerializableAPIResult<CloudStorageServiceAPIFile> result, Stream response)
-        {
-            if (response == null)
-                return null;
-
-            return await Task.Run(() =>
-            {
-                string content;
-                using (StreamReader reader = new StreamReader(Util.ZlibUncompress(response)))
-                    content = reader.ReadToEnd();
-
-                if (String.IsNullOrWhiteSpace(content))
-                {
-                    result.Error = new CloudStorageServiceAPIError
-                    {
-                        ErrorMessage = @"The settings file was not in a correct format."
-                    };
-                    return result;
-                }
-
-                result.Result = new CloudStorageServiceAPIFile
-                {
-                    FileName = $"{SettingsFileNameWithoutExtension}.xml",
-                    FileContent = content
-                };
-                return result;
-            });
-        }
-
-        /// <summary>
         /// Gets the error message description.
         /// </summary>
         /// <param name="exc">The exc.</param>

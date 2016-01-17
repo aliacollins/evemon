@@ -8,7 +8,6 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Dropbox.Api;
-using Dropbox.Api.Babel;
 using Dropbox.Api.Files;
 using Dropbox.Api.Users;
 using EVEMon.Common.Constants;
@@ -252,8 +251,9 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 DownloadArg arg = new DownloadArg($"/{SettingsFileNameWithoutExtension}");
                 using (DropboxClient client = GetClient())
                 {
-                    IDownloadResponse<FileMetadata> response = await client.Files.DownloadAsync(arg);
-                    return await GetMappedAPIFile(result, response);
+                    Task<Stream> response = await client.Files.DownloadAsync(arg)
+                        .ContinueWith(async task => await task.Result.GetContentAsStreamAsync());
+                    return await GetMappedAPIFile(result, response.Result);
                 }
             }
             catch (ApiException<DownloadError> ex)
@@ -322,44 +322,6 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
 
             return new DropboxClient(DropboxCloudStorageServiceSettings.Default.AccessToken,
                 userAgent: HttpWebClientServiceState.UserAgent);
-        }
-
-        /// <summary>
-        /// Gets the mapped API file.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        /// <param name="response">The response.</param>
-        /// <returns></returns>
-        private static async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFile(
-            SerializableAPIResult<CloudStorageServiceAPIFile> result, IDownloadResponse<FileMetadata> response)
-        {
-            if (response == null)
-                return null;
-
-            return await response.GetContentAsStreamAsync().ContinueWith(task =>
-            {
-                string content;
-                using (StreamReader reader = new StreamReader(Util.ZlibUncompress(task.Result)))
-                    content = reader.ReadToEnd();
-
-                if (String.IsNullOrWhiteSpace(content))
-                {
-                    result.Error = new CloudStorageServiceAPIError
-                    {
-                        ErrorMessage = @"The settings file was not in a correct format."
-                    };
-                    return result;
-                }
-
-                result.Result = response.Response != null
-                    ? new CloudStorageServiceAPIFile
-                    {
-                        FileName = $"{response.Response.Name}.xml",
-                        FileContent = content
-                    }
-                    : null;
-                return result;
-            });
         }
 
         #endregion
