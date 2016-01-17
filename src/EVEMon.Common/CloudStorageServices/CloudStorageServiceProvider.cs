@@ -177,15 +177,15 @@ namespace EVEMon.Common.CloudStorageServices
         protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckProviderAuthCodeAsync(string code);
 
         /// <summary>
-        /// Asynchronously checks the access token.
+        /// Asynchronously checks the authentication.
         /// </summary>
-        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAccessTokenAsync();
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAuthenticationAsync();
 
         /// <summary>
-        /// Asynchronously revokes the access token.
+        /// Asynchronously revokes the authorization.
         /// </summary>
         /// <returns></returns>
-        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RevokeAccessTokenAsync();
+        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RevokeAuthorizationAsync();
 
         /// <summary>
         /// Uploads the file asynchronously.
@@ -344,7 +344,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
         public bool CheckAPIAuthIsValid()
-            => !Task.Run(async () => await CheckAccessTokenAsync()).Result.HasError;
+            => !Task.Run(async () => await CheckAuthenticationAsync()).Result.HasError;
 
         /// <summary>
         /// Asynchronously checks that API authentication is valid.
@@ -361,7 +361,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             IsAuthenticated = false;
 
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckAccessTokenAsync();
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckAuthenticationAsync();
 
             IsAuthenticated = !result.HasError && HasCredentialsStored;
 
@@ -380,7 +380,7 @@ namespace EVEMon.Common.CloudStorageServices
         {
             EveMonClient.Trace($"{Name}.SettingsReset - Initiated");
 
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await RevokeAccessTokenAsync();
+            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await RevokeAuthorizationAsync();
 
             if (!result.HasError)
                 Settings.Reset();

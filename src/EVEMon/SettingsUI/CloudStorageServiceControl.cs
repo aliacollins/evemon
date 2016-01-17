@@ -32,7 +32,6 @@ namespace EVEMon.SettingsUI
             txtBoxAuthCode.Enabled = false;
             btnReset.Enabled = false;
 
-            createAccountLinkLabel.Visible = Provider?.RefferalLink != null;
             s_forceAuthOnLoad = true;
         }
 
@@ -256,6 +255,8 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void UpdateControlsVisibility()
         {
+            createAccountLinkLabel.Visible = Provider?.RefferalLink != null;
+
             if (Provider == null || m_authCodeRequested)
                 return;
 

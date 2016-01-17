@@ -128,6 +128,14 @@
       <HintPath>..\..\packages\NetOffice.Core.Net40.1.7.3.0\lib\net40\OfficeApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="OneDriveSdk, Version=1.1.29.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.OneDriveSDK.1.1.29\lib\net451\OneDriveSdk.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OneDriveSdk.WindowsForms, Version=1.1.29.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.OneDriveSDK.1.1.29\lib\net451\OneDriveSdk.WindowsForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OutlookApi, Version=1.7.3.0, Culture=neutral, PublicKeyToken=b118031aaa1097f3, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NetOffice.Outlook.Net40.1.7.3.0\lib\net40\OutlookApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -178,6 +186,12 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>GoogleDriveCloudStorageServiceSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="CloudStorageServices\OneDrive\OneDriveCloudStorageServiceProvider.cs" />
+    <Compile Include="CloudStorageServices\OneDrive\OneDriveCloudStorageServiceSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OneDriveCloudStorageServiceSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="Constants\EveConstants.cs" />
     <Compile Include="Constants\EVEMonConstants.cs" />
@@ -687,6 +701,10 @@
     <None Include="CloudStorageServices\GoogleDrive\GoogleDriveCloudStorageServiceSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>GoogleDriveCloudStorageServiceSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="CloudStorageServices\OneDrive\OneDriveCloudStorageServiceSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OneDriveCloudStorageServiceSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
     <Compile Include="Models\BuyOrder.cs" />
