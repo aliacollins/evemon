@@ -22,7 +22,8 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
     public sealed class GoogleDriveCloudStorageServiceProvider : CloudStorageServiceProvider
     {
         private static UserCredential s_credential;
-        private static string s_fileId;
+
+        private string m_fileId;
 
         private const string Spaces = "appDataFolder";
         private const string ContentType = "application/xml";
@@ -239,7 +240,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
             try
             {
-                s_fileId = s_fileId ?? await GetFileId();
+                m_fileId = m_fileId ?? await GetFileId();
 
                 byte[] content = Util.GZipCompress(SettingsFileContentByteArray).ToArray();
 
@@ -248,7 +249,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                 {
                     ResumableUpload<File, File> request;
                     File fileMetadata = new File { Name = SettingsFileNameWithoutExtension };
-                    if (String.IsNullOrWhiteSpace(s_fileId))
+                    if (String.IsNullOrWhiteSpace(m_fileId))
                     {
                         //Upload
                         fileMetadata.Parents = new List<string> { Spaces };
@@ -258,14 +259,14 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     else
                     {
                         //Update
-                        request = client.Files.Update(fileMetadata, s_fileId, stream, ContentType);
+                        request = client.Files.Update(fileMetadata, m_fileId, stream, ContentType);
                         ((FilesResource.UpdateMediaUpload)request).AddParents = Spaces;
                         ((FilesResource.UpdateMediaUpload)request).Fields = "id, name";
                     }
 
                     // Do the actual upload
-                    var response = await request.UploadAsync();
-                    s_fileId = request.ResponseBody?.Id;
+                    IUploadProgress response = await request.UploadAsync();
+                    m_fileId = request.ResponseBody?.Id;
 
                     // Chceck response for exception
                     if (response.Exception != null)
@@ -296,15 +297,15 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
             try
             {
-                s_fileId = s_fileId ?? await GetFileId();
+                m_fileId = m_fileId ?? await GetFileId();
 
-                if (String.IsNullOrWhiteSpace(s_fileId))
+                if (String.IsNullOrWhiteSpace(m_fileId))
                     throw new FileNotFoundException();
 
                 using (DriveService client = GetClient())
                 using (Stream stream = new MemoryStream())
                 {
-                    FilesResource.GetRequest request = client.Files.Get(s_fileId);
+                    FilesResource.GetRequest request = client.Files.Get(m_fileId);
                     request.Fields = "id, name";
 
                     IDownloadProgress response = await request.DownloadAsync(stream);

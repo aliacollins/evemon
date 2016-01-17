@@ -16,7 +16,7 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
 
         private static readonly string[] s_scopes = { "wl.offline_access", "onedrive.appfolder" };
 
-        private static string s_fileId;
+        private string m_fileId;
 
 
         #region Properties
@@ -189,20 +189,20 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
 
             try
             {
-                s_fileId = s_fileId ?? await GetFileId();
+                m_fileId = m_fileId ?? await GetFileId();
 
                 byte[] content = Util.GZipCompress(SettingsFileContentByteArray).ToArray();
 
                 using (OneDriveClient client = (OneDriveClient)await GetClient())
                 using (Stream stream = Util.GetMemoryStream(content))
                 {
-                    Item response = await (String.IsNullOrWhiteSpace(s_fileId)
+                    Item response = await (String.IsNullOrWhiteSpace(m_fileId)
                         ? client.Drive.Special.AppRoot
                             .ItemWithPath(Uri.EscapeUriString(SettingsFileNameWithoutExtension))
-                        : client.Drive.Items[s_fileId])
+                        : client.Drive.Items[m_fileId])
                         .Content.Request().PutAsync<Item>(stream);
 
-                    s_fileId = response?.Id;
+                    m_fileId = response?.Id;
                 }
             }
             catch (OneDriveException exc)
@@ -223,14 +223,14 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
 
             try
             {
-                s_fileId = s_fileId ?? await GetFileId();
+                m_fileId = m_fileId ?? await GetFileId();
 
-                if (String.IsNullOrWhiteSpace(s_fileId))
+                if (String.IsNullOrWhiteSpace(m_fileId))
                     throw new FileNotFoundException();
 
                 using (OneDriveClient client = (OneDriveClient)await GetClient())
                 {
-                    Stream stream = await client.Drive.Items[s_fileId].Content.Request().GetAsync();
+                    Stream stream = await client.Drive.Items[m_fileId].Content.Request().GetAsync();
                     return await GetMappedAPIFile(result, stream);
                 }
             }
