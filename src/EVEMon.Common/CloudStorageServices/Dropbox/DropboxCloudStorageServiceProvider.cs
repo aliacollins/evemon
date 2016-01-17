@@ -128,7 +128,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                     Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppSecret,
                         CultureConstants.InvariantCulture.NativeName));
 
-                result = await CheckAccessTokenAsync();
+                result = await CheckAuthenticationAsync();
 
                 if (!result.HasError)
                     DropboxCloudStorageServiceSettings.Default.AccessToken = response.AccessToken;
@@ -146,9 +146,9 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         }
 
         /// <summary>
-        /// Asynchronously checks the access token.
+        /// Asynchronously checks the authentication.
         /// </summary>
-        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAccessTokenAsync()
+        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAuthenticationAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPICredentials> result =
                 new SerializableAPIResult<CloudStorageServiceAPICredentials>();
@@ -189,10 +189,10 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         }
 
         /// <summary>
-        /// Asynchronously revokes the access token.
+        /// Asynchronously revokes the authorization.
         /// </summary>
         /// <returns></returns>
-        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RevokeAccessTokenAsync()
+        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RevokeAuthorizationAsync()
             => await Task.Run(() => new SerializableAPIResult<CloudStorageServiceAPICredentials>());
 
         /// <summary>
@@ -231,9 +231,9 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 IsAuthenticated = false;
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = ex.Message };
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
             }
 
             return result;
@@ -272,9 +272,9 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 IsAuthenticated = false;
                 result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = ex.Message };
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
             }
 
             return result;
