@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using Microsoft.OneDrive.Sdk;
 using Microsoft.OneDrive.Sdk.WindowsForms;
+using Image = System.Drawing.Image;
 
 namespace EVEMon.Common.CloudStorageServices.OneDrive
 {
@@ -61,6 +62,14 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
         /// The settings.
         /// </value>
         protected override ApplicationSettingsBase Settings => OneDriveCloudStorageServiceSettings.Default;
+
+        /// <summary>
+        /// Gets the logo.
+        /// </summary>
+        /// <value>
+        /// The logo.
+        /// </value>
+        public override Image Logo => CloudStorageServiceResources.OneDriveLogo;
 
         #endregion
 

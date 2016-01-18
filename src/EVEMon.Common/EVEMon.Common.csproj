@@ -175,6 +175,11 @@
     <Compile Include="CloudStorageServices\CloudStorageServiceAPIResult.cs" />
     <Compile Include="CloudStorageServices\CloudStorageServiceProvider.cs" />
     <Compile Include="CloudStorageServices\CloudStorageServiceAPICredentials.cs" />
+    <Compile Include="CloudStorageServices\CloudStorageServiceResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CloudStorageServiceResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="CloudStorageServices\Dropbox\DropboxCloudStorageServiceProvider.cs" />
     <Compile Include="CloudStorageServices\Dropbox\DropboxCloudStorageServiceSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -860,6 +865,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CloudStorageServices\CloudStorageServiceResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CloudStorageServiceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ColumnSelectWindow.resx">
       <DependentUpon>ColumnSelectWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1215,7 +1224,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->

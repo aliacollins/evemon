@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -110,6 +111,14 @@ namespace EVEMon.Common.CloudStorageServices
         /// The refferal link.
         /// </value>
         public virtual Uri RefferalLink => null;
+
+        /// <summary>
+        /// Gets the logo.
+        /// </summary>
+        /// <value>
+        /// The logo.
+        /// </value>
+        public virtual Image Logo => null;
 
         /// <summary>
         /// Gets the providers.

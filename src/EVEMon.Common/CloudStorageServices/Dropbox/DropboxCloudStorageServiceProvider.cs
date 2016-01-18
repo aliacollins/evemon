@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -68,6 +69,14 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// The refferal link.
         /// </value>
         public override Uri RefferalLink => new Uri("https://www.dropbox.com/referrals/NTEyOTk1Njg4MDk?src=app9-891961");
+
+        /// <summary>
+        /// Gets the logo.
+        /// </summary>
+        /// <value>
+        /// The logo.
+        /// </value>
+        public override Image Logo => CloudStorageServiceResources.DropboxLogo;
 
         #endregion
 

@@ -653,6 +653,8 @@ namespace EVEMon.SettingsUI
 
             if (cloudStorageProvidersComboBox.SelectedIndex == -1 && cloudStorageProvidersComboBox.Items.Count > 0)
                 cloudStorageProvidersComboBox.SelectedIndex = 0;
+
+            cloudStorageProviderLogoPictureBox.Image = m_settings.CloudStorageServiceProvider.Provider?.Logo;
         }
 
         #endregion
@@ -1182,6 +1184,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             m_settings.CloudStorageServiceProvider.ProviderName = cloudStorageProvidersComboBox.SelectedItem?.ToString();
+            cloudStorageProviderLogoPictureBox.Image = m_settings.CloudStorageServiceProvider.Provider?.Logo;
             cloudStorageServiceControl.CheckAPIAuthIsValid(forceRecheck: true);
         }
 
