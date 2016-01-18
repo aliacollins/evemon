@@ -23,7 +23,7 @@
       <row refTypeID="18" refTypeName="Your Corporate Application Accepted" subjectLayout="Invited to join {corpID}" textLayout="Dear {charID},\n\nYour application to {corpID} has been reviewed and an invitation to join the corporation has been sent to you. You may now choose to Accept the invitation which will move you to the corporation or alternatively you may Withdraw the application.\n\nThe invitation can be found in the Corporation window under the Recruitment \u201cMy Applications\u201d tab.\n\nRegards,\n{corpID}"/>
       <row refTypeID="19" refTypeName="Corporation Tax Change" subjectLayout="Tax Rate Changed To {newTaxRate}%" textLayout="This is an automated message: The tax rate for {corpID} members has been changed from {oldTaxRate}% to {newTaxRate}%."/>
       <row refTypeID="20" refTypeName="Corporation News" subjectLayout="" textLayout=""/>
-      <row refTypeID="21" refTypeName="Pilot Left Corporation" subjectLayout="Icy Beaty has left {corpID}" textLayout="{charID} is no longer a member of {corpID}."/>
+      <row refTypeID="21" refTypeName="Pilot Left Corporation" subjectLayout="{charID} has left {corpID}" textLayout="{charID} is no longer a member of {corpID}."/>
       <row refTypeID="22" refTypeName="New Corporation CEO" subjectLayout="{newCeoID} is the new CEO of {corpID}" textLayout="{oldCeoID} has resigned from the position of CEO with {corpID}. As their last move they appointed {newCeoID} as CEO."/>
       <row refTypeID="23" refTypeName="Corporate Dividend Payout" subjectLayout="" textLayout=""/>
       <row refTypeID="24" refTypeName="Unknown" subjectLayout="" textLayout=""/>
