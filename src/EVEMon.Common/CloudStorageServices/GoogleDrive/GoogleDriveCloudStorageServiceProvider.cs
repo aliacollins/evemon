@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -79,6 +80,14 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// The refferal link.
         /// </value>
         public override Uri RefferalLink => new Uri("https://accounts.google.com/SignUp");
+
+        /// <summary>
+        /// Gets the logo.
+        /// </summary>
+        /// <value>
+        /// The logo.
+        /// </value>
+        public override Image Logo => CloudStorageServiceResources.GoogleDriveLogo;
 
         #endregion
 

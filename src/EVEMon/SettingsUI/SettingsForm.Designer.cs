@@ -277,6 +277,7 @@ namespace EVEMon.SettingsUI
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.settingsFileStorageGroupBox = new System.Windows.Forms.GroupBox();
             this.settingsFileStorageControl = new EVEMon.SettingsUI.SettingsFileStorageControl();
+            this.cloudStorageProviderLogoPictureBox = new System.Windows.Forms.PictureBox();
             this.systemTrayIconGroupBox.SuspendLayout();
             this.bottomPanel.SuspendLayout();
             this.CharacterMonitorGroupBox.SuspendLayout();
@@ -328,6 +329,7 @@ namespace EVEMon.SettingsUI
             this.providerAuthenticationGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.settingsFileStorageGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cloudStorageProviderLogoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // systemTrayIconGroupBox
@@ -2675,6 +2677,7 @@ namespace EVEMon.SettingsUI
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cloudStorageProviderLogoPictureBox);
             this.groupBox1.Controls.Add(this.cloudStorageProvidersComboBox);
             this.groupBox1.Controls.Add(this.lblSelectedProvider);
             this.groupBox1.Location = new System.Drawing.Point(6, 81);
@@ -2690,7 +2693,7 @@ namespace EVEMon.SettingsUI
             this.cloudStorageProvidersComboBox.FormattingEnabled = true;
             this.cloudStorageProvidersComboBox.Location = new System.Drawing.Point(61, 28);
             this.cloudStorageProvidersComboBox.Name = "cloudStorageProvidersComboBox";
-            this.cloudStorageProvidersComboBox.Size = new System.Drawing.Size(165, 21);
+            this.cloudStorageProvidersComboBox.Size = new System.Drawing.Size(107, 21);
             this.cloudStorageProvidersComboBox.TabIndex = 1;
             this.cloudStorageProvidersComboBox.SelectedIndexChanged += new System.EventHandler(this.cloudStorageProvidersComboBox_SelectedIndexChanged);
             // 
@@ -2731,6 +2734,15 @@ namespace EVEMon.SettingsUI
             this.settingsFileStorageControl.Name = "settingsFileStorageControl";
             this.settingsFileStorageControl.Size = new System.Drawing.Size(416, 108);
             this.settingsFileStorageControl.TabIndex = 0;
+            // 
+            // cloudStorageProviderLogoPictureBox
+            // 
+            this.cloudStorageProviderLogoPictureBox.Location = new System.Drawing.Point(176, 11);
+            this.cloudStorageProviderLogoPictureBox.Name = "cloudStorageProviderLogoPictureBox";
+            this.cloudStorageProviderLogoPictureBox.Size = new System.Drawing.Size(50, 50);
+            this.cloudStorageProviderLogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.cloudStorageProviderLogoPictureBox.TabIndex = 2;
+            this.cloudStorageProviderLogoPictureBox.TabStop = false;
             // 
             // SettingsForm
             // 
@@ -2837,6 +2849,7 @@ namespace EVEMon.SettingsUI
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.settingsFileStorageGroupBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cloudStorageProviderLogoPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3043,5 +3056,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label lblSelectedProvider;
         private System.Windows.Forms.GroupBox providerAuthenticationGroupBox;
         private CloudStorageServiceControl cloudStorageServiceControl;
+        private System.Windows.Forms.PictureBox cloudStorageProviderLogoPictureBox;
     }
 }
