@@ -115,10 +115,6 @@ namespace EVEMon.SettingsUI
             this.lblBlockingEvents = new System.Windows.Forms.Label();
             this.lblRecurringEvents = new System.Windows.Forms.Label();
             this.lblSimpleEvents = new System.Windows.Forms.Label();
-            this.lblReminder = new System.Windows.Forms.Label();
-            this.lblURI = new System.Windows.Forms.Label();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.lblGoogleEmail = new System.Windows.Forms.Label();
             this.lblExternalCalendarPage = new System.Windows.Forms.Label();
             this.lblG15Page = new System.Windows.Forms.Label();
             this.lblCycleTrainingSeconds = new System.Windows.Forms.Label();
@@ -177,10 +173,8 @@ namespace EVEMon.SettingsUI
             this.proxyHttpHostTextBox = new System.Windows.Forms.TextBox();
             this.emailNotificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.mailNotificationCheckBox = new System.Windows.Forms.CheckBox();
-            this.emailNotificationsControl = new EVEMon.SettingsUI.EmailNotificationsControl();
             this.notificationsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.cbPlaySoundOnSkillComplete = new System.Windows.Forms.CheckBox();
-            this.notificationsControl = new EVEMon.SettingsUI.NotificationsControl();
             this.trayIconPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.mainWindowBehaviourGroupBox = new System.Windows.Forms.GroupBox();
             this.rbMinToTaskBar = new System.Windows.Forms.RadioButton();
@@ -193,7 +187,6 @@ namespace EVEMon.SettingsUI
             this.trayTooltipRadio = new System.Windows.Forms.RadioButton();
             this.trayTooltipButton = new System.Windows.Forms.Button();
             this.updatesPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
             this.lblUpdatesPage = new System.Windows.Forms.Label();
             this.cbCheckTime = new System.Windows.Forms.CheckBox();
             this.cbCheckForUpdates = new System.Windows.Forms.CheckBox();
@@ -205,30 +198,6 @@ namespace EVEMon.SettingsUI
             this.panelColorSingle1 = new System.Windows.Forms.Panel();
             this.panelColorBlocking = new System.Windows.Forms.Panel();
             this.externalCalendarPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
-            this.externalCalendarPanel = new System.Windows.Forms.Panel();
-            this.gbReminder = new System.Windows.Forms.GroupBox();
-            this.lblMinutes = new System.Windows.Forms.Label();
-            this.cbSetReminder = new System.Windows.Forms.CheckBox();
-            this.lblLateReminder = new System.Windows.Forms.Label();
-            this.dtpLateReminder = new System.Windows.Forms.DateTimePicker();
-            this.lblEarlyReminder = new System.Windows.Forms.Label();
-            this.tbReminder = new System.Windows.Forms.TextBox();
-            this.cbUseAlterateReminder = new System.Windows.Forms.CheckBox();
-            this.dtpEarlyReminder = new System.Windows.Forms.DateTimePicker();
-            this.cbLastQueuedSkillOnly = new System.Windows.Forms.CheckBox();
-            this.rbMSOutlook = new System.Windows.Forms.RadioButton();
-            this.rbGoogle = new System.Windows.Forms.RadioButton();
-            this.gbGoogle = new System.Windows.Forms.GroupBox();
-            this.cbGoogleReminder = new System.Windows.Forms.ComboBox();
-            this.tbGoogleURI = new System.Windows.Forms.TextBox();
-            this.tbGooglePassword = new System.Windows.Forms.TextBox();
-            this.tbGoogleEmail = new System.Windows.Forms.TextBox();
-            this.gbMSOutlook = new System.Windows.Forms.GroupBox();
-            this.calendarPathExampleLabel = new System.Windows.Forms.Label();
-            this.rbCustomCalendar = new System.Windows.Forms.RadioButton();
-            this.rbDefaultCalendar = new System.Windows.Forms.RadioButton();
-            this.tbCalendarPath = new System.Windows.Forms.TextBox();
-            this.calendarPathLabel = new System.Windows.Forms.Label();
             this.externalCalendarCheckbox = new System.Windows.Forms.CheckBox();
             this.g15Page = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.g15CheckBox = new System.Windows.Forms.CheckBox();
@@ -262,7 +231,6 @@ namespace EVEMon.SettingsUI
             this.portableEveClientsPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.lblPECIDescription = new System.Windows.Forms.Label();
             this.PECIGroupBox = new System.Windows.Forms.GroupBox();
-            this.portableEveClientsControl = new EVEMon.SettingsUI.PortableEveClientsControl();
             this.marketPriceProvidersPage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.gbMarketPriceProviders = new System.Windows.Forms.GroupBox();
             this.cbProvidersList = new System.Windows.Forms.ComboBox();
@@ -270,14 +238,19 @@ namespace EVEMon.SettingsUI
             this.marketPriceProviderPageLabel = new System.Windows.Forms.Label();
             this.cloudStorageServicePage = new EVEMon.Common.Controls.MultiPanel.MultiPanelPage();
             this.providerAuthenticationGroupBox = new System.Windows.Forms.GroupBox();
-            this.cloudStorageServiceControl = new EVEMon.SettingsUI.CloudStorageServiceControl();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cloudStorageProviderLogoPictureBox = new System.Windows.Forms.PictureBox();
             this.cloudStorageProvidersComboBox = new System.Windows.Forms.ComboBox();
             this.lblSelectedProvider = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.settingsFileStorageGroupBox = new System.Windows.Forms.GroupBox();
+            this.emailNotificationsControl = new EVEMon.SettingsUI.EmailNotificationsControl();
+            this.notificationsControl = new EVEMon.SettingsUI.NotificationsControl();
+            this.updateSettingsControl = new EVEMon.SettingsUI.UpdateSettingsControl();
+            this.externalCalendarControl = new EVEMon.SettingsUI.ExternalCalendarControl();
+            this.portableEveClientsControl = new EVEMon.SettingsUI.PortableEveClientsControl();
+            this.cloudStorageServiceControl = new EVEMon.SettingsUI.CloudStorageServiceControl();
             this.settingsFileStorageControl = new EVEMon.SettingsUI.SettingsFileStorageControl();
-            this.cloudStorageProviderLogoPictureBox = new System.Windows.Forms.PictureBox();
             this.systemTrayIconGroupBox.SuspendLayout();
             this.bottomPanel.SuspendLayout();
             this.CharacterMonitorGroupBox.SuspendLayout();
@@ -304,10 +277,6 @@ namespace EVEMon.SettingsUI
             this.updatesPage.SuspendLayout();
             this.schedulerUIPage.SuspendLayout();
             this.externalCalendarPage.SuspendLayout();
-            this.externalCalendarPanel.SuspendLayout();
-            this.gbReminder.SuspendLayout();
-            this.gbGoogle.SuspendLayout();
-            this.gbMSOutlook.SuspendLayout();
             this.g15Page.SuspendLayout();
             this.g15Panel.SuspendLayout();
             this.panelCycleQueueInfo.SuspendLayout();
@@ -328,8 +297,8 @@ namespace EVEMon.SettingsUI
             this.cloudStorageServicePage.SuspendLayout();
             this.providerAuthenticationGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.settingsFileStorageGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cloudStorageProviderLogoPictureBox)).BeginInit();
+            this.settingsFileStorageGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // systemTrayIconGroupBox
@@ -767,42 +736,6 @@ namespace EVEMon.SettingsUI
             this.lblSimpleEvents.TabIndex = 2;
             this.lblSimpleEvents.Text = "Simple Events:";
             // 
-            // lblReminder
-            // 
-            this.lblReminder.AutoSize = true;
-            this.lblReminder.Location = new System.Drawing.Point(6, 107);
-            this.lblReminder.Name = "lblReminder";
-            this.lblReminder.Size = new System.Drawing.Size(55, 13);
-            this.lblReminder.TabIndex = 6;
-            this.lblReminder.Text = "Reminder:";
-            // 
-            // lblURI
-            // 
-            this.lblURI.AutoSize = true;
-            this.lblURI.Location = new System.Drawing.Point(6, 80);
-            this.lblURI.Name = "lblURI";
-            this.lblURI.Size = new System.Drawing.Size(29, 13);
-            this.lblURI.TabIndex = 5;
-            this.lblURI.Text = "URI:";
-            // 
-            // lblPassword
-            // 
-            this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(6, 52);
-            this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(56, 13);
-            this.lblPassword.TabIndex = 1;
-            this.lblPassword.Text = "Password:";
-            // 
-            // lblGoogleEmail
-            // 
-            this.lblGoogleEmail.AutoSize = true;
-            this.lblGoogleEmail.Location = new System.Drawing.Point(6, 24);
-            this.lblGoogleEmail.Name = "lblGoogleEmail";
-            this.lblGoogleEmail.Size = new System.Drawing.Size(72, 13);
-            this.lblGoogleEmail.TabIndex = 0;
-            this.lblGoogleEmail.Text = "Google Email:";
-            // 
             // lblExternalCalendarPage
             // 
             this.lblExternalCalendarPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1229,7 +1162,7 @@ namespace EVEMon.SettingsUI
             this.multiPanel.Location = new System.Drawing.Point(199, 0);
             this.multiPanel.Name = "multiPanel";
             this.multiPanel.Padding = new System.Windows.Forms.Padding(5);
-            this.multiPanel.SelectedPage = this.cloudStorageServicePage;
+            this.multiPanel.SelectedPage = this.generalPage;
             this.multiPanel.Size = new System.Drawing.Size(445, 436);
             this.multiPanel.TabIndex = 7;
             // 
@@ -1592,14 +1525,6 @@ namespace EVEMon.SettingsUI
             this.mailNotificationCheckBox.UseVisualStyleBackColor = true;
             this.mailNotificationCheckBox.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
-            // emailNotificationsControl
-            // 
-            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
-            this.emailNotificationsControl.Name = "emailNotificationsControl";
-            this.emailNotificationsControl.Settings = null;
-            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
-            this.emailNotificationsControl.TabIndex = 20;
-            // 
             // notificationsPage
             // 
             this.notificationsPage.Controls.Add(this.lblNotificationsPage);
@@ -1622,18 +1547,6 @@ namespace EVEMon.SettingsUI
             this.cbPlaySoundOnSkillComplete.TabIndex = 3;
             this.cbPlaySoundOnSkillComplete.Text = "Play sound when skill training completes";
             this.cbPlaySoundOnSkillComplete.UseVisualStyleBackColor = true;
-            // 
-            // notificationsControl
-            // 
-            this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.notificationsControl.AutoScroll = true;
-            this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
-            this.notificationsControl.Location = new System.Drawing.Point(3, 56);
-            this.notificationsControl.Name = "notificationsControl";
-            this.notificationsControl.Settings = null;
-            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
-            this.notificationsControl.TabIndex = 4;
             // 
             // trayIconPage
             // 
@@ -1777,18 +1690,6 @@ namespace EVEMon.SettingsUI
             this.updatesPage.Text = "updatesPage";
             this.updatesPage.Visible = false;
             // 
-            // updateSettingsControl
-            // 
-            this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.updateSettingsControl.AutoScroll = true;
-            this.updateSettingsControl.Location = new System.Drawing.Point(11, 85);
-            this.updateSettingsControl.Name = "updateSettingsControl";
-            this.updateSettingsControl.Settings = null;
-            this.updateSettingsControl.Size = new System.Drawing.Size(413, 340);
-            this.updateSettingsControl.TabIndex = 10;
-            // 
             // lblUpdatesPage
             // 
             this.lblUpdatesPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1910,7 +1811,7 @@ namespace EVEMon.SettingsUI
             // 
             // externalCalendarPage
             // 
-            this.externalCalendarPage.Controls.Add(this.externalCalendarPanel);
+            this.externalCalendarPage.Controls.Add(this.externalCalendarControl);
             this.externalCalendarPage.Controls.Add(this.lblExternalCalendarPage);
             this.externalCalendarPage.Controls.Add(this.externalCalendarCheckbox);
             this.externalCalendarPage.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1920,274 +1821,6 @@ namespace EVEMon.SettingsUI
             this.externalCalendarPage.TabIndex = 11;
             this.externalCalendarPage.Text = "externalCalendarPage";
             this.externalCalendarPage.Visible = false;
-            // 
-            // externalCalendarPanel
-            // 
-            this.externalCalendarPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.externalCalendarPanel.Controls.Add(this.gbReminder);
-            this.externalCalendarPanel.Controls.Add(this.cbLastQueuedSkillOnly);
-            this.externalCalendarPanel.Controls.Add(this.rbMSOutlook);
-            this.externalCalendarPanel.Controls.Add(this.rbGoogle);
-            this.externalCalendarPanel.Controls.Add(this.gbGoogle);
-            this.externalCalendarPanel.Controls.Add(this.gbMSOutlook);
-            this.externalCalendarPanel.Location = new System.Drawing.Point(3, 119);
-            this.externalCalendarPanel.Name = "externalCalendarPanel";
-            this.externalCalendarPanel.Size = new System.Drawing.Size(429, 292);
-            this.externalCalendarPanel.TabIndex = 12;
-            // 
-            // gbReminder
-            // 
-            this.gbReminder.Controls.Add(this.lblMinutes);
-            this.gbReminder.Controls.Add(this.cbSetReminder);
-            this.gbReminder.Controls.Add(this.lblLateReminder);
-            this.gbReminder.Controls.Add(this.dtpLateReminder);
-            this.gbReminder.Controls.Add(this.lblEarlyReminder);
-            this.gbReminder.Controls.Add(this.tbReminder);
-            this.gbReminder.Controls.Add(this.cbUseAlterateReminder);
-            this.gbReminder.Controls.Add(this.dtpEarlyReminder);
-            this.gbReminder.Location = new System.Drawing.Point(3, 166);
-            this.gbReminder.Name = "gbReminder";
-            this.gbReminder.Size = new System.Drawing.Size(422, 96);
-            this.gbReminder.TabIndex = 13;
-            this.gbReminder.TabStop = false;
-            this.gbReminder.Text = "Reminder Setting";
-            // 
-            // lblMinutes
-            // 
-            this.lblMinutes.AutoSize = true;
-            this.lblMinutes.Location = new System.Drawing.Point(144, 21);
-            this.lblMinutes.Name = "lblMinutes";
-            this.lblMinutes.Size = new System.Drawing.Size(43, 13);
-            this.lblMinutes.TabIndex = 11;
-            this.lblMinutes.Text = "minutes";
-            // 
-            // cbSetReminder
-            // 
-            this.cbSetReminder.AutoSize = true;
-            this.cbSetReminder.Location = new System.Drawing.Point(8, 20);
-            this.cbSetReminder.Name = "cbSetReminder";
-            this.cbSetReminder.Size = new System.Drawing.Size(88, 17);
-            this.cbSetReminder.TabIndex = 6;
-            this.cbSetReminder.Text = "Use reminder";
-            this.cbSetReminder.UseVisualStyleBackColor = true;
-            this.cbSetReminder.Click += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // lblLateReminder
-            // 
-            this.lblLateReminder.AutoSize = true;
-            this.lblLateReminder.Location = new System.Drawing.Point(192, 70);
-            this.lblLateReminder.Name = "lblLateReminder";
-            this.lblLateReminder.Size = new System.Drawing.Size(79, 13);
-            this.lblLateReminder.TabIndex = 6;
-            this.lblLateReminder.Text = "Late Reminder:";
-            // 
-            // dtpLateReminder
-            // 
-            this.dtpLateReminder.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtpLateReminder.Location = new System.Drawing.Point(278, 66);
-            this.dtpLateReminder.Name = "dtpLateReminder";
-            this.dtpLateReminder.ShowUpDown = true;
-            this.dtpLateReminder.Size = new System.Drawing.Size(72, 20);
-            this.dtpLateReminder.TabIndex = 10;
-            this.dtpLateReminder.Value = new System.DateTime(2007, 9, 21, 0, 0, 0, 0);
-            // 
-            // lblEarlyReminder
-            // 
-            this.lblEarlyReminder.AutoSize = true;
-            this.lblEarlyReminder.Location = new System.Drawing.Point(27, 70);
-            this.lblEarlyReminder.Name = "lblEarlyReminder";
-            this.lblEarlyReminder.Size = new System.Drawing.Size(81, 13);
-            this.lblEarlyReminder.TabIndex = 4;
-            this.lblEarlyReminder.Text = "Early Reminder:";
-            // 
-            // tbReminder
-            // 
-            this.tbReminder.Location = new System.Drawing.Point(102, 18);
-            this.tbReminder.Name = "tbReminder";
-            this.tbReminder.Size = new System.Drawing.Size(35, 20);
-            this.tbReminder.TabIndex = 7;
-            this.tbReminder.Text = "5";
-            this.tbReminder.Validating += new System.ComponentModel.CancelEventHandler(this.tbReminder_Validating);
-            // 
-            // cbUseAlterateReminder
-            // 
-            this.cbUseAlterateReminder.AutoSize = true;
-            this.cbUseAlterateReminder.Location = new System.Drawing.Point(8, 45);
-            this.cbUseAlterateReminder.Name = "cbUseAlterateReminder";
-            this.cbUseAlterateReminder.Size = new System.Drawing.Size(132, 17);
-            this.cbUseAlterateReminder.TabIndex = 8;
-            this.cbUseAlterateReminder.Text = "Use alternate reminder";
-            this.cbUseAlterateReminder.UseVisualStyleBackColor = true;
-            this.cbUseAlterateReminder.Click += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // dtpEarlyReminder
-            // 
-            this.dtpEarlyReminder.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtpEarlyReminder.Location = new System.Drawing.Point(116, 66);
-            this.dtpEarlyReminder.Name = "dtpEarlyReminder";
-            this.dtpEarlyReminder.ShowUpDown = true;
-            this.dtpEarlyReminder.Size = new System.Drawing.Size(70, 20);
-            this.dtpEarlyReminder.TabIndex = 9;
-            this.dtpEarlyReminder.Value = new System.DateTime(2007, 9, 21, 0, 0, 0, 0);
-            // 
-            // cbLastQueuedSkillOnly
-            // 
-            this.cbLastQueuedSkillOnly.AutoSize = true;
-            this.cbLastQueuedSkillOnly.Location = new System.Drawing.Point(11, 268);
-            this.cbLastQueuedSkillOnly.Name = "cbLastQueuedSkillOnly";
-            this.cbLastQueuedSkillOnly.Size = new System.Drawing.Size(133, 17);
-            this.cbLastQueuedSkillOnly.TabIndex = 12;
-            this.cbLastQueuedSkillOnly.Text = "Last Queued Skill Only";
-            this.cbLastQueuedSkillOnly.UseVisualStyleBackColor = true;
-            // 
-            // rbMSOutlook
-            // 
-            this.rbMSOutlook.AutoSize = true;
-            this.rbMSOutlook.CausesValidation = false;
-            this.rbMSOutlook.Location = new System.Drawing.Point(3, 5);
-            this.rbMSOutlook.Name = "rbMSOutlook";
-            this.rbMSOutlook.Size = new System.Drawing.Size(81, 17);
-            this.rbMSOutlook.TabIndex = 1;
-            this.rbMSOutlook.Text = "MS Outlook";
-            this.rbMSOutlook.UseVisualStyleBackColor = true;
-            this.rbMSOutlook.Click += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // rbGoogle
-            // 
-            this.rbGoogle.AutoSize = true;
-            this.rbGoogle.CausesValidation = false;
-            this.rbGoogle.Location = new System.Drawing.Point(88, 4);
-            this.rbGoogle.Name = "rbGoogle";
-            this.rbGoogle.Size = new System.Drawing.Size(59, 17);
-            this.rbGoogle.TabIndex = 2;
-            this.rbGoogle.Text = "Google";
-            this.rbGoogle.UseVisualStyleBackColor = true;
-            this.rbGoogle.Click += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // gbGoogle
-            // 
-            this.gbGoogle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbGoogle.Controls.Add(this.cbGoogleReminder);
-            this.gbGoogle.Controls.Add(this.lblReminder);
-            this.gbGoogle.Controls.Add(this.lblURI);
-            this.gbGoogle.Controls.Add(this.tbGoogleURI);
-            this.gbGoogle.Controls.Add(this.tbGooglePassword);
-            this.gbGoogle.Controls.Add(this.tbGoogleEmail);
-            this.gbGoogle.Controls.Add(this.lblPassword);
-            this.gbGoogle.Controls.Add(this.lblGoogleEmail);
-            this.gbGoogle.Location = new System.Drawing.Point(2, 28);
-            this.gbGoogle.Name = "gbGoogle";
-            this.gbGoogle.Size = new System.Drawing.Size(423, 137);
-            this.gbGoogle.TabIndex = 3;
-            this.gbGoogle.TabStop = false;
-            this.gbGoogle.Text = "Google Information";
-            // 
-            // cbGoogleReminder
-            // 
-            this.cbGoogleReminder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGoogleReminder.FormattingEnabled = true;
-            this.cbGoogleReminder.Location = new System.Drawing.Point(83, 104);
-            this.cbGoogleReminder.Name = "cbGoogleReminder";
-            this.cbGoogleReminder.Size = new System.Drawing.Size(121, 21);
-            this.cbGoogleReminder.TabIndex = 7;
-            // 
-            // tbGoogleURI
-            // 
-            this.tbGoogleURI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbGoogleURI.Location = new System.Drawing.Point(83, 76);
-            this.tbGoogleURI.Name = "tbGoogleURI";
-            this.tbGoogleURI.Size = new System.Drawing.Size(334, 20);
-            this.tbGoogleURI.TabIndex = 5;
-            this.tbGoogleURI.Text = "http://www.google.com/calendar/feeds/default/private/full";
-            // 
-            // tbGooglePassword
-            // 
-            this.tbGooglePassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbGooglePassword.Location = new System.Drawing.Point(83, 49);
-            this.tbGooglePassword.Name = "tbGooglePassword";
-            this.tbGooglePassword.PasswordChar = '*';
-            this.tbGooglePassword.Size = new System.Drawing.Size(334, 20);
-            this.tbGooglePassword.TabIndex = 4;
-            // 
-            // tbGoogleEmail
-            // 
-            this.tbGoogleEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbGoogleEmail.Location = new System.Drawing.Point(83, 21);
-            this.tbGoogleEmail.Name = "tbGoogleEmail";
-            this.tbGoogleEmail.Size = new System.Drawing.Size(334, 20);
-            this.tbGoogleEmail.TabIndex = 3;
-            // 
-            // gbMSOutlook
-            // 
-            this.gbMSOutlook.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbMSOutlook.Controls.Add(this.calendarPathExampleLabel);
-            this.gbMSOutlook.Controls.Add(this.rbCustomCalendar);
-            this.gbMSOutlook.Controls.Add(this.rbDefaultCalendar);
-            this.gbMSOutlook.Controls.Add(this.tbCalendarPath);
-            this.gbMSOutlook.Controls.Add(this.calendarPathLabel);
-            this.gbMSOutlook.Location = new System.Drawing.Point(2, 28);
-            this.gbMSOutlook.Name = "gbMSOutlook";
-            this.gbMSOutlook.Size = new System.Drawing.Size(423, 137);
-            this.gbMSOutlook.TabIndex = 14;
-            this.gbMSOutlook.TabStop = false;
-            this.gbMSOutlook.Text = "MS Outlook Information";
-            // 
-            // calendarPathExampleLabel
-            // 
-            this.calendarPathExampleLabel.AutoSize = true;
-            this.calendarPathExampleLabel.Location = new System.Drawing.Point(6, 74);
-            this.calendarPathExampleLabel.Name = "calendarPathExampleLabel";
-            this.calendarPathExampleLabel.Size = new System.Drawing.Size(411, 52);
-            this.calendarPathExampleLabel.TabIndex = 4;
-            this.calendarPathExampleLabel.Text = resources.GetString("calendarPathExampleLabel.Text");
-            // 
-            // rbCustomCalendar
-            // 
-            this.rbCustomCalendar.AutoSize = true;
-            this.rbCustomCalendar.Location = new System.Drawing.Point(141, 20);
-            this.rbCustomCalendar.Name = "rbCustomCalendar";
-            this.rbCustomCalendar.Size = new System.Drawing.Size(127, 17);
-            this.rbCustomCalendar.TabIndex = 3;
-            this.rbCustomCalendar.TabStop = true;
-            this.rbCustomCalendar.Text = "Use Custom Calendar";
-            this.rbCustomCalendar.UseVisualStyleBackColor = true;
-            this.rbCustomCalendar.Click += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // rbDefaultCalendar
-            // 
-            this.rbDefaultCalendar.AutoSize = true;
-            this.rbDefaultCalendar.CausesValidation = false;
-            this.rbDefaultCalendar.Location = new System.Drawing.Point(9, 20);
-            this.rbDefaultCalendar.Name = "rbDefaultCalendar";
-            this.rbDefaultCalendar.Size = new System.Drawing.Size(126, 17);
-            this.rbDefaultCalendar.TabIndex = 2;
-            this.rbDefaultCalendar.TabStop = true;
-            this.rbDefaultCalendar.Text = "Use Default Calendar";
-            this.rbDefaultCalendar.UseVisualStyleBackColor = true;
-            this.rbDefaultCalendar.Click += new System.EventHandler(this.OnMustEnableOrDisable);
-            // 
-            // tbCalendarPath
-            // 
-            this.tbCalendarPath.Location = new System.Drawing.Point(95, 46);
-            this.tbCalendarPath.Name = "tbCalendarPath";
-            this.tbCalendarPath.Size = new System.Drawing.Size(295, 20);
-            this.tbCalendarPath.TabIndex = 1;
-            this.tbCalendarPath.Validating += new System.ComponentModel.CancelEventHandler(this.tbCalendarPath_Validating);
-            // 
-            // calendarPathLabel
-            // 
-            this.calendarPathLabel.AutoSize = true;
-            this.calendarPathLabel.Location = new System.Drawing.Point(6, 49);
-            this.calendarPathLabel.Name = "calendarPathLabel";
-            this.calendarPathLabel.Size = new System.Drawing.Size(77, 13);
-            this.calendarPathLabel.TabIndex = 0;
-            this.calendarPathLabel.Text = "Calendar Path:";
             // 
             // externalCalendarCheckbox
             // 
@@ -2582,15 +2215,6 @@ namespace EVEMon.SettingsUI
             this.PECIGroupBox.TabStop = false;
             this.PECIGroupBox.Text = "Portable EVE Client Installations";
             // 
-            // portableEveClientsControl
-            // 
-            this.portableEveClientsControl.AutoScroll = true;
-            this.portableEveClientsControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.portableEveClientsControl.Location = new System.Drawing.Point(3, 16);
-            this.portableEveClientsControl.Name = "portableEveClientsControl";
-            this.portableEveClientsControl.Size = new System.Drawing.Size(415, 264);
-            this.portableEveClientsControl.TabIndex = 0;
-            // 
             // marketPriceProvidersPage
             // 
             this.marketPriceProvidersPage.Controls.Add(this.gbMarketPriceProviders);
@@ -2666,15 +2290,6 @@ namespace EVEMon.SettingsUI
             this.providerAuthenticationGroupBox.TabStop = false;
             this.providerAuthenticationGroupBox.Text = "Cloud Storage Provider Authentication";
             // 
-            // cloudStorageServiceControl
-            // 
-            this.cloudStorageServiceControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cloudStorageServiceControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.cloudStorageServiceControl.Location = new System.Drawing.Point(3, 16);
-            this.cloudStorageServiceControl.Name = "cloudStorageServiceControl";
-            this.cloudStorageServiceControl.Size = new System.Drawing.Size(415, 109);
-            this.cloudStorageServiceControl.TabIndex = 0;
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.cloudStorageProviderLogoPictureBox);
@@ -2686,6 +2301,15 @@ namespace EVEMon.SettingsUI
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Cloud Storage Provider";
+            // 
+            // cloudStorageProviderLogoPictureBox
+            // 
+            this.cloudStorageProviderLogoPictureBox.Location = new System.Drawing.Point(176, 11);
+            this.cloudStorageProviderLogoPictureBox.Name = "cloudStorageProviderLogoPictureBox";
+            this.cloudStorageProviderLogoPictureBox.Size = new System.Drawing.Size(50, 50);
+            this.cloudStorageProviderLogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.cloudStorageProviderLogoPictureBox.TabIndex = 2;
+            this.cloudStorageProviderLogoPictureBox.TabStop = false;
             // 
             // cloudStorageProvidersComboBox
             // 
@@ -2726,6 +2350,64 @@ namespace EVEMon.SettingsUI
             this.settingsFileStorageGroupBox.TabStop = false;
             this.settingsFileStorageGroupBox.Text = "Settings File Storage";
             // 
+            // emailNotificationsControl
+            // 
+            this.emailNotificationsControl.Location = new System.Drawing.Point(7, 74);
+            this.emailNotificationsControl.Name = "emailNotificationsControl";
+            this.emailNotificationsControl.Settings = null;
+            this.emailNotificationsControl.Size = new System.Drawing.Size(355, 337);
+            this.emailNotificationsControl.TabIndex = 20;
+            // 
+            // notificationsControl
+            // 
+            this.notificationsControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.notificationsControl.AutoScroll = true;
+            this.notificationsControl.BackColor = System.Drawing.SystemColors.Window;
+            this.notificationsControl.Location = new System.Drawing.Point(3, 56);
+            this.notificationsControl.Name = "notificationsControl";
+            this.notificationsControl.Settings = null;
+            this.notificationsControl.Size = new System.Drawing.Size(429, 337);
+            this.notificationsControl.TabIndex = 4;
+            // 
+            // updateSettingsControl
+            // 
+            this.updateSettingsControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.updateSettingsControl.AutoScroll = true;
+            this.updateSettingsControl.Location = new System.Drawing.Point(11, 85);
+            this.updateSettingsControl.Name = "updateSettingsControl";
+            this.updateSettingsControl.Settings = null;
+            this.updateSettingsControl.Size = new System.Drawing.Size(413, 340);
+            this.updateSettingsControl.TabIndex = 10;
+            // 
+            // externalCalendarControl
+            // 
+            this.externalCalendarControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.externalCalendarControl.Location = new System.Drawing.Point(0, 123);
+            this.externalCalendarControl.Name = "externalCalendarControl";
+            this.externalCalendarControl.Size = new System.Drawing.Size(435, 303);
+            this.externalCalendarControl.TabIndex = 12;
+            // 
+            // portableEveClientsControl
+            // 
+            this.portableEveClientsControl.AutoScroll = true;
+            this.portableEveClientsControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.portableEveClientsControl.Location = new System.Drawing.Point(3, 16);
+            this.portableEveClientsControl.Name = "portableEveClientsControl";
+            this.portableEveClientsControl.Size = new System.Drawing.Size(415, 264);
+            this.portableEveClientsControl.TabIndex = 0;
+            // 
+            // cloudStorageServiceControl
+            // 
+            this.cloudStorageServiceControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cloudStorageServiceControl.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.cloudStorageServiceControl.Location = new System.Drawing.Point(3, 16);
+            this.cloudStorageServiceControl.Name = "cloudStorageServiceControl";
+            this.cloudStorageServiceControl.Size = new System.Drawing.Size(415, 109);
+            this.cloudStorageServiceControl.TabIndex = 0;
+            // 
             // settingsFileStorageControl
             // 
             this.settingsFileStorageControl.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2734,15 +2416,6 @@ namespace EVEMon.SettingsUI
             this.settingsFileStorageControl.Name = "settingsFileStorageControl";
             this.settingsFileStorageControl.Size = new System.Drawing.Size(416, 108);
             this.settingsFileStorageControl.TabIndex = 0;
-            // 
-            // cloudStorageProviderLogoPictureBox
-            // 
-            this.cloudStorageProviderLogoPictureBox.Location = new System.Drawing.Point(176, 11);
-            this.cloudStorageProviderLogoPictureBox.Name = "cloudStorageProviderLogoPictureBox";
-            this.cloudStorageProviderLogoPictureBox.Size = new System.Drawing.Size(50, 50);
-            this.cloudStorageProviderLogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.cloudStorageProviderLogoPictureBox.TabIndex = 2;
-            this.cloudStorageProviderLogoPictureBox.TabStop = false;
             // 
             // SettingsForm
             // 
@@ -2808,14 +2481,6 @@ namespace EVEMon.SettingsUI
             this.schedulerUIPage.PerformLayout();
             this.externalCalendarPage.ResumeLayout(false);
             this.externalCalendarPage.PerformLayout();
-            this.externalCalendarPanel.ResumeLayout(false);
-            this.externalCalendarPanel.PerformLayout();
-            this.gbReminder.ResumeLayout(false);
-            this.gbReminder.PerformLayout();
-            this.gbGoogle.ResumeLayout(false);
-            this.gbGoogle.PerformLayout();
-            this.gbMSOutlook.ResumeLayout(false);
-            this.gbMSOutlook.PerformLayout();
             this.g15Page.ResumeLayout(false);
             this.g15Page.PerformLayout();
             this.g15Panel.ResumeLayout(false);
@@ -2848,8 +2513,8 @@ namespace EVEMon.SettingsUI
             this.providerAuthenticationGroupBox.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.settingsFileStorageGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cloudStorageProviderLogoPictureBox)).EndInit();
+            this.settingsFileStorageGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2892,18 +2557,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Panel panelColorText;
         private System.Windows.Forms.Button trayTooltipButton;
         private System.Windows.Forms.CheckBox externalCalendarCheckbox;
-        private System.Windows.Forms.TextBox tbReminder;
-        private System.Windows.Forms.CheckBox cbSetReminder;
-        private System.Windows.Forms.DateTimePicker dtpLateReminder;
-        private System.Windows.Forms.DateTimePicker dtpEarlyReminder;
-        private System.Windows.Forms.CheckBox cbUseAlterateReminder;
-        private System.Windows.Forms.GroupBox gbGoogle;
-        private System.Windows.Forms.ComboBox cbGoogleReminder;
-        private System.Windows.Forms.TextBox tbGoogleURI;
-        private System.Windows.Forms.TextBox tbGooglePassword;
-        private System.Windows.Forms.TextBox tbGoogleEmail;
-        private System.Windows.Forms.RadioButton rbGoogle;
-        private System.Windows.Forms.RadioButton rbMSOutlook;
         private System.Windows.Forms.CheckBox cbShowAllPublicSkills;
         private System.Windows.Forms.CheckBox cbShowNonPublicSkills;
         private System.Windows.Forms.ComboBox cbAPIServer;
@@ -2939,7 +2592,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.RadioButton trayTooltipRadio;
         private System.Windows.Forms.Label lblUpdatesPage;
         private System.Windows.Forms.Button applyButton;
-        private System.Windows.Forms.Panel externalCalendarPanel;
         private System.Windows.Forms.GroupBox OverviewGroupBox;
         private System.Windows.Forms.ComboBox overviewPortraitSizeComboBox;
         private System.Windows.Forms.CheckBox overviewShowPortraitCheckBox;
@@ -2987,11 +2639,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.GroupBox gbMessageBox;
         private System.Windows.Forms.Label lblPrioritesConflict;
         private System.Windows.Forms.Button btnPrioritiesReset;
-        private System.Windows.Forms.CheckBox cbLastQueuedSkillOnly;
-        private System.Windows.Forms.GroupBox gbReminder;
-        private System.Windows.Forms.Label lblEarlyReminder;
-        private System.Windows.Forms.Label lblLateReminder;
-        private System.Windows.Forms.Label lblMinutes;
         private System.Windows.Forms.Panel bottomPanel;
         private System.Windows.Forms.Label lblMainWindowPage;
         private System.Windows.Forms.Label lblSize;
@@ -3013,10 +2660,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Label lblBlockingEvents;
         private System.Windows.Forms.Label lblRecurringEvents;
         private System.Windows.Forms.Label lblSimpleEvents;
-        private System.Windows.Forms.Label lblReminder;
-        private System.Windows.Forms.Label lblURI;
-        private System.Windows.Forms.Label lblPassword;
-        private System.Windows.Forms.Label lblGoogleEmail;
         private System.Windows.Forms.Label lblExternalCalendarPage;
         private System.Windows.Forms.Label lblG15Page;
         private System.Windows.Forms.Label lblCycleTrainingSeconds;
@@ -3032,12 +2675,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.Button btnEVEMonDataDir;
         private EmailNotificationsControl emailNotificationsControl;
         private System.Windows.Forms.CheckBox mailNotificationCheckBox;
-        private System.Windows.Forms.GroupBox gbMSOutlook;
-        private System.Windows.Forms.RadioButton rbCustomCalendar;
-        private System.Windows.Forms.RadioButton rbDefaultCalendar;
-        private System.Windows.Forms.TextBox tbCalendarPath;
-        private System.Windows.Forms.Label calendarPathLabel;
-        private System.Windows.Forms.Label calendarPathExampleLabel;
         private MultiPanelPage portableEveClientsPage;
         private System.Windows.Forms.Label lblPECIDescription;
         private System.Windows.Forms.GroupBox PECIGroupBox;
@@ -3057,5 +2694,6 @@ namespace EVEMon.SettingsUI
         private System.Windows.Forms.GroupBox providerAuthenticationGroupBox;
         private CloudStorageServiceControl cloudStorageServiceControl;
         private System.Windows.Forms.PictureBox cloudStorageProviderLogoPictureBox;
+        private ExternalCalendarControl externalCalendarControl;
     }
 }
