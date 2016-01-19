@@ -130,10 +130,13 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
                 CheckAuthCodeAsync(String.Empty);
             }
+            catch (GoogleApiException exc)
+            {
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
+            }
             catch (TokenResponseException exc)
             {
-                string errorMessage = GetErrorMessageDescription(exc);
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.ErrorDescription };
             }
             catch (Exception exc)
             {
@@ -186,19 +189,14 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             }
             catch (GoogleApiException exc)
             {
-                string errorMessage =
-                    exc.Message.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                        .Skip(1)
-                        .FirstOrDefault() ?? exc.Message;
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
 
                 if (s_credential == null && HasCredentialsStored)
                     ResetSettingsAsync();
             }
             catch (TokenResponseException exc)
             {
-                string errorMessage = GetErrorMessageDescription(exc);
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.ErrorDescription };
             }
             catch (Exception exc)
             {
@@ -226,6 +224,10 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                 {
                     result.Error = new CloudStorageServiceAPIError { ErrorMessage = "Unable to revoke authorization" };
                 }
+            }
+            catch (GoogleApiException exc)
+            {
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (TokenResponseException exc)
             {
@@ -284,10 +286,13 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     }
                 }
             }
+            catch (GoogleApiException exc)
+            {
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
+            }
             catch (TokenResponseException exc)
             {
-                string errorMessage = GetErrorMessageDescription(exc);
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.ErrorDescription };
             }
             catch (Exception exc)
             {
@@ -325,10 +330,13 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     result.Error = new CloudStorageServiceAPIError { ErrorMessage = response.Exception.Message };
                 }
             }
+            catch (GoogleApiException exc)
+            {
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
+            }
             catch (TokenResponseException exc)
             {
-                string errorMessage = GetErrorMessageDescription(exc);
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = errorMessage };
+                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.ErrorDescription };
             }
             catch (Exception exc)
             {
@@ -375,26 +383,6 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             }
 
             return result.Files.SingleOrDefault(file => file.Name == SettingsFileNameWithoutExtension)?.Id;
-        }
-
-        /// <summary>
-        /// Gets the error message description.
-        /// </summary>
-        /// <param name="exc">The exc.</param>
-        /// <returns></returns>
-        private static string GetErrorMessageDescription(Exception exc)
-        {
-            string errorMessage = exc.Message;
-            if (!errorMessage.StartsWith("error", StringComparison.InvariantCultureIgnoreCase))
-                return errorMessage;
-
-            if (!errorMessage.StartsWith("{", StringComparison.InvariantCulture))
-                errorMessage = $"{{{errorMessage}}}";
-
-            Dictionary<string, object> json = Util.DeserializeJsonToObject(errorMessage);
-            errorMessage = json["Description"] as string ?? exc.Message;
-
-            return errorMessage;
         }
 
         #endregion
