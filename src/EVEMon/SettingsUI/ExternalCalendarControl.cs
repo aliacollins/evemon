@@ -134,7 +134,7 @@ namespace EVEMon.SettingsUI
 
             if (e.Cancel)
             {
-                MessageBox.Show(@"MS Outlook", @"A calendar at that path could not be found.",
+                MessageBox.Show(@"A calendar at that path could not be found.", @"MS Outlook",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -151,7 +151,7 @@ namespace EVEMon.SettingsUI
 
             if (e.Cancel)
             {
-                MessageBox.Show(@"Reminder interval", @"The reminder interval must be a strictly positive integer.",
+                MessageBox.Show(@"The reminder interval must be a strictly positive integer.", @"Reminder interval",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
