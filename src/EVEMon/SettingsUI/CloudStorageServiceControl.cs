@@ -13,7 +13,6 @@ namespace EVEMon.SettingsUI
     public partial class CloudStorageServiceControl : UserControl
     {
         private bool m_authCodeRequested;
-        private static bool s_forceAuthOnLoad;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudStorageServiceControl"/> class.
@@ -31,8 +30,6 @@ namespace EVEMon.SettingsUI
             lblAuthCode.Enabled = false;
             txtBoxAuthCode.Enabled = false;
             btnReset.Enabled = false;
-
-            s_forceAuthOnLoad = true;
         }
 
         #region Properties
@@ -63,6 +60,8 @@ namespace EVEMon.SettingsUI
 
             CloudStorageServiceProvider.CredentialsChecked += CloudStorageServiceProvider_CheckCredentials;
             CloudStorageServiceProvider.SettingsReset += CloudStorageServiceProvider_SettingsReset;
+
+            CheckAPIAuthIsValid(true);
         }
 
         /// <summary>
@@ -76,20 +75,6 @@ namespace EVEMon.SettingsUI
             CloudStorageServiceProvider.SettingsReset -= CloudStorageServiceProvider_SettingsReset;
 
             Disposed -= OnDisposed;
-        }
-
-        /// <summary>
-        /// When the control becomes visible again, we update the content.
-        /// </summary>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            if (!Visible)
-                return;
-
-            CheckAPIAuthIsValid(s_forceAuthOnLoad);
-
-            s_forceAuthOnLoad = false;
         }
 
         /// <summary>

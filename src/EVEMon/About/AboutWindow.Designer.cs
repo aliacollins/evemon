@@ -51,11 +51,14 @@ namespace EVEMon.About
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.ccpGamesLinkLabel = new System.Windows.Forms.LinkLabel();
             this.eveCentralLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.eveDevLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.googleDataLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.ccpDocsLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.googleApisLinkLabel = new System.Windows.Forms.LinkLabel();
             this.lironLeviLinkLabel = new System.Windows.Forms.LinkLabel();
             this.stackOverflowLinkLabel = new System.Windows.Forms.LinkLabel();
             this.forgotLabel = new System.Windows.Forms.Label();
+            this.dropboxSDKLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.oneDriveSDKLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.eveMarketDataLinkLabel = new System.Windows.Forms.LinkLabel();
             this.LegalLayoutPanel.SuspendLayout();
             this.HeaderLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).BeginInit();
@@ -292,9 +295,12 @@ namespace EVEMon.About
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.ccpGamesLinkLabel);
+            this.flowLayoutPanel1.Controls.Add(this.ccpDocsLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.eveCentralLinkLabel);
-            this.flowLayoutPanel1.Controls.Add(this.eveDevLinkLabel);
-            this.flowLayoutPanel1.Controls.Add(this.googleDataLinkLabel);
+            this.flowLayoutPanel1.Controls.Add(this.eveMarketDataLinkLabel);
+            this.flowLayoutPanel1.Controls.Add(this.googleApisLinkLabel);
+            this.flowLayoutPanel1.Controls.Add(this.dropboxSDKLinkLabel);
+            this.flowLayoutPanel1.Controls.Add(this.oneDriveSDKLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.lironLeviLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.stackOverflowLinkLabel);
             this.flowLayoutPanel1.Controls.Add(this.forgotLabel);
@@ -331,37 +337,37 @@ namespace EVEMon.About
             this.eveCentralLinkLabel.Text = "EVE-Central for their market data and API.";
             this.eveCentralLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
-            // eveDevLinkLabel
+            // ccpDocsLinkLabel
             // 
-            this.eveDevLinkLabel.AutoSize = true;
-            this.eveDevLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.eveDevLinkLabel.Location = new System.Drawing.Point(0, 70);
-            this.eveDevLinkLabel.Margin = new System.Windows.Forms.Padding(0);
-            this.eveDevLinkLabel.Name = "eveDevLinkLabel";
-            this.eveDevLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.eveDevLinkLabel.Size = new System.Drawing.Size(167, 19);
-            this.eveDevLinkLabel.TabIndex = 8;
-            this.eveDevLinkLabel.Text = "EVEDev for their documentation.";
-            this.eveDevLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
+            this.ccpDocsLinkLabel.AutoSize = true;
+            this.ccpDocsLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
+            this.ccpDocsLinkLabel.Location = new System.Drawing.Point(0, 32);
+            this.ccpDocsLinkLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.ccpDocsLinkLabel.Name = "ccpDocsLinkLabel";
+            this.ccpDocsLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
+            this.ccpDocsLinkLabel.Size = new System.Drawing.Size(217, 19);
+            this.ccpDocsLinkLabel.TabIndex = 8;
+            this.ccpDocsLinkLabel.Text = "CCP 3rd party docs for their documentation.";
+            this.ccpDocsLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
-            // googleDataLinkLabel
+            // googleApisLinkLabel
             // 
-            this.googleDataLinkLabel.AutoSize = true;
-            this.googleDataLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.googleDataLinkLabel.Location = new System.Drawing.Point(0, 89);
-            this.googleDataLinkLabel.Margin = new System.Windows.Forms.Padding(0);
-            this.googleDataLinkLabel.Name = "googleDataLinkLabel";
-            this.googleDataLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.googleDataLinkLabel.Size = new System.Drawing.Size(199, 19);
-            this.googleDataLinkLabel.TabIndex = 10;
-            this.googleDataLinkLabel.Text = "The devs of the Google.Data assembly.";
-            this.googleDataLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
+            this.googleApisLinkLabel.AutoSize = true;
+            this.googleApisLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
+            this.googleApisLinkLabel.Location = new System.Drawing.Point(0, 89);
+            this.googleApisLinkLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.googleApisLinkLabel.Name = "googleApisLinkLabel";
+            this.googleApisLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
+            this.googleApisLinkLabel.Size = new System.Drawing.Size(132, 19);
+            this.googleApisLinkLabel.TabIndex = 10;
+            this.googleApisLinkLabel.Text = "Google for their API SDK.";
+            this.googleApisLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
             // lironLeviLinkLabel
             // 
             this.lironLeviLinkLabel.AutoSize = true;
             this.lironLeviLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.lironLeviLinkLabel.Location = new System.Drawing.Point(0, 108);
+            this.lironLeviLinkLabel.Location = new System.Drawing.Point(0, 146);
             this.lironLeviLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.lironLeviLinkLabel.Name = "lironLeviLinkLabel";
             this.lironLeviLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -374,7 +380,7 @@ namespace EVEMon.About
             // 
             this.stackOverflowLinkLabel.AutoSize = true;
             this.stackOverflowLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.stackOverflowLinkLabel.Location = new System.Drawing.Point(0, 127);
+            this.stackOverflowLinkLabel.Location = new System.Drawing.Point(0, 165);
             this.stackOverflowLinkLabel.Margin = new System.Windows.Forms.Padding(0);
             this.stackOverflowLinkLabel.Name = "stackOverflowLinkLabel";
             this.stackOverflowLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -386,7 +392,7 @@ namespace EVEMon.About
             // forgotLabel
             // 
             this.forgotLabel.AutoSize = true;
-            this.forgotLabel.Location = new System.Drawing.Point(0, 159);
+            this.forgotLabel.Location = new System.Drawing.Point(0, 197);
             this.forgotLabel.Margin = new System.Windows.Forms.Padding(0);
             this.forgotLabel.Name = "forgotLabel";
             this.forgotLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -395,6 +401,45 @@ namespace EVEMon.About
             this.forgotLabel.Text = "And also the ones we forgot, the ones who lurk in the shadows of the forums to he" +
     "lp us deal with users, all the people who reported bugs to the forums and the on" +
     "es who dared to test our betas.";
+            // 
+            // dropboxSDKLinkLabel
+            // 
+            this.dropboxSDKLinkLabel.AutoSize = true;
+            this.dropboxSDKLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
+            this.dropboxSDKLinkLabel.Location = new System.Drawing.Point(0, 108);
+            this.dropboxSDKLinkLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.dropboxSDKLinkLabel.Name = "dropboxSDKLinkLabel";
+            this.dropboxSDKLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
+            this.dropboxSDKLinkLabel.Size = new System.Drawing.Size(138, 19);
+            this.dropboxSDKLinkLabel.TabIndex = 17;
+            this.dropboxSDKLinkLabel.Text = "Dropbox for their API SDK.";
+            this.dropboxSDKLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
+            // 
+            // oneDriveSDKLinkLabel
+            // 
+            this.oneDriveSDKLinkLabel.AutoSize = true;
+            this.oneDriveSDKLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
+            this.oneDriveSDKLinkLabel.Location = new System.Drawing.Point(0, 127);
+            this.oneDriveSDKLinkLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.oneDriveSDKLinkLabel.Name = "oneDriveSDKLinkLabel";
+            this.oneDriveSDKLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
+            this.oneDriveSDKLinkLabel.Size = new System.Drawing.Size(189, 19);
+            this.oneDriveSDKLinkLabel.TabIndex = 18;
+            this.oneDriveSDKLinkLabel.Text = "Microsoft OneDrive for their API SDK.";
+            this.oneDriveSDKLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
+            // 
+            // eveMarketDataLinkLabel
+            // 
+            this.eveMarketDataLinkLabel.AutoSize = true;
+            this.eveMarketDataLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
+            this.eveMarketDataLinkLabel.Location = new System.Drawing.Point(0, 70);
+            this.eveMarketDataLinkLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.eveMarketDataLinkLabel.Name = "eveMarketDataLinkLabel";
+            this.eveMarketDataLinkLabel.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
+            this.eveMarketDataLinkLabel.Size = new System.Drawing.Size(233, 19);
+            this.eveMarketDataLinkLabel.TabIndex = 19;
+            this.eveMarketDataLinkLabel.Text = "EVE-MarketData for their market data and API.";
+            this.eveMarketDataLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
             // 
             // AboutWindow
             // 
@@ -455,13 +500,15 @@ namespace EVEMon.About
         private System.Windows.Forms.Label CredentialsLabels;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.LinkLabel ccpGamesLinkLabel;
-        private System.Windows.Forms.LinkLabel eveDevLinkLabel;
-        private System.Windows.Forms.LinkLabel googleDataLinkLabel;
+        private System.Windows.Forms.LinkLabel ccpDocsLinkLabel;
+        private System.Windows.Forms.LinkLabel googleApisLinkLabel;
         private System.Windows.Forms.LinkLabel eveCentralLinkLabel;
         private System.Windows.Forms.Label forgotLabel;
         private System.Windows.Forms.LinkLabel lironLeviLinkLabel;
         private System.Windows.Forms.LinkLabel stackOverflowLinkLabel;
         private System.Windows.Forms.Label DevelopmentTeamLabel;
-
+        private System.Windows.Forms.LinkLabel dropboxSDKLinkLabel;
+        private System.Windows.Forms.LinkLabel eveMarketDataLinkLabel;
+        private System.Windows.Forms.LinkLabel oneDriveSDKLinkLabel;
     }
 }

@@ -1,6 +1,7 @@
 using System;
+using EVEMon.Common.CloudStorageServices;
 
-namespace EVEMon.Common.CloudStorageServices
+namespace EVEMon.Common.Serialization
 {
     public sealed class SerializableAPIResult<T>
     {
@@ -18,7 +19,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <value>
         /// The error.
         /// </value>
-        public CloudStorageServiceAPIError Error { get; set; }
+        public SerializableAPIError Error { get; set; }
 
         /// <summary>
         /// Gets or sets the cache expires.

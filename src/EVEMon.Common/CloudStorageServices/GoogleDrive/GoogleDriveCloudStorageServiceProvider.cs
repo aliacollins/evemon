@@ -7,7 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Helpers;
+using EVEMon.Common.Exceptions;
+using EVEMon.Common.Serialization;
 using Google;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Responses;
@@ -16,7 +17,9 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Upload;
-using File = Google.Apis.Drive.v3.Data.File;
+using Google.Apis.Util.Store;
+using GoogleFile = Google.Apis.Drive.v3.Data.File;
+using File = System.IO.File;
 
 namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 {
@@ -28,6 +31,8 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
         private const string Spaces = "appDataFolder";
         private const string ContentType = "application/xml";
+        private const string CredentialsDirectory = @".googledrive";
+        private const string UserId = @"user";
 
 
         #region Properties
@@ -63,7 +68,19 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <c>true</c> if the provider API credentials are stored; otherwise, <c>false</c>.
         /// </value>
         public override bool HasCredentialsStored
-            => !String.IsNullOrEmpty(GoogleDriveCloudStorageServiceSettings.Default.AccessToken);
+        {
+            get
+            {
+                try
+                {
+                    return !String.IsNullOrWhiteSpace(GetCredentialsPath(checkAuth: true));
+                }
+                catch (APIException)
+                {
+                    return false;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the settings.
@@ -101,7 +118,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <param name="apiKey">The API key.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        protected override Task<SerializableAPIResult<CloudStorageServiceAPICredentials>>
+        protected override Task<SerializableAPIResult<SerializableAPICredentials>>
             CheckProviderAuthWithCredentialsIsValidAsync(uint userId, string apiKey)
         {
             throw new NotImplementedException();
@@ -110,10 +127,10 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <summary>
         /// Asynchronously requests the provider an authentication code.
         /// </summary>
-        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RequestProviderAuthCodeAsync()
+        protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
         {
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result =
-                new SerializableAPIResult<CloudStorageServiceAPICredentials>();
+            SerializableAPIResult<SerializableAPICredentials> result =
+                new SerializableAPIResult<SerializableAPICredentials>();
 
             var clientSecrets = new ClientSecrets
             {
@@ -126,21 +143,26 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             try
             {
                 s_credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets,
-                    new[] { DriveService.Scope.DriveAppdata }, "user", CancellationToken.None);
+                        new[] { DriveService.Scope.DriveAppdata }, UserId, CancellationToken.None,
+                        new FileDataStore(GetCredentialsPath(), true));
 
                 CheckAuthCodeAsync(String.Empty);
             }
             catch (GoogleApiException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (TokenResponseException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.ErrorDescription };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
+            }
+            catch (APIException exc)
+            {
+                result.Error = new SerializableAPIError { ErrorCode = exc.ErrorCode, ErrorMessage = exc.Message };
             }
             catch (Exception exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
             return result;
@@ -152,24 +174,19 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <param name="code">The code.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckProviderAuthCodeAsync(
+        protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckProviderAuthCodeAsync(
             string code)
         {
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckAuthenticationAsync();
-
-            if (!result.HasError)
-                GoogleDriveCloudStorageServiceSettings.Default.AccessToken = s_credential.Token.AccessToken;
-
-            return result;
+            return await CheckAuthenticationAsync();
         }
 
         /// <summary>
         /// Asynchronously checks the authentication.
         /// </summary>
-        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAuthenticationAsync()
+        protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckAuthenticationAsync()
         {
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result =
-                new SerializableAPIResult<CloudStorageServiceAPICredentials>();
+            SerializableAPIResult<SerializableAPICredentials> result =
+                new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
@@ -189,18 +206,18 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             }
             catch (GoogleApiException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
 
                 if (s_credential == null && HasCredentialsStored)
                     ResetSettingsAsync();
             }
             catch (TokenResponseException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.ErrorDescription };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
             }
             catch (Exception exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
             return result;
@@ -210,33 +227,32 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// Asynchronously revokes the authorization.
         /// </summary>
         /// <returns></returns>
-        protected override async Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RevokeAuthorizationAsync()
+        protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
         {
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result =
-                new SerializableAPIResult<CloudStorageServiceAPICredentials>();
+            SerializableAPIResult<SerializableAPICredentials> result =
+                new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
                 Task<bool> revokeTokenAsync = s_credential?.RevokeTokenAsync(CancellationToken.None);
                 bool success = revokeTokenAsync != null && await revokeTokenAsync;
 
-                if (revokeTokenAsync != null && !success)
+                if (!success)
                 {
-                    result.Error = new CloudStorageServiceAPIError { ErrorMessage = "Unable to revoke authorization" };
+                    result.Error = new SerializableAPIError { ErrorMessage = "Unable to revoke authorization" };
                 }
             }
             catch (GoogleApiException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (TokenResponseException exc)
             {
-                ExceptionHandler.LogException(exc, true);
-                return result;
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
             }
             catch (Exception exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
             return result;
@@ -258,8 +274,8 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                 using (DriveService client = GetClient())
                 using (Stream stream = Util.GetMemoryStream(content))
                 {
-                    ResumableUpload<File, File> request;
-                    File fileMetadata = new File { Name = SettingsFileNameWithoutExtension };
+                    ResumableUpload<GoogleFile, GoogleFile> request;
+                    GoogleFile fileMetadata = new GoogleFile { Name = SettingsFileNameWithoutExtension };
                     if (String.IsNullOrWhiteSpace(m_fileId))
                     {
                         //Upload
@@ -282,21 +298,21 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     // Chceck response for exception
                     if (response.Exception != null)
                     {
-                        result.Error = new CloudStorageServiceAPIError { ErrorMessage = response.Exception.Message };
+                        result.Error = new SerializableAPIError { ErrorMessage = response.Exception.Message };
                     }
                 }
             }
             catch (GoogleApiException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (TokenResponseException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.ErrorDescription };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
             }
             catch (Exception exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
             return result;
@@ -327,20 +343,20 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     if (response.Exception == null)
                         return await GetMappedAPIFile(result, stream);
 
-                    result.Error = new CloudStorageServiceAPIError { ErrorMessage = response.Exception.Message };
+                    result.Error = new SerializableAPIError { ErrorMessage = response.Exception.Message };
                 }
             }
             catch (GoogleApiException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (TokenResponseException exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Error.ErrorDescription };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
             }
             catch (Exception exc)
             {
-                result.Error = new CloudStorageServiceAPIError { ErrorMessage = exc.Message };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
             return result;
@@ -350,6 +366,41 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Gets the credentials path.
+        /// </summary>
+        /// <param name="checkAuth">if set to <c>true</c> [check authentication].</param>
+        /// <returns></returns>
+        /// <exception cref="EVEMon.Common.Exceptions.APIException"></exception>
+        private static string GetCredentialsPath(bool checkAuth = false)
+        {
+            Configuration configuration =
+                ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+
+            string certPath = Directory.GetParent(configuration.FilePath).Parent?.Parent?.FullName;
+
+            bool fileExists = false;
+            if (!String.IsNullOrWhiteSpace(certPath))
+            {
+                certPath = Path.Combine(certPath, CredentialsDirectory);
+                string filePath = Path.Combine(certPath, $"{typeof(TokenResponse).FullName}-{UserId}");
+                fileExists = File.Exists(filePath);
+            }
+
+            if (!checkAuth || fileExists)
+                return certPath;
+
+            SerializableAPIError error = new SerializableAPIError
+            {
+                ErrorCode = @"Authentication required",
+                ErrorMessage = "Authentication required.\n\n" +
+                               "Go to External Calendar options to request authentication.\n" +
+                               "(i.e. Tools > Options... > Scheduler > External Calendar)"
+            };
+
+            throw new APIException(error);
+        }
 
         /// <summary>
         /// Gets the client.

@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Serialization;
 
 namespace EVEMon.Common.CloudStorageServices
 {
@@ -161,6 +162,9 @@ namespace EVEMon.Common.CloudStorageServices
         protected static string SettingsFileNameWithoutExtension
             => Path.GetFileNameWithoutExtension(EveMonClient.SettingsFileName);
 
+        protected static Configuration Configuration
+            => ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+
         #endregion
 
 
@@ -171,30 +175,30 @@ namespace EVEMon.Common.CloudStorageServices
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
-        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>>
+        protected abstract Task<SerializableAPIResult<SerializableAPICredentials>>
             CheckProviderAuthWithCredentialsIsValidAsync(uint userId, string apiKey);
 
         /// <summary>
         /// Asynchronously requests the provider an authentication code.
         /// </summary>
-        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RequestProviderAuthCodeAsync();
+        protected abstract Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync();
 
         /// <summary>
         /// Asynchronously checks the provider authentication code.
         /// </summary>
         /// <param name="code">The code.</param>
-        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckProviderAuthCodeAsync(string code);
+        protected abstract Task<SerializableAPIResult<SerializableAPICredentials>> CheckProviderAuthCodeAsync(string code);
 
         /// <summary>
         /// Asynchronously checks the authentication.
         /// </summary>
-        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> CheckAuthenticationAsync();
+        protected abstract Task<SerializableAPIResult<SerializableAPICredentials>> CheckAuthenticationAsync();
 
         /// <summary>
         /// Asynchronously revokes the authorization.
         /// </summary>
         /// <returns></returns>
-        protected abstract Task<SerializableAPIResult<CloudStorageServiceAPICredentials>> RevokeAuthorizationAsync();
+        protected abstract Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync();
 
         /// <summary>
         /// Uploads the file asynchronously.
@@ -216,15 +220,12 @@ namespace EVEMon.Common.CloudStorageServices
         /// </summary>
         public static void UpgradeSettings()
         {
-            // Find the settings file
-            Configuration settings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-
             // Quit if the settings file is of the current version
-            if (settings.HasFile)
+            if (Configuration.HasFile)
                 return;
 
             // Find the parent directory of the settings file
-            DirectoryInfo configFileParentDir = Directory.GetParent(settings.FilePath);
+            DirectoryInfo configFileParentDir = Directory.GetParent(Configuration.FilePath);
 
             // Find the parent directory of the settings file directory
             DirectoryInfo configFileParentParentDir = configFileParentDir.Parent;
@@ -275,7 +276,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             IsAuthenticated = false;
 
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await RequestProviderAuthCodeAsync();
+            SerializableAPIResult<SerializableAPICredentials> result = await RequestProviderAuthCodeAsync();
 
             CredentialsChecked?.Invoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
 
@@ -298,7 +299,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             EveMonClient.Trace($"{Name}.CheckAuthenticationAsync - Initiated");
 
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckProviderAuthCodeAsync(code);
+            SerializableAPIResult<SerializableAPICredentials> result = await CheckProviderAuthCodeAsync(code);
             
             if (!result.HasError)
                 Settings.Save();
@@ -337,7 +338,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             IsAuthenticated = false;
 
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result =
+            SerializableAPIResult<SerializableAPICredentials> result =
                 await CheckProviderAuthWithCredentialsIsValidAsync(userID, apiKey);
 
             IsAuthenticated = !result.HasError;
@@ -370,7 +371,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             IsAuthenticated = false;
 
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await CheckAuthenticationAsync();
+            SerializableAPIResult<SerializableAPICredentials> result = await CheckAuthenticationAsync();
 
             IsAuthenticated = !result.HasError && HasCredentialsStored;
 
@@ -389,7 +390,7 @@ namespace EVEMon.Common.CloudStorageServices
         {
             EveMonClient.Trace($"{Name}.SettingsReset - Initiated");
 
-            SerializableAPIResult<CloudStorageServiceAPICredentials> result = await RevokeAuthorizationAsync();
+            SerializableAPIResult<SerializableAPICredentials> result = await RevokeAuthorizationAsync();
 
             if (!result.HasError)
                 Settings.Reset();
@@ -563,7 +564,9 @@ namespace EVEMon.Common.CloudStorageServices
                 return;
 
             foreach (string directory in Directory.GetDirectories(configFileParentParentDir.Parent.FullName)
-                .Where(directory => directory != configFileParentParentDir.FullName))
+                .Where(directory => directory != configFileParentParentDir.FullName &&
+                                    directory.StartsWith(EveMonClient.FileVersionInfo.ProductName,
+                                        StringComparison.OrdinalIgnoreCase)))
             {
                 // Delete the folder recursively
                 Directory.Delete(directory, true);
@@ -622,7 +625,7 @@ namespace EVEMon.Common.CloudStorageServices
 
                 if (String.IsNullOrWhiteSpace(content))
                 {
-                    result.Error = new CloudStorageServiceAPIError
+                    result.Error = new SerializableAPIError
                     {
                         ErrorMessage = @"The settings file was not in a correct format."
                     };

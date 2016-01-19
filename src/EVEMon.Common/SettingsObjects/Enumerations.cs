@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 using EVEMon.Common.Attributes;
 
 namespace EVEMon.Common.SettingsObjects
@@ -155,12 +156,14 @@ namespace EVEMon.Common.SettingsObjects
 
     public enum GoogleCalendarReminder
     {
-        Alert = 0,
-        All = 1,
-        Email = 2,
-        None = 3,
-        Sms = 4,
-        Unspecified = 5
+        [Description("Email")]
+        Email,
+
+        [Description("Pop-up")]
+        PopUp,
+
+        [Description("SMS")]
+        Sms,
     }
 
     #endregion

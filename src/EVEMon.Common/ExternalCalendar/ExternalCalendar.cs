@@ -3,10 +3,12 @@ using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Exceptions;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
-using Google.GData.Client;
+using Google;
+using Google.Apis.Auth.OAuth2.Responses;
 
 namespace EVEMon.Common.ExternalCalendar
 {
@@ -18,7 +20,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <value><c>true</c> if MSOutlook is installed; otherwise, <c>false</c>.</value>
         public static bool OutlookInstalled
         {
-            get { return OutlookAppointmentFilter.OutlookApplication != null; }
+            get { return OutlookCalendarEvent.OutlookApplication != null; }
         }
 
         /// <summary>
@@ -29,7 +31,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns></returns>
         public static bool OutlookCalendarExist(bool useDefaultCalendar, string path)
         {
-            return OutlookAppointmentFilter.OutlookCalendarExist(useDefaultCalendar, path);
+            return OutlookCalendarEvent.OutlookCalendarExist(useDefaultCalendar, path);
         }
 
         /// <summary>
@@ -74,67 +76,51 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="queuedSkill">The queued skill.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        private static void DoOutlookAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
+        private static async void DoOutlookAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
             // Get the calendar
-            if (!OutlookAppointmentFilter.OutlookCalendarExist(Settings.Calendar.UseOutlookDefaultCalendar))
+            if (!OutlookCalendarEvent.OutlookCalendarExist(Settings.Calendar.UseOutlookDefaultCalendar))
             {
-                MessageBox.Show("Outlook calendar does not exist. Please check your settings.", "Outlook Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(@"Outlook calendar does not exist. Please check your settings.", @"Outlook Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            try
+            // Set the subject to the character name and the skill and level in queue for uniqueness sake
+            OutlookCalendarEvent outlookAppointmentFilter = new OutlookCalendarEvent
             {
-                // Set the subject to the character name and the skill and level in queue for uniqueness sake
-                OutlookAppointmentFilter outlookAppointmentFilter = new OutlookAppointmentFilter
-                                                                        {
-                                                                            StartDate = DateTime.Now.AddDays(-40),
-                                                                            EndDate = DateTime.Now.AddDays(100),
-                                                                            Subject = String.Format(
-                                                                                CultureConstants.DefaultCulture,
-                                                                                "{0} - {1} {2}",
-                                                                                queuedSkill.Owner.Name,
-                                                                                queuedSkill.SkillName,
-                                                                                Skill.GetRomanFromInt(queuedSkill.Level))
-                                                                        };
+                StartDate = DateTime.Now.AddDays(-40),
+                EndDate = DateTime.Now.AddDays(100),
+                Subject = String.Format(
+                    CultureConstants.DefaultCulture,
+                    "{0} - {1} {2}",
+                    queuedSkill.Owner.Name,
+                    queuedSkill.SkillName,
+                    Skill.GetRomanFromInt(queuedSkill.Level))
+            };
 
 
-                // Pull the list of appointments, hopefully we should either get 1 or none back
-                outlookAppointmentFilter.ReadAppointments();
+            // Pull the list of appointments, hopefully we should either get 1 or none back
+            await outlookAppointmentFilter.ReadEvents();
 
-                // If there is an appointment, get the first one
-                bool foundAppointment = false;
-                if (outlookAppointmentFilter.ItemCount > 0)
-                    foundAppointment = outlookAppointmentFilter.Appointment;
+            // If there is an appointment, get the first one
+            bool foundAppointment = false;
+            if (outlookAppointmentFilter.ItemCount > 0)
+                foundAppointment = outlookAppointmentFilter.GetEvent();
 
-                // Update the appointment we may have pulled or the new one
-                // Set the appointment length to 5 minutes, starting at the estimated completion date and time
-                // Reminder value was already validated
-                // Use the values from the screen as these may differ what the user has set for defaults
-                outlookAppointmentFilter.StartDate = queuedSkill.EndTime.ToLocalTime();
-                outlookAppointmentFilter.EndDate = queuedSkill.EndTime.ToLocalTime().AddMinutes(5);
-                outlookAppointmentFilter.ItemReminder = Settings.Calendar.UseReminding;
-                outlookAppointmentFilter.AlternateReminder = Settings.Calendar.UseRemindingRange;
-                outlookAppointmentFilter.EarlyReminder = Settings.Calendar.EarlyReminding;
-                outlookAppointmentFilter.LateReminder = Settings.Calendar.LateReminding;
-                outlookAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
+            // Update the appointment we may have pulled or the new one
+            // Set the appointment length to 5 minutes, starting at the estimated completion date and time
+            // Reminder value was already validated
+            // Use the values from the screen as these may differ what the user has set for defaults
+            outlookAppointmentFilter.StartDate = queuedSkill.EndTime.ToLocalTime();
+            outlookAppointmentFilter.EndDate = queuedSkill.EndTime.ToLocalTime().AddMinutes(5);
+            outlookAppointmentFilter.ItemReminder = Settings.Calendar.UseReminding;
+            outlookAppointmentFilter.AlternateReminder = Settings.Calendar.UseAlternateReminding;
+            outlookAppointmentFilter.EarlyReminder = Settings.Calendar.EarlyReminding;
+            outlookAppointmentFilter.LateReminder = Settings.Calendar.LateReminding;
+            outlookAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
 
-                try
-                {
-                    outlookAppointmentFilter.AddOrUpdateAppointment(foundAppointment, queuePosition, lastSkillInQueue);
-                }
-                catch (Exception ex)
-                {
-                    ExceptionHandler.LogRethrowException(ex);
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.LogRethrowException(ex);
-                throw;
-            }
+            await outlookAppointmentFilter.AddOrUpdateEvent(foundAppointment, queuePosition, lastSkillInQueue);
         }
 
         /// <summary>
@@ -143,38 +129,30 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="queuedSkill">The queued skill.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        private static void DoGoogleAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
+        private static async void DoGoogleAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
             try
             {
                 // Set the subject to the character name and the skill and level in queue for uniqueness sakes
-                GoogleAppointmentFilter googleAppointmentFilter = new GoogleAppointmentFilter
-                                                                      {
-                                                                          UserName = Settings.Calendar.GoogleEmail,
-                                                                          Password =
-                                                                              Util.Decrypt(Settings.Calendar.GooglePassword,
-                                                                                           Settings.Calendar.GoogleEmail),
-                                                                          Uri = new Uri(Settings.Calendar.GoogleAddress),
-                                                                          StartDate = DateTime.Now.AddDays(-40),
-                                                                          EndDate = DateTime.Now.AddDays(100),
-                                                                          Subject = String.Format(
-                                                                              CultureConstants.DefaultCulture,
-                                                                              "{0} - {1} {2}",
-                                                                              queuedSkill.Owner.Name,
-                                                                              queuedSkill.SkillName,
-                                                                              Skill.GetRomanFromInt(queuedSkill.Level))
-                                                                      };
-
-                // Log on to google
-                googleAppointmentFilter.Logon();
+                GoogleCalendarEvent googleAppointmentFilter = new GoogleCalendarEvent
+                {
+                    StartDate = DateTime.Now.AddDays(-40),
+                    EndDate = DateTime.Now.AddDays(100),
+                    Subject = String.Format(
+                        CultureConstants.DefaultCulture,
+                        "{0} - {1} {2}",
+                        queuedSkill.Owner.Name,
+                        queuedSkill.SkillName,
+                        Skill.GetRomanFromInt(queuedSkill.Level))
+                };
 
                 // Pull the list of appointments, hopefully we should either get 1 or none back
-                googleAppointmentFilter.ReadAppointments();
+                await googleAppointmentFilter.ReadEvents();
 
                 // If there is are appointments, see if any match the subject
                 bool foundAppointment = false;
                 if (googleAppointmentFilter.ItemCount > 0)
-                    foundAppointment = googleAppointmentFilter.Appointment;
+                    foundAppointment = googleAppointmentFilter.GetEvent();
 
                 // Update the appointment we may have pulled or the new one
                 // Set the appointment length to 5 minutes, starting at the estimated completion date and time
@@ -183,26 +161,29 @@ namespace EVEMon.Common.ExternalCalendar
                 googleAppointmentFilter.StartDate = queuedSkill.EndTime.ToLocalTime();
                 googleAppointmentFilter.EndDate = queuedSkill.EndTime.ToLocalTime().AddMinutes(5);
                 googleAppointmentFilter.ItemReminder = Settings.Calendar.UseReminding;
-                googleAppointmentFilter.AlternateReminder = Settings.Calendar.UseRemindingRange;
+                googleAppointmentFilter.AlternateReminder = Settings.Calendar.UseAlternateReminding;
                 googleAppointmentFilter.EarlyReminder = Settings.Calendar.EarlyReminding;
                 googleAppointmentFilter.LateReminder = Settings.Calendar.LateReminding;
                 googleAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
-                googleAppointmentFilter.ReminderMethod = (int)Settings.Calendar.GoogleReminder;
+                googleAppointmentFilter.ReminderMethod = Settings.Calendar.GoogleEventReminder;
 
-                googleAppointmentFilter.AddOrUpdateAppointment(foundAppointment, queuePosition, lastSkillInQueue);
+                await googleAppointmentFilter.AddOrUpdateEvent(foundAppointment, queuePosition, lastSkillInQueue);
             }
-            catch (GDataRequestException ex)
+            catch (TokenResponseException ex)
             {
-                MessageBox.Show(ex.Message, "Google says:");
+                MessageBox.Show(ex.Error.ErrorDescription, @"Google Calendar");
             }
-            catch (InvalidCredentialsException ex)
+            catch (GoogleApiException ex)
             {
-                MessageBox.Show(ex.Message, "Google says:");
+                MessageBox.Show(ex.Error.Message, @"Google Calendar");
+            }
+            catch (APIException ex)
+            {
+                MessageBox.Show(ex.Message, ex.ErrorCode ?? @"Google Calendar");
             }
             catch (Exception ex)
             {
-                ExceptionHandler.LogRethrowException(ex);
-                throw;
+                MessageBox.Show(ex.Message, @"Google Calendar");
             }
         }
     }
