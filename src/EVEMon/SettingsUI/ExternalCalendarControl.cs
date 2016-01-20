@@ -135,6 +135,9 @@ namespace EVEMon.SettingsUI
             apiResponseLabel.ResetText();
             apiResponseLabel.ResetForeColor();
 
+            if (checkAuth && !GoogleCalendarEvent.HasCredentialsStored())
+                return;
+
             throbber.State = ThrobberState.Rotating;
             throbber.Visible = true;
 

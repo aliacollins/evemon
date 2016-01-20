@@ -321,6 +321,24 @@ namespace EVEMon.Common.ExternalCalendar
         }
 
         /// <summary>
+        /// Determines whether credentials are stored.
+        /// </summary>
+        /// <returns></returns>
+        public static bool HasCredentialsStored()
+        {
+            try
+            {
+                GetCredentialsPath(true);
+            }
+            catch (APIException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Logon to Google.
         /// </summary>
         /// <param name="checkAuth">if set to <c>true</c> [check authentication].</param>
@@ -329,7 +347,10 @@ namespace EVEMon.Common.ExternalCalendar
         {
             SerializableAPIResult<SerializableAPICredentials> result =
                 new SerializableAPIResult<SerializableAPICredentials>();
-            
+
+            if (checkAuth && !HasCredentialsStored())
+                return result;
+
             var clientSecrets = new ClientSecrets
             {
                 ClientId = Util.Decrypt(GoogleDriveCloudStorageServiceSettings.Default.AppKey,
@@ -410,7 +431,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <returns></returns>
         private static async Task<CalendarService> GetClient()
         {
-            if (s_credential == null)
+            if ((s_credential == null) || !HasCredentialsStored())
             {
                 GetCredentialsPath(true);
                 await LogOn(true);
