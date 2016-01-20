@@ -16,7 +16,6 @@ using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Controls.MultiPanel;
-using EVEMon.Common.ExternalCalendar;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.MarketPricer;
@@ -348,24 +347,7 @@ namespace EVEMon.SettingsUI
         {
             externalCalendarCheckbox.Checked = m_settings.Calendar.Enabled;
 
-            rbMSOutlook.Checked = m_settings.Calendar.Enabled && m_settings.Calendar.Provider == CalendarProvider.Outlook &&
-                                  ExternalCalendar.OutlookInstalled;
-            rbGoogle.Checked = !rbMSOutlook.Checked;
-
-            rbDefaultCalendar.Checked = m_settings.Calendar.UseOutlookDefaultCalendar;
-            rbCustomCalendar.Checked = !rbDefaultCalendar.Checked;
-            tbCalendarPath.Text = m_settings.Calendar.OutlookCustomCalendarPath;
-
-            tbGoogleEmail.Text = m_settings.Calendar.GoogleEmail;
-            tbGooglePassword.Text = Util.Decrypt(m_settings.Calendar.GooglePassword, m_settings.Calendar.GoogleEmail);
-            tbGoogleURI.Text = m_settings.Calendar.GoogleAddress;
-            cbGoogleReminder.SelectedIndex = (int)m_settings.Calendar.GoogleReminder;
-            cbSetReminder.Checked = m_settings.Calendar.UseReminding;
-            tbReminder.Text = m_settings.Calendar.RemindingInterval.ToString(CultureConstants.DefaultCulture);
-            cbUseAlterateReminder.Checked = m_settings.Calendar.UseRemindingRange;
-            dtpEarlyReminder.Value = m_settings.Calendar.EarlyReminding;
-            dtpLateReminder.Value = m_settings.Calendar.LateReminding;
-            cbLastQueuedSkillOnly.Checked = m_settings.Calendar.LastQueuedSkillOnly;
+            externalCalendarControl.SetExternalCalendar(m_settings);
         }
 
         /// <summary>
@@ -527,24 +509,7 @@ namespace EVEMon.SettingsUI
 
             // External calendar settings
             m_settings.Calendar.Enabled = externalCalendarCheckbox.Checked;
-            m_settings.Calendar.Provider = (rbMSOutlook.Checked ? CalendarProvider.Outlook : CalendarProvider.Google);
-
-            m_settings.Calendar.UseOutlookDefaultCalendar = rbDefaultCalendar.Checked;
-            m_settings.Calendar.OutlookCustomCalendarPath = tbCalendarPath.Text.Trim();
-
-            m_settings.Calendar.GoogleEmail = tbGoogleEmail.Text.Trim();
-            m_settings.Calendar.GooglePassword = Util.Encrypt(tbGooglePassword.Text.Trim(), tbGoogleEmail.Text.Trim());
-            m_settings.Calendar.GoogleAddress = tbGoogleURI.Text.Trim();
-            m_settings.Calendar.GoogleReminder = cbGoogleReminder.SelectedIndex != -1
-                ? (GoogleCalendarReminder)cbGoogleReminder.SelectedIndex
-                : GoogleCalendarReminder.None;
-
-            m_settings.Calendar.UseReminding = cbSetReminder.Checked;
-            m_settings.Calendar.RemindingInterval = Int32.Parse(tbReminder.Text, CultureConstants.DefaultCulture);
-            m_settings.Calendar.UseRemindingRange = cbUseAlterateReminder.Checked;
-            m_settings.Calendar.EarlyReminding = dtpEarlyReminder.Value;
-            m_settings.Calendar.LateReminding = dtpLateReminder.Value;
-            m_settings.Calendar.LastQueuedSkillOnly = cbLastQueuedSkillOnly.Checked;
+            externalCalendarControl.ApplyExternalCalendarSettings(m_settings);
 
             // Updates API provider choices
             m_settings.APIProviders.CurrentProviderName = (string)cbAPIServer.SelectedItem;
@@ -604,11 +569,6 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void InitilizeGoogleCalendarReminderDropDown()
         {
-            cbGoogleReminder.Items.Clear();
-            foreach (string text in GoogleAppointmentFilter.ReminderMethods.Cast<Enum>().Select(item => item.ToString()))
-            {
-                cbGoogleReminder.Items.Add(char.ToUpper(text[0], CultureConstants.DefaultCulture) + text.Substring(1));
-            }
         }
 
         /// <summary>
@@ -661,36 +621,6 @@ namespace EVEMon.SettingsUI
 
 
         #region Validation
-
-        /// <summary>
-        /// Outlook custom calendar path validation.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void tbCalendarPath_Validating(object sender, CancelEventArgs e)
-        {
-            e.Cancel = externalCalendarCheckbox.Checked && rbMSOutlook.Checked && rbCustomCalendar.Checked &&
-                       (tbCalendarPath.Text.Any(x => Path.GetInvalidPathChars().Contains(x)) ||
-                        String.IsNullOrWhiteSpace(tbCalendarPath.Text.Trim()) ||
-                        !ExternalCalendar.OutlookCalendarExist(rbDefaultCalendar.Checked, tbCalendarPath.Text));
-
-            if (e.Cancel)
-                ShowErrorMessage("MS Outlook", "A calendar at that path could not be found.");
-        }
-
-        /// <summary>
-        /// Reminder value validation.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        private void tbReminder_Validating(object sender, CancelEventArgs e)
-        {
-            int value;
-
-            e.Cancel = !Int32.TryParse(tbReminder.Text, out value) && value > 0;
-            if (e.Cancel)
-                ShowErrorMessage("Reminder interval", "The reminder interval must be a strictly positive integer.");
-        }
 
         /// <summary>
         /// Proxy port validation.
@@ -804,19 +734,7 @@ namespace EVEMon.SettingsUI
                 rbMinToTaskBar.Checked = true;
 
             // Calendar
-            externalCalendarPanel.Enabled = externalCalendarCheckbox.Checked;
-            rbMSOutlook.Enabled = externalCalendarCheckbox.Checked && ExternalCalendar.OutlookInstalled;
-            gbMSOutlook.Visible = rbMSOutlook.Checked;
-            gbGoogle.Visible = rbGoogle.Checked;
-            calendarPathLabel.Enabled = tbCalendarPath.Enabled = rbCustomCalendar.Checked;
-            calendarPathExampleLabel.Visible = rbCustomCalendar.Checked;
-            if (rbCustomCalendar.Checked)
-                tbCalendarPath.Focus();
-            cbSetReminder.Enabled = lblMinutes.Enabled = !cbUseAlterateReminder.Checked;
-            tbReminder.Enabled = cbSetReminder.Checked;
-            cbUseAlterateReminder.Enabled = lblEarlyReminder.Enabled = lblLateReminder.Enabled = !cbSetReminder.Checked;
-            dtpEarlyReminder.Enabled = cbUseAlterateReminder.Checked;
-            dtpLateReminder.Enabled = cbUseAlterateReminder.Checked;
+            externalCalendarControl.Enabled = externalCalendarCheckbox.Checked;
 
             // Main window filters (show non-public skills and such)
             if (cbShowAllPublicSkills.Checked)

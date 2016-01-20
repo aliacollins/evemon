@@ -1,33 +1,30 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace EVEMon.Common.ExternalCalendar
 {
     /// <summary>
     /// Common Appointment Class used for both instances of the calendar.
     /// </summary>
-    public abstract class AppointmentFilter
+    public abstract class CalendarEvent
     {
-        private readonly ArrayList m_arrayList;
-
-
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AppointmentFilter"/> class.
+        /// Initializes a new instance of the <see cref="CalendarEvent"/> class.
         /// </summary>
-        protected AppointmentFilter()
+        protected CalendarEvent()
         {
             StartDate = DateTime.Now;
             EndDate = DateTime.Now.AddDays(1);
             Subject = String.Empty;
             ItemReminder = true;
             Minutes = 5;
-            EntryId = String.Empty;
             AlternateReminder = false;
             EarlyReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 0, 0);
             LateReminder = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 20, 0, 0);
-            m_arrayList = new ArrayList();
+            Events = new ArrayList();
         }
 
         #endregion
@@ -61,11 +58,6 @@ namespace EVEMon.Common.ExternalCalendar
         public int Minutes { get; set; }
 
         /// <summary>
-        /// Gets or sets Entry Id.
-        /// </summary>
-        public string EntryId { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the appointment uses the Alternate Reminder.
         /// </summary>
         public bool AlternateReminder { get; set; }
@@ -81,20 +73,20 @@ namespace EVEMon.Common.ExternalCalendar
         public DateTime LateReminder { get; set; }
 
         /// <summary>
-        /// Gets the number of appointments.
+        /// Gets the number of events.
         /// </summary>
         public int ItemCount
         {
-            get { return AppointmentArray.Count; }
+            get { return Events.Count; }
         }
 
         /// <summary>
-        /// Gets or sets Appointment Array.
+        /// Gets the events.
         /// </summary>
-        protected ArrayList AppointmentArray
-        {
-            get { return m_arrayList; }
-        }
+        /// <value>
+        /// The events.
+        /// </value>
+        protected ArrayList Events { get; }
 
         #endregion
 
@@ -102,31 +94,31 @@ namespace EVEMon.Common.ExternalCalendar
         #region Abstract Methods
 
         /// <summary>
-        /// Method to search for any existing appointments for this skill.
+        /// Method to search for any existing event for this skill.
         /// </summary>
-        internal abstract void ReadAppointments();
+        internal abstract Task ReadEvents();
 
         /// <summary>
-        /// Method to get the relevant appointment item and populate the details.
+        /// Method to get the relevant event item and populate the details.
         /// </summary>
         /// <returns>
-        /// 	<c>true</c> if an appointment is found, <c>false</c> otherwise.
+        /// 	<c>true</c> if an event is found, <c>false</c> otherwise.
         /// </returns>
-        internal abstract bool Appointment { get; }
+        internal abstract bool GetEvent();
 
         /// <summary>
-        /// Add a new appointment or Update the appropriate appointment in the calendar.
+        /// Add a new appointment or Update the appropriate event in the calendar.
         /// </summary>
-        /// <param name="appointmentExists">if set to <c>true</c> the appointment exists.</param>
+        /// <param name="eventExists">if set to <c>true</c> the event exists.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        internal abstract void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue);
+        internal abstract Task AddOrUpdateEvent(bool eventExists, int queuePosition, bool lastSkillInQueue);
 
         /// <summary>
-        /// Delete the appropriate appointment.
+        /// Delete the appropriate event.
         /// </summary>
-        /// <param name="appointmentIndex">The index of the appointment.</param>
-        internal abstract void DeleteAppointment(int appointmentIndex);
+        /// <param name="eventIndex">The index of the event.</param>
+        internal abstract Task DeleteEvent(int eventIndex);
 
         #endregion
 

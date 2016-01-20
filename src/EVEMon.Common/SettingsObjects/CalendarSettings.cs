@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Serialization;
-using EVEMon.Common.Constants;
 
 namespace EVEMon.Common.SettingsObjects
 {
@@ -12,8 +11,7 @@ namespace EVEMon.Common.SettingsObjects
         public CalendarSettings()
         {
             UseOutlookDefaultCalendar = true;
-            GoogleAddress = NetworkConstants.GoogleCalendarURL;
-            GoogleReminder = GoogleCalendarReminder.Email;
+            GoogleEventReminder = GoogleCalendarReminder.Email;
             RemindingInterval = 10;
 
             EarlyReminding = DateTime.Now.Date.AddHours(8);
@@ -50,7 +48,7 @@ namespace EVEMon.Common.SettingsObjects
         public string OutlookCustomCalendarPath { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [use reminding].
+        /// Gets or sets a value indicating whether to use reminding.
         /// </summary>
         /// <value><c>true</c> if [use reminding]; otherwise, <c>false</c>.</value>
         [XmlElement("useReminding")]
@@ -62,8 +60,14 @@ namespace EVEMon.Common.SettingsObjects
         [XmlElement("remindingInterval")]
         public int RemindingInterval { get; set; }
 
-        [XmlElement("remindingRange")]
-        public bool UseRemindingRange { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether to use alternate reminding.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if to use alternate reminding; otherwise, <c>false</c>.
+        /// </value>
+        [XmlElement("useAlternateReminding")]
+        public bool UseAlternateReminding { get; set; }
 
         /// <summary>
         /// Gets or sets the early reminding.
@@ -80,32 +84,20 @@ namespace EVEMon.Common.SettingsObjects
         public DateTime LateReminding { get; set; }
 
         /// <summary>
-        /// Gets or sets the google email.
+        /// Gets or sets the name of the google calendar.
         /// </summary>
-        /// <value>The google email.</value>
-        [XmlElement("googleEmail")]
-        public string GoogleEmail { get; set; }
-
-        /// <summary>
-        /// Gets or sets the google password.
-        /// </summary>
-        /// <value>The google password.</value>
-        [XmlElement("googlePassword")]
-        public string GooglePassword { get; set; }
-
-        /// <summary>
-        /// Gets or sets the google URL.
-        /// </summary>
-        /// <value>The google URL.</value>
-        [XmlElement("googleUrl")]
-        public string GoogleAddress { get; set; }
+        /// <value>
+        /// The name of the google calendar.
+        /// </value>
+        [XmlElement("googleCalendarName")]
+        public string GoogleCalendarName { get; set; }
 
         /// <summary>
         /// Gets or sets the google reminder.
         /// </summary>
         /// <value>The google reminder.</value>
-        [XmlElement("googleReminder")]
-        public GoogleCalendarReminder GoogleReminder { get; set; }
+        [XmlElement("googleEventReminder")]
+        public GoogleCalendarReminder GoogleEventReminder { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [last queued skill only].
