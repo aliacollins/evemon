@@ -43,24 +43,26 @@
             this.rbMSOutlook = new System.Windows.Forms.RadioButton();
             this.rbGoogle = new System.Windows.Forms.RadioButton();
             this.gbGoogle = new System.Windows.Forms.GroupBox();
+            this.calendarIDLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.apiResponseLabel = new System.Windows.Forms.Label();
+            this.btnRevokeAuth = new System.Windows.Forms.Button();
+            this.btnRequestAuth = new System.Windows.Forms.Button();
             this.cbGoogleReminder = new System.Windows.Forms.ComboBox();
             this.lblReminder = new System.Windows.Forms.Label();
-            this.lblURI = new System.Windows.Forms.Label();
-            this.tbGoogleURI = new System.Windows.Forms.TextBox();
-            this.tbGooglePassword = new System.Windows.Forms.TextBox();
-            this.tbGoogleEmail = new System.Windows.Forms.TextBox();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.lblGoogleEmail = new System.Windows.Forms.Label();
+            this.lblCalendarId = new System.Windows.Forms.Label();
+            this.tbGoogleCalendarName = new System.Windows.Forms.TextBox();
             this.gbMSOutlook = new System.Windows.Forms.GroupBox();
             this.calendarPathExampleLabel = new System.Windows.Forms.Label();
             this.rbCustomCalendar = new System.Windows.Forms.RadioButton();
             this.rbDefaultCalendar = new System.Windows.Forms.RadioButton();
-            this.tbCalendarPath = new System.Windows.Forms.TextBox();
+            this.tbOutlookCalendarPath = new System.Windows.Forms.TextBox();
             this.calendarPathLabel = new System.Windows.Forms.Label();
+            this.throbber = new EVEMon.Common.Controls.Throbber();
             this.externalCalendarPanel.SuspendLayout();
             this.gbReminder.SuspendLayout();
             this.gbGoogle.SuspendLayout();
             this.gbMSOutlook.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
             // 
             // externalCalendarPanel
@@ -75,7 +77,7 @@
             this.externalCalendarPanel.Location = new System.Drawing.Point(0, 0);
             this.externalCalendarPanel.Name = "externalCalendarPanel";
             this.externalCalendarPanel.Padding = new System.Windows.Forms.Padding(3);
-            this.externalCalendarPanel.Size = new System.Drawing.Size(432, 294);
+            this.externalCalendarPanel.Size = new System.Drawing.Size(439, 297);
             this.externalCalendarPanel.TabIndex = 13;
             // 
             // gbReminder
@@ -92,7 +94,7 @@
             this.gbReminder.Controls.Add(this.dtpEarlyReminder);
             this.gbReminder.Location = new System.Drawing.Point(6, 169);
             this.gbReminder.Name = "gbReminder";
-            this.gbReminder.Size = new System.Drawing.Size(419, 96);
+            this.gbReminder.Size = new System.Drawing.Size(426, 96);
             this.gbReminder.TabIndex = 13;
             this.gbReminder.TabStop = false;
             this.gbReminder.Text = "Reminder Setting";
@@ -151,7 +153,7 @@
             this.tbReminder.Name = "tbReminder";
             this.tbReminder.Size = new System.Drawing.Size(35, 20);
             this.tbReminder.TabIndex = 7;
-            this.tbReminder.Text = "5";
+            this.tbReminder.Text = "10";
             this.tbReminder.Validating += new System.ComponentModel.CancelEventHandler(this.tbReminder_Validating);
             // 
             // cbUseAlterateReminder
@@ -201,106 +203,116 @@
             // 
             this.rbGoogle.AutoSize = true;
             this.rbGoogle.CausesValidation = false;
-            this.rbGoogle.Location = new System.Drawing.Point(91, 7);
+            this.rbGoogle.Location = new System.Drawing.Point(93, 8);
             this.rbGoogle.Name = "rbGoogle";
             this.rbGoogle.Size = new System.Drawing.Size(59, 17);
             this.rbGoogle.TabIndex = 2;
             this.rbGoogle.Text = "Google";
             this.rbGoogle.UseVisualStyleBackColor = true;
-            this.rbGoogle.CheckedChanged += new System.EventHandler(this.OnMustEnableOrDisable);
+            this.rbGoogle.CheckedChanged += new System.EventHandler(this.rbGoogle_CheckedChanged);
             // 
             // gbGoogle
             // 
             this.gbGoogle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbGoogle.Controls.Add(this.calendarIDLinkLabel);
+            this.gbGoogle.Controls.Add(this.apiResponseLabel);
+            this.gbGoogle.Controls.Add(this.btnRevokeAuth);
+            this.gbGoogle.Controls.Add(this.btnRequestAuth);
             this.gbGoogle.Controls.Add(this.cbGoogleReminder);
             this.gbGoogle.Controls.Add(this.lblReminder);
-            this.gbGoogle.Controls.Add(this.lblURI);
-            this.gbGoogle.Controls.Add(this.tbGoogleURI);
-            this.gbGoogle.Controls.Add(this.tbGooglePassword);
-            this.gbGoogle.Controls.Add(this.tbGoogleEmail);
-            this.gbGoogle.Controls.Add(this.lblPassword);
-            this.gbGoogle.Controls.Add(this.lblGoogleEmail);
+            this.gbGoogle.Controls.Add(this.lblCalendarId);
+            this.gbGoogle.Controls.Add(this.tbGoogleCalendarName);
+            this.gbGoogle.Controls.Add(this.throbber);
             this.gbGoogle.Location = new System.Drawing.Point(5, 31);
             this.gbGoogle.Name = "gbGoogle";
-            this.gbGoogle.Size = new System.Drawing.Size(420, 137);
+            this.gbGoogle.Size = new System.Drawing.Size(427, 137);
             this.gbGoogle.TabIndex = 3;
             this.gbGoogle.TabStop = false;
             this.gbGoogle.Text = "Google Information";
+            // 
+            // calendarIDLinkLabel
+            // 
+            this.calendarIDLinkLabel.AutoSize = true;
+            this.calendarIDLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(54, 25);
+            this.calendarIDLinkLabel.Location = new System.Drawing.Point(7, 118);
+            this.calendarIDLinkLabel.Name = "calendarIDLinkLabel";
+            this.calendarIDLinkLabel.Size = new System.Drawing.Size(406, 17);
+            this.calendarIDLinkLabel.TabIndex = 12;
+            this.calendarIDLinkLabel.TabStop = true;
+            this.calendarIDLinkLabel.Text = "Tip: Leave Calendar ID blank to use default calendar. How to find a Calendar ID.";
+            this.calendarIDLinkLabel.UseCompatibleTextRendering = true;
+            this.calendarIDLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.calendarIDLinkLabel_LinkClicked);
+            // 
+            // apiResponseLabel
+            // 
+            this.apiResponseLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.apiResponseLabel.Location = new System.Drawing.Point(6, 16);
+            this.apiResponseLabel.Name = "apiResponseLabel";
+            this.apiResponseLabel.Size = new System.Drawing.Size(415, 24);
+            this.apiResponseLabel.TabIndex = 11;
+            this.apiResponseLabel.Text = "APIResponse";
+            this.apiResponseLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnRevokeAuth
+            // 
+            this.btnRevokeAuth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRevokeAuth.Location = new System.Drawing.Point(347, 43);
+            this.btnRevokeAuth.Name = "btnRevokeAuth";
+            this.btnRevokeAuth.Size = new System.Drawing.Size(75, 23);
+            this.btnRevokeAuth.TabIndex = 9;
+            this.btnRevokeAuth.Text = "Reset";
+            this.btnRevokeAuth.UseVisualStyleBackColor = true;
+            this.btnRevokeAuth.Click += new System.EventHandler(this.btnRevokeAuth_Click);
+            // 
+            // btnRequestAuth
+            // 
+            this.btnRequestAuth.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnRequestAuth.Location = new System.Drawing.Point(140, 43);
+            this.btnRequestAuth.Name = "btnRequestAuth";
+            this.btnRequestAuth.Size = new System.Drawing.Size(147, 23);
+            this.btnRequestAuth.TabIndex = 8;
+            this.btnRequestAuth.Text = "Request Authentication";
+            this.btnRequestAuth.UseVisualStyleBackColor = true;
+            this.btnRequestAuth.Click += new System.EventHandler(this.btnRequestAuth_Click);
             // 
             // cbGoogleReminder
             // 
             this.cbGoogleReminder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGoogleReminder.FormattingEnabled = true;
-            this.cbGoogleReminder.Location = new System.Drawing.Point(83, 104);
+            this.cbGoogleReminder.Location = new System.Drawing.Point(78, 93);
             this.cbGoogleReminder.Name = "cbGoogleReminder";
-            this.cbGoogleReminder.Size = new System.Drawing.Size(121, 21);
+            this.cbGoogleReminder.Size = new System.Drawing.Size(92, 21);
             this.cbGoogleReminder.TabIndex = 7;
             // 
             // lblReminder
             // 
             this.lblReminder.AutoSize = true;
-            this.lblReminder.Location = new System.Drawing.Point(6, 107);
+            this.lblReminder.Location = new System.Drawing.Point(6, 96);
             this.lblReminder.Name = "lblReminder";
             this.lblReminder.Size = new System.Drawing.Size(55, 13);
             this.lblReminder.TabIndex = 6;
             this.lblReminder.Text = "Reminder:";
             // 
-            // lblURI
+            // lblCalendarId
             // 
-            this.lblURI.AutoSize = true;
-            this.lblURI.Location = new System.Drawing.Point(6, 80);
-            this.lblURI.Name = "lblURI";
-            this.lblURI.Size = new System.Drawing.Size(29, 13);
-            this.lblURI.TabIndex = 5;
-            this.lblURI.Text = "URI:";
+            this.lblCalendarId.AutoSize = true;
+            this.lblCalendarId.Location = new System.Drawing.Point(6, 73);
+            this.lblCalendarId.Name = "lblCalendarId";
+            this.lblCalendarId.Size = new System.Drawing.Size(66, 13);
+            this.lblCalendarId.TabIndex = 5;
+            this.lblCalendarId.Text = "Calendar ID:";
             // 
-            // tbGoogleURI
+            // tbGoogleCalendarName
             // 
-            this.tbGoogleURI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tbGoogleCalendarName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbGoogleURI.Location = new System.Drawing.Point(83, 76);
-            this.tbGoogleURI.Name = "tbGoogleURI";
-            this.tbGoogleURI.Size = new System.Drawing.Size(331, 20);
-            this.tbGoogleURI.TabIndex = 5;
-            this.tbGoogleURI.Text = "http://www.google.com/calendar/feeds/default/private/full";
-            // 
-            // tbGooglePassword
-            // 
-            this.tbGooglePassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbGooglePassword.Location = new System.Drawing.Point(83, 49);
-            this.tbGooglePassword.Name = "tbGooglePassword";
-            this.tbGooglePassword.PasswordChar = '*';
-            this.tbGooglePassword.Size = new System.Drawing.Size(331, 20);
-            this.tbGooglePassword.TabIndex = 4;
-            // 
-            // tbGoogleEmail
-            // 
-            this.tbGoogleEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbGoogleEmail.Location = new System.Drawing.Point(83, 21);
-            this.tbGoogleEmail.Name = "tbGoogleEmail";
-            this.tbGoogleEmail.Size = new System.Drawing.Size(331, 20);
-            this.tbGoogleEmail.TabIndex = 3;
-            // 
-            // lblPassword
-            // 
-            this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(6, 52);
-            this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(56, 13);
-            this.lblPassword.TabIndex = 1;
-            this.lblPassword.Text = "Password:";
-            // 
-            // lblGoogleEmail
-            // 
-            this.lblGoogleEmail.AutoSize = true;
-            this.lblGoogleEmail.Location = new System.Drawing.Point(6, 24);
-            this.lblGoogleEmail.Name = "lblGoogleEmail";
-            this.lblGoogleEmail.Size = new System.Drawing.Size(72, 13);
-            this.lblGoogleEmail.TabIndex = 0;
-            this.lblGoogleEmail.Text = "Google Email:";
+            this.tbGoogleCalendarName.Location = new System.Drawing.Point(78, 69);
+            this.tbGoogleCalendarName.Name = "tbGoogleCalendarName";
+            this.tbGoogleCalendarName.Size = new System.Drawing.Size(343, 20);
+            this.tbGoogleCalendarName.TabIndex = 5;
+            this.tbGoogleCalendarName.Text = "primary";
             // 
             // gbMSOutlook
             // 
@@ -309,11 +321,11 @@
             this.gbMSOutlook.Controls.Add(this.calendarPathExampleLabel);
             this.gbMSOutlook.Controls.Add(this.rbCustomCalendar);
             this.gbMSOutlook.Controls.Add(this.rbDefaultCalendar);
-            this.gbMSOutlook.Controls.Add(this.tbCalendarPath);
+            this.gbMSOutlook.Controls.Add(this.tbOutlookCalendarPath);
             this.gbMSOutlook.Controls.Add(this.calendarPathLabel);
             this.gbMSOutlook.Location = new System.Drawing.Point(5, 31);
             this.gbMSOutlook.Name = "gbMSOutlook";
-            this.gbMSOutlook.Size = new System.Drawing.Size(420, 137);
+            this.gbMSOutlook.Size = new System.Drawing.Size(427, 137);
             this.gbMSOutlook.TabIndex = 14;
             this.gbMSOutlook.TabStop = false;
             this.gbMSOutlook.Text = "MS Outlook Information";
@@ -354,15 +366,15 @@
             this.rbDefaultCalendar.UseVisualStyleBackColor = true;
             this.rbDefaultCalendar.Click += new System.EventHandler(this.OnMustEnableOrDisable);
             // 
-            // tbCalendarPath
+            // tbOutlookCalendarPath
             // 
-            this.tbCalendarPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tbOutlookCalendarPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCalendarPath.Location = new System.Drawing.Point(95, 46);
-            this.tbCalendarPath.Name = "tbCalendarPath";
-            this.tbCalendarPath.Size = new System.Drawing.Size(319, 20);
-            this.tbCalendarPath.TabIndex = 1;
-            this.tbCalendarPath.Validating += new System.ComponentModel.CancelEventHandler(this.tbCalendarPath_Validating);
+            this.tbOutlookCalendarPath.Location = new System.Drawing.Point(95, 46);
+            this.tbOutlookCalendarPath.Name = "tbOutlookCalendarPath";
+            this.tbOutlookCalendarPath.Size = new System.Drawing.Size(326, 20);
+            this.tbOutlookCalendarPath.TabIndex = 1;
+            this.tbOutlookCalendarPath.Validating += new System.ComponentModel.CancelEventHandler(this.tbCalendarPath_Validating);
             // 
             // calendarPathLabel
             // 
@@ -373,13 +385,25 @@
             this.calendarPathLabel.TabIndex = 0;
             this.calendarPathLabel.Text = "Calendar Path:";
             // 
+            // throbber
+            // 
+            this.throbber.Location = new System.Drawing.Point(201, 16);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
+            this.throbber.TabIndex = 13;
+            this.throbber.TabStop = false;
+            // 
             // ExternalCalendarControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.externalCalendarPanel);
+            this.Enabled = false;
             this.Name = "ExternalCalendarControl";
-            this.Size = new System.Drawing.Size(432, 294);
+            this.Size = new System.Drawing.Size(439, 297);
             this.EnabledChanged += new System.EventHandler(this.ExternalCalendarControl_EnabledChanged);
             this.externalCalendarPanel.ResumeLayout(false);
             this.externalCalendarPanel.PerformLayout();
@@ -389,6 +413,7 @@
             this.gbGoogle.PerformLayout();
             this.gbMSOutlook.ResumeLayout(false);
             this.gbMSOutlook.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -409,18 +434,19 @@
         private System.Windows.Forms.GroupBox gbGoogle;
         private System.Windows.Forms.ComboBox cbGoogleReminder;
         private System.Windows.Forms.Label lblReminder;
-        private System.Windows.Forms.Label lblURI;
-        private System.Windows.Forms.TextBox tbGoogleURI;
-        private System.Windows.Forms.TextBox tbGooglePassword;
-        private System.Windows.Forms.TextBox tbGoogleEmail;
-        private System.Windows.Forms.Label lblPassword;
-        private System.Windows.Forms.Label lblGoogleEmail;
+        private System.Windows.Forms.Label lblCalendarId;
+        private System.Windows.Forms.TextBox tbGoogleCalendarName;
         private System.Windows.Forms.GroupBox gbMSOutlook;
         private System.Windows.Forms.Label calendarPathExampleLabel;
         private System.Windows.Forms.RadioButton rbCustomCalendar;
         private System.Windows.Forms.RadioButton rbDefaultCalendar;
-        private System.Windows.Forms.TextBox tbCalendarPath;
+        private System.Windows.Forms.TextBox tbOutlookCalendarPath;
         private System.Windows.Forms.Label calendarPathLabel;
         private System.Windows.Forms.Panel externalCalendarPanel;
+        private System.Windows.Forms.Button btnRevokeAuth;
+        private System.Windows.Forms.Button btnRequestAuth;
+        private System.Windows.Forms.Label apiResponseLabel;
+        private System.Windows.Forms.LinkLabel calendarIDLinkLabel;
+        private Common.Controls.Throbber throbber;
     }
 }

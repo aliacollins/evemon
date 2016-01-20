@@ -23,18 +23,6 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string AccessToken {
-            get {
-                return ((string)(this["AccessToken"]));
-            }
-            set {
-                this["AccessToken"] = value;
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8BvIlzHHSodUmiKJYYZAZt0G+0e3FAPudDgGnisxIPlRhL6OtAuJ0rLrvcABqSjZbpUiNTD7HO+9jMyFB" +

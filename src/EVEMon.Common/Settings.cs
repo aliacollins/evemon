@@ -425,7 +425,7 @@ namespace EVEMon.Common
             const string Caption = "Corrupt Settings";
 
             DialogResult dr = MessageBox.Show("Loading settings from the storage server file failed.\n" +
-                                              "Do you want to use the local settings file?",
+                                              @"Do you want to use the local settings file?",
                 Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
             if (dr != DialogResult.No)
@@ -604,8 +604,8 @@ namespace EVEMon.Common
 
             using (SaveFileDialog fileDialog = new SaveFileDialog())
             {
-                fileDialog.Title = "Settings file backup";
-                fileDialog.Filter = "Settings Backup Files (*.bak)|*.bak";
+                fileDialog.Title = @"Settings file backup";
+                fileDialog.Filter = @"Settings Backup Files (*.bak)|*.bak";
                 fileDialog.FileName = String.Format(CultureConstants.DefaultCulture,
                     "EVEMon_Settings_{0}.xml.bak", settings.Revision);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);

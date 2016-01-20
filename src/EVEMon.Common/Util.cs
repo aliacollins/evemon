@@ -953,21 +953,21 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="value">The json string.</param>
         /// <returns></returns>
-        public static Dictionary<string, object> DeserializeJsonToObject(string value)
+        public static T DeserializeJsonToObject<T>(string value)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Deserialize<Dictionary<string, object>>(value);
+            return serializer.Deserialize<T>(value);
         }
 
         /// <summary>
-        /// Serializes the object to JSON.
+        /// Serializes the object to a JSON string.
         /// </summary>
-        /// <param name="jsonObj">The json object.</param>
+        /// <param name="obj">The object.</param>
         /// <returns></returns>
-        public static string SerializeObjectToJson(Dictionary<string, object> jsonObj)
+        public static string SerializeObjectToJson(object obj)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Serialize(jsonObj);
+            return serializer.Serialize(obj);
         }
 
         /// <summary>

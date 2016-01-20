@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Helpers;
 using NetOffice.OutlookApi;
@@ -11,9 +12,9 @@ using NetOffice.OutlookApi.Enums;
 namespace EVEMon.Common.ExternalCalendar
 {
     /// <summary>
-    /// Appointment filter for MS Outlook.
+    /// Class for handling MS Outlook calendar.
     /// </summary>
-    public sealed class OutlookAppointmentFilter : AppointmentFilter
+    public sealed class OutlookCalendarEvent : CalendarEvent
     {
         private static Application s_outlookApplication;
         private static MAPIFolder s_mapiFolder;
@@ -72,109 +73,112 @@ namespace EVEMon.Common.ExternalCalendar
         #region Internal Methods
 
         /// <summary>
-        /// Add a new appointment or Update the appropriate appointment in the calendar.
+        /// Add a new event or Update the appropriate event in the calendar.
         /// </summary>
-        /// <param name="appointmentExists">if set to <c>true</c> the appointment exists.</param>
+        /// <param name="eventExists">if set to <c>true</c> the event exists.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        internal override void AddOrUpdateAppointment(bool appointmentExists, int queuePosition, bool lastSkillInQueue)
+        internal override async Task AddOrUpdateEvent(bool eventExists, int queuePosition, bool lastSkillInQueue)
         {
-            AppointmentItem appointmentItem = appointmentExists
-                                                  ? (AppointmentItem)AppointmentArray[0]
-                                                  : (AppointmentItem)s_mapiFolder.Items.Add(OlItemType.olAppointmentItem);
-
-            appointmentItem.Subject = Subject;
-            appointmentItem.Start = StartDate;
-            appointmentItem.End = EndDate;
-
-            string queuePositionText = lastSkillInQueue ? "End Of Queue" : queuePosition.ToString(CultureConstants.DefaultCulture);
-
-            appointmentItem.Body = appointmentExists
-                                       ? String.Format(CultureConstants.DefaultCulture,
-                                                       "{0} {3}Updated: {1} Queue Position: {2}",
-                                                       appointmentItem.Body, DateTime.Now,
-                                                       queuePositionText,
-                                                       Environment.NewLine)
-                                       : String.Format(CultureConstants.DefaultCulture,
-                                                       "Added: {0} Queue Position: {1}",
-                                                       DateTime.Now,
-                                                       queuePositionText);
-
-            appointmentItem.ReminderSet = ItemReminder || AlternateReminder;
-            appointmentItem.BusyStatus = OlBusyStatus.olBusy;
-            appointmentItem.AllDayEvent = false;
-            appointmentItem.Location = String.Empty;
-
-            if (AlternateReminder)
+            await Task.Run(() =>
             {
-                EarlyReminder = new DateTime(StartDate.Year,
-                                             StartDate.Month,
-                                             StartDate.Day,
-                                             EarlyReminder.Hour,
-                                             EarlyReminder.Minute,
-                                             EarlyReminder.Second);
+                AppointmentItem eventItem = eventExists
+                    ? (AppointmentItem)Events[0]
+                    : (AppointmentItem)s_mapiFolder.Items.Add(OlItemType.olAppointmentItem);
 
-                LateReminder = new DateTime(StartDate.Year,
-                                            StartDate.Month,
-                                            StartDate.Day,
-                                            LateReminder.Hour,
-                                            LateReminder.Minute,
-                                            LateReminder.Second);
+                eventItem.Subject = Subject;
+                eventItem.Start = StartDate;
+                eventItem.End = EndDate;
 
-                DateTime dateTimeAlternateReminder = WorkOutAlternateReminders();
+                string queuePositionText = lastSkillInQueue
+                    ? "End Of Queue"
+                    : queuePosition.ToString(CultureConstants.DefaultCulture);
 
-                // Subtract the reminder time from the appointment time
-                TimeSpan timeSpan = appointmentItem.Start.Subtract(dateTimeAlternateReminder);
-                appointmentItem.ReminderMinutesBeforeStart = Math.Abs((timeSpan.Hours * 60) + timeSpan.Minutes);
-                Minutes = appointmentItem.ReminderMinutesBeforeStart;
-            }
+                eventItem.Body = eventExists
+                    ? String.Format(CultureConstants.DefaultCulture,
+                        "{0} {3}Updated: {1} Queue Position: {2}",
+                        eventItem.Body, DateTime.Now,
+                        queuePositionText,
+                        Environment.NewLine)
+                    : String.Format(CultureConstants.DefaultCulture,
+                        "Added: {0} Queue Position: {1}",
+                        DateTime.Now,
+                        queuePositionText);
 
-            appointmentItem.ReminderMinutesBeforeStart = (appointmentItem.ReminderSet ? Minutes : 0);
-            appointmentItem.Save();
+                eventItem.ReminderSet = ItemReminder || AlternateReminder;
+                eventItem.BusyStatus = OlBusyStatus.olBusy;
+                eventItem.AllDayEvent = false;
+                eventItem.Location = String.Empty;
+
+                if (AlternateReminder)
+                {
+                    EarlyReminder = new DateTime(StartDate.Year,
+                        StartDate.Month,
+                        StartDate.Day,
+                        EarlyReminder.Hour,
+                        EarlyReminder.Minute,
+                        EarlyReminder.Second);
+
+                    LateReminder = new DateTime(StartDate.Year,
+                        StartDate.Month,
+                        StartDate.Day,
+                        LateReminder.Hour,
+                        LateReminder.Minute,
+                        LateReminder.Second);
+
+                    DateTime dateTimeAlternateReminder = WorkOutAlternateReminders();
+
+                    // Subtract the reminder time from the event time
+                    TimeSpan timeSpan = eventItem.Start.Subtract(dateTimeAlternateReminder);
+                    eventItem.ReminderMinutesBeforeStart = Math.Abs((timeSpan.Hours * 60) + timeSpan.Minutes);
+                    Minutes = eventItem.ReminderMinutesBeforeStart;
+                }
+
+                eventItem.ReminderMinutesBeforeStart = eventItem.ReminderSet ? Minutes : 0;
+                eventItem.Save();
+            });
         }
 
         /// <summary>
-        /// Get the relevant appointment item and populate the details.
+        /// Get the relevant event item and populate the details.
         /// </summary>
         /// <returns>
-        /// 	<c>true</c> if an appointment is found, <c>false</c> otherwise.
+        /// 	<c>true</c> if an event is found, <c>false</c> otherwise.
         /// </returns>
-        internal override bool Appointment
+        internal override bool GetEvent()
         {
-            get
+            if (Events.Count < 1)
+                return false;
+
+            AppointmentItem eventItem = (AppointmentItem)Events[0];
+            StartDate = eventItem.Start;
+            EndDate = eventItem.End;
+            Subject = eventItem.Subject;
+            ItemReminder = eventItem.ReminderSet;
+            Minutes = eventItem.ReminderMinutesBeforeStart;
+            return true;
+        }
+
+        /// <summary>
+        /// Pull all the events and populate the event array.
+        /// </summary>
+        internal override async Task ReadEvents()
+            => await Task.Run(() =>
             {
-                if (AppointmentArray.Count < 1)
-                    return false;
-
-                AppointmentItem appointmentItem = (AppointmentItem)AppointmentArray[0];
-                StartDate = appointmentItem.Start;
-                EndDate = appointmentItem.End;
-                Subject = appointmentItem.Subject;
-                ItemReminder = appointmentItem.ReminderSet;
-                Minutes = appointmentItem.ReminderMinutesBeforeStart;
-                EntryId = appointmentItem.EntryID;
-                return true;
-            }
-        }
+                Events.Clear();
+                Events.AddRange(GetEventItems());
+            });
 
         /// <summary>
-        /// Pull all the appointments and populate the appointment array.
+        /// Delete the specified event.
         /// </summary>
-        internal override void ReadAppointments()
+        /// <param name="eventIndex">The event index.</param>
+        internal override async Task DeleteEvent(int eventIndex)
         {
-            // Appointment Filter class that will handle any data attached
-            // to the appointment with which we are currently dealing
-            AppointmentArray.Clear();
-            AppointmentArray.AddRange(RecurringItems());
-        }
-
-        /// <summary>
-        /// Delete the specified appointment.
-        /// </summary>
-        /// <param name="appointmentIndex">The appointment index.</param>
-        internal override void DeleteAppointment(int appointmentIndex)
-        {
-            ((AppointmentItem)AppointmentArray[appointmentIndex]).Delete();
+            await Task.Run(() =>
+            {
+                ((AppointmentItem)Events[eventIndex]).Delete();
+            });
         }
 
         /// <summary>
@@ -223,7 +227,7 @@ namespace EVEMon.Common.ExternalCalendar
                     break;
                 }
 
-                if (folder.Folders.Cast<MAPIFolder>().Any())
+                if (folder.Folders.Any())
                     GetMapiFolder(folder.Folders, path: path);
             }
 
@@ -236,35 +240,35 @@ namespace EVEMon.Common.ExternalCalendar
         #region Private Methods
 
         /// <summary>
-        /// Get appointments matching the subject.
+        /// Get events matching the subject.
         /// </summary>
         /// <returns>
-        /// Array of relevant appointments or empty array.
+        /// Array of relevant events or empty array.
         /// </returns>
-        private ArrayList RecurringItems()
+        private ArrayList GetEventItems()
         {
             // Use a Jet Query to filter the details we need initially between the two specified dates
             string dateFilter = String.Format(CultureConstants.DefaultCulture, "[Start] >= '{0:g}' and [End] <= '{1:g}'",
-                                              StartDate, EndDate);
+                StartDate, EndDate);
             _Items calendarItems = s_mapiFolder.Items.Restrict(dateFilter);
             calendarItems.Sort("[Start]", Type.Missing);
             calendarItems.IncludeRecurrences = true;
 
             // Must use 'like' comparison for Find/FindNext
             string subjectFilter = (!String.IsNullOrEmpty(Subject)
-                                        ? String.Format(CultureConstants.InvariantCulture,
-                                        "@SQL=\"urn:schemas:httpmail:subject\" like '%{0}%'", Subject.Replace("'", "''"))
-                                        : "@SQL=\"urn:schemas:httpmail:subject\" <> '!@#'");
+                ? String.Format(CultureConstants.InvariantCulture,
+                    "@SQL=\"urn:schemas:httpmail:subject\" like '%{0}%'", Subject.Replace("'", "''"))
+                : "@SQL=\"urn:schemas:httpmail:subject\" <> '!@#'");
 
             // Use Find and FindNext methods to get all the items
             ArrayList resultArray = new ArrayList();
-            AppointmentItem appointmentItem = calendarItems.Find(subjectFilter) as AppointmentItem;
-            while (appointmentItem != null)
+            AppointmentItem eventItem = calendarItems.Find(subjectFilter) as AppointmentItem;
+            while (eventItem != null)
             {
-                resultArray.Add(appointmentItem);
+                resultArray.Add(eventItem);
 
-                // Find the next appointment
-                appointmentItem = calendarItems.FindNext() as AppointmentItem;
+                // Find the next event
+                eventItem = calendarItems.FindNext() as AppointmentItem;
             }
 
             return resultArray;
@@ -285,7 +289,7 @@ namespace EVEMon.Common.ExternalCalendar
 
             // Reconstruct the root path according to the index found
             return String.Format(CultureConstants.InvariantCulture, @"\\{0}",
-                                 index > 0 ? folderPath.Substring(0, index) : folderPath);
+                index > 0 ? folderPath.Substring(0, index) : folderPath);
         }
 
         #endregion

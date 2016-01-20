@@ -184,11 +184,14 @@ namespace EVEMon.About
             AddDevelopersToListView();
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
+            AddLinkToLabel(ccpDocsLinkLabel, "CCP 3rd party docs", "https://github.com/ccpgames/eveonline-third-party-documentation/");
             AddLinkToLabel(eveCentralLinkLabel, "EVE-Central", "http://www.eve-central.com/");
-            AddLinkToLabel(eveDevLinkLabel, "EVEDev", "http://wiki.eve-id.net/Main_Page");
-            AddLinkToLabel(googleDataLinkLabel, "Google.Data", "http://code.google.com/apis/gdata/client-cs.html");
-            AddLinkToLabel(lironLeviLinkLabel, "Liron Levi", "http://www.codeproject.com/KB/cs/multipanelcontrol.aspx");
-            AddLinkToLabel(stackOverflowLinkLabel, "Stack Overflow", "http://stackoverflow.com");
+            AddLinkToLabel(eveMarketDataLinkLabel, "EVE-MarketData", "http://eve-marketdata.com/");
+            AddLinkToLabel(googleApisLinkLabel, "Google", "https://github.com/google/google-api-dotnet-client/");
+            AddLinkToLabel(dropboxSDKLinkLabel, "Dropbox", "https://github.com/dropbox/dropbox-sdk-dotnet/");
+            AddLinkToLabel(oneDriveSDKLinkLabel, "Microsoft OneDrive", "https://github.com/OneDrive/onedrive-sdk-csharp/");
+            AddLinkToLabel(lironLeviLinkLabel, "Liron Levi", "http://www.codeproject.com/Articles/37397/A-Multipanel-Control-in-C/");
+            AddLinkToLabel(stackOverflowLinkLabel, "Stack Overflow", "http://stackoverflow.com/");
         }
 
         /// <summary>

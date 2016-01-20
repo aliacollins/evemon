@@ -1,6 +1,6 @@
-namespace EVEMon.Common.CloudStorageServices
+namespace EVEMon.Common.Serialization
 {
-    public sealed class CloudStorageServiceAPIError
+    public sealed class SerializableAPIError
     {
         /// <summary>
         /// Gets or sets the error code.

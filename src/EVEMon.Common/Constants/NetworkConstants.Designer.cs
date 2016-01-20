@@ -1150,15 +1150,6 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://www.google.com/calendar/feeds/default/private/full.
-        /// </summary>
-        public static string GoogleCalendarURL {
-            get {
-                return ResourceManager.GetString("GoogleCalendarURL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to /bitmaps/character/level.
         /// </summary>
         public static string MyEVELevelImage {

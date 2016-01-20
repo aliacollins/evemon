@@ -73,32 +73,20 @@
       <HintPath>..\..\packages\Google.Apis.Auth.1.10.0\lib\net40\Google.Apis.Auth.PlatformServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Google.Apis.Calendar.v3, Version=1.10.0.158, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Google.Apis.Calendar.v3.1.10.0.1580\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Calendar.v3.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Apis.Core, Version=1.10.0.25331, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.Apis.Core.1.10.0\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Google.Apis.Drive.v3, Version=1.10.0.1, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Google.Apis.Drive.v3.1.10.0.10\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Drive.v3.dll</HintPath>
+    <Reference Include="Google.Apis.Drive.v3, Version=1.10.0.4, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Google.Apis.Drive.v3.1.10.0.40\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Drive.v3.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Apis.PlatformServices, Version=1.10.0.25332, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.Apis.1.10.0\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Google.GData.AccessControl, Version=2.2.0.0, Culture=neutral, PublicKeyToken=b4b8eb9a7afc8328, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Google.GData.AccessControl.2.2.0.0\lib\Google.GData.AccessControl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Google.GData.Calendar, Version=2.2.0.0, Culture=neutral, PublicKeyToken=aa6748391206b888, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Google.GData.Calendar.2.2.0.0\lib\Google.GData.Calendar.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Google.GData.Client, Version=2.2.0.0, Culture=neutral, PublicKeyToken=04a59ca9b0273830, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Google.GData.Client.2.2.0.0\lib\Google.GData.Client.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Google.GData.Extensions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Google.GData.Extensions.2.2.0.0\lib\Google.GData.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
@@ -170,11 +158,12 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
-    <Compile Include="CloudStorageServices\CloudStorageServiceAPIError.cs" />
+    <Compile Include="Exceptions\APIException.cs" />
+    <Compile Include="Serialization\SerializableAPIError.cs" />
     <Compile Include="CloudStorageServices\CloudStorageServiceAPIFile.cs" />
-    <Compile Include="CloudStorageServices\CloudStorageServiceAPIResult.cs" />
+    <Compile Include="Serialization\SerializableAPIResult.cs" />
     <Compile Include="CloudStorageServices\CloudStorageServiceProvider.cs" />
-    <Compile Include="CloudStorageServices\CloudStorageServiceAPICredentials.cs" />
+    <Compile Include="Serialization\SerializableAPICredentials.cs" />
     <Compile Include="CloudStorageServices\CloudStorageServiceResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -482,10 +471,10 @@
     <Compile Include="Service\EveNotificationType.cs" />
     <Compile Include="Models\CalendarEventAttendee.cs" />
     <Compile Include="Service\EveRefType.cs" />
-    <Compile Include="ExternalCalendar\AppointmentFilter.cs" />
+    <Compile Include="ExternalCalendar\CalendarEvent.cs" />
     <Compile Include="ExternalCalendar\ExternalCalendar.cs" />
-    <Compile Include="ExternalCalendar\GoogleAppointmentFilter.cs" />
-    <Compile Include="ExternalCalendar\OutlookAppointmentFilter.cs" />
+    <Compile Include="ExternalCalendar\GoogleCalendarEvent.cs" />
+    <Compile Include="ExternalCalendar\OutlookCalendarEvent.cs" />
     <Compile Include="Models\EveFactionalWarfareStats.cs" />
     <Compile Include="Models\FactionalWarfareStats.cs" />
     <Compile Include="Helpers\FormatHelper.cs" />

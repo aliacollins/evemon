@@ -1,6 +1,6 @@
-namespace EVEMon.Common.CloudStorageServices
+namespace EVEMon.Common.Serialization
 {
-    public sealed class CloudStorageServiceAPICredentials
+    public sealed class SerializableAPICredentials
     {
         /// <summary>
         /// Gets or sets the user identifier.
