@@ -131,28 +131,28 @@ namespace EVEMon.Common.Models
         /// Gets the corporation image.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private void GetImage(bool useFallbackUri = false)
+        private async void GetImage(bool useFallbackUri = false)
         {
             m_image = Properties.Resources.DefaultCorporationImage32;
-            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+
+            while (true)
             {
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
+
                 if (img == null)
                 {
                     if (useFallbackUri)
                         return;
 
-                    GetImage(true);
-                    return;
+                    useFallbackUri = true;
+                    continue;
                 }
 
                 m_image = img;
 
-                // Notify the subscriber that we got the image
-                // Note that if the image is in cache the event doesn't get fired
-                // as the event object is null
-                if (EmploymentRecordImageUpdated != null)
-                    EmploymentRecordImageUpdated(this, EventArgs.Empty);
-            });
+                EmploymentRecordImageUpdated?.Invoke(this, EventArgs.Empty);
+                break;
+            }
         }
 
         /// <summary>

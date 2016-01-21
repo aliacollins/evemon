@@ -16,7 +16,6 @@ namespace EVEMon.Sales
         public event EventHandler<EventArgs> MineralPriceChanged;
 
         private Item m_mineral;
-        private EveImageSize m_imageSize = EveImageSize.x64;
 
 
         #region Constructor
@@ -49,7 +48,7 @@ namespace EVEMon.Sales
                     return;
 
                 m_mineral = StaticItems.GetItemByName(value);
-                GetImageFromCCP();
+                GetImageFromCCPAsync();
             }
         }
 
@@ -106,18 +105,20 @@ namespace EVEMon.Sales
         /// Gets the image from CCP's image server.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private void GetImageFromCCP(bool useFallbackUri = false)
+        private async void GetImageFromCCPAsync(bool useFallbackUri = false)
         {
-            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+            while (true)
             {
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
                 if (img == null && !useFallbackUri)
                 {
-                    GetImageFromCCP(true);
-                    return;
+                    useFallbackUri = true;
+                    continue;
                 }
 
                 GotImage(m_mineral.ID, img);
-            });
+                break;
+            }
         }
 
         /// <summary>
@@ -129,8 +130,7 @@ namespace EVEMon.Sales
         {
             string path = String.Format(CultureConstants.InvariantCulture,
                 NetworkConstants.CCPIconsFromImageServer,
-                (int)m_imageSize > 64 ? "render" : "type",
-                m_mineral.ID, (int)m_imageSize);
+                "type", m_mineral.ID, (int)EveImageSize.x64);
 
             return useFallbackUri
                 ? ImageService.GetImageServerBaseUri(path)
@@ -188,8 +188,7 @@ namespace EVEMon.Sales
 
             tbSubtotal.Text = Subtotal.ToString("N", CultureConstants.DefaultCulture);
 
-            if (SubtotalChanged != null)
-                SubtotalChanged(this, new EventArgs());
+            SubtotalChanged?.Invoke(this, new EventArgs());
         }
 
         #endregion
@@ -205,8 +204,7 @@ namespace EVEMon.Sales
         private void txtLastSell_TextChanged(object sender, EventArgs e)
         {
             UpdateSubtotal();
-            if (MineralPriceChanged != null)
-                MineralPriceChanged(this, new EventArgs());
+            MineralPriceChanged?.Invoke(this, new EventArgs());
         }
 
         /// <summary>

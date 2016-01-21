@@ -20,7 +20,7 @@ namespace EVEMon.Common.Threading
         /// <summary>
         /// Gets true whether the threading model uses many threads, false otherwise.
         /// </summary>
-        public static bool IsMultiThreaded
+        private static bool IsMultiThreaded
         {
             get { return Actor != null; }
         }
@@ -29,7 +29,7 @@ namespace EVEMon.Common.Threading
         /// Gets true if the calling thread is the underlying thread; false otherwise.
         /// When false, operations on the underlying actor have to be done through <see cref="Invoke"/> or <see cref="BeginInvoke"/>.
         /// </summary>
-        public static bool HasAccess
+        private static bool HasAccess
         {
             get
             {
@@ -41,7 +41,7 @@ namespace EVEMon.Common.Threading
         /// Gets the underlying actor of the dispatcher.
         /// When null, the dispatcher will run in single-threaded mode.
         /// </summary>
-        public static IActor Actor { get; private set; }
+        private static IActor Actor { get; set; }
 
         /// <summary>
         /// Starts the dispatcher with the given actor.
