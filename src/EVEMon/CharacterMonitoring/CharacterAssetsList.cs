@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
@@ -18,7 +19,6 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Threading;
 using Region = EVEMon.Common.Data.Region;
 
 namespace EVEMon.CharacterMonitoring
@@ -742,18 +742,17 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Updates the asset location.
         /// </summary>
-        private void UpdateAssetLocation()
+        private async void UpdateAssetLocation()
         {
-            // Invoke it to a background thread cause it may be time intensive
+            // Invoke it on a worker thread cause it may be time intensive
             // if character owns many stuff in several locations
-            Dispatcher.BackgroundInvoke(() =>
+            await Task.Run(() =>
             {
                 Character.Assets.UpdateLocation();
                 Assets = Character.Assets;
-
-                // Return to the UI thread
-                Dispatcher.Invoke(UpdateColumns);
             });
+
+            UpdateColumns();
         }
 
         #endregion

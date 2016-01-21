@@ -13,6 +13,7 @@ namespace EVEMon.Common.Models.Collections
         private readonly Dictionary<SolarSystem, int> m_jumps = new Dictionary<SolarSystem, int>();
 
         private SolarSystem m_lastStoredCharacterKnownSolarSystem;
+        private bool m_isImporting;
 
         /// <summary>
         /// Internal constructor.
@@ -29,6 +30,8 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="src">The enumeration of serializable assets from the API.</param>
         internal void Import(IEnumerable<SerializableAssetListItem> src)
         {
+            m_isImporting = true;
+
             Items.Clear();
 
             // Import the assets from the API
@@ -39,12 +42,14 @@ namespace EVEMon.Common.Models.Collections
                 Items.Add(asset);
 
                 Items.AddRange(srcAsset.Contents.Select(content => new Asset(content)
-                                                                       {
-                                                                           LocationID = asset.LocationID,
-                                                                           Container = asset.Item.Name,
-                                                                           Jumps = asset.Jumps
-                                                                       }));
+                {
+                    LocationID = asset.LocationID,
+                    Container = asset.Item.Name,
+                    Jumps = asset.Jumps
+                }));
             }
+
+            m_isImporting = true;
         }
 
         /// <summary>
@@ -52,7 +57,7 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         public void UpdateLocation()
         {
-            foreach (Asset asset in Items)
+            foreach (Asset asset in Items.TakeWhile(asset => !m_isImporting))
             {
                 asset.LocationID = asset.LocationID;
                 asset.Jumps = GetJumps(asset);
@@ -65,15 +70,17 @@ namespace EVEMon.Common.Models.Collections
         /// <returns></returns>
         private int GetJumps(Asset asset)
         {
+            SolarSystem lastKnownSolaSystem = m_character.LastKnownSolarSystem ?? m_character.LastKnownStation?.SolarSystem;
+
             // When data to calculate jumps are insufficient return a default value
-            if (m_character.LastKnownSolarSystem == null || asset.SolarSystem == null)
+            if (lastKnownSolaSystem == null || asset.SolarSystem == null)
                 return -1;
 
             // Reset everything if the character changed solar system
-            if (m_lastStoredCharacterKnownSolarSystem != m_character.LastKnownSolarSystem)
+            if (m_lastStoredCharacterKnownSolarSystem != lastKnownSolaSystem)
             {
                 m_jumps.Clear();
-                m_lastStoredCharacterKnownSolarSystem = m_character.LastKnownSolarSystem;
+                m_lastStoredCharacterKnownSolarSystem = lastKnownSolaSystem;
             }
 
             // If the asset's solar sytem is known return the stored jumps
@@ -81,8 +88,8 @@ namespace EVEMon.Common.Models.Collections
                 return m_jumps[asset.SolarSystem];
 
             // Calculate the jumps between the character and the asset
-            int jumps = m_character.LastKnownSolarSystem.GetFastestPathTo(asset.SolarSystem, PathSearchCriteria.FewerJumps)
-                .Count(system => system != m_character.LastKnownSolarSystem);
+            int jumps = lastKnownSolaSystem.GetFastestPathTo(asset.SolarSystem, PathSearchCriteria.FewerJumps)
+                .Count(system => system != lastKnownSolaSystem);
 
             // Store the calculated jumps
             m_jumps[asset.SolarSystem] = jumps;
