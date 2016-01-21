@@ -35,7 +35,7 @@ namespace EVEMon.Common.Models.Extended
             if (s_parser != null && s_cachedUntil > DateTime.UtcNow)
                 return s_parser;
 
-            //if (!EveMonClient.IsDebugBuild)
+            if (!EveMonClient.IsDebugBuild)
                 GetExternalParser();
             
             return new InternalEveNotificationTextParser();
