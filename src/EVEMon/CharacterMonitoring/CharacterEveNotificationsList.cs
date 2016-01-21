@@ -775,7 +775,6 @@ namespace EVEMon.CharacterMonitoring
             if (e.Character != Character)
                 return;
 
-            UpdateColumns();
             OnSelectionChanged();
         }
 
