@@ -4,7 +4,6 @@ using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Net;
 using EVEMon.Common.Service;
-using EVEMon.Common.Threading;
 using YamlDotNet.RepresentationModel;
 using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
@@ -12,15 +11,11 @@ namespace EVEMon.Common.Models.Extended
 {
     public abstract class EveNotificationTextParser
     {
+        public static event EventHandler<EventArgs> NotificationTextParserUpdated;
+        
         private static EveNotificationTextParser s_parser;
         private static DateTime s_cachedUntil;
         private static bool s_queryPending;
-
-        private static readonly string[] s_referenceAssemblies =
-        {
-            typeof(Enumerable).Assembly.Location,
-            typeof(YamlNode).Assembly.Location,
-        };
 
         /// <summary>
         /// Parses the notification text.
@@ -37,14 +32,12 @@ namespace EVEMon.Common.Models.Extended
         /// <returns></returns>
         internal static EveNotificationTextParser GetParser()
         {
-            if (s_parser != null && s_cachedUntil < DateTime.UtcNow)
+            if (s_parser != null && s_cachedUntil > DateTime.UtcNow)
                 return s_parser;
 
-            if (!EveMonClient.IsDebugBuild && Dispatcher.IsMultiThreaded)
+            //if (!EveMonClient.IsDebugBuild)
                 GetExternalParser();
-
-            s_cachedUntil = s_cachedUntil.AddHours(12);
-
+            
             return new InternalEveNotificationTextParser();
         }
 
@@ -64,6 +57,9 @@ namespace EVEMon.Common.Models.Extended
             s_queryPending = true;
 
             OnDownloaded(await HttpWebClientService.DownloadStringAsync(url));
+
+            // Reset query pending flag
+            s_queryPending = false;
         }
 
         /// <summary>
@@ -81,15 +77,22 @@ namespace EVEMon.Common.Models.Extended
                 EveMonClient.Trace(result.Error.Message);
                 return;
             }
+            
+            string[] referenceAssemblies =
+            {
+                typeof(Enumerable).Assembly.Location,
+                typeof(YamlNode).Assembly.Location,
+            };
 
-            s_cachedUntil = s_cachedUntil.AddHours(12);
+            s_parser = CodeCompiler.GenerateAssembly<EveNotificationTextParser>(referenceAssemblies, result.Result);
 
-            s_parser = new CodeCompiler(s_referenceAssemblies).CreateInstanceFrom<EveNotificationTextParser>(result.Result);
+            s_cachedUntil = DateTime.UtcNow.AddHours(12);
 
             EveMonClient.Trace("EveNotificationTextParser.GetExternalParser - done");
 
-            // Reset query pending flag
-            s_queryPending = false;
+            // Notify the subscribers
+            EveMonClient.Trace("EveNotificationTextParser.OnNotificationTextParserUpdated");
+            NotificationTextParserUpdated?.Invoke(null, EventArgs.Empty);
         }
     }
 }

@@ -14,16 +14,26 @@ namespace EVEMon.Common.Service
         /// Initializes a new instance of the <see cref="CodeCompiler"/> class.
         /// </summary>
         /// <param name="referenceAssemblies">The reference assemblies.</param>
-        internal CodeCompiler(string[] referenceAssemblies)
+        private CodeCompiler(string[] referenceAssemblies)
         {
             m_compilerParameters.GenerateInMemory = true;
             m_compilerParameters.GenerateExecutable = false;
+            m_compilerParameters.OutputAssembly = null;
             m_compilerParameters.ReferencedAssemblies.Add(GetType().Assembly.Location);
+            m_compilerParameters.ReferencedAssemblies.AddRange(referenceAssemblies);
+        }
 
-            foreach (string referenceAssembly in referenceAssemblies)
-            {
-                m_compilerParameters.ReferencedAssemblies.Add(referenceAssembly);
-            }
+        /// <summary>
+        /// Generates the assembly.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="referenceAssemblies">The reference assemblies.</param>
+        /// <param name="codeText">The code text.</param>
+        /// <returns></returns>
+        internal static T GenerateAssembly<T>(string[] referenceAssemblies, string codeText) where T : class
+        {
+            var compiler = new CodeCompiler(referenceAssemblies);
+            return compiler.CreateInstanceFrom<T>(codeText);
         }
 
         /// <summary>
@@ -32,14 +42,10 @@ namespace EVEMon.Common.Service
         /// <typeparam name="T"></typeparam>
         /// <param name="codeText">The code text.</param>
         /// <returns></returns>
-        internal T CreateInstanceFrom<T>(string codeText) where T : class
+        private T CreateInstanceFrom<T>(string codeText) where T : class
         {
-            Assembly assembly = Compile(codeText);
-
-            if (assembly == null)
-                return null;
-
-            Type type = assembly.GetExportedTypes().FirstOrDefault(exportedType => exportedType.IsSubclassOf(typeof(T)));
+            Type type = Compile(codeText)?.GetExportedTypes()
+                .FirstOrDefault(exportedType => exportedType.IsSubclassOf(typeof(T)));
 
             if (type == null)
                 return null;
@@ -54,16 +60,23 @@ namespace EVEMon.Common.Service
         /// <returns></returns>
         private Assembly Compile(string codeText)
         {
-            CompilerResults results;
-            using (CodeDomProvider csProvider = new CSharpCodeProvider())
+            try
             {
-                results = csProvider.CompileAssemblyFromSource(m_compilerParameters, codeText);
+                CompilerResults results;
+                using (CodeDomProvider csProvider = new CSharpCodeProvider())
+                {
+                    results = csProvider.CompileAssemblyFromSource(m_compilerParameters, codeText);
+                }
+
+                if (!results.Errors.HasErrors)
+                    return results.CompiledAssembly;
+
+                results.Errors.OfType<CompilerError>().ToList().ForEach(x => EveMonClient.Trace(x.ErrorText));
             }
-
-            if (!results.Errors.HasErrors)
-                return results.CompiledAssembly;
-
-            results.Errors.OfType<CompilerError>().ToList().ForEach(x => EveMonClient.Trace(x.ErrorText));
+            catch (Exception exc)
+            {
+                Helpers.ExceptionHandler.LogException(exc, true);
+            }
 
             return null;
         }
