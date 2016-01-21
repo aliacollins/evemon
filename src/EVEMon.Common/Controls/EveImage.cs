@@ -258,18 +258,20 @@ namespace EVEMon.Common.Controls
         /// Gets the image from CCP's image server.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private void GetImageFromCCP(bool useFallbackUri = false)
+        private async void GetImageFromCCP(bool useFallbackUri = false)
         {
-            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+            while (true)
             {
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
                 if (img == null && !useFallbackUri)
                 {
-                    GetImageFromCCP(true);
-                    return;
+                    useFallbackUri = true;
+                    continue;
                 }
 
                 GotImage(m_item.ID, img);
-            });
+                break;
+            }
         }
 
         /// <summary>

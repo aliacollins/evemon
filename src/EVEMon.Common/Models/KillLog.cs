@@ -130,26 +130,28 @@ namespace EVEMon.Common.Models
         /// Gets the victim's ship image.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private void GetVictimShipImage(bool useFallbackUri = false)
+        private async void GetVictimShipImage(bool useFallbackUri = false)
         {
             m_image = GetDefaultImage();
-            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+
+            while (true)
             {
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
                 if (img == null)
                 {
                     if (useFallbackUri)
                         return;
 
-                    GetVictimShipImage(true);
-                    return;
+                    useFallbackUri = true;
+                    continue;
                 }
 
                 m_image = img;
 
                 // Notify the subscriber that we got the image
-                if (KillLogVictimShipImageUpdated != null)
-                    KillLogVictimShipImageUpdated(this, EventArgs.Empty);
-            });
+                KillLogVictimShipImageUpdated?.Invoke(this, EventArgs.Empty);
+                break;
+            }
         }
 
         /// <summary>

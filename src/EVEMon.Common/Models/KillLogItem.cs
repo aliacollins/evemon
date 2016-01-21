@@ -226,26 +226,28 @@ namespace EVEMon.Common.Models
         /// Gets the item image.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private void GetItemImage(bool useFallbackUri = false)
+        private async void GetItemImage(bool useFallbackUri = false)
         {
             m_image = GetDefaultImage();
-            ImageService.GetImageAsync(GetImageUrl(useFallbackUri), img =>
+
+            while (true)
             {
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
                 if (img == null)
                 {
                     if (useFallbackUri)
                         return;
 
-                    GetItemImage(true);
-                    return;
+                    useFallbackUri = true;
+                    continue;
                 }
 
                 m_image = img;
 
                 // Notify the subscriber that we got the image
-                if (KillLogItemImageUpdated != null)
-                    KillLogItemImageUpdated(this, EventArgs.Empty);
-            });
+                KillLogItemImageUpdated?.Invoke(this, EventArgs.Empty);
+                break;
+            }
         }
 
         /// <summary>

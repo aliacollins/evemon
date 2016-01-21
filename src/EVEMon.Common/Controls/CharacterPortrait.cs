@@ -177,7 +177,7 @@ namespace EVEMon.Common.Controls
         /// then download the url if no image was found in cache.</item>
         /// </list>
         /// </summary>
-        private void UpdateCharacterImageFromCCP()
+        private async void UpdateCharacterImageFromCCP()
         {
             Cursor.Current = Cursors.WaitCursor;
             if (m_updatingPortrait)
@@ -186,8 +186,11 @@ namespace EVEMon.Common.Controls
             m_updatingPortrait = true;
 
             // Skip if it's a blank character
-            if (m_character.CharacterID != UriCharacter.BlankCharacterID)
-                ImageService.GetCharacterImageAsync(m_character.CharacterID, OnGotCharacterImageFromCCP);
+            if (m_character.CharacterID == UriCharacter.BlankCharacterID)
+                return;
+
+            Image result = await ImageService.GetCharacterImageAsync(m_character.CharacterID);
+            OnGotCharacterImageFromCCP(result);
         }
 
         /// <summary>
