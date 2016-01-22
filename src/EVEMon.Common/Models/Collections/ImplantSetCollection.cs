@@ -11,7 +11,7 @@ namespace EVEMon.Common.Models.Collections
     /// </summary>
     public sealed class ImplantSetCollection : ReadonlyVirtualCollection<ImplantSet>
     {
-        private readonly Character m_owner;
+        private readonly Character m_character;
         private readonly List<ImplantSet> m_cloneSets;
         private readonly List<ImplantSet> m_customSets;
         private ImplantSet m_current;
@@ -19,14 +19,14 @@ namespace EVEMon.Common.Models.Collections
         /// <summary>
         /// Internal constructor
         /// </summary>
-        /// <param name="owner"></param>
-        internal ImplantSetCollection(Character owner)
+        /// <param name="character"></param>
+        internal ImplantSetCollection(Character character)
         {
-            m_owner = owner;
+            m_character = character;
             m_customSets = new List<ImplantSet>();
             m_cloneSets = new List<ImplantSet>();
-            ActiveClone = new ImplantSet(owner, "Active Clone");
-            None = new ImplantSet(owner, "None");
+            ActiveClone = new ImplantSet(character, "Active Clone");
+            None = new ImplantSet(character, "None");
             m_current = ActiveClone;
         }
 
@@ -63,7 +63,7 @@ namespace EVEMon.Common.Models.Collections
                     return;
 
                 m_current = value;
-                EveMonClient.OnCharacterUpdated(m_owner);
+                EveMonClient.OnCharacterUpdated(m_character);
             }
         }
 
@@ -74,9 +74,9 @@ namespace EVEMon.Common.Models.Collections
         /// <returns></returns>
         public ImplantSet Add(string name)
         {
-            ImplantSet set = new ImplantSet(m_owner, name);
+            ImplantSet set = new ImplantSet(m_character, name);
             m_customSets.Add(set);
-            EveMonClient.OnCharacterUpdated(m_owner);
+            EveMonClient.OnCharacterUpdated(m_character);
             return set;
         }
 
@@ -87,7 +87,7 @@ namespace EVEMon.Common.Models.Collections
         public void Remove(ImplantSet set)
         {
             m_customSets.Remove(set);
-            EveMonClient.OnCharacterUpdated(m_owner);
+            EveMonClient.OnCharacterUpdated(m_character);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace EVEMon.Common.Models.Collections
             m_cloneSets.Clear();
             foreach (SerializableSettingsImplantSet serialSet in serial.JumpClones)
             {
-                ImplantSet set = new ImplantSet(m_owner, serialSet.Name);
+                ImplantSet set = new ImplantSet(m_character, serialSet.Name);
                 set.Import(serialSet);
                 m_cloneSets.Add(set);
             }
@@ -131,7 +131,7 @@ namespace EVEMon.Common.Models.Collections
             m_customSets.Clear();
             foreach (SerializableSettingsImplantSet serialSet in serial.CustomSets)
             {
-                ImplantSet set = new ImplantSet(m_owner, serialSet.Name);
+                ImplantSet set = new ImplantSet(m_character, serialSet.Name);
                 set.Import(serialSet);
                 m_customSets.Add(set);
             }
@@ -139,7 +139,7 @@ namespace EVEMon.Common.Models.Collections
             // Imports selection
             m_current = this[serial.SelectedIndex];
 
-            EveMonClient.OnCharacterImplantSetCollectionChanged();
+            EveMonClient.OnCharacterImplantSetCollectionChanged(m_character);
         }
 
         /// <summary>
@@ -165,12 +165,12 @@ namespace EVEMon.Common.Models.Collections
                             Name = cloneImplant.TypeName
                         }).ToList();
 
-                ImplantSet set = new ImplantSet(m_owner, jumpClone.CloneName);
+                ImplantSet set = new ImplantSet(m_character, jumpClone.CloneName);
                 set.Import(cloneImplants);
                 m_cloneSets.Add(set);
             }
 
-            EveMonClient.OnCharacterImplantSetCollectionChanged();
+            EveMonClient.OnCharacterImplantSetCollectionChanged(m_character);
         }
 
         /// <summary>

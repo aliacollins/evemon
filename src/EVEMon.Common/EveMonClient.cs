@@ -897,12 +897,12 @@ namespace EVEMon.Common
         /// <summary>
         /// Called when the character implant set collection changed.
         /// </summary>
-        internal static void OnCharacterImplantSetCollectionChanged()
+        internal static void OnCharacterImplantSetCollectionChanged(Character character)
         {
-            Trace("EveMonClient.OnCharacterImplantSetCollectionChanged");
+            Trace("EveMonClient.OnCharacterImplantSetCollectionChanged- {0}", character.Name);
             Settings.Save();
             if (CharacterImplantSetCollectionChanged != null)
-                CharacterImplantSetCollectionChanged(null, EventArgs.Empty);
+                CharacterImplantSetCollectionChanged(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
