@@ -181,32 +181,29 @@ namespace EVEMon.Common.Service
         {
             await Task.Run(async () =>
             {
-                //lock (s_syncLock)
-                //{
-                    // Saves the image file
-                    try
-                    {
-                        // Write this image to the cache file
-                        EveMonClient.EnsureCacheDirInit();
-                        string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, await GetCacheName(url));
-                        FileHelper.OverwriteOrWarnTheUser(cacheFileName,
-                            fs =>
+                // Saves the image file
+                try
+                {
+                    // Write this image to the cache file
+                    EveMonClient.EnsureCacheDirInit();
+                    string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, await GetCacheName(url));
+                    FileHelper.OverwriteOrWarnTheUser(cacheFileName,
+                        fs =>
+                        {
+                            // We need to create a copy of the image because GDI+ is locking it
+                            using (Image newImage = new Bitmap(image))
                             {
-                                // We need to create a copy of the image because GDI+ is locking it
-                                using (Image newImage = new Bitmap(image))
-                                {
-                                    newImage.Save(fs, ImageFormat.Png);
-                                    fs.Flush();
-                                }
-                                return true;
-                            });
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionHandler.LogRethrowException(ex);
-                        throw;
-                    }
-                //}
+                                newImage.Save(fs, ImageFormat.Png);
+                                fs.Flush();
+                            }
+                            return true;
+                        });
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
+                }
             });
         }
 
