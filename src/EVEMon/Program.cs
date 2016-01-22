@@ -33,15 +33,15 @@ namespace EVEMon
         [STAThread]
         private static void Main()
         {
+            // Quits if another instance already exists
+            if (!IsInstanceUnique)
+                return;
+
             // Check if we are in DEBUG mode 
             EveMonClient.CheckIsDebug();
 
             // Check if we are in SNAPSHOT mode 
             EveMonClient.CheckIsSnapshot();
-
-            // Quits non-debug builds if another instance already exists
-            if (!EveMonClient.IsDebugBuild && !IsInstanceUnique)
-                return;
 
             // Subscribe application's events (especially the unhandled exceptions management for the crash box)
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;

@@ -29,20 +29,15 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public static class EveMonClient
     {
-
         #region Fields
 
         private static StreamWriter s_traceStream;
         private static TextWriterTraceListener s_traceListener;
         private static readonly DateTime s_startTime = DateTime.UtcNow;
 
-        private static readonly Object s_pathsInitializationLock = new Object();
-        private static readonly Object s_initializationLock = new Object();
         private static IEnumerable<string> s_defaultEvePortraitCacheFolders;
         private static bool s_initialized;
         private static string s_traceFile;
-
-        public const int DefaultDpi = 96;
 
         #endregion
 
@@ -55,47 +50,44 @@ namespace EVEMon.Common
         /// <remarks>May be called more than once without causing redundant operations to occur.</remarks>
         public static void Initialize()
         {
-            lock (s_initializationLock)
-            {
-                if (s_initialized)
-                    return;
+            if (s_initialized)
+                return;
 
-                s_initialized = true;
+            s_initialized = true;
 
-                Trace("EveMonClient.Initialize - begin");
+            Trace("EveMonClient.Initialize - begin");
 
-                // Network monitoring (connection availability changes)
-                NetworkMonitor.Initialize();
+            // Network monitoring (connection availability changes)
+            NetworkMonitor.Initialize();
 
-                // APIMethodsEnum collection initialization (always before members instatiation)
-                APIMethods.Initialize();
+            // APIMethodsEnum collection initialization (always before members instatiation)
+            APIMethods.Initialize();
 
-                // Members instantiations
-                APIProviders = new GlobalAPIProviderCollection();
-                MonitoredCharacters = new GlobalMonitoredCharacterCollection();
-                CharacterIdentities = new GlobalCharacterIdentityCollection();
-                Notifications = new GlobalNotificationCollection();
-                Characters = new GlobalCharacterCollection();
-                Datafiles = new GlobalDatafileCollection();
-                APIKeys = new GlobalAPIKeyCollection();
-                EVEServer = new EveServer();
+            // Members instantiations
+            APIProviders = new GlobalAPIProviderCollection();
+            MonitoredCharacters = new GlobalMonitoredCharacterCollection();
+            CharacterIdentities = new GlobalCharacterIdentityCollection();
+            Notifications = new GlobalNotificationCollection();
+            Characters = new GlobalCharacterCollection();
+            Datafiles = new GlobalDatafileCollection();
+            APIKeys = new GlobalAPIKeyCollection();
+            EVEServer = new EveServer();
 
-                // Load static data
-                // (min order to follow : 
-                // skills before anything else,
-                // items before certs,
-                // certs before masteries)
-                Trace("Load Datafiles - begin");
-                StaticProperties.Load();
-                StaticSkills.Load();
-                StaticItems.Load();
-                StaticCertificates.Load();
-                StaticMasteries.Load();
-                StaticBlueprints.Load();
-                Trace("Load Datafiles - done");
+            // Load static data
+            // (min order to follow : 
+            // skills before anything else,
+            // items before certs,
+            // certs before masteries)
+            Trace("Load Datafiles - begin");
+            StaticProperties.Load();
+            StaticSkills.Load();
+            StaticItems.Load();
+            StaticCertificates.Load();
+            StaticMasteries.Load();
+            StaticBlueprints.Load();
+            Trace("Load Datafiles - done");
 
-                Trace("EveMonClient.Initialize - done");
-            }
+            Trace("EveMonClient.Initialize - done");
         }
 
         /// <summary>
@@ -173,14 +165,9 @@ namespace EVEMon.Common
         /// <value>
         /// The file version.
         /// </value>
-        public static FileVersionInfo FileVersionInfo
-        {
-            get
-            {
-                return FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location);
-            }
-        }
-        
+        public static FileVersionInfo FileVersionInfo 
+            => FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location);
+
         #endregion
 
 
@@ -269,65 +256,56 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the fully qualified path to the current settings file.
         /// </summary>
-        public static string SettingsFileNameFullPath
-        {
-            get { return Path.Combine(EVEMonDataDir, SettingsFileName); }
-        }
+        public static string SettingsFileNameFullPath => Path.Combine(EVEMonDataDir, SettingsFileName);
 
         /// <summary>
         /// Gets the fully qualified path to the trace file.
         /// </summary>
-        public static string TraceFileNameFullPath
-        {
-            get { return Path.Combine(EVEMonDataDir, s_traceFile); }
-        }
+        public static string TraceFileNameFullPath => Path.Combine(EVEMonDataDir, s_traceFile);
 
         /// <summary>
         /// Creates the file system paths (settings file name, appdata directory, etc).
         /// </summary>
         public static void InitializeFileSystemPaths()
         {
-            lock (s_pathsInitializationLock)
+            // Ensure it is made once only
+            if (!String.IsNullOrEmpty(SettingsFileName))
+                return;
+
+            if (IsDebugBuild)
             {
-                // Ensure it is made once only
-                if (!String.IsNullOrEmpty(SettingsFileName))
+                SettingsFileName = "settings-debug.xml";
+                s_traceFile = "trace-debug.txt";
+            }
+            else
+            {
+                SettingsFileName = "settings.xml";
+                s_traceFile = "trace.txt";
+            }
+
+            while (true)
+            {
+                try
+                {
+                    InitializeEVEMonPaths();
+                    InitializeDefaultEvePortraitCachePath();
                     return;
-
-                if (IsDebugBuild)
-                {
-                    SettingsFileName = "settings-debug.xml";
-                    s_traceFile = "trace-debug.txt";
                 }
-                else
+                catch (UnauthorizedAccessException exc)
                 {
-                    SettingsFileName = "settings.xml";
-                    s_traceFile = "trace.txt";
-                }
+                    string msg = String.Format(CultureConstants.DefaultCulture,
+                        "An error occurred while EVEMon was looking for its data directory. " +
+                        "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
+                        Environment.NewLine, exc.Message);
 
-                while (true)
-                {
-                    try
-                    {
-                        InitializeEVEMonPaths();
-                        InitializeDefaultEvePortraitCachePath();
-                        return;
-                    }
-                    catch (UnauthorizedAccessException exc)
-                    {
-                        string msg = String.Format(CultureConstants.DefaultCulture,
-                            "An error occurred while EVEMon was looking for its data directory. " +
-                            "You may have insufficient rights or a synchronization may be taking place.{0}{0}The message was :{0}{1}",
-                            Environment.NewLine, exc.Message);
+                    DialogResult result = MessageBox.Show(msg, @"EVEMon Error", MessageBoxButtons.RetryCancel,
+                        MessageBoxIcon.Error);
 
-                        DialogResult result = MessageBox.Show(msg, "EVEMon Error", MessageBoxButtons.RetryCancel,
-                            MessageBoxIcon.Error);
+                    if (result != DialogResult.Cancel)
+                        continue;
 
-                        if (result != DialogResult.Cancel)
-                            continue;
-
-                        Application.Exit();
-                        return;
-                    }
+                    Application.Exit();
+                    return;
                 }
             }
         }
