@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 using EVEMon.Common.Net;
 using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
@@ -156,6 +157,55 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
+        /// Asynchronously gets the character image from cache.
+        /// </summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns></returns>
+        public static async Task<Image> GetCharacterImageFromCacheAsync(Guid guid)
+            => await Task.Run(() =>
+            {
+                // First check whether the image exists in cache
+                EveMonClient.EnsureCacheDirInit();
+                string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir, $"{guid}.png");
+                if (!File.Exists(cacheFileName))
+                    return null;
+
+                try
+                {
+                    // Load the data into a MemoryStream
+                    // before returning the image
+                    // to avoid file locking
+                    Image image;
+
+                    byte[] imageBytes = File.ReadAllBytes(cacheFileName);
+
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        stream.Write(imageBytes, 0, imageBytes.Length);
+                        stream.Position = 0;
+
+                        image = Image.FromStream(stream);
+                    }
+                    return image;
+                }
+                catch (ArgumentException e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                    File.Delete(cacheFileName);
+                }
+                catch (IOException e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                }
+                catch (UnauthorizedAccessException e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                }
+
+                return null;
+            });
+
+        /// <summary>
         /// Callback used when images are downloaded, it takes care to invoke another callback provided as our user state.
         /// </summary>
         /// <param name="result">The result.</param>
@@ -173,7 +223,7 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
-        /// Adds the image to the memory cache, flush the cache to the hard drive, then save the image to a cached file.
+        /// Adds the image to the cache.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="image"></param>
@@ -208,13 +258,48 @@ namespace EVEMon.Common.Service
         }
 
         /// <summary>
+        /// Adds the portrait to the cache.
+        /// </summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="image">The image.</param>
+        /// <returns></returns>
+        internal static async Task AddCharacterImageToCache(Guid guid, Image image)
+        {
+            await Task.Run(() =>
+            {
+                // Saves the image file
+                try
+                {
+                    // Save the image to the portrait cache file
+                    EveMonClient.EnsureCacheDirInit();
+                    string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir, $"{guid}.png");
+                    FileHelper.OverwriteOrWarnTheUser(cacheFileName,
+                        fs =>
+                        {
+                            // We need to create a copy of the image because GDI+ is locking it
+                            using (Image newImage = new Bitmap(image))
+                            {
+                                newImage.Save(fs, ImageFormat.Png);
+                                fs.Flush();
+                            }
+                            return true;
+                        });
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
+                }
+            });
+        }
+
+        /// <summary>
         /// From a given url, computes a cache file name.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
         private static async Task<string> GetCacheName(Uri url)
-        {
-            return await Task.Run(() =>
+            => await Task.Run(() =>
             {
                 Match extensionMatch = Regex.Match(url.AbsoluteUri, @"([^\.]+)$");
                 string ext = String.Empty;
@@ -225,6 +310,5 @@ namespace EVEMon.Common.Service
                 string md5Sum = Util.CreateMD5(stream);
                 return String.Concat(md5Sum, ext);
             });
-        }
     }
 }

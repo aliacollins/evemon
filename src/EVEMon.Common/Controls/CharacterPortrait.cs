@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Service;
 
@@ -87,7 +85,7 @@ namespace EVEMon.Common.Controls
         /// </list>
         /// </summary>
         /// <remarks>Note this method will first check the ImageService cache before to resort to download.</remarks>
-        private void UpdateContent()
+        private async void UpdateContent()
         {
             if (!Visible)
             {
@@ -103,8 +101,11 @@ namespace EVEMon.Common.Controls
                 return;
             }
 
+            if (m_character == null)
+                return;
+
             // Try to retrieve the portrait from our portrait cache (%APPDATA%\cache\portraits)
-            Image image = GetPortraitFromCache();
+            Image image = await ImageService.GetCharacterImageFromCacheAsync(m_character.Guid);
             if (image != null)
             {
                 pictureBox.Image = image;
@@ -114,59 +115,6 @@ namespace EVEMon.Common.Controls
             // The image does not exist in cache, we try to retrieve it from CCP
             pictureBox.Image = pictureBox.InitialImage;
             UpdateCharacterImageFromCCP();
-        }
-
-        /// <summary>
-        /// Open the character portrait from the EVEMon cache.
-        /// </summary>
-        /// <returns>The character portrait as an Image object</returns>
-        private Image GetPortraitFromCache()
-        {
-            if (m_character == null)
-                return null;
-
-            EveMonClient.EnsureCacheDirInit();
-            string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir,
-                                                String.Format(CultureConstants.InvariantCulture, "{0}.png", m_character.Guid));
-
-            if (!File.Exists(cacheFileName))
-                return null;
-
-            try
-            {
-                // We need to load the data into a MemoryStream before
-                // returning the image or GDI+ will lock the file for 
-                // the lifetime of the image
-                Image image;
-
-                byte[] imageBytes = File.ReadAllBytes(cacheFileName);
-
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    stream.Write(imageBytes, 0, imageBytes.Length);
-                    stream.Position = 0;
-
-                    image = Image.FromStream(stream);
-                }
-
-                return image;
-            }
-            catch (ArgumentException e)
-            {
-                ExceptionHandler.LogException(e, true);
-                File.Delete(cacheFileName);
-                return null;
-            }
-            catch (IOException e)
-            {
-                ExceptionHandler.LogException(e, true);
-                return null;
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                ExceptionHandler.LogException(e, true);
-                return null;
-            }
         }
 
         /// <summary>
@@ -189,75 +137,41 @@ namespace EVEMon.Common.Controls
             if (m_character.CharacterID == UriCharacter.BlankCharacterID)
                 return;
 
-            Image result = await ImageService.GetCharacterImageAsync(m_character.CharacterID);
-            OnGotCharacterImageFromCCP(result);
-        }
+            Image image = await ImageService.GetCharacterImageAsync(m_character.CharacterID);
 
-        /// <summary>
-        /// We retrieve a portrait from the ImageService's cache or from the CCP url.
-        /// We then save it to the portraits' cache (%APPDATA%\Cache).
-        /// </summary>
-        /// <param name="newImage">The retrieved image.</param>
-        private void OnGotCharacterImageFromCCP(Image newImage)
-        {
-            // Restore cursor, then quit if download failed
             Cursor.Current = Cursors.Default;
-            if (newImage == null)
+            if (image == null)
             {
                 m_updatingPortrait = false;
                 return;
             }
 
             // The image was retrieved, we save it to the cache
-            SavePortraitToCache(newImage);
+            SaveCharacterImageToCache(image);
         }
 
         /// <summary>
         /// Save the specified image to the EVEMon cache as this character's portrait.
         /// </summary>
-        /// <param name="newImage">The new portrait image.</param>
-        private void SavePortraitToCache(Image newImage)
+        /// <param name="image">The portrait image.</param>
+        private async void SaveCharacterImageToCache(Image image)
         {
             // If control only has a character ID, we just update the picture box right now
             if (m_character == null)
             {
-                pictureBox.Image = newImage;
+                pictureBox.Image = image;
                 m_updatingPortrait = false;
                 return;
             }
 
             // Save to the portraits cache
-            try
-            {
-                // Save the image to the portrait cache file
-                EveMonClient.EnsureCacheDirInit();
-                string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir,
-                                                    String.Format(CultureConstants.InvariantCulture, "{0}.png", m_character.Guid));
+            await ImageService.AddCharacterImageToCache(m_character.Guid, image);
 
-                FileHelper.OverwriteOrWarnTheUser(cacheFileName,
-                                                  fs =>
-                                                      {
-                                                          // We need to create a copy of the image because GDI+ is locking it
-                                                          using (Image image = new Bitmap(newImage))
-                                                          {
-                                                              image.Save(fs, ImageFormat.Png);
-                                                              fs.Flush();
-                                                          }
-                                                          return true;
-                                                      });
+            // Update the portrait
+            pictureBox.Image = image;
 
-                // Update the portrait
-                pictureBox.Image = newImage;
-            }
-            catch (IOException e)
-            {
-                ExceptionHandler.LogException(e, false);
-            }
-            finally
-            {
-                // Release the updating flag
-                m_updatingPortrait = false;
-            }
+            // Release the updating flag
+            m_updatingPortrait = false;
         }
 
         #endregion
@@ -292,7 +206,7 @@ namespace EVEMon.Common.Controls
                     evePortraitCacheFolder => new DirectoryInfo(evePortraitCacheFolder)).Where(directory => directory.Exists))
                 {
                     filesInEveCache.AddRange(di.GetFiles(String.Format(CultureConstants.InvariantCulture,
-                                                                       "{0}*", m_character.CharacterID)));
+                        "{0}*", m_character.CharacterID)));
 
                     // Look up for an image file and add it to the list
                     // Note by Jimi : CCP changed image format in Incursion 1.1.0
@@ -308,16 +222,18 @@ namespace EVEMon.Common.Controls
                     StringBuilder message = new StringBuilder();
 
                     message.AppendFormat("No portraits for your character were found in the folder you selected.{0}{0}",
-                                         Environment.NewLine);
+                        Environment.NewLine);
                     message.AppendFormat("Ensure that you have checked the following:{0}", Environment.NewLine);
                     message.AppendFormat(" - You have logged into EVE with that characters' account.{0}", Environment.NewLine);
                     message.AppendFormat(" - You have selected a folder that contains EVE Portraits.{0}", Environment.NewLine);
 
                     if (EveMonClient.DefaultEvePortraitCacheFolders.Any())
+                    {
                         message.AppendFormat("Your default EVE Portrait directory is:{1}{0}",
-                                             EveMonClient.DefaultEvePortraitCacheFolders.First(), Environment.NewLine);
+                            EveMonClient.DefaultEvePortraitCacheFolders.First(), Environment.NewLine);
+                    }
 
-                    MessageBox.Show(message.ToString(), "Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(message.ToString(), @"Portrait Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                     m_updatingPortrait = false;
                     return;
@@ -341,7 +257,7 @@ namespace EVEMon.Common.Controls
 
                 // Open the largest image and save it
                 Image image = Image.FromFile(bestFile);
-                SavePortraitToCache(image);
+                SaveCharacterImageToCache(image);
             }
             finally
             {
@@ -363,6 +279,10 @@ namespace EVEMon.Common.Controls
                 Image.FromFile(file.FullName);
             }
             catch (OutOfMemoryException)
+            {
+                return false;
+            }
+            catch (FileNotFoundException)
             {
                 return false;
             }
