@@ -96,7 +96,7 @@ namespace EVEMon.Common
         {
             s_checkScheduled = true;
             Dispatcher.Schedule(time, BeginCheck);
-            EveMonClient.Trace("UpdateManager.ScheduleCheck in {0}", time);
+            EveMonClient.Trace($"in {time}");
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace EVEMon.Common
                 return;
             }
 
-            EveMonClient.Trace("UpdateManager.BeginCheck");
+            EveMonClient.Trace();
 
             // Otherwise, query for the patch file
             // First look up for an emergency patch
@@ -161,28 +161,28 @@ namespace EVEMon.Common
             if (result.Error != null)
             {
                 // Logs the error and reschedule
-                EveMonClient.Trace("UpdateManager: {0}", result.Error.Message);
+                EveMonClient.Trace($"UpdateManager: {result.Error.Message}", false);
                 ScheduleCheck(s_frequency);
                 return;
             }
 
-            // No error, let's try to deserialize
             try
             {
+                // No error, let's try to deserialize
                 ScanUpdateFeed(result.Result);
             }
-                // An error occurred during the deserialization
             catch (InvalidOperationException exc)
             {
+                // An error occurred during the deserialization
                 ExceptionHandler.LogException(exc, true);
             }
             finally
             {
+                EveMonClient.Trace();
+
                 // Reschedule
                 ScheduleCheck(s_frequency);
             }
-
-            EveMonClient.Trace("UpdateManager.OnCheckCompleted");
         }
 
         /// <summary>

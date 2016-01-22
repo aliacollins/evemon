@@ -168,15 +168,15 @@ namespace EVEMon.Common.Service
         private static void SendCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Cancelled)
-                EveMonClient.Trace("Emailer.SendCompleted - The last message was cancelled");
+                EveMonClient.Trace("The last message was cancelled");
             else if (e.Error != null)
             {
-                EveMonClient.Trace("Emailer.SendCompleted - An error occurred");
-                ExceptionHandler.LogException(e.Error, false);
-                MessageBox.Show(e.Error.Message, "EVEMon Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                EveMonClient.Trace("An error occurred");
+                ExceptionHandler.LogException(e.Error, true);
+                MessageBox.Show(e.Error.Message, @"EVEMon Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
-                EveMonClient.Trace("Emailer.SendCompleted - Message sent.");
+                EveMonClient.Trace("Message sent.");
         }
 
         /// <summary>
@@ -195,13 +195,10 @@ namespace EVEMon.Common.Service
         private static bool SendMail(NotificationSettings settings, string subject, string body)
         {
             // Trace something to the logs so we can identify the time the message was sent
-            EveMonClient.Trace("Emailer.SendMail: Subject - {0}; Server - {1}:{2}",
-                               subject,
-                               settings.EmailSmtpServerAddress,
-                               settings.EmailPortNumber);
+            EveMonClient.Trace($"(Subject - {subject}; Server - {settings.EmailSmtpServerAddress}:{settings.EmailPortNumber})");
 
             string sender = String.IsNullOrEmpty(settings.EmailFromAddress)
-                                ? "evemonclient@battleclinic.com"
+                                ? "no-reply@evemon.net"
                                 : settings.EmailFromAddress;
 
             List<string> toAddresses = settings.EmailToAddress.Split(

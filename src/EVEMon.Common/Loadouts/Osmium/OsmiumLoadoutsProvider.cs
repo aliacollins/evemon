@@ -10,7 +10,6 @@ using EVEMon.Common.Interfaces;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Osmium.Loadout;
 using EVEMon.Common.Threading;
-using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Loadouts.Osmium
 {

@@ -112,7 +112,7 @@ namespace EVEMon.Common.Service
             // Reset the cache if anything went wrong
             if (cache == null || cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))
             {
-                EveMonClient.Trace("Deserializing EveIDToName failed. File may be corrupt. Deleting file.");
+                EveMonClient.Trace("Deserializing failed. File may be corrupt. Deleting file.");
                 try
                 {
                     File.Delete(file);

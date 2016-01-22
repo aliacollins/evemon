@@ -180,7 +180,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         private static void Import(IEnumerable<SerializableOutpost> outposts)
         {
-            EveMonClient.Trace("ConquerableStationList.Import - begin");
+            EveMonClient.Trace("begin");
 
             s_conqStationsByID.Clear();
             foreach (SerializableOutpost outpost in outposts)
@@ -189,7 +189,7 @@ namespace EVEMon.Common.Models
             }
 
             s_loaded = true;
-            EveMonClient.Trace("ConquerableStationList.Import - done");
+            EveMonClient.Trace("done");
         }
 
         #endregion

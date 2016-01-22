@@ -25,7 +25,6 @@ using EVEMon.Common.Serialization.Eve;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using YamlDotNet.RepresentationModel;
-using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common
 {
@@ -312,8 +311,9 @@ namespace EVEMon.Common
                 result = new CCPAPIResult<T>(HttpWebClientServiceException.Exception(url, e));
 
                 ExceptionHandler.LogException(e, false);
-                EveMonClient.Trace("Method: DownloadAPIResultAsync, url: {0}, postdata: {1}, type: {2}",
-                    url.AbsoluteUri, postData, typeof(T).Name);
+                EveMonClient.Trace(
+                    $"Method: DownloadAPIResultAsync, url: {url.AbsoluteUri}, postdata: {postData}, type: {typeof(T).Name}",
+                    false);
             }
 
             return result;
@@ -345,8 +345,9 @@ namespace EVEMon.Common
             {
                 ExceptionHandler.LogException(e, true);
                 result = new CCPAPIResult<T>(Enumerations.CCPAPI.CCPAPIErrors.Http, e.Message);
-                EveMonClient.Trace("Method: DownloadAPIResult, url: {0}, postdata: {1}, type: {2}",
-                    url.AbsoluteUri, postData, typeof(T).Name);
+                EveMonClient.Trace(
+                    $"Method: DownloadAPIResult, url: {url.AbsoluteUri}, postdata: {postData}, type: {typeof(T).Name}",
+                    false);
             }
 
             // Returns

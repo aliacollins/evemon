@@ -3,6 +3,7 @@ using System.Linq;
 using EVEMon.Common;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Threading;
 
@@ -107,7 +108,7 @@ namespace EVEMon.LogitechG15
             }
             catch (Exception ex)
             {
-                EveMonClient.Trace(ex.Message);
+                ExceptionHandler.LogException(ex, true);
                 s_lcd = null;
                 s_startupError = true;
             }
@@ -124,7 +125,8 @@ namespace EVEMon.LogitechG15
             }
             catch (Exception ex)
             {
-                EveMonClient.Trace(ex.Message);
+                EveMonClient.Trace("failed");
+                ExceptionHandler.LogException(ex, true);
             }
             finally
             {
