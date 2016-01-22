@@ -7,9 +7,6 @@ namespace EVEMon.Common.Controls
 {
     public sealed partial class TipWindow : UserControl
     {
-        private static readonly object s_lockObject = new object();
-        private readonly string m_key;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TipWindow"/> class.
         /// </summary>
@@ -19,19 +16,29 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TipWindow"/> class.
+        /// Initializes a new instance of the <see cref="TipWindow" /> class.
         /// </summary>
+        /// <param name="form">The form.</param>
         /// <param name="title">The title.</param>
         /// <param name="tiptext">The tiptext.</param>
         /// <param name="key">The key.</param>
         /// <param name="checkboxVisible">if set to <c>true</c> the checkbox is visible.</param>
-        private TipWindow(string title, string tiptext, string key, bool checkboxVisible)
+        private TipWindow(Form form, string title, string tiptext, string key, bool checkboxVisible)
             : this()
         {
+            form.Controls.Add(this);
+
+            Tag = key;
+            cbDontShowAgain.Visible = checkboxVisible;
+            pictureBox.Image = SystemIcons.Information.ToBitmap();
+
             Text = title;
             TipLabel.Text = tiptext;
-            m_key = key;
-            cbDontShowAgain.Visible = checkboxVisible;
+            // Aligns the top right corner of the tip window with the top right corner of the owner's client rectangle
+            Location = new Point(form.ClientRectangle.Left + form.ClientSize.Width - Width,
+                form.ClientRectangle.Top);
+            Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            BringToFront();
         }
 
         /// <summary>
@@ -42,19 +49,14 @@ namespace EVEMon.Common.Controls
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (cbDontShowAgain.Checked)
-                Settings.UI.ConfirmedTips.Add(m_key);
+            {
+                Settings.UI.ConfirmedTips.Add((string)Tag);
+                Settings.Save();
+            }
 
             Parent.Controls.Remove(this);
-        }
-
-        /// <summary>
-        /// Handles the Load event of the TipWindow control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void TipWindow_Load(object sender, EventArgs e)
-        {
-            pictureBox.Image = SystemIcons.Information.ToBitmap();
+            
+            Dispose();
         }
 
         /// <summary>
@@ -70,27 +72,16 @@ namespace EVEMon.Common.Controls
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            lock (s_lockObject)
-            {
-                if (Settings.UI.ConfirmedTips.Contains(key))
-                    return;
+            if (Settings.UI.ConfirmedTips.Contains(key))
+                return;
 
-                // Quit if it's already shown
-                if (form.Controls.OfType<TipWindow>().Any())
-                    return;
+            // Quit if it's already shown
+            if (form.Controls.OfType<TipWindow>().Any())
+                return;
 
-                TipWindow tipWindow = new TipWindow(title, tiptext, key, checkBoxVisible);
-                form.Controls.Add(tipWindow);
-
-                // Aligns the top right corner of the tip window with the top right corner of the owner's client rectangle
-                tipWindow.Location = new Point(form.ClientRectangle.Left + form.ClientSize.Width - tipWindow.Width,
-                                        form.ClientRectangle.Top);
-                tipWindow.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-                tipWindow.BringToFront();
-                tipWindow.Show();
-
-                Settings.Save();
-            }
+            // Gets disposed when clicking the OK button
+            TipWindow tipWindow = new TipWindow(form, title, tiptext, key, checkBoxVisible);
+            tipWindow.Show();
         }
     }
 }

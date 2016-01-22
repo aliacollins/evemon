@@ -125,7 +125,6 @@ namespace EVEMon.Common.Controls
             this.Controls.Add(this.panel1);
             this.Name = "TipWindow";
             this.Size = new System.Drawing.Size(271, 110);
-            this.Load += new System.EventHandler(this.TipWindow_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
