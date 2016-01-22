@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
-using EVEMon.Common.Models;
 using EVEMon.Common.Net;
 using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
@@ -23,10 +22,8 @@ namespace EVEMon.Common.Service
         /// <param name="path">The path.</param>
         /// <returns></returns>
         public static Uri GetImageServerCdnUri(string path)
-        {
-            return new Uri(
+            => new Uri(
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageServerCDN, path));
-        }
 
         /// <summary>
         /// Gets the image server base URI.
@@ -34,10 +31,8 @@ namespace EVEMon.Common.Service
         /// <param name="path">The path.</param>
         /// <returns></returns>
         public static Uri GetImageServerBaseUri(string path)
-        {
-            return new Uri(
+            => new Uri(
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageServerBase, path));
-        }
 
         /// <summary>
         /// Asynchronously downloads a character portrait from its ID.
@@ -111,6 +106,7 @@ namespace EVEMon.Common.Service
             // First check whether the image exists in cache
             EveMonClient.EnsureCacheDirInit();
             string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, await GetCacheName(url));
+
             if (File.Exists(cacheFileName))
             {
                 try
@@ -167,6 +163,7 @@ namespace EVEMon.Common.Service
                 // First check whether the image exists in cache
                 EveMonClient.EnsureCacheDirInit();
                 string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir, $"{guid}.png");
+
                 if (!File.Exists(cacheFileName))
                     return null;
 
