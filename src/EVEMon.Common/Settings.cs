@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
@@ -443,10 +444,15 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="filename">The fully qualified filename of the settings file to load</param>
         /// <returns>The Settings object loaded</returns>
-        public static void Restore(string filename)
+        public static async Task RestoreAsync(string filename)
         {
-            // Try deserialize
-            SerializableSettings settings = TryDeserializeFromBackupFile(filename, false);
+            SerializableSettings settings = null;
+
+            await Task.Run(() =>
+            {
+                // Try deserialize
+                settings = TryDeserializeFromBackupFile(filename, false);
+            });
 
             // Loading from file failed, we abort and keep our current settings
             if (settings == null)

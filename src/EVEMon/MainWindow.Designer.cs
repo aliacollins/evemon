@@ -44,7 +44,7 @@ namespace EVEMon
             this.lblTraining = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblServerStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusSpacerLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblCSSProviderStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -223,7 +223,7 @@ namespace EVEMon
             this.lblTraining,
             this.lblStatus,
             this.lblServerStatus,
-            this.toolStripStatusLabel1,
+            this.toolStripStatusSpacerLabel,
             this.lblCSSProviderStatus});
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
@@ -250,11 +250,11 @@ namespace EVEMon
             this.lblServerStatus.Size = new System.Drawing.Size(141, 17);
             this.lblServerStatus.Text = "// Server Status Unknown";
             // 
-            // toolStripStatusLabel1
+            // toolStripStatusSpacerLabel
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(211, 17);
-            this.toolStripStatusLabel1.Spring = true;
+            this.toolStripStatusSpacerLabel.Name = "toolStripStatusSpacerLabel";
+            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(211, 17);
+            this.toolStripStatusSpacerLabel.Spring = true;
             // 
             // lblCSSProviderStatus
             // 
@@ -1080,17 +1080,18 @@ namespace EVEMon
             this.tabCreationLabel.Name = "tabCreationLabel";
             this.tabCreationLabel.Size = new System.Drawing.Size(600, 503);
             this.tabCreationLabel.TabIndex = 7;
-            this.tabCreationLabel.Text = "Tab pages creation in progress.\r\n\r\nPlease wait.";
+            this.tabCreationLabel.Text = "Restoring...\r\n\r\nPlease wait.";
             this.tabCreationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.tabCreationLabel.Visible = false;
             // 
             // noCharactersLabel
             // 
             this.noCharactersLabel.BackColor = System.Drawing.Color.WhiteSmoke;
             this.noCharactersLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.noCharactersLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.noCharactersLabel.Location = new System.Drawing.Point(0, 0);
+            this.noCharactersLabel.Location = new System.Drawing.Point(0, 49);
             this.noCharactersLabel.Name = "noCharactersLabel";
-            this.noCharactersLabel.Size = new System.Drawing.Size(600, 646);
+            this.noCharactersLabel.Size = new System.Drawing.Size(600, 503);
             this.noCharactersLabel.TabIndex = 8;
             this.noCharactersLabel.Text = "No character loaded.\r\nTo add characters, click the File|Add API key... menu optio" +
     "n";
@@ -1113,11 +1114,11 @@ namespace EVEMon
             this.ClientSize = new System.Drawing.Size(600, 646);
             this.Controls.Add(this.tcCharacterTabs);
             this.Controls.Add(this.tabCreationLabel);
+            this.Controls.Add(this.noCharactersLabel);
             this.Controls.Add(this.notificationList);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.mainToolBar);
             this.Controls.Add(this.mainMenuBar);
-            this.Controls.Add(this.noCharactersLabel);
             this.MainMenuStrip = this.mainMenuBar;
             this.MinimumSize = new System.Drawing.Size(616, 350);
             this.Name = "MainWindow";
@@ -1248,7 +1249,7 @@ namespace EVEMon
         private System.Windows.Forms.Label noCharactersLabel;
         private System.Windows.Forms.TabPage tpOverview;
         private Controls.Overview overview;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusSpacerLabel;
         private System.Windows.Forms.ToolStripStatusLabel lblCSSProviderStatus;
     }
 }

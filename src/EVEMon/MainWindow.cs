@@ -341,18 +341,18 @@ namespace EVEMon
         /// </summary>
         private void LayoutTabPages()
         {
-            TabPage selectedTab = tcCharacterTabs.SelectedTab;
-
-            // Collect the existing pages
-            Dictionary<Character, TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
-                page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
-
             // Hide the TabControl
             tcCharacterTabs.Hide();
-            tabCreationLabel.Visible = true;
+            tabCreationLabel.Show();
 
             try
             {
+                TabPage selectedTab = tcCharacterTabs.SelectedTab;
+
+               // Collect the existing pages
+                Dictionary<Character, TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
+                    page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
+
                 // Rebuild the pages
                 int index = 0;
                 foreach (Character character in EveMonClient.MonitoredCharacters)
@@ -403,17 +403,10 @@ namespace EVEMon
             }
             finally
             {
-                tabCreationLabel.Visible = false;
+                tabCreationLabel.Hide();
 
                 if (tcCharacterTabs.Controls.Count > 0)
-                {
                     tcCharacterTabs.Show();
-                    noCharactersLabel.Visible = false;
-                }
-                else
-                {
-                    noCharactersLabel.Visible = true;
-                }
             }
         }
 
@@ -1303,15 +1296,18 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void loadSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Prompts the user for a location
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            DialogResult result = openFileDialog.ShowDialog();
 
             // Load settings if OK
-            if (result != DialogResult.OK)
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
+
+            // Hide the TabControl
+            tcCharacterTabs.Hide();
+            tabCreationLabel.Show();
 
             // Close any open character associated windows
             WindowsFactory.CloseAllTagged();
@@ -1319,18 +1315,16 @@ namespace EVEMon
             // Clear any notifications
             ClearNotifications();
 
-            // Hide the TabControl
-            tcCharacterTabs.Hide();
-
             // Open the specified settings
-            Settings.Restore(openFileDialog.FileName);
-
-            // Show the TabControl
-            tcCharacterTabs.Show();
+            await Settings.RestoreAsync(openFileDialog.FileName);
 
             // Remove the tip window if it exist and is confirmed in settings
             if (Settings.UI.ConfirmedTips.Contains("startup") && Controls.OfType<TipWindow>().Any())
                 Controls.Remove(Controls.OfType<TipWindow>().First());
+
+            // Show the TabControl
+            tabCreationLabel.Hide();
+            tcCharacterTabs.Show();
         }
 
         /// <summary>
