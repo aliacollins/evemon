@@ -606,18 +606,18 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
-        /// Gets the mapped API file.
+        /// Asynchronously gets a mapped API file.
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="response">The response.</param>
         /// <returns></returns>
-        protected static async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFile(
+        protected static Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFileAsync(
             SerializableAPIResult<CloudStorageServiceAPIFile> result, Stream response)
         {
             if (response == null)
                 return null;
 
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 string content;
                 using (StreamReader reader = new StreamReader(Util.ZlibUncompress(response)))

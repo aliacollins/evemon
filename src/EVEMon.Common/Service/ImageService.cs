@@ -157,8 +157,8 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="guid">The unique identifier.</param>
         /// <returns></returns>
-        public static async Task<Image> GetCharacterImageFromCacheAsync(Guid guid)
-            => await Task.Run(() =>
+        public static Task<Image> GetCharacterImageFromCacheAsync(Guid guid)
+            => Task.Run(() =>
             {
                 // First check whether the image exists in cache
                 EveMonClient.EnsureCacheDirInit();
@@ -224,9 +224,8 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="url"></param>
         /// <param name="image"></param>
-        private static async Task AddImageToCache(Uri url, Image image)
-        {
-            await Task.Run(async () =>
+        private static Task AddImageToCache(Uri url, Image image)
+            => Task.Run(async () =>
             {
                 // Saves the image file
                 try
@@ -252,7 +251,6 @@ namespace EVEMon.Common.Service
                     throw;
                 }
             });
-        }
 
         /// <summary>
         /// Adds the portrait to the cache.
@@ -260,9 +258,8 @@ namespace EVEMon.Common.Service
         /// <param name="guid">The unique identifier.</param>
         /// <param name="image">The image.</param>
         /// <returns></returns>
-        internal static async Task AddCharacterImageToCache(Guid guid, Image image)
-        {
-            await Task.Run(() =>
+        internal static Task AddCharacterImageToCache(Guid guid, Image image)
+            => Task.Run(() =>
             {
                 // Saves the image file
                 try
@@ -288,15 +285,14 @@ namespace EVEMon.Common.Service
                     throw;
                 }
             });
-        }
 
         /// <summary>
         /// From a given url, computes a cache file name.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        private static async Task<string> GetCacheName(Uri url)
-            => await Task.Run(() =>
+        private static Task<string> GetCacheName(Uri url)
+            => Task.Run(() =>
             {
                 Match extensionMatch = Regex.Match(url.AbsoluteUri, @"([^\.]+)$");
                 string ext = String.Empty;
