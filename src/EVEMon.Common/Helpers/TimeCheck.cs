@@ -82,7 +82,7 @@ namespace EVEMon.Common.Helpers
             }
             catch (Exception exc)
             {
-                EveMonClient.Trace(exc.Message);
+                EveMonClient.Trace($"TimeCheck.CheckFailure - {exc.Message}", false);
                 ScheduleCheck(TimeSpan.FromMinutes(1));
             }
 

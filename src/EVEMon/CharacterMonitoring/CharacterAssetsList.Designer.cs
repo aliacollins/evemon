@@ -42,9 +42,11 @@
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noPricesFoundLabel = new System.Windows.Forms.Label();
             this.lblTotalCost = new System.Windows.Forms.Label();
-            this.estimatedCostFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.throbber = new EVEMon.Common.Controls.Throbber();
+            this.estimatedCostPanel = new System.Windows.Forms.Panel();
             this.contextMenu.SuspendLayout();
-            this.estimatedCostFlowLayoutPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
+            this.estimatedCostPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // noAssetsLabel
@@ -53,7 +55,7 @@
             this.noAssetsLabel.ForeColor = System.Drawing.SystemColors.GrayText;
             this.noAssetsLabel.Location = new System.Drawing.Point(0, 0);
             this.noAssetsLabel.Name = "noAssetsLabel";
-            this.noAssetsLabel.Size = new System.Drawing.Size(454, 404);
+            this.noAssetsLabel.Size = new System.Drawing.Size(472, 401);
             this.noAssetsLabel.TabIndex = 3;
             this.noAssetsLabel.Text = "No assets are available.";
             this.noAssetsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -73,7 +75,7 @@
             this.lvAssets.HideSelection = false;
             this.lvAssets.Location = new System.Drawing.Point(0, 0);
             this.lvAssets.Name = "lvAssets";
-            this.lvAssets.Size = new System.Drawing.Size(454, 404);
+            this.lvAssets.Size = new System.Drawing.Size(472, 401);
             this.lvAssets.SmallImageList = this.ilIcons;
             this.lvAssets.TabIndex = 3;
             this.lvAssets.UseCompatibleStateImageBehavior = false;
@@ -127,35 +129,51 @@
             // 
             // noPricesFoundLabel
             // 
-            this.noPricesFoundLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.noPricesFoundLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.noPricesFoundLabel.AutoSize = true;
             this.noPricesFoundLabel.ForeColor = System.Drawing.Color.DarkRed;
-            this.noPricesFoundLabel.Location = new System.Drawing.Point(216, 8);
+            this.noPricesFoundLabel.Location = new System.Drawing.Point(258, 9);
             this.noPricesFoundLabel.Name = "noPricesFoundLabel";
+            this.noPricesFoundLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.noPricesFoundLabel.Size = new System.Drawing.Size(208, 13);
             this.noPricesFoundLabel.TabIndex = 1;
             this.noPricesFoundLabel.Text = "* Prices for some items could not be found.";
+            this.noPricesFoundLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblTotalCost
             // 
             this.lblTotalCost.AutoSize = true;
-            this.lblTotalCost.Location = new System.Drawing.Point(3, 8);
+            this.lblTotalCost.Location = new System.Drawing.Point(3, 9);
             this.lblTotalCost.Name = "lblTotalCost";
             this.lblTotalCost.Size = new System.Drawing.Size(207, 13);
             this.lblTotalCost.TabIndex = 0;
             this.lblTotalCost.Text = "Estimated Cost of shown items: {0:N2} ISK";
+            this.lblTotalCost.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // estimatedCostFlowLayoutPanel
+            // throbber
             // 
-            this.estimatedCostFlowLayoutPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.estimatedCostFlowLayoutPanel.Controls.Add(this.lblTotalCost);
-            this.estimatedCostFlowLayoutPanel.Controls.Add(this.noPricesFoundLabel);
-            this.estimatedCostFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.estimatedCostFlowLayoutPanel.Location = new System.Drawing.Point(0, 404);
-            this.estimatedCostFlowLayoutPanel.Name = "estimatedCostFlowLayoutPanel";
-            this.estimatedCostFlowLayoutPanel.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
-            this.estimatedCostFlowLayoutPanel.Size = new System.Drawing.Size(454, 30);
-            this.estimatedCostFlowLayoutPanel.TabIndex = 4;
+            this.throbber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.throbber.Location = new System.Drawing.Point(442, 4);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
+            this.throbber.TabIndex = 3;
+            this.throbber.TabStop = false;
+            this.throbber.Visible = false;
+            // 
+            // estimatedCostPanel
+            // 
+            this.estimatedCostPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.estimatedCostPanel.Controls.Add(this.lblTotalCost);
+            this.estimatedCostPanel.Controls.Add(this.noPricesFoundLabel);
+            this.estimatedCostPanel.Controls.Add(this.throbber);
+            this.estimatedCostPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.estimatedCostPanel.Location = new System.Drawing.Point(0, 401);
+            this.estimatedCostPanel.Name = "estimatedCostPanel";
+            this.estimatedCostPanel.Size = new System.Drawing.Size(472, 33);
+            this.estimatedCostPanel.TabIndex = 5;
             // 
             // CharacterAssetsList
             // 
@@ -164,12 +182,13 @@
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvAssets);
             this.Controls.Add(this.noAssetsLabel);
-            this.Controls.Add(this.estimatedCostFlowLayoutPanel);
+            this.Controls.Add(this.estimatedCostPanel);
             this.Name = "CharacterAssetsList";
-            this.Size = new System.Drawing.Size(454, 434);
+            this.Size = new System.Drawing.Size(472, 434);
             this.contextMenu.ResumeLayout(false);
-            this.estimatedCostFlowLayoutPanel.ResumeLayout(false);
-            this.estimatedCostFlowLayoutPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
+            this.estimatedCostPanel.ResumeLayout(false);
+            this.estimatedCostPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -188,6 +207,7 @@
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
         private System.Windows.Forms.Label lblTotalCost;
         private System.Windows.Forms.Label noPricesFoundLabel;
-        private System.Windows.Forms.FlowLayoutPanel estimatedCostFlowLayoutPanel;
+        private Common.Controls.Throbber throbber;
+        private System.Windows.Forms.Panel estimatedCostPanel;
     }
 }
