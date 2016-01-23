@@ -26,7 +26,6 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.IGBService;
 using EVEMon.Common.Models;
-using EVEMon.Common.Net;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Properties;
 using EVEMon.Common.Scheduling;
@@ -164,6 +163,8 @@ namespace EVEMon
 
             // Force cleanup
             TriggerAutoShrink();
+
+            EveMonClient.Trace("Main window - loaded", false);
         }
 
         /// <summary>

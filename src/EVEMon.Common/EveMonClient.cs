@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections.Global;
@@ -69,18 +70,19 @@ namespace EVEMon.Common
             EVEServer = new EveServer();
 
             // Load static data
+            // This is the optimal loading time order
             // (min order to follow : 
             // skills before anything else,
-            // items before certs,
+            // items before blueprints and certs,
             // certs before masteries)
-            Trace("Load Datafiles - begin", printMethod: false);
-            StaticProperties.Load();
-            StaticSkills.Load();
+            Trace("Datafiles.Load - begin", printMethod: false);
+            Task.Run(() => StaticSkills.Load());
+            Task.Run(() => StaticProperties.Load());
             StaticItems.Load();
+            Task.Run(() => StaticBlueprints.Load());
             StaticCertificates.Load();
-            StaticMasteries.Load();
-            StaticBlueprints.Load();
-            Trace("Load Datafiles - done", printMethod: false);
+            Task.Run(() => StaticMasteries.Load());
+            Trace("Datafiles.Load - done", printMethod: false);
 
             Trace("done");
         }
