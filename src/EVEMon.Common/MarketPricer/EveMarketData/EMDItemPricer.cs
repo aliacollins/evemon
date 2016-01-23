@@ -117,9 +117,9 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// Import the query result list.
         /// </summary>
         /// <param name="itemPrices">The item prices.</param>
-        private void Import(IEnumerable<SerializableEMDItemPriceListItem> itemPrices)
+        private static void Import(IEnumerable<SerializableEMDItemPriceListItem> itemPrices)
         {
-            EveMonClient.Trace("{0}.Import - begin", GetType().Name);
+            EveMonClient.Trace("begin");
 
             foreach (IGrouping<int, SerializableEMDItemPriceListItem> item in itemPrices.GroupBy(item => item.ID))
             {
@@ -136,7 +136,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             Loaded = true;
 
-            EveMonClient.Trace("{0}.Import - done", GetType().Name);
+            EveMonClient.Trace("done");
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             PriceByItemID.Clear();
 
-            EveMonClient.Trace("{0}.GetPricesAsync - begin", GetType().Name);
+            EveMonClient.Trace("begin");
 
             var url = new Uri(
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEMarketDataBaseUrl,
@@ -167,7 +167,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// Called when data downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void OnPricesDownloaded(DownloadAsyncResult<SerializableEMDItemPrices> result)
+        private static void OnPricesDownloaded(DownloadAsyncResult<SerializableEMDItemPrices> result)
         {
             // Reset query pending flag
             s_queryPending = false;
@@ -175,20 +175,20 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             if (result == null || result.Error != null || result.Result.Result == null || !result.Result.Result.ItemPrices.Any())
             {
                 if (result?.Result == null)
-                    EveMonClient.Trace("{0}.GetPricesAsync - no result", GetType().Name);
+                    EveMonClient.Trace("no result");
                 else if (result.Error != null)
                     EveMonClient.Trace(result.Error.Message);
                 else if (result.Result.Result == null || !result.Result.Result.ItemPrices.Any())
-                    EveMonClient.Trace("{0}.GetPricesAsync - empty result", GetType().Name);
+                    EveMonClient.Trace("empty result");
                 else
-                    EveMonClient.Trace("{0}.GetPricesAsync - failed", GetType().Name);
+                    EveMonClient.Trace("failed");
 
                 EveMonClient.OnPricesDownloaded(null, String.Empty);
 
                 return;
             }
 
-            EveMonClient.Trace("{0}.GetPricesAsync - done", GetType().Name);
+            EveMonClient.Trace("done");
 
             Import(result.Result.Result.ItemPrices);
 

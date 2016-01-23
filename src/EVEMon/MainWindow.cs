@@ -134,10 +134,10 @@ namespace EVEMon
             EveMonClient.Run(this);
 
             // Check with NIST that the local clock is synchronized
-            CheckTimeSynchronization();
+            TimeCheck.ScheduleCheck(TimeSpan.FromSeconds(1));
 
             // Notify Gooogle Analytics about start up
-            GAnalyticsTracker.TrackStartAsync(GetType());
+            GAnalyticsTracker.TrackStart(GetType());
 
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
             lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
@@ -147,6 +147,7 @@ namespace EVEMon
             toolbarToolStripMenuItem.Checked = mainToolBar.Visible = !Settings.UI.MainWindow.ShowMenuBar;
 
             // Subscribe events
+            TimeCheck.TimeCheckCompleted += TimeCheck_TimeCheckCompleted;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
             EveMonClient.NotificationInvalidated += EveMonClient_NotificationInvalidated;
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
@@ -163,24 +164,6 @@ namespace EVEMon
 
             // Force cleanup
             TriggerAutoShrink();
-        }
-
-        /// <summary>
-        /// Check for time synchronization,
-        /// or reschedule it for later if no connection is available.
-        /// </summary>
-        private void CheckTimeSynchronization()
-        {
-            // Do it now if network available
-            if (NetworkMonitor.IsNetworkAvailable)
-            {
-                TimeCheck.CheckIsSynchronisedToNistTime(TimeCheckCallback);
-                Dispatcher.Schedule(TimeSpan.FromDays(1), CheckTimeSynchronization);
-                return;
-            }
-
-            // Reschedule later otherwise
-            Dispatcher.Schedule(TimeSpan.FromMinutes(1), CheckTimeSynchronization);
         }
 
         /// <summary>
@@ -265,6 +248,16 @@ namespace EVEMon
             // Hide the system tray icons
             niAlertIcon.Visible = false;
             trayIcon.Visible = false;
+
+            // Unsubscribe events
+            TimeCheck.TimeCheckCompleted -= TimeCheck_TimeCheckCompleted;
+            EveMonClient.NotificationSent -= EveMonClient_NotificationSent;
+            EveMonClient.NotificationInvalidated -= EveMonClient_NotificationInvalidated;
+            EveMonClient.MonitoredCharacterCollectionChanged -= EveMonClient_MonitoredCharacterCollectionChanged;
+            EveMonClient.ServerStatusUpdated -= EveMonClient_ServerStatusUpdated;
+            EveMonClient.QueuedSkillsCompleted -= EveMonClient_QueuedSkillsCompleted;
+            EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.TimerTick -= EveMonClient_TimerTick;
         }
 
         /// <summary>
@@ -282,25 +275,15 @@ namespace EVEMon
         /// <summary>
         /// Callback for time synchronization with NIST check.
         /// </summary>
-        /// <param name="isSynchronised">if set to <c>true</c> [is synchronised].</param>
-        /// <param name="serverTimeToLocalTime">The server time to local time.</param>
-        /// <param name="localTime">The local time.</param>
-        private void TimeCheckCallback(bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
+        private void TimeCheck_TimeCheckCompleted(object sender, TimeCheckSyncEventArgs e)
         {
-            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised ||
-                (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime()))
+            if (!Settings.Updates.CheckTimeOnStartup || e.IsSynchronised ||
+                (e.ServerTimeToLocalTime == DateTime.MinValue.ToLocalTime()))
             {
-                if (!Settings.Updates.CheckTimeOnStartup)
-                    EveMonClient.Trace("EveMonClient.TimeSynchronization - Disabled");
-                else if (isSynchronised)
-                    EveMonClient.Trace("EveMonClient.TimeSynchronization - Synchronised");
-                else if (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime())
-                    EveMonClient.Trace("EveMonClient.TimeSynchronization - Failed");
-
                 return;
             }
 
-            using (TimeCheckNotification timeDialog = new TimeCheckNotification(serverTimeToLocalTime, localTime))
+            using (TimeCheckNotification timeDialog = new TimeCheckNotification(e.ServerTimeToLocalTime, e.LocalTime))
             {
                 timeDialog.ShowDialog(this);
             }

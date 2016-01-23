@@ -105,7 +105,10 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             // In case the file is an old one, we try to get a fresh copy
             if (result == null || CachedUntil < DateTime.UtcNow)
+            {
+                GetPricesAsync();
                 return;
+            }
 
             PriceByItemID.Clear();
 
@@ -117,9 +120,9 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// Imports the specified item prices.
         /// </summary>
         /// <param name="itemPrices">The item prices.</param>
-        private void Import(IEnumerable<SerializableECItemPriceListItem> itemPrices)
+        private static void Import(IEnumerable<SerializableECItemPriceListItem> itemPrices)
         {
-            EveMonClient.Trace("{0}.Import - begin", GetType().Name);
+            EveMonClient.Trace("begin");
 
             foreach (SerializableECItemPriceListItem item in itemPrices)
             {
@@ -129,7 +132,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             if (((s_queue == null) || (s_queue.Count == 0)) && !s_queryPending)
                 Loaded = true;
 
-            EveMonClient.Trace("{0}.Import - done", GetType().Name);
+            EveMonClient.Trace("done");
         }
 
         /// <summary>
@@ -157,7 +160,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             s_queue = new Queue<int>(marketItems);
             s_queryMonitorList = marketItems.ToList();
 
-            EveMonClient.Trace("{0}.GetPricesAsync - begin", GetType().Name);
+            EveMonClient.Trace("begin");
 
             QueryIDs();
         }
@@ -169,9 +172,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         private async void QueryIDs()
         {
             var idsToQuery = new List<int>();
-            var url = new Uri(
-                String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVECentralBaseUrl,
-                    NetworkConstants.EVECentralAPIItemPrices));
+            var url = new Uri($"{NetworkConstants.EVECentralBaseUrl}{NetworkConstants.EVECentralAPIItemPrices}");
 
             while (s_queue.Count > 0)
             {
@@ -187,7 +188,8 @@ namespace EVEMon.Common.MarketPricer.EveCentral
                 s_queryCounter++;
 
                 DownloadAsyncResult<SerializableECItemPrices> result =
-                    await Util.DownloadXmlAsync<SerializableECItemPrices>(url, postData: GetPostData(idsToQuery), acceptEncoded: true);
+                    await Util.DownloadXmlAsync<SerializableECItemPrices>(url,
+                        postData: GetPostData(idsToQuery), acceptEncoded: true);
                 OnPricesDownloaded(result);
             }
         }
@@ -197,7 +199,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// </summary>
         /// <param name="idsToQuery">The ids to query.</param>
         /// <returns></returns>
-        private static string GetPostData(List<int> idsToQuery)
+        private static string GetPostData(IReadOnlyCollection<int> idsToQuery)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -227,9 +229,9 @@ namespace EVEMon.Common.MarketPricer.EveCentral
                 return;
 
             if (EveMonClient.IsDebugBuild)
-                EveMonClient.Trace(@"Remaining ids: {0}", String.Join(", ", s_queryMonitorList));
+                EveMonClient.Trace($"Remaining ids: {String.Join(", ", s_queryMonitorList)}", false);
 
-            EveMonClient.Trace("{0}.GetPricesAsync - done", GetType().Name);
+            EveMonClient.Trace("done");
 
             // Reset query pending flag
             s_queryPending = false;

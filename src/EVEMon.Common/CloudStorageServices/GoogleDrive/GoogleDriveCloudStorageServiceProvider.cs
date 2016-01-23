@@ -175,10 +175,8 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckProviderAuthCodeAsync(
-            string code)
-        {
-            return await CheckAuthenticationAsync();
-        }
+            string code) 
+            => await CheckAuthenticationAsync();
 
         /// <summary>
         /// Asynchronously checks the authentication.

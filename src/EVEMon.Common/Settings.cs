@@ -180,7 +180,7 @@ namespace EVEMon.Common
             IsRestoringSettings = true;
             try
             {
-                EveMonClient.Trace("Settings.Import - begin");
+                EveMonClient.Trace("begin");
 
                 // Global settings
                 Compatibility = serial.Compatibility;
@@ -226,7 +226,7 @@ namespace EVEMon.Common
                 // Notify the subscribers
                 EveMonClient.OnSettingsChanged();
 
-                EveMonClient.Trace("Settings.Import - done");
+                EveMonClient.Trace("done");
             }
             finally
             {
@@ -406,7 +406,7 @@ namespace EVEMon.Common
             if (String.IsNullOrWhiteSpace(fileContent))
                 return null;
 
-            EveMonClient.Trace("Settings.TryDeserializeFromFileContent - begin");
+            EveMonClient.Trace("begin");
 
             // Gets the revision number of the assembly which generated this file
             int revision = Util.GetRevisionNumber(fileContent);
@@ -419,7 +419,7 @@ namespace EVEMon.Common
 
             if (settings != null)
             {
-                EveMonClient.Trace("Settings.TryDeserializeFromFileContent - done");
+                EveMonClient.Trace("done");
                 return settings;
             }
 
@@ -433,7 +433,7 @@ namespace EVEMon.Common
                 return TryDeserializeFromFile();
 
             MessageBox.Show("A new settings file will be created.\n"
-                            + "You may wish then to restore a saved copy of the file.", Caption,
+                            + @"You may wish then to restore a saved copy of the file.", Caption,
                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
             return null;
@@ -476,7 +476,7 @@ namespace EVEMon.Common
             if (!File.Exists(settingsFile))
                 return TryDeserializeFromBackupFile(backupFile);
 
-            EveMonClient.Trace("Settings.TryDeserializeFromFile - begin");
+            EveMonClient.Trace("begin");
 
             // Check settings file length
             FileInfo settingsInfo = new FileInfo(settingsFile);
@@ -496,7 +496,7 @@ namespace EVEMon.Common
 
             CheckSettingsVersion(settings);
             FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-            EveMonClient.Trace("Settings.TryDeserializeFromFile - done");
+            EveMonClient.Trace("done");
             return settings;
         }
 
@@ -514,7 +514,7 @@ namespace EVEMon.Common
             if (!File.Exists(backupFile))
                 return null;
 
-            EveMonClient.Trace("Settings.TryDeserializeFromBackupFile - begin");
+            EveMonClient.Trace("begin");
 
             // Check backup settings file length
             FileInfo backupInfo = new FileInfo(backupFile);
@@ -539,7 +539,7 @@ namespace EVEMon.Common
                 if (dialogResult == DialogResult.No)
                 {
                     MessageBox.Show("A new settings file will be created.\n"
-                                    + "You may wish then to restore a saved copy of the file.", Caption,
+                                    + @"You may wish then to restore a saved copy of the file.", Caption,
                         MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                     // Save a copy of the corrupt file just in case
@@ -562,7 +562,7 @@ namespace EVEMon.Common
                 CheckSettingsVersion(settings);
                 FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
                 FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
-                EveMonClient.Trace("Settings.TryDeserializeFromBackupFile - done");
+                EveMonClient.Trace("done");
                 return settings;
             }
 
@@ -570,7 +570,7 @@ namespace EVEMon.Common
             {
                 // Backup failed too, notify the user we have a problem
                 MessageBox.Show("Loading from backup failed.\nA new settings file will be created.\n"
-                                + "You may wish then to restore a saved copy of the file.",
+                                + @"You may wish then to restore a saved copy of the file.",
                     Caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                 // Save a copy of the corrupt file just in case
@@ -579,8 +579,7 @@ namespace EVEMon.Common
             else
             {
                 // Restoring from file failed
-                MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                    "Restoring settings from {0} failed, the file is corrupted.", backupFile),
+                MessageBox.Show($"Restoring settings from {backupFile} failed, the file is corrupted.",
                     Caption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
@@ -601,8 +600,8 @@ namespace EVEMon.Common
 
             DialogResult backupSettings =
                 MessageBox.Show("The current EVEMon settings file is from a previous version.\n" +
-                                "Backup the current file before proceeding (recommended)?",
-                    "EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                @"Backup the current file before proceeding (recommended)?",
+                    @"EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button1);
 
             if (backupSettings != DialogResult.Yes)

@@ -92,8 +92,7 @@ namespace EVEMon.Common.Collections.Global
                 }
                 catch (ArgumentException ex)
                 {
-                    EveMonClient.Trace("GlobalAPIKeyCollection.Import - " +
-                                       "An API key with id {0} already existed; additional instance ignored.", apikey.ID);
+                    EveMonClient.Trace($"An API key with id {apikey.ID} already existed; additional instance ignored.");
                     ExceptionHandler.LogException(ex, true);
                 }
             }

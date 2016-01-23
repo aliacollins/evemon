@@ -55,7 +55,7 @@ namespace EVEMon
 
             // Creates a trace file
             EveMonClient.StartTraceLogging();
-            EveMonClient.Trace("Starting up");
+            EveMonClient.Trace("Starting up", false);
 
             // Make our windows nice
             MakeWindowsJuicy();
@@ -85,10 +85,10 @@ namespace EVEMon
             try
             {
                 // Fires the main window
-                EveMonClient.Trace("Main loop - start");
+                EveMonClient.Trace("Main loop - start", printMethod: false);
                 s_mainWindow = new MainWindow(startMinimized);
                 Application.Run(s_mainWindow);
-                EveMonClient.Trace("Main loop - done");
+                EveMonClient.Trace("Main loop - done", printMethod: false);
             }
             finally
             {
@@ -98,7 +98,7 @@ namespace EVEMon
 
                 // Stop the one-second timer right now
                 EveMonClient.Shutdown();
-                EveMonClient.Trace("Closed");
+                EveMonClient.Trace("Closed", false);
                 EveMonClient.StopTraceLogging();
             }
         }

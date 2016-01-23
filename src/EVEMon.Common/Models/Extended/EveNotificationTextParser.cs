@@ -5,7 +5,6 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.Net;
 using EVEMon.Common.Service;
 using YamlDotNet.RepresentationModel;
-using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Models.Extended
 {
@@ -35,7 +34,7 @@ namespace EVEMon.Common.Models.Extended
             if (s_parser != null && s_cachedUntil > DateTime.UtcNow)
                 return s_parser;
 
-            if (!EveMonClient.IsDebugBuild)
+            //if (!EveMonClient.IsDebugBuild)
                 GetExternalParser();
             
             return new InternalEveNotificationTextParser();
@@ -49,10 +48,9 @@ namespace EVEMon.Common.Models.Extended
             if (s_queryPending)
                 return;
 
-            EveMonClient.Trace("EveNotificationTextParser.GetExternalParser - begin");
+            EveMonClient.Trace("begin");
 
-            Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.BitBucketWikiBase,
-                NetworkConstants.ExternalEveNotificationTextParser));
+            Uri url = new Uri($"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.ExternalEveNotificationTextParser}");
 
             s_queryPending = true;
 
@@ -73,7 +71,6 @@ namespace EVEMon.Common.Models.Extended
                 // Reset query pending flag
                 s_queryPending = false;
 
-                EveMonClient.Trace("EveNotificationTextParser.GetExternalParser - failed");
                 EveMonClient.Trace(result.Error.Message);
                 return;
             }
@@ -88,10 +85,9 @@ namespace EVEMon.Common.Models.Extended
 
             s_cachedUntil = DateTime.UtcNow.AddHours(12);
 
-            EveMonClient.Trace("EveNotificationTextParser.GetExternalParser - done");
+            EveMonClient.Trace("done");
 
             // Notify the subscribers
-            EveMonClient.Trace("EveNotificationTextParser.OnNotificationTextParserUpdated");
             NotificationTextParserUpdated?.Invoke(null, EventArgs.Empty);
         }
     }

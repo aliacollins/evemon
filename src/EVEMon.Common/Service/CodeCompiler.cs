@@ -71,7 +71,7 @@ namespace EVEMon.Common.Service
                 if (!results.Errors.HasErrors)
                     return results.CompiledAssembly;
 
-                results.Errors.OfType<CompilerError>().ToList().ForEach(x => EveMonClient.Trace(x.ErrorText));
+                results.Errors.OfType<CompilerError>().ToList().ForEach(error => EveMonClient.Trace(error.ErrorText, false));
             }
             catch (Exception exc)
             {

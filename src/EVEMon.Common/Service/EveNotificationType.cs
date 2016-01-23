@@ -126,16 +126,16 @@ namespace EVEMon.Common.Service
         {
             if (result == null)
             {
-                EveMonClient.Trace("NotificationRefTypes.Import - failed");
+                EveMonClient.Trace("failed");
                 return;
             }
 
-            EveMonClient.Trace("NotificationRefTypes.Import - begin");
+            EveMonClient.Trace("begin");
 
             s_notificationRefTypes = result.Types.ToList();
             s_loaded = true;
 
-            EveMonClient.Trace("NotificationRefTypes.Import - done");
+            EveMonClient.Trace("done");
         }
 
         /// <summary>
@@ -170,7 +170,6 @@ namespace EVEMon.Common.Service
                 // Reset query pending flag
                 s_queryPending = false;
 
-                EveMonClient.Trace("NotificationRefTypes.UpdateFile - failed");
                 EveMonClient.Trace(result.ErrorMessage);
 
                 // Fallback
