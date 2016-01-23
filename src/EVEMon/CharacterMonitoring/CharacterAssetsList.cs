@@ -57,8 +57,8 @@ namespace EVEMon.CharacterMonitoring
             lvAssets.Visible = false;
             lvAssets.AllowColumnReorder = true;
             lvAssets.Columns.Clear();
-
-            estimatedCostFlowLayoutPanel.Visible = false;
+            estimatedCostPanel.Hide();
+            noPricesFoundLabel.Hide();
 
             noAssetsLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
 
@@ -229,12 +229,12 @@ namespace EVEMon.CharacterMonitoring
             // Prevents the properties to call UpdateColumns() till we set all properties
             m_init = false;
 
-            lvAssets.Visible = false;
-            estimatedCostFlowLayoutPanel.Visible = false;
+            lvAssets.Hide();
+            estimatedCostPanel.Hide();
 
-            Assets = Character == null ? null : Character.Assets;
+            Assets = Character?.Assets;
             Columns = Settings.UI.MainWindow.Assets.Columns;
-            Grouping = (Character == null ? AssetGrouping.None : Character.UISettings.AssetsGroupBy);
+            Grouping = Character?.UISettings.AssetsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -365,6 +365,16 @@ namespace EVEMon.CharacterMonitoring
             lblTotalCost.Text = String.Format(CultureConstants.DefaultCulture, m_totalCostLabelDefaultText,
                 assets.Sum(asset => asset.Price * asset.Quantity));
 
+            if (assets.All(x => Math.Abs(x.Price) < double.Epsilon))
+            {
+                noPricesFoundLabel.Hide();
+                throbber.Show();
+                throbber.State = ThrobberState.Rotating;
+                return;
+            }
+
+            throbber.State = ThrobberState.Stopped;
+            throbber.Hide();
             noPricesFoundLabel.Visible = assets.Any(asset => Math.Abs(asset.Price) < double.Epsilon);
         }
 
@@ -378,7 +388,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             noAssetsLabel.Visible = lvAssets.Items.Count == 0;
-            estimatedCostFlowLayoutPanel.Visible = !noAssetsLabel.Visible;
+            estimatedCostPanel.Visible = !noAssetsLabel.Visible;
             lvAssets.Visible = !noAssetsLabel.Visible;
         }
 
