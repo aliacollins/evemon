@@ -4,32 +4,25 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
-using EVEMon.Common.Threading;
-using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Service
 {
-    public delegate void GetImageCallback(Image i);
-
     public static class ImageService
     {
-        private static readonly Object s_syncLock = new object();
-
         /// <summary>
         /// Gets the image server CDN URI.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns></returns>
         public static Uri GetImageServerCdnUri(string path)
-        {
-            return new Uri(
+            => new Uri(
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageServerCDN, path));
-        }
 
         /// <summary>
         /// Gets the image server base URI.
@@ -37,31 +30,20 @@ namespace EVEMon.Common.Service
         /// <param name="path">The path.</param>
         /// <returns></returns>
         public static Uri GetImageServerBaseUri(string path)
-        {
-            return new Uri(
+            => new Uri(
                 String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageServerBase, path));
-        }
 
         /// <summary>
         /// Asynchronously downloads a character portrait from its ID.
         /// </summary>
         /// <param name="charId"></param>
-        /// <param name="callback">Callback that will be invoked on the UI thread.</param>
-        internal static void GetCharacterImageAsync(long charId, GetImageCallback callback)
+        internal static async Task<Image> GetCharacterImageAsync(long charId)
         {
             string path = String.Format(CultureConstants.InvariantCulture,
                 NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128);
 
-            GetImageAsync(GetImageServerCdnUri(path), img =>
-            {
-                if (img == null)
-                {
-                    GetImageAsync(GetImageServerBaseUri(path), callback, false);
-                    return;
-                }
-
-                callback(img);
-            }, false);
+            return await GetImageAsync(GetImageServerCdnUri(path), false) ??
+                   await GetImageAsync(GetImageServerBaseUri(path), false);
         }
 
         /// <summary>
@@ -74,27 +56,7 @@ namespace EVEMon.Common.Service
             string path = String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
                 "alliance", allianceID, pictureBox.Width);
 
-            GetImageAsync(GetImageServerCdnUri(path), (img =>
-            {
-                if (img == null)
-                {
-                    GetImageAsync(GetImageServerBaseUri(path), (image => OnDownload(pictureBox, image)));
-                    return;
-                }
-
-                OnDownload(pictureBox, img);
-            }));
-        }
-
-        /// <summary>
-        /// Called when image gets downloaded.
-        /// </summary>
-        /// <param name="pictureBox">The picture box.</param>
-        /// <param name="image">The image.</param>
-        private static void OnDownload(PictureBox pictureBox, Image image)
-        {
-            pictureBox.Image = image ?? pictureBox.InitialImage;
-            pictureBox.Update();
+            GetImageAsync(pictureBox, path);
         }
 
         /// <summary>
@@ -107,21 +69,21 @@ namespace EVEMon.Common.Service
             string path = String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
                 "corporation", corporationID, pictureBox.Width);
 
-            GetImageAsync(GetImageServerCdnUri(path), (img =>
-            {
-                if (img == null)
-                {
-                    GetImageAsync(GetImageServerBaseUri(path), (image =>
-                    {
-                        pictureBox.Image = image ?? pictureBox.InitialImage;
-                        pictureBox.Update();
-                    }));
-                    return;
-                }
+            GetImageAsync(pictureBox, path);
+        }
 
-                pictureBox.Image = img;
-                pictureBox.Update();
-            }));
+        /// <summary>
+        /// Called when image gets downloaded.
+        /// </summary>
+        /// <param name="pictureBox">The picture box.</param>
+        /// <param name="path">The path.</param>
+        private static async void GetImageAsync(PictureBox pictureBox, string path)
+        {
+            Image image = await GetImageAsync(GetImageServerCdnUri(path)) ??
+                        await GetImageAsync(GetImageServerBaseUri(path));
+
+            pictureBox.Image = image ?? pictureBox.InitialImage;
+            pictureBox.Update();
         }
 
         /// <summary>
@@ -129,19 +91,21 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
-        /// <param name="callback">Callback that will be invoked on the UI thread.</param>
-        public static async void GetImageAsync(Uri url, GetImageCallback callback, bool useCache = true)
-        {          
+        public static async Task<Image> GetImageAsync(Uri url, bool useCache = true)
+        {
+            DownloadAsyncResult<Image> result;
+
             // Cache not to be used ?
             if (!useCache)
             {
-                GotImage(await HttpWebClientService.DownloadImageAsync(url), callback);
-                return;
+                result = await HttpWebClientService.DownloadImageAsync(url);
+                return GotImage(result);
             }
 
             // First check whether the image exists in cache
             EveMonClient.EnsureCacheDirInit();
-            string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
+            string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, await GetCacheName(url));
+
             if (File.Exists(cacheFileName))
             {
                 try
@@ -160,8 +124,7 @@ namespace EVEMon.Common.Service
 
                         image = Image.FromStream(stream);
                     }
-                    callback(image);
-                    return;
+                    return image;
                 }
                 catch (ArgumentException e)
                 {
@@ -179,30 +142,96 @@ namespace EVEMon.Common.Service
             }
 
             // Downloads the image and adds it to cache
-            GotImage(await HttpWebClientService.DownloadImageAsync(url), (GetImageCallback)(img =>
-            {
-                if (img != null)
-                    AddImageToCache(url, img);
+            result = await HttpWebClientService.DownloadImageAsync(url);
+            Image img = GotImage(result);
 
-                callback(img);
-            }));
+            if (img != null)
+                await AddImageToCache(url, img);
+
+            return img;
         }
 
         /// <summary>
-        /// Adds the image to the memory cache, flush the cache to the hard drive, then save the image to a cached file.
+        /// Asynchronously gets the character image from cache.
+        /// </summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns></returns>
+        public static Task<Image> GetCharacterImageFromCacheAsync(Guid guid)
+            => Task.Run(() =>
+            {
+                // First check whether the image exists in cache
+                EveMonClient.EnsureCacheDirInit();
+                string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir, $"{guid}.png");
+
+                if (!File.Exists(cacheFileName))
+                    return null;
+
+                try
+                {
+                    // Load the data into a MemoryStream
+                    // before returning the image
+                    // to avoid file locking
+                    Image image;
+
+                    byte[] imageBytes = File.ReadAllBytes(cacheFileName);
+
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        stream.Write(imageBytes, 0, imageBytes.Length);
+                        stream.Position = 0;
+
+                        image = Image.FromStream(stream);
+                    }
+                    return image;
+                }
+                catch (ArgumentException e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                    File.Delete(cacheFileName);
+                }
+                catch (IOException e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                }
+                catch (UnauthorizedAccessException e)
+                {
+                    ExceptionHandler.LogException(e, false);
+                }
+
+                return null;
+            });
+
+        /// <summary>
+        /// Callback used when images are downloaded, it takes care to invoke another callback provided as our user state.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        private static Image GotImage(DownloadAsyncResult<Image> result)
+        {
+            if (result.Error == null)
+                return result.Result;
+
+            if (result.Error.Status == HttpWebClientServiceExceptionStatus.Timeout)
+                EveMonClient.Trace(result.Error.Message);
+            else
+                ExceptionHandler.LogException(result.Error, true);
+
+            return null;
+        }
+
+        /// <summary>
+        /// Adds the image to the cache.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="image"></param>
-        private static void AddImageToCache(Uri url, Image image)
-        {
-            lock (s_syncLock)
+        private static Task AddImageToCache(Uri url, Image image)
+            => Task.Run(async () =>
             {
                 // Saves the image file
                 try
                 {
                     // Write this image to the cache file
                     EveMonClient.EnsureCacheDirInit();
-                    string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
+                    string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, await GetCacheName(url));
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName,
                         fs =>
                         {
@@ -220,49 +249,58 @@ namespace EVEMon.Common.Service
                     ExceptionHandler.LogRethrowException(ex);
                     throw;
                 }
-            }
-        }
+            });
+
+        /// <summary>
+        /// Adds the portrait to the cache.
+        /// </summary>
+        /// <param name="guid">The unique identifier.</param>
+        /// <param name="image">The image.</param>
+        /// <returns></returns>
+        internal static Task AddCharacterImageToCache(Guid guid, Image image)
+            => Task.Run(() =>
+            {
+                // Saves the image file
+                try
+                {
+                    // Save the image to the portrait cache file
+                    EveMonClient.EnsureCacheDirInit();
+                    string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir, $"{guid}.png");
+                    FileHelper.OverwriteOrWarnTheUser(cacheFileName,
+                        fs =>
+                        {
+                            // We need to create a copy of the image because GDI+ is locking it
+                            using (Image newImage = new Bitmap(image))
+                            {
+                                newImage.Save(fs, ImageFormat.Png);
+                                fs.Flush();
+                            }
+                            return true;
+                        });
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.LogRethrowException(ex);
+                    throw;
+                }
+            });
 
         /// <summary>
         /// From a given url, computes a cache file name.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        private static string GetCacheName(Uri url)
-        {
-            Match extensionMatch = Regex.Match(url.AbsoluteUri, @"([^\.]+)$");
-            string ext = String.Empty;
-            if (extensionMatch.Success)
-                ext = "." + extensionMatch.Groups[1];
-
-            Stream stream = Util.GetMemoryStream(Encoding.UTF8.GetBytes(url.AbsoluteUri));
-            string md5Sum = Util.CreateMD5(stream);
-            return String.Concat(md5Sum, ext);
-        }
-
-        /// <summary>
-        /// Callback used when images are downloaded, it takes care to invoke another callback provided as our user state.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        /// <param name="state">The state.</param>
-        private static void GotImage(DownloadAsyncResult<Image> result, object state)
-        {
-            GetImageCallback callback = (GetImageCallback)state;
-
-            if (result.Error == null)
+        private static Task<string> GetCacheName(Uri url)
+            => Task.Run(() =>
             {
-                // Invokes on the UI thread
-                Dispatcher.BeginInvoke(() => callback(result.Result));
-            }
-            else
-            {
-                if (result.Error.Status == HttpWebClientServiceExceptionStatus.Timeout)
-                    EveMonClient.Trace("ImageService: {0}", result.Error.Message);
-                else
-                    ExceptionHandler.LogException(result.Error, true);
+                Match extensionMatch = Regex.Match(url.AbsoluteUri, @"([^\.]+)$");
+                string ext = String.Empty;
+                if (extensionMatch.Success)
+                    ext = "." + extensionMatch.Groups[1];
 
-                callback(null);
-            }
-        }
+                Stream stream = Util.GetMemoryStream(Encoding.UTF8.GetBytes(url.AbsoluteUri));
+                string md5Sum = Util.CreateMD5(stream);
+                return String.Concat(md5Sum, ext);
+            });
     }
 }

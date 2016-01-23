@@ -21,6 +21,8 @@ namespace EVEMon.Common.Service
     public static class Emailer
     {
         private static SmtpClient s_smtpClient;
+        private static MailMessage s_mailMessage;
+        private static bool s_isTestMail;
 
         /// <summary>
         /// Sends a test mail
@@ -32,9 +34,10 @@ namespace EVEMon.Common.Service
         /// is changing settings.
         /// </remarks>
         /// <returns>False if an exception was thrown, otherwise True.</returns>
-        public static bool SendTestMail(NotificationSettings settings)
+        public static void SendTestMail(NotificationSettings settings)
         {
-            return SendMail(settings, "EVEMon Test Mail", "This is a test email sent by EVEMon");
+            s_isTestMail = true;
+            SendMail(settings, "EVEMon Test Mail", "This is a test email sent by EVEMon");
         }
 
         /// <summary>
@@ -46,11 +49,13 @@ namespace EVEMon.Common.Service
         /// <returns></returns>
         public static void SendSkillCompletionMail(IList<QueuedSkill> queueList, QueuedSkill skill, Character character)
         {
+            s_isTestMail = false;
+
             if (queueList == null)
-                throw new ArgumentNullException("queueList");
+                throw new ArgumentNullException(nameof(queueList));
 
             if (skill == null)
-                throw new ArgumentNullException("skill");
+                throw new ArgumentNullException(nameof(skill));
 
             CCPCharacter ccpCharacter = character as CCPCharacter;
 
@@ -64,22 +69,27 @@ namespace EVEMon.Common.Service
 
             // Message's first line
             StringBuilder body = new StringBuilder();
-            body.AppendFormat(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}.{3}{3}", charName, skillName,
-                              skillLevelString, Environment.NewLine);
+            body.Append($"{charName} has finished training {skillName} {skillLevelString}.")
+                .AppendLine()
+                .AppendLine();
 
             // Next skills in queue
             if (queueList[0] != null)
             {
-                body.AppendFormat(CultureConstants.DefaultCulture, "Next skill{0} in queue:{1}",
-                                  (queueList.Count > 1 ? "s" : String.Empty), Environment.NewLine);
+                var plural = queueList.Count > 1 ? "s" : String.Empty;
+                body.Append($"Next skill{plural} in queue:")
+                    .AppendLine();
+
                 foreach (QueuedSkill qskill in queueList)
                 {
-                    body.AppendFormat(CultureConstants.DefaultCulture, "- {0}{1}", qskill, Environment.NewLine);
+                    body.AppendFormat($"- {qskill}").AppendLine();
                 }
                 body.AppendLine();
             }
             else
-                body.AppendFormat(CultureConstants.DefaultCulture, "Character is not training.{0}{0}", Environment.NewLine);
+                body.Append("Character is not training.")
+                    .AppendLine()
+                    .AppendLine();
 
             // Free room in skill queue
             DateTime skillQueueEndTime = ccpCharacter.SkillQueue.EndTime;
@@ -87,22 +97,27 @@ namespace EVEMon.Common.Service
             {
                 TimeSpan timeLeft = DateTime.UtcNow.AddHours(EveConstants.SkillQueueDuration).Subtract(skillQueueEndTime);
                 string timeLeftText = timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false);
-                body.AppendFormat(CultureConstants.DefaultCulture, "There is also {0} free room in skill queue.{1}", timeLeftText,
-                                  Environment.NewLine);
+                body.Append($"There is also {timeLeftText} free room in skill queue.")
+                    .AppendLine();
             }
 
             // Short format (also for SMS)
             if (Settings.Notifications.UseEmailShortFormat)
             {
                 SendMail(Settings.Notifications,
-                         String.Format(CultureConstants.DefaultCulture, "[STC] {0} :: {1} {2}", charName, skillName,
-                                       skillLevelString), body.ToString());
+                    $"[STC] {charName} :: {skillName} {skillLevelString}",
+                    body.ToString());
+
                 return;
             }
 
             // Long format
             if (character.Plans.Count > 0)
-                body.AppendFormat(CultureConstants.DefaultCulture, "Next skills listed in plans:{0}{0}", Environment.NewLine);
+            {
+                body.Append("Next skills listed in plans:")
+                    .AppendLine()
+                    .AppendLine();
+            }
 
             foreach (Plan plan in character.Plans)
             {
@@ -111,7 +126,7 @@ namespace EVEMon.Common.Service
 
                 // Print plan name
                 CharacterScratchpad scratchpad = new CharacterScratchpad(character);
-                body.AppendFormat(CultureConstants.DefaultCulture, "{0}:{1}", plan.Name, Environment.NewLine);
+                body.Append($"{plan.Name}:").AppendLine();
 
                 // Scroll through entries
                 int i = 0;
@@ -119,7 +134,7 @@ namespace EVEMon.Common.Service
                 foreach (PlanEntry entry in plan)
                 {
                     TimeSpan trainTime = scratchpad.GetTrainingTime(entry.Skill, entry.Level,
-                                                                    TrainingOrigin.FromPreviousLevelOrCurrent);
+                        TrainingOrigin.FromPreviousLevelOrCurrent);
 
                     // Only print the first three skills, and the very long skills
                     // (first limit is one day, then we add skills duration)
@@ -130,34 +145,27 @@ namespace EVEMon.Common.Service
                     {
                         // Print long message once
                         if (minDays == 1)
-                        {
-                            body.AppendFormat(CultureConstants.DefaultCulture, "{1}Longer skills from {0}:{1}", plan.Name,
-                                              Environment.NewLine);
-                        }
+                            body.AppendLine().Append($"Longer skills from {plan.Name}:").AppendLine();
 
                         minDays = trainTime.Days + minDays;
                     }
-                    body.AppendFormat(CultureConstants.DefaultCulture, "\t{0}", entry);
+                    body.Append($"\t{entry}");
 
                     // Notes
                     if (!string.IsNullOrEmpty(entry.Notes))
-                        body.AppendFormat(CultureConstants.DefaultCulture, " ({0})", entry.Notes);
+                        body.Append($" ({entry.Notes})");
 
                     // Training time
-                    if (trainTime.Days > 0)
-                        body.AppendFormat(CultureConstants.DefaultCulture, " - {0}d, {1}", trainTime.Days, trainTime);
-                    else
-                        body.AppendFormat(CultureConstants.DefaultCulture, " - {0}", trainTime);
+                    body.Append(trainTime.Days > 0 ? $" - {trainTime.Days}d, {trainTime}" : $" - {trainTime}");
 
                     body.AppendLine();
                 }
                 body.AppendLine();
             }
 
-            string subject = String.Format(CultureConstants.DefaultCulture, "{0} has finished training {1} {2}", charName,
-                                           skillName, skillLevelString);
-
-            SendMail(Settings.Notifications, subject, body.ToString());
+            SendMail(Settings.Notifications,
+                $"{charName} has finished training {charName} {skillLevelString}",
+                body.ToString());
         }
 
         /// <summary>
@@ -168,15 +176,28 @@ namespace EVEMon.Common.Service
         private static void SendCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Cancelled)
-                EveMonClient.Trace("Emailer.SendCompleted - The last message was cancelled");
+            {
+                EveMonClient.Trace("The last message was cancelled");
+            }
             else if (e.Error != null)
             {
-                EveMonClient.Trace("Emailer.SendCompleted - An error occurred");
-                ExceptionHandler.LogException(e.Error, false);
-                MessageBox.Show(e.Error.Message, "EVEMon Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                EveMonClient.Trace("An error occurred");
+                ExceptionHandler.LogException(e.Error, true);
+                MessageBox.Show(e.Error.Message, @"EVEMon Emailer Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
-                EveMonClient.Trace("Emailer.SendCompleted - Message sent.");
+            {
+                if (s_isTestMail)
+                {
+                    MessageBox.Show(@"The message sent successfully. Please verify that the message was received.",
+                        @"EVEMon Emailer Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                EveMonClient.Trace("Message sent.");
+            }
+
+            s_mailMessage.Dispose();
+            s_smtpClient.Dispose();
         }
 
         /// <summary>
@@ -192,17 +213,14 @@ namespace EVEMon.Common.Service
         /// Settings.Notifications unless using an alternative
         /// configuration.
         /// </remarks>
-        private static bool SendMail(NotificationSettings settings, string subject, string body)
+        private static void SendMail(NotificationSettings settings, string subject, string body)
         {
             // Trace something to the logs so we can identify the time the message was sent
-            EveMonClient.Trace("Emailer.SendMail: Subject - {0}; Server - {1}:{2}",
-                               subject,
-                               settings.EmailSmtpServerAddress,
-                               settings.EmailPortNumber);
+            EveMonClient.Trace($"(Subject - {subject}; Server - {settings.EmailSmtpServerAddress}:{settings.EmailPortNumber})");
 
             string sender = String.IsNullOrEmpty(settings.EmailFromAddress)
-                                ? "evemonclient@battleclinic.com"
-                                : settings.EmailFromAddress;
+                ? "no-reply@evemon.net"
+                : settings.EmailFromAddress;
 
             List<string> toAddresses = settings.EmailToAddress.Split(
                 new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -210,51 +228,60 @@ namespace EVEMon.Common.Service
             try
             {
                 // Set up message
-                MailMessage msg = new MailMessage();
-                toAddresses.ForEach(address => msg.To.Add(address.Trim()));
-                msg.From = new MailAddress(sender);
-                msg.Subject = subject;
-                msg.Body = body;
+                s_mailMessage = new MailMessage();
+                toAddresses.ForEach(address => s_mailMessage.To.Add(address.Trim()));
+                s_mailMessage.From = new MailAddress(sender);
+                s_mailMessage.Subject = subject;
+                s_mailMessage.Body = body;
 
                 // Set up client
-                s_smtpClient = new SmtpClient();
-
-                s_smtpClient.SendCompleted += SendCompleted;
-                s_smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                s_smtpClient.Timeout = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds;
-                
-                // Host and port
-                s_smtpClient.Host = settings.EmailSmtpServerAddress;
-                s_smtpClient.Port = settings.EmailPortNumber;
-
-                // SSL
-                s_smtpClient.EnableSsl = settings.EmailServerRequiresSsl;
-                ServicePointManager.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
-
-                // Credentials
-                if (settings.EmailAuthenticationRequired)
-                {
-                    s_smtpClient.UseDefaultCredentials = false;
-                    s_smtpClient.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
-                                                                     Util.Decrypt(settings.EmailAuthenticationPassword,
-                                                                     settings.EmailAuthenticationUserName));
-                }
+                s_smtpClient = GetClient(settings);
 
                 // Send message
-                s_smtpClient.SendAsync(msg, null);
+                s_smtpClient.SendAsync(s_mailMessage, null);
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler.LogException(e, true);
+                MessageBox.Show(@"The message failed to send.", @"EVEMon Emailer Failure", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+        }
 
-                return true;
-            }
-            catch (InvalidOperationException e)
+        /// <summary>
+        /// Gets the client.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        private static SmtpClient GetClient(NotificationSettings settings)
+        {
+            SmtpClient client = new SmtpClient
             {
-                ExceptionHandler.LogException(e, true);
-                return false;
-            }
-            catch (SmtpException e)
-            {
-                ExceptionHandler.LogException(e, true);
-                return false;
-            }
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Timeout = (int)TimeSpan.FromSeconds(Settings.Updates.HttpTimeout).TotalMilliseconds,
+
+                // Host and port
+                Host = settings.EmailSmtpServerAddress,
+                Port = settings.EmailPortNumber,
+
+                // SSL
+                EnableSsl = settings.EmailServerRequiresSsl
+            };
+
+            ServicePointManager.ServerCertificateValidationCallback = (s, certificate, chain, sslPolicyErrors) => true;
+
+            client.SendCompleted += SendCompleted;
+
+            if (!settings.EmailAuthenticationRequired)
+                return client;
+
+            // Credentials
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(settings.EmailAuthenticationUserName,
+                Util.Decrypt(settings.EmailAuthenticationPassword,
+                    settings.EmailAuthenticationUserName));
+
+            return client;
         }
     }
 }

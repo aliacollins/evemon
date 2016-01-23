@@ -75,10 +75,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Gets the number of events.
         /// </summary>
-        public int ItemCount
-        {
-            get { return Events.Count; }
-        }
+        public int ItemCount => Events.Count;
 
         /// <summary>
         /// Gets the events.

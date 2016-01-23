@@ -33,15 +33,15 @@ namespace EVEMon
         [STAThread]
         private static void Main()
         {
+            // Quits if another instance already exists
+            if (!IsInstanceUnique)
+                return;
+
             // Check if we are in DEBUG mode 
             EveMonClient.CheckIsDebug();
 
             // Check if we are in SNAPSHOT mode 
             EveMonClient.CheckIsSnapshot();
-
-            // Quits non-debug builds if another instance already exists
-            if (!EveMonClient.IsDebugBuild && !IsInstanceUnique)
-                return;
 
             // Subscribe application's events (especially the unhandled exceptions management for the crash box)
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -55,7 +55,7 @@ namespace EVEMon
 
             // Creates a trace file
             EveMonClient.StartTraceLogging();
-            EveMonClient.Trace("Starting up");
+            EveMonClient.Trace("Starting up", false);
 
             // Make our windows nice
             MakeWindowsJuicy();
@@ -85,10 +85,10 @@ namespace EVEMon
             try
             {
                 // Fires the main window
-                EveMonClient.Trace("Main loop - start");
+                EveMonClient.Trace("Main loop - start", printMethod: false);
                 s_mainWindow = new MainWindow(startMinimized);
                 Application.Run(s_mainWindow);
-                EveMonClient.Trace("Main loop - done");
+                EveMonClient.Trace("Main loop - done", printMethod: false);
             }
             finally
             {
@@ -98,7 +98,7 @@ namespace EVEMon
 
                 // Stop the one-second timer right now
                 EveMonClient.Shutdown();
-                EveMonClient.Trace("Closed");
+                EveMonClient.Trace("Closed", false);
                 EveMonClient.StopTraceLogging();
             }
         }

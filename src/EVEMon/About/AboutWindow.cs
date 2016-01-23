@@ -184,7 +184,7 @@ namespace EVEMon.About
             AddDevelopersToListView();
 
             AddLinkToLabel(ccpGamesLinkLabel, "CCP Games", "http://www.ccpgames.com/");
-            AddLinkToLabel(ccpDocsLinkLabel, "CCP 3rd party docs", "https://github.com/ccpgames/eveonline-third-party-documentation/");
+            AddLinkToLabel(ccpDocsLinkLabel, "CCP 3rd party docs", "https://eveonline-third-party-documentation.readthedocs.org/en/latest/");
             AddLinkToLabel(eveCentralLinkLabel, "EVE-Central", "http://www.eve-central.com/");
             AddLinkToLabel(eveMarketDataLinkLabel, "EVE-MarketData", "http://eve-marketdata.com/");
             AddLinkToLabel(googleApisLinkLabel, "Google", "https://github.com/google/google-api-dotnet-client/");

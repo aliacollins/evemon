@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
@@ -91,21 +92,20 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="pictureBox">The picture box.</param>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private void GetImageFor(PictureBox pictureBox, bool useFallbackUri = false)
+        private async void GetImageFor(PictureBox pictureBox, bool useFallbackUri = false)
         {
-            ImageService.GetImageAsync(GetImageUrl(pictureBox, useFallbackUri), img =>
+            while (true)
             {
-                if (img == null)
+                Image img = await ImageService.GetImageAsync(GetImageUrl(pictureBox, useFallbackUri));
+                if (img == null && !useFallbackUri)
                 {
-                    if (useFallbackUri)
-                        return;
-
-                    GetImageFor(pictureBox, true);
-                    return;
+                    useFallbackUri = true;
+                    continue;
                 }
 
                 pictureBox.Image = img;
-            });
+                break;
+            }
         }
 
         /// <summary>

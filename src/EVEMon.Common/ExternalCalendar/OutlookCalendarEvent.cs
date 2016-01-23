@@ -78,9 +78,8 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="eventExists">if set to <c>true</c> the event exists.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        internal override async Task AddOrUpdateEvent(bool eventExists, int queuePosition, bool lastSkillInQueue)
-        {
-            await Task.Run(() =>
+        internal override Task AddOrUpdateEvent(bool eventExists, int queuePosition, bool lastSkillInQueue)
+            => Task.Run(() =>
             {
                 AppointmentItem eventItem = eventExists
                     ? (AppointmentItem)Events[0]
@@ -137,7 +136,6 @@ namespace EVEMon.Common.ExternalCalendar
                 eventItem.ReminderMinutesBeforeStart = eventItem.ReminderSet ? Minutes : 0;
                 eventItem.Save();
             });
-        }
 
         /// <summary>
         /// Get the relevant event item and populate the details.
@@ -162,8 +160,8 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Pull all the events and populate the event array.
         /// </summary>
-        internal override async Task ReadEvents()
-            => await Task.Run(() =>
+        internal override Task ReadEvents()
+            => Task.Run(() =>
             {
                 Events.Clear();
                 Events.AddRange(GetEventItems());
@@ -173,13 +171,11 @@ namespace EVEMon.Common.ExternalCalendar
         /// Delete the specified event.
         /// </summary>
         /// <param name="eventIndex">The event index.</param>
-        internal override async Task DeleteEvent(int eventIndex)
-        {
-            await Task.Run(() =>
+        internal override Task DeleteEvent(int eventIndex)
+            => Task.Run(() =>
             {
                 ((AppointmentItem)Events[eventIndex]).Delete();
             });
-        }
 
         /// <summary>
         /// Gets true if the Outlook calendar exist.

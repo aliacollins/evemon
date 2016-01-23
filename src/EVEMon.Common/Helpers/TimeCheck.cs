@@ -4,117 +4,117 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using EVEMon.Common.Constants;
+using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Helpers
 {
-    public delegate void TimeSynchronisationCallback(bool isSynchronised, DateTime serverTime, DateTime localTime);
-
     /// <summary>
     /// Ensures synchronization of local time to a known time source.
     /// </summary>
     public static class TimeCheck
     {
         /// <summary>
-        /// Asynchronous method to determine if the user's clock is syncrhonised to NIST time.
+        /// Occurs when time check completed.
         /// </summary>
-        /// <param name="callback">The callback.</param>
-        public static async void CheckIsSynchronisedToNistTime(TimeSynchronisationCallback callback)
+        public static event EventHandler<TimeCheckSyncEventArgs> TimeCheckCompleted;
+
+        /// <summary>
+        /// Check for time synchronization,
+        /// or reschedule it for later if no connection is available.
+        /// </summary>
+        public static void ScheduleCheck(TimeSpan time)
         {
-            SyncResult result = await GetNistTimeAsync(new Uri(NetworkConstants.NISTTimeServer));
-            Dispatcher.Invoke(() => callback.Invoke(result.IsSynchronised, result.ServerTimeToLocalTime, result.LocalTime));
+            Dispatcher.Schedule(time, BeginCheck);
+            EveMonClient.Trace($"in {time}");
         }
 
         /// <summary>
-        /// Gets the nist time asynchronously.
+        /// Method to determine if the user's clock is syncrhonised to NIST time.
         /// </summary>
-        /// <param name="url">The URL.</param>
-        private static async Task<SyncResult> GetNistTimeAsync(Uri url)
+        private static async void BeginCheck()
         {
+            if (!NetworkMonitor.IsNetworkAvailable)
+            {
+                // Reschedule later otherwise
+                ScheduleCheck(TimeSpan.FromMinutes(1));
+                return;
+            }
+
+            EveMonClient.Trace();
+
+            Uri url = new Uri(NetworkConstants.NISTTimeServer);
             DateTime serverTimeToLocalTime = DateTime.MinValue.ToLocalTime();
             DateTime localTime = DateTime.Now;
-            TimeSpan timediff = TimeSpan.Zero;
+            bool isSynchronised = false;
 
             try
             {
-                await Dns.GetHostAddressesAsync(url.Host)
-                    .ContinueWith(async task =>
+                IPAddress[] ipAdresses = await Dns.GetHostAddressesAsync(url.Host);
+
+                if (ipAdresses.Any())
+                {
+                    DateTime dateTimeNowUtc;
+
+                    using (TcpClient tcpClient = new TcpClient())
                     {
-                        if (task.Result.Any())
+                        await tcpClient.ConnectAsync(ipAdresses.First(), url.Port);
+
+                        using (NetworkStream netStream = tcpClient.GetStream())
                         {
-                            DateTime dateTimeNowUtc;
-
-                            using (TcpClient tcpClient = new TcpClient())
-                            {
-                                await tcpClient.ConnectAsync(task.Result.First(), url.Port);
-
-                                using (NetworkStream netStream = tcpClient.GetStream())
-                                {
-                                    byte[] data = new byte[24];
-                                    netStream.Read(data, 0, data.Length);
-                                    data = data.Skip(7).Take(17).ToArray();
-
-                                    dateTimeNowUtc = DateTime.ParseExact(Encoding.ASCII.GetString(data),
-                                        "yy-MM-dd HH:mm:ss", CultureInfo.CurrentCulture.DateTimeFormat);
-                                }
-                            }
-
-                            serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
-                            timediff = TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
+                            byte[] data = new byte[24];
+                            netStream.Read(data, 0, data.Length);
+                            data = data.Skip(7).Take(17).ToArray();
+                            string dateTimeText = Encoding.ASCII.GetString(data);
+                            dateTimeNowUtc = DateTime.ParseExact(dateTimeText,
+                                "yy-MM-dd HH:mm:ss",
+                                CultureInfo.CurrentCulture.DateTimeFormat,
+                                DateTimeStyles.AssumeUniversal);
                         }
-                    });
+                    }
+
+                    serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
+                    TimeSpan timediff = TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
+                    isSynchronised = timediff < TimeSpan.FromSeconds(60);
+                }
             }
             catch (Exception exc)
             {
-                ExceptionHandler.LogException(exc, true);
+                EveMonClient.Trace(exc.Message);
+                ScheduleCheck(TimeSpan.FromMinutes(1));
             }
 
-            return new SyncResult(timediff < TimeSpan.FromSeconds(60), serverTimeToLocalTime, localTime);
+            OnCheckCompleted(isSynchronised, serverTimeToLocalTime, localTime);
         }
 
-        ///// <summary>
-        ///// Helper class for the result of asyncronous time sync requests.
-        ///// </summary>
-        private class SyncResult
+        /// <summary>
+        /// Called when time check completed.
+        /// </summary>
+        /// <param name="isSynchronised">if set to <c>true</c> [is synchronised].</param>
+        /// <param name="serverTimeToLocalTime">The server time to local time.</param>
+        /// <param name="localTime">The local time.</param>
+        private static void OnCheckCompleted(bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="SyncResult"/> class.
-            /// </summary>
-            /// <param name="isSynchronised">if set to <c>true</c> the user's machine is synchronised.</param>
-            /// <param name="serverTimeToLocalTime">The server time to local time.</param>
-            /// <param name="localTime">The local time.</param>
-            internal SyncResult(bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
+            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised ||
+                (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime()))
             {
-                IsSynchronised = isSynchronised;
-                ServerTimeToLocalTime = serverTimeToLocalTime;
-                LocalTime = localTime;
+                if (!Settings.Updates.CheckTimeOnStartup)
+                    EveMonClient.Trace("Disabled");
+                else if (isSynchronised)
+                    EveMonClient.Trace("Synchronised");
+                else if (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime())
+                {
+                    EveMonClient.Trace("Failed");
+                    return;
+                }
             }
 
-            /// <summary>
-            /// Gets a value indicating whether this instance is synchronised.
-            /// </summary>
-            /// <value>
-            /// <c>true</c> if this instance is synchronised; otherwise, <c>false</c>.
-            /// </value>
-            public bool IsSynchronised { get; }
+            TimeCheckCompleted?.Invoke(null, new TimeCheckSyncEventArgs(isSynchronised, serverTimeToLocalTime, localTime));
 
-            /// <summary>
-            /// Gets the server time to local time.
-            /// </summary>
-            /// <value>
-            /// The server time to local time.
-            /// </value>
-            public DateTime ServerTimeToLocalTime { get; }
-
-            /// <summary>
-            /// Gets the local time.
-            /// </summary>
-            /// <value>
-            /// The local time.
-            /// </value>
-            public DateTime LocalTime { get; }
+            // Reschedule
+            ScheduleCheck(TimeSpan.FromDays(1));
         }
     }
 }

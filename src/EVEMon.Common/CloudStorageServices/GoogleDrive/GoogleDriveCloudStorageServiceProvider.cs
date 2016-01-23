@@ -175,10 +175,8 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckProviderAuthCodeAsync(
-            string code)
-        {
-            return await CheckAuthenticationAsync();
-        }
+            string code) 
+            => await CheckAuthenticationAsync();
 
         /// <summary>
         /// Asynchronously checks the authentication.
@@ -341,7 +339,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     IDownloadProgress response = await request.DownloadAsync(stream);
 
                     if (response.Exception == null)
-                        return await GetMappedAPIFile(result, stream);
+                        return await GetMappedAPIFileAsync(result, stream);
 
                     result.Error = new SerializableAPIError { ErrorMessage = response.Exception.Message };
                 }

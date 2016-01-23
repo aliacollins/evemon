@@ -11,7 +11,7 @@ namespace EVEMon.Common.Net
     /// </summary>
     public static class NetworkMonitor
     {
-        private static readonly Object s_syncLock = new object();
+        private static readonly Object s_syncLock = new Object();
 
         private static List<WeakReference<INetworkChangeSubscriber>> s_subscribers;
         private static bool s_networkAvailable;
@@ -22,27 +22,25 @@ namespace EVEMon.Common.Net
         /// </summary>
         public static void Initialize()
         {
-            lock (s_syncLock)
+            if (s_subscribers != null)
+                return;
+
+            // Subscribe to network changes
+            s_subscribers = new List<WeakReference<INetworkChangeSubscriber>>();
+
+            try
             {
-                if (s_subscribers != null)
-                    return;
+                s_networkAvailable = NetworkInterface.GetIsNetworkAvailable();
+                NetworkChange.NetworkAvailabilityChanged += OnNetworkAvailabilityChanged;
+            }
+            catch (Exception ex)
+            {
+                // GetIsNetworkAvailable doesn't seem to work on every system (f.ex. Mac OSX/Darwine)
+                ExceptionHandler.LogException(ex, true);
 
-                // Subscribe to network changes
-                s_subscribers = new List<WeakReference<INetworkChangeSubscriber>>();
-                try
-                {
-                    s_networkAvailable = NetworkInterface.GetIsNetworkAvailable();
-                    NetworkChange.NetworkAvailabilityChanged += OnNetworkAvailabilityChanged;
-                }
-                catch (Exception ex)
-                {
-                    // GetIsNetworkAvailable doesn't seem to work on every system (f.ex. Mac OSX/Darwine)
-                    ExceptionHandler.LogException(ex, true);
-
-                    // Check the network manually and set the manual flag to true
-                    s_networkAvailable = IsNetworkAvailableManual();
-                    s_manualTestRequired = true;
-                }
+                // Check the network manually and set the manual flag to true
+                s_networkAvailable = IsNetworkAvailableManual();
+                s_manualTestRequired = true;
             }
         }
 
@@ -87,12 +85,7 @@ namespace EVEMon.Common.Net
         public static void Register(INetworkChangeSubscriber monitor)
         {
             lock (s_syncLock)
-            {
-                if (s_subscribers == null)
-                    return;
-
-                s_subscribers.Add(new WeakReference<INetworkChangeSubscriber>(monitor, false));
-            }
+                s_subscribers?.Add(new WeakReference<INetworkChangeSubscriber>(monitor, false));
         }
 
         /// <summary>

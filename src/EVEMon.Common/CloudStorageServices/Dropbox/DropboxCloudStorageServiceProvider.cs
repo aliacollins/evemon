@@ -202,8 +202,8 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// Asynchronously revokes the authorization.
         /// </summary>
         /// <returns></returns>
-        protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
-            => await Task.Run(() => new SerializableAPIResult<SerializableAPICredentials>());
+        protected override Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
+            => Task.Run(() => new SerializableAPIResult<SerializableAPICredentials>());
 
         /// <summary>
         /// Uploads the file asynchronously.
@@ -263,7 +263,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 {
                     Task<Stream> response = await client.Files.DownloadAsync(arg)
                         .ContinueWith(async task => await task.Result.GetContentAsStreamAsync());
-                    return await GetMappedAPIFile(result, response.Result);
+                    return await GetMappedAPIFileAsync(result, response.Result);
                 }
             }
             catch (ApiException<DownloadError> ex)

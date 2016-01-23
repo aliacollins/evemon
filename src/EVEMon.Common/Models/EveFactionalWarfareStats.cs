@@ -233,7 +233,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         private static void Import(SerializableAPIEveFactionalWarfareStats src)
         {
-            EveMonClient.Trace("EveFactionalWarfareStats.Import - begin");
+            EveMonClient.Trace("begin");
 
             s_totalsKillsYesterday = src.Totals.KillsYesterday;
             s_totalsKillsLastWeek = src.Totals.KillsLastWeek;
@@ -246,7 +246,7 @@ namespace EVEMon.Common.Models
             s_eveFactionWars.Import(src.FactionWars);
 
             s_loaded = true;
-            EveMonClient.Trace("EveFactionalWarfareStats.Import - done");
+            EveMonClient.Trace("done");
         }
 
         #endregion

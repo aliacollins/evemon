@@ -5,12 +5,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
-using HttpWebClientService = EVEMon.Common.Net.HttpWebClientService;
 
 namespace EVEMon.Common.Helpers
 {
@@ -25,11 +23,13 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         static GAnalyticsTracker()
         {
+            string userAgentId = Util.Decrypt("+PzrIVxVhL3PBJcRYN2tXg==", CultureConstants.InvariantCulture.NativeName);
+            string clientId = EveMonClient.IsDebugBuild ? "2" : "1";
+
             s_parameters = new GampParameters
             {
                 ProtocolVersion = "1",
-                TrackerId = String.Format(CultureConstants.InvariantCulture, "UA-71610557-{0}",
-                    EveMonClient.IsDebugBuild ? "2" : "1"),
+                TrackerId = $"{userAgentId}-{clientId}",
                 AnonymizeIp = true,
                 ClientId = Util.CreateSHA1SumFromMacAddress(),
                 ApplicationName = EveMonClient.FileVersionInfo.ProductName,
@@ -46,7 +46,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         /// <param name="action">The action.</param>
         /// <remarks>Default action is 'Start'</remarks>
-        public static async void TrackStartAsync(Type type, string action = null)
+        public static void TrackStart(Type type, string action = null)
         {
             if (String.IsNullOrWhiteSpace(action))
                 action = SessionStatus.Start.ToString();
@@ -57,8 +57,8 @@ namespace EVEMon.Common.Helpers
                     "Only actions '{0}' and '{1}' are allowed.", SessionStatus.Start, DailyStartText));
             }
 
-            await TrackEventAsync(type, "ApplicationLifecycle", action);
-            Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackStartAsync(type, DailyStartText));
+            TrackEventAsync(type, "ApplicationLifecycle", action);
+            Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackStart(type, DailyStartText));
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace EVEMon.Common.Helpers
                     HttpMethod.Post, postdata: BuildQueryString());
 
                 if (EveMonClient.IsDebugBuild)
-                    EveMonClient.Trace("GAnalyticsTracker.{0} - {1}", category, action);
+                    EveMonClient.Trace($"({category} - {action})");
 
                 return;
             }
@@ -101,7 +101,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         /// <param name="category">The category.</param>
         /// <param name="action">The action.</param>
-        private static async Task TrackEventAsync(Type type, string category, string action)
+        private static async void TrackEventAsync(Type type, string category, string action)
         {
             InitEvent(type, category, action);
             
@@ -112,13 +112,13 @@ namespace EVEMon.Common.Helpers
                     HttpMethod.Post, postdata: BuildQueryString());
 
                 if (EveMonClient.IsDebugBuild)
-                    EveMonClient.Trace("GAnalyticsTracker.{0} - {1}", category, action);
+                    EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - ({category} - {action})", printMethod: false);
 
                 return;
             }
 
             // Reschedule later otherwise
-            Dispatcher.Schedule(TimeSpan.FromMinutes(1), async () => await TrackEventAsync(type, category, action));
+            Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action));
         }
 
         /// <summary>
