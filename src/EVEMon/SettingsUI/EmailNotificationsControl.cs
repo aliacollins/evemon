@@ -193,14 +193,7 @@ namespace EVEMon.SettingsUI
                 return;
 
             PopulateSettingsFromControls();
-
-            if (!Emailer.SendTestMail(m_settings))
-                MessageBox.Show("The message failed to send.", "Mail Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            else
-            {
-                MessageBox.Show("The message sent successfully. Please verify that the message was received.",
-                                "Mail Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            Emailer.SendTestMail(m_settings);
         }
 
         /// <summary>
