@@ -105,7 +105,10 @@ namespace EVEMon.Common.Helpers
                 else if (isSynchronised)
                     EveMonClient.Trace("Synchronised");
                 else if (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime())
+                {
                     EveMonClient.Trace("Failed");
+                    return;
+                }
             }
 
             TimeCheckCompleted?.Invoke(null, new TimeCheckSyncEventArgs(isSynchronised, serverTimeToLocalTime, localTime));
