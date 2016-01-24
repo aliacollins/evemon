@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -17,22 +18,23 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Initialize static masteries.
         /// </summary>
-        internal static void Load()
-        {
-            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.MasteriesDatafile)))
-                return;
-
-            MasteriesDatafile datafile = Util.DeserializeDatafile<MasteriesDatafile>(DatafileConstants.MasteriesDatafile);
-
-            foreach (SerializableMasteryShip srcShip in datafile.MasteryShips)
+        internal static Task LoadAsync()
+            => Task.Run(() =>
             {
-                Ship ship = StaticItems.GetItemByID(srcShip.ID) as Ship;
-                if (ship == null)
-                    continue;
+                if (!File.Exists(Datafile.GetFullPath(DatafileConstants.MasteriesDatafile)))
+                    return;
 
-                s_masteryShipsByID[ship.ID] = new MasteryShip(srcShip, ship);
-            }
-        }
+                MasteriesDatafile datafile = Util.DeserializeDatafile<MasteriesDatafile>(DatafileConstants.MasteriesDatafile);
+
+                foreach (SerializableMasteryShip srcShip in datafile.MasteryShips)
+                {
+                    Ship ship = StaticItems.GetItemByID(srcShip.ID) as Ship;
+                    if (ship == null)
+                        continue;
+
+                    s_masteryShipsByID[ship.ID] = new MasteryShip(srcShip, ship);
+                }
+            });
 
         #endregion
 

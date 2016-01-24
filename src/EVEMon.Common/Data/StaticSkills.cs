@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -25,7 +26,8 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Initialize static skills.
         /// </summary>
-        internal static void Load()
+        internal static Task LoadAsync()
+            => Task.Run(() =>
         {
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.SkillsDatafile)))
                 return;
@@ -39,10 +41,10 @@ namespace EVEMon.Common.Data
             foreach (SerializableSkillGroup srcGroup in datafile.SkillGroups)
             {
                 StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref s_arrayIndicesCount);
-                s_skillGroupsByID[group.ID] = group;
+                s_skillGroupsByID[@group.ID] = @group;
 
                 // Store skills
-                foreach (StaticSkill skill in group)
+                foreach (StaticSkill skill in @group)
                 {
                     s_skillsByID[skill.ID] = skill;
                     s_skillsByName[skill.Name] = skill;
@@ -59,7 +61,7 @@ namespace EVEMon.Common.Data
                 staticSkill.CompleteInitialization(prereqs[staticSkill.ArrayIndex]);
                 s_skills[staticSkill.ArrayIndex] = staticSkill;
             }
-        }
+        });
 
         #endregion
 

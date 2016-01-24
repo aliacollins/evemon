@@ -76,12 +76,14 @@ namespace EVEMon.Common
             // items before blueprints and certs,
             // certs before masteries)
             Trace("Datafiles.Load - begin", printMethod: false);
-            Task.Run(() => StaticSkills.Load());
-            Task.Run(() => StaticProperties.Load());
-            StaticItems.Load();
-            Task.Run(() => StaticBlueprints.Load());
-            StaticCertificates.Load();
-            Task.Run(() => StaticMasteries.Load());
+            StaticSkills.LoadAsync();
+            StaticProperties.LoadAsync();
+            // Must always run synchronously as blueprints and certificates depend on it
+            StaticItems.LoadAsync().GetAwaiter().GetResult();
+            StaticBlueprints.LoadAsync();
+            // Must always run synchronously as masteries depend on it
+            StaticCertificates.LoadAsync().GetAwaiter().GetResult();
+            StaticMasteries.LoadAsync();
             Trace("Datafiles.Load - done", printMethod: false);
 
             Trace("done");
