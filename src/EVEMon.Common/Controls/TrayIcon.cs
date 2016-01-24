@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using EVEMon.Common.SettingsObjects;
@@ -28,21 +29,12 @@ namespace EVEMon.Common.Controls
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TrayIcon"/> class.
-        /// </summary>
-        public TrayIcon()
-            : this(null)
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TrayIcon"/> class with the specfied container.
         /// </summary>
         /// <param name="container">An <see cref="System.ComponentModel.IContainer"/> that represents the container for the <see cref="TrayIcon"/> control.</param>
         public TrayIcon(IContainer container)
         {
-            if (container != null)
-                container.Add(this);
+            container?.Add(this);
 
             InitializeComponent();
 
@@ -52,39 +44,7 @@ namespace EVEMon.Common.Controls
         #endregion
 
 
-        #region Local Properties
-
-        /// <summary>
-        /// The length of time, in milliseconds, for which the mouse must remain stationary over the control before the MouseHover event is raised.
-        /// </summary>
-        [Category("Behaviour"),
-         Description(
-             "The length of time, in milliseconds, for which the mouse must remain stationary over the control before the MouseHover event is raised"
-             ),
-         DefaultValue(250)]
-        public int MouseHoverTime
-        {
-            get { return m_mouseHoverTime; }
-            set { m_mouseHoverTime = value < 250 ? 250 : value; }
-        }
-
-        #endregion
-
-
         #region NotifyIcon properties
-
-        /// <summary>
-        /// Gets or sets the shortcut menu associated with the <see cref="TrayIcon"/>.
-        /// </summary>
-        /// <remarks>
-        /// Exposes the value of the underlying <see cref="System.Windows.Forms.NotifyIcon.ContextMenuStrip"/> property.
-        /// </remarks>
-        [Category("Behaviour")]
-        public ContextMenuStrip ContextMenuStrip
-        {
-            get { return notifyIcon.ContextMenuStrip; }
-            set { notifyIcon.ContextMenuStrip = value; }
-        }
 
         /// <summary>
         /// Gets or sets the current icon.
@@ -112,6 +72,33 @@ namespace EVEMon.Common.Controls
         {
             get { return notifyIcon.Text; }
             set { notifyIcon.Text = value; }
+        }
+
+        /// <summary>
+        /// The length of time, in milliseconds, for which the mouse must remain stationary over the control before the MouseHover event is raised.
+        /// </summary>
+        [Category("Behaviour"),
+         Description(
+             "The length of time, in milliseconds, for which the mouse must remain stationary over the control before the MouseHover event is raised"
+             ),
+         DefaultValue(250)]
+        public int MouseHoverTime
+        {
+            get { return m_mouseHoverTime; }
+            set { m_mouseHoverTime = value < 250 ? 250 : value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the shortcut menu associated with the <see cref="TrayIcon"/>.
+        /// </summary>
+        /// <remarks>
+        /// Exposes the value of the underlying <see cref="System.Windows.Forms.NotifyIcon.ContextMenuStrip"/> property.
+        /// </remarks>
+        [Category("Behaviour")]
+        public ContextMenuStrip ContextMenuStrip
+        {
+            get { return notifyIcon.ContextMenuStrip; }
+            set { notifyIcon.ContextMenuStrip = value; }
         }
 
         /// <summary>
@@ -190,7 +177,7 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Get each subscriber in turn
-            foreach (EventHandler handler in mainHandler.GetInvocationList())
+            foreach (EventHandler handler in mainHandler.GetInvocationList().Cast<EventHandler>())
             {
                 // Get the object containing the subscribing method
                 // If the target doesn't implement ISyncronizeInvoke, this will be null
@@ -537,38 +524,6 @@ namespace EVEMon.Common.Controls
             }
 
             /// <summary>
-            /// Overrides the base OnMouseMove method to reset the hover timer if the mouse moves while over the notification area icon.
-            /// </summary>
-            protected override void OnMouseMove()
-            {
-                try
-                {
-                    // Mouse has moved, so reset the hover timer
-                    m_timer.Change(TrayIcon.m_mouseHoverTime, Timeout.Infinite);
-                }
-                catch (ObjectDisposedException)
-                {
-                    // Swallow any disposed exceptions
-                    // Can only occur if timings cause a MouseMove after we've disposed of the timer
-                    // Shouldn't happen, but catch it just in case
-                }
-            }
-
-            /// <summary>
-            /// Releases unmanaged and - optionally - managed resources
-            /// </summary>
-            /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-            private void Dispose(bool disposing)
-            {
-                if (!disposing)
-                    return;
-
-                // Dispose timer
-                m_timer.Dispose();
-                m_timer = null;
-            }
-
-            /// <summary>
             /// A <see cref="System.Threading.TimerCallback"/> method invoked when the hover timer expires.
             /// </summary>
             /// <remarks>
@@ -606,6 +561,38 @@ namespace EVEMon.Common.Controls
                     // when HoverTimeout is called it means its no longer over the icon
                     ChangeState(Control.MousePosition == MousePosition ? States.MouseHovering : States.MouseOut);
                 }
+            }
+
+            /// <summary>
+            /// Overrides the base OnMouseMove method to reset the hover timer if the mouse moves while over the notification area icon.
+            /// </summary>
+            protected override void OnMouseMove()
+            {
+                try
+                {
+                    // Mouse has moved, so reset the hover timer
+                    m_timer.Change(TrayIcon.m_mouseHoverTime, Timeout.Infinite);
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Swallow any disposed exceptions
+                    // Can only occur if timings cause a MouseMove after we've disposed of the timer
+                    // Shouldn't happen, but catch it just in case
+                }
+            }
+
+            /// <summary>
+            /// Releases unmanaged and - optionally - managed resources
+            /// </summary>
+            /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+            private void Dispose(bool disposing)
+            {
+                if (!disposing)
+                    return;
+
+                // Dispose timer
+                m_timer.Dispose();
+                m_timer = null;
             }
 
             /// <summary>
