@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.SettingsObjects;
 using Timer = System.Threading.Timer;
 
@@ -162,49 +162,11 @@ namespace EVEMon.Common.Controls
         #region Event methods
 
         /// <summary>
-        /// Helper method to fire events in a thread safe manner.
-        /// </summary>
-        /// <remarks>
-        /// Checks whether subscribers implement <see cref="System.ComponentModel.ISynchronizeInvoke"/> to ensure we raise the
-        /// event on the correct thread.
-        /// </remarks>
-        /// <param name="mainHandler">The <see cref="System.EventHandler"/> for the event to be raised.</param>
-        /// <param name="e">An <see cref="System.EventArgs"/> to be passed with the event invocation.</param>
-        private void FireEvent(EventHandler mainHandler, EventArgs e)
-        {
-            // Make sure we have some subscribers
-            if (mainHandler == null)
-                return;
-
-            // Get each subscriber in turn
-            foreach (EventHandler handler in mainHandler.GetInvocationList().Cast<EventHandler>())
-            {
-                // Get the object containing the subscribing method
-                // If the target doesn't implement ISyncronizeInvoke, this will be null
-                ISynchronizeInvoke sync = handler.Target as ISynchronizeInvoke;
-
-                // Check if our target requires an Invoke
-                if (sync != null && sync.InvokeRequired)
-                {
-                    // Yes it does, so invoke the handler using the target's BeginInvoke method, but wait for it to finish
-                    // This is preferable to using Invoke so that if an exception is thrown its presented
-                    // in the context of the handler, not the current thread
-                    IAsyncResult result = sync.BeginInvoke(handler, new object[] { this, e });
-                    sync.EndInvoke(result);
-                    return;
-                }
-
-                // No it doesn't, so invoke the handler directly
-                handler(this, e);
-            }
-        }
-
-        /// <summary>
         /// Raises the Click event.
         /// </summary>
         private void OnClick(EventArgs e)
         {
-            FireEvent(Click, e);
+            Click?.ThreadSafeInvoke(this, e);
         }
 
         /// <summary>
@@ -212,7 +174,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void OnMouseHover(EventArgs e)
         {
-            FireEvent(MouseHover, e);
+            MouseHover?.ThreadSafeInvoke(this, e);
         }
 
         /// <summary>
@@ -220,7 +182,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void OnMouseLeave(EventArgs e)
         {
-            FireEvent(MouseLeave, e);
+            MouseLeave?.ThreadSafeInvoke(this, e);
         }
 
         #endregion
