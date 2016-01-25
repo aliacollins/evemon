@@ -29,19 +29,34 @@ namespace EVEMon.Controls
         private void InitializeComponent()
         {
             this.labelNoCharacters = new System.Windows.Forms.Label();
+            this.labelLoading = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelNoCharacters
             // 
             this.labelNoCharacters.BackColor = System.Drawing.Color.Transparent;
             this.labelNoCharacters.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelNoCharacters.ForeColor = System.Drawing.SystemColors.GrayText;
             this.labelNoCharacters.Location = new System.Drawing.Point(0, 0);
             this.labelNoCharacters.Name = "labelNoCharacters";
             this.labelNoCharacters.Size = new System.Drawing.Size(361, 507);
             this.labelNoCharacters.TabIndex = 0;
-            this.labelNoCharacters.Text = "No character loaded.\r\nTo add characters, click the File|Add API key... menu optio" +
-                "n";
+            this.labelNoCharacters.Text = "No character loaded or monitored\r\n\r\nTo add characters, click the File > Add API k" +
+    "ey... menu option\r\nTo monitor characters, click the File > Manage API Keys... me" +
+    "nu option";
             this.labelNoCharacters.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelNoCharacters.Visible = false;
+            // 
+            // labelLoading
+            // 
+            this.labelLoading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelLoading.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelLoading.Location = new System.Drawing.Point(0, 0);
+            this.labelLoading.Name = "labelLoading";
+            this.labelLoading.Size = new System.Drawing.Size(361, 507);
+            this.labelLoading.TabIndex = 1;
+            this.labelLoading.Text = "Loading...\r\n\r\nPlease Wait.";
+            this.labelLoading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Overview
             // 
@@ -49,6 +64,7 @@ namespace EVEMon.Controls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.Controls.Add(this.labelLoading);
             this.Controls.Add(this.labelNoCharacters);
             this.Name = "Overview";
             this.Size = new System.Drawing.Size(361, 507);
@@ -59,5 +75,6 @@ namespace EVEMon.Controls
         #endregion
 
         private System.Windows.Forms.Label labelNoCharacters;
+        private System.Windows.Forms.Label labelLoading;
     }
 }

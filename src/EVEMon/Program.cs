@@ -68,8 +68,8 @@ namespace EVEMon
 
             // Initialization
             EveMonClient.Initialize();
+            EveIDToName.InitializeFromFileAsync();
             Settings.Initialize();
-            EveIDToName.InitializeFromFile();
 
             // Initialize G15
             if (OSFeatureCheck.IsWindowsNT)

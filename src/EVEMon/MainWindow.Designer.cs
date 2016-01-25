@@ -136,7 +136,7 @@ namespace EVEMon
             this.tpOverview = new System.Windows.Forms.TabPage();
             this.overview = new EVEMon.Controls.Overview();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
-            this.tabCreationLabel = new System.Windows.Forms.Label();
+            this.tabLoadingLabel = new System.Windows.Forms.Label();
             this.noCharactersLabel = new System.Windows.Forms.Label();
             this.notificationList = new EVEMon.Controls.NotificationList();
             this.trayIconContextMenuStrip.SuspendLayout();
@@ -253,7 +253,7 @@ namespace EVEMon
             // toolStripStatusSpacerLabel
             // 
             this.toolStripStatusSpacerLabel.Name = "toolStripStatusSpacerLabel";
-            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(211, 17);
+            this.toolStripStatusSpacerLabel.Size = new System.Drawing.Size(385, 17);
             this.toolStripStatusSpacerLabel.Spring = true;
             // 
             // lblCSSProviderStatus
@@ -1071,18 +1071,17 @@ namespace EVEMon
             this.trayIcon.MouseHover += new System.EventHandler(this.trayIcon_MouseHover);
             this.trayIcon.MouseLeave += new System.EventHandler(this.trayIcon_MouseLeave);
             // 
-            // tabCreationLabel
+            // tabLoadingLabel
             // 
-            this.tabCreationLabel.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.tabCreationLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabCreationLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.tabCreationLabel.Location = new System.Drawing.Point(0, 49);
-            this.tabCreationLabel.Name = "tabCreationLabel";
-            this.tabCreationLabel.Size = new System.Drawing.Size(600, 503);
-            this.tabCreationLabel.TabIndex = 7;
-            this.tabCreationLabel.Text = "Restoring...\r\n\r\nPlease wait.";
-            this.tabCreationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.tabCreationLabel.Visible = false;
+            this.tabLoadingLabel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabLoadingLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabLoadingLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.tabLoadingLabel.Location = new System.Drawing.Point(0, 49);
+            this.tabLoadingLabel.Name = "tabLoadingLabel";
+            this.tabLoadingLabel.Size = new System.Drawing.Size(600, 503);
+            this.tabLoadingLabel.TabIndex = 7;
+            this.tabLoadingLabel.Text = "Loading...\r\n\r\nPlease Wait.";
+            this.tabLoadingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // noCharactersLabel
             // 
@@ -1093,8 +1092,9 @@ namespace EVEMon
             this.noCharactersLabel.Name = "noCharactersLabel";
             this.noCharactersLabel.Size = new System.Drawing.Size(600, 503);
             this.noCharactersLabel.TabIndex = 8;
-            this.noCharactersLabel.Text = "No character loaded.\r\nTo add characters, click the File|Add API key... menu optio" +
-    "n";
+            this.noCharactersLabel.Text = "No character loaded or monitored\r\n\r\nTo add characters, click the File > Add API k" +
+    "ey... menu option\r\nTo monitor characters, click the File > Manage API Keys... me" +
+    "nu option";
             this.noCharactersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // notificationList
@@ -1113,7 +1113,7 @@ namespace EVEMon
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 646);
             this.Controls.Add(this.tcCharacterTabs);
-            this.Controls.Add(this.tabCreationLabel);
+            this.Controls.Add(this.tabLoadingLabel);
             this.Controls.Add(this.noCharactersLabel);
             this.Controls.Add(this.notificationList);
             this.Controls.Add(this.statusStrip);
@@ -1245,7 +1245,7 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripButton resetSettingsToolStripButton;
         private System.Windows.Forms.ToolStripButton tsbImplantGroups;
         private System.Windows.Forms.ToolStripButton tsbShowOwned;
-        private System.Windows.Forms.Label tabCreationLabel;
+        private System.Windows.Forms.Label tabLoadingLabel;
         private System.Windows.Forms.Label noCharactersLabel;
         private System.Windows.Forms.TabPage tpOverview;
         private Controls.Overview overview;

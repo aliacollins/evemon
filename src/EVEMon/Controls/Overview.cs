@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Controls
@@ -24,6 +26,9 @@ namespace EVEMon.Controls
         public Overview()
         {
             InitializeComponent();
+
+            labelNoCharacters.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            labelLoading.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
         }
 
         #endregion
@@ -48,8 +53,6 @@ namespace EVEMon.Controls
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             Disposed += OnDisposed;
-
-            UpdateContent();
         }
 
         /// <summary>
@@ -104,9 +107,9 @@ namespace EVEMon.Controls
             if (!EveMonClient.MonitoredCharacters.Any())
             {
                 if (Controls.OfType<OverviewItem>().Any())
-                    CleanUp(Controls.OfType<OverviewItem>().ToList());
+                    CleanUp(Controls.OfType<OverviewItem>());
 
-                labelNoCharacters.Visible = true;
+                labelNoCharacters.Show();
                 return;
             }
 
@@ -130,10 +133,9 @@ namespace EVEMon.Controls
             {
                 // Retrieve the current overview item, or null if we're past the limits
                 OverviewItem currentOverviewItem = (index < overviewItems.Count ? overviewItems[index] : null);
-                Character currentTag = currentOverviewItem != null ? (Character)currentOverviewItem.Tag : null;
 
                 // Does the overview item match with the character ?
-                if (currentTag != character)
+                if ((Character)currentOverviewItem?.Tag != character)
                 {
                     // Retrieve the overview item when it was previously created
                     // Is the overview item later in the collection ?
@@ -155,7 +157,7 @@ namespace EVEMon.Controls
             }
 
             // Remove the remaining items
-            CleanUp(items.Values.ToList());
+            CleanUp(items.Values);
             foreach (OverviewItem item in items.Values)
             {
                 overviewItems.Remove(item);
@@ -230,10 +232,10 @@ namespace EVEMon.Controls
             if (!Visible)
                 return;
 
-            IEnumerable<OverviewItem> overviewItems = Controls.OfType<OverviewItem>();
+            IList<OverviewItem> overviewItems = Controls.OfType<OverviewItem>().ToList();
 
             // Check there is at least one control
-            int numControls = overviewItems.Count();
+            int numControls = overviewItems.Count;
             if (numControls == 0)
                 return;
 
@@ -342,6 +344,8 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
+            labelLoading.Hide();
+
             // Update only when grouping settings have changed
             if (m_grouping != Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
                 UpdateContent();

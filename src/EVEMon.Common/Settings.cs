@@ -76,7 +76,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets true if we're currently restoring the settings.
         /// </summary>
-        public static bool IsRestoringSettings { get; private set; }
+        public static bool IsRestoring { get; private set; }
 
 
         #region The very settings
@@ -154,84 +154,80 @@ namespace EVEMon.Common
         /// <summary>
         /// Creates new empty Settings file, overwriting the existing file.
         /// </summary>
-        public static void Reset()
+        public static async Task ResetAsync()
         {
             // Append new properties here
-            Import(new SerializableSettings());
-
-            // Notifies the client and save
-            SaveImmediate();
+            await ImportAsync(new SerializableSettings());
         }
 
         /// <summary>
-        /// Updates from the provided serialization object
+        /// Asynchronous imports the provided serialization object.
         /// </summary>
-        /// <param name="serial">The serializable version of the new settings. May be null (acts as a reset)</param>
-        /// <param name="preferencesOnly">When true, only the user preferences will be reimported, not plans, characters, accounts and such.</param>
-        public static void Import(SerializableSettings serial, bool preferencesOnly = false)
+        /// <param name="serial">The serial.</param>
+        /// <param name="preferencesOnly">if set to <c>true</c> [preferences only].</param>
+        /// <returns></returns>
+        public static async Task ImportAsync(SerializableSettings serial, bool preferencesOnly = false)
         {
-            // When null, we just reset
-            if (serial == null)
+            EveMonClient.Trace("begin");
+
+            await Task.Run(() =>
             {
-                Reset();
-                return;
-            }
+                // When null, we just reset
+                if (serial == null)
+                    serial = new SerializableSettings();
 
-            IsRestoringSettings = true;
-            try
-            {
-                EveMonClient.Trace("begin");
-
-                // Global settings
-                Compatibility = serial.Compatibility;
-
-                // API providers
-                EveMonClient.APIProviders.Import(serial.APIProviders);
-
-                // Scheduler
-                Scheduler.Import(serial.Scheduler);
-
-                // User settings
-                UI = serial.UI;
-                G15 = serial.G15;
-                IGB = serial.IGB;
-                Proxy = serial.Proxy;
-                Updates = serial.Updates;
-                Calendar = serial.Calendar;
-                Exportation = serial.Exportation;
-                Notifications = serial.Notifications;
-                MarketPricer = serial.MarketPricer;
-                LoadoutsProvider = serial.LoadoutsProvider;
-                PortableEveInstallations = serial.PortableEveInstallations;
-                CloudStorageServiceProvider = serial.CloudStorageServiceProvider;
-
-                // Import the characters, API keys and plans
-                if (!preferencesOnly)
+                IsRestoring = true;
+                try
                 {
-                    // The above check prevents the settings form to trigger a 
-                    // characters updates since the last queried infos would be lost
-                    EveMonClient.ResetCollections();
-                    EveMonClient.Characters.Import(serial.Characters);
-                    EveMonClient.Characters.ImportPlans(serial.Plans);
-                    EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
-                    EveMonClient.APIKeys.Import(serial.APIKeys);
+                    // API providers
+                    EveMonClient.APIProviders.Import(serial.APIProviders);
+                    
+                    // User settings
+                    UI = serial.UI;
+                    G15 = serial.G15;
+                    IGB = serial.IGB;
+                    Proxy = serial.Proxy;
+                    Updates = serial.Updates;
+                    Calendar = serial.Calendar;
+                    Exportation = serial.Exportation;
+                    MarketPricer = serial.MarketPricer;
+                    Notifications = serial.Notifications;
+                    Compatibility = serial.Compatibility;
+                    LoadoutsProvider = serial.LoadoutsProvider;
+                    PortableEveInstallations = serial.PortableEveInstallations;
+                    CloudStorageServiceProvider = serial.CloudStorageServiceProvider;
+
+                    // Import the characters, API keys and plans
+                    if (!preferencesOnly)
+                    {
+                        // The above check prevents the settings form to trigger a 
+                        // characters updates since the last queried infos would be lost
+                        EveMonClient.ResetCollections();
+                        EveMonClient.Characters.Import(serial.Characters);
+                        EveMonClient.APIKeys.Import(serial.APIKeys);
+                        EveMonClient.Characters.ImportPlans(serial.Plans);
+                        EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
+                    }
+
+                    // Scheduler
+                    Scheduler.Import(serial.Scheduler);
+
+                    // Trim the data
+                    OnImportCompleted();
+
+                    // Save
+                    SaveImmediate();
                 }
+                finally
+                {
+                    IsRestoring = false;
+                }
+            });
 
-                // Trim the data
-                OnImportCompleted();
+            EveMonClient.Trace("Settins.ImportAsync - done", printMethod: false);
 
-                // Save
-                SaveImmediate();
-
-                // Notify the subscribers
-                EveMonClient.OnSettingsChanged();
-
-                EveMonClient.Trace("done");
-            }
-            finally
-            {
-                IsRestoringSettings = false;
-            }
+            // Notify the subscribers
+            EveMonClient.OnSettingsChanged();
         }
 
         /// <summary>
@@ -368,10 +364,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the current assembly's revision, which is also used for files versioning.
         /// </summary>
-        internal static int Revision
-        {
-            get { return Version.Parse(EveMonClient.FileVersionInfo.FileVersion).Revision; }
-        }
+        internal static int Revision => Version.Parse(EveMonClient.FileVersionInfo.FileVersion).Revision;
 
         /// <summary>
         /// Initialization for the EVEMon client settings.
@@ -387,11 +380,9 @@ namespace EVEMon.Common
                 ? TryDeserializeFromFileContent(settingsFile.FileContent)
                 : TryDeserializeFromFile();
 
-            // Loading settings failed, we create settings from scratch
-            if (settings == null)
-                Reset();
-            else
-                Import(settings);
+            // Loading settings.
+            // If there are none, we create them from scratch
+            Task.Run(() => ImportAsync(settings));
         }
 
         /// <summary>
@@ -440,26 +431,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
-        /// Loads a settings file from a specified filepath.
+        /// Asynchronously restores the settings from the specified file.
         /// </summary>
         /// <param name="filename">The fully qualified filename of the settings file to load</param>
         /// <returns>The Settings object loaded</returns>
         public static async Task RestoreAsync(string filename)
         {
-            SerializableSettings settings = null;
-
-            await Task.Run(() =>
-            {
-                // Try deserialize
-                settings = TryDeserializeFromBackupFile(filename, false);
-            });
+            // Try deserialize
+            SerializableSettings settings = TryDeserializeFromBackupFile(filename, false);
 
             // Loading from file failed, we abort and keep our current settings
             if (settings == null)
                 return;
 
-            // Updates and save
-            Import(settings);
+            await ImportAsync(settings);
         }
 
         /// <summary>
@@ -653,7 +638,8 @@ namespace EVEMon.Common
         /// </remarks>
         public static void Save()
         {
-            s_savePending = true;
+            if (!IsRestoring)
+                s_savePending = true;
         }
 
         /// <summary>
