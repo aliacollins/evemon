@@ -2,6 +2,7 @@
 using System.Linq;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Models;
+using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.QueryMonitor
 {
@@ -20,7 +21,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <param name="character"></param>
         /// <param name="method"></param>
         /// <param name="onUpdated"></param>
-        internal CharacterQueryMonitor(Character character, Enum method, QueryCallback<T> onUpdated)
+        internal CharacterQueryMonitor(Character character, Enum method, Action<CCPAPIResult<T>> onUpdated)
             : base(method, onUpdated)
         {
             m_character = character;
@@ -55,7 +56,7 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="provider">The API provider to use.</param>
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
-        protected override void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
+        protected override void QueryAsyncCore(APIProvider provider, Action<CCPAPIResult<T>> callback)
         {
             if (provider == null)
                 throw new ArgumentNullException("provider");

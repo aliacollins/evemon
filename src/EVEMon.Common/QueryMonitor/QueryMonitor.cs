@@ -18,7 +18,7 @@ namespace EVEMon.Common.QueryMonitor
     [EnforceUIThreadAffinity]
     public class QueryMonitor<T> : IQueryMonitorEx, INetworkChangeSubscriber
     {
-        private readonly QueryCallback<T> m_onUpdated;
+        private readonly Action<CCPAPIResult<T>> m_onUpdated;
 
         private bool m_forceUpdate;
         private bool m_retryOnForceUpdateError;
@@ -32,7 +32,7 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="method"></param>
         /// <param name="callback"></param>
-        internal QueryMonitor(Enum method, QueryCallback<T> callback)
+        internal QueryMonitor(Enum method, Action<CCPAPIResult<T>> callback)
         {
             // Check callback not null
             if (callback == null)
@@ -278,7 +278,7 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="provider">The API provider to use.</param>
         /// <param name="callback">The callback invoked on the UI thread after a result has been queried.</param>
-        protected virtual void QueryAsyncCore(APIProvider provider, QueryCallback<T> callback)
+        protected virtual void QueryAsyncCore(APIProvider provider, Action<CCPAPIResult<T>> callback)
         {
             if (provider == null)
                 throw new ArgumentNullException("provider");
