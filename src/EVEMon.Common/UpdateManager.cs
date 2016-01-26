@@ -161,7 +161,7 @@ namespace EVEMon.Common
             if (result.Error != null)
             {
                 // Logs the error and reschedule
-                EveMonClient.Trace($"UpdateManager: {result.Error.Message}", false);
+                EveMonClient.Trace($"UpdateManager: {result.Error.Message}", printMethod: false);
                 ScheduleCheck(s_frequency);
                 return;
             }

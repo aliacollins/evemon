@@ -80,8 +80,12 @@ namespace EVEMon
             RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
 
-            tabCreationLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            tabLoadingLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             noCharactersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            noCharactersLabel.Hide();
+
+            trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
+            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
 
             if (EveMonClient.IsDebugBuild)
                 DisplayTestMenu();
@@ -138,9 +142,6 @@ namespace EVEMon
             // Notify Gooogle Analytics about start up
             GAnalyticsTracker.TrackStart(GetType());
 
-            trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
-            lblServerStatus.Text = String.Format(CultureConstants.DefaultCulture, "// {0}", EveMonClient.EVEServer.StatusText);
-
             // Prepare control's visibility
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = Settings.UI.MainWindow.ShowMenuBar;
             toolbarToolStripMenuItem.Checked = mainToolBar.Visible = !Settings.UI.MainWindow.ShowMenuBar;
@@ -164,7 +165,7 @@ namespace EVEMon
             // Force cleanup
             TriggerAutoShrink();
 
-            EveMonClient.Trace("Main window - loaded", false);
+            EveMonClient.Trace("Main window - loaded", printMethod: false);
         }
 
         /// <summary>
@@ -325,15 +326,13 @@ namespace EVEMon
         /// </summary>
         private void LayoutTabPages()
         {
-            // Hide the TabControl
-            tcCharacterTabs.Hide();
-            tabCreationLabel.Show();
+            tcCharacterTabs.SuspendLayout();
 
             try
             {
                 TabPage selectedTab = tcCharacterTabs.SelectedTab;
 
-               // Collect the existing pages
+                // Collect the existing pages
                 Dictionary<Character, TabPage> pages = tcCharacterTabs.TabPages.Cast<TabPage>().Where(
                     page => page.Tag is Character).ToDictionary(page => (Character)page.Tag);
 
@@ -342,16 +341,14 @@ namespace EVEMon
                 foreach (Character character in EveMonClient.MonitoredCharacters)
                 {
                     // Retrieve the current page, or null if we're past the limits
-                    TabPage currentPage = (index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
+                    TabPage currentPage = index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null;
 
                     // Is it the overview ? We'll deal with it later
                     if (currentPage == tpOverview)
-                        currentPage = (++index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null);
-
-                    Character currentTag = currentPage != null ? (Character)currentPage.Tag : null;
+                        currentPage = ++index < tcCharacterTabs.TabCount ? tcCharacterTabs.TabPages[index] : null;
 
                     // Does the page match with the character ?
-                    if (currentTag != character)
+                    if ((Character)currentPage?.Tag != character)
                     {
                         // Retrieve the page when it was previously created
                         // Is the page later in the collection ?
@@ -363,6 +360,7 @@ namespace EVEMon
 
                         // Inserts the page in the proper location
                         tcCharacterTabs.TabPages.Insert(index, page);
+                        tcCharacterTabs.Update();
                     }
 
                     // Remove processed character from the dictionary and move forward
@@ -384,13 +382,13 @@ namespace EVEMon
                 // Reselect
                 if (selectedTab != null && tcCharacterTabs.TabPages.Contains(selectedTab))
                     tcCharacterTabs.SelectedTab = selectedTab;
+                else if (tcCharacterTabs.TabCount > 0)
+                    tcCharacterTabs.SelectedTab = tcCharacterTabs.TabPages[0];
             }
             finally
             {
-                tabCreationLabel.Hide();
-
-                if (tcCharacterTabs.Controls.Count > 0)
-                    tcCharacterTabs.Show();
+                tcCharacterTabs.Visible = tcCharacterTabs.Controls.Count > 0;
+                tcCharacterTabs.ResumeLayout();
             }
         }
 
@@ -418,8 +416,8 @@ namespace EVEMon
                     tcCharacterTabs.TabPages.Insert(overviewIndex, tpOverview);
                 }
 
-                // Select the Overview tab if it's the first tab
-                if (overviewIndex == 0)
+                // Select the Overview tab if it's the only tab
+                if (tcCharacterTabs.TabCount == 1)
                     tcCharacterTabs.SelectedTab = tpOverview;
 
                 return;
@@ -1289,15 +1287,16 @@ namespace EVEMon
             if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            // Hide the TabControl
-            tcCharacterTabs.Hide();
-            tabCreationLabel.Show();
+            // Clear any notifications
+            ClearNotifications();
 
             // Close any open character associated windows
             WindowsFactory.CloseAllTagged();
 
-            // Clear any notifications
-            ClearNotifications();
+            // Hide the TabControl
+            tcCharacterTabs.Hide();
+            tabLoadingLabel.Show();
+            Update();
 
             // Open the specified settings
             await Settings.RestoreAsync(openFileDialog.FileName);
@@ -1305,10 +1304,6 @@ namespace EVEMon
             // Remove the tip window if it exist and is confirmed in settings
             if (Settings.UI.ConfirmedTips.Contains("startup") && Controls.OfType<TipWindow>().Any())
                 Controls.Remove(Controls.OfType<TipWindow>().First());
-
-            // Show the TabControl
-            tabCreationLabel.Hide();
-            tcCharacterTabs.Show();
         }
 
         /// <summary>
@@ -1334,7 +1329,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void resetSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Manually delete the Settings file for any non-recoverable errors
             DialogResult dr = MessageBox.Show(
@@ -1355,7 +1350,7 @@ namespace EVEMon
             tcCharacterTabs.Hide();
 
             // Reset the settings
-            Settings.Reset();
+            await Settings.ResetAsync();
 
             // Show the TabControl
             tcCharacterTabs.Show();
@@ -2016,6 +2011,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
+            tabLoadingLabel.Hide();
+
             UpdateControlsVisibility();
         }
 
@@ -2024,6 +2021,9 @@ namespace EVEMon
         /// </summary>
         private void UpdateControlsVisibility()
         {
+            // Displays or not the 'no characters added' label
+            noCharactersLabel.Visible = !EveMonClient.MonitoredCharacters.Any();
+
             // Tray icon's visibility
             trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
                                 || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&

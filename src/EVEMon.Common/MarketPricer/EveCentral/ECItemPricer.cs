@@ -229,7 +229,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
                 return;
 
             if (EveMonClient.IsDebugBuild)
-                EveMonClient.Trace($"Remaining ids: {String.Join(", ", s_queryMonitorList)}", false);
+                EveMonClient.Trace($"Remaining ids: {String.Join(", ", s_queryMonitorList)}", printMethod: false);
 
             EveMonClient.Trace("done");
 

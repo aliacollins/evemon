@@ -95,9 +95,8 @@ namespace EVEMon.Common
         /// <remarks>May be called more than once without causing redundant operations to occur.</remarks>
         public static void Run(Form mainForm)
         {
-            Trace();
-
             Dispatcher.Run(new UIActor(mainForm));
+            Trace();
         }
 
         /// <summary>
@@ -114,8 +113,11 @@ namespace EVEMon.Common
         /// </summary>
         internal static void ResetCollections()
         {
-            CharacterIdentities = new GlobalCharacterIdentityCollection();
+            APIKeys = new GlobalAPIKeyCollection();
+            Characters = new GlobalCharacterCollection();
             Notifications = new GlobalNotificationCollection();
+            CharacterIdentities = new GlobalCharacterIdentityCollection();
+            MonitoredCharacters = new GlobalMonitoredCharacterCollection();
         }
 
         /// <summary>
@@ -477,16 +479,22 @@ namespace EVEMon.Common
         /// <param name="printMethod">if set to <c>true</c> [print method].</param>
         public static void Trace(string message = null, bool printMethod = true)
         {
-            StackTrace stackTrace = new StackTrace();
-            StackFrame frame = stackTrace.GetFrame(1);
-            MethodBase method = frame.GetMethod();
-            if (method.Name == "MoveNext")
-                method = stackTrace.GetFrame(3).GetMethod();
+            string header = String.Empty;
 
-            Type declaringType = method.DeclaringType;
+            if (printMethod)
+            {
+                StackTrace stackTrace = new StackTrace();
+                StackFrame frame = stackTrace.GetFrame(1);
+                MethodBase method = frame.GetMethod();
+                if (method.Name == "MoveNext")
+                    method = stackTrace.GetFrame(3).GetMethod();
+
+                Type declaringType = method.DeclaringType;
+                header = $"{declaringType?.Name}.{method.Name}";
+            }
+
             TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
             string timeStr = $"{time.Days:#0}d {time.Hours:#0}h {time.Minutes:00}m {time.Seconds:00}s > ";
-            string header = printMethod ? $"{declaringType?.Name}.{method.Name}" : String.Empty;
             message = String.IsNullOrWhiteSpace(message) || !printMethod ? message : $" - {message}";
             string msgStr = $"{header}{message}";
 

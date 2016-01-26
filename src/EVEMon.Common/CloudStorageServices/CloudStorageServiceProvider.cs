@@ -311,7 +311,7 @@ namespace EVEMon.Common.CloudStorageServices
             m_queryPending = false;
 
             var actionText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace($"CloudStorageServiceProvider.CheckAuthCodeAsync - {actionText}", false);
+            EveMonClient.Trace($"CloudStorageServiceProvider.CheckAuthCodeAsync - {actionText}", printMethod: false);
         }
 
         /// <summary>

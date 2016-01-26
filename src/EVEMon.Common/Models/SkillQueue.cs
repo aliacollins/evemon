@@ -110,7 +110,7 @@ namespace EVEMon.Common.Models
                 Items.Remove(skill);
 
                 // Sends an email alert
-                if (!Settings.IsRestoringSettings && Settings.Notifications.SendMailAlert)
+                if (!Settings.IsRestoring && Settings.Notifications.SendMailAlert)
                     Emailer.SendSkillCompletionMail(Items, skill, m_character);
 
                 // Sends a notification
