@@ -1095,14 +1095,14 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cloudStorageProvidersComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cloudStorageProvidersComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (m_isLoading)
                 return;
 
             m_settings.CloudStorageServiceProvider.ProviderName = cloudStorageProvidersComboBox.SelectedItem?.ToString();
             cloudStorageProviderLogoPictureBox.Image = m_settings.CloudStorageServiceProvider.Provider?.Logo;
-            cloudStorageServiceControl.CheckAPIAuthIsValid(forceRecheck: true);
+            await cloudStorageServiceControl.CheckAPIAuthIsValidAsync(forceRecheck: true);
         }
 
         #endregion

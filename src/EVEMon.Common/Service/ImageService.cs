@@ -51,12 +51,12 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="pictureBox">The picture box.</param>
         /// <param name="allianceID">The alliance ID.</param>
-        public static void GetAllianceImage(PictureBox pictureBox, long allianceID)
+        public static async Task GetAllianceImageAsync(PictureBox pictureBox, long allianceID)
         {
             string path = String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
                 "alliance", allianceID, pictureBox.Width);
 
-            GetImageAsync(pictureBox, path);
+            await GetImageAsync(pictureBox, path);
         }
 
         /// <summary>
@@ -64,12 +64,12 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="pictureBox">The picture box.</param>
         /// <param name="corporationID">The corporation ID.</param>
-        public static void GetCorporationImage(PictureBox pictureBox, long corporationID)
+        public static async Task GetCorporationImageAsync(PictureBox pictureBox, long corporationID)
         {
             string path = String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
                 "corporation", corporationID, pictureBox.Width);
 
-            GetImageAsync(pictureBox, path);
+            await GetImageAsync(pictureBox, path);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="pictureBox">The picture box.</param>
         /// <param name="path">The path.</param>
-        private static async void GetImageAsync(PictureBox pictureBox, string path)
+        private static async Task GetImageAsync(PictureBox pictureBox, string path)
         {
             Image image = await GetImageAsync(GetImageServerCdnUri(path)) ??
                         await GetImageAsync(GetImageServerBaseUri(path));
@@ -257,7 +257,7 @@ namespace EVEMon.Common.Service
         /// <param name="guid">The unique identifier.</param>
         /// <param name="image">The image.</param>
         /// <returns></returns>
-        internal static Task AddCharacterImageToCache(Guid guid, Image image)
+        internal static Task AddCharacterImageToCacheAsync(Guid guid, Image image)
             => Task.Run(() =>
             {
                 // Saves the image file

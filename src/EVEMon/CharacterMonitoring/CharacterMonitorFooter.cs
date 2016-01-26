@@ -316,7 +316,7 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void btnUpdateCalendar_Click(object sender, EventArgs e)
+        private async void btnUpdateCalendar_Click(object sender, EventArgs e)
         {
             // Ensure that we are trying to use the external calendar
             if (!Settings.Calendar.Enabled)
@@ -326,7 +326,7 @@ namespace EVEMon.CharacterMonitoring
             }
 
             if (m_character is CCPCharacter)
-                ExternalCalendar.UpdateCalendar(m_character as CCPCharacter);
+                await ExternalCalendar.UpdateCalendar(m_character as CCPCharacter);
         }
 
         #endregion

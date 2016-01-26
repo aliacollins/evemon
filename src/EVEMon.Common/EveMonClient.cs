@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections.Global;
@@ -123,7 +124,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets true whether the client has been shut down.
         /// </summary>
-        public static bool Closed { get; private set; }
+        private static bool Closed { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is debug build.
@@ -379,6 +380,14 @@ namespace EVEMon.Common
 
 
         #region Services
+
+        /// <summary>
+        /// Gets the current synchronization context.
+        /// </summary>
+        /// <value>
+        /// The current synchronization context.
+        /// </value>
+        public static TaskScheduler CurrentSynchronizationContext => TaskScheduler.FromCurrentSynchronizationContext();
 
         /// <summary>
         /// Gets an enumeration over the datafiles checksums.

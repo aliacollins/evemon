@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Constants;
@@ -39,11 +40,11 @@ namespace EVEMon.SettingsUI
         /// Raises the <see cref="E:System.Windows.Forms.UserControl.Load" /> event.
         /// </summary>
         /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
-        protected override void OnLoad(EventArgs e)
+        protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            RequestGoogleCalendarAuthentication(true);
+            await RequestGoogleCalendarAuthentication(true);
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace EVEMon.SettingsUI
         /// Requests the Google calendar authentication.
         /// </summary>
         /// <param name="checkAuth">if set to <c>true</c> [check authentication].</param>
-        private async void RequestGoogleCalendarAuthentication(bool checkAuth = false)
+        private async Task RequestGoogleCalendarAuthentication(bool checkAuth = false)
         {
             if (!Enabled || !rbGoogle.Checked)
                 return;
@@ -173,13 +174,13 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void ExternalCalendarControl_EnabledChanged(object sender, EventArgs e)
+        private async void ExternalCalendarControl_EnabledChanged(object sender, EventArgs e)
         {
             if (!Enabled)
                 return;
 
             UpdateControlsVisibility();
-            RequestGoogleCalendarAuthentication(true);
+            await RequestGoogleCalendarAuthentication(true);
         }
 
         /// <summary>
@@ -223,10 +224,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void rbGoogle_CheckedChanged(object sender, EventArgs e)
+        private async void rbGoogle_CheckedChanged(object sender, EventArgs e)
         {
             UpdateControlsVisibility();
-            RequestGoogleCalendarAuthentication(true);
+            await RequestGoogleCalendarAuthentication(true);
         }
 
         /// <summary>
@@ -234,9 +235,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void btnRequestAuth_Click(object sender, EventArgs e)
+        private async void btnRequestAuth_Click(object sender, EventArgs e)
         {
-            RequestGoogleCalendarAuthentication();
+            await RequestGoogleCalendarAuthentication();
         }
 
         /// <summary>

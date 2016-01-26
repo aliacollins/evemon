@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CloudStorageServices;
@@ -53,7 +54,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void CloudStorageServiceControl_Load(object sender, EventArgs e)
+        private async void CloudStorageServiceControl_Load(object sender, EventArgs e)
         {
             Font = FontFactory.GetFont("Tahoma");
             Disposed += OnDisposed;
@@ -61,7 +62,7 @@ namespace EVEMon.SettingsUI
             CloudStorageServiceProvider.CredentialsChecked += CloudStorageServiceProvider_CheckCredentials;
             CloudStorageServiceProvider.SettingsReset += CloudStorageServiceProvider_SettingsReset;
 
-            CheckAPIAuthIsValid(true);
+            await CheckAPIAuthIsValidAsync(true);
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void btnReset_Click(object sender, EventArgs e)
+        private async void btnReset_Click(object sender, EventArgs e)
         {
             ResetTextAndColor();
 
@@ -91,7 +92,7 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Rotating;
             throbber.Visible = true;
 
-            Provider?.ResetSettingsAsync();
+            await Provider?.ResetSettingsAsync();
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void btnRequestApply_Click(object sender, EventArgs e)
+        private async void btnRequestApply_Click(object sender, EventArgs e)
         {
             ResetTextAndColor();
 
@@ -108,7 +109,7 @@ namespace EVEMon.SettingsUI
 
             if (!m_authCodeRequested && !Provider.HasCredentialsStored)
             {
-                Provider.RequestAuthCodeAsync();
+                await Provider.RequestAuthCodeAsync();
 
                 if (Provider.AuthSteps == AuthenticationSteps.One)
                 {
@@ -131,7 +132,7 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Rotating;
             throbber.Visible = true;
 
-            Provider.CheckAuthCodeAsync(txtBoxAuthCode.Text);
+            await Provider.CheckAuthCodeAsync(txtBoxAuthCode.Text);
         }
 
         /// <summary>
@@ -198,7 +199,7 @@ namespace EVEMon.SettingsUI
         /// Checks the API authentication is valid.
         /// </summary>
         /// <param name="forceRecheck">if set to <c>true</c> forces an authentication recheck.</param>
-        internal void CheckAPIAuthIsValid(bool forceRecheck = false)
+        internal async Task CheckAPIAuthIsValidAsync(bool forceRecheck = false)
         {
             m_authCodeRequested = false;
 
@@ -223,7 +224,7 @@ namespace EVEMon.SettingsUI
             if (forceRecheck)
                 Provider.CancelPendingQueries();
 
-            Provider?.CheckAPIAuthIsValidAsync();
+            await Provider?.CheckAPIAuthIsValidAsync();
         }
 
         /// <summary>

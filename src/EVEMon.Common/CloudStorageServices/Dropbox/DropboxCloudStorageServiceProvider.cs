@@ -184,7 +184,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 result.Error = new SerializableAPIError { ErrorMessage = errorMessage };
 
                 if (HasCredentialsStored)
-                    ResetSettingsAsync();
+                    await ResetSettingsAsync();
             }
             catch (BadInputException exc)
             {

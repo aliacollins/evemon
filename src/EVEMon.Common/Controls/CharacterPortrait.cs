@@ -85,7 +85,7 @@ namespace EVEMon.Common.Controls
         /// </list>
         /// </summary>
         /// <remarks>Note this method will first check the ImageService cache before to resort to download.</remarks>
-        private async void UpdateContent()
+        private void UpdateContent()
         {
             if (!Visible)
             {
@@ -105,16 +105,21 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Try to retrieve the portrait from our portrait cache (%APPDATA%\cache\portraits)
-            Image image = await ImageService.GetCharacterImageFromCacheAsync(m_character.Guid);
-            if (image != null)
-            {
-                pictureBox.Image = image;
-                return;
-            }
+            ImageService.GetCharacterImageFromCacheAsync(m_character.Guid)
+                .ContinueWith(task =>
+                {
+                    Image image = task.Result;
+                    if (image != null)
+                    {
+                        pictureBox.Image = image;
+                        return;
+                    }
 
-            // The image does not exist in cache, we try to retrieve it from CCP
-            pictureBox.Image = pictureBox.InitialImage;
-            UpdateCharacterImageFromCCP();
+                    // The image does not exist in cache, we try to retrieve it from CCP
+                    pictureBox.Image = pictureBox.InitialImage;
+                    UpdateCharacterImageFromCCP();
+
+                }, EveMonClient.CurrentSynchronizationContext);
         }
 
         /// <summary>
@@ -125,7 +130,7 @@ namespace EVEMon.Common.Controls
         /// then download the url if no image was found in cache.</item>
         /// </list>
         /// </summary>
-        private async void UpdateCharacterImageFromCCP()
+        private void UpdateCharacterImageFromCCP()
         {
             Cursor.Current = Cursors.WaitCursor;
             if (m_updatingPortrait)
@@ -137,41 +142,41 @@ namespace EVEMon.Common.Controls
             if (m_character.CharacterID == UriCharacter.BlankCharacterID)
                 return;
 
-            Image image = await ImageService.GetCharacterImageAsync(m_character.CharacterID);
+            ImageService.GetCharacterImageAsync(m_character.CharacterID)
+                .ContinueWith(task =>
+                {
+                    Image image = task.Result;
+                    Cursor.Current = Cursors.Default;
 
-            Cursor.Current = Cursors.Default;
-            if (image == null)
-            {
-                m_updatingPortrait = false;
-                return;
-            }
+                    if (image == null)
+                    {
+                        m_updatingPortrait = false;
+                        return;
+                    }
 
-            // The image was retrieved, we save it to the cache
-            SaveCharacterImageToCache(image);
+                    // The image was retrieved, we save it to the cache
+                    SaveCharacterImageToCacheAsync(image);
+
+                }, EveMonClient.CurrentSynchronizationContext);
         }
 
         /// <summary>
         /// Save the specified image to the EVEMon cache as this character's portrait.
         /// </summary>
         /// <param name="image">The portrait image.</param>
-        private async void SaveCharacterImageToCache(Image image)
+        private void SaveCharacterImageToCacheAsync(Image image)
         {
-            // If control only has a character ID, we just update the picture box right now
-            if (m_character == null)
-            {
-                pictureBox.Image = image;
-                m_updatingPortrait = false;
-                return;
-            }
-
-            // Save to the portraits cache
-            await ImageService.AddCharacterImageToCache(m_character.Guid, image);
+            // Release the updating flag
+            m_updatingPortrait = false;
 
             // Update the portrait
             pictureBox.Image = image;
 
-            // Release the updating flag
-            m_updatingPortrait = false;
+            if (m_character == null)
+                return;
+
+            // Save to the portraits cache
+            ImageService.AddCharacterImageToCacheAsync(m_character.Guid, image);
         }
 
         #endregion
@@ -257,7 +262,7 @@ namespace EVEMon.Common.Controls
 
                 // Open the largest image and save it
                 Image image = Image.FromFile(bestFile);
-                SaveCharacterImageToCache(image);
+                SaveCharacterImageToCacheAsync(image);
             }
             finally
             {

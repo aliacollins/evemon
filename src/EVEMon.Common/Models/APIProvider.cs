@@ -252,7 +252,8 @@ namespace EVEMon.Common.Models
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         /// <param name="postData">The http POST data</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        private async void QueryMethodAsync<T>(Enum method, Action<CCPAPIResult<T>> callback, string postData, XslCompiledTransform transform)
+        private void QueryMethodAsync<T>(Enum method, Action<CCPAPIResult<T>> callback, string postData,
+            XslCompiledTransform transform)
         {
             // Check callback not null
             if (callback == null)
@@ -260,20 +261,24 @@ namespace EVEMon.Common.Models
 
             // Lazy download
             Uri url = GetMethodUrl(method);
-            CCPAPIResult<T> result = await Util.DownloadAPIResultAsync<T>(url, SupportsCompressedResponse, postData, transform);
 
-            // On failure with a custom provider, fallback to CCP
-            if (ShouldRetryWithCCP(result))
-            {
-                APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
-                    ? s_ccpProvider
-                    : s_ccpTestProvider;
-                ccpProvider.QueryMethodAsync(method, callback, postData, transform);
-                return;
-            }
+            Util.DownloadAPIResultAsync<T>(url, SupportsCompressedResponse, postData, transform)
+                .ContinueWith(task =>
+                {
+                    // On failure with a custom provider, fallback to CCP
+                    if (ShouldRetryWithCCP(task.Result))
+                    {
+                        APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
+                            ? s_ccpProvider
+                            : s_ccpTestProvider;
+                        ccpProvider.QueryMethodAsync(method, callback, postData, transform);
+                        return;
+                    }
 
-            // Invokes the callback
-            callback.Invoke(result);
+                    // Invokes the callback
+                    callback.Invoke(task.Result);
+
+                }, EveMonClient.CurrentSynchronizationContext);
         }
 
         /// <summary>

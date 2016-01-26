@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
@@ -114,10 +115,12 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                if (m_image == null)
-                    GetVictimShipImage();
+                if (m_image != null)
+                    return m_image;
 
-                return m_image;
+                Task.Run(() => GetVictimShipImageAsync());
+
+                return m_image = GetDefaultImage();
             }
         }
 
@@ -130,10 +133,8 @@ namespace EVEMon.Common.Models
         /// Gets the victim's ship image.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private async void GetVictimShipImage(bool useFallbackUri = false)
+        private async Task GetVictimShipImageAsync(bool useFallbackUri = false)
         {
-            m_image = GetDefaultImage();
-
             while (true)
             {
                 Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
@@ -38,7 +39,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// Process the selected character skill queue into the selected calendar.
         /// </summary>
         /// <param name="character">The character.</param>
-        public static void UpdateCalendar(CCPCharacter character)
+        public static async Task UpdateCalendar(CCPCharacter character)
         {
             if (character == null)
                 throw new ArgumentNullException("character");
@@ -57,10 +58,10 @@ namespace EVEMon.Common.ExternalCalendar
                 try
                 {
                     if (Settings.Calendar.Provider == CalendarProvider.Outlook && OutlookInstalled)
-                        DoOutlookAppointment(queuedSkill, queuePosition, lastSkillInQueue);
+                        await DoOutlookAppointmentAsync(queuedSkill, queuePosition, lastSkillInQueue);
 
                     if (Settings.Calendar.Provider == CalendarProvider.Google)
-                        DoGoogleAppointment(queuedSkill, queuePosition, lastSkillInQueue);
+                        await DoGoogleAppointmentAsync(queuedSkill, queuePosition, lastSkillInQueue);
                 }
                 catch (Exception ex)
                 {
@@ -76,7 +77,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="queuedSkill">The queued skill.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        private static async void DoOutlookAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
+        private static async Task DoOutlookAppointmentAsync(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
             // Get the calendar
             if (!OutlookCalendarEvent.OutlookCalendarExist(Settings.Calendar.UseOutlookDefaultCalendar))
@@ -129,7 +130,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="queuedSkill">The queued skill.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        private static async void DoGoogleAppointment(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
+        private static async Task DoGoogleAppointmentAsync(QueuedSkill queuedSkill, int queuePosition, bool lastSkillInQueue)
         {
             try
             {

@@ -10,18 +10,18 @@ namespace EVEMon.Common
     {
         public static void Run(Func<Task> func)
         {
-            var prevCtx = SynchronizationContext.Current;
+            SynchronizationContext prevCtx = SynchronizationContext.Current;
             try
             {
                 var syncCtx = new SingleThreadSynchronizationContext();
                 SynchronizationContext.SetSynchronizationContext(syncCtx);
 
-                var t = func();
-                t.ContinueWith(delegate { syncCtx.Complete(); }, TaskScheduler.Default);
+                Task task = func();
+                task.ContinueWith(_ => syncCtx.Complete(), TaskScheduler.Default);
 
                 syncCtx.RunOnCurrentThread();
 
-                t.GetAwaiter().GetResult();
+                task.GetAwaiter().GetResult();
             }
             finally
             {
@@ -36,9 +36,9 @@ namespace EVEMon.Common
                 m_queue =
                     new BlockingCollection<KeyValuePair<SendOrPostCallback, object>>();
 
-            public override void Post(SendOrPostCallback d, object state)
+            public override void Post(SendOrPostCallback callback, object state)
             {
-                m_queue.Add(new KeyValuePair<SendOrPostCallback, object>(d, state));
+                m_queue.Add(new KeyValuePair<SendOrPostCallback, object>(callback, state));
             }
 
             public void RunOnCurrentThread()

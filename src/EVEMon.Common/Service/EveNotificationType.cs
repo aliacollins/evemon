@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Models;
 using EVEMon.Common.Serialization;
@@ -93,7 +94,7 @@ namespace EVEMon.Common.Service
             // Update the file if we don't have it or the data have expired
             if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
             {
-                UpdateFile();
+                Task.Run(UpdateFileAsync);
                 return;
             }
 
@@ -106,7 +107,7 @@ namespace EVEMon.Common.Service
             // In case the file has an error or it's an old one, we try to get a fresh copy
             if (s_cachedUntil < DateTime.UtcNow)
             {
-                UpdateFile();
+                Task.Run(UpdateFileAsync);
                 return;
             }
 
@@ -141,7 +142,7 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Updates the file.
         /// </summary>
-        private static async void UpdateFile()
+        private static async Task UpdateFileAsync()
         {
             // Quit if query is pending
             if (s_queryPending)

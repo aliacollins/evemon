@@ -58,7 +58,6 @@ namespace EVEMon.Common.Helpers
             }
 
             TrackEventAsync(type, "ApplicationLifecycle", action);
-            Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackStart(type, DailyStartText));
         }
 
         /// <summary>
@@ -101,18 +100,23 @@ namespace EVEMon.Common.Helpers
         /// <param name="type">The type.</param>
         /// <param name="category">The category.</param>
         /// <param name="action">The action.</param>
-        private static async void TrackEventAsync(Type type, string category, string action)
+        private static void TrackEventAsync(Type type, string category, string action)
         {
             InitEvent(type, category, action);
-            
+
             // Sent notification
             if (NetworkMonitor.IsNetworkAvailable)
             {
-                await HttpWebClientService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
-                    HttpMethod.Post, postdata: BuildQueryString());
+                HttpWebClientService.DownloadImageAsync(new Uri(NetworkConstants.GoogleAnalyticsUrl),
+                    HttpMethod.Post, postdata: BuildQueryString())
+                    .ContinueWith(delegate
+                    {
+                        if (EveMonClient.IsDebugBuild)
+                            EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - ({category} - {action})", printMethod: false);
 
-                if (EveMonClient.IsDebugBuild)
-                    EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - ({category} - {action})", printMethod: false);
+                        Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackStart(type, DailyStartText));
+
+                    }, EveMonClient.CurrentSynchronizationContext);
 
                 return;
             }

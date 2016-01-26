@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
@@ -67,9 +68,9 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
-            GetImageFor(CharacterPictureBox);
-            GetImageFor(ShipPictureBox);
-            GetImageFor(WeaponPictureBox);
+            Task.Run(() => GetImageForAsync(CharacterPictureBox));
+            Task.Run(() => GetImageForAsync(ShipPictureBox));
+            Task.Run(() => GetImageForAsync(WeaponPictureBox));
 
             CharacterNameLabel.Text = String.IsNullOrEmpty(m_attacker.Name) ? m_attacker.ShipTypeName : m_attacker.Name;
             CorpNameLabel.Text = m_attacker.CorporationName;
@@ -84,7 +85,7 @@ namespace EVEMon.Controls
         /// </summary>
         /// <param name="pictureBox">The picture box.</param>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private async void GetImageFor(PictureBox pictureBox, bool useFallbackUri = false)
+        private async Task GetImageForAsync(PictureBox pictureBox, bool useFallbackUri = false)
         {
             while (true)
             {

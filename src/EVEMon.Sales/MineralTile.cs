@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
@@ -48,7 +49,7 @@ namespace EVEMon.Sales
                     return;
 
                 m_mineral = StaticItems.GetItemByName(value);
-                GetImageFromCCPAsync();
+                Task.Run(() => GetImageFromCCPAsync());
             }
         }
 
@@ -105,7 +106,7 @@ namespace EVEMon.Sales
         /// Gets the image from CCP's image server.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private async void GetImageFromCCPAsync(bool useFallbackUri = false)
+        private async Task GetImageFromCCPAsync(bool useFallbackUri = false)
         {
             while (true)
             {

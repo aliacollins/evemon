@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Controls;
@@ -94,9 +95,9 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void delayQueryTimer_Tick(object sender, EventArgs e)
+        private async void delayQueryTimer_Tick(object sender, EventArgs e)
         {
-            TryUri(urlTextBox.Text);
+            await TryUri(urlTextBox.Text);
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void fileButton_Click(object sender, EventArgs e)
+        private async void fileButton_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog form = new OpenFileDialog())
             {
@@ -118,7 +119,7 @@ namespace EVEMon.ApiCredentialsManagement
 
                 fileTextBox.Text = form.FileName;
                 fileRadio.Checked = true;
-                TryUri(form.FileName);
+                await TryUri(form.FileName);
             }
         }
 
@@ -126,7 +127,7 @@ namespace EVEMon.ApiCredentialsManagement
         /// Try to download a character XML from the given URI.
         /// </summary>
         /// <param name="uri"></param>
-        private async void TryUri(string uri)
+        private async Task TryUri(string uri)
         {
             m_version++;
             m_args = null;
