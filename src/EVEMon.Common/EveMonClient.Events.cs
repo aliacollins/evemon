@@ -1052,7 +1052,7 @@ namespace EVEMon.Common
             bool canAutoInstall, string installArgs)
         {
             Trace($"({currentVersion} -> {newestVersion}, {canAutoInstall}, {installArgs})");
-            UpdateAvailable?.Invoke(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage, currentVersion,
+            UpdateAvailable?.ThreadSafeInvoke(null, new UpdateAvailableEventArgs(forumUrl, installerUrl, updateMessage, currentVersion,
                 newestVersion, md5Sum, canAutoInstall, installArgs));
         }
 
@@ -1063,7 +1063,7 @@ namespace EVEMon.Common
         internal static void OnDataUpdateAvailable(Collection<SerializableDatafile> changedFiles)
         {
             Trace($"(ChangedFiles = {changedFiles.Count})");
-            DataUpdateAvailable?.Invoke(null, new DataUpdateAvailableEventArgs(changedFiles));
+            DataUpdateAvailable?.ThreadSafeInvoke(null, new DataUpdateAvailableEventArgs(changedFiles));
         }
 
         /// <summary>
@@ -1073,7 +1073,7 @@ namespace EVEMon.Common
         /// <param name="errorMessage">The error message.</param>
         internal static void OnLoadoutsFeedDownloaded(object loadoutFeed, string errorMessage)
         {
-            LoadoutFeedUpdated?.Invoke(null, new LoadoutFeedEventArgs(loadoutFeed, errorMessage));
+            LoadoutFeedUpdated?.ThreadSafeInvoke(null, new LoadoutFeedEventArgs(loadoutFeed, errorMessage));
         }
 
         /// <summary>
@@ -1083,7 +1083,7 @@ namespace EVEMon.Common
         /// <param name="errorMessage">The error message.</param>
         internal static void OnLoadoutDownloaded(object loadout, string errorMessage)
         {
-            LoadoutUpdated?.Invoke(null, new LoadoutEventArgs(loadout, errorMessage));
+            LoadoutUpdated?.ThreadSafeInvoke(null, new LoadoutEventArgs(loadout, errorMessage));
         }
 
         /// <summary>
@@ -1093,7 +1093,7 @@ namespace EVEMon.Common
         /// <param name="errormessage">The errormessage.</param>
         internal static void OnPricesDownloaded(object pricesFeed, string errormessage)
         {
-            ItemPricesUpdated?.Invoke(null, EventArgs.Empty);
+            ItemPricesUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
 
         #endregion
