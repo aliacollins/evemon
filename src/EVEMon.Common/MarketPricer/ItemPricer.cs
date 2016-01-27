@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml.XPath;
 using EVEMon.Common.Service;
 
@@ -58,7 +59,7 @@ namespace EVEMon.Common.MarketPricer
         /// Gets the prices asynchronous.
         /// </summary>
         /// Gets the item prices list.
-        protected abstract void GetPricesAsync();
+        protected abstract Task GetPricesAsync();
         
         /// <summary>
         /// Saves the xml document to the specified filename.

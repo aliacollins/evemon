@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -18,24 +19,25 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Initialize static blueprints.
         /// </summary>
-        internal static void Load()
-        {
-            if (BlueprintMarketGroups != null)
-                return;
-
-            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.BlueprintsDatafile)))
-                return;
-
-            BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile,
-                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
-
-            BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.MarketGroups);
-
-            foreach (BlueprintMarketGroup srcGroup in BlueprintMarketGroups)
+        internal static Task LoadAsync()
+            => Task.Run(() =>
             {
-                InitializeDictionaries(srcGroup);
-            }
-        }
+                if (BlueprintMarketGroups != null)
+                    return;
+
+                if (!File.Exists(Datafile.GetFullPath(DatafileConstants.BlueprintsDatafile)))
+                    return;
+
+                BlueprintsDatafile datafile = Util.DeserializeDatafile<BlueprintsDatafile>(DatafileConstants.BlueprintsDatafile,
+                    Util.LoadXslt(Properties.Resources.DatafilesXSLT));
+
+                BlueprintMarketGroups = new BlueprintMarketGroupCollection(null, datafile.MarketGroups);
+
+                foreach (BlueprintMarketGroup srcGroup in BlueprintMarketGroups)
+                {
+                    InitializeDictionaries(srcGroup);
+                }
+            });
 
         /// <summary>
         /// Recursively collect the blueprints within all groups and stores them in the dictionaries.

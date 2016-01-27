@@ -94,11 +94,11 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
         /// Asynchronously requests the provider an authentication code.
         /// </summary>
         /// <returns></returns>
-        protected override Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
+        protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
         {
-            CheckAuthCodeAsync(String.Empty);
+            await CheckAuthCodeAsync(String.Empty);
 
-            return Task.FromResult(new SerializableAPIResult<SerializableAPICredentials>());
+            return await Task.FromResult(new SerializableAPIResult<SerializableAPICredentials>());
         }
 
         /// <summary>

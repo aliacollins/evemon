@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common.Collections;
@@ -297,7 +298,7 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Adds the blank character.
         /// </summary>
-        public static async void AddBlankCharacter(Action callback)
+        public static async Task AddBlankCharacterAsync(Action callback)
         {
             // Add blank character
             var result = await GlobalCharacterCollection.TryAddOrUpdateFromUriAsync(new Uri(s_filename));

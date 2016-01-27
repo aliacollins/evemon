@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
@@ -56,7 +57,7 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// Gets the loadouts feed.
         /// </summary>
         /// <param name="ship">The ship.</param>
-        public override async void GetLoadoutsFeedAsync(Item ship)
+        public override async Task GetLoadoutsFeedAsync(Item ship)
         {
             // Quit if query is pending
             if (s_queryFeedPending)
@@ -76,7 +77,7 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// Gets the loadout by type ID.
         /// </summary>
         /// <param name="id">The id.</param>
-        public override async void GetLoadoutByIDAsync(long id)
+        public override async Task GetLoadoutByIDAsync(long id)
         {
             // Quit if query is pending
             if (s_queryPending)

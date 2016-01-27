@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
@@ -48,13 +49,13 @@ namespace EVEMon.Common.Loadouts
         /// Gets the loadouts feed asynchronous.
         /// </summary>
         /// <param name="ship">The ship.</param>
-        public abstract void GetLoadoutsFeedAsync(Item ship);
+        public abstract Task GetLoadoutsFeedAsync(Item ship);
 
         /// <summary>
         /// Gets the loadout by identifier asynchronous.
         /// </summary>
         /// <param name="id">The id.</param>
-        public abstract void GetLoadoutByIDAsync(long id);
+        public abstract Task GetLoadoutByIDAsync(long id);
 
         /// <summary>
         /// Deserializes the loadout.

@@ -1,11 +1,13 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Service;
 
 namespace EVEMon.Sales
@@ -48,7 +50,7 @@ namespace EVEMon.Sales
                     return;
 
                 m_mineral = StaticItems.GetItemByName(value);
-                GetImageFromCCPAsync();
+                Task.Run(() => GetImageFromCCPAsync());
             }
         }
 
@@ -105,7 +107,7 @@ namespace EVEMon.Sales
         /// Gets the image from CCP's image server.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private async void GetImageFromCCPAsync(bool useFallbackUri = false)
+        private async Task GetImageFromCCPAsync(bool useFallbackUri = false)
         {
             while (true)
             {
@@ -188,7 +190,7 @@ namespace EVEMon.Sales
 
             tbSubtotal.Text = Subtotal.ToString("N", CultureConstants.DefaultCulture);
 
-            SubtotalChanged?.Invoke(this, new EventArgs());
+            SubtotalChanged?.ThreadSafeInvoke(this, EventArgs.Empty);
         }
 
         #endregion
@@ -204,7 +206,7 @@ namespace EVEMon.Sales
         private void txtLastSell_TextChanged(object sender, EventArgs e)
         {
             UpdateSubtotal();
-            MineralPriceChanged?.Invoke(this, new EventArgs());
+            MineralPriceChanged?.ThreadSafeInvoke(this, EventArgs.Empty);
         }
 
         /// <summary>

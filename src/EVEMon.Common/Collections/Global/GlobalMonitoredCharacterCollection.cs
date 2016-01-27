@@ -89,9 +89,9 @@ namespace EVEMon.Common.Collections.Global
                 Items.Add(character);
                 character.Monitored = true;
                 character.UISettings = characterSettings.Settings;
-            }
 
-            EveMonClient.OnMonitoredCharactersChanged();
+                EveMonClient.OnMonitoredCharactersChanged();
+            }
         }
 
         /// <summary>

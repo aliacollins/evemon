@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using EVEMon.Common.Collections;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
@@ -81,7 +82,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             if (!File.Exists(file) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
-                GetPricesAsync();
+                Task.Run(GetPricesAsync);
                 return;
             }
 
@@ -106,7 +107,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             // In case the file is an old one, we try to get a fresh copy
             if (result == null || CachedUntil < DateTime.UtcNow)
             {
-                GetPricesAsync();
+                Task.Run(GetPricesAsync);
                 return;
             }
 
@@ -139,7 +140,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// Gets the prices asynchronous.
         /// </summary>
         /// Gets the item prices list.
-        protected override void GetPricesAsync()
+        protected override async Task GetPricesAsync()
         {
             // Quit if query is pending
             if (s_queryPending)
@@ -162,14 +163,14 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             EveMonClient.Trace("begin");
 
-            QueryIDs();
+            await QueryIDs();
         }
 
         /// <summary>
         /// Queries the ids.
         /// </summary>
         /// <returns></returns>
-        private async void QueryIDs()
+        private async Task QueryIDs()
         {
             var idsToQuery = new List<int>();
             var url = new Uri($"{NetworkConstants.EVECentralBaseUrl}{NetworkConstants.EVECentralAPIItemPrices}");
@@ -229,7 +230,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
                 return;
 
             if (EveMonClient.IsDebugBuild)
-                EveMonClient.Trace($"Remaining ids: {String.Join(", ", s_queryMonitorList)}", false);
+                EveMonClient.Trace($"Remaining ids: {String.Join(", ", s_queryMonitorList)}", printMethod: false);
 
             EveMonClient.Trace("done");
 
@@ -296,7 +297,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             s_queryStep = s_queryStep / 2;
             s_queue = new Queue<int>(s_queryMonitorList);
 
-            QueryIDs();
+            Task.Run(QueryIDs);
 
             return true;
         }

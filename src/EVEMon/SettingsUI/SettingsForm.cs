@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Resources;
 using System.Security;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CloudStorageServices;
@@ -206,11 +207,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnCancel_Click(object sender, EventArgs e)
+        private async void btnCancel_Click(object sender, EventArgs e)
         {
             // Update settings
-            Settings.Import(m_oldSettings, true);
-            Settings.Save();
+            await Settings.ImportAsync(m_oldSettings, true);
 
             // Close
             Close();
@@ -222,10 +222,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnOk_Click(object sender, EventArgs e)
+        private async void btnOk_Click(object sender, EventArgs e)
         {
             // Return settings
-            ApplyToSettings();
+            await ApplyToSettings();
 
             // Close
             Close();
@@ -237,10 +237,10 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void applyButton_Click(object sender, EventArgs e)
+        private async void applyButton_Click(object sender, EventArgs e)
         {
             // Return settings
-            ApplyToSettings();
+            await ApplyToSettings();
         }
 
         #endregion
@@ -385,7 +385,7 @@ namespace EVEMon.SettingsUI
         /// <summary>
         /// Fetches the controls' values to <see cref="m_settings"/>.
         /// </summary>
-        private void ApplyToSettings()
+        private async Task ApplyToSettings()
         {
             // If enabled validate email notification settings
             if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
@@ -530,8 +530,7 @@ namespace EVEMon.SettingsUI
             else
                 rk.DeleteValue("EVEMon", false);
 
-            Settings.Import(m_settings, true);
-            Settings.Save();
+            await Settings.ImportAsync(m_settings, true);
         }
 
         /// <summary>
@@ -1096,14 +1095,14 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cloudStorageProvidersComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cloudStorageProvidersComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (m_isLoading)
                 return;
 
             m_settings.CloudStorageServiceProvider.ProviderName = cloudStorageProvidersComboBox.SelectedItem?.ToString();
             cloudStorageProviderLogoPictureBox.Image = m_settings.CloudStorageServiceProvider.Provider?.Logo;
-            cloudStorageServiceControl.CheckAPIAuthIsValid(forceRecheck: true);
+            await cloudStorageServiceControl.CheckAPIAuthIsValidAsync(forceRecheck: true);
         }
 
         #endregion

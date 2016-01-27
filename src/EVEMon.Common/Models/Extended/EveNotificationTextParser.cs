@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
 using EVEMon.Common.Service;
 using YamlDotNet.RepresentationModel;
@@ -35,7 +37,7 @@ namespace EVEMon.Common.Models.Extended
                 return s_parser;
 
             //if (!EveMonClient.IsDebugBuild)
-                GetExternalParser();
+                Task.Run(GetExternalParser);
             
             return new InternalEveNotificationTextParser();
         }
@@ -43,7 +45,7 @@ namespace EVEMon.Common.Models.Extended
         /// <summary>
         /// Gets the external parser.
         /// </summary>
-        private static async void GetExternalParser()
+        private static async Task GetExternalParser()
         {
             if (s_queryPending)
                 return;
@@ -88,7 +90,7 @@ namespace EVEMon.Common.Models.Extended
             EveMonClient.Trace("done");
 
             // Notify the subscribers
-            NotificationTextParserUpdated?.Invoke(null, EventArgs.Empty);
+            NotificationTextParserUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
         }
     }
 }

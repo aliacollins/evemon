@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
@@ -79,7 +80,7 @@ namespace EVEMon.Common.Controls
             {
                 m_item = value;
                 if (m_imageSize != EveImageSize.x0)
-                    GetImage();
+                    Task.Run(GetImageAsync);
             }
         }
 
@@ -226,7 +227,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Retrieves image for the given EveObject.
         /// </summary>
-        private void GetImage()
+        private async Task GetImageAsync()
         {
             // Reset flags and cursor
             m_popUpActive = false;
@@ -251,14 +252,14 @@ namespace EVEMon.Common.Controls
                 pbImage.Cursor = Cursors.Hand;
             }
 
-            GetImageFromCCP();
+            await GetImageFromCCPAsync();
         }
 
         /// <summary>
         /// Gets the image from CCP's image server.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private async void GetImageFromCCP(bool useFallbackUri = false)
+        private async Task GetImageFromCCPAsync(bool useFallbackUri = false)
         {
             while (true)
             {

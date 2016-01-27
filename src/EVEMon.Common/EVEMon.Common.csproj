@@ -157,10 +157,12 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AsyncPump.cs" />
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
     <Compile Include="EveMonClient.Events.cs" />
     <Compile Include="Exceptions\APIException.cs" />
     <Compile Include="CustomEventArgs\TimeCheckSyncEventArgs.cs" />
+    <Compile Include="Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Serialization\SerializableAPIError.cs" />
     <Compile Include="CloudStorageServices\CloudStorageServiceAPIFile.cs" />
     <Compile Include="Serialization\SerializableAPIResult.cs" />

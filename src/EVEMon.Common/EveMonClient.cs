@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections.Global;
@@ -69,18 +70,21 @@ namespace EVEMon.Common
             EVEServer = new EveServer();
 
             // Load static data
+            // This is the optimal loading time order
             // (min order to follow : 
             // skills before anything else,
-            // items before certs,
+            // items before blueprints and certs,
             // certs before masteries)
-            Trace("Load Datafiles - begin", printMethod: false);
-            StaticProperties.Load();
-            StaticSkills.Load();
-            StaticItems.Load();
-            StaticCertificates.Load();
-            StaticMasteries.Load();
-            StaticBlueprints.Load();
-            Trace("Load Datafiles - done", printMethod: false);
+            Trace("Datafiles.Load - begin", printMethod: false);
+            StaticSkills.LoadAsync();
+            StaticProperties.LoadAsync();
+            // Must always run synchronously as blueprints and certificates depend on it
+            StaticItems.LoadAsync().GetAwaiter().GetResult();
+            StaticBlueprints.LoadAsync();
+            // Must always run synchronously as masteries depend on it
+            StaticCertificates.LoadAsync().GetAwaiter().GetResult();
+            StaticMasteries.LoadAsync();
+            Trace("Datafiles.Load - done", printMethod: false);
 
             Trace("done");
         }
@@ -92,9 +96,8 @@ namespace EVEMon.Common
         /// <remarks>May be called more than once without causing redundant operations to occur.</remarks>
         public static void Run(Form mainForm)
         {
-            Trace();
-
             Dispatcher.Run(new UIActor(mainForm));
+            Trace();
         }
 
         /// <summary>
@@ -111,14 +114,17 @@ namespace EVEMon.Common
         /// </summary>
         internal static void ResetCollections()
         {
-            CharacterIdentities = new GlobalCharacterIdentityCollection();
+            APIKeys = new GlobalAPIKeyCollection();
+            Characters = new GlobalCharacterCollection();
             Notifications = new GlobalNotificationCollection();
+            CharacterIdentities = new GlobalCharacterIdentityCollection();
+            MonitoredCharacters = new GlobalMonitoredCharacterCollection();
         }
 
         /// <summary>
         /// Gets true whether the client has been shut down.
         /// </summary>
-        public static bool Closed { get; private set; }
+        private static bool Closed { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is debug build.
@@ -376,6 +382,14 @@ namespace EVEMon.Common
         #region Services
 
         /// <summary>
+        /// Gets the current synchronization context.
+        /// </summary>
+        /// <value>
+        /// The current synchronization context.
+        /// </value>
+        public static TaskScheduler CurrentSynchronizationContext => TaskScheduler.FromCurrentSynchronizationContext();
+
+        /// <summary>
         /// Gets an enumeration over the datafiles checksums.
         /// </summary>
         public static GlobalDatafileCollection Datafiles { get; private set; }
@@ -474,16 +488,22 @@ namespace EVEMon.Common
         /// <param name="printMethod">if set to <c>true</c> [print method].</param>
         public static void Trace(string message = null, bool printMethod = true)
         {
-            StackTrace stackTrace = new StackTrace();
-            StackFrame frame = stackTrace.GetFrame(1);
-            MethodBase method = frame.GetMethod();
-            if (method.Name == "MoveNext")
-                method = stackTrace.GetFrame(3).GetMethod();
+            string header = String.Empty;
 
-            Type declaringType = method.DeclaringType;
+            if (printMethod)
+            {
+                StackTrace stackTrace = new StackTrace();
+                StackFrame frame = stackTrace.GetFrame(1);
+                MethodBase method = frame.GetMethod();
+                if (method.Name == "MoveNext")
+                    method = stackTrace.GetFrame(3).GetMethod();
+
+                Type declaringType = method.DeclaringType;
+                header = $"{declaringType?.Name}.{method.Name}";
+            }
+
             TimeSpan time = DateTime.UtcNow.Subtract(s_startTime);
             string timeStr = $"{time.Days:#0}d {time.Hours:#0}h {time.Minutes:00}m {time.Seconds:00}s > ";
-            string header = printMethod ? $"{declaringType?.Name}.{method.Name}" : String.Empty;
             message = String.IsNullOrWhiteSpace(message) || !printMethod ? message : $" - {message}";
             string msgStr = $"{header}{message}";
 

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -142,10 +144,12 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                if (m_image == null)
-                    GetItemImage();
+                if (m_image != null)
+                    return m_image;
 
-                return m_image;
+                Task.Run(() => GetItemImageAsync());
+
+                return m_image = GetDefaultImage();
             }
         }
 
@@ -226,10 +230,8 @@ namespace EVEMon.Common.Models
         /// Gets the item image.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private async void GetItemImage(bool useFallbackUri = false)
+        private async Task GetItemImageAsync(bool useFallbackUri = false)
         {
-            m_image = GetDefaultImage();
-
             while (true)
             {
                 Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
@@ -245,7 +247,7 @@ namespace EVEMon.Common.Models
                 m_image = img;
 
                 // Notify the subscriber that we got the image
-                KillLogItemImageUpdated?.Invoke(this, EventArgs.Empty);
+                KillLogItemImageUpdated?.ThreadSafeInvoke(this, EventArgs.Empty);
                 break;
             }
         }

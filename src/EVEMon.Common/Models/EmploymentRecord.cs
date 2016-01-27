@@ -1,8 +1,10 @@
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -94,10 +96,12 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                if (m_image == null)
-                    GetImage();
+                if (m_image != null)
+                    return m_image;
 
-                return m_image;
+                Task.Run(() => GetImageAsync());
+
+                return m_image = Properties.Resources.DefaultCorporationImage32;
             }
         }
 
@@ -131,10 +135,8 @@ namespace EVEMon.Common.Models
         /// Gets the corporation image.
         /// </summary>
         /// <param name="useFallbackUri">if set to <c>true</c> [use fallback URI].</param>
-        private async void GetImage(bool useFallbackUri = false)
+        private async Task GetImageAsync(bool useFallbackUri = false)
         {
-            m_image = Properties.Resources.DefaultCorporationImage32;
-
             while (true)
             {
                 Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
@@ -150,7 +152,7 @@ namespace EVEMon.Common.Models
 
                 m_image = img;
 
-                EmploymentRecordImageUpdated?.Invoke(this, EventArgs.Empty);
+                EmploymentRecordImageUpdated?.ThreadSafeInvoke(this, EventArgs.Empty);
                 break;
             }
         }

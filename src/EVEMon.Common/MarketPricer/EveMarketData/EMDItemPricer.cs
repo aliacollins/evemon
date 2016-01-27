@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.EveMarketData.MarketPricer;
@@ -78,7 +79,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             // Update the file if we don't have it or the data have expired
             if (!File.Exists(file) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
-                GetPricesAsync();
+                Task.Run(GetPricesAsync);
                 return;
             }
 
@@ -103,7 +104,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             // In case the file is an old one, we try to get a fresh copy
             if (result == null || CachedUntil < DateTime.UtcNow)
             {
-                GetPricesAsync();
+                Task.Run(GetPricesAsync);
                 return;
             }
 
@@ -142,7 +143,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         /// <summary>
         /// Downloads the item prices list.
         /// </summary>
-        protected override async void GetPricesAsync()
+        protected override async Task GetPricesAsync()
         {
             // Quit if query is pending
             if (s_queryPending)

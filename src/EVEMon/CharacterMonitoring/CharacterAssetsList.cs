@@ -752,7 +752,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Updates the asset location.
         /// </summary>
-        private async void UpdateAssetLocation()
+        private async Task UpdateAssetLocation()
         {
             // Invoke it on a worker thread cause it may be time intensive
             // if character owns many stuff in several locations
@@ -916,12 +916,12 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
+        private async void EveMonClient_ConquerableStationListUpdated(object sender, EventArgs e)
         {
             if (Character == null)
                 return;
 
-            UpdateAssetLocation();
+            await UpdateAssetLocation();
         }
 
         /// <summary>
@@ -930,12 +930,12 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         /// <remarks>Mainly to update the jumps from charater last known location to assets.</remarks>
-        private void EveMonClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
+        private async void EveMonClient_CharacterInfoUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (Character == null || e.Character != Character)
                 return;
 
-            UpdateAssetLocation();
+            await UpdateAssetLocation();
         }
 
         /// <summary>

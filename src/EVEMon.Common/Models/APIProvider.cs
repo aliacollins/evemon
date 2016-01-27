@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Constants;
@@ -11,11 +10,6 @@ using EVEMon.Common.Serialization.Eve;
 
 namespace EVEMon.Common.Models
 {
-    /// <summary>
-    /// A delegate for query callbacks.
-    /// </summary>
-    /// <param name="result"></param>
-    public delegate void QueryCallback<T>(CCPAPIResult<T> result);
 
     /// <summary>
     /// Serializable class abstracting an API queries provider and its configuration.
@@ -156,7 +150,7 @@ namespace EVEMon.Common.Models
         /// <typeparam name="T">The type of the deserialization object.</typeparam>
         /// <param name="method"></param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, Action<CCPAPIResult<T>> callback)
         {
             QueryMethodAsync(method, callback, null, RowsetsTransform);
         }
@@ -169,7 +163,7 @@ namespace EVEMon.Common.Models
         /// <param name="keyId">The API key's ID</param>
         /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, Action<CCPAPIResult<T>> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataBase,
                                             keyId, verificationCode);
@@ -185,7 +179,7 @@ namespace EVEMon.Common.Models
         /// <param name="verificationCode">The API key's verification code</param>
         /// <param name="id">The character or corporation ID.</param>
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
-        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, Action<CCPAPIResult<T>> callback)
         {
             if (method == null)
                 throw new ArgumentNullException("method");
@@ -206,7 +200,7 @@ namespace EVEMon.Common.Models
         /// <param name="messageID">The message ID.</param>
         /// <param name="callback">The callback.</param>
         public void QueryMethodAsync<T>(Enum method, long keyId, string verificationCode, long id, long messageID,
-                                        QueryCallback<T> callback)
+                                        Action<CCPAPIResult<T>> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture, GetPostDataFormat(method),
                                             keyId, verificationCode, id, messageID);
@@ -220,7 +214,7 @@ namespace EVEMon.Common.Models
         /// <param name="method">The method.</param>
         /// <param name="ids">The ids.</param>
         /// <param name="callback">The callback.</param>
-        public void QueryMethodAsync<T>(Enum method, string ids, QueryCallback<T> callback)
+        public void QueryMethodAsync<T>(Enum method, string ids, Action<CCPAPIResult<T>> callback)
         {
             string postData = String.Format(CultureConstants.InvariantCulture, NetworkConstants.PostDataIDsOnly,
                                             ids);
@@ -258,7 +252,8 @@ namespace EVEMon.Common.Models
         /// <param name="callback">The callback to invoke once the query has been completed.</param>
         /// <param name="postData">The http POST data</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        private async void QueryMethodAsync<T>(Enum method, QueryCallback<T> callback, string postData, XslCompiledTransform transform)
+        private void QueryMethodAsync<T>(Enum method, Action<CCPAPIResult<T>> callback, string postData,
+            XslCompiledTransform transform)
         {
             // Check callback not null
             if (callback == null)
@@ -266,20 +261,24 @@ namespace EVEMon.Common.Models
 
             // Lazy download
             Uri url = GetMethodUrl(method);
-            CCPAPIResult<T> result = await Util.DownloadAPIResultAsync<T>(url, SupportsCompressedResponse, postData, transform);
 
-            // On failure with a custom provider, fallback to CCP
-            if (ShouldRetryWithCCP(result))
-            {
-                APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
-                    ? s_ccpProvider
-                    : s_ccpTestProvider;
-                ccpProvider.QueryMethodAsync(method, callback, postData, transform);
-                return;
-            }
+            Util.DownloadAPIResultAsync<T>(url, SupportsCompressedResponse, postData, transform)
+                .ContinueWith(task =>
+                {
+                    // On failure with a custom provider, fallback to CCP
+                    if (ShouldRetryWithCCP(task.Result))
+                    {
+                        APIProvider ccpProvider = EveMonClient.APIProviders.CurrentProvider.Url.Host != TestProvider.Url.Host
+                            ? s_ccpProvider
+                            : s_ccpTestProvider;
+                        ccpProvider.QueryMethodAsync(method, callback, postData, transform);
+                        return;
+                    }
 
-            // Invokes the callback
-            callback(result);
+                    // Invokes the callback
+                    callback.Invoke(task.Result);
+
+                }, EveMonClient.CurrentSynchronizationContext);
         }
 
         /// <summary>
