@@ -27,14 +27,14 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         public static void ScheduleCheck(TimeSpan time)
         {
-            Dispatcher.Schedule(time, BeginCheck);
+            Dispatcher.Schedule(time, BeginCheckAsync);
             EveMonClient.Trace($"in {time}");
         }
 
         /// <summary>
         /// Method to determine if the user's clock is syncrhonised to NIST time.
         /// </summary>
-        private static async void BeginCheck()
+        private static void BeginCheckAsync()
         {
             if (!NetworkMonitor.IsNetworkAvailable)
             {
@@ -52,41 +52,64 @@ namespace EVEMon.Common.Helpers
 
             try
             {
-                IPAddress[] ipAdresses = await Dns.GetHostAddressesAsync(url.Host);
-
-                if (ipAdresses.Any())
-                {
-                    DateTime dateTimeNowUtc;
-
-                    using (TcpClient tcpClient = new TcpClient())
+                Dns.GetHostAddressesAsync(url.Host)
+                    .ContinueWith(async task =>
                     {
-                        await tcpClient.ConnectAsync(ipAdresses.First(), url.Port);
+                        IPAddress[] ipAddresses = task.Result;
 
-                        using (NetworkStream netStream = tcpClient.GetStream())
+                        if (ipAddresses.Any())
                         {
-                            byte[] data = new byte[24];
-                            netStream.Read(data, 0, data.Length);
-                            data = data.Skip(7).Take(17).ToArray();
-                            string dateTimeText = Encoding.ASCII.GetString(data);
-                            dateTimeNowUtc = DateTime.ParseExact(dateTimeText,
-                                "yy-MM-dd HH:mm:ss",
-                                CultureInfo.CurrentCulture.DateTimeFormat,
-                                DateTimeStyles.AssumeUniversal);
-                        }
-                    }
+                            try
+                            {
+                                DateTime dateTimeNowUtc;
+                                using (TcpClient tcpClient = new TcpClient())
+                                {
+                                    await tcpClient.ConnectAsync(ipAddresses.First(), url.Port);
 
-                    serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
-                    TimeSpan timediff = TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
-                    isSynchronised = timediff < TimeSpan.FromSeconds(60);
-                }
+                                    using (NetworkStream netStream = tcpClient.GetStream())
+                                    {
+                                        byte[] data = new byte[24];
+                                        netStream.Read(data, 0, data.Length);
+                                        data = data.Skip(7).Take(17).ToArray();
+                                        string dateTimeText = Encoding.ASCII.GetString(data);
+                                        dateTimeNowUtc = DateTime.ParseExact(dateTimeText,
+                                            "yy-MM-dd HH:mm:ss",
+                                            CultureInfo.CurrentCulture.DateTimeFormat,
+                                            DateTimeStyles.AssumeUniversal);
+                                    }
+                                }
+
+                                serverTimeToLocalTime = dateTimeNowUtc.ToLocalTime();
+                                TimeSpan timediff =
+                                    TimeSpan.FromSeconds(Math.Abs(serverTimeToLocalTime.Subtract(localTime).TotalSeconds));
+                                isSynchronised = timediff < TimeSpan.FromSeconds(60);
+
+                                OnCheckCompleted(isSynchronised, serverTimeToLocalTime, localTime);
+                            }
+                            catch (Exception exc)
+                            {
+                                CheckFailure(exc, isSynchronised, serverTimeToLocalTime, localTime);
+                            }
+                        }
+                    }, EveMonClient.CurrentSynchronizationContext);
             }
             catch (Exception exc)
             {
-                EveMonClient.Trace($"TimeCheck.CheckFailure - {exc.Message}", printMethod: false);
-                ScheduleCheck(TimeSpan.FromMinutes(1));
+                CheckFailure(exc, isSynchronised, serverTimeToLocalTime, localTime);
             }
+        }
 
-            OnCheckCompleted(isSynchronised, serverTimeToLocalTime, localTime);
+        /// <summary>
+        /// Called when the check fails.
+        /// </summary>
+        /// <param name="exc">The exc.</param>
+        /// <param name="isSynchronised">if set to <c>true</c> [is synchronised].</param>
+        /// <param name="serverTimeToLocalTime">The server time to local time.</param>
+        /// <param name="localTime">The local time.</param>
+        private static void CheckFailure(Exception exc, bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
+        {
+            EveMonClient.Trace(exc.Message);
+            ScheduleCheck(TimeSpan.FromMinutes(1));
         }
 
         /// <summary>
@@ -97,19 +120,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="localTime">The local time.</param>
         private static void OnCheckCompleted(bool isSynchronised, DateTime serverTimeToLocalTime, DateTime localTime)
         {
-            if (!Settings.Updates.CheckTimeOnStartup || isSynchronised ||
-                (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime()))
-            {
-                if (!Settings.Updates.CheckTimeOnStartup)
-                    EveMonClient.Trace("Disabled");
-                else if (isSynchronised)
-                    EveMonClient.Trace("Synchronised");
-                else if (serverTimeToLocalTime == DateTime.MinValue.ToLocalTime())
-                {
-                    EveMonClient.Trace("Failed");
-                    return;
-                }
-            }
+            EveMonClient.Trace(Settings.Updates.CheckTimeOnStartup ?  "Synchronised" : "Disabled");
 
             TimeCheckCompleted?.Invoke(null, new TimeCheckSyncEventArgs(isSynchronised, serverTimeToLocalTime, localTime));
 

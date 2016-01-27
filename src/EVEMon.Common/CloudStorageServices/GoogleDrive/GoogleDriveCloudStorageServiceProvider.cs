@@ -146,7 +146,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                         new[] { DriveService.Scope.DriveAppdata }, UserId, CancellationToken.None,
                         new FileDataStore(GetCredentialsPath(), true));
 
-                CheckAuthCodeAsync(String.Empty);
+                await CheckAuthCodeAsync(String.Empty);
             }
             catch (GoogleApiException exc)
             {
@@ -207,7 +207,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                 result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
 
                 if (s_credential == null && HasCredentialsStored)
-                    ResetSettingsAsync();
+                    await ResetSettingsAsync();
             }
             catch (TokenResponseException exc)
             {

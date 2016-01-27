@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CloudStorageServices;
@@ -139,7 +140,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void uploadSettingsFileButton_Click(object sender, EventArgs e)
+        private async void uploadSettingsFileButton_Click(object sender, EventArgs e)
         {
             ResetTextAndColor();
 
@@ -152,7 +153,9 @@ namespace EVEMon.SettingsUI
 
             Settings.SaveImmediate();
 
-            Provider?.UploadSettingsFileAsync();
+            Task uploadSettingsFileAsync = Provider?.UploadSettingsFileAsync();
+            if (uploadSettingsFileAsync != null)
+                await uploadSettingsFileAsync;
         }
 
         /// <summary>
@@ -160,7 +163,7 @@ namespace EVEMon.SettingsUI
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void downloadSettingsFileButton_Click(object sender, EventArgs e)
+        private async void downloadSettingsFileButton_Click(object sender, EventArgs e)
         {
             ResetTextAndColor();
 
@@ -171,7 +174,9 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Rotating;
             throbber.Visible = true;
 
-            Provider?.DownloadSettingsFileAsync();
+            Task downloadSettingsFileAsync = Provider?.DownloadSettingsFileAsync();
+            if (downloadSettingsFileAsync != null)
+                await downloadSettingsFileAsync;
         }
 
         #endregion

@@ -75,7 +75,7 @@ namespace EVEMon.BlankCharacter
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void buttonOK_Click(object sender, EventArgs e)
+        private async void buttonOK_Click(object sender, EventArgs e)
         {
             // Three choices for one button
             switch (buttonOK.DialogResult)
@@ -86,7 +86,7 @@ namespace EVEMon.BlankCharacter
                     break;
                     // Add blank character
                 case DialogResult.OK:
-                    BlankCharacterUIHelper.AddBlankCharacter(OnCharacterImported);
+                    await BlankCharacterUIHelper.AddBlankCharacterAsync(OnCharacterImported);
                     break;
             }
         }

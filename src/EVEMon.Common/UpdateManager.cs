@@ -95,7 +95,7 @@ namespace EVEMon.Common
         private static void ScheduleCheck(TimeSpan time)
         {
             s_checkScheduled = true;
-            Dispatcher.Schedule(time, BeginCheck);
+            Dispatcher.Schedule(time, BeginCheckAsync);
             EveMonClient.Trace($"in {time}");
         }
 
@@ -104,7 +104,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <remarks>Invoked on the UI thread the first time and on some background thread the rest of the time.</remarks>
         /// <returns></returns>
-        private static async void BeginCheck()
+        private static void BeginCheckAsync()
         {
             // If update manager has been disabled since the last
             // update was triggered quit out here
@@ -125,7 +125,7 @@ namespace EVEMon.Common
 
             // Otherwise, query for the patch file
             // First look up for an emergency patch
-            await Util.DownloadXmlAsync<SerializablePatch>(
+            Util.DownloadXmlAsync<SerializablePatch>(
                 new Uri(String.Format(CultureConstants.DefaultCulture, "{0}-emergency.xml",
                     Settings.Updates.UpdatesAddress.Replace(".xml", String.Empty))))
                 .ContinueWith(async task =>
@@ -140,7 +140,8 @@ namespace EVEMon.Common
 
                     // Proccess the result
                     OnCheckCompleted(result);
-                });
+
+                }, EveMonClient.CurrentSynchronizationContext);
         }
 
         /// <summary>

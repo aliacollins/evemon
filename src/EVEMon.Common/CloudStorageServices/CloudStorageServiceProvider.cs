@@ -265,7 +265,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Asynchronously requests an authentication code.
         /// </summary>
-        public async void RequestAuthCodeAsync()
+        public async Task RequestAuthCodeAsync()
         {
             if (m_queryPending || HasCredentialsStored)
                 return;
@@ -290,7 +290,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// Asynchronously checks the authentication code.
         /// </summary>
         /// <param name="code">The code.</param>
-        public async void CheckAuthCodeAsync(string code)
+        public async Task CheckAuthCodeAsync(string code)
         {
             if (m_queryPending && AuthSteps == AuthenticationSteps.Two)
                 return;
@@ -327,7 +327,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// </summary>
         /// <param name="userID">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
-        public async void CheckAPIAuthWithCredentialsIsValidAsync(uint userID, string apiKey)
+        public async Task CheckAPIAuthWithCredentialsIsValidAsync(uint userID, string apiKey)
         {
             if (m_queryPending)
                 return;
@@ -360,7 +360,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// Asynchronously checks that API authentication is valid.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        public async void CheckAPIAuthIsValidAsync()
+        public async Task CheckAPIAuthIsValidAsync()
         {
             if (m_queryPending)
                 return;
@@ -386,7 +386,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Asynchronously resets the settings.
         /// </summary>
-        public async void ResetSettingsAsync()
+        public async Task ResetSettingsAsync()
         {
             EveMonClient.Trace("Initiated");
 
@@ -501,7 +501,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Uploads the settings file asynchronously.
         /// </summary>
-        public async void UploadSettingsFileAsync()
+        public async Task UploadSettingsFileAsync()
         {
             if (m_queryPending)
                 return;
@@ -521,7 +521,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Downloads the settings file asynchronously.
         /// </summary>
-        public async void DownloadSettingsFileAsync()
+        public async Task DownloadSettingsFileAsync()
         {
             if (m_queryPending)
                 return;

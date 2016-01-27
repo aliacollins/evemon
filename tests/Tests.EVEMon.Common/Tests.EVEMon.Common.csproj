@@ -89,6 +89,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="AsyncVoidMethodsTests.cs" />
     <Compile Include="CompressionUncompressionTests.cs" />
     <Compile Include="TimeExtensionsTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -127,7 +128,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rd /s /q "$(TargetDir)"Resources
-del "$(TargetDir)"Google*
 del "$(TargetDir)"*office*
 del "$(TargetDir)"*outlook*
 del "$(TargetDir)"YamlDotNet*
