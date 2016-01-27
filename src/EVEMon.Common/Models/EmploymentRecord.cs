@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -151,7 +152,7 @@ namespace EVEMon.Common.Models
 
                 m_image = img;
 
-                EmploymentRecordImageUpdated?.Invoke(this, EventArgs.Empty);
+                EmploymentRecordImageUpdated?.ThreadSafeInvoke(this, EventArgs.Empty);
                 break;
             }
         }

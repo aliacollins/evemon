@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Net;
 using EVEMon.Common.Threading;
 
@@ -122,7 +123,7 @@ namespace EVEMon.Common.Helpers
         {
             EveMonClient.Trace(Settings.Updates.CheckTimeOnStartup ?  "Synchronised" : "Disabled");
 
-            TimeCheckCompleted?.Invoke(null, new TimeCheckSyncEventArgs(isSynchronised, serverTimeToLocalTime, localTime));
+            TimeCheckCompleted?.ThreadSafeInvoke(null, new TimeCheckSyncEventArgs(isSynchronised, serverTimeToLocalTime, localTime));
 
             // Reschedule
             ScheduleCheck(TimeSpan.FromDays(1));

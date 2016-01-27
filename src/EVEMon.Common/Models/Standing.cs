@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -157,7 +158,7 @@ namespace EVEMon.Common.Models
                 m_image = img;
 
                 // Notify the subscriber that we got the image
-                StandingImageUpdated?.Invoke(this, EventArgs.Empty);
+                StandingImageUpdated?.ThreadSafeInvoke(this, EventArgs.Empty);
                 break;
             }
         }

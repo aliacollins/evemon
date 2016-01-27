@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EVEMon.Common.Extensions
 {
-    internal static class EventHandlerExtensions
+    public static class EventHandlerExtensions
     {
         /// <summary>
         /// Helper method to fire events in a thread safe manner.

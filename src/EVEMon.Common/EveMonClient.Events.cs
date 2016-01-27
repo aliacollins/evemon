@@ -753,7 +753,7 @@ namespace EVEMon.Common
         internal static void OnCharacterResearchPointsUpdated(Character character)
         {
             Trace(character.Name);
-            CharacterResearchPointsUpdated?.Invoke(null, new CharacterChangedEventArgs(character));
+            CharacterResearchPointsUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -905,7 +905,7 @@ namespace EVEMon.Common
         internal static void OnCharacterPlanetaryLinksUpdated(Character character)
         {
             Trace(character.Name);
-            CharacterPlanetaryLinksUpdated?.Invoke(null, new CharacterChangedEventArgs(character));
+            CharacterPlanetaryLinksUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
@@ -915,7 +915,7 @@ namespace EVEMon.Common
         internal static void OnCharacterPortraitUpdated(Character character)
         {
             Trace(character.Name);
-            CharacterPortraitUpdated?.Invoke(null, new CharacterChangedEventArgs(character));
+            CharacterPortraitUpdated?.ThreadSafeInvoke(null, new CharacterChangedEventArgs(character));
         }
 
         /// <summary>
