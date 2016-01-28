@@ -7,7 +7,7 @@ using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.PatchXml;
-using EVEMon.Common.Threading;
+using Dispatcher = EVEMon.Common.Threading.Dispatcher;
 
 namespace EVEMon.Common
 {
@@ -102,8 +102,9 @@ namespace EVEMon.Common
         /// <summary>
         /// Performs the check asynchronously.
         /// </summary>
-        /// <remarks>Invoked on the UI thread the first time and on some background thread the rest of the time.</remarks>
-        /// <returns></returns>
+        /// <remarks>
+        /// Invoked on the UI thread the first time and on some background thread the rest of the time.
+        /// </remarks>
         private static void BeginCheckAsync()
         {
             // If update manager has been disabled since the last

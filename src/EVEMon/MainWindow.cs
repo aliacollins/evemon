@@ -32,7 +32,6 @@ using EVEMon.Common.Scheduling;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.Service;
 using EVEMon.Common.SettingsObjects;
-using EVEMon.Common.Threading;
 using EVEMon.DetailsWindow;
 using EVEMon.ImplantControls;
 using EVEMon.NotificationWindow;
@@ -134,7 +133,7 @@ namespace EVEMon
             }
 
             // Start the one-second timer 
-            EveMonClient.Run(this);
+            EveMonClient.Run();
 
             // Check with NIST that the local clock is synchronized
             TimeCheck.ScheduleCheck(TimeSpan.FromSeconds(1));
@@ -620,24 +619,24 @@ namespace EVEMon
 
             // Group by API key
             IEnumerable<IGrouping<long, NotificationEventArgs>> groups = m_popupNotifications.GroupBy(
-                x =>
+                notification =>
                 {
                     // It's an API server related notification
-                    if (x.Sender == null)
+                    if (notification.Sender == null)
                         return 0;
 
                     // It's an API key related notification
-                    if (x.SenderAPIKey != null)
-                        return x.SenderAPIKey.ID;
+                    if (notification.SenderAPIKey != null)
+                        return notification.SenderAPIKey.ID;
 
                     // It's a corporation related notification
-                    if (x.SenderCorporation != null)
-                        return x.SenderCorporation.ID;
+                    if (notification.SenderCorporation != null)
+                        return notification.SenderCorporation.ID;
 
                     // It's a character related notification
-                    return x.SenderCharacter is UriCharacter
+                    return notification.SenderCharacter is UriCharacter
                         ? 1
-                        : x.SenderCharacter.CharacterID;
+                        : notification.SenderCharacter.CharacterID;
                 });
 
             // Add every group, order by character's name, accounts being on top
@@ -653,7 +652,7 @@ namespace EVEMon
             // If the info must be presented once only, schedule a deletion
             if (behaviour == ToolTipNotificationBehaviour.Once)
             {
-                Dispatcher.Schedule(TimeSpan.FromSeconds(60),
+                NotificationEventArgs.ScheduleAction(TimeSpan.FromMinutes(1),
                     () =>
                     {
                         if (!m_popupNotifications.Contains(e))
@@ -1063,13 +1062,6 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
-            // Ensure it is invoked on the proper thread
-            if (InvokeRequired)
-            {
-                Dispatcher.Invoke(() => OnUpdateAvailable(sender, e));
-                return;
-            }
-
             // Notify the user and prompt him
             if (m_isShowingUpdateWindow)
                 return;
@@ -1098,13 +1090,6 @@ namespace EVEMon
         /// <param name="e"></param>
         private void OnDataUpdateAvailable(object sender, DataUpdateAvailableEventArgs e)
         {
-            // Ensure it is invoked on the proper thread
-            if (InvokeRequired)
-            {
-                Dispatcher.Invoke(() => OnDataUpdateAvailable(sender, e));
-                return;
-            }
-
             if (m_isShowingDataUpdateWindow)
                 return;
 

@@ -92,11 +92,9 @@ namespace EVEMon.Common
         /// <summary>
         /// Starts the event processing on a multi-threaded model, with the UI actor being the main actor.
         /// </summary>
-        /// <param name="mainForm">The main form of the application</param>
-        /// <remarks>May be called more than once without causing redundant operations to occur.</remarks>
-        public static void Run(Form mainForm)
+        public static void Run()
         {
-            Dispatcher.Run(new UIActor(mainForm));
+            Dispatcher.Run();
             Trace();
         }
 

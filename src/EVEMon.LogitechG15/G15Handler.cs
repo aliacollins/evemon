@@ -5,7 +5,6 @@ using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
-using EVEMon.Common.Threading;
 
 namespace EVEMon.LogitechG15
 {
@@ -214,7 +213,7 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private static void LcdDisplay_CurrentCharacterChanged(object sender, CharacterChangedEventArgs e)
         {
-            Dispatcher.Invoke(UpdateOnTimerTick);
+            UpdateOnTimerTick();
         }
 
         /// <summary>
@@ -222,18 +221,12 @@ namespace EVEMon.LogitechG15
         /// </summary>
         private static void LcdDisplay_APIUpdateRequested(object sender, CharacterChangedEventArgs e)
         {
-            Dispatcher.Invoke(() =>
-                                  {
-                                      CCPCharacter ccpCharacter = e.Character as CCPCharacter;
-                                      if (ccpCharacter != null)
-                                      {
-                                          ccpCharacter.QueryMonitors.Query(new Enum[]
-                                                                               {
-                                                                                   CCPAPICharacterMethods.CharacterSheet,
-                                                                                   CCPAPICharacterMethods.SkillQueue
-                                                                               });
-                                      }
-                                  });
+            CCPCharacter ccpCharacter = e.Character as CCPCharacter;
+            ccpCharacter?.QueryMonitors.Query(new Enum[]
+            {
+                CCPAPICharacterMethods.CharacterSheet,
+                CCPAPICharacterMethods.SkillQueue
+            });
         }
 
         /// <summary>
