@@ -799,8 +799,7 @@ namespace EVEMon.LogitechG15
 
                 CurrentCharacter = FirstCharacterToCompleteSkill;
 
-                if (AutoCycleChanged != null)
-                    AutoCycleChanged(this, new CycleEventArgs(false));
+                AutoCycleChanged?.ThreadSafeInvoke(this, new CycleEventArgs(false));
 
                 SwitchState(LcdState.Character);
             }
@@ -811,8 +810,7 @@ namespace EVEMon.LogitechG15
                 if (m_state == LcdState.Character || m_state == LcdState.CharacterList)
                 {
                     m_refreshCharacter = CurrentCharacter;
-                    if (ApiUpdateRequested != null)
-                        ApiUpdateRequested(this, new CharacterChangedEventArgs(m_refreshCharacter));
+                    ApiUpdateRequested?.ThreadSafeInvoke(this, new CharacterChangedEventArgs(m_refreshCharacter));
 
                     SwitchState(LcdState.Refreshing);
                 }
@@ -824,8 +822,7 @@ namespace EVEMon.LogitechG15
                 // Switch autocycle on/off
                 SwitchCycle();
 
-                if (AutoCycleChanged != null)
-                    AutoCycleChanged(this, new CycleEventArgs(Cycle));
+                AutoCycleChanged?.ThreadSafeInvoke(this, new CycleEventArgs(Cycle));
 
                 SwitchState(LcdState.CycleSettings);
                 m_cycleTime = DateTime.Now;
@@ -850,8 +847,7 @@ namespace EVEMon.LogitechG15
             CurrentCharacter = MonitoredCharacters.ElementAt(index);
 
             // Requests new data
-            if (CurrentCharacterChanged != null)
-                CurrentCharacterChanged(this, new CharacterChangedEventArgs(CurrentCharacter));
+            CurrentCharacterChanged?.ThreadSafeInvoke(this, new CharacterChangedEventArgs(CurrentCharacter));
         }
 
         /// <summary>

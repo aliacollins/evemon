@@ -1,5 +1,6 @@
 ﻿using System;
 using EVEMon.Common.Models;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Notifications
 {
@@ -105,6 +106,16 @@ namespace EVEMon.Common.Notifications
         {
             // Must have to be implemented by inheritors
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Schedules an action on this notification.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="callback">The callback.</param>
+        public static void ScheduleAction(TimeSpan time, Action callback)
+        {
+            Dispatcher.Schedule(time, callback.Invoke);
         }
 
         /// <summary>

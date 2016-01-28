@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("EVEMon.Common Unit Tests")]
-[assembly: AssemblyDescription("Unit Tests for EVEMon.Common")]
+[assembly: AssemblyTitle("Unit Tests Helpers")]
+[assembly: AssemblyDescription("Helper Classes for Unit Tests")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EVEMon Developement Team")]
 [assembly: AssemblyProduct("EVEMon")]
-[assembly: AssemblyCopyright("Copyright © 2010-2016, EVEMon Development Team")]
+[assembly: AssemblyCopyright("Copyright © 2016, EVEMon Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f99bf852-fee8-4117-af4c-ada2957c429c")]
+[assembly: Guid("1917e258-0979-4333-8b20-5d66e8986e1c")]
 
 // Version information for an assembly consists of the following four values:
 //

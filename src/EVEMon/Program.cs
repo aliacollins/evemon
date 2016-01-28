@@ -219,16 +219,19 @@ namespace EVEMon
             {
                 // Some exceptions may be thrown on a worker thread so we need to invoke them to the UI thread,
                 // if we are already on the UI thread nothing changes
-                Dispatcher.Invoke(() =>
+                if (s_mainWindow.InvokeRequired)
                 {
-                    using (UnhandledExceptionWindow form = new UnhandledExceptionWindow(ex))
-                    {
-                        form.ShowDialog(s_mainWindow);
-                    }
+                    Dispatcher.Invoke(() => HandleUnhandledException(ex));
+                    return;
+                }
 
-                    // Notify Gooogle Analytics about ending via the Unhandled Exception window
-                    GAnalyticsTracker.TrackEnd(typeof(Program));
-                });
+                using (UnhandledExceptionWindow form = new UnhandledExceptionWindow(ex))
+                {
+                    form.ShowDialog(s_mainWindow);
+                }
+
+                // Notify Gooogle Analytics about ending via the Unhandled Exception window
+                GAnalyticsTracker.TrackEnd(typeof(Program));
             }
             catch (Exception e)
             {

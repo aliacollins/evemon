@@ -10,7 +10,6 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Net;
 using EVEMon.Common.Serialization.Osmium.Loadout;
-using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Loadouts.Osmium
 {
@@ -143,12 +142,9 @@ namespace EVEMon.Common.Loadouts.Osmium
         /// <param name="result">The result.</param>
         private static void OnLoadoutDownloaded(DownloadAsyncResult<String> result)
         {
-            Dispatcher.Invoke(() =>
-            {
-                s_queryPending = false;
+            s_queryPending = false;
 
-                EveMonClient.OnLoadoutDownloaded(result.Result, result.Error?.Message);
-            });
+            EveMonClient.OnLoadoutDownloaded(result.Result, result.Error?.Message);
         }
 
         /// <summary>
