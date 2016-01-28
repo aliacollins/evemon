@@ -36,30 +36,30 @@ namespace EVEMon.Common.Models.Extended
             if (s_parser != null && s_cachedUntil > DateTime.UtcNow)
                 return s_parser;
 
-            //if (!EveMonClient.IsDebugBuild)
-                Task.Run(GetExternalParser);
+            GetExternalParserAsync();
             
             return new InternalEveNotificationTextParser();
         }
 
         /// <summary>
-        /// Gets the external parser.
+        /// asynchronousl gets the external parser.
         /// </summary>
-        private static async Task GetExternalParser()
+        private static void GetExternalParserAsync()
         {
             if (s_queryPending)
                 return;
 
-            EveMonClient.Trace("begin");
+            EveMonClient.Trace();
 
             Uri url = new Uri($"{NetworkConstants.BitBucketWikiBase}{NetworkConstants.ExternalEveNotificationTextParser}");
 
             s_queryPending = true;
 
-            OnDownloaded(await HttpWebClientService.DownloadStringAsync(url));
-
-            // Reset query pending flag
-            s_queryPending = false;
+            HttpWebClientService.DownloadStringAsync(url)
+                .ContinueWith(task =>
+                {
+                    OnDownloaded(task.Result);
+                });
         }
 
         /// <summary>
@@ -83,11 +83,17 @@ namespace EVEMon.Common.Models.Extended
                 typeof(YamlNode).Assembly.Location,
             };
 
-            s_parser = CodeCompiler.GenerateAssembly<EveNotificationTextParser>(referenceAssemblies, result.Result);
+            // Revert to internal parser if the compilation fails for any reason
+            s_parser = CodeCompiler.GenerateAssembly<EveNotificationTextParser>(referenceAssemblies, result.Result) ??
+                       new InternalEveNotificationTextParser();
+
+            // Reset query pending flag
+            // after we compiled the parser
+            s_queryPending = false;
 
             s_cachedUntil = DateTime.UtcNow.AddHours(12);
 
-            EveMonClient.Trace("done");
+            EveMonClient.Trace();
 
             // Notify the subscribers
             NotificationTextParserUpdated?.ThreadSafeInvoke(null, EventArgs.Empty);
