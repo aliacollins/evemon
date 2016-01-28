@@ -41,7 +41,7 @@ namespace EVEMon.Common.Extensions
                 }
 
                 // No it doesn't, so invoke the handler directly
-                handler(sender, e);
+                handler.Invoke(sender, e);
             }
         }
 

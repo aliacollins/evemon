@@ -144,6 +144,7 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="YamlDotNet, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\YamlDotNet.3.7.0\lib\net35\YamlDotNet.dll</HintPath>
       <Private>True</Private>
@@ -777,10 +778,6 @@
     <Compile Include="SettingsObjects\ResearchColumn.cs" />
     <Compile Include="SettingsObjects\ResearchColumnSettings.cs" />
     <Compile Include="SettingsObjects\ResearchSettings.cs" />
-    <Compile Include="Threading\Dispatcher.cs" />
-    <Compile Include="Threading\ActorTimer.cs" />
-    <Compile Include="Threading\IActor.cs" />
-    <Compile Include="Threading\UIActor.cs" />
     <Compile Include="Helpers\TimeCheck.cs" />
     <Compile Include="Net\HttpWebClientServiceException.cs" />
     <Compile Include="Net\HttpWebClientServiceExceptionStatus.cs" />
@@ -848,7 +845,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\TreeViewExtensions.cs" />
-    <Compile Include="Threading\Actor.cs" />
+    <Compile Include="Threading\Dispatcher.cs" />
     <Compile Include="UpdateManager.cs" />
     <Compile Include="Util.cs" />
     <None Include="Serialization\Exportation\output-html.xslt" />
@@ -1072,9 +1069,6 @@
     <Compile Include="Serialization\Eve\CCPAPIResult.cs" />
     <Compile Include="Collections\ReadonlyCollection.cs" />
     <Compile Include="Models\SkillLevel.cs" />
-    <Compile Include="Threading\IActorTimer.cs" />
-    <Compile Include="Threading\Message.cs" />
-    <Compile Include="Threading\UIActorTimer.cs" />
     <Compile Include="Extensions\TimeExtensions.cs" />
     <Compile Include="Models\UriCharacter.cs" />
     <Compile Include="Collections\Global\GlobalAPIProviderCollection.cs" />
@@ -1217,6 +1211,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->

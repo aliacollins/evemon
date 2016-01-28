@@ -18,7 +18,7 @@ namespace EVEMon.Common.MarketPricer
         public static void QueryRegionalMarketOrdersAsync(IEnumerable<int> itemIDs, IEnumerable<int> regions,
                                                           Action<PricerMarketOrdersQueryResult> callback)
         {
-            Dispatcher.Schedule(TimeSpan.FromSeconds(1.0), () => callback(new PricerMarketOrdersQueryResult()));
+            Dispatcher.Schedule(TimeSpan.FromSeconds(1), () => callback(new PricerMarketOrdersQueryResult()));
         }
     }
 }

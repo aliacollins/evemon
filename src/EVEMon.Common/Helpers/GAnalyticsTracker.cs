@@ -92,6 +92,9 @@ namespace EVEMon.Common.Helpers
 
             // Reschedule later otherwise
             Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEvent(type, category, action));
+
+            if (EveMonClient.IsDebugBuild)
+                EveMonClient.Trace($"in {TimeSpan.FromMinutes(1)}");
         }
 
         /// <summary>
@@ -112,7 +115,10 @@ namespace EVEMon.Common.Helpers
                     .ContinueWith(delegate
                     {
                         if (EveMonClient.IsDebugBuild)
+                        {
                             EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - ({category} - {action})", printMethod: false);
+                            EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - in {TimeSpan.FromDays(1)}", printMethod: false);
+                        }
 
                         Dispatcher.Schedule(TimeSpan.FromDays(1), () => TrackStart(type, DailyStartText));
 
@@ -123,6 +129,9 @@ namespace EVEMon.Common.Helpers
 
             // Reschedule later otherwise
             Dispatcher.Schedule(TimeSpan.FromMinutes(1), () => TrackEventAsync(type, category, action));
+
+            if (EveMonClient.IsDebugBuild)
+                EveMonClient.Trace($"GAnalyticsTracker.TrackEventAsync - in {TimeSpan.FromMinutes(1)}", printMethod: false);
         }
 
         /// <summary>
