@@ -780,8 +780,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                if (tmSkillExplorerTemp != null)
-                    tmSkillExplorerTemp.Dispose();
+                tmSkillExplorerTemp?.Dispose();
             }
 
             // Quit here if skill is fully trained
@@ -808,13 +807,13 @@ namespace EVEMon.CharacterMonitoring
                             String.Format(CultureConstants.DefaultCulture, "Level {0} to", Skill.GetRomanFromInt(level)));
 
                         Character.Plans.AddTo(tempMenuLevel.DropDownItems,
-                                              (menuPlanItem, plan) =>
-                                                  {
-                                                      menuPlanItem.Click += menuPlanItem_Click;
-                                                      menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
-                                                                                                            new SkillLevel(skill,
-                                                                                                                           level));
-                                                  });
+                            (menuPlanItem, plan) =>
+                            {
+                                menuPlanItem.Click += menuPlanItem_Click;
+                                menuPlanItem.Tag = new KeyValuePair<Plan, SkillLevel>(plan,
+                                    new SkillLevel(skill,
+                                        level));
+                            });
 
                         ToolStripMenuItem menuLevel = tempMenuLevel;
                         tempMenuLevel = null;
@@ -823,8 +822,7 @@ namespace EVEMon.CharacterMonitoring
                     }
                     finally
                     {
-                        if (tempMenuLevel != null)
-                            tempMenuLevel.Dispose();
+                        tempMenuLevel?.Dispose();
                     }
                 }
 
@@ -836,8 +834,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                if (tempMenuItem != null)
-                    tempMenuItem.Dispose();
+                tempMenuItem?.Dispose();
             }
         }
 

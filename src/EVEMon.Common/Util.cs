@@ -650,8 +650,7 @@ namespace EVEMon.Common
             }
             finally
             {
-                if (stream != null)
-                    stream.Dispose();
+                stream?.Dispose();
             }
             return tempFile;
         }

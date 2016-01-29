@@ -70,6 +70,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls
 {
@@ -141,14 +142,12 @@ namespace EVEMon.Common.Controls
 
         protected void OnAfterDeselect(TreeNode tn)
         {
-            if (AfterDeselect != null)
-                AfterDeselect(this, new TreeViewEventArgs(tn));
+            AfterDeselect?.ThreadSafeInvoke(this, new TreeViewEventArgs(tn));
         }
 
         protected void OnBeforeDeselect(TreeNode tn)
         {
-            if (BeforeDeselect != null)
-                BeforeDeselect(this, new TreeViewEventArgs(tn));
+            BeforeDeselect?.ThreadSafeInvoke(this, new TreeViewEventArgs(tn));
         }
 
         protected void OnSelectionsChanged()
@@ -156,8 +155,7 @@ namespace EVEMon.Common.Controls
             if (!m_blnSelectionChanged)
                 return;
 
-            if (SelectionsChanged != null)
-                SelectionsChanged(this, new EventArgs());
+            SelectionsChanged?.ThreadSafeInvoke(this, new EventArgs());
         }
 
 
@@ -876,8 +874,7 @@ namespace EVEMon.Common.Controls
         {
             if (disposing)
             {
-                if (m_components != null)
-                    m_components.Dispose();
+                m_components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -952,10 +949,7 @@ namespace EVEMon.Common.Controls
         /// <returns>True if we click on the plus/minus icon</returns>
         private static bool IsPlusMinusClicked(TreeNode tn, MouseEventArgs e)
         {
-            if (tn == null)
-                return false;
-
-            return e.X < tn.Bounds.X;
+            return e.X < tn?.Bounds.X;
         }
 
         /// <summary>
@@ -1553,8 +1547,7 @@ namespace EVEMon.Common.Controls
                         break;
                 }
 
-                if (tnToMakeVisible != null)
-                    tnToMakeVisible.EnsureVisible();
+                tnToMakeVisible?.EnsureVisible();
             }
 
             base.OnKeyDown(e);
@@ -1664,8 +1657,7 @@ namespace EVEMon.Common.Controls
         /// <returns>The position into which the new element was inserted.</returns>
         public void Add(TreeNode treeNode)
         {
-            if (TreeNodeAdded != null)
-                TreeNodeAdded(treeNode);
+            TreeNodeAdded?.Invoke(treeNode);
 
             List.Add(treeNode);
         }
@@ -1677,8 +1669,7 @@ namespace EVEMon.Common.Controls
         /// <param name="treeNode">Tree node to insert.</param>
         public void InsertAt(int index, TreeNode treeNode)
         {
-            if (TreeNodeInserted != null)
-                TreeNodeInserted(treeNode);
+            TreeNodeInserted?.Invoke(treeNode);
 
             List.Insert(index, treeNode);
         }
@@ -1689,8 +1680,7 @@ namespace EVEMon.Common.Controls
         /// <param name="treeNode">Tree node to remove.</param>
         public void Remove(TreeNode treeNode)
         {
-            if (TreeNodeRemoved != null)
-                TreeNodeRemoved(treeNode);
+            TreeNodeRemoved?.Invoke(treeNode);
 
             List.Remove(treeNode);
         }
@@ -1787,8 +1777,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         protected override void OnClear()
         {
-            if (SelectedNodesCleared != null)
-                SelectedNodesCleared(this, EventArgs.Empty);
+            SelectedNodesCleared?.ThreadSafeInvoke(this, EventArgs.Empty);
 
             base.OnClear();
         }

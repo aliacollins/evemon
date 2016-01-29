@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.PieChart
 {
@@ -285,8 +286,7 @@ namespace EVEMon.PieChart
             if (width <= 0 || height <= 0)
                 return;
 
-            if (PieChart != null)
-                PieChart.Dispose();
+            PieChart?.Dispose();
 
             if (m_drawColors != null && m_drawColors.Length > 0)
             {
@@ -421,8 +421,7 @@ namespace EVEMon.PieChart
             {
                 if (disposing)
                 {
-                    if (PieChart != null)
-                        PieChart.Dispose();
+                    PieChart?.Dispose();
 
                     m_toolTip.Dispose();
                 }
@@ -466,8 +465,7 @@ namespace EVEMon.PieChart
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnAngleChange(EventArgs e)
         {
-            if (AngleChange != null)
-                AngleChange(this, e);
+            AngleChange?.ThreadSafeInvoke(this, e);
         }
 
         /// <summary>

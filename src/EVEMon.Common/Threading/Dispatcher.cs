@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Threading;
 using ThreadDispatcher = System.Windows.Threading.Dispatcher;
 
@@ -12,13 +13,16 @@ namespace EVEMon.Common.Threading
         /// <summary>
         /// Starts the dispatcher on the main thread.
         /// </summary>
-        /// <remarks>If the method has already been called previously, this new call will silently fail.</remarks>
-        internal static void Run()
+        /// <param name="thread">The thread.</param>
+        /// <remarks>
+        /// If the method has already been called previously, this new call will silently fail.
+        /// </remarks>
+        internal static void Run(Thread thread)
         {
             if (s_mainThreadDispather != null)
                 return;
 
-            s_mainThreadDispather = ThreadDispatcher.CurrentDispatcher;
+            s_mainThreadDispather = ThreadDispatcher.FromThread(thread) ?? ThreadDispatcher.CurrentDispatcher;
 
             s_oneSecondTimer = new DispatcherTimer(TimeSpan.FromSeconds(1),
                 DispatcherPriority.Background,

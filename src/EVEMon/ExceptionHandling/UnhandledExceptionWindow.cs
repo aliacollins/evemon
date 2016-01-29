@@ -134,8 +134,7 @@ namespace EVEMon.ExceptionHandling
             }
             finally
             {
-                if (traceStream != null)
-                    traceStream.Dispose();
+                traceStream?.Dispose();
             }
             return trace;
         }

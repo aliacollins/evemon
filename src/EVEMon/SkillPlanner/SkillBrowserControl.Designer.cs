@@ -48,7 +48,7 @@ namespace EVEMon.SkillPlanner
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.showSkillExplorerMenu = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.ownsBookMenu = new System.Windows.Forms.ToolStripButton();
+            this.ownsBookToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.planToMenu = new System.Windows.Forms.ToolStripDropDownButton();
             this.planTo0Menu = new System.Windows.Forms.ToolStripMenuItem();
             this.planTo1Menu = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,47 +91,47 @@ namespace EVEMon.SkillPlanner
             this.miPlanTo4,
             this.miPlanTo5});
             this.cmsSkillContext.Name = "cmsSkillContext";
-            this.cmsSkillContext.Size = new System.Drawing.Size(153, 158);
+            this.cmsSkillContext.Size = new System.Drawing.Size(151, 136);
             // 
             // miPlanTo0
             // 
             this.miPlanTo0.Name = "miPlanTo0";
-            this.miPlanTo0.Size = new System.Drawing.Size(152, 22);
+            this.miPlanTo0.Size = new System.Drawing.Size(150, 22);
             this.miPlanTo0.Text = "Remove";
             this.miPlanTo0.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo1
             // 
             this.miPlanTo1.Name = "miPlanTo1";
-            this.miPlanTo1.Size = new System.Drawing.Size(152, 22);
+            this.miPlanTo1.Size = new System.Drawing.Size(150, 22);
             this.miPlanTo1.Text = "Plan to Level 1";
             this.miPlanTo1.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo2
             // 
             this.miPlanTo2.Name = "miPlanTo2";
-            this.miPlanTo2.Size = new System.Drawing.Size(152, 22);
+            this.miPlanTo2.Size = new System.Drawing.Size(150, 22);
             this.miPlanTo2.Text = "Plan to Level 2";
             this.miPlanTo2.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo3
             // 
             this.miPlanTo3.Name = "miPlanTo3";
-            this.miPlanTo3.Size = new System.Drawing.Size(152, 22);
+            this.miPlanTo3.Size = new System.Drawing.Size(150, 22);
             this.miPlanTo3.Text = "Plan to Level 3";
             this.miPlanTo3.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo4
             // 
             this.miPlanTo4.Name = "miPlanTo4";
-            this.miPlanTo4.Size = new System.Drawing.Size(152, 22);
+            this.miPlanTo4.Size = new System.Drawing.Size(150, 22);
             this.miPlanTo4.Text = "Plan to Level 4";
             this.miPlanTo4.Click += new System.EventHandler(this.planToMenu_Click);
             // 
             // miPlanTo5
             // 
             this.miPlanTo5.Name = "miPlanTo5";
-            this.miPlanTo5.Size = new System.Drawing.Size(152, 22);
+            this.miPlanTo5.Size = new System.Drawing.Size(150, 22);
             this.miPlanTo5.Text = "Plan to Level 5";
             this.miPlanTo5.Click += new System.EventHandler(this.planToMenu_Click);
             // 
@@ -216,7 +216,7 @@ namespace EVEMon.SkillPlanner
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showSkillExplorerMenu,
             this.toolStripSeparator1,
-            this.ownsBookMenu,
+            this.ownsBookToolStripButton,
             this.planToMenu});
             this.toolStrip.Location = new System.Drawing.Point(0, 106);
             this.toolStrip.Name = "toolStrip";
@@ -241,16 +241,17 @@ namespace EVEMon.SkillPlanner
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // ownsBookMenu
+            // ownsBookToolStripButton
             // 
-            this.ownsBookMenu.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.ownsBookMenu.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.ownsBookMenu.Image = ((System.Drawing.Image)(resources.GetObject("ownsBookMenu.Image")));
-            this.ownsBookMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ownsBookMenu.Name = "ownsBookMenu";
-            this.ownsBookMenu.Size = new System.Drawing.Size(71, 22);
-            this.ownsBookMenu.Text = "&Owns book";
-            this.ownsBookMenu.Click += new System.EventHandler(this.ownsBookMenu_Click);
+            this.ownsBookToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ownsBookToolStripButton.CheckOnClick = true;
+            this.ownsBookToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ownsBookToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("ownsBookToolStripButton.Image")));
+            this.ownsBookToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ownsBookToolStripButton.Name = "ownsBookToolStripButton";
+            this.ownsBookToolStripButton.Size = new System.Drawing.Size(71, 22);
+            this.ownsBookToolStripButton.Text = "&Owns book";
+            this.ownsBookToolStripButton.CheckedChanged += new System.EventHandler(this.ownsBookToolStripButton_CheckedChanged);
             // 
             // planToMenu
             // 
@@ -507,7 +508,7 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.ToolStripMenuItem planTo4Menu;
         private System.Windows.Forms.ToolStripMenuItem planTo5Menu;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton ownsBookMenu;
+        private System.Windows.Forms.ToolStripButton ownsBookToolStripButton;
         private System.Windows.Forms.Label lblHelp;
         private System.Windows.Forms.Label lblSkillCost;
         private System.Windows.Forms.FlowLayoutPanel flpSkillNameCost;

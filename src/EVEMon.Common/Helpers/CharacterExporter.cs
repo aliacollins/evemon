@@ -428,8 +428,7 @@ namespace EVEMon.Common.Helpers
                                                          };
 
 
-            if (plan != null)
-                plan.Merge(mergedSkill);
+            plan?.Merge(mergedSkill);
 
             return mergedSkill;
         }

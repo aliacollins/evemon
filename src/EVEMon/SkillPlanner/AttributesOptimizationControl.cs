@@ -179,8 +179,7 @@ namespace EVEMon.SkillPlanner
             UpdateControls(m_character, m_plan, manualRemapping, m_description);
 
             // Notify the changes
-            if (AttributeChanged != null)
-                AttributeChanged(this, new AttributeChangedEventArgs(manualRemapping));
+            AttributeChanged?.ThreadSafeInvoke(this, new AttributeChangedEventArgs(manualRemapping));
         }
 
 
@@ -241,8 +240,7 @@ namespace EVEMon.SkillPlanner
             UpdateControls(m_character, m_plan, m_remapping, m_description);
 
             // Fires the event
-            if (AttributeChanged != null)
-                AttributeChanged(this, new AttributeChangedEventArgs(m_remapping));
+            AttributeChanged?.ThreadSafeInvoke(this, new AttributeChangedEventArgs(m_remapping));
         }
 
         /// <summary>
@@ -260,8 +258,7 @@ namespace EVEMon.SkillPlanner
             UpdateControls(m_character, m_plan, zeroRemapping, m_description);
 
             // Fires the event
-            if (AttributeChanged != null)
-                AttributeChanged(this, new AttributeChangedEventArgs(zeroRemapping));
+            AttributeChanged?.ThreadSafeInvoke(this, new AttributeChangedEventArgs(zeroRemapping));
         }
 
         /// <summary>
@@ -273,9 +270,7 @@ namespace EVEMon.SkillPlanner
         private void attributeButton_Click(object sender, EventArgs e)
         {
             AttributeButtonControl button = (sender as AttributeButtonControl);
-            if (button == null)
-                return;
-            if (button.AttributeBar == null)
+            if (button?.AttributeBar == null)
                 return;
 
             // Adjust delta
@@ -323,8 +318,7 @@ namespace EVEMon.SkillPlanner
             UpdateControls(m_character, m_plan, remapping, m_description);
 
             // Fires the event
-            if (AttributeChanged != null)
-                AttributeChanged(this, new AttributeChangedEventArgs(remapping));
+            AttributeChanged?.ThreadSafeInvoke(this, new AttributeChangedEventArgs(remapping));
         }
 
         #endregion

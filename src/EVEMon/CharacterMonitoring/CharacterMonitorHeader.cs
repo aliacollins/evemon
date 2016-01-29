@@ -569,8 +569,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                if (tempMenu != null)
-                    tempMenu.Dispose();
+                tempMenu?.Dispose();
             }
             return menu;
         }

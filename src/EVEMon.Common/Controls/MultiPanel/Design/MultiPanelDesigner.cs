@@ -98,13 +98,12 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         private void OnServiceSelectionChanged(object sender, EventArgs e)
         {
             ISelectionService service = (ISelectionService)GetService(typeof(ISelectionService));
-            if (service == null)
-                return;
 
-            if (service.PrimarySelection == null)
+            if (service?.PrimarySelection == null)
                 return;
 
             MultiPanelPage page = GetMultiPanelPage((Control)service.PrimarySelection);
+
             if (page != null)
                 m_panel.SelectedPage = page;
         }

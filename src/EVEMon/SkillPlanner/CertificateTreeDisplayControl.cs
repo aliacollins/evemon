@@ -233,8 +233,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             treeView.SelectedNode = selection;
-            if (SelectionChanged != null)
-                SelectionChanged(this, new EventArgs());
+            SelectionChanged?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -327,8 +326,7 @@ namespace EVEMon.SkillPlanner
             if (newSelection != null)
                 return;
 
-            if (SelectionChanged != null)
-                SelectionChanged(this, new EventArgs());
+            SelectionChanged?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -532,8 +530,7 @@ namespace EVEMon.SkillPlanner
             {
                 treeView.SelectedNode = node;
                 node.Expand();
-                if (SelectionChanged != null)
-                    SelectionChanged(this, new EventArgs());
+                SelectionChanged?.ThreadSafeInvoke(this, new EventArgs());
                 break;
             }
         }
@@ -691,14 +688,13 @@ namespace EVEMon.SkillPlanner
         {
             // Retrieve the owner window
             PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+
             if (planWindow == null || planWindow.IsDisposed)
                 return;
 
-            // Return when nothing is selected
-            if (treeView.SelectedNode == null)
-                return;
+            SkillLevel skill = treeView.SelectedNode?.Tag as SkillLevel;
 
-            SkillLevel skill = treeView.SelectedNode.Tag as SkillLevel;
+            // Return when nothing is selected
             if (skill == null)
                 return;
 

@@ -358,8 +358,7 @@ namespace EVEMon.Common.QueryMonitor
 
             // Check the account has a character in training (if API key of type "Account")
             APIKey apikey = m_ccpCharacter.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.SkillInTraining);
-            if (apikey != null)
-                apikey.CharacterInTraining();
+            apikey?.CharacterInTraining();
 
             // Check the character has room in skill queue
             if (m_ccpCharacter.IsTraining && (m_ccpCharacter.SkillQueue.EndTime < DateTime.UtcNow.AddHours(24)))

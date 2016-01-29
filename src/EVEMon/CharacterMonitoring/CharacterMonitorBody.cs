@@ -637,8 +637,7 @@ namespace EVEMon.CharacterMonitoring
                                 }
                                 finally
                                 {
-                                    if (tempToolStripMenuItem != null)
-                                        tempToolStripMenuItem.Dispose();
+                                    tempToolStripMenuItem?.Dispose();
                                 }
                                 return tsmi;
                             }).ToList();
@@ -1198,10 +1197,7 @@ namespace EVEMon.CharacterMonitoring
         {
             IListView list = multiPanel.SelectedPage.Controls.OfType<IListView>().FirstOrDefault();
 
-            if (list == null)
-                return;
-
-            list.AutoResizeColumns();
+            list?.AutoResizeColumns();
         }
 
         /// <summary>
@@ -1500,8 +1496,7 @@ namespace EVEMon.CharacterMonitoring
                             }
                             finally
                             {
-                                if (tempToolStripButton != null)
-                                    tempToolStripButton.Dispose();
+                                tempToolStripButton?.Dispose();
                             }
                             return tsb;
                         }))

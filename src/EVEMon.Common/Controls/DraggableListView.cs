@@ -3,6 +3,7 @@ using System.Collections;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Controls
@@ -139,8 +140,7 @@ namespace EVEMon.Common.Controls
                 Items.Remove(item);
             }
 
-            if (ListViewItemsDragged != null)
-                ListViewItemsDragged(this, new EventArgs());
+            ListViewItemsDragged?.ThreadSafeInvoke(this, new EventArgs());
 
             // if the item was dragged to the end of the plan.
             if (dropIndex >= Items.Count)

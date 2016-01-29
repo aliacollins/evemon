@@ -910,8 +910,7 @@ namespace EVEMon.SkillPlanner
             m_lastImplantSetIndex = cbChooseImplantSet.SelectedIndex;
             DisplayPlan.ChosenImplantSet = m_plan.ChosenImplantSet;
 
-            if (m_pluggable != null)
-                m_pluggable.UpdateOnImplantSetChange();
+            m_pluggable?.UpdateOnImplantSetChange();
         }
 
         #endregion
@@ -997,10 +996,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private static PlanEntry GetPlanEntry(ListViewItem lvi)
         {
-            if (lvi == null)
-                return null;
-
-            return lvi.Tag as PlanEntry;
+            return lvi?.Tag as PlanEntry;
         }
 
         /// <summary>
@@ -1537,8 +1533,7 @@ namespace EVEMon.SkillPlanner
                         }
                         finally
                         {
-                            if (tempToolStripButton != null)
-                                tempToolStripButton.Dispose();
+                            tempToolStripButton?.Dispose();
                         }
                     }
                 }
@@ -1848,14 +1843,14 @@ namespace EVEMon.SkillPlanner
         private void miChangeToLevel_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menu = sender as ToolStripMenuItem;
-            if (menu == null)
-                return;
 
-            IPlanOperation operation = menu.Tag as IPlanOperation;
+            IPlanOperation operation = menu?.Tag as IPlanOperation;
+
             if (operation == null)
                 return;
 
             PlanWindow window = WindowsFactory.ShowByTag<PlanWindow, Plan>(operation.Plan);
+
             if (window == null || window.IsDisposed)
                 return;
 
@@ -2063,8 +2058,7 @@ namespace EVEMon.SkillPlanner
                 return;
 
             // When we click on another point the previous form closes
-            if (m_oldForm != null)
-                m_oldForm.Close();
+            m_oldForm?.Close();
 
             // Creates the form and displays it
             AttributesOptimizationForm form;
@@ -2081,8 +2075,7 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
-                if (tempForm != null)
-                    tempForm.Dispose();
+                tempForm?.Dispose();
             }
 
             // Update variables for forms display control

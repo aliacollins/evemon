@@ -792,8 +792,7 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void OnSelectionChanged()
         {
-            if (SelectionChanged != null)
-                SelectionChanged(this, new EventArgs());
+            SelectionChanged?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         /// <summary>

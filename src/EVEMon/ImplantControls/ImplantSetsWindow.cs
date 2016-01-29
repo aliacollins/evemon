@@ -177,8 +177,7 @@ namespace EVEMon.ImplantControls
             }
             finally
             {
-                if (tempLabel != null)
-                    tempLabel.Dispose();
+                tempLabel?.Dispose();
             }
         }
 
@@ -202,8 +201,7 @@ namespace EVEMon.ImplantControls
             }
             finally
             {
-                if (tempRow != null)
-                    tempRow.Dispose();
+                tempRow?.Dispose();
             }
         }
 

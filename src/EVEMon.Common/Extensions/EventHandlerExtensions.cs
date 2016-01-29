@@ -16,7 +16,7 @@ namespace EVEMon.Common.Extensions
         /// Checks whether subscribers implement <see cref="System.ComponentModel.ISynchronizeInvoke" /> to ensure we raise the
         /// event on the correct thread.
         /// </remarks>
-        public static void ThreadSafeInvoke(this EventHandler eventHandler, object sender, EventArgs e)
+        public static void ThreadSafeInvoke(this Delegate eventHandler, object sender, EventArgs e)
         {
             // Make sure we have some subscribers
             if (eventHandler == null)

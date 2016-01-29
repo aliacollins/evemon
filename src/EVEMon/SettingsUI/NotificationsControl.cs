@@ -153,8 +153,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempCheckbox != null)
-                    tempCheckbox.Dispose();
+                tempCheckbox?.Dispose();
             }
         }
 
@@ -187,8 +186,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempCombo != null)
-                    tempCombo.Dispose();
+                tempCombo?.Dispose();
             }
         }
 
@@ -217,8 +215,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempLabel != null)
-                    tempLabel.Dispose();
+                tempLabel?.Dispose();
             }
         }
     }

@@ -568,8 +568,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                if (tmSkillExplorerTemp != null)
-                    tmSkillExplorerTemp.Dispose();
+                tmSkillExplorerTemp?.Dispose();
             }
 
             // Quit here if skill is fully trained
@@ -610,8 +609,7 @@ namespace EVEMon.CharacterMonitoring
                     }
                     finally
                     {
-                        if (tempMenuLevel != null)
-                            tempMenuLevel.Dispose();
+                        tempMenuLevel?.Dispose();
                     }
                 }
 
@@ -623,8 +621,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                if (tempMenuItem != null)
-                    tempMenuItem.Dispose();
+                tempMenuItem?.Dispose();
             }
 
             // Add a separator
@@ -643,8 +640,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                if (tempCreatePlanMenuItem != null)
-                    tempCreatePlanMenuItem.Dispose();
+                tempCreatePlanMenuItem?.Dispose();
             }
         }
 

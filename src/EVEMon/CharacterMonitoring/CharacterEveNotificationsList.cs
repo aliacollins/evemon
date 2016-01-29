@@ -809,11 +809,10 @@ namespace EVEMon.CharacterMonitoring
                 return;
 
             APIErrorNotificationEventArgs notification = e as APIErrorNotificationEventArgs;
-            if (notification == null)
-                return;
 
             CCPAPIResult<SerializableAPINotificationTexts> notificationResult =
-                notification.Result as CCPAPIResult<SerializableAPINotificationTexts>;
+                notification?.Result as CCPAPIResult<SerializableAPINotificationTexts>;
+
             if (notificationResult == null)
                 return;
 

@@ -619,10 +619,7 @@ namespace EVEMon.SkillPlanner
         private void tvLoadout_DoubleClick(object sender, EventArgs e)
         {
             // user double clicked an area that isn't a node
-            if (tvLoadout.SelectedNode == null)
-                return;
-
-            Item item = tvLoadout.SelectedNode.Tag as Item;
+            Item item = tvLoadout.SelectedNode?.Tag as Item;
 
             // if the loadout node isn't tagged or we couldn't cast it
             // to an Item return

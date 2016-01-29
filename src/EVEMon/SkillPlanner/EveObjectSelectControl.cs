@@ -354,8 +354,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Notify subscribers
-            if (SelectionChanged != null)
-                SelectionChanged(this, new EventArgs());
+            SelectionChanged?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         #endregion

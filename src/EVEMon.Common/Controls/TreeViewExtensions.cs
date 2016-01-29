@@ -43,8 +43,7 @@ namespace EVEMon.Common.Controls
                     {
                         // Clean up
                         IDisposable disposable = currentEnumerator as IDisposable;
-                        if (disposable != null)
-                            disposable.Dispose();
+                        disposable?.Dispose();
 
                         // Previous level
                         currentEnumerator = enumerators.Pop();

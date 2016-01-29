@@ -329,8 +329,7 @@ namespace EVEMon.Schedule
                 }
                 finally
                 {
-                    if (tempItem != null)
-                        tempItem.Dispose();
+                    tempItem?.Dispose();
                 }
             }
 

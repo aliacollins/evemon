@@ -4,9 +4,10 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 
-namespace EVEMon.Common.IGBService
+namespace EVEMon.Common.IgbService
 {
     /// <summary>
     /// Manages a individual client connection
@@ -62,8 +63,7 @@ namespace EVEMon.Common.IGBService
         /// </summary>
         private void OnClosed()
         {
-            if (Closed != null)
-                Closed(this, new EventArgs());
+            Closed?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         #endregion
@@ -149,8 +149,7 @@ namespace EVEMon.Common.IGBService
         /// <param name="count">bytes read</param>
         private void OnDataRead(IEnumerable<byte> buffer, int count)
         {
-            if (DataRead != null)
-                DataRead(this, new IgbClientDataReadEventArgs(buffer, count));
+            DataRead?.ThreadSafeInvoke(this, new IgbClientDataReadEventArgs(buffer, count));
         }
 
         #endregion

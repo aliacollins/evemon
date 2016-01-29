@@ -68,8 +68,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
                     return;
 
                 MultiPanel panel = m_page.Parent as MultiPanel;
-                if (panel != null)
-                    panel.Refresh();
+                panel?.Refresh();
             }
         }
 

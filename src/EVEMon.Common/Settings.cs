@@ -49,7 +49,7 @@ namespace EVEMon.Common
         {
             UI = new UISettings();
             G15 = new G15Settings();
-            IGB = new IGBSettings();
+            IGB = new IgbSettings();
             Proxy = new ProxySettings();
             Updates = new UpdateSettings();
             Calendar = new CalendarSettings();
@@ -114,7 +114,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Gets the settings for the network.
         /// </summary>
-        public static IGBSettings IGB { get; private set; }
+        public static IgbSettings IGB { get; private set; }
 
         /// <summary>
         /// Gets the calendar settings.

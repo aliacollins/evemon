@@ -107,8 +107,7 @@ namespace EVEMon.Common.Helpers
                 // Training time
                 AddTrainingTime(settings, shoppingListCandidate, entry, builder);
 
-                if (exportActions != null)
-                    exportActions(builder, entry, settings);
+                exportActions?.Invoke(builder, entry, settings);
 
                 builder.Append(lineFeed);
 

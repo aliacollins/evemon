@@ -114,8 +114,7 @@ namespace EVEMon.Common.Models
             BestDuration = BestScratchpad.After(Skills).TrainingTime.Subtract(StartTime);
 
             // Update the underlying remapping point
-            if (Point != null)
-                Point.SetBaseAttributes(BestScratchpad, BaseScratchpad);
+            Point?.SetBaseAttributes(BestScratchpad, BaseScratchpad);
         }
 
         /// <summary>

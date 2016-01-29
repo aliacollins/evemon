@@ -57,8 +57,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dropbox.Api, Version=0.1.5855.27667, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dropbox.Api.2.2.1\lib\portable-net45+sl50+win+wpa81+wp80\Dropbox.Api.dll</HintPath>
+    <Reference Include="Dropbox.Api, Version=0.1.5870.31770, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dropbox.Api.2.3.3\lib\portable-net45+sl50+win+wpa81+wp80\Dropbox.Api.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Apis, Version=1.10.0.25332, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
@@ -933,11 +933,11 @@
     <Compile Include="Data\StationServices.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Collections\Global\GlobalNotificationCollection.cs" />
-    <Compile Include="IGBService\ClientConnectedEventArgs.cs" />
-    <Compile Include="IGBService\IgbClientDataReadEventArgs.cs" />
-    <Compile Include="IGBService\IgbServer.cs" />
-    <Compile Include="IGBService\IgbTcpClient.cs" />
-    <Compile Include="IGBService\IgbTcpListener.cs" />
+    <Compile Include="IgbService\ClientConnectedEventArgs.cs" />
+    <Compile Include="IgbService\IgbClientDataReadEventArgs.cs" />
+    <Compile Include="IgbService\IgbServer.cs" />
+    <Compile Include="IgbService\IgbTcpClient.cs" />
+    <Compile Include="IgbService\IgbTcpListener.cs" />
     <Compile Include="Attributes\UpdateAttribute.cs" />
     <Compile Include="Models\IndustryJob.cs" />
     <Compile Include="Models\Collections\IndustryJobCollection.cs" />
@@ -1009,7 +1009,7 @@
     <Compile Include="SettingsObjects\CharacterUISettings.cs" />
     <Compile Include="SettingsObjects\CustomMsgBoxSettings.cs" />
     <Compile Include="SettingsObjects\ExportationSettings.cs" />
-    <Compile Include="SettingsObjects\IGBSettings.cs" />
+    <Compile Include="SettingsObjects\IgbSettings.cs" />
     <Compile Include="SettingsObjects\IndustryJobColumn.cs" />
     <Compile Include="SettingsObjects\IndustryJobColumnSettings.cs" />
     <Compile Include="SettingsObjects\IndustryJobSettings.cs" />

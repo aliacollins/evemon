@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
 
 namespace EVEMon.Common
@@ -50,8 +51,7 @@ namespace EVEMon.Common
         /// <param name="b">if set to <c>true</c> [b].</param>
         private void SemaphoreReleased(object o, bool b)
         {
-            if (Signaled != null)
-                Signaled(this, new EventArgs());
+            Signaled?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         /// <summary>

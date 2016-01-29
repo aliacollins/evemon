@@ -352,8 +352,7 @@ namespace EVEMon.Common.Controls
             }
             finally
             {
-                if (overlayIcon != null)
-                    overlayIcon.Dispose();
+                overlayIcon?.Dispose();
             }
         }
 

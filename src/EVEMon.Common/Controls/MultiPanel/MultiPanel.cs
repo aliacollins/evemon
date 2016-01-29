@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
 using EVEMon.Common.Controls.MultiPanel.Design;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls.MultiPanel
 {
@@ -43,8 +44,7 @@ namespace EVEMon.Common.Controls.MultiPanel
                     child.Visible = ReferenceEquals(child, m_selectedPage);
                 }
 
-                if (SelectionChange != null)
-                    SelectionChange(null, new MultiPanelSelectionChangeEventArgs(oldPage, value));
+                SelectionChange?.ThreadSafeInvoke(null, new MultiPanelSelectionChangeEventArgs(oldPage, value));
             }
         }
 

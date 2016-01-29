@@ -63,6 +63,7 @@ namespace EVEMon.SkillPlanner
 
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.PlanChanged += EveMonClient_PlanChanged;
+            EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             Disposed += OnDisposed;
 
             //Update the controls visibility
@@ -79,6 +80,7 @@ namespace EVEMon.SkillPlanner
             skillTreeDisplay.SkillClicked -= skillTreeDisplay_SkillClicked;
             EveMonClient.PlanChanged -= EveMonClient_PlanChanged;
             EveMonClient.SettingsChanged -= EveMonClient_SettingsChanged;
+            EveMonClient.CharacterUpdated -= EveMonClient_CharacterUpdated;
             Disposed -= OnDisposed;
         }
 
@@ -206,7 +208,7 @@ namespace EVEMon.SkillPlanner
             lblSkillCost.Text = String.Format(CultureConstants.DefaultCulture, "{0} ISK", m_selectedSkill.FormattedCost);
             descriptionTextBox.Text = m_selectedSkill.Description;
             if (!m_selectedSkill.IsPublic)
-                descriptionTextBox.Text += " ** THIS IS A NON-PUBLIC SKILL **";
+                descriptionTextBox.Text += @" ** THIS IS A NON-PUBLIC SKILL **";
 
             lblAttributes.Text = String.Format(CultureConstants.DefaultCulture,
                                                "Primary: {0}, Secondary: {1} (SP/Hour: {2:N0})",
@@ -223,13 +225,13 @@ namespace EVEMon.SkillPlanner
             // Update "owned" checkbox
             if (m_selectedSkill.IsKnown)
             {
-                ownsBookMenu.Checked = false;
-                ownsBookMenu.Enabled = false;
+                ownsBookToolStripButton.Checked = false;
+                ownsBookToolStripButton.Enabled = false;
             }
             else
             {
-                ownsBookMenu.Checked = m_selectedSkill.IsOwned;
-                ownsBookMenu.Enabled = true;
+                ownsBookToolStripButton.Checked = m_selectedSkill.IsOwned;
+                ownsBookToolStripButton.Enabled = true;
             }
 
             // Update "planned level" combo (on the top left)
@@ -311,6 +313,33 @@ namespace EVEMon.SkillPlanner
             skillExplorer.Skill = skill;
         }
 
+        /// <summary>
+        /// Updates the owned skill book controls.
+        /// </summary>
+        private void UpdateOwnedSkillBookControls()
+        {
+            // Set button check state according to skills 'owned' property;
+            // this will also trigger a check through the character's assets
+            ownsBookToolStripButton.Checked = m_selectedSkill.IsOwned |
+                                              (m_selectedSkill.HasBookInAssets && !m_selectedSkill.IsKnown);
+
+            skillSelectControl.UpdateContent();
+
+            // Update also the skill selector of the Plan Editor
+            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+            if (planWindow != null && !planWindow.IsDisposed)
+                planWindow.UpdatePlanEditorSkillSelection();
+
+            // Update the Owned Skill books window if open
+            OwnedSkillBooksWindow ownedSkillBooksWindow =
+                WindowsFactory.GetByTag<OwnedSkillBooksWindow, Character>((Character)m_plan.Character);
+
+            if (ownedSkillBooksWindow == null || ownedSkillBooksWindow.IsDisposed)
+                return;
+
+            ownedSkillBooksWindow.UpdateList();
+        }
+
         #endregion
 
 
@@ -336,6 +365,22 @@ namespace EVEMon.SkillPlanner
             UpdateControlVisibility();
         }
 
+        /// <summary>
+        /// Occurs whenever the settings changed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
+        {
+            if (e.Character != m_plan.Character)
+                return;
+
+            // Update the 'Owns book' indicator 
+            // if the indicator is not already set
+            // This prevents the update on repeated requests from IGB
+            if (ownsBookToolStripButton.Checked != m_selectedSkill.IsOwned)
+                UpdateOwnedSkillBookControls();
+        }
 
         #endregion
 
@@ -367,30 +412,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ownsBookMenu_Click(object sender, EventArgs e)
+        private void ownsBookToolStripButton_CheckedChanged(object sender, EventArgs e)
         {
-            // Set button check state according to skills 'owned' property;
-            // this will also trigger a check through the character's assets
-            ownsBookMenu.Checked = !ownsBookMenu.Checked | (m_selectedSkill.HasBookInAssets && !m_selectedSkill.IsKnown);
-            
             // Set skill's 'owned' property according to button check state
-            m_selectedSkill.IsOwned = ownsBookMenu.Checked;
-            skillSelectControl.UpdateContent();
+            m_selectedSkill.IsOwned = ownsBookToolStripButton.Checked;
 
-            // Update also the skill selector of the Plan Editor
-            PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
-            if (planWindow == null || planWindow.IsDisposed)
-                return;
-
-            planWindow.UpdatePlanEditorSkillSelection();
-
-            // Update the Owned Skill books window if open
-            OwnedSkillBooksWindow ownedSkillBooksWindow =
-                WindowsFactory.GetByTag<OwnedSkillBooksWindow, Character>((Character)m_plan.Character);
-            if (ownedSkillBooksWindow == null || ownedSkillBooksWindow.IsDisposed)
-                return;
-
-            ownedSkillBooksWindow.UpdateList();
+            UpdateOwnedSkillBookControls();
         }
 
         /// <summary>

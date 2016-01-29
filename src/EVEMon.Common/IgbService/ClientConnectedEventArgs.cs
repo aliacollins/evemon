@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 
-namespace EVEMon.Common.IGBService
+namespace EVEMon.Common.IgbService
 {
     /// <summary>
     /// Event arguments triggered on client connect.

@@ -202,12 +202,12 @@ namespace EVEMon.Common.CloudStorageServices
         protected abstract Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync();
 
         /// <summary>
-        /// Uploads the file asynchronously.
+        /// Asynchronously uploads the file.
         /// </summary>
         protected abstract Task<SerializableAPIResult<CloudStorageServiceAPIFile>> UploadFileAsync();
 
         /// <summary>
-        /// Downloads the file asynchronously.
+        /// Asynchronously downloads the file.
         /// </summary>
         protected abstract Task<SerializableAPIResult<CloudStorageServiceAPIFile>> DownloadFileAsync();
 
@@ -353,14 +353,12 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Synchronously checks that API authentication is valid.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         public bool CheckAPIAuthIsValid()
             => !Task.Run(async () => await CheckAuthenticationAsync()).Result.HasError;
 
         /// <summary>
         /// Asynchronously checks that API authentication is valid.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         public async Task CheckAPIAuthIsValidAsync()
         {
             if (m_queryPending)
