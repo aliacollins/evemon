@@ -8,6 +8,7 @@ using System.Linq;
 using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using EVEMon.About;
 using EVEMon.ApiCredentialsManagement;
@@ -133,7 +134,7 @@ namespace EVEMon
             }
 
             // Start the one-second timer 
-            EveMonClient.Run();
+            EveMonClient.Run(Thread.CurrentThread);
 
             // Check with NIST that the local clock is synchronized
             TimeCheck.ScheduleCheck(TimeSpan.FromSeconds(1));

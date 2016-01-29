@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Attributes;
@@ -92,9 +93,10 @@ namespace EVEMon.Common
         /// <summary>
         /// Starts the event processing on a multi-threaded model, with the UI actor being the main actor.
         /// </summary>
-        public static void Run()
+        /// <param name="thread">The thread.</param>
+        public static void Run(Thread thread)
         {
-            Dispatcher.Run();
+            Dispatcher.Run(thread);
             Trace();
         }
 
