@@ -975,8 +975,7 @@ namespace EVEMon.SettingsUI
                 }
                 finally
                 {
-                    if (defaultGroupReader != null)
-                        defaultGroupReader.Close();
+                    defaultGroupReader?.Close();
                 }
 
                 IResourceReader groupReader = null;
@@ -1001,8 +1000,7 @@ namespace EVEMon.SettingsUI
                 }
                 finally
                 {
-                    if (groupReader != null)
-                        groupReader.Close();
+                    groupReader?.Close();
                 }
 
                 customIconSet = tempImageList;
@@ -1010,8 +1008,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempImageList != null)
-                    tempImageList.Dispose();
+                tempImageList?.Dispose();
             }
 
             return customIconSet;

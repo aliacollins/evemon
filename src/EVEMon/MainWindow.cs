@@ -452,8 +452,7 @@ namespace EVEMon
             }
             finally
             {
-                if (tempPage != null)
-                    tempPage.Dispose();
+                tempPage?.Dispose();
             }
 
             return page;
@@ -479,8 +478,7 @@ namespace EVEMon
             }
             finally
             {
-                if (tempMonitor != null)
-                    tempMonitor.Dispose();
+                tempMonitor?.Dispose();
             }
         }
 
@@ -555,10 +553,7 @@ namespace EVEMon
         /// <returns></returns>
         private Character GetCurrentCharacter()
         {
-            if (tcCharacterTabs.SelectedTab == null)
-                return null;
-
-            return tcCharacterTabs.SelectedTab.Tag as Character;
+            return tcCharacterTabs.SelectedTab?.Tag as Character;
         }
 
         /// <summary>
@@ -1117,8 +1112,7 @@ namespace EVEMon
                 return;
 
             // Stop IGB
-            if (m_igbServer != null)
-                m_igbServer.Stop();
+            m_igbServer?.Stop();
 
             // Set the updating data flag so EVEMon exits cleanly
             m_isUpdatingData = true;
@@ -1419,10 +1413,7 @@ namespace EVEMon
             }
 
             // Add new entries
-            if (character == null)
-                return;
-
-            character.Plans.AddTo(plansToolStripMenuItem.DropDownItems, InitializePlanItem);
+            character?.Plans.AddTo(plansToolStripMenuItem.DropDownItems, InitializePlanItem);
         }
 
         /// <summary>

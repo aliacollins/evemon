@@ -770,8 +770,7 @@ namespace EVEMon.Common.Models
                     continue;
 
                 IQueryMonitorEx monitor = QueryMonitors[method] as IQueryMonitorEx;
-                if (monitor != null)
-                    monitor.Reset(lastUpdate.Time);
+                monitor?.Reset(lastUpdate.Time);
             }
         }
 

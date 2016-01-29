@@ -268,9 +268,7 @@ namespace EVEMon.Common.Factories
             where TForm : Form
         {
             ConstructorInfo constructorInfo = typeof(TForm).GetConstructor(Type.EmptyTypes);
-            if (constructorInfo != null)
-                return (TForm)constructorInfo.Invoke(null);
-            return null;
+            return (TForm)constructorInfo?.Invoke(null);
         }
 
         /// <summary>

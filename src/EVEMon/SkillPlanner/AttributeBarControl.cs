@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.SkillPlanner
 {
@@ -281,8 +282,7 @@ namespace EVEMon.SkillPlanner
             if (HighlightedValue >= 0 && HighlightedValue < m_baseValue)
                 HighlightedValue = m_baseValue;
 
-            if (Highlighting != null)
-                Highlighting(this, new AttributeHighlightingEventArgs(HighlightedValue));
+            Highlighting?.ThreadSafeInvoke(this, new AttributeHighlightingEventArgs(HighlightedValue));
 
             // To zero-based value
             HighlightedValue--;
@@ -384,8 +384,7 @@ namespace EVEMon.SkillPlanner
                             return;
 
                         // Fires the value changing event
-                        if (ValueChanging != null)
-                            ValueChanging(this, new AttributeValueChangingEventArgs(DeltaValue));
+                        ValueChanging?.ThreadSafeInvoke(this, new AttributeValueChangingEventArgs(DeltaValue));
 
                         if (DeltaValue == 0)
                             return;
@@ -403,8 +402,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Fires the value changed event
-            if (ValueChanged != null)
-                ValueChanged(this, new AttributeValueChangedEventArgs());
+            ValueChanged?.ThreadSafeInvoke(this, new AttributeValueChangedEventArgs());
         }
 
         /// <summary>

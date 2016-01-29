@@ -287,8 +287,7 @@ namespace EVEMon.Common.Controls
                 displayText = GetTextValue();
                 Invalidate();
 
-                if (ItemCheck != null)
-                    ItemCheck(sender, e);
+                ItemCheck?.Invoke(sender, e);
             }
         }
 

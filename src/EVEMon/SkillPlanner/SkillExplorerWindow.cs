@@ -646,10 +646,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private Skill GetSelectedSkill()
         {
-            if (tvSkills.SelectedNode == null)
-                return null;
-
-            return tvSkills.SelectedNode.Tag as Skill;
+            return tvSkills.SelectedNode?.Tag as Skill;
         }
 
         /// <summary>
@@ -805,10 +802,7 @@ namespace EVEMon.SkillPlanner
         /// <returns></returns>
         private Item GetSelectedItem()
         {
-            if (tvEntity.SelectedNode == null)
-                return null;
-
-            return tvEntity.SelectedNode.Tag as Item;
+            return tvEntity.SelectedNode?.Tag as Item;
         }
 
         /// <summary>

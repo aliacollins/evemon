@@ -80,15 +80,11 @@ namespace EVEMon.ApiErrorHandling
         /// <returns>A troubleshooter for the error message.</returns>
         private ApiErrorTroubleshooter GetTroubleshooter(Exception exception)
         {
-            if (exception == null)
-                return null;
-
             HttpWebClientServiceException httpException = exception as HttpWebClientServiceException;
 
-            if (httpException == null)
-                return null;
-
-            return httpException.Status == HttpWebClientServiceExceptionStatus.Timeout ? m_httpTimeoutTroubleshooter : null;
+            return httpException?.Status == HttpWebClientServiceExceptionStatus.Timeout
+                ? m_httpTimeoutTroubleshooter
+                : null;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls
 {
@@ -69,8 +70,7 @@ namespace EVEMon.Common.Controls
                 if (index < 0)
                     return;
 
-                if (DropDownMouseMove != null)
-                    DropDownMouseMove(this, new DropDownMouseMoveEventArgs(Items[index], e.Location));
+                DropDownMouseMove?.ThreadSafeInvoke(this, new DropDownMouseMoveEventArgs(Items[index], e.Location));
             }
 
             /// <summary>
@@ -129,8 +129,7 @@ namespace EVEMon.Common.Controls
             }
             finally
             {
-                if (tempListBox != null)
-                    tempListBox.Dispose();
+                tempListBox?.Dispose();
             }
             return m_listBox;
         }
@@ -221,8 +220,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e">The <see cref="DropDownMouseMoveEventArgs"/> instance containing the event data.</param>
         private void listBox_DropDownMouseMove(object sender, DropDownMouseMoveEventArgs e)
         {
-            if (DropDownMouseMove != null)
-                DropDownMouseMove(sender, e);
+            DropDownMouseMove?.ThreadSafeInvoke(sender, e);
         }
 
         /// <summary>

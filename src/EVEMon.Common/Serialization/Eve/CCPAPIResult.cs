@@ -253,8 +253,7 @@ namespace EVEMon.Common.Serialization.Eve
             // Fix the start/end times for the results implementing synchronization
             ISynchronizableWithLocalClock synchronizable = Result as ISynchronizableWithLocalClock;
 
-            if (synchronizable != null)
-                synchronizable.SynchronizeWithLocalClock(drift);
+            synchronizable?.SynchronizeWithLocalClock(drift);
         }
 
         #endregion

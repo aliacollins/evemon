@@ -151,8 +151,7 @@ namespace EVEMon.Common.Factories
                 }
                 finally
                 {
-                    if (family != null)
-                        family.Dispose();
+                    family?.Dispose();
                 }
             }
             catch (ArgumentException e)

@@ -153,8 +153,7 @@ namespace EVEMon.SkillPlanner
                 tvItems.SelectNodeWithTag(value);
                 
                 // Notify subscribers
-                if (SelectedSkillChanged != null)
-                    SelectedSkillChanged(this, new EventArgs());
+                SelectedSkillChanged?.ThreadSafeInvoke(this, new EventArgs());
             }
         }
 
@@ -261,8 +260,7 @@ namespace EVEMon.SkillPlanner
                 }
                 finally
                 {
-                    if (defaultGroupReader != null)
-                        defaultGroupReader.Close();
+                    defaultGroupReader?.Close();
                 }
 
                 IResourceReader groupReader = null;
@@ -287,8 +285,7 @@ namespace EVEMon.SkillPlanner
                 }
                 finally
                 {
-                    if (groupReader != null)
-                        groupReader.Close();
+                    groupReader?.Close();
                 }
 
                 imageList = tempImageList;
@@ -296,8 +293,7 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
-                if (tempImageList != null)
-                    tempImageList.Dispose();
+                tempImageList?.Dispose();
             }
 
             return imageList;
@@ -927,10 +923,8 @@ namespace EVEMon.SkillPlanner
         private void tvItems_ItemDrag(object sender, ItemDragEventArgs e)
         {
             TreeNode node = tvItems.SelectedNode;
-            if (node == null)
-                return;
 
-            if (node.Nodes.Count != 0)
+            if (node?.Nodes.Count != 0)
                 return;
 
             Skill skill = node.Tag as Skill;

@@ -253,8 +253,7 @@ namespace EVEMon.SkillPlanner
             UpdateAttributeLabels(EveAttribute.Perception, (int)(nudPerception.Value),
                                   lblAdjustPerception, lblEffectivePerception);
             UpdateTimes();
-            if (m_planEditor != null)
-                m_planEditor.ShowWithPluggable(this);
+            m_planEditor?.ShowWithPluggable(this);
         }
 
         /// <summary>

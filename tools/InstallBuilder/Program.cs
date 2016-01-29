@@ -349,8 +349,7 @@ namespace EVEMon.InstallBuilder
             }
             finally
             {
-                if (stream != null)
-                    stream.Dispose();
+                stream?.Dispose();
             }
 
             return 0;

@@ -308,8 +308,7 @@ namespace EVEMon.Common.QueryMonitor
             LastResult = result;
 
             // Notify subscribers
-            if (m_onUpdated != null)
-                m_onUpdated(result);
+            m_onUpdated?.Invoke(result);
         }
 
         /// <summary>

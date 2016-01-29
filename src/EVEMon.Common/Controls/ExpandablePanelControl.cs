@@ -109,8 +109,7 @@ namespace EVEMon.Common.Controls
             }
             finally
             {
-                if (tempHeader != null)
-                    tempHeader.Dispose();
+                tempHeader?.Dispose();
             }
         }
 
@@ -286,11 +285,9 @@ namespace EVEMon.Common.Controls
             get { return m_expandImage; }
             set
             {
-                if (value != null)
-                {
-                    if (value.Height > Header.Height - 4)
-                        throw new ArgumentException("HeaderIcon: Height must be less than HeaderHeight - 4 pixels.");
-                }
+                if (value?.Height > Header.Height - 4)
+                    throw new ArgumentException("HeaderIcon: Height must be less than HeaderHeight - 4 pixels.");
+
                 m_expandImage = value;
                 Header.Refresh();
             }
@@ -305,11 +302,9 @@ namespace EVEMon.Common.Controls
             get { return m_collapseImage; }
             set
             {
-                if (value != null)
-                {
-                    if (value.Height > Header.Height - 4)
-                        throw new ArgumentException("HeaderIcon: Height must be less than HeaderHeight - 4 pixels.");
-                }
+                if (value?.Height > Header.Height - 4)
+                    throw new ArgumentException("HeaderIcon: Height must be less than HeaderHeight - 4 pixels.");
+
                 m_collapseImage = value;
                 Header.Refresh();
             }

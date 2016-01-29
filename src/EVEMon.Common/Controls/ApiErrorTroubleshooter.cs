@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Windows.Forms;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls
 {
     public partial class ApiErrorTroubleshooter : UserControl
     {
+        /// <summary>
+        /// Occurs when a resolution has been completed.
+        /// </summary>
+        public event EventHandler<ApiErrorTroubleshooterEventArgs> ErrorResolved;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiErrorTroubleshooter"/> class.
         /// </summary>
@@ -15,17 +21,11 @@ namespace EVEMon.Common.Controls
         }
 
         /// <summary>
-        /// Occurs when a resolution has been completed.
-        /// </summary>
-        public event EventHandler<ApiErrorTroubleshooterEventArgs> ErrorResolved;
-
-        /// <summary>
         /// Called when the error is unresolved.
         /// </summary>
         protected void OnErrorUnresolved()
         {
-            if (ErrorResolved != null)
-                ErrorResolved(null, new ApiErrorTroubleshooterEventArgs());
+            ErrorResolved?.ThreadSafeInvoke(null, new ApiErrorTroubleshooterEventArgs());
         }
 
         /// <summary>
@@ -34,8 +34,7 @@ namespace EVEMon.Common.Controls
         /// <param name="action">The action.</param>
         protected void OnErrorResolved(ResolutionAction action)
         {
-            if (ErrorResolved != null)
-                ErrorResolved(null, new ApiErrorTroubleshooterEventArgs(action));
+            ErrorResolved?.ThreadSafeInvoke(null, new ApiErrorTroubleshooterEventArgs(action));
         }
     }
 }

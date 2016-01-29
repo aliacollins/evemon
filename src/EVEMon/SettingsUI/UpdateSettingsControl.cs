@@ -192,8 +192,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempCombo != null)
-                    tempCombo.Dispose();
+                tempCombo?.Dispose();
             }
         }
 
@@ -223,8 +222,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempLabel != null)
-                    tempLabel.Dispose();
+                tempLabel?.Dispose();
             }
         }
 
@@ -284,8 +282,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempPicture != null)
-                    tempPicture.Dispose();
+                tempPicture?.Dispose();
             }
         }
 

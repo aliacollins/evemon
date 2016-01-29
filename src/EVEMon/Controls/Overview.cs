@@ -214,8 +214,7 @@ namespace EVEMon.Controls
             }
             finally
             {
-                if (tempOverviewItem != null)
-                    tempOverviewItem.Dispose();
+                tempOverviewItem?.Dispose();
             }
 
             return overviewItem;

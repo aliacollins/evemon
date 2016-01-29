@@ -218,8 +218,8 @@ namespace EVEMon.Common.Controls
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-                components.Dispose();
+            if (disposing)
+                components?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -231,8 +231,7 @@ namespace EVEMon.Common.Controls
 
         private void UpdateToolTip()
         {
-            if (this.toolTip != null)
-                this.toolTip.SetToolTip(this, this.Text + "\n(use del and shift + del to unselect/select all)");
+            this.toolTip?.SetToolTip(this, this.Text + "\n(use del and shift + del to unselect/select all)");
         }
 
         private void DoDropDown()

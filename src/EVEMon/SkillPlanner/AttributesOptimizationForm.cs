@@ -414,8 +414,7 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
-                if (tempPage != null)
-                    tempPage.Dispose();
+                tempPage?.Dispose();
             }
         }
 
@@ -444,8 +443,7 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
-                if (ctl != null)
-                    ctl.Dispose();
+                ctl?.Dispose();
             }
 
             return control;

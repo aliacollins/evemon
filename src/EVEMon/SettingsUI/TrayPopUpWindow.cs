@@ -192,8 +192,7 @@ namespace EVEMon.SettingsUI
                         }
                         finally
                         {
-                            if (tempAccountGroupPanel != null)
-                                tempAccountGroupPanel.Dispose();
+                            tempAccountGroupPanel?.Dispose();
                         }
 
                         prevAPIKeys = apiKeys;
@@ -226,8 +225,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempOverviewItem != null)
-                    tempOverviewItem.Dispose();
+                tempOverviewItem?.Dispose();
             }
 
             return overviewItem;
@@ -302,8 +300,7 @@ namespace EVEMon.SettingsUI
                     }
                     finally
                     {
-                        if (tempPictureBoxWarning != null)
-                            tempPictureBoxWarning.Dispose();
+                        tempPictureBoxWarning?.Dispose();
                     }
                 }
 
@@ -322,8 +319,7 @@ namespace EVEMon.SettingsUI
                 }
                 finally
                 {
-                    if (tempLabelMessage != null)
-                        tempLabelMessage.Dispose();
+                    tempLabelMessage?.Dispose();
                 }
 
                 tempWarningPanel.CreateControl();
@@ -333,8 +329,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempWarningPanel != null)
-                    tempWarningPanel.Dispose();
+                tempWarningPanel?.Dispose();
             }
 
             return warningPanel;

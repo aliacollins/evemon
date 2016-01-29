@@ -205,14 +205,13 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">Arguments of the event.</param>
         private void tvLoadout_DoubleClick(object sender, EventArgs e)
         {
-            if (ResultsTreeView.SelectedNode == null)
-                return;
+            Item item = ResultsTreeView.SelectedNode?.Tag as Item;
 
-            Item item = ResultsTreeView.SelectedNode.Tag as Item;
             if (item == null)
                 return;
 
             PlanWindow planWindow = WindowsFactory.GetByTag<PlanWindow, Plan>(m_plan);
+
             if (planWindow == null || planWindow.IsDisposed)
                 return;
 

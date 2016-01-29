@@ -399,8 +399,7 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
-                if (fillBrush != null)
-                    fillBrush.Dispose();
+                fillBrush?.Dispose();
             }
         }
 
@@ -425,8 +424,7 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
-                if (tempBrush != null)
-                    tempBrush.Dispose();
+                tempBrush?.Dispose();
             }
             return brush;
         }
@@ -505,8 +503,7 @@ namespace EVEMon.SkillPlanner
             if (skill == null)
                 return;
 
-            if (SkillClicked != null)
-                SkillClicked(this, new SkillClickedEventArgs(skill, e.Button, mouseLocation));
+            SkillClicked?.ThreadSafeInvoke(this, new SkillClickedEventArgs(skill, e.Button, mouseLocation));
         }
 
         /// <summary>

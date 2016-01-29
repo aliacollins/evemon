@@ -126,8 +126,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
         protected override void OnResize(EventArgs e)
         {
-            if (m_borderPath != null)
-                m_borderPath.Dispose();
+            m_borderPath?.Dispose();
 
             m_borderPath = CreateBorderPath();
 

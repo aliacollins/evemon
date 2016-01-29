@@ -196,8 +196,7 @@ namespace EVEMon.SkillPlanner
             }
             finally
             {
-                if (tempLabel != null)
-                    tempLabel.Dispose();
+                tempLabel?.Dispose();
             }
 
             foreach (LinkLabel linkLabel in ships.Values
@@ -219,8 +218,7 @@ namespace EVEMon.SkillPlanner
                     }
                     finally
                     {
-                        if (tempLinkLabel != null)
-                            tempLinkLabel.Dispose();
+                        tempLinkLabel?.Dispose();
                     }
 
                     return linkLabel;
@@ -302,8 +300,7 @@ namespace EVEMon.SkillPlanner
                 }
                 finally
                 {
-                    if (tempLabel != null)
-                        tempLabel.Dispose();
+                    tempLabel?.Dispose();
                 }
             }
         }

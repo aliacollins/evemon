@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using EVEMon.Common.Extensions;
 
 /* Code from http://blogs.msdn.com/jfoscoding/articles/491523.aspx */
 
@@ -34,8 +35,7 @@ namespace EVEMon.Common.Controls
 
                 m_showSplit = value;
                 Invalidate();
-                if (Parent != null)
-                    Parent.PerformLayout();
+                Parent?.PerformLayout();
             }
         }
 
@@ -297,8 +297,7 @@ namespace EVEMon.Common.Controls
             }
 
             //expose an opportunity to modify the context menu
-            if (ContextMenuShowing != null)
-                ContextMenuShowing(this, EventArgs.Empty);
+            ContextMenuShowing?.ThreadSafeInvoke(this, EventArgs.Empty);
 
             State = PushButtonState.Pressed;
             if (ContextMenuStrip == null)

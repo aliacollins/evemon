@@ -63,8 +63,7 @@ namespace EVEMon.Common.IgbService
         /// </summary>
         private void OnClosed()
         {
-            if (Closed != null)
-                Closed(this, new EventArgs());
+            Closed?.ThreadSafeInvoke(this, new EventArgs());
         }
 
         #endregion

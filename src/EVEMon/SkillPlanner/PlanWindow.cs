@@ -154,12 +154,10 @@ namespace EVEMon.SkillPlanner
                 WindowsFactory.GetAndCloseByTag<SkillExplorerWindow, PlanWindow>(this);
 
                 // Tell the attributes optimization window we're closing down
-                if (m_attributesOptimizerWindow != null)
-                    m_attributesOptimizerWindow.Close();
+                m_attributesOptimizerWindow?.Close();
 
                 // Tell the implant window we're closing down
-                if (m_implantCalcWindow != null)
-                    m_implantCalcWindow.Close();
+                m_implantCalcWindow?.Close();
             }
 
             base.OnFormClosing(e);

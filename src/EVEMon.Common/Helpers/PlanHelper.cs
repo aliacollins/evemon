@@ -81,10 +81,7 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         public static bool RequiresWindow(IPlanOperation operation)
         {
-            if (operation == null)
-                return false;
-
-            if (operation.Type != PlanOperations.Suppression)
+            if (operation?.Type != PlanOperations.Suppression)
                 return false;
 
             return (operation.SkillsToRemove.Count() != operation.AllEntriesToRemove.Count());

@@ -102,8 +102,7 @@ namespace EVEMon.Common.Models
                     break;
 
                 // The skill has been completed
-                if (skill.Skill != null)
-                    skill.Skill.MarkAsCompleted();
+                skill.Skill?.MarkAsCompleted();
 
                 skillsCompleted.Add(skill);
                 LastCompleted = skill;

@@ -114,8 +114,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempButton != null)
-                    tempButton.Dispose();
+                tempButton?.Dispose();
             }
         }
 
@@ -144,8 +143,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempTextBox != null)
-                    tempTextBox.Dispose();
+                tempTextBox?.Dispose();
             }
         }
 
@@ -172,8 +170,7 @@ namespace EVEMon.SettingsUI
             }
             finally
             {
-                if (tempPicture != null)
-                    tempPicture.Dispose();
+                tempPicture?.Dispose();
             }
         }
 
