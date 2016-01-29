@@ -142,12 +142,12 @@ namespace EVEMon.Common.Controls
 
         protected void OnAfterDeselect(TreeNode tn)
         {
-            AfterDeselect?.Invoke(this, new TreeViewEventArgs(tn));
+            AfterDeselect?.ThreadSafeInvoke(this, new TreeViewEventArgs(tn));
         }
 
         protected void OnBeforeDeselect(TreeNode tn)
         {
-            BeforeDeselect?.Invoke(this, new TreeViewEventArgs(tn));
+            BeforeDeselect?.ThreadSafeInvoke(this, new TreeViewEventArgs(tn));
         }
 
         protected void OnSelectionsChanged()
