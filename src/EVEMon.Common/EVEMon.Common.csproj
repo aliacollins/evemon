@@ -57,8 +57,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dropbox.Api, Version=0.1.5855.27667, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dropbox.Api.2.2.1\lib\portable-net45+sl50+win+wpa81+wp80\Dropbox.Api.dll</HintPath>
+    <Reference Include="Dropbox.Api, Version=0.1.5870.31770, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dropbox.Api.2.3.3\lib\portable-net45+sl50+win+wpa81+wp80\Dropbox.Api.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Apis, Version=1.10.0.25332, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">

@@ -25,8 +25,10 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 {
     public sealed class GoogleDriveCloudStorageServiceProvider : CloudStorageServiceProvider
     {
-        private static UserCredential s_credential;
+        private SerializableAPIResult<SerializableAPICredentials> m_result =
+                new SerializableAPIResult<SerializableAPICredentials>();
 
+        private static UserCredential s_credential;
         private string m_fileId;
 
         private const string Spaces = "appDataFolder";
@@ -129,8 +131,8 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// </summary>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
         {
-            SerializableAPIResult<SerializableAPICredentials> result =
-                new SerializableAPIResult<SerializableAPICredentials>();
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             var clientSecrets = new ClientSecrets
             {
@@ -150,22 +152,22 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             }
             catch (GoogleApiException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (TokenResponseException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
             }
             catch (APIException exc)
             {
-                result.Error = new SerializableAPIError { ErrorCode = exc.ErrorCode, ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorCode = exc.ErrorCode, ErrorMessage = exc.Message };
             }
             catch (Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
-            return result;
+            return m_result;
         }
 
         /// <summary>
@@ -183,13 +185,13 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// </summary>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckAuthenticationAsync()
         {
-            SerializableAPIResult<SerializableAPICredentials> result =
-                new SerializableAPIResult<SerializableAPICredentials>();
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
                 if (!HasCredentialsStored)
-                    return result;
+                    return m_result;
 
                 if (s_credential == null)
                     return await RequestProviderAuthCodeAsync();
@@ -204,21 +206,21 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             }
             catch (GoogleApiException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
-
-                if (s_credential == null && HasCredentialsStored)
-                    await ResetSettingsAsync();
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (TokenResponseException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
+
+                if (HasCredentialsStored)
+                    await ResetSettingsAsync();
             }
             catch (Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
-            return result;
+            return m_result;
         }
 
         /// <summary>
@@ -227,8 +229,8 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <returns></returns>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
         {
-            SerializableAPIResult<SerializableAPICredentials> result =
-                new SerializableAPIResult<SerializableAPICredentials>();
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
@@ -237,28 +239,29 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
                 if (!success)
                 {
-                    result.Error = new SerializableAPIError { ErrorMessage = "Unable to revoke authorization" };
+                    m_result.Error = new SerializableAPIError { ErrorMessage = "Unable to revoke authorization" };
                 }
             }
             catch (GoogleApiException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (TokenResponseException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
             }
             catch (Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
-            return result;
+            return m_result;
         }
 
         /// <summary>
-        /// Uploads the file asynchronously.
+        /// Asynchronously uploads the file.
         /// </summary>
+        /// <returns></returns>
         protected override async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> UploadFileAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPIFile> result = new SerializableAPIResult<CloudStorageServiceAPIFile>();
@@ -306,6 +309,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             }
             catch (TokenResponseException exc)
             {
+                IsAuthenticated = false;
                 result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
             }
             catch (Exception exc)
@@ -317,8 +321,10 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         }
 
         /// <summary>
-        /// Downloads the file asynchronously.
+        /// Asynchronously downloads the file.
         /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.IO.FileNotFoundException"></exception>
         protected override async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> DownloadFileAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPIFile> result = new SerializableAPIResult<CloudStorageServiceAPIFile>();
@@ -350,6 +356,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
             }
             catch (TokenResponseException exc)
             {
+                IsAuthenticated = false;
                 result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
             }
             catch (Exception exc)

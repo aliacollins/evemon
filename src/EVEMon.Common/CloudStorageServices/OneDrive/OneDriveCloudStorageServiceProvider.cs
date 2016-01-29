@@ -14,6 +14,9 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
 {
     public sealed class OneDriveCloudStorageServiceProvider : CloudStorageServiceProvider
     {
+        private SerializableAPIResult<SerializableAPICredentials> m_result =
+                new SerializableAPIResult<SerializableAPICredentials>();
+
         private const string RedirectUri = "https://login.live.com/oauth20_desktop.srf";
 
         private static readonly string[] s_scopes = { "wl.offline_access", "onedrive.appfolder" };
@@ -96,9 +99,12 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
         /// <returns></returns>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
         {
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
+
             await CheckAuthCodeAsync(String.Empty);
 
-            return await Task.FromResult(new SerializableAPIResult<SerializableAPICredentials>());
+            return await Task.FromResult(m_result);
         }
 
         /// <summary>
@@ -109,8 +115,8 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckProviderAuthCodeAsync(
             string code)
         {
-            SerializableAPIResult<SerializableAPICredentials> result =
-                new SerializableAPIResult<SerializableAPICredentials>();
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
@@ -120,14 +126,14 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
             }
             catch (OneDriveException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
-            return result;
+            return m_result;
         }
 
         /// <summary>
@@ -136,13 +142,13 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
         /// <returns></returns>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckAuthenticationAsync()
         {
-            SerializableAPIResult<SerializableAPICredentials> result =
-                new SerializableAPIResult<SerializableAPICredentials>();
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
                 if (!HasCredentialsStored)
-                    return result;
+                    return m_result;
 
                 // Checks that the client is authenticated
                 // Settings save is done on called method
@@ -150,14 +156,17 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
             }
             catch (OneDriveException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
+
+                if (exc.Error.Code == OneDriveErrorCode.AuthenticationFailure.ToString() && HasCredentialsStored)
+                    await ResetSettingsAsync();
             }
             catch (Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
-            return result;
+            return m_result;
         }
 
         /// <summary>
@@ -166,8 +175,8 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
         /// <returns></returns>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
         {
-            SerializableAPIResult<SerializableAPICredentials> result =
-                new SerializableAPIResult<SerializableAPICredentials>();
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
@@ -178,21 +187,25 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
                     if (cansignout)
                         await client.AuthenticationProvider.SignOutAsync();
                     else
-                        result.Error = new SerializableAPIError { ErrorMessage = "Unable to revoke authorization" };
+                        m_result.Error = new SerializableAPIError { ErrorMessage = "Unable to revoke authorization" };
                 }
             }
             catch (OneDriveException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
-            return result;
+            return m_result;
         }
 
+        /// <summary>
+        /// Asynchronously uploads the file.
+        /// </summary>
+        /// <returns></returns>
         protected override async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> UploadFileAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPIFile> result = new SerializableAPIResult<CloudStorageServiceAPIFile>();
@@ -217,6 +230,9 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
             }
             catch (OneDriveException exc)
             {
+                if (exc.Error.Code == OneDriveErrorCode.AuthenticationFailure.ToString())
+                    IsAuthenticated = false;
+
                 result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (Exception exc)
@@ -227,6 +243,11 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
             return result;
         }
 
+        /// <summary>
+        /// Asynchronously downloads the file.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.IO.FileNotFoundException"></exception>
         protected override async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> DownloadFileAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPIFile> result = new SerializableAPIResult<CloudStorageServiceAPIFile>();
@@ -246,6 +267,9 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
             }
             catch (OneDriveException exc)
             {
+                if (exc.Error.Code == OneDriveErrorCode.AuthenticationFailure.ToString())
+                    IsAuthenticated = false;
+
                 result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
             }
             catch (Exception exc)

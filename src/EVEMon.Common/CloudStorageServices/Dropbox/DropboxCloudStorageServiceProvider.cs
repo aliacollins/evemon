@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
 using System.IO;
@@ -19,6 +18,8 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
 {
     public sealed class DropboxCloudStorageServiceProvider : CloudStorageServiceProvider
     {
+        private SerializableAPIResult<SerializableAPICredentials> m_result =
+                new SerializableAPIResult<SerializableAPICredentials>();
 
         #region Properties
 
@@ -98,11 +99,11 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <summary>
         /// Asynchronously requests the provider an authentication code.
         /// </summary>
-        protected override Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
-            => Task.Run(() =>
+        protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
+            => await Task.Run(() =>
             {
-                SerializableAPIResult<SerializableAPICredentials> result =
-                    new SerializableAPIResult<SerializableAPICredentials>();
+                if (m_result == null)
+                    m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
                 try
                 {
@@ -114,10 +115,10 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 }
                 catch (Exception exc)
                 {
-                    result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                    m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
                 }
 
-                return result;
+                return m_result;
             });
 
         /// <summary>
@@ -127,8 +128,8 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckProviderAuthCodeAsync(
             string code)
         {
-            SerializableAPIResult<SerializableAPICredentials> result =
-                new SerializableAPIResult<SerializableAPICredentials>();
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
@@ -138,21 +139,21 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                     Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppSecret,
                         CultureConstants.InvariantCulture.NativeName));
 
-                result = await CheckAuthenticationAsync();
+                await CheckAuthenticationAsync();
 
-                if (!result.HasError)
+                if (!m_result.HasError)
                     DropboxCloudStorageServiceSettings.Default.AccessToken = response.AccessToken;
             }
             catch (OAuth2Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
             catch (Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
-            return result;
+            return m_result;
         }
 
         /// <summary>
@@ -160,13 +161,13 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// </summary>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckAuthenticationAsync()
         {
-            SerializableAPIResult<SerializableAPICredentials> result =
-                new SerializableAPIResult<SerializableAPICredentials>();
+            if (m_result == null)
+                m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
                 if (!HasCredentialsStored)
-                    return result;
+                    return m_result;
 
                 using (DropboxClient client = GetClient())
                 {
@@ -175,27 +176,25 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             }
             catch (ApiException<GetAccountError> exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
             catch (AuthException exc)
             {
-                Dictionary<string, object> json = Util.DeserializeJsonToObject<Dictionary<string, object>>(exc.Message);
-                string errorMessage = json[".tag"] as string ?? exc.Message;
-                result.Error = new SerializableAPIError { ErrorMessage = errorMessage };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
 
-                if (HasCredentialsStored)
+                if (exc.ErrorResponse.IsInvalidAccessToken && HasCredentialsStored)
                     await ResetSettingsAsync();
             }
             catch (BadInputException exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
             catch (Exception exc)
             {
-                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
 
-            return result;
+            return m_result;
         }
 
         /// <summary>
@@ -203,11 +202,12 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// </summary>
         /// <returns></returns>
         protected override Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
-            => Task.Run(() => new SerializableAPIResult<SerializableAPICredentials>());
+            => Task.Run(() => m_result ?? new SerializableAPIResult<SerializableAPICredentials>());
 
         /// <summary>
-        /// Uploads the file asynchronously.
+        /// Asynchronously uploads the file.
         /// </summary>
+        /// <returns></returns>
         protected override async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> UploadFileAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPIFile> result = new SerializableAPIResult<CloudStorageServiceAPIFile>();
@@ -231,10 +231,8 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             }
             catch (AuthException exc)
             {
-                Dictionary<string, object> json = Util.DeserializeJsonToObject<Dictionary<string, object>>(exc.Message);
-                string errorMessage = json[".tag"] as string ?? exc.Message;
                 IsAuthenticated = false;
-                result.Error = new SerializableAPIError { ErrorMessage = errorMessage };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
             catch (BadInputException exc)
             {
@@ -250,8 +248,9 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         }
 
         /// <summary>
-        /// Downloads the file asynchronously.
+        /// Asynchronously downloads the file.
         /// </summary>
+        /// <returns></returns>
         protected override async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> DownloadFileAsync()
         {
             SerializableAPIResult<CloudStorageServiceAPIFile> result = new SerializableAPIResult<CloudStorageServiceAPIFile>();
@@ -272,10 +271,8 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
             }
             catch (AuthException exc)
             {
-                Dictionary<string, object> json = Util.DeserializeJsonToObject<Dictionary<string, object>>(exc.Message);
-                string errorMessage = json[".tag"] as string ?? exc.Message;
                 IsAuthenticated = false;
-                result.Error = new SerializableAPIError { ErrorMessage = errorMessage };
+                result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
             }
             catch (BadInputException exc)
             {
