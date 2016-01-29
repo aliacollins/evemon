@@ -129,9 +129,9 @@ namespace EVEMon.SettingsUI
             SetOverviewSettings();
 
             // IGB Server
-            igbCheckBox.Checked = m_settings.IGB.IGBServerEnabled;
-            cbIGBPublic.Checked = m_settings.IGB.IGBServerPublic;
-            igbPortTextBox.Text = m_settings.IGB.IGBServerPort.ToString(CultureConstants.DefaultCulture);
+            igbCheckBox.Checked = m_settings.IGB.IgbServerEnabled;
+            cbIGBPublic.Checked = m_settings.IGB.IgbServerPublic;
+            igbPortTextBox.Text = m_settings.IGB.IgbServerPort.ToString(CultureConstants.DefaultCulture);
 
             // Notifications
             notificationsControl.Settings = m_settings.Notifications;
@@ -465,11 +465,11 @@ namespace EVEMon.SettingsUI
             emailNotificationsControl.PopulateSettingsFromControls();
 
             // IGB
-            m_settings.IGB.IGBServerEnabled = igbCheckBox.Checked;
-            m_settings.IGB.IGBServerPublic = cbIGBPublic.Checked;
+            m_settings.IGB.IgbServerEnabled = igbCheckBox.Checked;
+            m_settings.IGB.IgbServerPublic = cbIGBPublic.Checked;
             int igbServerPort;
             if (Int32.TryParse(igbPortTextBox.Text, out igbServerPort))
-                m_settings.IGB.IGBServerPort = igbServerPort;
+                m_settings.IGB.IgbServerPort = igbServerPort;
 
             // Main window - Overview
             m_settings.UI.MainWindow.ShowOverview = cbShowOverViewTab.Checked;

@@ -32,7 +32,7 @@ namespace EVEMon.Common.Serialization.Settings
             Calendar = new CalendarSettings();
             Updates = new UpdateSettings();
             Proxy = new ProxySettings();
-            IGB = new IGBSettings();
+            IGB = new IgbSettings();
             G15 = new G15Settings();
             UI = new UISettings();
         }
@@ -82,7 +82,7 @@ namespace EVEMon.Common.Serialization.Settings
         public NotificationSettings Notifications { get; set; }
 
         [XmlElement("network")]
-        public IGBSettings IGB { get; set; }
+        public IgbSettings IGB { get; set; }
 
         [XmlElement("scheduler")]
         public SchedulerSettings Scheduler { get; set; }

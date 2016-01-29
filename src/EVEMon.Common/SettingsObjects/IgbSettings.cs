@@ -2,14 +2,14 @@
 
 namespace EVEMon.Common.SettingsObjects
 {
-    public sealed class IGBSettings
+    public sealed class IgbSettings
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="IGBSettings"/> class.
+        /// Initializes a new instance of the <see cref="IgbSettings"/> class.
         /// </summary>
-        public IGBSettings()
+        public IgbSettings()
         {
-            IGBServerPort = 80;
+            IgbServerPort = 80;
         }
 
         /// <summary>
@@ -17,20 +17,20 @@ namespace EVEMon.Common.SettingsObjects
         /// </summary>
         /// <value><c>true</c> if [IGB server enabled]; otherwise, <c>false</c>.</value>
         [XmlElement("igbServerEnabled")]
-        public bool IGBServerEnabled { get; set; }
+        public bool IgbServerEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [IGB server public].
         /// </summary>
         /// <value><c>true</c> if [IGB server public]; otherwise, <c>false</c>.</value>
         [XmlElement("igbServerPublic")]
-        public bool IGBServerPublic { get; set; }
+        public bool IgbServerPublic { get; set; }
 
         /// <summary>
         /// Gets or sets the IGB server port.
         /// </summary>
         /// <value>The IGB server port.</value>
         [XmlElement("igbServerPort")]
-        public int IGBServerPort { get; set; }
+        public int IgbServerPort { get; set; }
     }
 }

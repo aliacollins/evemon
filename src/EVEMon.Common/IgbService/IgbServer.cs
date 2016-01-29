@@ -14,7 +14,7 @@ using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
 
-namespace EVEMon.Common.IGBService
+namespace EVEMon.Common.IgbService
 {
     /// <summary>
     /// Incomplete HTTP 1.0 web server, to serve out simple pages to

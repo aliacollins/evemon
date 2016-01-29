@@ -24,7 +24,7 @@ using EVEMon.Common.Enumerations;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
-using EVEMon.Common.IGBService;
+using EVEMon.Common.IgbService;
 using EVEMon.Common.Models;
 using EVEMon.Common.Notifications;
 using EVEMon.Common.Properties;
@@ -2063,7 +2063,7 @@ namespace EVEMon
         private void ConfigureIgbServer()
         {
             // Not using the IGB server? stop it if it is running
-            if (!Settings.IGB.IGBServerEnabled)
+            if (!Settings.IGB.IgbServerEnabled)
             {
                 if (m_igbServer == null)
                     return;
@@ -2076,11 +2076,11 @@ namespace EVEMon
 
             // We are using the IGB server create one if we don't already have one
             if (m_igbServer == null)
-                m_igbServer = new IgbServer(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
-            else if (Settings.IGB.IGBServerPort != m_igbServer.IgbServerPort)
+                m_igbServer = new IgbServer(Settings.IGB.IgbServerPublic, Settings.IGB.IgbServerPort);
+            else if (Settings.IGB.IgbServerPort != m_igbServer.IgbServerPort)
             {
                 // The port has changed reset the IGB server
-                m_igbServer.Reset(Settings.IGB.IGBServerPublic, Settings.IGB.IGBServerPort);
+                m_igbServer.Reset(Settings.IGB.IgbServerPublic, Settings.IGB.IgbServerPort);
             }
 
             // Finally start the service

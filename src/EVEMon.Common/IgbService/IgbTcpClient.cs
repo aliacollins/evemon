@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using EVEMon.Common.Helpers;
 
-namespace EVEMon.Common.IGBService
+namespace EVEMon.Common.IgbService
 {
     /// <summary>
     /// Manages a individual client connection
