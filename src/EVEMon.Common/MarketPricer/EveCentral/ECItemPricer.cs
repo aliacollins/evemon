@@ -82,7 +82,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             if (!File.Exists(file) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
-                Task.Run(GetPricesAsync);
+                Task.WhenAll(GetPricesAsync());
                 return;
             }
 
@@ -107,7 +107,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             // In case the file is an old one, we try to get a fresh copy
             if (result == null || CachedUntil < DateTime.UtcNow)
             {
-                Task.Run(GetPricesAsync);
+                Task.WhenAll(GetPricesAsync());
                 return;
             }
 
@@ -297,7 +297,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             s_queryStep = s_queryStep / 2;
             s_queue = new Queue<int>(s_queryMonitorList);
 
-            Task.Run(QueryIDs);
+            Task.WhenAll(QueryIDs());
 
             return true;
         }

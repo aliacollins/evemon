@@ -79,7 +79,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             // Update the file if we don't have it or the data have expired
             if (!File.Exists(file) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
-                Task.Run(GetPricesAsync);
+                Task.WhenAll(GetPricesAsync());
                 return;
             }
 
@@ -104,7 +104,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             // In case the file is an old one, we try to get a fresh copy
             if (result == null || CachedUntil < DateTime.UtcNow)
             {
-                Task.Run(GetPricesAsync);
+                Task.WhenAll(GetPricesAsync());
                 return;
             }
 

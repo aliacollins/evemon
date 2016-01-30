@@ -131,24 +131,12 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// </summary>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
         {
-            if (m_result == null)
-                m_result = new SerializableAPIResult<SerializableAPICredentials>();
-
-            var clientSecrets = new ClientSecrets
-            {
-                ClientId = Util.Decrypt(GoogleDriveCloudStorageServiceSettings.Default.AppKey,
-                    CultureConstants.InvariantCulture.NativeName),
-                ClientSecret = Util.Decrypt(GoogleDriveCloudStorageServiceSettings.Default.AppSecret,
-                    CultureConstants.InvariantCulture.NativeName)
-            };
+            m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
-                s_credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets,
-                        new[] { DriveService.Scope.DriveAppdata }, UserId, CancellationToken.None,
-                        new FileDataStore(GetCredentialsPath(), true));
-
-                await CheckAuthCodeAsync(String.Empty);
+                await GetCredentialsAsync().ConfigureAwait(false);
+                await CheckAuthCodeAsync(String.Empty).ConfigureAwait(false);
             }
             catch (GoogleApiException exc)
             {
@@ -178,7 +166,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <exception cref="System.NotImplementedException"></exception>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> CheckProviderAuthCodeAsync(
             string code) 
-            => await CheckAuthenticationAsync();
+            => await CheckAuthenticationAsync().ConfigureAwait(false);
 
         /// <summary>
         /// Asynchronously checks the authentication.
@@ -194,14 +182,14 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     return m_result;
 
                 if (s_credential == null)
-                    return await RequestProviderAuthCodeAsync();
+                    await GetCredentialsAsync().ConfigureAwait(false);
 
                 using (DriveService client = GetClient())
                 {
                     AboutResource.GetRequest request = client.About.Get();
                     request.Fields = "user";
 
-                    await request.ExecuteAsync();
+                    await request.ExecuteAsync().ConfigureAwait(false);
                 }
             }
             catch (GoogleApiException exc)
@@ -213,7 +201,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                 m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.ErrorDescription ?? exc.Error.Error };
 
                 if (HasCredentialsStored)
-                    await ResetSettingsAsync();
+                    await ResetSettingsAsync().ConfigureAwait(false);
             }
             catch (Exception exc)
             {
@@ -229,13 +217,12 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// <returns></returns>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
         {
-            if (m_result == null)
-                m_result = new SerializableAPIResult<SerializableAPICredentials>();
+            m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
                 Task<bool> revokeTokenAsync = s_credential?.RevokeTokenAsync(CancellationToken.None);
-                bool success = revokeTokenAsync != null && await revokeTokenAsync;
+                bool success = revokeTokenAsync != null && await revokeTokenAsync.ConfigureAwait(false);
 
                 if (!success)
                 {
@@ -268,7 +255,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
             try
             {
-                m_fileId = m_fileId ?? await GetFileId();
+                m_fileId = m_fileId ?? await GetFileIdAsync().ConfigureAwait(false);
 
                 byte[] content = Util.GZipCompress(SettingsFileContentByteArray).ToArray();
 
@@ -293,7 +280,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     }
 
                     // Do the actual upload
-                    IUploadProgress response = await request.UploadAsync();
+                    IUploadProgress response = await request.UploadAsync().ConfigureAwait(false);
                     m_fileId = request.ResponseBody?.Id;
 
                     // Chceck response for exception
@@ -331,7 +318,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
             try
             {
-                m_fileId = m_fileId ?? await GetFileId();
+                m_fileId = m_fileId ?? await GetFileIdAsync().ConfigureAwait(false);
 
                 if (String.IsNullOrWhiteSpace(m_fileId))
                     throw new FileNotFoundException();
@@ -342,10 +329,10 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     FilesResource.GetRequest request = client.Files.Get(m_fileId);
                     request.Fields = "id, name";
 
-                    IDownloadProgress response = await request.DownloadAsync(stream);
+                    IDownloadProgress response = await request.DownloadAsync(stream).ConfigureAwait(false);
 
                     if (response.Exception == null)
-                        return await GetMappedAPIFileAsync(result, stream);
+                        return GetMappedAPIFile(result, stream);
 
                     result.Error = new SerializableAPIError { ErrorMessage = response.Exception.Message };
                 }
@@ -371,6 +358,25 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
 
 
         #region Helper Methods
+
+        /// <summary>
+        /// Asynchronously gets the credentials.
+        /// </summary>
+        /// <returns></returns>
+        private static async Task GetCredentialsAsync()
+        {
+            var clientSecrets = new ClientSecrets
+            {
+                ClientId = Util.Decrypt(GoogleDriveCloudStorageServiceSettings.Default.AppKey,
+                    CultureConstants.InvariantCulture.NativeName),
+                ClientSecret = Util.Decrypt(GoogleDriveCloudStorageServiceSettings.Default.AppSecret,
+                    CultureConstants.InvariantCulture.NativeName)
+            };
+
+            s_credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets,
+                new[] { DriveService.Scope.DriveAppdata }, UserId, CancellationToken.None,
+                new FileDataStore(GetCredentialsPath(), true)).ConfigureAwait(false);
+        }
 
         /// <summary>
         /// Gets the credentials path.
@@ -426,7 +432,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
         /// Gets the file identifier.
         /// </summary>
         /// <returns></returns>
-        private static async Task<string> GetFileId()
+        private static async Task<string> GetFileIdAsync()
         {
             FileList result;
             using (DriveService client = GetClient())
@@ -435,7 +441,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                 listRequest.Spaces = Spaces;
                 listRequest.Fields = "files(id, name)";
 
-                result = await listRequest.ExecuteAsync();
+                result = await listRequest.ExecuteAsync().ConfigureAwait(false);
             }
 
             return result.Files.SingleOrDefault(file => file.Name == SettingsFileNameWithoutExtension)?.Id;

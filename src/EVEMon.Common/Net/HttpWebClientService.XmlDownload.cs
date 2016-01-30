@@ -21,11 +21,9 @@ namespace EVEMon.Common.Net
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The post data compression method.</param>
         /// <returns></returns>
-        public static DownloadAsyncResult<IXPathNavigable> DownloadXml(Uri url, HttpMethod method = null,
+        public static IXPathNavigable DownloadXml(Uri url, HttpMethod method = null,
             bool acceptEncoded = false, string postdata = null, DataCompression dataCompression = DataCompression.None)
-            => Task.Run(
-                async () => await DownloadXmlAsync(url, method, acceptEncoded, postdata, dataCompression))
-                .Result;
+            => DownloadXmlAsync(url, method, acceptEncoded, postdata, dataCompression).Result.Result;
 
         /// <summary>
         /// Asynchronously downloads an xml file from the specified url.
@@ -46,9 +44,12 @@ namespace EVEMon.Common.Net
             HttpClientServiceRequest request = new HttpClientServiceRequest();
             try
             {
-                using (HttpResponseMessage response = await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, XmlAccept))
+                HttpResponseMessage response =
+                    await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, XmlAccept).ConfigureAwait(false);
+
+                using (response)
                 {
-                    Stream stream = await response.Content.ReadAsStreamAsync();
+                    Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
                     return GetXmlDocument(request, stream);
                 }
             }

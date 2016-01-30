@@ -94,7 +94,7 @@ namespace EVEMon.Common.Service
             // Update the file if we don't have it or the data have expired
             if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
             {
-                Task.Run(UpdateFileAsync);
+                Task.WhenAll(UpdateFileAsync());
                 return;
             }
 
@@ -107,7 +107,7 @@ namespace EVEMon.Common.Service
             // In case the file has an error or it's an old one, we try to get a fresh copy
             if (s_cachedUntil < DateTime.UtcNow)
             {
-                Task.Run(UpdateFileAsync);
+                Task.WhenAll(UpdateFileAsync());
                 return;
             }
 

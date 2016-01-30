@@ -99,12 +99,11 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
         /// <returns></returns>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
         {
-            if (m_result == null)
-                m_result = new SerializableAPIResult<SerializableAPICredentials>();
+            m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
-            await CheckAuthCodeAsync(String.Empty);
+            await CheckAuthCodeAsync(String.Empty).ConfigureAwait(false);
 
-            return await Task.FromResult(m_result);
+            return m_result;
         }
 
         /// <summary>
@@ -122,7 +121,7 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
             {
                 // Checks that the client is authenticated
                 // Settings save is done on caller method
-                return await CheckAuthAsync();
+                return await CheckAuthAsync().ConfigureAwait(false);
             }
             catch (OneDriveException exc)
             {
@@ -152,14 +151,14 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
 
                 // Checks that the client is authenticated
                 // Settings save is done on called method
-                return await CheckAuthAsync(saveOnChangeCheck: true);
+                return await CheckAuthAsync(saveOnChangeCheck: true).ConfigureAwait(false);
             }
             catch (OneDriveException exc)
             {
                 m_result.Error = new SerializableAPIError { ErrorMessage = exc.Error.Message };
 
                 if (exc.Error.Code == OneDriveErrorCode.AuthenticationFailure.ToString() && HasCredentialsStored)
-                    await ResetSettingsAsync();
+                    await ResetSettingsAsync().ConfigureAwait(false);
             }
             catch (Exception exc)
             {
@@ -175,17 +174,16 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
         /// <returns></returns>
         protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
         {
-            if (m_result == null)
-                m_result = new SerializableAPIResult<SerializableAPICredentials>();
+            m_result = new SerializableAPIResult<SerializableAPICredentials>();
 
             try
             {
-                using (OneDriveClient client = (OneDriveClient)await GetClient())
+                using (OneDriveClient client = (OneDriveClient)await GetClient().ConfigureAwait(false))
                 {
                     bool cansignout = client.AuthenticationProvider.CurrentAccountSession.CanSignOut;
 
                     if (cansignout)
-                        await client.AuthenticationProvider.SignOutAsync();
+                        await client.AuthenticationProvider.SignOutAsync().ConfigureAwait(false);
                     else
                         m_result.Error = new SerializableAPIError { ErrorMessage = "Unable to revoke authorization" };
                 }
@@ -212,18 +210,18 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
 
             try
             {
-                m_fileId = m_fileId ?? await GetFileId();
+                m_fileId = m_fileId ?? await GetFileIdAsync().ConfigureAwait(false);
 
                 byte[] content = Util.GZipCompress(SettingsFileContentByteArray).ToArray();
 
-                using (OneDriveClient client = (OneDriveClient)await GetClient())
+                using (OneDriveClient client = (OneDriveClient)await GetClient().ConfigureAwait(false))
                 using (Stream stream = Util.GetMemoryStream(content))
                 {
                     Item response = await (String.IsNullOrWhiteSpace(m_fileId)
                         ? client.Drive.Special.AppRoot
                             .ItemWithPath(Uri.EscapeUriString(SettingsFileNameWithoutExtension))
                         : client.Drive.Items[m_fileId])
-                        .Content.Request().PutAsync<Item>(stream);
+                        .Content.Request().PutAsync<Item>(stream).ConfigureAwait(false);
 
                     m_fileId = response?.Id;
                 }
@@ -254,15 +252,15 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
 
             try
             {
-                m_fileId = m_fileId ?? await GetFileId();
+                m_fileId = m_fileId ?? await GetFileIdAsync().ConfigureAwait(false);
 
                 if (String.IsNullOrWhiteSpace(m_fileId))
                     throw new FileNotFoundException();
 
-                using (OneDriveClient client = (OneDriveClient)await GetClient())
+                using (OneDriveClient client = (OneDriveClient)await GetClient().ConfigureAwait(false))
                 {
-                    Stream stream = await client.Drive.Items[m_fileId].Content.Request().GetAsync();
-                    return await GetMappedAPIFileAsync(result, stream);
+                    Stream stream = await client.Drive.Items[m_fileId].Content.Request().GetAsync().ConfigureAwait(false);
+                    return GetMappedAPIFile(result, stream);
                 }
             }
             catch (OneDriveException exc)
@@ -344,23 +342,23 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
 
             return await OneDriveClient.GetAuthenticatedMicrosoftAccountClient(
                 Util.Decrypt(OneDriveCloudStorageServiceSettings.Default.AppKey, CultureConstants.InvariantCulture.NativeName),
-                RedirectUri, s_scopes, serviceInfoProvider, credentialCache);
+                RedirectUri, s_scopes, serviceInfoProvider, credentialCache).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets the file identifier.
         /// </summary>
         /// <returns></returns>
-        private static async Task<string> GetFileId()
+        private static async Task<string> GetFileIdAsync()
         {
             try
             {
-                using (OneDriveClient client = (OneDriveClient)await GetClient())
+                using (OneDriveClient client = (OneDriveClient)await GetClient().ConfigureAwait(false))
                 {
                     IItemRequest request = client.Drive.Special.AppRoot
                         .ItemWithPath($"/{Uri.EscapeUriString(SettingsFileNameWithoutExtension)}")
                         .Request();
-                    Item response = await request.GetAsync();
+                    Item response = await request.GetAsync().ConfigureAwait(false);
                     return response.Id;
                 }
             }

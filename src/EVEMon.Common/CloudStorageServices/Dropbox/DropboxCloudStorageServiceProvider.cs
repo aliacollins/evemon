@@ -99,27 +99,25 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// <summary>
         /// Asynchronously requests the provider an authentication code.
         /// </summary>
-        protected override async Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
-            => await Task.Run(() =>
+        protected override Task<SerializableAPIResult<SerializableAPICredentials>> RequestProviderAuthCodeAsync()
+        {
+            m_result = new SerializableAPIResult<SerializableAPICredentials>();
+
+            try
             {
-                if (m_result == null)
-                    m_result = new SerializableAPIResult<SerializableAPICredentials>();
+                Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(
+                    Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppKey,
+                        CultureConstants.InvariantCulture.NativeName));
 
-                try
-                {
-                    Uri authorizeUri = DropboxOAuth2Helper.GetAuthorizeUri(
-                        Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppKey,
-                            CultureConstants.InvariantCulture.NativeName));
+                Util.OpenURL(authorizeUri);
+            }
+            catch (Exception exc)
+            {
+                m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
+            }
 
-                    Util.OpenURL(authorizeUri);
-                }
-                catch (Exception exc)
-                {
-                    m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
-                }
-
-                return m_result;
-            });
+            return Task.FromResult(m_result);
+        }
 
         /// <summary>
         /// Asynchronously checks the provider authentication code.
@@ -137,9 +135,9 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                     Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppKey,
                         CultureConstants.InvariantCulture.NativeName),
                     Util.Decrypt(DropboxCloudStorageServiceSettings.Default.AppSecret,
-                        CultureConstants.InvariantCulture.NativeName));
+                        CultureConstants.InvariantCulture.NativeName)).ConfigureAwait(false);
 
-                await CheckAuthenticationAsync();
+                await CheckAuthenticationAsync().ConfigureAwait(false);
 
                 if (!m_result.HasError)
                     DropboxCloudStorageServiceSettings.Default.AccessToken = response.AccessToken;
@@ -171,7 +169,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
 
                 using (DropboxClient client = GetClient())
                 {
-                    await client.Users.GetCurrentAccountAsync();
+                    await client.Users.GetCurrentAccountAsync().ConfigureAwait(false);
                 }
             }
             catch (ApiException<GetAccountError> exc)
@@ -183,7 +181,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 m_result.Error = new SerializableAPIError { ErrorMessage = exc.Message };
 
                 if (exc.ErrorResponse.IsInvalidAccessToken && HasCredentialsStored)
-                    await ResetSettingsAsync();
+                    await ResetSettingsAsync().ConfigureAwait(false);
             }
             catch (BadInputException exc)
             {
@@ -202,7 +200,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
         /// </summary>
         /// <returns></returns>
         protected override Task<SerializableAPIResult<SerializableAPICredentials>> RevokeAuthorizationAsync()
-            => Task.Run(() => m_result ?? new SerializableAPIResult<SerializableAPICredentials>());
+            => Task.FromResult(new SerializableAPIResult<SerializableAPICredentials>());
 
         /// <summary>
         /// Asynchronously uploads the file.
@@ -221,7 +219,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 using (DropboxClient client = GetClient())
                 using (MemoryStream stream = Util.GetMemoryStream(content))
                 {
-                    await client.Files.UploadAsync(commitInfo, stream);
+                    await client.Files.UploadAsync(commitInfo, stream).ConfigureAwait(false);
                     return result;
                 }
             }
@@ -262,7 +260,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 {
                     Task<Stream> response = await client.Files.DownloadAsync(arg)
                         .ContinueWith(async task => await task.Result.GetContentAsStreamAsync());
-                    return await GetMappedAPIFileAsync(result, response.Result);
+                    return GetMappedAPIFile(result, response.Result);
                 }
             }
             catch (ApiException<DownloadError> ex)

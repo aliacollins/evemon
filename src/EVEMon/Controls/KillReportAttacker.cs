@@ -68,16 +68,17 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
-            Task.Run(() => GetImageForAsync(CharacterPictureBox));
-            Task.Run(() => GetImageForAsync(ShipPictureBox));
-            Task.Run(() => GetImageForAsync(WeaponPictureBox));
-
             CharacterNameLabel.Text = String.IsNullOrEmpty(m_attacker.Name) ? m_attacker.ShipTypeName : m_attacker.Name;
             CorpNameLabel.Text = m_attacker.CorporationName;
             AllianceNameLabel.Text = m_attacker.AllianceID == 0 ? String.Empty : m_attacker.AllianceName;
 
             DamageDoneLabel.Text = String.Format(CultureConstants.DefaultCulture, DamageDoneLabel.Text, m_attacker.DamageDone,
-                (m_attacker.DamageDone / (double)TotalDamageDone));
+                m_attacker.DamageDone / (double)TotalDamageDone);
+
+            Task.WhenAll(
+                GetImageForAsync(CharacterPictureBox),
+                GetImageForAsync(ShipPictureBox),
+                GetImageForAsync(WeaponPictureBox));
         }
 
         /// <summary>

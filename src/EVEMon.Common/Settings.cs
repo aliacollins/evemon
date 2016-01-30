@@ -181,7 +181,7 @@ namespace EVEMon.Common
                 {
                     // API providers
                     EveMonClient.APIProviders.Import(serial.APIProviders);
-                    
+
                     // User settings
                     UI = serial.UI;
                     G15 = serial.G15;
@@ -375,14 +375,21 @@ namespace EVEMon.Common
         /// </remarks>
         public static void Initialize()
         {
-            CloudStorageServiceAPIFile settingsFile = CloudStorageServiceProvider.Provider?.DownloadSettingsFile();
-            SerializableSettings settings = settingsFile != null
-                ? TryDeserializeFromFileContent(settingsFile.FileContent)
-                : TryDeserializeFromFile();
+            // Deserialize the local settings file to determine
+            // which cloud storage service provider should be used
+            SerializableSettings settings = TryDeserializeFromFile();
 
-            // Loading settings.
+            // Try to download the seetings file from the cloud
+            CloudStorageServiceAPIFile settingsFile = settings.CloudStorageServiceProvider.Provider?.DownloadSettingsFile();
+
+            // If a settings file was downloaded try to deserialize it
+            settings = settingsFile != null
+                ? TryDeserializeFromFileContent(settingsFile.FileContent)
+                : settings;
+
+            // Loading settings
             // If there are none, we create them from scratch
-            Task.Run(() => ImportAsync(settings));
+            Task.WhenAll(ImportAsync(settings));
         }
 
         /// <summary>
