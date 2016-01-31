@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Text;
 using System.Windows.Forms;
-using EVEMon.Common.Extensions;
 
 namespace EVEMon.Common.Controls
 {
@@ -288,7 +287,7 @@ namespace EVEMon.Common.Controls
                 displayText = GetTextValue();
                 Invalidate();
 
-                ItemCheck?.ThreadSafeInvoke(sender, e);
+                ItemCheck?.Invoke(sender, e);
             }
         }
 

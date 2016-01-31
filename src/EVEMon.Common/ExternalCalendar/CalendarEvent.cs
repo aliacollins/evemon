@@ -93,7 +93,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Method to search for any existing event for this skill.
         /// </summary>
-        internal abstract Task ReadEvents();
+        internal abstract Task ReadEventsAsync();
 
         /// <summary>
         /// Method to get the relevant event item and populate the details.
@@ -109,13 +109,13 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="eventExists">if set to <c>true</c> the event exists.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        internal abstract Task AddOrUpdateEvent(bool eventExists, int queuePosition, bool lastSkillInQueue);
+        internal abstract Task AddOrUpdateEventAsync(bool eventExists, int queuePosition, bool lastSkillInQueue);
 
         /// <summary>
         /// Delete the appropriate event.
         /// </summary>
         /// <param name="eventIndex">The index of the event.</param>
-        internal abstract Task DeleteEvent(int eventIndex);
+        internal abstract Task DeleteEventAsync(int eventIndex);
 
         #endregion
 

@@ -155,7 +155,7 @@ namespace EVEMon.Common.Controls
                     }
 
                     // The image was retrieved, we save it to the cache
-                    SaveCharacterImageToCacheAsync(image);
+                    SaveCharacterImageToCache(image);
 
                 }, EveMonClient.CurrentSynchronizationContext);
         }
@@ -164,7 +164,7 @@ namespace EVEMon.Common.Controls
         /// Save the specified image to the EVEMon cache as this character's portrait.
         /// </summary>
         /// <param name="image">The portrait image.</param>
-        private void SaveCharacterImageToCacheAsync(Image image)
+        private void SaveCharacterImageToCache(Image image)
         {
             // Release the updating flag
             m_updatingPortrait = false;
@@ -176,7 +176,7 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Save to the portraits cache
-            ImageService.AddCharacterImageToCacheAsync(m_character.Guid, image);
+            ImageService.AddCharacterImageToCacheAsync(m_character.Guid, (Image)image.Clone());
         }
 
         #endregion
@@ -262,7 +262,7 @@ namespace EVEMon.Common.Controls
 
                 // Open the largest image and save it
                 Image image = Image.FromFile(bestFile);
-                SaveCharacterImageToCacheAsync(image);
+                SaveCharacterImageToCache(image);
             }
             finally
             {
@@ -282,6 +282,7 @@ namespace EVEMon.Common.Controls
             try
             {
                 Image.FromFile(file.FullName);
+                return true;
             }
             catch (OutOfMemoryException)
             {
@@ -291,7 +292,6 @@ namespace EVEMon.Common.Controls
             {
                 return false;
             }
-            return true;
         }
 
         /// <summary>
@@ -299,12 +299,12 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private static bool ChangeEVEPortraitCache()
         {
-            using (EveFolderWindow f = new EveFolderWindow())
+            using (EveFolderWindow folderWindow = new EveFolderWindow())
             {
-                if (f.ShowDialog() != DialogResult.OK)
+                if (folderWindow.ShowDialog() != DialogResult.OK)
                     return false;
 
-                EveMonClient.EvePortraitCacheFolders = f.SpecifiedEVEPortraitCacheFolder;
+                EveMonClient.EvePortraitCacheFolders = folderWindow.SpecifiedEVEPortraitCacheFolder;
                 return true;
             }
         }

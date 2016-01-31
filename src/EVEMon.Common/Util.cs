@@ -334,7 +334,8 @@ namespace EVEMon.Common
             
             try
             {
-                var apiResult = HttpWebClientService.DownloadXml(url, HttpMethod.Post, acceptEncoded, postData);
+                DownloadAsyncResult<IXPathNavigable> apiResult =
+                    HttpWebClientService.DownloadXmlAsync(url, HttpMethod.Post, acceptEncoded, postData).Result;
 
                 // Was there an HTTP error ?
                 result = apiResult.Error != null

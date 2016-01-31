@@ -19,11 +19,9 @@ namespace EVEMon.Common.Net
         /// <param name="postdata">The post data.</param>
         /// <param name="dataCompression">The post data compression method.</param>
         /// <returns></returns>
-        public static DownloadAsyncResult<String> DownloadString(Uri url, HttpMethod method = null, bool acceptEncoded = false,
+        public static String DownloadString(Uri url, HttpMethod method = null, bool acceptEncoded = false,
             string postdata = null, DataCompression dataCompression = DataCompression.None)
-            => Task.Run(
-                async () => await DownloadStringAsync(url, method, acceptEncoded, postdata, dataCompression))
-                .Result;
+            => DownloadStringAsync(url, method, acceptEncoded, postdata, dataCompression).Result.Result;
 
 
         /// <summary>
@@ -45,9 +43,12 @@ namespace EVEMon.Common.Net
             HttpClientServiceRequest request = new HttpClientServiceRequest();
             try
             {
-                using (HttpResponseMessage response = await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, StringAccept))
+                HttpResponseMessage response =
+                    await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, StringAccept).ConfigureAwait(false);
+
+                using (response)
                 {
-                    Stream stream = await response.Content.ReadAsStreamAsync();
+                    Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
                     return GetString(request, stream);
                 }
             }

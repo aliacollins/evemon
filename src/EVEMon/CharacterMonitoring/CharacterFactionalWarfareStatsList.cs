@@ -159,14 +159,14 @@ namespace EVEMon.CharacterMonitoring
             FightingPartiesPanel.Visible = !Settings.UI.SafeForWork || !factionsAgainstEnlisted.Any();
 
             // Update the images
-            Task.Run(() => ImageService.GetAllianceImageAsync(FactionPictureBox, m_charFacWarStats.FactionID));
-            Task.Run(() => ImageService.GetCorporationImageAsync(CorporationPictureBox, Character.CorporationID));
-            Task.Run(() => ImageService.GetAllianceImageAsync(EnlistedFactionPictureBox, m_charFacWarStats.FactionID));
+            ImageService.GetAllianceImageAsync(FactionPictureBox, m_charFacWarStats.FactionID);
+            ImageService.GetCorporationImageAsync(CorporationPictureBox, Character.CorporationID);
+            ImageService.GetAllianceImageAsync(EnlistedFactionPictureBox, m_charFacWarStats.FactionID);
 
             if (factionsAgainstEnlisted.Any())
             {
-                Task.Run(() => ImageService.GetAllianceImageAsync(PrimeAgainstFactionPictureBox, factionsAgainstEnlisted[0]));
-                Task.Run(() => ImageService.GetAllianceImageAsync(AllyAgainstFactionPictureBox, factionsAgainstEnlisted[1]));
+                ImageService.GetAllianceImageAsync(PrimeAgainstFactionPictureBox, factionsAgainstEnlisted[0]);
+                ImageService.GetAllianceImageAsync(AllyAgainstFactionPictureBox, factionsAgainstEnlisted[1]);
             }
 
             // Update the labels

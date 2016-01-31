@@ -48,7 +48,7 @@ namespace EVEMon.Common.Threading
         /// <param name="action">The action to invoke</param>
         public static void Invoke(Action action)
         {
-            if (s_mainThreadDispather.CheckAccess())
+            if (s_mainThreadDispather == null || s_mainThreadDispather.CheckAccess())
                 action.Invoke();
             else
                 s_mainThreadDispather.Invoke(action);
@@ -65,7 +65,7 @@ namespace EVEMon.Common.Threading
             timer.Tick += (sender, args) =>
             {
                 timer.Stop();
-                action.Invoke();
+                Invoke(action);
             };
             timer.Start();
         }

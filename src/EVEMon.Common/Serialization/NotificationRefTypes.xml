@@ -113,7 +113,7 @@
       <row refTypeID="108" refTypeName="Kill Event LP Disqualification" subjectLayout="" textLayout=""/>
       <row refTypeID="109" refTypeName="War Ally Agreement Cancelled" subjectLayout="" textLayout=""/>
       <row refTypeID="110" refTypeName="War Ally Offer Declined" subjectLayout="" textLayout=""/>
-      <row refTypeID="111" refTypeName="Bounty On You Claimed" subjectLayout="" textLayout=""/>
+      <row refTypeID="111" refTypeName="Bounty From You Claimed" subjectLayout="" textLayout=""/>
       <row refTypeID="112" refTypeName="Bounty Placed On You" subjectLayout="" textLayout=""/>
       <row refTypeID="113" refTypeName="Bounty Placed On Corporation" subjectLayout="" textLayout=""/>
       <row refTypeID="114" refTypeName="Bounty Placed On Alliance" subjectLayout="" textLayout=""/>

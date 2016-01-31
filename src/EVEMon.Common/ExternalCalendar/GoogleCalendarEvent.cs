@@ -93,7 +93,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="eventExists">if set to <c>true</c> the event exists.</param>
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
-        internal override async Task AddOrUpdateEvent(bool eventExists, int queuePosition, bool lastSkillInQueue)
+        internal override async Task AddOrUpdateEventAsync(bool eventExists, int queuePosition, bool lastSkillInQueue)
         {
             Event eventItem = eventExists
                 ? (Event)Events[0]
@@ -193,7 +193,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <summary>
         /// Read the Google events.
         /// </summary>
-        internal override async Task ReadEvents()
+        internal override async Task ReadEventsAsync()
         {
             Events.Clear();
 
@@ -221,7 +221,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// Delete the relevant event.
         /// </summary>
         /// <param name="eventIndex">The event index.</param>
-        internal override async Task DeleteEvent(int eventIndex)
+        internal override async Task DeleteEventAsync(int eventIndex)
         {
             Event eventItem = (Event)Events[eventIndex];
 

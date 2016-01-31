@@ -77,7 +77,7 @@ namespace EVEMon.Common.Net
                 {
                     HttpClientHandler httpClientHandler = GetHttpClientHandler();
                     HttpRequestMessage request = GetHttpRequest();
-                    response = await GetHttpResponseAsync(httpClientHandler, request);
+                    response = await GetHttpResponseAsync(httpClientHandler, request).ConfigureAwait(false);
                 }
                 catch (HttpWebClientServiceException)
                 {
@@ -159,10 +159,10 @@ namespace EVEMon.Common.Net
         private static async Task<HttpResponseMessage> GetHttpResponseAsync(HttpClientHandler httpClientHandler,
             HttpRequestMessage request)
         {
-            using (var client = HttpWebClientService.GetHttpClient(httpClientHandler))
+            using (HttpClient client = HttpWebClientService.GetHttpClient(httpClientHandler))
             {
                 client.Timeout = s_timeout;
-                return await client.SendAsync(request);
+                return await client.SendAsync(request).ConfigureAwait(false);
             }
         }
 

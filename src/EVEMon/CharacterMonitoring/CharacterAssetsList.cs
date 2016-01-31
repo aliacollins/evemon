@@ -752,7 +752,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Updates the asset location.
         /// </summary>
-        private async Task UpdateAssetLocation()
+        private async Task UpdateAssetLocationAsync()
         {
             // Invoke it on a worker thread cause it may be time intensive
             // if character owns many stuff in several locations
@@ -921,7 +921,7 @@ namespace EVEMon.CharacterMonitoring
             if (Character == null)
                 return;
 
-            await UpdateAssetLocation();
+            await UpdateAssetLocationAsync();
         }
 
         /// <summary>
@@ -935,7 +935,7 @@ namespace EVEMon.CharacterMonitoring
             if (Character == null || e.Character != Character)
                 return;
 
-            await UpdateAssetLocation();
+            await UpdateAssetLocationAsync();
         }
 
         /// <summary>

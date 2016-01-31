@@ -58,13 +58,14 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
-            Task.Run(() => GetImageForAsync(CharacterPictureBox));
-            Task.Run(() => GetImageForAsync(ShipPictureBox));
-            Task.Run(() => GetImageForAsync(CorpPictureBox));
+            Task.WhenAll(
+                GetImageForAsync(CharacterPictureBox),
+                GetImageForAsync(ShipPictureBox),
+                GetImageForAsync(CorpPictureBox));
 
             if (m_killLog.Victim.AllianceID != 0)
             {
-                Task.Run(() => GetImageForAsync(AlliancePictureBox));
+                Task.WhenAll(GetImageForAsync(AlliancePictureBox));
                 AllianceNameLabel.Text = m_killLog.Victim.AllianceName;
             }
             else
