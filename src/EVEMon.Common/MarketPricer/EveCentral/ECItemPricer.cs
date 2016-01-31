@@ -24,6 +24,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         private static int s_queryCounter;
         private static bool s_queryPending;
         private static int s_queryStep = 100;
+        private static bool s_checkFileExists = true;
 
         #endregion
 
@@ -39,7 +40,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        protected override bool Enabled => false;
+        protected override bool Enabled => EveMonClient.IsDebugBuild;
 
         /// <summary>
         /// Gets the price by type ID.
@@ -80,7 +81,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             string file = LocalXmlCache.GetFile(Filename).FullName;
 
-            if (!File.Exists(file) || (Loaded && CachedUntil < DateTime.UtcNow))
+            if ((s_checkFileExists && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
                 Task.WhenAll(GetPricesAsync());
                 return;
@@ -89,8 +90,15 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             // Exit if we have already imported the list
             if (Loaded)
                 return;
-
-            LoadFromFile(file);
+            
+            if (File.Exists(file))
+                LoadFromFile(file);
+            else
+            {
+                Loaded = true;
+                CachedUntil = DateTime.UtcNow.AddHours(1);
+                PriceByItemID.Clear();
+            }
         }
 
         /// <summary>
@@ -259,17 +267,24 @@ namespace EVEMon.Common.MarketPricer.EveCentral
                 if (result?.Error != null)
                     EveMonClient.Trace(result.Error.Message);
 
-                // Reset query pending flag
-                if (s_queryCounter == 0)
+                // Abort further attempts
+                if (result?.Error.Status != HttpWebClientServiceExceptionStatus.Exception &&
+                    result?.Error.Status != HttpWebClientServiceExceptionStatus.Timeout)
                 {
-                    s_queryPending = false;
-                    EveMonClient.OnPricesDownloaded(null, String.Empty);
+                    return result != null && s_queryCounter != 0;
                 }
-                else
-                    return true;
 
-                if (result == null)
-                    return false;
+                // Set a retry
+                s_queue.Clear();
+                s_checkFileExists = false;
+                Loaded = true;
+                CachedUntil = DateTime.UtcNow.AddHours(1);
+                
+                // Reset query pending flag
+                s_queryPending = false;
+                EveMonClient.OnPricesDownloaded(null, String.Empty);
+
+                return true;
             }
 
             // When the query succeeds import the data and remove the ids from the monitoring list

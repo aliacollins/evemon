@@ -365,7 +365,7 @@ namespace EVEMon.CharacterMonitoring
             lblTotalCost.Text = String.Format(CultureConstants.DefaultCulture, m_totalCostLabelDefaultText,
                 assets.Sum(asset => asset.Price * asset.Quantity));
 
-            if (assets.All(x => Math.Abs(x.Price) < double.Epsilon))
+            if (!throbber.Visible && !Settings.MarketPricer.Pricer.Queried)
             {
                 noPricesFoundLabel.Hide();
                 throbber.Show();
