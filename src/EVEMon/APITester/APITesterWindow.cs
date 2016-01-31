@@ -60,6 +60,17 @@ namespace EVEMon.ApiTester
         }
 
         /// <summary>
+        /// Updates the controls.
+        /// </summary>
+        private void UpdateControls()
+        {
+            UpdateCharacterList();
+
+            if (!APIMethods.NonAccountGenericMethods.Contains(APIMethodComboBox.SelectedItem))
+                APIMethodComboBox.SelectedIndex = -1;
+        }
+
+        /// <summary>
         /// Updates the controls visibility.
         /// </summary>
         private void UpdateControlsVisibility()
@@ -188,6 +199,8 @@ namespace EVEMon.ApiTester
         /// <param name="url">The URL.</param>
         private void LoadDocument(Uri url)
         {
+            m_url = url;
+
             string errorText = url != m_defaultUri ? ApiTesterUIHelper.ErrorText : String.Empty;
 
             ErrorProvider.SetError(UrlLabel, errorText);
@@ -195,8 +208,6 @@ namespace EVEMon.ApiTester
             UrlLabel.Text = url != m_defaultUri
                 ? String.Format(CultureConstants.InvariantCulture, "URL: {0}", url.AbsoluteUri)
                 : String.Empty;
-
-            m_url = url;
 
             // Show the xml document using the webbrowser control
             WebBrowser.Navigate(url);
@@ -214,8 +225,7 @@ namespace EVEMon.ApiTester
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_APIKeyInfoUpdated(object sender, EventArgs e)
         {
-            UpdateCharacterList();
-            UpdateControlsVisibility();
+            UpdateControls();
         }
 
         /// <summary>
@@ -225,8 +235,7 @@ namespace EVEMon.ApiTester
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_CharacterCollectionChanged(object sender, EventArgs e)
         {
-            UpdateCharacterList();
-            UpdateControlsVisibility();
+            UpdateControls();
         }
 
         #endregion
