@@ -28,40 +28,40 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static Task LoadAsync()
             => Task.Run(() =>
-        {
-            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.SkillsDatafile)))
-                return;
-
-            SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>(DatafileConstants.SkillsDatafile,
-                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
-
-            // Fetch deserialized data
-            s_arrayIndicesCount = 0;
-            List<Collection<SerializableSkillPrerequisite>> prereqs = new List<Collection<SerializableSkillPrerequisite>>();
-            foreach (SerializableSkillGroup srcGroup in datafile.SkillGroups)
             {
-                StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref s_arrayIndicesCount);
-                s_skillGroupsByID[@group.ID] = @group;
+                if (!File.Exists(Datafile.GetFullPath(DatafileConstants.SkillsDatafile)))
+                    return;
 
-                // Store skills
-                foreach (StaticSkill skill in @group)
+                SkillsDatafile datafile = Util.DeserializeDatafile<SkillsDatafile>(DatafileConstants.SkillsDatafile,
+                    Util.LoadXslt(Properties.Resources.DatafilesXSLT));
+
+                // Fetch deserialized data
+                s_arrayIndicesCount = 0;
+                List<Collection<SerializableSkillPrerequisite>> prereqs = new List<Collection<SerializableSkillPrerequisite>>();
+                foreach (SerializableSkillGroup srcGroup in datafile.SkillGroups)
                 {
-                    s_skillsByID[skill.ID] = skill;
-                    s_skillsByName[skill.Name] = skill;
+                    StaticSkillGroup group = new StaticSkillGroup(srcGroup, ref s_arrayIndicesCount);
+                    s_skillGroupsByID[@group.ID] = @group;
+
+                    // Store skills
+                    foreach (StaticSkill skill in @group)
+                    {
+                        s_skillsByID[skill.ID] = skill;
+                        s_skillsByName[skill.Name] = skill;
+                    }
+
+                    // Store prereqs
+                    prereqs.AddRange(srcGroup.Skills.Select(serialSkill => serialSkill.SkillPrerequisites));
                 }
 
-                // Store prereqs
-                prereqs.AddRange(srcGroup.Skills.Select(serialSkill => serialSkill.SkillPrerequisites));
-            }
-
-            // Complete initialization
-            s_skills = new StaticSkill[s_arrayIndicesCount];
-            foreach (StaticSkill staticSkill in s_skillsByID.Values)
-            {
-                staticSkill.CompleteInitialization(prereqs[staticSkill.ArrayIndex]);
-                s_skills[staticSkill.ArrayIndex] = staticSkill;
-            }
-        });
+                // Complete initialization
+                s_skills = new StaticSkill[s_arrayIndicesCount];
+                foreach (StaticSkill staticSkill in s_skillsByID.Values)
+                {
+                    staticSkill.CompleteInitialization(prereqs[staticSkill.ArrayIndex]);
+                    s_skills[staticSkill.ArrayIndex] = staticSkill;
+                }
+            });
 
         #endregion
 

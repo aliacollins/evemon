@@ -14,6 +14,7 @@ using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Serialization;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.CloudStorageServices
 {
@@ -277,14 +278,14 @@ namespace EVEMon.Common.CloudStorageServices
 
             IsAuthenticated = false;
 
-            SerializableAPIResult<SerializableAPICredentials> result = await RequestProviderAuthCodeAsync();
+            SerializableAPIResult<SerializableAPICredentials> result = await RequestProviderAuthCodeAsync().ConfigureAwait(false);
 
             CredentialsChecked?.ThreadSafeInvoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
 
             m_queryPending = false;
 
-            var actionText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace(actionText);
+            var resultText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"CloudStorageServiceProvider.RequestAuthCodeAsync - {resultText}", printMethod: false);
         }
 
         /// <summary>
@@ -300,7 +301,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             EveMonClient.Trace("Initiated");
 
-            SerializableAPIResult<SerializableAPICredentials> result = await CheckProviderAuthCodeAsync(code);
+            SerializableAPIResult<SerializableAPICredentials> result = await CheckProviderAuthCodeAsync(code).ConfigureAwait(false);
             
             if (!result.HasError)
                 Settings.Save();
@@ -321,7 +322,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <param name="userID">The user identifier.</param>
         /// <param name="apiKey">The API key.</param>
         public bool CheckAPIAuthWithCredentialsIsValid(uint userID, string apiKey)
-            => !Task.Run(async () => await CheckProviderAuthWithCredentialsIsValidAsync(userID, apiKey)).Result.HasError;
+            => !CheckProviderAuthWithCredentialsIsValidAsync(userID, apiKey).Result.HasError;
 
         /// <summary>
         /// Asynchronously checks the API authentication with credentials is valid.
@@ -340,21 +341,28 @@ namespace EVEMon.Common.CloudStorageServices
             IsAuthenticated = false;
 
             SerializableAPIResult<SerializableAPICredentials> result =
-                await CheckProviderAuthWithCredentialsIsValidAsync(userID, apiKey);
+                await CheckProviderAuthWithCredentialsIsValidAsync(userID, apiKey).ConfigureAwait(false);
 
             IsAuthenticated = !result.HasError;
+
             CredentialsChecked?.ThreadSafeInvoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
+
             m_queryPending = false;
 
-            var actionText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace(actionText);
+            var resultText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"CloudStorageServiceProvider.CheckAPIAuthWithCredentialsIsValidAsync - {resultText}",
+                printMethod: false);
         }
 
         /// <summary>
         /// Synchronously checks that API authentication is valid.
         /// </summary>
+        /// <remarks>Because only Google is correctly implementing the use of "<![CDATA[ Task<T>.Result ]]>"
+        /// we are forced to use "<![CDATA[ Task.Run ]]>" to avoid deadlocks.
+        /// When the rest of the providers implement it correctly it should be removed.
+        /// </remarks>
         public bool CheckAPIAuthIsValid()
-            => !Task.Run(async () => await CheckAuthenticationAsync()).Result.HasError;
+            => !Task.Run(CheckAuthenticationAsync).Result.HasError;
 
         /// <summary>
         /// Asynchronously checks that API authentication is valid.
@@ -370,7 +378,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             IsAuthenticated = false;
 
-            SerializableAPIResult<SerializableAPICredentials> result = await CheckAuthenticationAsync();
+            SerializableAPIResult<SerializableAPICredentials> result = await CheckAuthenticationAsync().ConfigureAwait(false);
 
             IsAuthenticated = !result.HasError && HasCredentialsStored;
 
@@ -378,8 +386,8 @@ namespace EVEMon.Common.CloudStorageServices
 
             m_queryPending = false;
 
-            var actionText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace(actionText);
+            var resultText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"CloudStorageServiceProvider.CheckAPIAuthIsValidAsync - {resultText}", printMethod: false);
         }
 
         /// <summary>
@@ -389,25 +397,27 @@ namespace EVEMon.Common.CloudStorageServices
         {
             EveMonClient.Trace("Initiated");
 
-            SerializableAPIResult<SerializableAPICredentials> result = await RevokeAuthorizationAsync();
+            SerializableAPIResult<SerializableAPICredentials> result = await RevokeAuthorizationAsync().ConfigureAwait(false);
 
             if (!result.HasError)
                 Settings.Reset();
 
             SettingsReset?.ThreadSafeInvoke(this, new CloudStorageServiceProviderEventArgs(null));
 
-            var actionText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace(actionText);
+            var resultText = result.HasError ? "Failed" : "Completed";
+            EveMonClient.Trace($"CloudStorageServiceProvider.ResetSettingsAsync - {resultText}", printMethod: false);
         }
 
         /// <summary>
         /// Uploads the settings file.
         /// </summary>
         /// <returns></returns>
-        public bool UploadSettingsFile()
+        public async Task<bool> UploadSettingsFileOnExitAsync()
         {
             if (!CloudStorageServiceSettings.Default.UploadAlways || !HasCredentialsStored)
                 return true;
+
+            //var isValid = CheckAPIAuthIsValid();
 
             // Quit if user is not authenticated
             if (!IsAuthenticated && !CheckAPIAuthIsValid())
@@ -423,12 +433,12 @@ namespace EVEMon.Common.CloudStorageServices
             // Ask for user action if uploading fails
             while (true)
             {
-                SerializableAPIResult<CloudStorageServiceAPIFile> result = Task.Run(async () => await UploadFileAsync()).Result;
+                SerializableAPIResult<CloudStorageServiceAPIFile> result = await UploadFileAsync().ConfigureAwait(false);
                 FileUploaded?.ThreadSafeInvoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
 
                 if (!result.HasError)
                 {
-                    EveMonClient.Trace("Completed");
+                    EveMonClient.Trace("CloudStorageServiceProvider.UploadSettingsFileOnExitAsync - Completed", printMethod: false);
                     return true;
                 }
 
@@ -468,7 +478,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             EveMonClient.Trace("Initiated");
 
-            SerializableAPIResult<CloudStorageServiceAPIFile> result = Task.Run(async () => await DownloadFileAsync()).Result;
+            SerializableAPIResult<CloudStorageServiceAPIFile> result = DownloadFileAsync().Result;
             FileDownloaded?.ThreadSafeInvoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
 
             if (CloudStorageServiceSettings.Default.UseImmediately)
@@ -509,12 +519,12 @@ namespace EVEMon.Common.CloudStorageServices
 
             EveMonClient.Trace("Initiated");
 
-            SerializableAPIResult<CloudStorageServiceAPIFile> result = await UploadFileAsync();
+            SerializableAPIResult<CloudStorageServiceAPIFile> result = await UploadFileAsync().ConfigureAwait(false);
             FileUploaded?.ThreadSafeInvoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
             m_queryPending = false;
 
             string resultText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace(resultText);
+            EveMonClient.Trace($"CloudStorageServiceProvider.UploadSettingsFileAsync - {resultText}", printMethod: false);
         }
 
         /// <summary>
@@ -529,15 +539,15 @@ namespace EVEMon.Common.CloudStorageServices
 
             EveMonClient.Trace("Initiated");
 
-            SerializableAPIResult<CloudStorageServiceAPIFile> result = await DownloadFileAsync();
+            SerializableAPIResult<CloudStorageServiceAPIFile> result = await DownloadFileAsync().ConfigureAwait(false);
             FileDownloaded?.ThreadSafeInvoke(this, new CloudStorageServiceProviderEventArgs(result.Error?.ErrorMessage));
             m_queryPending = false;
 
             string resultText = result.HasError ? "Failed" : "Completed";
-            EveMonClient.Trace(resultText);
+            EveMonClient.Trace($"CloudStorageServiceProvider.DownloadSettingsFileAsync - {resultText}", printMethod: false);
 
             if (!result.HasError)
-                SaveSettingsFile(result.Result);
+                Dispatcher.Invoke(() => SaveSettingsFile(result.Result));
         }
 
         /// <summary>
@@ -605,39 +615,38 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
-        /// Asynchronously gets a mapped API file.
+        /// Gets a mapped API file.
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="response">The response.</param>
         /// <returns></returns>
-        protected static Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFileAsync(
+        protected static SerializableAPIResult<CloudStorageServiceAPIFile> GetMappedAPIFile(
             SerializableAPIResult<CloudStorageServiceAPIFile> result, Stream response)
         {
             if (response == null)
                 return null;
 
-            return Task.Run(() =>
+            string content;
+            using (StreamReader reader = new StreamReader(Util.ZlibUncompress(response)))
+                content = reader.ReadToEnd();
+
+            if (String.IsNullOrWhiteSpace(content))
             {
-                string content;
-                using (StreamReader reader = new StreamReader(Util.ZlibUncompress(response)))
-                    content = reader.ReadToEnd();
-
-                if (String.IsNullOrWhiteSpace(content))
+                result.Error = new SerializableAPIError
                 {
-                    result.Error = new SerializableAPIError
-                    {
-                        ErrorMessage = @"The settings file was not in a correct format."
-                    };
-                    return result;
-                }
-
-                result.Result = new CloudStorageServiceAPIFile
-                {
-                    FileName = $"{SettingsFileNameWithoutExtension}.xml",
-                    FileContent = content
+                    ErrorMessage = @"The settings file was not in a correct format."
                 };
+
                 return result;
-            });
+            }
+
+            result.Result = new CloudStorageServiceAPIFile
+            {
+                FileName = $"{SettingsFileNameWithoutExtension}.xml",
+                FileContent = content
+            };
+
+            return result;
         }
 
         #endregion

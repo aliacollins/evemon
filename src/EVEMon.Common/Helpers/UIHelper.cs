@@ -274,8 +274,9 @@ namespace EVEMon.Common.Helpers
                             {
                                 if (format == CharacterSaveFormat.PNG)
                                 {
-                                    Bitmap bmp = CharacterMonitorScreenshot; // monitor.GetCharacterScreenshot();
+                                    Bitmap bmp = CharacterMonitorScreenshot;
                                     bmp.Save(fs, ImageFormat.Png);
+                                    fs.Flush();
                                     return true;
                                 }
 

@@ -9,6 +9,7 @@ using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.About;
 using EVEMon.ApiCredentialsManagement;
@@ -1084,7 +1085,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDataUpdateAvailable(object sender, DataUpdateAvailableEventArgs e)
+        private async void OnDataUpdateAvailable(object sender, DataUpdateAvailableEventArgs e)
         {
             if (m_isShowingDataUpdateWindow)
                 return;
@@ -1093,7 +1094,7 @@ namespace EVEMon
             using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(e))
             {
                 if (f.ShowDialog() == DialogResult.OK)
-                    RestartApplication();
+                    await RestartApplication();
             }
 
             m_isShowingDataUpdateWindow = false;
@@ -1103,13 +1104,14 @@ namespace EVEMon
         /// <summary>
         /// Triggers a restart of EVEMon.
         /// </summary>
-        private void RestartApplication()
+        private async Task RestartApplication()
         {
             // Save the settings to make sure we don't lose anything
             Settings.SaveImmediate();
 
             // Try to save settings to cloud storage service provider
-            if (TryUploadToCloudStorageProvider())
+            bool canExit = await TasksSucceeded(TryUploadToCloudStorageProvider());
+            if (!canExit)
                 return;
 
             // Stop IGB
@@ -1344,13 +1346,13 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Try to save settings to cloud storage service provider
-            if (TryUploadToCloudStorageProvider())
-                return;
+            bool canExit = await TasksSucceeded(TryUploadToCloudStorageProvider());
 
-            Application.Exit();
+            if (canExit)
+                Application.Exit();
         }
 
         /// <summary>
@@ -1940,13 +1942,13 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Try to save settings to cloud storage service provider
-            if (TryUploadToCloudStorageProvider())
-                return;
+            bool canExit = await TasksSucceeded(TryUploadToCloudStorageProvider());
 
-            Application.Exit();
+            if (canExit)
+                Application.Exit();
         }
 
         /// <summary>
@@ -2085,10 +2087,18 @@ namespace EVEMon
         #region Helper Methods
 
         /// <summary>
+        /// Determines if all tasks succeeded.
+        /// </summary>
+        /// <param name="tasks">The tasks.</param>
+        /// <returns></returns>
+        private static async Task<bool> TasksSucceeded(params Task<bool>[] tasks)
+            => await Task.WhenAll(tasks).ContinueWith(task => { return task.Result.All(x => !x); });
+
+        /// <summary>
         /// Tries to upload to cloud storage provider.
         /// </summary>
         /// <returns></returns>
-        private bool TryUploadToCloudStorageProvider()
+        private async Task<bool> TryUploadToCloudStorageProvider()
         {
             if (Settings.CloudStorageServiceProvider.Provider == null)
                 return false;
@@ -2100,7 +2110,9 @@ namespace EVEMon
                 lblCSSProviderStatus.Visible = true;
             }
 
-            if (Settings.CloudStorageServiceProvider.Provider.UploadSettingsFile())
+            bool success = await Settings.CloudStorageServiceProvider.Provider.UploadSettingsFileOnExitAsync();
+
+            if (success)
                 return false;
 
             lblCSSProviderStatus.Visible = false;

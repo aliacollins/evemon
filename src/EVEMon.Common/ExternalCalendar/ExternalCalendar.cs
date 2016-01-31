@@ -102,7 +102,7 @@ namespace EVEMon.Common.ExternalCalendar
 
 
             // Pull the list of appointments, hopefully we should either get 1 or none back
-            await outlookAppointmentFilter.ReadEvents();
+            await outlookAppointmentFilter.ReadEventsAsync();
 
             // If there is an appointment, get the first one
             bool foundAppointment = false;
@@ -121,7 +121,7 @@ namespace EVEMon.Common.ExternalCalendar
             outlookAppointmentFilter.LateReminder = Settings.Calendar.LateReminding;
             outlookAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
 
-            await outlookAppointmentFilter.AddOrUpdateEvent(foundAppointment, queuePosition, lastSkillInQueue);
+            await outlookAppointmentFilter.AddOrUpdateEventAsync(foundAppointment, queuePosition, lastSkillInQueue);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace EVEMon.Common.ExternalCalendar
                 };
 
                 // Pull the list of appointments, hopefully we should either get 1 or none back
-                await googleAppointmentFilter.ReadEvents();
+                await googleAppointmentFilter.ReadEventsAsync();
 
                 // If there is are appointments, see if any match the subject
                 bool foundAppointment = false;
@@ -168,7 +168,7 @@ namespace EVEMon.Common.ExternalCalendar
                 googleAppointmentFilter.Minutes = Settings.Calendar.RemindingInterval;
                 googleAppointmentFilter.ReminderMethod = Settings.Calendar.GoogleEventReminder;
 
-                await googleAppointmentFilter.AddOrUpdateEvent(foundAppointment, queuePosition, lastSkillInQueue);
+                await googleAppointmentFilter.AddOrUpdateEventAsync(foundAppointment, queuePosition, lastSkillInQueue);
             }
             catch (TokenResponseException ex)
             {

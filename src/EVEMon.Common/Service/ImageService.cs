@@ -42,8 +42,8 @@ namespace EVEMon.Common.Service
             string path = String.Format(CultureConstants.InvariantCulture,
                 NetworkConstants.CCPPortraits, charId, (int)EveImageSize.x128);
 
-            return await GetImageAsync(GetImageServerCdnUri(path), false) ??
-                   await GetImageAsync(GetImageServerBaseUri(path), false);
+            return await GetImageAsync(GetImageServerCdnUri(path), false).ConfigureAwait(false) ??
+                   await GetImageAsync(GetImageServerBaseUri(path), false).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -51,12 +51,12 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="pictureBox">The picture box.</param>
         /// <param name="allianceID">The alliance ID.</param>
-        public static async Task GetAllianceImageAsync(PictureBox pictureBox, long allianceID)
+        public static Task GetAllianceImageAsync(PictureBox pictureBox, long allianceID)
         {
             string path = String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
                 "alliance", allianceID, pictureBox.Width);
 
-            await GetImageAsync(pictureBox, path);
+            return GetImageAsync(pictureBox, path);
         }
 
         /// <summary>
@@ -64,12 +64,12 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="pictureBox">The picture box.</param>
         /// <param name="corporationID">The corporation ID.</param>
-        public static async Task GetCorporationImageAsync(PictureBox pictureBox, long corporationID)
+        public static Task GetCorporationImageAsync(PictureBox pictureBox, long corporationID)
         {
             string path = String.Format(CultureConstants.InvariantCulture, NetworkConstants.CCPIconsFromImageServer,
                 "corporation", corporationID, pictureBox.Width);
 
-            await GetImageAsync(pictureBox, path);
+            return GetImageAsync(pictureBox, path);
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace EVEMon.Common.Service
         /// <param name="path">The path.</param>
         private static async Task GetImageAsync(PictureBox pictureBox, string path)
         {
-            Image image = await GetImageAsync(GetImageServerCdnUri(path)) ??
-                        await GetImageAsync(GetImageServerBaseUri(path));
+            Image image = await GetImageAsync(GetImageServerCdnUri(path)).ConfigureAwait(false) ??
+                        await GetImageAsync(GetImageServerBaseUri(path)).ConfigureAwait(false);
 
             pictureBox.Image = image ?? pictureBox.InitialImage;
             pictureBox.Update();
@@ -98,13 +98,13 @@ namespace EVEMon.Common.Service
             // Cache not to be used ?
             if (!useCache)
             {
-                result = await HttpWebClientService.DownloadImageAsync(url);
+                result = await HttpWebClientService.DownloadImageAsync(url).ConfigureAwait(false);
                 return GotImage(result);
             }
 
             // First check whether the image exists in cache
             EveMonClient.EnsureCacheDirInit();
-            string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, await GetCacheName(url));
+            string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
 
             if (File.Exists(cacheFileName))
             {
@@ -142,11 +142,11 @@ namespace EVEMon.Common.Service
             }
 
             // Downloads the image and adds it to cache
-            result = await HttpWebClientService.DownloadImageAsync(url);
+            result = await HttpWebClientService.DownloadImageAsync(url).ConfigureAwait(false);
             Image img = GotImage(result);
 
             if (img != null)
-                await AddImageToCache(url, img);
+                await AddImageToCacheAsync(url, (Image)img.Clone()).ConfigureAwait(false);
 
             return img;
         }
@@ -223,22 +223,21 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="url"></param>
         /// <param name="image"></param>
-        private static Task AddImageToCache(Uri url, Image image)
-            => Task.Run(async () =>
+        private static Task AddImageToCacheAsync(Uri url, Image image)
+            => Task.Run(() =>
             {
                 // Saves the image file
                 try
                 {
                     // Write this image to the cache file
                     EveMonClient.EnsureCacheDirInit();
-                    string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, await GetCacheName(url));
+                    string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName,
                         fs =>
                         {
-                            // We need to create a copy of the image because GDI+ is locking it
-                            using (Image newImage = new Bitmap(image))
+                            using (image)
                             {
-                                newImage.Save(fs, ImageFormat.Png);
+                                image.Save(fs, ImageFormat.Png);
                                 fs.Flush();
                             }
                             return true;
@@ -269,10 +268,9 @@ namespace EVEMon.Common.Service
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName,
                         fs =>
                         {
-                            // We need to create a copy of the image because GDI+ is locking it
-                            using (Image newImage = new Bitmap(image))
+                            using (image)
                             {
-                                newImage.Save(fs, ImageFormat.Png);
+                                image.Save(fs, ImageFormat.Png);
                                 fs.Flush();
                             }
                             return true;
@@ -290,17 +288,16 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        private static Task<string> GetCacheName(Uri url)
-            => Task.Run(() =>
-            {
-                Match extensionMatch = Regex.Match(url.AbsoluteUri, @"([^\.]+)$");
-                string ext = String.Empty;
-                if (extensionMatch.Success)
-                    ext = "." + extensionMatch.Groups[1];
+        private static string GetCacheName(Uri url)
+        {
+            Match extensionMatch = Regex.Match(url.AbsoluteUri, @"([^\.]+)$");
+            string ext = String.Empty;
+            if (extensionMatch.Success)
+                ext = "." + extensionMatch.Groups[1];
 
-                Stream stream = Util.GetMemoryStream(Encoding.UTF8.GetBytes(url.AbsoluteUri));
-                string md5Sum = Util.CreateMD5(stream);
-                return String.Concat(md5Sum, ext);
-            });
+            Stream stream = Util.GetMemoryStream(Encoding.UTF8.GetBytes(url.AbsoluteUri));
+            string md5Sum = Util.CreateMD5(stream);
+            return String.Concat(md5Sum, ext);
+        }
     }
 }

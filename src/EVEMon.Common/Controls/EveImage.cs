@@ -80,7 +80,7 @@ namespace EVEMon.Common.Controls
             {
                 m_item = value;
                 if (m_imageSize != EveImageSize.x0)
-                    Task.Run(GetImageAsync);
+                    Task.WhenAll(GetImageAsync());
             }
         }
 
@@ -252,7 +252,7 @@ namespace EVEMon.Common.Controls
                 pbImage.Cursor = Cursors.Hand;
             }
 
-            await GetImageFromCCPAsync();
+            await GetImageFromCCPAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace EVEMon.Common.Controls
         {
             while (true)
             {
-                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri)).ConfigureAwait(false);
                 if (img == null && !useFallbackUri)
                 {
                     useFallbackUri = true;

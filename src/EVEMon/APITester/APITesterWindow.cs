@@ -383,7 +383,7 @@ namespace EVEMon.ApiTester
                 try
                 {
                     result = HttpWebClientService.DownloadXml(nUrl, HttpMethod.Post,
-                        provider.SupportsCompressedResponse, postData).Result;
+                        provider.SupportsCompressedResponse, postData);
                 }
                 catch (HttpWebClientServiceException ex)
                 {
