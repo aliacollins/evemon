@@ -29,7 +29,15 @@ namespace EVEMon.Common.MarketPricer
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
         protected abstract bool Enabled { get; }
-        
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="ItemPricer"/> is queried.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if queried; otherwise, <c>false</c>.
+        /// </value>
+        public bool Queried => Loaded;
+
         /// <summary>
         /// Gets the providers.
         /// </summary>
