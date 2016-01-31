@@ -17,6 +17,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         private const string Filename = "emd_item_prices";
 
         private static bool s_queryPending;
+        private static bool s_checkFileExists = true;
 
         #endregion
 
@@ -77,7 +78,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             string file = LocalXmlCache.GetFile(Filename).FullName;
 
             // Update the file if we don't have it or the data have expired
-            if (!File.Exists(file) || (Loaded && CachedUntil < DateTime.UtcNow))
+            if ((s_checkFileExists && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
                 Task.WhenAll(GetPricesAsync());
                 return;
@@ -87,7 +88,14 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             if (Loaded)
                 return;
 
-            LoadFromFile(file);
+            if (File.Exists(file))
+                LoadFromFile(file);
+            else
+            {
+                Loaded = true;
+                CachedUntil = DateTime.UtcNow.AddHours(1);
+                PriceByItemID.Clear();
+            }
         }
 
         /// <summary>
@@ -175,6 +183,10 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             if (result == null || result.Error != null || result.Result.Result == null || !result.Result.Result.ItemPrices.Any())
             {
+                s_checkFileExists = false;
+                Loaded = true;
+                CachedUntil = DateTime.UtcNow.AddHours(1);
+
                 if (result?.Result == null)
                     EveMonClient.Trace("no result");
                 else if (result.Error != null)

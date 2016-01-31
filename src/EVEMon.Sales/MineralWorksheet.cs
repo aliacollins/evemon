@@ -72,15 +72,15 @@ namespace EVEMon.Sales
             foreach (ToolStripItem item in MineralWorksheetToolStrip.Items)
             {
                 item.DisplayStyle = (Settings.UI.SafeForWork
-                                         ? ToolStripItemDisplayStyle.Text
-                                         : ToolStripItemDisplayStyle.ImageAndText);
+                    ? ToolStripItemDisplayStyle.Text
+                    : ToolStripItemDisplayStyle.ImageAndText);
             }
 
             foreach (ToolStripStatusLabel item in MineralWorksheetStatusStrip.Items)
             {
                 item.DisplayStyle = (Settings.UI.SafeForWork
-                                         ? ToolStripItemDisplayStyle.Text
-                                         : ToolStripItemDisplayStyle.ImageAndText);
+                    ? ToolStripItemDisplayStyle.Text
+                    : ToolStripItemDisplayStyle.ImageAndText);
             }
 
             foreach (MineralTile tile in Tiles)
@@ -226,9 +226,9 @@ namespace EVEMon.Sales
             {
                 ExceptionHandler.LogException(e.Error, true);
                 MessageBox.Show(String.Format(CultureConstants.DefaultCulture,
-                                              "Failed to retrieve mineral pricing data:\n{0}", e.Error.Message),
-                                "Failed to Retrieve Data", MessageBoxButtons.OK, MessageBoxIcon.Error,
-                                MessageBoxDefaultButton.Button1, 0);
+                    "Failed to retrieve mineral pricing data:\n{0}", e.Error.Message),
+                    @"Failed to Retrieve Data", MessageBoxButtons.OK, MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1, 0);
             }
             else
             {
@@ -236,9 +236,9 @@ namespace EVEMon.Sales
                 if (prices == null)
                     return;
 
-                foreach (MineralTile mt in Tiles.Where(mt => prices.ContainsKey(mt.MineralName)))
+                foreach (MineralTile mt in Tiles)
                 {
-                    mt.PricePerUnit = prices[mt.MineralName];
+                    mt.PricePerUnit = prices.ContainsKey(mt.MineralName) ? prices[mt.MineralName] : 0m;
                 }
 
                 tslCourtesy.Text = String.Format(CultureConstants.DefaultCulture, "Mineral Prices Courtesy of {0}",
@@ -258,12 +258,12 @@ namespace EVEMon.Sales
             if (m_pricesLocked)
             {
                 PricesLocked = false;
-                btnLockPrices.Text = "Lock Prices";
+                btnLockPrices.Text = @"Lock Prices";
             }
             else
             {
                 PricesLocked = true;
-                btnLockPrices.Text = "Unlock Prices";
+                btnLockPrices.Text = @"Unlock Prices";
             }
         }
 
@@ -308,9 +308,9 @@ namespace EVEMon.Sales
         private void copyTotalDropDownButton_DropDownOpening(object sender, EventArgs e)
         {
             copyFormattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture,
-                                                                     "Formatted ({0:N} ISK)", m_total);
+                "Formatted ({0:N} ISK)", m_total);
             copyUnformattedTotalToolStripMenuItem.Text = String.Format(CultureConstants.DefaultCulture,
-                                                                       "Unformatted ({0})", m_total);
+                "Unformatted ({0})", m_total);
         }
 
         /// <summary>

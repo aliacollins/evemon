@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.SettingsObjects;
@@ -78,6 +79,9 @@ namespace EVEMon.Common.Net
                     HttpClientHandler httpClientHandler = GetHttpClientHandler();
                     HttpRequestMessage request = GetHttpRequest();
                     response = await GetHttpResponseAsync(httpClientHandler, request).ConfigureAwait(false);
+
+                    if ((int)response.StatusCode > 400)
+                        throw new HttpException((int)response.StatusCode, response.StatusCode.ToString());
                 }
                 catch (HttpWebClientServiceException)
                 {
