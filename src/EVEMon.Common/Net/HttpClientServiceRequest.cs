@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
+using EVEMon.Common.Models;
 using EVEMon.Common.SettingsObjects;
 
 namespace EVEMon.Common.Net
@@ -60,7 +60,8 @@ namespace EVEMon.Common.Net
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="accept">The accept.</param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> SendAsync(Uri url, HttpMethod method, HttpPostData postData, DataCompression dataCompression,
+        public async Task<HttpResponseMessage> SendAsync(Uri url, HttpMethod method, HttpPostData postData,
+            DataCompression dataCompression,
             bool acceptEncoded, string accept)
         {
             while (true)
@@ -73,32 +74,43 @@ namespace EVEMon.Common.Net
                 m_dataCompression = postData == null ? DataCompression.None : dataCompression;
                 m_acceptEncoded = acceptEncoded;
 
-                HttpResponseMessage response;
+                HttpResponseMessage response = null;
                 try
                 {
                     HttpClientHandler httpClientHandler = GetHttpClientHandler();
                     HttpRequestMessage request = GetHttpRequest();
                     response = await GetHttpResponseAsync(httpClientHandler, request).ConfigureAwait(false);
 
-                    if ((int)response.StatusCode > 400)
-                        throw new HttpException((int)response.StatusCode, response.StatusCode.ToString());
+                    EnsureSuccessStatusCode(response);
                 }
                 catch (HttpWebClientServiceException)
                 {
                     throw;
                 }
+                catch (HttpRequestException ex)
+                {
+                    if (ex.InnerException is WebException)
+                        throw HttpWebClientServiceException.HttpWebClientException(url, ex.InnerException);
+
+                    if (response == null)
+                        throw HttpWebClientServiceException.Exception(url, ex);
+
+                    if (response.StatusCode != HttpStatusCode.Redirect && response.StatusCode != HttpStatusCode.MovedPermanently)
+                    {
+                        throw HttpWebClientServiceException.HttpWebClientException(url, ex, response.StatusCode);
+                    }
+                }
                 catch (WebException ex)
                 {
-                    // Aborted, time out or error while processing the request
-                    throw HttpWebClientServiceException.WebException(url, ex);
+                    // We should not get a WebException here but keep this as extra precaution
+                    throw HttpWebClientServiceException.HttpWebClientException(url, ex);
                 }
                 catch (Exception ex)
                 {
                     throw HttpWebClientServiceException.Exception(url, ex);
                 }
 
-                if (response.StatusCode != HttpStatusCode.Redirect && response.StatusCode != HttpStatusCode.Moved &&
-                    response.StatusCode != HttpStatusCode.MovedPermanently)
+                if (response.StatusCode != HttpStatusCode.Redirect && response.StatusCode != HttpStatusCode.MovedPermanently)
                 {
                     return response;
                 }
@@ -116,20 +128,43 @@ namespace EVEMon.Common.Net
             }
         }
 
+        private static void EnsureSuccessStatusCode(HttpResponseMessage response)
+        {
+            if ((int)response.StatusCode < 100)
+            {
+                response.StatusCode = HttpStatusCode.OK;
+                response.ReasonPhrase = "OK";
+            }
+
+            string contentTypeMediaType = response.Content?.Headers?.ContentType?.MediaType;
+            bool isNotCCPWithXmlContent = response.RequestMessage.RequestUri.Host != APIProvider.DefaultProvider.Url.Host &&
+                                       response.RequestMessage.RequestUri.Host != APIProvider.TestProvider.Url.Host &&
+                                       contentTypeMediaType != null && !contentTypeMediaType.Contains("xml");
+
+            if (isNotCCPWithXmlContent || response.Content?.Headers?.ContentLength == 0)
+                response.EnsureSuccessStatusCode();
+        }
+
         /// <summary>
         /// Gets the HTTP client handler.
         /// </summary>
         /// <returns></returns>
         private static HttpClientHandler GetHttpClientHandler()
-        {
-            HttpClientHandler httpClientHandler = new HttpClientHandler
+            => new HttpClientHandler
             {
                 AllowAutoRedirect = false,
                 MaxAutomaticRedirections = HttpWebClientServiceState.MaxRedirects,
+                Proxy = GetWebProxy()
             };
 
+        /// <summary>
+        /// Gets the web proxy.
+        /// </summary>
+        /// <returns></returns>
+        internal static IWebProxy GetWebProxy()
+        {
             if (!HttpWebClientServiceState.Proxy.Enabled)
-                return httpClientHandler;
+                return WebRequest.DefaultWebProxy;
 
             WebProxy proxy = new WebProxy(HttpWebClientServiceState.Proxy.Host, HttpWebClientServiceState.Proxy.Port);
             switch (HttpWebClientServiceState.Proxy.Authentication)
@@ -148,10 +183,7 @@ namespace EVEMon.Common.Net
                             HttpWebClientServiceState.Proxy.Username));
                     break;
             }
-
-            httpClientHandler.Proxy = proxy;
-
-            return httpClientHandler;
+            return proxy;
         }
 
         /// <summary>
@@ -208,7 +240,7 @@ namespace EVEMon.Common.Net
                 request.Content.Headers.ContentEncoding
                     .Add(m_dataCompression.ToString().ToLower(CultureConstants.InvariantCulture));
             }
-            
+
             return request;
         }
     }
