@@ -44,13 +44,14 @@ namespace EVEMon.Common.Net
             HttpClientServiceRequest request = new HttpClientServiceRequest();
             try
             {
-                HttpResponseMessage response =
-                    await request.SendAsync(url, method, postData, dataCompression, acceptEncoded, XmlAccept).ConfigureAwait(false);
+                HttpResponseMessage response = await request
+                    .SendAsync(url, method, postData, dataCompression, acceptEncoded, XmlAccept)
+                    .ConfigureAwait(false);
 
                 using (response)
                 {
                     Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    return GetXmlDocument(request, stream);
+                    return GetXmlDocument(request.BaseUrl, stream);
                 }
             }
             catch (HttpWebClientServiceException ex)
@@ -62,17 +63,17 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Helper method to return an Xml document from the completed request.
         /// </summary>
-        /// <param name="request">The request.</param>
+        /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
         /// <returns></returns>
-        private static DownloadAsyncResult<IXPathNavigable> GetXmlDocument(HttpClientServiceRequest request, Stream stream)
+        private static DownloadAsyncResult<IXPathNavigable> GetXmlDocument(Uri requestBaseUrl, Stream stream)
         {
             XmlDocument xmlDoc = new XmlDocument();
             HttpWebClientServiceException error = null;
 
             if (stream == null)
             {
-                error = HttpWebClientServiceException.Exception(request.BaseUrl, new ArgumentNullException("stream"));
+                error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException("stream"));
                 return new DownloadAsyncResult<IXPathNavigable>(xmlDoc, error);
             }
 
@@ -82,7 +83,7 @@ namespace EVEMon.Common.Net
             }
             catch (XmlException ex)
             {
-                error = HttpWebClientServiceException.XmlException(request.BaseUrl, ex);
+                error = HttpWebClientServiceException.XmlException(requestBaseUrl, ex);
             }
 
             return new DownloadAsyncResult<IXPathNavigable>(xmlDoc, error);

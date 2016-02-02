@@ -35,7 +35,11 @@ namespace EVEMon.Common.Net
         /// Gets the web client.
         /// </summary>
         /// <returns></returns>
-        public static WebClient GetWebClient() => new WebClient();
+        public static WebClient GetWebClient()
+            => new WebClient
+            {
+                Proxy = HttpClientServiceRequest.GetWebProxy()
+            };
 
         /// <summary>
         /// Gets the HTTP client.

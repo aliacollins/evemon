@@ -14,18 +14,12 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// The maximum size of a download section.
         /// </summary>
-        public static int MaxBufferSize
-        {
-            get { return 8192; }
-        }
+        public static int MaxBufferSize => 8192;
 
         /// <summary>
         /// The minimum size if a download section.
         /// </summary>
-        public static int MinBufferSize
-        {
-            get { return 1024; }
-        }
+        public static int MinBufferSize => 1024;
 
         /// <summary>
         /// The user agent string for requests.
@@ -46,10 +40,7 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// The maximum redirects allowed for a request.
         /// </summary>
-        public static int MaxRedirects
-        {
-            get { return 5; }
-        }
+        public static int MaxRedirects => 5;
 
         /// <summary>
         /// A ProxySetting instance for the custom proxy to be used.

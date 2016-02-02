@@ -61,7 +61,7 @@ namespace EVEMon.Updater
                     }
                     catch (WebException ex)
                     {
-                        throw HttpWebClientServiceException.WebException(m_url, ex);
+                        throw HttpWebClientServiceException.HttpWebClientException(m_url, ex);
                     }
                     catch (Exception ex)
                     {

@@ -48,8 +48,8 @@ namespace EVEMon.Common.Extensions
         {
             // Return true if strIn is in valid e-mail format
             return Regex.IsMatch(strIn,
-                   @"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))" +
-                   @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,6}))$");
+                @"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))" +
+                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,6}))$");
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace EVEMon.Common.Extensions
         public static string NewLinesToBreakLines(this string text)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
 
             if (String.IsNullOrWhiteSpace(text))
                 return text;
@@ -95,13 +95,13 @@ namespace EVEMon.Common.Extensions
         public static string DecodeUnicodeCharacters(this string text)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
 
             return Regex.Replace(text, @"\\u(?<Value>[a-zA-Z0-9]{4})",
-                                 m => ((char)int.Parse(m.Groups["Value"].Value,
-                                                       NumberStyles.HexNumber,
-                                                       CultureConstants.InvariantCulture)).ToString(
-                                                           CultureConstants.DefaultCulture));
+                m => ((char)int.Parse(m.Groups["Value"].Value,
+                    NumberStyles.HexNumber,
+                    CultureConstants.InvariantCulture)).ToString(
+                        CultureConstants.DefaultCulture));
         }
 
         /// <summary>
@@ -113,10 +113,18 @@ namespace EVEMon.Common.Extensions
         public static string ConvertUpperToLowerCamelCase(this string text)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
 
             return String.Concat(text.Substring(0, 1).ToLowerInvariant(), text.Substring(1, text.Length - 1));
         }
+
+        /// <summary>
+        /// Converts an upper camel case text to a sentence string.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        public static string ConvertUpperCamelCaseToString(this string text)
+            => Regex.Replace(text.Trim(), "\\B([A-Z])", " $1", RegexOptions.Compiled | RegexOptions.CultureInvariant );
 
         /// <summary>
         /// Determines whether the source contains the specified text.
@@ -142,7 +150,7 @@ namespace EVEMon.Common.Extensions
         public static string ToTitleCase(this string text)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
 
             string[] words = text.Split(" ".ToCharArray());
             StringBuilder sb = new StringBuilder();
@@ -155,7 +163,8 @@ namespace EVEMon.Common.Extensions
                     continue;
                 }
 
-                sb.Append(String.Concat(word.Substring(0, 1).ToUpperInvariant(), word.Substring(1, word.Length - 1).ToLowerInvariant()));
+                sb.Append(String.Concat(word.Substring(0, 1).ToUpperInvariant(),
+                    word.Substring(1, word.Length - 1).ToLowerInvariant()));
                 if (word != words.Last())
                     sb.Append(" ");
             }
@@ -238,8 +247,8 @@ namespace EVEMon.Common.Extensions
                 return String.Empty;
 
             text = removeNewLine
-                       ? text.Replace(Environment.NewLine, " ")
-                       : text.Replace(Environment.NewLine, " " + Environment.NewLine + " ");
+                ? text.Replace(Environment.NewLine, " ")
+                : text.Replace(Environment.NewLine, " " + Environment.NewLine + " ");
 
             text = text.Replace(".", ". ");
             text = text.Replace(">", "> ");
@@ -293,8 +302,8 @@ namespace EVEMon.Common.Extensions
             lines.CopyTo(textLinesStr, 0);
 
             return textLinesStr.Aggregate(String.Empty,
-                                          (current, line) => String.Format(CultureConstants.DefaultCulture,
-                                                                           "{0}{1}{2}", current, line, Environment.NewLine));
+                (current, line) => String.Format(CultureConstants.DefaultCulture,
+                    "{0}{1}{2}", current, line, Environment.NewLine));
         }
     }
 }

@@ -106,7 +106,7 @@ namespace EVEMon.Common.Net {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The proxy server at {0} rejected a request to {1}. Please verify that you have specified the correct user name and password. Web requests have been temporarily disabled until your proxy settings have been updated..
+        ///   Looks up a localized string similar to The proxy server at {0} rejected a request to {1}. Please verify that you have specified the correct user name and password. Requests have been temporarily disabled until your proxy settings have been updated..
         /// </summary>
         internal static string ProxyAuthenticationFailureDisabledRequests {
             get {
@@ -142,7 +142,7 @@ namespace EVEMon.Common.Net {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A request to {0} failed because web requests have been temporarily disabled..
+        ///   Looks up a localized string similar to A request to {0} failed because requests have been temporarily disabled..
         /// </summary>
         internal static string RequestsDisabled {
             get {
@@ -151,7 +151,7 @@ namespace EVEMon.Common.Net {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The web server at {0} returned an error. The full response returned by the web server was: .
+        ///   Looks up a localized string similar to The server at {0} returned an error. The full response returned by the server was: .
         /// </summary>
         internal static string ServerError {
             get {
@@ -169,11 +169,11 @@ namespace EVEMon.Common.Net {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A request to {0} failed with status {1}..
+        ///   Looks up a localized string similar to A request to {0} failed with status: {1}..
         /// </summary>
-        internal static string UnknownWebException {
+        internal static string UnknownException {
             get {
-                return ResourceManager.GetString("UnknownWebException", resourceCulture);
+                return ResourceManager.GetString("UnknownException", resourceCulture);
             }
         }
         
