@@ -206,8 +206,8 @@ namespace EVEMon.Common.Net
         /// <param name="proxyHost">The proxy host.</param>
         /// <param name="status">The status.</param>
         /// <returns></returns>
-        private static string ParseHttpRequestException(HttpRequestException httpRequestException, HttpStatusCode httpStatusCode, Uri url, string proxyHost,
-            out HttpWebClientServiceExceptionStatus status)
+        private static string ParseHttpRequestException(HttpRequestException httpRequestException, HttpStatusCode httpStatusCode,
+            Uri url, string proxyHost, out HttpWebClientServiceExceptionStatus status)
         {
             StringBuilder messageBuilder = new StringBuilder();
             switch (httpStatusCode)
@@ -218,7 +218,7 @@ namespace EVEMon.Common.Net
                 case HttpStatusCode.SwitchingProtocols:
                     goto default;
 
-                // Redirection
+                    // Redirection
                 case HttpStatusCode.MultipleChoices:
                     goto default;
                 case HttpStatusCode.MovedPermanently:
@@ -239,7 +239,7 @@ namespace EVEMon.Common.Net
                 case HttpStatusCode.TemporaryRedirect:
                     goto default;
 
-                // Client Error
+                    // Client Error
                 case HttpStatusCode.BadRequest:
                     goto default;
                 case HttpStatusCode.Unauthorized:
@@ -284,7 +284,7 @@ namespace EVEMon.Common.Net
                 case HttpStatusCode.UpgradeRequired:
                     goto default;
 
-                // Server  Error
+                    // Server  Error
                 case HttpStatusCode.InternalServerError:
                 case HttpStatusCode.NotImplemented:
                 case HttpStatusCode.BadGateway:

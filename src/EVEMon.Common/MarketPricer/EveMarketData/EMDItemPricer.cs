@@ -17,7 +17,6 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
         private const string Filename = "emd_item_prices";
 
         private static bool s_queryPending;
-        private static bool s_checkFileExists = true;
 
         #endregion
 
@@ -78,7 +77,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             string file = LocalXmlCache.GetFile(Filename).FullName;
 
             // Update the file if we don't have it or the data have expired
-            if ((s_checkFileExists && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
+            if ((!Loaded && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
                 Task.WhenAll(GetPricesAsync());
                 return;
@@ -117,6 +116,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             }
 
             PriceByItemID.Clear();
+            Loaded = false;
 
             // Import the data
             Import(result.Result.ItemPrices);
@@ -160,6 +160,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             s_queryPending = true;
 
             PriceByItemID.Clear();
+            Loaded = false;
 
             EveMonClient.Trace("begin");
 
@@ -183,7 +184,6 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             if (result == null || result.Error != null || result.Result.Result == null || !result.Result.Result.ItemPrices.Any())
             {
-                s_checkFileExists = false;
                 Loaded = true;
                 CachedUntil = DateTime.UtcNow.AddHours(1);
 
@@ -200,18 +200,19 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
                 return;
             }
-
-            EveMonClient.Trace("done");
-
+            
             Import(result.Result.Result.ItemPrices);
+
+            Loaded = true;
+            CachedUntil = DateTime.UtcNow.AddDays(1);
 
             // Reset query pending flag
             s_queryPending = false;
 
+            EveMonClient.Trace("done");
+
             // Save the file in cache
             Save(Filename, Util.SerializeToXmlDocument(result.Result));
-
-            CachedUntil = DateTime.UtcNow.AddDays(1);
 
             EveMonClient.OnPricesDownloaded(null, String.Empty);
         }
