@@ -326,6 +326,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvJobs.Columns.Clear();
+                lvJobs.Groups.Clear();
+                lvJobs.Items.Clear();
 
                 foreach (IndustryJobColumnSettings column in m_columns.Where(x => x.Visible))
                 {

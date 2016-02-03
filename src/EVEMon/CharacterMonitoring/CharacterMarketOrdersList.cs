@@ -339,6 +339,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvOrders.Columns.Clear();
+                lvOrders.Groups.Clear();
+                lvOrders.Items.Clear();
 
                 foreach (MarketOrderColumnSettings column in m_columns.Where(x => x.Visible))
                 {

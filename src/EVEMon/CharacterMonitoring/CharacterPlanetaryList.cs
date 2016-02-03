@@ -301,6 +301,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvPlanetary.Columns.Clear();
+                lvPlanetary.Groups.Clear();
+                lvPlanetary.Items.Clear();
 
                 foreach (PlanetaryColumnSettings column in m_columns.Where(x => x.Visible))
                 {

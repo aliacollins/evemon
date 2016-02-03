@@ -257,6 +257,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvWalletJournal.Columns.Clear();
+                lvWalletJournal.Groups.Clear();
+                lvWalletJournal.Items.Clear();
 
                 foreach (WalletJournalColumnSettings column in m_columns.Where(x => x.Visible))
                 {

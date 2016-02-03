@@ -279,6 +279,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvNotifications.Columns.Clear();
+                lvNotifications.Groups.Clear();
+                lvNotifications.Items.Clear();
 
                 foreach (EveNotificationColumnSettings column in m_columns.Where(x => x.Visible))
                 {

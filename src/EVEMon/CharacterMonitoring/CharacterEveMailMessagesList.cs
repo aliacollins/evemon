@@ -278,6 +278,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvMailMessages.Columns.Clear();
+                lvMailMessages.Groups.Clear();
+                lvMailMessages.Items.Clear();
 
                 foreach (EveMailMessageColumnSettings column in m_columns.Where(x => x.Visible))
                 {
