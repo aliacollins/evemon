@@ -1237,14 +1237,14 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void numberAbsFormatMenuItem_Click(object sender, EventArgs e)
+        private async void numberAbsFormatMenuItem_Click(object sender, EventArgs e)
         {
             if (multiPanel.SelectedPage == assetsPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
                 numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
                 Settings.UI.MainWindow.Assets.NumberAbsFormat = !numberFormat;
-                assetsList.UpdateColumns();
+                await assetsList.UpdateColumnsAsync();
             }
 
             if (multiPanel.SelectedPage == ordersPage)

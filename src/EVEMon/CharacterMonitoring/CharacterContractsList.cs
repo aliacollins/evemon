@@ -298,6 +298,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvContracts.Columns.Clear();
+                lvContracts.Groups.Clear();
+                lvContracts.Items.Clear();
 
                 foreach (ContractColumnSettings column in m_columns.Where(x => x.Visible))
                 {

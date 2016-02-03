@@ -23,8 +23,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         private static List<int> s_queryMonitorList;
         private static int s_queryCounter;
         private static bool s_queryPending;
-        private static int s_queryStep = 100;
-        private static bool s_checkFileExists = true;
+        private static int s_queryStep;
 
         #endregion
 
@@ -81,7 +80,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             string file = LocalXmlCache.GetFile(Filename).FullName;
 
-            if ((s_checkFileExists && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
+            if ((!Loaded && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
                 Task.WhenAll(GetPricesAsync());
                 return;
@@ -120,6 +119,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             }
 
             PriceByItemID.Clear();
+            Loaded = false;
 
             // Import the data
             Import(result.ItemPrices);
@@ -131,7 +131,8 @@ namespace EVEMon.Common.MarketPricer.EveCentral
         /// <param name="itemPrices">The item prices.</param>
         private static void Import(IEnumerable<SerializableECItemPriceListItem> itemPrices)
         {
-            EveMonClient.Trace("begin");
+            if (!PriceByItemID.Any())
+                EveMonClient.Trace("begin");
 
             foreach (SerializableECItemPriceListItem item in itemPrices)
             {
@@ -141,7 +142,8 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             if (((s_queue == null) || (s_queue.Count == 0)) && !s_queryPending)
                 Loaded = true;
 
-            EveMonClient.Trace("done");
+            if (Loaded)
+                EveMonClient.Trace("done");
         }
 
         /// <summary>
@@ -157,6 +159,8 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             s_queryPending = true;
 
             PriceByItemID.Clear();
+            Loaded = false;
+            s_queryStep = 100;
 
             IOrderedEnumerable<int> marketItems = StaticItems.AllItems
                 .Where(item =>
@@ -240,15 +244,16 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             if (EveMonClient.IsDebugBuild)
                 EveMonClient.Trace($"Remaining ids: {String.Join(", ", s_queryMonitorList)}", printMethod: false);
 
-            EveMonClient.Trace("done");
+            Loaded = true;
+            CachedUntil = DateTime.UtcNow.AddDays(1);
 
             // Reset query pending flag
             s_queryPending = false;
 
+            EveMonClient.Trace("done");
+
             // Save the file in cache
             Save(Filename, Util.SerializeToXmlDocument(Export()));
-
-            CachedUntil = DateTime.UtcNow.AddDays(1);
 
             EveMonClient.OnPricesDownloaded(null, String.Empty);
         }
@@ -265,30 +270,47 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             if (result == null || result.Error != null)
             {
                 if (result?.Error != null)
+                {
                     EveMonClient.Trace(result.Error.Message);
 
-                // Abort further attempts
-                if (result?.Error.Status != HttpWebClientServiceExceptionStatus.Exception &&
-                    result?.Error.Status != HttpWebClientServiceExceptionStatus.Timeout)
-                {
-                    return result != null && s_queryCounter != 0;
+                        // Abort further attempts
+                    if (result.Error.Status == HttpWebClientServiceExceptionStatus.Timeout ||
+                        result.Error.Status == HttpWebClientServiceExceptionStatus.ServerError)
+                    {
+                        s_queue.Clear();
+
+                        // Set a retry
+                        Loaded = true;
+                        CachedUntil = DateTime.UtcNow.AddHours(1);
+
+                        // Reset query pending flag
+                        s_queryPending = false;
+                        EveMonClient.OnPricesDownloaded(null, String.Empty);
+
+                        // We return 'true' to avoid saving a file
+                        return true;
+                    }
+
+                    // If it's a 'Bad Request' just return 
+                    // We'll check those items later on a lower query step
+                    if (result.Error.Status == HttpWebClientServiceExceptionStatus.Exception &&
+                        result.Error.Message.Contains("400 (Bad Request)") && s_queue.Count != 0)
+                    {
+                        return true;
+                    }
+
+                    // If we are done set the proper flags
+                    if (!s_queryMonitorList.Any() || s_queryStep <= 1)
+                    {
+                        Loaded = true;
+                        EveMonClient.Trace("ECItemPricer.Import - done", printMethod: false);
+                        return false;
+                    }
                 }
-
-                // Set a retry
-                s_queue.Clear();
-                s_checkFileExists = false;
-                Loaded = true;
-                CachedUntil = DateTime.UtcNow.AddHours(1);
-                
-                // Reset query pending flag
-                s_queryPending = false;
-                EveMonClient.OnPricesDownloaded(null, String.Empty);
-
-                return true;
             }
 
             // When the query succeeds import the data and remove the ids from the monitoring list
-            if (result.Result != null)
+            if (result?.Result != null)
             {
                 foreach (SerializableECItemPriceListItem item in result.Result.ItemPrices)
                 {
@@ -298,17 +320,15 @@ namespace EVEMon.Common.MarketPricer.EveCentral
                 Import(result.Result.ItemPrices);
             }
 
-            if (s_queryCounter != 0)
+            // If all items where queried we are done
+            if (s_queryCounter == 0 && s_queue.Count == 0 && s_queryStep <= 1)
+                return false;
+
+            // If there are still items in queue just continue
+            if (s_queryCounter != 0 || !s_queryMonitorList.Any() || s_queue.Count != 0)
                 return true;
 
             // if there are ids still to query repeat the query on a lower query step
-            if (!s_queryMonitorList.Any())
-                return false;
-
-            // If the query step is greater than one at a time repeat the querying
-            if (s_queryStep <= 1)
-                return false;
-
             s_queryStep = s_queryStep / 2;
             s_queue = new Queue<int>(s_queryMonitorList);
 

@@ -256,6 +256,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvWalletTransactions.Columns.Clear();
+                lvWalletTransactions.Groups.Clear();
+                lvWalletTransactions.Items.Clear();
 
                 foreach (WalletTransactionColumnSettings column in m_columns.Where(x => x.Visible))
                 {

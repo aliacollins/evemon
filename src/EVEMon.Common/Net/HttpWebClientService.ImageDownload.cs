@@ -48,7 +48,7 @@ namespace EVEMon.Common.Net
                 using (response)
                 {
                     Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    return GetImage(request, stream);
+                    return GetImage(request.BaseUrl, stream);
                 }
             }
             catch (HttpWebClientServiceException ex)
@@ -60,16 +60,17 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Gets the result.
         /// </summary>
-        /// <param name="request">The request.</param>
+        /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
-        private static DownloadAsyncResult<Image> GetImage(HttpClientServiceRequest request, Stream stream)
+        /// <returns></returns>
+        private static DownloadAsyncResult<Image> GetImage(Uri requestBaseUrl, Stream stream)
         {
             Image image = null;
             HttpWebClientServiceException error = null;
 
             if (stream == null)
             {
-                error = HttpWebClientServiceException.Exception(request.BaseUrl, new ArgumentNullException("stream"));
+                error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException("stream"));
                 return new DownloadAsyncResult<Image>(null, error);
             }
 
@@ -79,7 +80,7 @@ namespace EVEMon.Common.Net
             }
             catch (ArgumentException ex)
             {
-                error = HttpWebClientServiceException.ImageException(request.BaseUrl, ex);
+                error = HttpWebClientServiceException.ImageException(requestBaseUrl, ex);
             }
 
             return new DownloadAsyncResult<Image>(image, error);

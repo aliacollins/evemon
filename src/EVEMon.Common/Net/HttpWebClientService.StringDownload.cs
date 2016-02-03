@@ -49,7 +49,7 @@ namespace EVEMon.Common.Net
                 using (response)
                 {
                     Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    return GetString(request, stream);
+                    return GetString(request.BaseUrl, stream);
                 }
             }
             catch (HttpWebClientServiceException ex)
@@ -61,17 +61,17 @@ namespace EVEMon.Common.Net
         /// <summary>
         /// Helper method to return a string from the completed request.
         /// </summary>
-        /// <param name="request">The request.</param>
+        /// <param name="requestBaseUrl">The request base URL.</param>
         /// <param name="stream">The stream.</param>
         /// <returns></returns>
-        private static DownloadAsyncResult<String> GetString(HttpClientServiceRequest request, Stream stream)
+        private static DownloadAsyncResult<String> GetString(Uri requestBaseUrl, Stream stream)
         {
             String text = String.Empty;
             HttpWebClientServiceException error = null;
 
             if (stream == null)
             {
-                error = HttpWebClientServiceException.Exception(request.BaseUrl, new ArgumentNullException("stream"));
+                error = HttpWebClientServiceException.Exception(requestBaseUrl, new ArgumentNullException("stream"));
                 return new DownloadAsyncResult<String>(text, error);
             }
 
@@ -82,7 +82,7 @@ namespace EVEMon.Common.Net
             }
             catch (ArgumentException ex)
             {
-                error = HttpWebClientServiceException.Exception(request.BaseUrl, ex);
+                error = HttpWebClientServiceException.Exception(requestBaseUrl, ex);
             }
 
             return new DownloadAsyncResult<String>(text, error);

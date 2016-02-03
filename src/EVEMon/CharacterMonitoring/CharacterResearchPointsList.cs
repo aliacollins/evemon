@@ -242,6 +242,8 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvResearchPoints.Columns.Clear();
+                lvResearchPoints.Groups.Clear();
+                lvResearchPoints.Items.Clear();
 
                 foreach (ResearchColumnSettings column in m_columns.Where(x => x.Visible))
                 {

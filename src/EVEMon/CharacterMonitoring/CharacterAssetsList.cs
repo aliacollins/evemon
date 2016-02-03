@@ -93,7 +93,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 m_textFilter = value;
                 if (m_init)
-                    UpdateColumns();
+                    Task.WhenAll(UpdateColumnsAsync());
             }
         }
 
@@ -125,7 +125,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 m_grouping = (AssetGrouping)value;
                 if (m_init)
-                    UpdateColumns();
+                    Task.WhenAll(UpdateColumnsAsync());
             }
         }
 
@@ -161,7 +161,7 @@ namespace EVEMon.CharacterMonitoring
                     m_columns.AddRange(value.Cast<AssetColumnSettings>());
 
                 if (m_init)
-                    UpdateColumns();
+                    Task.WhenAll(UpdateColumnsAsync());
             }
         }
 
@@ -216,7 +216,7 @@ namespace EVEMon.CharacterMonitoring
         /// When the control becomes visible again, we update the content.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnVisibleChanged(EventArgs e)
+        protected override async void OnVisibleChanged(EventArgs e)
         {
             if (DesignMode || this.IsDesignModeHosted() || Character == null)
                 return;
@@ -237,7 +237,7 @@ namespace EVEMon.CharacterMonitoring
             Grouping = Character?.UISettings.AssetsGroupBy;
             TextFilter = String.Empty;
 
-            UpdateColumns();
+            await UpdateColumnsAsync();
 
             m_init = true;
 
@@ -260,13 +260,13 @@ namespace EVEMon.CharacterMonitoring
                     column.Width = -2;
             });
 
-            UpdateColumns();
+            Task.WhenAll(UpdateColumnsAsync());
         }
 
         /// <summary>
         /// Updates the columns.
         /// </summary>
-        internal void UpdateColumns()
+        internal async Task UpdateColumnsAsync()
         {
             // Returns if not visible
             if (!Visible)
@@ -278,25 +278,13 @@ namespace EVEMon.CharacterMonitoring
             try
             {
                 lvAssets.Columns.Clear();
+                lvAssets.Groups.Clear();
+                lvAssets.Items.Clear();
 
-                foreach (AssetColumnSettings column in m_columns.Where(x => x.Visible))
-                {
-                    ColumnHeader header = lvAssets.Columns.Add(column.Column.GetHeader(), column.Width);
-                    header.Tag = column.Column;
-
-                    switch (column.Column)
-                    {
-                        case AssetColumn.UnitaryPrice:
-                        case AssetColumn.TotalPrice:
-                        case AssetColumn.Quantity:
-                        case AssetColumn.Volume:
-                            header.TextAlign = HorizontalAlignment.Right;
-                            break;
-                    }
-                }
+                AddColumns();
 
                 // We update the content
-                UpdateContent();
+                await UpdateContentAsync();
             }
             finally
             {
@@ -306,9 +294,31 @@ namespace EVEMon.CharacterMonitoring
         }
 
         /// <summary>
+        /// Adds the columns.
+        /// </summary>
+        private void AddColumns()
+        {
+            foreach (AssetColumnSettings column in m_columns.Where(x => x.Visible))
+            {
+                ColumnHeader header = lvAssets.Columns.Add(column.Column.GetHeader(), column.Width);
+                header.Tag = column.Column;
+
+                switch (column.Column)
+                {
+                    case AssetColumn.UnitaryPrice:
+                    case AssetColumn.TotalPrice:
+                    case AssetColumn.Quantity:
+                    case AssetColumn.Volume:
+                        header.TextAlign = HorizontalAlignment.Right;
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
         /// Updates the content of the listview.
         /// </summary>
-        private void UpdateContent()
+        private async Task UpdateContentAsync()
         {
             // Returns if not visible
             if (!Visible)
@@ -317,9 +327,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvAssets.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvAssets.SelectedItems.Count > 0
+            int selectedItem = lvAssets.SelectedItems.Count > 0
                 ? lvAssets.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             lvAssets.BeginUpdate();
             try
@@ -330,7 +340,14 @@ namespace EVEMon.CharacterMonitoring
 
                 UpdateSort();
 
-                UpdateContentByGroup(assets);
+                await UpdateContentByGroupAsync(assets);
+
+                await UpdateItemsCostAsync(assets);
+
+                // Adjust the size of the columns
+                AdjustColumns();
+
+                UpdateListVisibility();
 
                 // Restore the selected item (if any)
                 if (selectedItem > 0)
@@ -341,13 +358,6 @@ namespace EVEMon.CharacterMonitoring
                         lvItem.Selected = true;
                     }
                 }
-
-                // Adjust the size of the columns
-                AdjustColumns();
-
-                UpdateItemsCost(assets);
-
-                UpdateListVisibility();
             }
             finally
             {
@@ -360,10 +370,10 @@ namespace EVEMon.CharacterMonitoring
         /// Updates the items cost.
         /// </summary>
         /// <param name="assets">The assets.</param>
-        private void UpdateItemsCost(IList<Asset> assets)
+        private async Task UpdateItemsCostAsync(IList<Asset> assets)
         {
             lblTotalCost.Text = String.Format(CultureConstants.DefaultCulture, m_totalCostLabelDefaultText,
-                assets.Sum(asset => asset.Price * asset.Quantity));
+                await GetTotalCostAsync(assets));
 
             if (!throbber.Visible && !Settings.MarketPricer.Pricer.Queried)
             {
@@ -375,8 +385,18 @@ namespace EVEMon.CharacterMonitoring
 
             throbber.State = ThrobberState.Stopped;
             throbber.Hide();
-            noPricesFoundLabel.Visible = assets.Any(asset => Math.Abs(asset.Price) < double.Epsilon);
+            noPricesFoundLabel.Visible = assets
+                .Where(asset => asset.TypeOfBlueprint != BlueprintType.Copy.ToString())
+                .Any(asset => Math.Abs(asset.Price) < double.Epsilon);
         }
+
+        /// <summary>
+        /// Asynchronously gets the total cost of the assets.
+        /// </summary>
+        /// <param name="assets">The assets.</param>
+        /// <returns></returns>
+        private static Task<double> GetTotalCostAsync(IEnumerable<Asset> assets)
+            => Task.Run(() => assets.Sum(asset => asset.Price * asset.Quantity));
 
         /// <summary>
         /// Updates the list visibility.
@@ -396,72 +416,72 @@ namespace EVEMon.CharacterMonitoring
         /// Updates the content by group.
         /// </summary>
         /// <param name="assets">The assets.</param>
-        private void UpdateContentByGroup(IEnumerable<Asset> assets)
+        private async Task UpdateContentByGroupAsync(IEnumerable<Asset> assets)
         {
             switch (m_grouping)
             {
                 case AssetGrouping.None:
-                    UpdateNoGroupContent(assets);
+                    await UpdateNoGroupContentAsync(assets);
                     break;
                 case AssetGrouping.Group:
                     IOrderedEnumerable<IGrouping<string, Asset>> groups1 =
                         assets.GroupBy(x => x.Item.GroupName).OrderBy(x => x.Key);
-                    UpdateContent(groups1);
+                    await UpdateContentAsync(groups1);
                     break;
                 case AssetGrouping.GroupDesc:
                     IOrderedEnumerable<IGrouping<string, Asset>> groups2 =
                         assets.GroupBy(x => x.Item.GroupName).OrderByDescending(x => x.Key);
-                    UpdateContent(groups2);
+                    await UpdateContentAsync(groups2);
                     break;
                 case AssetGrouping.Category:
                     IOrderedEnumerable<IGrouping<string, Asset>> groups3 =
                         assets.GroupBy(x => x.Item.CategoryName).OrderBy(x => x.Key);
-                    UpdateContent(groups3);
+                    await UpdateContentAsync(groups3);
                     break;
                 case AssetGrouping.CategoryDesc:
                     IOrderedEnumerable<IGrouping<string, Asset>> groups4 =
                         assets.GroupBy(x => x.Item.CategoryName).OrderByDescending(x => x.Key);
-                    UpdateContent(groups4);
+                    await UpdateContentAsync(groups4);
                     break;
                 case AssetGrouping.Container:
                     IOrderedEnumerable<IGrouping<string, Asset>> groups5 =
                         assets.GroupBy(x => x.Container).OrderBy(x => x.Key);
-                    UpdateContent(groups5);
+                    await UpdateContentAsync(groups5);
                     break;
                 case AssetGrouping.ContainerDesc:
                     IOrderedEnumerable<IGrouping<string, Asset>> groups6 =
                         assets.GroupBy(x => x.Container).OrderByDescending(x => x.Key);
-                    UpdateContent(groups6);
+                    await UpdateContentAsync(groups6);
                     break;
                 case AssetGrouping.Location:
                     IOrderedEnumerable<IGrouping<string, Asset>> groups7 =
                         assets.GroupBy(x => x.Location).OrderBy(x => x.Key);
-                    UpdateContent(groups7);
+                    await UpdateContentAsync(groups7);
                     break;
                 case AssetGrouping.LocationDesc:
                     IOrderedEnumerable<IGrouping<string, Asset>> groups8 =
                         assets.GroupBy(x => x.Location).OrderByDescending(x => x.Key);
-                    UpdateContent(groups8);
+                    await UpdateContentAsync(groups8);
                     break;
                 case AssetGrouping.Region:
                     IOrderedEnumerable<IGrouping<Region, Asset>> groups9 =
                         assets.GroupBy(x => x.SolarSystem.Constellation.Region).OrderBy(x => x.Key);
-                    UpdateContent(groups9);
+                    await UpdateContentAsync(groups9);
                     break;
                 case AssetGrouping.RegionDesc:
                     IOrderedEnumerable<IGrouping<Region, Asset>> groups10 =
                         assets.GroupBy(x => x.SolarSystem.Constellation.Region).OrderByDescending(x => x.Key);
-                    UpdateContent(groups10);
+                    await UpdateContentAsync(groups10);
                     break;
                 case AssetGrouping.Jumps:
                     IOrderedEnumerable<IGrouping<int, Asset>> groups11 =
                         assets.GroupBy(x => x.Jumps).OrderBy(x => x.Key);
-                    UpdateContent(groups11);
+                    await UpdateContentAsync(groups11);
                     break;
                 case AssetGrouping.JumpsDesc:
                     IOrderedEnumerable<IGrouping<int, Asset>> groups12 =
                         assets.GroupBy(x => x.Jumps).OrderByDescending(x => x.Key);
-                    UpdateContent(groups12);
+                    await UpdateContentAsync(groups12);
                     break;
             }
         }
@@ -469,14 +489,11 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Updates the content of the listview.
         /// </summary>
-        private void UpdateNoGroupContent(IEnumerable<Asset> assets)
-        {
-            lvAssets.Items.Clear();
-            lvAssets.Groups.Clear();
-
-            // Add the items
-            lvAssets.Items.AddRange(
-                assets.Select(asset => new
+        /// <param name="assets">The assets.</param>
+        private Task UpdateNoGroupContentAsync(IEnumerable<Asset> assets)
+            => Task.Run(() =>
+            {
+                return assets.Select(asset => new
                 {
                     asset,
                     item = new ListViewItem(asset.Item.Name)
@@ -484,35 +501,41 @@ namespace EVEMon.CharacterMonitoring
                         UseItemStyleForSubItems = false,
                         Tag = asset
                     }
-                }).Select(x => CreateSubItems(x.asset, x.item)).ToArray());
-        }
+                }).Select(x => CreateSubItems(x.asset, x.item)).ToArray();
+
+            }).ContinueWith(task =>
+            {
+                lvAssets.Groups.Clear();
+                lvAssets.Items.Clear();
+
+                lvAssets.Items.AddRange(task.Result);
+
+            }, EveMonClient.CurrentSynchronizationContext);
 
         /// <summary>
         /// Updates the content of the listview.
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <param name="groups"></param>
-        private void UpdateContent<TKey>(IEnumerable<IGrouping<TKey, Asset>> groups)
-        {
-            lvAssets.Items.Clear();
-            lvAssets.Groups.Clear();
-
-            // Add the groups
-            foreach (IGrouping<TKey, Asset> group in groups)
+        private Task UpdateContentAsync<TKey>(IEnumerable<IGrouping<TKey, Asset>> groups)
+            => Task.Run(() =>
             {
-                string groupText;
-                if (group.Key is int) // Really ugly way but couldn't figured another way
-                    groupText = group.First().JumpsText;
-                else
-                    groupText = group.Key.ToString();
+                var listOfGroups = new List<ListViewGroup>();
+                var listOfItems = new List<ListViewItem>();
 
+                // Add the groups
+                foreach (IGrouping<TKey, Asset> group in groups)
+                {
+                    string groupText;
+                    if (@group.Key is int) // Really ugly way but couldn't figured another way
+                        groupText = @group.First().JumpsText;
+                    else
+                        groupText = @group.Key.ToString();
 
-                ListViewGroup listGroup = new ListViewGroup(groupText);
-                lvAssets.Groups.Add(listGroup);
+                    ListViewGroup listGroup = new ListViewGroup(groupText);
+                    listOfGroups.Add(listGroup);
 
-                // Add the items in every group
-                lvAssets.Items.AddRange(
-                    group.Select(asset => new
+                    ListViewItem[] items = @group.Select(asset => new
                     {
                         asset,
                         item = new ListViewItem(asset.Item.Name, listGroup)
@@ -520,9 +543,21 @@ namespace EVEMon.CharacterMonitoring
                             UseItemStyleForSubItems = false,
                             Tag = asset
                         }
-                    }).Select(x => CreateSubItems(x.asset, x.item)).ToArray());
-            }
-        }
+                    }).Select(x => CreateSubItems(x.asset, x.item)).ToArray();
+                    listOfItems.AddRange(items);
+                }
+
+                return new Tuple<ListViewGroup[], ListViewItem[]>(listOfGroups.ToArray(), listOfItems.ToArray());
+
+            }).ContinueWith(task =>
+            {
+                lvAssets.Items.Clear();
+                lvAssets.Groups.Clear();
+
+                lvAssets.Groups.AddRange(task.Result.Item1);
+                lvAssets.Items.AddRange(task.Result.Item2);
+
+            }, EveMonClient.CurrentSynchronizationContext);
 
         /// <summary>
         /// Creates the list view sub items.
@@ -762,7 +797,7 @@ namespace EVEMon.CharacterMonitoring
                 Assets = Character.Assets;
             });
 
-            UpdateColumns();
+            await UpdateColumnsAsync();
         }
 
         #endregion
@@ -902,13 +937,13 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveMonClient_CharacterAssetsUpdated(object sender, CharacterChangedEventArgs e)
+        private async void EveMonClient_CharacterAssetsUpdated(object sender, CharacterChangedEventArgs e)
         {
             if (Character == null || e.Character != Character)
                 return;
 
             Assets = Character.Assets;
-            UpdateContent();
+            await UpdateContentAsync();
         }
 
         /// <summary>
@@ -943,13 +978,13 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_SettingsChanged(object sender, EventArgs e)
+        private async void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
             // No need to do this if control is not visible
             if (!Visible)
                 return;
-           
-            UpdateContent();
+
+            await UpdateContentAsync();
         }
 
         /// <summary>
@@ -957,9 +992,9 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void EveMonClient_ItemPricesUpdated(object sender, EventArgs e)
+        private async void EveMonClient_ItemPricesUpdated(object sender, EventArgs e)
         {
-            UpdateContent();
+            await UpdateContentAsync();
         }
 
         # endregion
