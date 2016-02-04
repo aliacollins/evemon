@@ -90,7 +90,8 @@ namespace EVEMon.Controls
         {
             while (true)
             {
-                Image img = await ImageService.GetImageAsync(GetImageUrl(pictureBox, useFallbackUri));
+                Image img = await ImageService.GetImageAsync(GetImageUrl(pictureBox, useFallbackUri)). ConfigureAwait(false);
+
                 if (img == null && !useFallbackUri)
                 {
                     useFallbackUri = true;

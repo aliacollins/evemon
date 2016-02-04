@@ -202,7 +202,7 @@ namespace EVEMon.Common.Service
             });
 
         /// <summary>
-        /// Callback used when images are downloaded, it takes care to invoke another callback provided as our user state.
+        /// Callback used when images are downloaded.
         /// </summary>
         /// <param name="result">The result.</param>
         private static Image GotImage(DownloadAsyncResult<Image> result)

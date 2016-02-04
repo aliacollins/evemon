@@ -147,7 +147,7 @@ namespace EVEMon.Common.Models
                 if (m_image != null)
                     return m_image;
 
-                Task.WhenAll(GetItemImageAsync());
+                Task.Run(() => GetItemImageAsync());
 
                 return m_image = GetDefaultImage();
             }
@@ -234,7 +234,8 @@ namespace EVEMon.Common.Models
         {
             while (true)
             {
-                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri)).ConfigureAwait(false);
+
                 if (img == null)
                 {
                     if (useFallbackUri)
