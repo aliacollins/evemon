@@ -226,12 +226,13 @@ namespace EVEMon.CharacterMonitoring
             if (!Visible)
                 return;
 
-            // Prevents the properties to call UpdateColumns() till we set all properties
+            // Prevents the properties to call UpdateColumnsAsync() till we set all properties
             m_init = false;
 
             lvAssets.Hide();
             estimatedCostPanel.Hide();
-
+            noAssetsLabel.Visible = Character?.Assets.Count == 0;
+            
             Assets = Character?.Assets;
             Columns = Settings.UI.MainWindow.Assets.Columns;
             Grouping = Character?.UISettings.AssetsGroupBy;
@@ -283,8 +284,14 @@ namespace EVEMon.CharacterMonitoring
 
                 AddColumns();
 
+                throbber.Show();
+                throbber.State = ThrobberState.Rotating;
+
                 // We update the content
                 await UpdateContentAsync();
+
+                throbber.State = ThrobberState.Stopped;
+                throbber.Hide();
             }
             finally
             {
@@ -375,16 +382,16 @@ namespace EVEMon.CharacterMonitoring
             lblTotalCost.Text = String.Format(CultureConstants.DefaultCulture, m_totalCostLabelDefaultText,
                 await GetTotalCostAsync(assets));
 
-            if (!throbber.Visible && !Settings.MarketPricer.Pricer.Queried)
+            if (!totalCostThrobber.Visible && !Settings.MarketPricer.Pricer.Queried)
             {
                 noPricesFoundLabel.Hide();
-                throbber.Show();
-                throbber.State = ThrobberState.Rotating;
+                totalCostThrobber.Show();
+                totalCostThrobber.State = ThrobberState.Rotating;
                 return;
             }
 
-            throbber.State = ThrobberState.Stopped;
-            throbber.Hide();
+            totalCostThrobber.State = ThrobberState.Stopped;
+            totalCostThrobber.Hide();
             noPricesFoundLabel.Visible = assets
                 .Where(asset => asset.TypeOfBlueprint != BlueprintType.Copy.ToString())
                 .Any(asset => Math.Abs(asset.Price) < double.Epsilon);
