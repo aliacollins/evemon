@@ -171,6 +171,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Get the dragged tab
         /// </summary>
+        /// <param name="e">The <see cref="DragEventArgs"/> instance containing the event data.</param>
         /// <returns></returns>
         private static TabPage GetDraggedTab(DragEventArgs e)
         {

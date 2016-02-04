@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace EVEMon.Common.Controls
 {
@@ -20,6 +21,25 @@ namespace EVEMon.Common.Controls
                 control = control.Parent;
             }
             return false;
+        }
+        
+        /// <summary>
+        /// Suspends the drawing.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        public static void SuspendDrawing(this Control parent)
+        {
+            NativeMethods.SendMessage(parent.Handle, NativeMethods.WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Resumes the drawing.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        public static void ResumeDrawing(this Control parent)
+        {
+            NativeMethods.SendMessage(parent.Handle, NativeMethods.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
+            parent.Refresh();
         }
     }
 }

@@ -78,11 +78,13 @@ namespace EVEMon
         private MainWindow()
         {
             InitializeComponent();
+
             RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
 
             tabLoadingLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             noCharactersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
             noCharactersLabel.Hide();
 
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
@@ -276,8 +278,10 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Callback for time synchronization with NIST check.
+        /// Callback for time synchronization.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TimeCheckSyncEventArgs"/> instance containing the event data.</param>
         private void TimeCheck_TimeCheckCompleted(object sender, TimeCheckSyncEventArgs e)
         {
             if (!Settings.Updates.CheckTimeOnStartup || e.IsSynchronised ||
@@ -327,7 +331,7 @@ namespace EVEMon
         /// </summary>
         private void LayoutTabPages()
         {
-            tcCharacterTabs.SuspendLayout();
+            this.SuspendDrawing();
 
             try
             {
@@ -361,7 +365,6 @@ namespace EVEMon
 
                         // Inserts the page in the proper location
                         tcCharacterTabs.TabPages.Insert(index, page);
-                        tcCharacterTabs.Update();
                     }
 
                     // Remove processed character from the dictionary and move forward
@@ -389,7 +392,7 @@ namespace EVEMon
             finally
             {
                 tcCharacterTabs.Visible = tcCharacterTabs.Controls.Count > 0;
-                tcCharacterTabs.ResumeLayout();
+                this.ResumeDrawing();
             }
         }
 
@@ -1277,8 +1280,9 @@ namespace EVEMon
 
             // Hide the TabControl
             tcCharacterTabs.Hide();
+            mainLoadingThrobber.State = ThrobberState.Rotating;
+            mainLoadingThrobber.Show();
             tabLoadingLabel.Show();
-            Update();
 
             // Open the specified settings
             await Settings.RestoreAsync(openFileDialog.FileName);
@@ -1990,6 +1994,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
+            mainLoadingThrobber.State = ThrobberState.Stopped;
+            mainLoadingThrobber.Hide();
             tabLoadingLabel.Hide();
 
             UpdateControlsVisibility();
@@ -2002,7 +2008,7 @@ namespace EVEMon
         {
             // Displays or not the 'no characters added' label
             noCharactersLabel.Visible = !EveMonClient.MonitoredCharacters.Any();
-
+            
             // Tray icon's visibility
             trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
                                 || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&

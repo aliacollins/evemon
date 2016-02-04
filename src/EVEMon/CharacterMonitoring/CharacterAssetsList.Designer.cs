@@ -42,11 +42,13 @@
             this.ilIcons = new System.Windows.Forms.ImageList(this.components);
             this.noPricesFoundLabel = new System.Windows.Forms.Label();
             this.lblTotalCost = new System.Windows.Forms.Label();
-            this.throbber = new EVEMon.Common.Controls.Throbber();
+            this.totalCostThrobber = new EVEMon.Common.Controls.Throbber();
             this.estimatedCostPanel = new System.Windows.Forms.Panel();
+            this.throbber = new EVEMon.Common.Controls.Throbber();
             this.contextMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.totalCostThrobber)).BeginInit();
             this.estimatedCostPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).BeginInit();
             this.SuspendLayout();
             // 
             // noAssetsLabel
@@ -150,30 +152,43 @@
             this.lblTotalCost.Text = "Estimated Cost of shown items: {0:N2} ISK";
             this.lblTotalCost.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // throbber
+            // totalCostThrobber
             // 
-            this.throbber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.throbber.Location = new System.Drawing.Point(442, 4);
-            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
-            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
-            this.throbber.Name = "throbber";
-            this.throbber.Size = new System.Drawing.Size(24, 24);
-            this.throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
-            this.throbber.TabIndex = 3;
-            this.throbber.TabStop = false;
-            this.throbber.Visible = false;
+            this.totalCostThrobber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.totalCostThrobber.Location = new System.Drawing.Point(442, 4);
+            this.totalCostThrobber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.totalCostThrobber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.totalCostThrobber.Name = "totalCostThrobber";
+            this.totalCostThrobber.Size = new System.Drawing.Size(24, 24);
+            this.totalCostThrobber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
+            this.totalCostThrobber.TabIndex = 3;
+            this.totalCostThrobber.TabStop = false;
+            this.totalCostThrobber.Visible = false;
             // 
             // estimatedCostPanel
             // 
             this.estimatedCostPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.estimatedCostPanel.Controls.Add(this.lblTotalCost);
             this.estimatedCostPanel.Controls.Add(this.noPricesFoundLabel);
-            this.estimatedCostPanel.Controls.Add(this.throbber);
+            this.estimatedCostPanel.Controls.Add(this.totalCostThrobber);
             this.estimatedCostPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.estimatedCostPanel.Location = new System.Drawing.Point(0, 401);
             this.estimatedCostPanel.Name = "estimatedCostPanel";
             this.estimatedCostPanel.Size = new System.Drawing.Size(472, 33);
             this.estimatedCostPanel.TabIndex = 5;
+            // 
+            // throbber
+            // 
+            this.throbber.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.throbber.Location = new System.Drawing.Point(229, 205);
+            this.throbber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.throbber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.throbber.Name = "throbber";
+            this.throbber.Size = new System.Drawing.Size(24, 24);
+            this.throbber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
+            this.throbber.TabIndex = 6;
+            this.throbber.TabStop = false;
+            this.throbber.Visible = false;
             // 
             // CharacterAssetsList
             // 
@@ -181,14 +196,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.lvAssets);
+            this.Controls.Add(this.throbber);
             this.Controls.Add(this.noAssetsLabel);
             this.Controls.Add(this.estimatedCostPanel);
             this.Name = "CharacterAssetsList";
             this.Size = new System.Drawing.Size(472, 434);
             this.contextMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.totalCostThrobber)).EndInit();
             this.estimatedCostPanel.ResumeLayout(false);
             this.estimatedCostPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.throbber)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -207,7 +224,8 @@
         private System.Windows.Forms.ToolStripMenuItem exportToCSVToolStripMenuItem;
         private System.Windows.Forms.Label lblTotalCost;
         private System.Windows.Forms.Label noPricesFoundLabel;
-        private Common.Controls.Throbber throbber;
+        private Common.Controls.Throbber totalCostThrobber;
         private System.Windows.Forms.Panel estimatedCostPanel;
+        private Common.Controls.Throbber throbber;
     }
 }
