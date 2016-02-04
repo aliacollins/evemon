@@ -102,6 +102,8 @@ namespace EVEMon.Common.Service
                 return GotImage(result);
             }
 
+            await GetImageFromCacheAsync(GetCacheName(url));
+
             // First check whether the image exists in cache
             EveMonClient.EnsureCacheDirInit();
             string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
@@ -146,7 +148,7 @@ namespace EVEMon.Common.Service
             Image img = GotImage(result);
 
             if (img != null)
-                await AddImageToCacheAsync(url, (Image)img.Clone()).ConfigureAwait(false);
+                await AddImageToCacheAsync((Image)img.Clone(), GetCacheName(url)).ConfigureAwait(false);
 
             return img;
         }
@@ -154,14 +156,15 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Asynchronously gets the character image from cache.
         /// </summary>
-        /// <param name="guid">The unique identifier.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="directory">The directory.</param>
         /// <returns></returns>
-        public static Task<Image> GetCharacterImageFromCacheAsync(Guid guid)
+        internal static Task<Image> GetImageFromCacheAsync(string filename, string directory = null)
             => Task.Run(() =>
             {
                 // First check whether the image exists in cache
                 EveMonClient.EnsureCacheDirInit();
-                string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir, $"{guid}.png");
+                string cacheFileName = Path.Combine(directory ?? EveMonClient.EVEMonImageCacheDir, filename);
 
                 if (!File.Exists(cacheFileName))
                     return null;
@@ -221,9 +224,11 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Adds the image to the cache.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="image"></param>
-        private static Task AddImageToCacheAsync(Uri url, Image image)
+        /// <param name="image">The image.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="directory">The directory.</param>
+        /// <returns></returns>
+        internal static Task AddImageToCacheAsync(Image image, string filename, string directory = null)
             => Task.Run(() =>
             {
                 // Saves the image file
@@ -231,40 +236,7 @@ namespace EVEMon.Common.Service
                 {
                     // Write this image to the cache file
                     EveMonClient.EnsureCacheDirInit();
-                    string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
-                    FileHelper.OverwriteOrWarnTheUser(cacheFileName,
-                        fs =>
-                        {
-                            using (image)
-                            {
-                                image.Save(fs, ImageFormat.Png);
-                                fs.Flush();
-                            }
-                            return true;
-                        });
-                }
-                catch (Exception ex)
-                {
-                    ExceptionHandler.LogRethrowException(ex);
-                    throw;
-                }
-            });
-
-        /// <summary>
-        /// Adds the portrait to the cache.
-        /// </summary>
-        /// <param name="guid">The unique identifier.</param>
-        /// <param name="image">The image.</param>
-        /// <returns></returns>
-        internal static Task AddCharacterImageToCacheAsync(Guid guid, Image image)
-            => Task.Run(() =>
-            {
-                // Saves the image file
-                try
-                {
-                    // Save the image to the portrait cache file
-                    EveMonClient.EnsureCacheDirInit();
-                    string cacheFileName = Path.Combine(EveMonClient.EVEMonPortraitCacheDir, $"{guid}.png");
+                    string cacheFileName = Path.Combine(directory ?? EveMonClient.EVEMonImageCacheDir, filename);
                     FileHelper.OverwriteOrWarnTheUser(cacheFileName,
                         fs =>
                         {
