@@ -105,7 +105,7 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Try to retrieve the portrait from our portrait cache (%APPDATA%\cache\portraits)
-            ImageService.GetCharacterImageFromCacheAsync(m_character.Guid)
+            ImageService.GetImageFromCacheAsync($"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir)
                 .ContinueWith(task =>
                 {
                     Image image = task.Result;
@@ -176,7 +176,9 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Save to the portraits cache
-            ImageService.AddCharacterImageToCacheAsync(m_character.Guid, (Image)image.Clone());
+            ImageService
+                .AddImageToCacheAsync((Image)image.Clone(), $"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir)
+                .ConfigureAwait(false);
         }
 
         #endregion

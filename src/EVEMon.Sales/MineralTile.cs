@@ -111,7 +111,8 @@ namespace EVEMon.Sales
         {
             while (true)
             {
-                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri));
+                Image img = await ImageService.GetImageAsync(GetImageUrl(useFallbackUri)).ConfigureAwait(false);
+
                 if (img == null && !useFallbackUri)
                 {
                     useFallbackUri = true;
