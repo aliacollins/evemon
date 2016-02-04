@@ -134,10 +134,11 @@ namespace EVEMon
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.tcCharacterTabs = new EVEMon.Common.Controls.DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
-            this.overview = new EVEMon.Controls.Overview();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
             this.tabLoadingLabel = new System.Windows.Forms.Label();
             this.noCharactersLabel = new System.Windows.Forms.Label();
+            this.mainLoadingThrobber = new EVEMon.Common.Controls.Throbber();
+            this.overview = new EVEMon.Controls.Overview();
             this.notificationList = new EVEMon.Controls.NotificationList();
             this.trayIconContextMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -146,6 +147,7 @@ namespace EVEMon
             this.mainToolBar.SuspendLayout();
             this.tcCharacterTabs.SuspendLayout();
             this.tpOverview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainLoadingThrobber)).BeginInit();
             this.SuspendLayout();
             // 
             // trayIconContextMenuStrip
@@ -1049,18 +1051,6 @@ namespace EVEMon
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
             // 
-            // overview
-            // 
-            this.overview.AutoScroll = true;
-            this.overview.BackColor = System.Drawing.Color.Transparent;
-            this.overview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.overview.Location = new System.Drawing.Point(0, 0);
-            this.overview.Name = "overview";
-            this.overview.Size = new System.Drawing.Size(592, 477);
-            this.overview.TabIndex = 0;
-            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
-            // 
             // trayIcon
             // 
             this.trayIcon.ContextMenuStrip = this.trayIconContextMenuStrip;
@@ -1097,6 +1087,30 @@ namespace EVEMon
     "nu option";
             this.noCharactersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // mainLoadingThrobber
+            // 
+            this.mainLoadingThrobber.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.mainLoadingThrobber.Location = new System.Drawing.Point(285, 314);
+            this.mainLoadingThrobber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.mainLoadingThrobber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.mainLoadingThrobber.Name = "mainLoadingThrobber";
+            this.mainLoadingThrobber.Size = new System.Drawing.Size(24, 24);
+            this.mainLoadingThrobber.State = EVEMon.Common.Enumerations.ThrobberState.Rotating;
+            this.mainLoadingThrobber.TabIndex = 1;
+            this.mainLoadingThrobber.TabStop = false;
+            // 
+            // overview
+            // 
+            this.overview.AutoScroll = true;
+            this.overview.BackColor = System.Drawing.Color.Transparent;
+            this.overview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.overview.Location = new System.Drawing.Point(0, 0);
+            this.overview.Name = "overview";
+            this.overview.Size = new System.Drawing.Size(592, 477);
+            this.overview.TabIndex = 0;
+            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
+            // 
             // notificationList
             // 
             this.notificationList.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -1113,6 +1127,7 @@ namespace EVEMon
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 646);
             this.Controls.Add(this.tcCharacterTabs);
+            this.Controls.Add(this.mainLoadingThrobber);
             this.Controls.Add(this.tabLoadingLabel);
             this.Controls.Add(this.noCharactersLabel);
             this.Controls.Add(this.notificationList);
@@ -1136,6 +1151,7 @@ namespace EVEMon
             this.mainToolBar.PerformLayout();
             this.tcCharacterTabs.ResumeLayout(false);
             this.tpOverview.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mainLoadingThrobber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1251,5 +1267,6 @@ namespace EVEMon
         private Controls.Overview overview;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusSpacerLabel;
         private System.Windows.Forms.ToolStripStatusLabel lblCSSProviderStatus;
+        private Common.Controls.Throbber mainLoadingThrobber;
     }
 }

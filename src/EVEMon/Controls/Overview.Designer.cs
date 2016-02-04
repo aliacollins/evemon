@@ -30,6 +30,8 @@ namespace EVEMon.Controls
         {
             this.labelNoCharacters = new System.Windows.Forms.Label();
             this.labelLoading = new System.Windows.Forms.Label();
+            this.overviewLoadingThrobber = new EVEMon.Common.Controls.Throbber();
+            ((System.ComponentModel.ISupportInitialize)(this.overviewLoadingThrobber)).BeginInit();
             this.SuspendLayout();
             // 
             // labelNoCharacters
@@ -58,6 +60,19 @@ namespace EVEMon.Controls
             this.labelLoading.Text = "Loading...\r\n\r\nPlease Wait.";
             this.labelLoading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // overviewLoadingThrobber
+            // 
+            this.overviewLoadingThrobber.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.overviewLoadingThrobber.Location = new System.Drawing.Point(168, 243);
+            this.overviewLoadingThrobber.MaximumSize = new System.Drawing.Size(24, 24);
+            this.overviewLoadingThrobber.MinimumSize = new System.Drawing.Size(24, 24);
+            this.overviewLoadingThrobber.Name = "overviewLoadingThrobber";
+            this.overviewLoadingThrobber.Size = new System.Drawing.Size(24, 24);
+            this.overviewLoadingThrobber.State = EVEMon.Common.Enumerations.ThrobberState.Stopped;
+            this.overviewLoadingThrobber.TabIndex = 2;
+            this.overviewLoadingThrobber.TabStop = false;
+            this.overviewLoadingThrobber.Visible = false;
+            // 
             // Overview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -66,8 +81,10 @@ namespace EVEMon.Controls
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.Controls.Add(this.labelLoading);
             this.Controls.Add(this.labelNoCharacters);
+            this.Controls.Add(this.overviewLoadingThrobber);
             this.Name = "Overview";
             this.Size = new System.Drawing.Size(361, 507);
+            ((System.ComponentModel.ISupportInitialize)(this.overviewLoadingThrobber)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -76,5 +93,6 @@ namespace EVEMon.Controls
 
         private System.Windows.Forms.Label labelNoCharacters;
         private System.Windows.Forms.Label labelLoading;
+        private Common.Controls.Throbber overviewLoadingThrobber;
     }
 }

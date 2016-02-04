@@ -78,11 +78,13 @@ namespace EVEMon
         private MainWindow()
         {
             InitializeComponent();
+
             RememberPositionKey = "MainWindow";
             notificationList.Notifications = null;
 
             tabLoadingLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             noCharactersLabel.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+
             noCharactersLabel.Hide();
 
             trayIcon.Text = EveMonClient.FileVersionInfo.ProductName;
@@ -1278,8 +1280,9 @@ namespace EVEMon
 
             // Hide the TabControl
             tcCharacterTabs.Hide();
+            mainLoadingThrobber.State = ThrobberState.Rotating;
+            mainLoadingThrobber.Show();
             tabLoadingLabel.Show();
-            Update();
 
             // Open the specified settings
             await Settings.RestoreAsync(openFileDialog.FileName);
@@ -1991,6 +1994,8 @@ namespace EVEMon
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
+            mainLoadingThrobber.State = ThrobberState.Stopped;
+            mainLoadingThrobber.Hide();
             tabLoadingLabel.Hide();
 
             UpdateControlsVisibility();
@@ -2003,7 +2008,7 @@ namespace EVEMon
         {
             // Displays or not the 'no characters added' label
             noCharactersLabel.Visible = !EveMonClient.MonitoredCharacters.Any();
-
+            
             // Tray icon's visibility
             trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
                                 || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&

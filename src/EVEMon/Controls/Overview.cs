@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Controls;
 using EVEMon.Common.CustomEventArgs;
+using EVEMon.Common.Enumerations;
+using EVEMon.Common.Extensions;
 using EVEMon.Common.Factories;
 using EVEMon.Common.Models;
 
@@ -29,6 +31,7 @@ namespace EVEMon.Controls
 
             labelNoCharacters.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
             labelLoading.Font = FontFactory.GetFont("Tahoma", 11.25F, FontStyle.Bold);
+            overviewLoadingThrobber.BringToFront();
         }
 
         #endregion
@@ -47,11 +50,15 @@ namespace EVEMon.Controls
             if (DesignMode || this.IsDesignModeHosted())
                 return;
 
+            overviewLoadingThrobber.State = ThrobberState.Rotating;
+            overviewLoadingThrobber.Show();
+
             DoubleBuffered = true;
 
             EveMonClient.MonitoredCharacterCollectionChanged += EveMonClient_MonitoredCharacterCollectionChanged;
             EveMonClient.CharacterUpdated += EveMonClient_CharacterUpdated;
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
+
             Disposed += OnDisposed;
         }
 
@@ -110,6 +117,7 @@ namespace EVEMon.Controls
                     CleanUp(Controls.OfType<OverviewItem>());
 
                 labelNoCharacters.Show();
+
                 return;
             }
 
@@ -172,6 +180,7 @@ namespace EVEMon.Controls
         /// <summary>
         /// Cleans up the existing controls.
         /// </summary>
+        /// <param name="items">The items.</param>
         private void CleanUp(IEnumerable<OverviewItem> items)
         {
             // Dispose every one of the control to prevent event triggering
@@ -343,6 +352,8 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
+            overviewLoadingThrobber.State = ThrobberState.Stopped;
+            overviewLoadingThrobber.Hide();
             labelLoading.Hide();
 
             // Update only when grouping settings have changed
@@ -358,8 +369,9 @@ namespace EVEMon.Controls
         private void item_Click(object sender, EventArgs e)
         {
             OverviewItem item = sender as OverviewItem;
-            if (CharacterClicked != null && item != null)
-                CharacterClicked(this, new CharacterChangedEventArgs(item.Character));
+
+            if (item != null)
+                CharacterClicked?.ThreadSafeInvoke(this, new CharacterChangedEventArgs(item.Character));
         }
 
         #endregion
