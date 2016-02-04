@@ -9,6 +9,12 @@ namespace EVEMon.Common.Controls
     /// </summary>
     public static class ListViewHelper
     {
+        /// <summary>
+        /// Sets the extended style.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <param name="exStyle">The ex style.</param>
+        /// <exception cref="System.ArgumentNullException">control</exception>
         public static void SetExtendedStyle(Control control, ListViewExtendedStyles exStyle)
         {
             if (control == null)
@@ -21,6 +27,11 @@ namespace EVEMon.Common.Controls
             NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, IntPtr.Zero, (IntPtr)styles);
         }
 
+        /// <summary>
+        /// Enables the double buffer.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <exception cref="System.ArgumentNullException">control</exception>
         public static void EnableDoubleBuffer(Control control)
         {
             if (control == null)
@@ -37,6 +48,11 @@ namespace EVEMon.Common.Controls
             NativeMethods.SendMessage(control.Handle, (int)ListViewMessages.SetExtendedStyle, IntPtr.Zero, (IntPtr)styles);
         }
 
+        /// <summary>
+        /// Disables the double buffer.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <exception cref="System.ArgumentNullException">control</exception>
         public static void DisableDoubleBuffer(Control control)
         {
             if (control == null)

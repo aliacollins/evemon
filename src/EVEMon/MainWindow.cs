@@ -276,8 +276,10 @@ namespace EVEMon
         }
 
         /// <summary>
-        /// Callback for time synchronization with NIST check.
+        /// Callback for time synchronization.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="TimeCheckSyncEventArgs"/> instance containing the event data.</param>
         private void TimeCheck_TimeCheckCompleted(object sender, TimeCheckSyncEventArgs e)
         {
             if (!Settings.Updates.CheckTimeOnStartup || e.IsSynchronised ||
@@ -327,7 +329,7 @@ namespace EVEMon
         /// </summary>
         private void LayoutTabPages()
         {
-            tcCharacterTabs.SuspendLayout();
+            this.SuspendDrawing();
 
             try
             {
@@ -361,7 +363,6 @@ namespace EVEMon
 
                         // Inserts the page in the proper location
                         tcCharacterTabs.TabPages.Insert(index, page);
-                        tcCharacterTabs.Update();
                     }
 
                     // Remove processed character from the dictionary and move forward
@@ -389,7 +390,7 @@ namespace EVEMon
             finally
             {
                 tcCharacterTabs.Visible = tcCharacterTabs.Controls.Count > 0;
-                tcCharacterTabs.ResumeLayout();
+                this.ResumeDrawing();
             }
         }
 
