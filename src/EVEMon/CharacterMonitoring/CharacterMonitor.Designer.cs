@@ -1,6 +1,3 @@
-using EVEMon.Common.Controls;
-using EVEMon.Common.Controls.MultiPanel;
-
 namespace EVEMon.CharacterMonitoring
 {
     internal partial class CharacterMonitor

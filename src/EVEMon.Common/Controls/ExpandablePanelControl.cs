@@ -11,6 +11,8 @@ namespace EVEMon.Common.Controls
     {
         #region Fields
 
+        private readonly IContainer components;
+
         // Settings
         private PanelState m_panelState;
         private int m_animationStep;
@@ -43,7 +45,9 @@ namespace EVEMon.Common.Controls
         /// </summary>
         public ExpandablePanelControl()
         {
-            HeaderText = "Header Text";
+            components = new Container();
+
+            HeaderText = String.Empty;
             ExpandDirection = Direction.Up;
 
             // Header
@@ -70,17 +74,9 @@ namespace EVEMon.Common.Controls
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
-            m_expandImage.Dispose();
-            m_collapseImage.Dispose();
-            m_tsmiExpandCollapse.Dispose();
-            m_tsmiSeparator.Dispose();
-            m_tsmiNoAnim.Dispose();
-            m_tsmiHighAnim.Dispose();
-            m_tsmiMedAnim.Dispose();
-            m_tsmiLowAnim.Dispose();
-            m_tsmiSelectAnim.Dispose();
-            m_contextMenuStrip.Dispose();
-            Header.Dispose();
+            if (disposing)
+                components?.Dispose();
+
             base.Dispose(disposing);
         }
 
@@ -94,23 +90,14 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void CreateHeader()
         {
-            NoFlickerPanel tempHeader = null;
-            try
+            Header = new NoFlickerPanel
             {
-                tempHeader = new NoFlickerPanel();
-                tempHeader.Width = Width;
-                tempHeader.Height = 30;
-                tempHeader.BackColor = Color.Transparent;
+                Width = Width,
+                Height = 30,
+                BackColor = Color.Transparent
+            };
 
-                Header = tempHeader;
-                tempHeader = null;
-
-                Controls.Add(Header);
-            }
-            finally
-            {
-                tempHeader?.Dispose();
-            }
+            Controls.Add(Header);
         }
 
         /// <summary>
@@ -118,33 +105,33 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void CreateContextMenu()
         {
-            m_contextMenuStrip = new ContextMenuStrip();
             m_tsmiExpandCollapse = new ToolStripMenuItem();
-            m_tsmiSelectAnim = new ToolStripMenuItem();
-            m_tsmiNoAnim = new ToolStripMenuItem();
-            m_tsmiHighAnim = new ToolStripMenuItem();
-            m_tsmiMedAnim = new ToolStripMenuItem();
-            m_tsmiLowAnim = new ToolStripMenuItem();
+            m_tsmiSelectAnim = new ToolStripMenuItem("Animation Speed");
+            m_tsmiNoAnim = new ToolStripMenuItem("None");
+            m_tsmiHighAnim = new ToolStripMenuItem("High");
+            m_tsmiMedAnim = new ToolStripMenuItem("Medium");
+            m_tsmiLowAnim = new ToolStripMenuItem("Low");
             m_tsmiSeparator = new ToolStripSeparator();
 
             // Add menu items
-            m_contextMenuStrip.Items.Add(m_tsmiExpandCollapse);
-            m_contextMenuStrip.Items.Add(m_tsmiSeparator);
-            m_contextMenuStrip.Items.Add(m_tsmiSelectAnim);
             m_tsmiSelectAnim.DropDownItems.AddRange(new ToolStripItem[]
-                                                        {
-                                                            m_tsmiNoAnim,
-                                                            m_tsmiHighAnim,
-                                                            m_tsmiMedAnim,
-                                                            m_tsmiLowAnim
-                                                        });
+            {
+                m_tsmiNoAnim,
+                m_tsmiHighAnim,
+                m_tsmiMedAnim,
+                m_tsmiLowAnim
+            });
 
-            // Apply properties
-            m_tsmiSelectAnim.Text = "Animation Speed";
-            m_tsmiNoAnim.Text = "None";
-            m_tsmiHighAnim.Text = "High";
-            m_tsmiMedAnim.Text = "Medium";
-            m_tsmiLowAnim.Text = "Low";
+            // Create context menu
+            m_contextMenuStrip = new ContextMenuStrip(components);
+            m_contextMenuStrip.SuspendLayout();
+            m_contextMenuStrip.Items.AddRange(new ToolStripItem[]
+            {
+                m_tsmiExpandCollapse,
+                m_tsmiSeparator,
+                m_tsmiSelectAnim
+            });
+            m_contextMenuStrip.ResumeLayout();
 
             // Subscribe events
             m_tsmiExpandCollapse.Click += tsmiExpandCollapse_Click;
@@ -251,12 +238,6 @@ namespace EVEMon.Common.Controls
         public NoFlickerPanel Header { get; private set; }
 
         /// <summary>
-        /// Gets or sets the Header text.
-        /// </summary>
-        [Browsable(false)]
-        public string HeaderText { get; set; }
-
-        /// <summary>
         /// Gets or sets the expanded Height of the Panel.
         /// </summary>
         [Browsable(false)]
@@ -275,6 +256,12 @@ namespace EVEMon.Common.Controls
                 Refresh();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the Header text.
+        /// </summary>
+        [Description("The text to be shown in the header.")]
+        public string HeaderText { get; set; }
 
         /// <summary>
         /// Gets or sets the image shown in the header when Panel is collapsed. Height must be less than HeaderHeight - 4 pixels. Null to disable it.
