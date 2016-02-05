@@ -47,6 +47,9 @@ namespace EVEMon.Common.Models
             get { return m_locationID; }
             set
             {
+                if (m_locationID == value)
+                    return;
+
                 m_locationID = value;
                 Location = GetLocation();
             }
