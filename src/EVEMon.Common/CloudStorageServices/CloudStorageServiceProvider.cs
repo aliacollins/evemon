@@ -357,7 +357,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Synchronously checks that API authentication is valid.
         /// </summary>
-        /// <remarks>Because only Google is correctly implementing the use of "<![CDATA[ Task<T>.Result ]]>"
+        /// <remarks>Because only Google and Dropbox are correctly implementing the use of "<![CDATA[ Task<T>.Result ]]>"
         /// we are forced to use "<![CDATA[ Task.Run ]]>" to avoid deadlocks.
         /// When the rest of the providers implement it correctly it should be removed.
         /// </remarks>
