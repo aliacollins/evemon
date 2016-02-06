@@ -447,6 +447,7 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateNotifications()
         {
             notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == m_character);
+            Refresh();
         }
 
         #endregion
