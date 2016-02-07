@@ -17,6 +17,7 @@ namespace EVEMon.Common.Helpers
         /// <remarks>
         /// This methods purpose is to help developers understand
         /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
         public static Task RunIOBoundTaskAsync(Action action,
             CancellationToken cancellationToken = default(CancellationToken),
@@ -35,6 +36,7 @@ namespace EVEMon.Common.Helpers
         /// <remarks>
         /// This methods purpose is to help developers understand
         /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
         public static Task RunIOBoundTaskAsync(Func<Task> function,
             CancellationToken cancellationToken = default(CancellationToken),
@@ -45,7 +47,7 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Runs the IO bound task asynchronous.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
         /// <param name="function">The function.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="continuationOptions">The continuation options.</param>
@@ -54,12 +56,13 @@ namespace EVEMon.Common.Helpers
         /// <remarks>
         /// This methods purpose is to help developers understand
         /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
-        public static Task<T> RunIOBoundTaskAsync<T>(Func<T> function,
+        public static Task<TResult> RunIOBoundTaskAsync<TResult>(Func<TResult> function,
             CancellationToken cancellationToken = default(CancellationToken),
             TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<T>(new Task<T>(function), cancellationToken, continuationOptions, scheduler);
+            => ExecuteIOBoundTaskCore<TResult>(new Task<TResult>(function), cancellationToken, continuationOptions, scheduler);
 
         /// <summary>
         /// Executes the task.
@@ -72,19 +75,20 @@ namespace EVEMon.Common.Helpers
         /// <remarks>
         /// This methods purpose is to help developers understand
         /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
-        private static Task<T> ExecuteIOBoundTaskCore<T>(Task taskToRun,
+        private static Task<TResult> ExecuteIOBoundTaskCore<TResult>(Task taskToRun,
             CancellationToken cancellationToken = default(CancellationToken),
             TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler scheduler = null)
         {
-            var tcs = new TaskCompletionSource<T>();
+            var tcs = new TaskCompletionSource<TResult>();
 
             try
             {
                 taskToRun.Start();
 
-                var genericTaskToRun = taskToRun as Task<T>;
+                var genericTaskToRun = taskToRun as Task<TResult>;
                 if (genericTaskToRun != null)
                 {
                     genericTaskToRun.ContinueWith(task =>
@@ -107,7 +111,7 @@ namespace EVEMon.Common.Helpers
                         else if (task.IsCanceled)
                             tcs.TrySetCanceled(cancellationToken);
                         else if (task.IsCompleted)
-                            tcs.TrySetResult(default(T));
+                            tcs.TrySetResult(default(TResult));
 
                     }, cancellationToken, continuationOptions, scheduler ?? TaskScheduler.Current);
                 }
@@ -129,6 +133,7 @@ namespace EVEMon.Common.Helpers
         /// <remarks>
         /// This methods purpose is to help developers understand
         /// the concept of running compute bound task using <![CDATA[Task.Run()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
         public static Task RunCPUBoundTaskAsync(Action action,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -143,23 +148,9 @@ namespace EVEMon.Common.Helpers
         /// <remarks>
         /// This methods purpose is to help developers understand
         /// the concept of running compute bound task using <![CDATA[Task.Run()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
         public static Task RunCPUBoundTaskAsync(Func<Task> function,
-            CancellationToken cancellationToken = default(CancellationToken))
-            => Task.Run(function, cancellationToken);
-
-        /// <summary>
-        /// Runs the compute bound task asynchronous.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="function">The function.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// This methods purpose is to help developers understand
-        /// the concept of running compute bound task using <![CDATA[Task.Run()]]>
-        /// </remarks>
-        public static Task<T> RunCPUBoundTaskAsync<T>(Func<T> function,
             CancellationToken cancellationToken = default(CancellationToken))
             => Task.Run(function, cancellationToken);
 
@@ -173,6 +164,23 @@ namespace EVEMon.Common.Helpers
         /// <remarks>
         /// This methods purpose is to help developers understand
         /// the concept of running compute bound task using <![CDATA[Task.Run()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
+        /// </remarks>
+        public static Task<TResult> RunCPUBoundTaskAsync<TResult>(Func<TResult> function,
+            CancellationToken cancellationToken = default(CancellationToken))
+            => Task.Run(function, cancellationToken);
+
+        /// <summary>
+        /// Runs the compute bound task asynchronous.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="function">The function.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This methods purpose is to help developers understand
+        /// the concept of running compute bound task using <![CDATA[Task.Run()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
         /// </remarks>
         public static Task<TResult> RunCPUBoundTaskAsync<TResult>(Func<Task<TResult>> function,
             CancellationToken cancellationToken = default(CancellationToken))
