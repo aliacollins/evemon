@@ -19,7 +19,6 @@ namespace EVEMon.Common.Data
         private static readonly Dictionary<int, Station> s_stationsByID = new Dictionary<int, Station>();
         private static readonly Dictionary<int, NPCCorporation> s_corporationsByID = new Dictionary<int, NPCCorporation>();
         private static readonly Dictionary<int, Agent> s_agentsByID = new Dictionary<int, Agent>();
-        private static bool s_initialized;
 
         #endregion
 
@@ -27,13 +26,10 @@ namespace EVEMon.Common.Data
         #region Initialization
 
         /// <summary>
-        /// Ensures the datafile has been intialized.
+        /// Initialize static geography.
         /// </summary>
-        private static void EnsureInitialized()
+        internal static void Load()
         {
-            if (s_initialized)
-                return;
-
             if (!File.Exists(Datafile.GetFullPath(DatafileConstants.GeographyDatafile)))
                 return;
 
@@ -69,9 +65,6 @@ namespace EVEMon.Common.Data
                     }
                 }
             }
-
-            // Mark as initialized
-            s_initialized = true;
 
             CompleteInitialization(datafile);
         }
@@ -109,74 +102,32 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets an enumeration of all the regions in the universe.
         /// </summary>
-        public static IEnumerable<Region> AllRegions
-        {
-            get
-            {
-                EnsureInitialized();
-                return s_regionsByID.Values;
-            }
-        }
+        public static IEnumerable<Region> AllRegions => s_regionsByID.Values;
 
         /// <summary>
         /// Gets an enumeration of all the constellations in the universe.
         /// </summary>
-        public static IEnumerable<Constellation> AllConstellations
-        {
-            get
-            {
-                EnsureInitialized();
-                return s_constellationsByID.Values;
-            }
-        }
+        public static IEnumerable<Constellation> AllConstellations => s_constellationsByID.Values;
 
         /// <summary>
         /// Gets an enumeration of all the solar systems in the universe.
         /// </summary>
-        public static IEnumerable<SolarSystem> AllSolarSystems
-        {
-            get
-            {
-                EnsureInitialized();
-                return s_solarSystemsByID.Values;
-            }
-        }
+        public static IEnumerable<SolarSystem> AllSolarSystems => s_solarSystemsByID.Values;
 
         /// <summary>
         /// Gets an enumeration of all the stations in the universe.
         /// </summary>
-        public static IEnumerable<Station> AllStations
-        {
-            get
-            {
-                EnsureInitialized();
-                return s_stationsByID.Values;
-            }
-        }
+        public static IEnumerable<Station> AllStations => s_stationsByID.Values;
 
         /// <summary>
         /// Gets an enumeration of all the NPCCorporations in the universe.
         /// </summary>
-        public static IEnumerable<NPCCorporation> AllNPCCorporations
-        {
-            get
-            {
-                EnsureInitialized();
-                return s_corporationsByID.Values;
-            }
-        }
+        public static IEnumerable<NPCCorporation> AllNPCCorporations => s_corporationsByID.Values;
 
         /// <summary>
         /// Gets an enumeration of all the agents in the universe.
         /// </summary>
-        public static IEnumerable<Agent> AllAgents
-        {
-            get
-            {
-                EnsureInitialized();
-                return s_agentsByID.Values;
-            }
-        }
+        public static IEnumerable<Agent> AllAgents => s_agentsByID.Values;
 
         #endregion
 
@@ -190,7 +141,6 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static Region GetRegionByID(int id)
         {
-            EnsureInitialized();
             Region result;
             s_regionsByID.TryGetValue(id, out result);
             return result;
@@ -201,11 +151,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static Region GetRegionByName(string name)
-        {
-            EnsureInitialized();
-            return s_regionsByID.Values.FirstOrDefault(region => region.Name == name);
-        }
+        public static Region GetRegionByName(string name) 
+            => s_regionsByID.Values.FirstOrDefault(region => region.Name == name);
 
         /// <summary>
         /// Gets the constellation with the provided ID.
@@ -214,7 +161,6 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static Constellation GetConstellationByID(int id)
         {
-            EnsureInitialized();
             Constellation result;
             s_constellationsByID.TryGetValue(id, out result);
             return result;
@@ -225,11 +171,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static Constellation GetConstellationByName(string name)
-        {
-            EnsureInitialized();
-            return s_constellationsByID.Values.FirstOrDefault(constellation => constellation.Name == name);
-        }
+        public static Constellation GetConstellationByName(string name) 
+            => s_constellationsByID.Values.FirstOrDefault(constellation => constellation.Name == name);
 
         /// <summary>
         /// Gets the system with the provided ID.
@@ -238,7 +181,6 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static SolarSystem GetSolarSystemByID(int id)
         {
-            EnsureInitialized();
             SolarSystem result;
             s_solarSystemsByID.TryGetValue(id, out result);
             return result;
@@ -249,11 +191,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static SolarSystem GetSolarSystemByName(string name)
-        {
-            EnsureInitialized();
-            return s_solarSystemsByID.Values.FirstOrDefault(system => system.Name == name);
-        }
+        public static SolarSystem GetSolarSystemByName(string name) 
+            => s_solarSystemsByID.Values.FirstOrDefault(system => system.Name == name);
 
         /// <summary>
         /// Gets the station with the provided ID.
@@ -262,7 +201,6 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static Station GetStationByID(int id)
         {
-            EnsureInitialized();
             Station result;
             s_stationsByID.TryGetValue(id, out result);
             return result;
@@ -274,10 +212,7 @@ namespace EVEMon.Common.Data
         /// <param name="name">The name.</param>
         /// <returns></returns>
         public static Station GetStationByName(string name)
-        {
-            EnsureInitialized();
-            return s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
-        }
+            => s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
 
         /// <summary>
         /// Gets the NPC Coproration with the provided ID.
@@ -286,7 +221,6 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static NPCCorporation GetCorporationByID(int id)
         {
-            EnsureInitialized();
             NPCCorporation result;
             s_corporationsByID.TryGetValue(id, out result);
             return result;
@@ -298,10 +232,7 @@ namespace EVEMon.Common.Data
         /// <param name="name">The name.</param>
         /// <returns></returns>
         public static NPCCorporation GetCorporationByName(string name)
-        {
-            EnsureInitialized();
-            return s_corporationsByID.Values.FirstOrDefault(corporation => corporation.Name == name);
-        }
+            => s_corporationsByID.Values.FirstOrDefault(corporation => corporation.Name == name);
 
         /// <summary>
         /// Gets the agent with the provided ID.
@@ -310,7 +241,6 @@ namespace EVEMon.Common.Data
         /// <returns></returns>
         public static Agent GetAgentByID(int id)
         {
-            EnsureInitialized();
             Agent result;
             s_agentsByID.TryGetValue(id, out result);
             return result;
@@ -321,11 +251,8 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static Station GetAgentByName(string name)
-        {
-            EnsureInitialized();
-            return s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
-        }
+        public static Station GetAgentByName(string name) 
+            => s_stationsByID.Values.FirstOrDefault(station => station.Name == name);
 
         #endregion
 
