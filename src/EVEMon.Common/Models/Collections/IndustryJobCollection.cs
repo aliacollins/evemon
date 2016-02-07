@@ -43,13 +43,21 @@ namespace EVEMon.Common.Models.Collections
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            IQueryMonitor charIndustryJobsMonitor = m_ccpCharacter.QueryMonitors[CCPAPICharacterMethods.IndustryJobs];
+            IQueryMonitor charIndustryJobsMonitor =
+                m_ccpCharacter.QueryMonitors.Any(x => (CCPAPICharacterMethods)x.Method == CCPAPICharacterMethods.IndustryJobs)
+                    ? m_ccpCharacter.QueryMonitors[CCPAPICharacterMethods.IndustryJobs]
+                    : null;
             IQueryMonitor corpIndustryJobsMonitor =
-                m_ccpCharacter.QueryMonitors[CCPAPICorporationMethods.CorporationIndustryJobs];
+                m_ccpCharacter.QueryMonitors.Any(
+                    x => (CCPAPICorporationMethods)x.Method == CCPAPICorporationMethods.CorporationIndustryJobs)
+                    ? m_ccpCharacter.QueryMonitors[CCPAPICorporationMethods.CorporationIndustryJobs]
+                    : null;
 
             if ((charIndustryJobsMonitor == null || !charIndustryJobsMonitor.Enabled) &&
                 (corpIndustryJobsMonitor == null || !corpIndustryJobsMonitor.Enabled))
+            {
                 return;
+            }
 
             UpdateOnTimerTick();
         }
