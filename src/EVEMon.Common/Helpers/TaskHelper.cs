@@ -28,6 +28,26 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Runs the IO bound task asynchronous.
         /// </summary>
+        /// <param name="action">The action.</param>
+        /// <param name="state">The state.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="continuationOptions">The continuation options.</param>
+        /// <param name="scheduler">The scheduler.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This methods purpose is to help developers understand
+        /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
+        /// </remarks>
+        public static Task RunIOBoundTaskAsync(Action<object> action, object state = null,
+            CancellationToken cancellationToken = default(CancellationToken),
+            TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler scheduler = null)
+            => ExecuteIOBoundTaskCore<object>(new Task(action, state), cancellationToken, continuationOptions, scheduler);
+
+        /// <summary>
+        /// Runs the IO bound task asynchronous.
+        /// </summary>
         /// <param name="function">The function.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="continuationOptions">The continuation options.</param>
