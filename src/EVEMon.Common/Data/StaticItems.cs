@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Serialization.Datafiles;
@@ -23,33 +22,32 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Initialize static items.
         /// </summary>
-        internal static Task LoadAsync()
-            => Task.Run(() =>
+        internal static void Load()
+        {
+            if (MarketGroups != null)
+                return;
+
+            // Create the implants slots
+            for (int i = 0; i < s_implantSlots.Length; i++)
             {
-                if (MarketGroups != null)
-                    return;
+                s_implantSlots[i] = new ImplantCollection((ImplantSlots)i) { new Implant() };
+            }
 
-                // Create the implants slots
-                for (int i = 0; i < s_implantSlots.Length; i++)
-                {
-                    s_implantSlots[i] = new ImplantCollection((ImplantSlots)i) { new Implant() };
-                }
+            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.ItemsDatafile)))
+                return;
 
-                if (!File.Exists(Datafile.GetFullPath(DatafileConstants.ItemsDatafile)))
-                    return;
+            // Deserialize the items datafile
+            ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile,
+                Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 
-                // Deserialize the items datafile
-                ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile,
-                    Util.LoadXslt(Properties.Resources.DatafilesXSLT));
+            MarketGroups = new MarketGroupCollection(null, datafile.MarketGroups);
 
-                MarketGroups = new MarketGroupCollection(null, datafile.MarketGroups);
-
-                // Gather the items into a by-ID dictionary
-                foreach (MarketGroup marketGroup in MarketGroups)
-                {
-                    InitializeDictionaries(marketGroup);
-                }
-            });
+            // Gather the items into a by-ID dictionary
+            foreach (MarketGroup marketGroup in MarketGroups)
+            {
+                InitializeDictionaries(marketGroup);
+            }
+        }
 
         /// <summary>
         /// Recursively collect the items within all groups and stores them in the dictionaries.

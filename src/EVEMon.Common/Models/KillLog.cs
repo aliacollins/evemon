@@ -119,7 +119,7 @@ namespace EVEMon.Common.Models
                 if (m_image != null)
                     return m_image;
 
-                Task.Run(() => GetVictimShipImageAsync());
+                var _ = GetVictimShipImageAsync();
 
                 return m_image = GetDefaultImage();
             }

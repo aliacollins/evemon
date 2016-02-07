@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Threading;
 
@@ -362,7 +363,7 @@ namespace EVEMon.Common.CloudStorageServices
         /// When the rest of the providers implement it correctly it should be removed.
         /// </remarks>
         public bool CheckAPIAuthIsValid()
-            => !Task.Run(CheckAuthenticationAsync).Result.HasError;
+            => !TaskHelper.RunCPUBoundTaskAsync(CheckAuthenticationAsync).Result.HasError;
 
         /// <summary>
         /// Asynchronously checks that API authentication is valid.

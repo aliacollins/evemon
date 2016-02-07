@@ -12,6 +12,7 @@ using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Extended;
 using EVEMon.Common.Net;
@@ -77,14 +78,14 @@ namespace EVEMon.Common
             // items before blueprints and certs,
             // certs before masteries)
             Trace("Datafiles.Load - begin", printMethod: false);
-            StaticSkills.LoadAsync();
-            StaticProperties.LoadAsync();
+            TaskHelper.RunIOBoundTaskAsync(() => StaticSkills.Load());
+            TaskHelper.RunIOBoundTaskAsync(() => StaticProperties.Load());
             // Must always run synchronously as blueprints and certificates depend on it
-            StaticItems.LoadAsync().GetAwaiter().GetResult();
-            StaticBlueprints.LoadAsync();
+            StaticItems.Load();
+            TaskHelper.RunIOBoundTaskAsync(() => StaticBlueprints.Load());
             // Must always run synchronously as masteries depend on it
-            StaticCertificates.LoadAsync().GetAwaiter().GetResult();
-            StaticMasteries.LoadAsync();
+            StaticCertificates.Load();
+            TaskHelper.RunIOBoundTaskAsync(() => StaticMasteries.Load());
             Trace("Datafiles.Load - done", printMethod: false);
 
             Trace("done");

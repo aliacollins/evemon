@@ -131,11 +131,17 @@ namespace EVEMon.Common.QueryMonitor
                 m_charUpcomingCalendarEventsMonitor
             });
 
-            m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>().Select(
-                monitor => new { monitor, method = (CCPAPICharacterMethods)monitor.Method }).Where(
-                    monitor =>
-                        (int)monitor.method == ((int)monitor.method & (int)CCPAPIMethodsEnum.BasicCharacterFeatures)).Select(
-                            basicFeature => basicFeature.monitor).ToList();
+            m_basicFeaturesMonitors = m_characterQueryMonitors.Cast<IQueryMonitor>()
+                .Select(monitor =>
+                    new
+                    {
+                        monitor,
+                        method = (CCPAPICharacterMethods)monitor.Method
+                    })
+                .Where(monitor =>
+                    (int)monitor.method == ((int)monitor.method & (int)CCPAPIMethodsEnum.BasicCharacterFeatures))
+                .Select(basicFeature => basicFeature.monitor)
+                .ToList();
 
             m_characterQueryMonitors.ForEach(monitor => ccpCharacter.QueryMonitors.Add(monitor));
 

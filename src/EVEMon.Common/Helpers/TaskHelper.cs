@@ -7,7 +7,7 @@ namespace EVEMon.Common.Helpers
     public static class TaskHelper
     {
         /// <summary>
-        /// Runs the IO bound task asynchronous.
+        /// Runs the IO bound task asynchronously.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -26,7 +26,7 @@ namespace EVEMon.Common.Helpers
             => ExecuteIOBoundTaskCore<object>(new Task(action), cancellationToken, continuationOptions, scheduler);
 
         /// <summary>
-        /// Runs the IO bound task asynchronous.
+        /// Runs the IO bound task asynchronously.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="state">The state.</param>
@@ -46,7 +46,7 @@ namespace EVEMon.Common.Helpers
             => ExecuteIOBoundTaskCore<object>(new Task(action, state), cancellationToken, continuationOptions, scheduler);
 
         /// <summary>
-        /// Runs the IO bound task asynchronous.
+        /// Runs the IO bound task asynchronously.
         /// </summary>
         /// <param name="function">The function.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -65,7 +65,7 @@ namespace EVEMon.Common.Helpers
             => ExecuteIOBoundTaskCore<object>(new Task<Task>(function), cancellationToken, continuationOptions, scheduler);
 
         /// <summary>
-        /// Runs the IO bound task asynchronous.
+        /// Runs the IO bound task asynchronously.
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="function">The function.</param>
@@ -83,6 +83,27 @@ namespace EVEMon.Common.Helpers
             TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler scheduler = null)
             => ExecuteIOBoundTaskCore<TResult>(new Task<TResult>(function), cancellationToken, continuationOptions, scheduler);
+
+        /// <summary>
+        /// Runs the IO bound task asynchronously.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="function">The function.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="continuationOptions">The continuation options.</param>
+        /// <param name="scheduler">The scheduler.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This methods purpose is to help developers understand
+        /// the concept of running IO bound task using <![CDATA[TaskCompletionSource<T>()]]>
+        /// See more at: https://msdn.microsoft.com/en-us/library/hh873177.aspx
+        /// </remarks>
+        public static Task<TResult> RunIOBoundTaskAsync<TResult>(Func<Task<TResult>> function,
+            CancellationToken cancellationToken = default(CancellationToken),
+            TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler scheduler = null)
+            => ExecuteIOBoundTaskCore<Task<TResult>>(new Task<Task<TResult>>(function), cancellationToken,
+                continuationOptions, scheduler).Unwrap();
 
         /// <summary>
         /// Executes the task.
@@ -145,7 +166,7 @@ namespace EVEMon.Common.Helpers
         }
 
         /// <summary>
-        /// Runs the compute bound task asynchronous.
+        /// Runs the compute bound task asynchronously.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -160,7 +181,7 @@ namespace EVEMon.Common.Helpers
             => Task.Run(action, cancellationToken);
 
         /// <summary>
-        /// Runs the compute bound task asynchronous.
+        /// Runs the compute bound task asynchronously.
         /// </summary>
         /// <param name="function">The function.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -175,7 +196,7 @@ namespace EVEMon.Common.Helpers
             => Task.Run(function, cancellationToken);
 
         /// <summary>
-        /// Runs the compute bound task asynchronous.
+        /// Runs the compute bound task asynchronously.
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="function">The function.</param>
@@ -191,7 +212,7 @@ namespace EVEMon.Common.Helpers
             => Task.Run(function, cancellationToken);
 
         /// <summary>
-        /// Runs the compute bound task asynchronous.
+        /// Runs the compute bound task asynchronously.
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="function">The function.</param>

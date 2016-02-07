@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Service;
 
@@ -105,7 +106,8 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Try to retrieve the portrait from our portrait cache (%APPDATA%\cache\portraits)
-            ImageService.GetImageFromCacheAsync($"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir)
+            TaskHelper.RunIOBoundTaskAsync(
+                () => ImageService.GetImageFromCache($"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir))
                 .ContinueWith(task =>
                 {
                     Image image = task.Result;
@@ -154,6 +156,12 @@ namespace EVEMon.Common.Controls
                         return;
                     }
 
+                    // Release the updating flag
+                    m_updatingPortrait = false;
+
+                    // Update the portrait
+                    pictureBox.Image = image;
+
                     // The image was retrieved, we save it to the cache
                     SaveCharacterImageToCache(image);
 
@@ -166,19 +174,12 @@ namespace EVEMon.Common.Controls
         /// <param name="image">The portrait image.</param>
         private void SaveCharacterImageToCache(Image image)
         {
-            // Release the updating flag
-            m_updatingPortrait = false;
-
-            // Update the portrait
-            pictureBox.Image = image;
-
             if (m_character == null)
                 return;
 
             // Save to the portraits cache
-            ImageService
-                .AddImageToCacheAsync((Image)image.Clone(), $"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir)
-                .ConfigureAwait(false);
+            TaskHelper.RunIOBoundTaskAsync(
+                () => ImageService.AddImageToCache(image, $"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir));
         }
 
         #endregion
@@ -264,6 +265,13 @@ namespace EVEMon.Common.Controls
 
                 // Open the largest image and save it
                 Image image = Image.FromFile(bestFile);
+
+                // Release the updating flag
+                m_updatingPortrait = false;
+
+                // Update the portrait
+                pictureBox.Image = image;
+
                 SaveCharacterImageToCache(image);
             }
             finally

@@ -385,11 +385,11 @@ namespace EVEMon.SettingsUI
         /// <summary>
         /// Fetches the controls' values to <see cref="m_settings"/>.
         /// </summary>
-        private async Task ApplyToSettings()
+        private Task ApplyToSettings()
         {
             // If enabled validate email notification settings
             if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
-                return;
+                return Task.CompletedTask;
 
             // General - Compatibility
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
@@ -516,11 +516,11 @@ namespace EVEMon.SettingsUI
 
             // Run at startup
             if (!runAtStartupComboBox.Enabled)
-                return;
+                return Task.CompletedTask;
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey(StartupRegistryKey, true);
             if (rk == null)
-                return;
+                return Task.CompletedTask;
 
             if (runAtStartupComboBox.Checked)
             {
@@ -530,7 +530,7 @@ namespace EVEMon.SettingsUI
             else
                 rk.DeleteValue("EVEMon", false);
 
-            await Settings.ImportAsync(m_settings, true);
+            return Settings.ImportAsync(m_settings, true);
         }
 
         /// <summary>

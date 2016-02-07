@@ -147,7 +147,7 @@ namespace EVEMon.Common.Models
                 if (m_image != null)
                     return m_image;
 
-                Task.Run(() => GetItemImageAsync());
+                var _ = GetItemImageAsync();
 
                 return m_image = GetDefaultImage();
             }

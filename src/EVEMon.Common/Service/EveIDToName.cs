@@ -93,14 +93,13 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Initializes the cache from file.
         /// </summary>
-        public static Task InitializeFromFileAsync()
-            => Task.Run(() =>
-            {
-                string file = LocalXmlCache.GetFile(Filename).FullName;
+        public static void InitializeFromFile()
+        {
+            string file = LocalXmlCache.GetFile(Filename).FullName;
 
-                if (File.Exists(file) && !s_cacheList.Any())
-                    ImportCacheFile(file);
-            });
+            if (File.Exists(file) && !s_cacheList.Any())
+                ImportCacheFile(file);
+        }
 
         /// <summary>
         /// Imports the cache file.

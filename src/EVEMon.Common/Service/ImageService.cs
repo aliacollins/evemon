@@ -102,7 +102,7 @@ namespace EVEMon.Common.Service
                 return GotImage(result);
             }
 
-            await GetImageFromCacheAsync(GetCacheName(url));
+            await TaskHelper.RunIOBoundTaskAsync(() => GetImageFromCache(GetCacheName(url)));
 
             // First check whether the image exists in cache
             EveMonClient.EnsureCacheDirInit();
@@ -148,7 +148,9 @@ namespace EVEMon.Common.Service
             Image img = GotImage(result);
 
             if (img != null)
-                await AddImageToCacheAsync((Image)img.Clone(), GetCacheName(url)).ConfigureAwait(false);
+            {
+                var _ = TaskHelper.RunIOBoundTaskAsync(() => AddImageToCache(img, GetCacheName(url)));
+            }
 
             return img;
         }
@@ -159,50 +161,49 @@ namespace EVEMon.Common.Service
         /// <param name="filename">The filename.</param>
         /// <param name="directory">The directory.</param>
         /// <returns></returns>
-        internal static Task<Image> GetImageFromCacheAsync(string filename, string directory = null)
-            => Task.Run(() =>
-            {
-                // First check whether the image exists in cache
-                EveMonClient.EnsureCacheDirInit();
-                string cacheFileName = Path.Combine(directory ?? EveMonClient.EVEMonImageCacheDir, filename);
+        internal static Image GetImageFromCache(string filename, string directory = null)
+        {
+            // First check whether the image exists in cache
+            EveMonClient.EnsureCacheDirInit();
+            string cacheFileName = Path.Combine(directory ?? EveMonClient.EVEMonImageCacheDir, filename);
 
-                if (!File.Exists(cacheFileName))
-                    return null;
-
-                try
-                {
-                    // Load the data into a MemoryStream
-                    // before returning the image
-                    // to avoid file locking
-                    Image image;
-
-                    byte[] imageBytes = File.ReadAllBytes(cacheFileName);
-
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        stream.Write(imageBytes, 0, imageBytes.Length);
-                        stream.Position = 0;
-
-                        image = Image.FromStream(stream);
-                    }
-                    return image;
-                }
-                catch (ArgumentException e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                    File.Delete(cacheFileName);
-                }
-                catch (IOException e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                }
-                catch (UnauthorizedAccessException e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                }
-
+            if (!File.Exists(cacheFileName))
                 return null;
-            });
+
+            try
+            {
+                // Load the data into a MemoryStream
+                // before returning the image
+                // to avoid file locking
+                Image image;
+
+                byte[] imageBytes = File.ReadAllBytes(cacheFileName);
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    stream.Write(imageBytes, 0, imageBytes.Length);
+                    stream.Position = 0;
+
+                    image = Image.FromStream(stream);
+                }
+                return image;
+            }
+            catch (ArgumentException e)
+            {
+                ExceptionHandler.LogException(e, false);
+                File.Delete(cacheFileName);
+            }
+            catch (IOException e)
+            {
+                ExceptionHandler.LogException(e, false);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                ExceptionHandler.LogException(e, false);
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Callback used when images are downloaded.
@@ -228,32 +229,31 @@ namespace EVEMon.Common.Service
         /// <param name="filename">The filename.</param>
         /// <param name="directory">The directory.</param>
         /// <returns></returns>
-        internal static Task AddImageToCacheAsync(Image image, string filename, string directory = null)
-            => Task.Run(() =>
+        internal static void AddImageToCache(Image image, string filename, string directory = null)
+        {
+            // Saves the image file
+            try
             {
-                // Saves the image file
-                try
-                {
-                    // Write this image to the cache file
-                    EveMonClient.EnsureCacheDirInit();
-                    string cacheFileName = Path.Combine(directory ?? EveMonClient.EVEMonImageCacheDir, filename);
-                    FileHelper.OverwriteOrWarnTheUser(cacheFileName,
-                        fs =>
+                // Write this image to the cache file
+                EveMonClient.EnsureCacheDirInit();
+                string cacheFileName = Path.Combine(directory ?? EveMonClient.EVEMonImageCacheDir, filename);
+                FileHelper.OverwriteOrWarnTheUser(cacheFileName,
+                    fs =>
+                    {
+                        using (image = (Image)image.Clone())
                         {
-                            using (image)
-                            {
-                                image.Save(fs, ImageFormat.Png);
-                                fs.Flush();
-                            }
-                            return true;
-                        });
-                }
-                catch (Exception ex)
-                {
-                    ExceptionHandler.LogRethrowException(ex);
-                    throw;
-                }
-            });
+                            image.Save(fs, ImageFormat.Png);
+                            fs.Flush();
+                        }
+                        return true;
+                    });
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogRethrowException(ex);
+                throw;
+            }
+        }
 
         /// <summary>
         /// From a given url, computes a cache file name.
