@@ -7,6 +7,64 @@ namespace EVEMon.Common.Helpers
     public static class TaskHelper
     {
         /// <summary>
+        /// Runs the IO bound action asynchronously.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        public static Task RunIOBoundAsync(Action action, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var tcs = new TaskCompletionSource<object>();
+
+            try
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    tcs.TrySetCanceled(cancellationToken);
+                    return tcs.Task;
+                }
+
+                action.Invoke();
+                tcs.TrySetResult(default(object));
+            }
+            catch (Exception exc)
+            {
+                tcs.TrySetException(exc);
+            }
+
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// Runs the IO bound function asynchronously.
+        /// </summary>
+        /// <param name="function">The function.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        public static Task<TResult> RunIOBoundAsync<TResult>(Func<TResult> function, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var tcs = new TaskCompletionSource<TResult>();
+
+            try
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    tcs.TrySetCanceled(cancellationToken);
+                    return tcs.Task;
+                }
+
+                TResult result = function.Invoke();
+                tcs.TrySetResult(result);
+            }
+            catch (Exception exc)
+            {
+                tcs.TrySetException(exc);
+            }
+
+            return tcs.Task;
+        }
+
+        /// <summary>
         /// Runs the IO bound task asynchronously.
         /// </summary>
         /// <param name="action">The action.</param>
@@ -23,7 +81,7 @@ namespace EVEMon.Common.Helpers
             CancellationToken cancellationToken = default(CancellationToken),
             TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<object>(new Task(action), cancellationToken, continuationOptions, scheduler);
+            => ExecuteIOBoundTaskCore<object>(new Task(action, cancellationToken), cancellationToken, continuationOptions, scheduler);
 
         /// <summary>
         /// Runs the IO bound task asynchronously.
@@ -43,7 +101,7 @@ namespace EVEMon.Common.Helpers
             CancellationToken cancellationToken = default(CancellationToken),
             TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<object>(new Task(action, state), cancellationToken, continuationOptions, scheduler);
+            => ExecuteIOBoundTaskCore<object>(new Task(action, state, cancellationToken), cancellationToken, continuationOptions, scheduler);
 
         /// <summary>
         /// Runs the IO bound task asynchronously.
@@ -62,7 +120,7 @@ namespace EVEMon.Common.Helpers
             CancellationToken cancellationToken = default(CancellationToken),
             TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<object>(new Task<Task>(function), cancellationToken, continuationOptions, scheduler);
+            => ExecuteIOBoundTaskCore<Task>(new Task<Task>(function, cancellationToken), cancellationToken, continuationOptions, scheduler).Unwrap();
 
         /// <summary>
         /// Runs the IO bound task asynchronously.
@@ -82,7 +140,7 @@ namespace EVEMon.Common.Helpers
             CancellationToken cancellationToken = default(CancellationToken),
             TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<TResult>(new Task<TResult>(function), cancellationToken, continuationOptions, scheduler);
+            => ExecuteIOBoundTaskCore<TResult>(new Task<TResult>(function, cancellationToken), cancellationToken, continuationOptions, scheduler);
 
         /// <summary>
         /// Runs the IO bound task asynchronously.
@@ -102,7 +160,7 @@ namespace EVEMon.Common.Helpers
             CancellationToken cancellationToken = default(CancellationToken),
             TaskContinuationOptions continuationOptions = TaskContinuationOptions.ExecuteSynchronously,
             TaskScheduler scheduler = null)
-            => ExecuteIOBoundTaskCore<Task<TResult>>(new Task<Task<TResult>>(function), cancellationToken,
+            => ExecuteIOBoundTaskCore<Task<TResult>>(new Task<Task<TResult>>(function, cancellationToken), cancellationToken,
                 continuationOptions, scheduler).Unwrap();
 
         /// <summary>
@@ -127,6 +185,12 @@ namespace EVEMon.Common.Helpers
 
             try
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    tcs.TrySetCanceled(cancellationToken);
+                    return tcs.Task;
+                }
+
                 taskToRun.Start();
 
                 var genericTaskToRun = taskToRun as Task<TResult>;
