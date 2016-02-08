@@ -290,8 +290,6 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
-            this.SuspendDrawing();
-
             // Update character's 'Adorned Name' and 'Portrait' in case they have changed
             lblCharName.Text = Character.AdornedName;
             pbCharacterPortrait.Character = Character;
@@ -344,8 +342,6 @@ namespace EVEMon.Controls
 
             // Adjusts all the controls layout
             PerformCustomLayout(m_isTooltip);
-
-            this.ResumeDrawing();
         }
 
         /// <summary>
