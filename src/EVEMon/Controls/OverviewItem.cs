@@ -115,7 +115,7 @@ namespace EVEMon.Controls
             EveMonClient.SettingsChanged += EveMonClient_SettingsChanged;
             EveMonClient.TimerTick += EveMonClient_TimerTick;
             Disposed += OnDisposed;
-            
+
             UpdateFromSettings();
         }
 
@@ -161,8 +161,8 @@ namespace EVEMon.Controls
                 return;
 
             ButtonRenderer.DrawButton(e.Graphics, DisplayRectangle, m_pressed
-                                                                        ? PushButtonState.Pressed
-                                                                        : PushButtonState.Hot);
+                ? PushButtonState.Pressed
+                : PushButtonState.Hot);
             base.OnPaint(e);
         }
 
@@ -243,8 +243,8 @@ namespace EVEMon.Controls
             TrayPopupSettings trayPopupSettings = Settings.UI.SystemTrayPopup;
             MainWindowSettings mainWindowSettings = Settings.UI.MainWindow;
             PortraitSizes portraitSize = m_isTooltip
-                                             ? trayPopupSettings.PortraitSize
-                                             : mainWindowSettings.OverviewItemSize;
+                ? trayPopupSettings.PortraitSize
+                : mainWindowSettings.OverviewItemSize;
 
             // Misc fields
             m_portraitSize = Int32.Parse(portraitSize.ToString().Substring(1), CultureConstants.InvariantCulture);
@@ -252,11 +252,15 @@ namespace EVEMon.Controls
             m_showCompletionTime = !m_isTooltip || trayPopupSettings.ShowCompletionTime;
             m_showRemainingTime = !m_isTooltip || trayPopupSettings.ShowRemainingTime;
             m_showSkillInTraining = !m_isTooltip || trayPopupSettings.ShowSkillInTraining;
-            m_showWalletBalance = m_isTooltip ? trayPopupSettings.ShowWallet : mainWindowSettings.ShowOverviewWallet;
-            m_showPortrait = m_isTooltip ? trayPopupSettings.ShowPortrait : mainWindowSettings.ShowOverviewPortrait;
+            m_showWalletBalance = m_isTooltip
+                ? trayPopupSettings.ShowWallet
+                : mainWindowSettings.ShowOverviewWallet;
+            m_showPortrait = m_isTooltip
+                ? trayPopupSettings.ShowPortrait
+                : mainWindowSettings.ShowOverviewPortrait;
             m_showSkillQueueTrainingTime = m_isTooltip
-                                               ? trayPopupSettings.ShowSkillQueueTrainingTime
-                                               : mainWindowSettings.ShowOverviewSkillQueueTrainingTime;
+                ? trayPopupSettings.ShowSkillQueueTrainingTime
+                : mainWindowSettings.ShowOverviewSkillQueueTrainingTime;
 
             // Update colors
             UpdateContrastColor();
@@ -272,8 +276,8 @@ namespace EVEMon.Controls
         {
             m_settingsForeColor = (m_isTooltip && Settings.UI.SystemTrayPopup.UseIncreasedContrast)
                                   || (!m_isTooltip && Settings.UI.MainWindow.UseIncreasedContrastOnOverview)
-                                      ? Color.Black
-                                      : Color.DimGray;
+                ? Color.Black
+                : Color.DimGray;
 
             lblBalance.ForeColor = m_settingsForeColor;
             lblRemainingTime.ForeColor = m_settingsForeColor;
@@ -286,6 +290,8 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
+            this.SuspendDrawing();
+
             // Update character's 'Adorned Name' and 'Portrait' in case they have changed
             lblCharName.Text = Character.AdornedName;
             pbCharacterPortrait.Character = Character;
@@ -302,8 +308,8 @@ namespace EVEMon.Controls
 
                 // Update the completion time
                 lblCompletionTime.Text = (m_portraitSize > 80
-                                              ? String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0}", endTime)
-                                              : endTime.ToString(CultureConstants.DefaultCulture));
+                    ? String.Format(CultureConstants.DefaultCulture, "{0:ddd} {0}", endTime)
+                    : endTime.ToString(CultureConstants.DefaultCulture));
 
                 // Changes the completion time color on scheduling block
                 string blockingEntry;
@@ -338,6 +344,8 @@ namespace EVEMon.Controls
 
             // Adjusts all the controls layout
             PerformCustomLayout(m_isTooltip);
+
+            this.ResumeDrawing();
         }
 
         /// <summary>
@@ -434,18 +442,18 @@ namespace EVEMon.Controls
             // Skill queue is empty ?
             if (timeLeft > TimeSpan.FromDays(1))
             {
-                lblSkillQueueTrainingTime.Text = "Skill queue is empty";
+                lblSkillQueueTrainingTime.Text = @"Skill queue is empty";
                 return;
             }
 
             // Less than one minute ? Display seconds else display time without seconds
             string timeLeftText = (timeLeft < TimeSpan.FromMinutes(1)
-                                       ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
-                                       : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
+                ? timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)
+                : timeLeft.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas, false));
 
             lblSkillQueueTrainingTime.ForeColor = Color.Red;
             lblSkillQueueTrainingTime.Text = String.Format(CultureConstants.DefaultCulture,
-                                                           "{0} free room in skill queue", timeLeftText);
+                "{0} free room in skill queue", timeLeftText);
         }
 
         #endregion
@@ -498,7 +506,7 @@ namespace EVEMon.Controls
                 UpdateContent();
             else
             {
-                lblRemainingTime.Text = "Completed";
+                lblRemainingTime.Text = @"Completed";
                 m_hasCompletionTime = false;
                 UpdateVisibilities();
             }
@@ -556,6 +564,8 @@ namespace EVEMon.Controls
         {
             if (!Visible)
                 return;
+
+            SuspendLayout();
 
             UpdateVisibilities();
 
@@ -636,7 +646,7 @@ namespace EVEMon.Controls
             if (lblRemainingTime.Visible)
             {
                 lblRemainingTime.Font = FontFactory.GetFont(lblRemainingTime.Font.FontFamily, mediumFontSize,
-                                                            lblRemainingTime.Font.Style);
+                    lblRemainingTime.Font.Style);
                 lblRemainingTime.Location = new Point(left, top);
                 labelWidth = Math.Max(labelWidth, lblRemainingTime.PreferredWidth + rightPad);
                 labelHeight = Math.Max(labelHeight, lblRemainingTime.Font.Height);
@@ -676,6 +686,8 @@ namespace EVEMon.Controls
             Width = left + labelWidth + margin;
             m_preferredHeight = Height;
             m_preferredWidth = Width;
+
+            ResumeLayout(false);
         }
 
         /// <summary>

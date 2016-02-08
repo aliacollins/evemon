@@ -18,6 +18,7 @@ namespace EVEMon.Controls
         public event EventHandler<CharacterChangedEventArgs> CharacterClicked;
 
         private bool m_grouping;
+        private bool m_safeForWork;
 
 
         #region Constructor
@@ -126,7 +127,9 @@ namespace EVEMon.Controls
 
             // Create the order we will layout the controls
             List<Character> characters = new List<Character>();
+            m_safeForWork = Settings.UI.SafeForWork;
             m_grouping = Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview;
+
             if (m_grouping)
             {
                 characters.AddRange(EveMonClient.MonitoredCharacters.Where(x => x.IsTraining));
@@ -140,7 +143,7 @@ namespace EVEMon.Controls
             foreach (Character character in characters)
             {
                 // Retrieve the current overview item, or null if we're past the limits
-                OverviewItem currentOverviewItem = (index < overviewItems.Count ? overviewItems[index] : null);
+                OverviewItem currentOverviewItem = index < overviewItems.Count ? overviewItems[index] : null;
 
                 // Does the overview item match with the character ?
                 if ((Character)currentOverviewItem?.Tag != character)
@@ -164,6 +167,8 @@ namespace EVEMon.Controls
                 index++;
             }
 
+            this.SuspendDrawing();
+
             // Remove the remaining items
             CleanUp(items.Values);
             foreach (OverviewItem item in items.Values)
@@ -175,6 +180,8 @@ namespace EVEMon.Controls
             Controls.AddRange(overviewItems.ToArray<Control>());
 
             PerformCustomLayout();
+
+            this.ResumeDrawing();
         }
 
         /// <summary>
@@ -312,7 +319,8 @@ namespace EVEMon.Controls
             }
             finally
             {
-                ResumeLayout(true);
+                ResumeLayout(false);
+
                 labelNoCharacters.Visible = !EveMonClient.MonitoredCharacters.Any();
 
                 // Restore the scroll bar position
@@ -352,13 +360,19 @@ namespace EVEMon.Controls
         /// <param name="e"></param>
         private void EveMonClient_SettingsChanged(object sender, EventArgs e)
         {
-            overviewLoadingThrobber.State = ThrobberState.Stopped;
-            overviewLoadingThrobber.Hide();
-            labelLoading.Hide();
+            if (labelLoading.Visible)
+            {
+                overviewLoadingThrobber.State = ThrobberState.Stopped;
+                overviewLoadingThrobber.Hide();
+                labelLoading.Hide();
+            }
 
-            // Update only when grouping settings have changed
-            if (m_grouping != Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview)
+            // Update only when grouping or safe for work settings have changed
+            if (m_grouping != Settings.UI.MainWindow.PutTrainingSkillsFirstOnOverview ||
+                m_safeForWork != Settings.UI.SafeForWork)
+            {
                 UpdateContent();
+            }
         }
 
         /// <summary>
