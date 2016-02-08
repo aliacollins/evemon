@@ -95,7 +95,7 @@ namespace EVEMon.Common.Service
         /// </summary>
         public static void InitializeFromFile()
         {
-            string file = LocalXmlCache.GetFile(Filename).FullName;
+            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
 
             if (File.Exists(file) && !s_cacheList.Any())
                 ImportCacheFile(file);

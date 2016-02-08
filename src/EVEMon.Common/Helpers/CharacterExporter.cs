@@ -303,8 +303,8 @@ namespace EVEMon.Common.Helpers
             if (plan != null)
             {
                 serial.Skills.Clear();
-                serial.Skills.AddRange(character.Skills.Where(skill => skill.IsKnown || (plan.IsPlanned(skill))).Select(
-                    skill => GetMergedSkill(plan, skill)));
+                serial.Skills.AddRange(character.Skills.Where(skill => skill.IsKnown || (plan.IsPlanned(skill)))
+                    .Select(skill => GetMergedSkill(plan, skill)));
             }
 
             XmlDocument doc = (XmlDocument)Util.SerializeToXmlDocument(serial);
@@ -318,7 +318,7 @@ namespace EVEMon.Common.Helpers
         private static string ExportAsCCPXML(Character character)
         {
             // Try to use the last XML character sheet downloaded from CCP
-            XmlDocument doc = (XmlDocument)LocalXmlCache.GetCharacterXml(character.Name);
+            XmlDocument doc = (XmlDocument)LocalXmlCache.GetCharacterXml(character);
             return doc != null ? Util.GetXmlStringRepresentation(doc) : null;
         }
 

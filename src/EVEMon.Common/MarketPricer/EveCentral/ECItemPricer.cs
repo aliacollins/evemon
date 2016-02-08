@@ -78,7 +78,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             else
                 SelectedProviderName = Name;
 
-            string file = LocalXmlCache.GetFile(Filename).FullName;
+            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
 
             if ((!Loaded && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
             {

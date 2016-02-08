@@ -211,7 +211,7 @@ namespace EVEMon.Common.Models
             if (s_loaded)
                 return;
 
-            string filename = LocalXmlCache.GetFile(Filename).FullName;
+            string filename = LocalXmlCache.GetFileInfo(Filename).FullName;
 
             // Abort if the file hasn't been obtained for any reason
             if (!File.Exists(filename))

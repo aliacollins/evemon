@@ -74,7 +74,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             else
                 SelectedProviderName = Name;
 
-            string file = LocalXmlCache.GetFile(Filename).FullName;
+            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
 
             // Update the file if we don't have it or the data have expired
             if ((!Loaded && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
