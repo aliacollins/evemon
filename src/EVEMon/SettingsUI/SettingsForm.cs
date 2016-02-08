@@ -378,7 +378,7 @@ namespace EVEMon.SettingsUI
             else
             {
                 // Run at startup ?
-                runAtStartupComboBox.Checked = (rk.GetValue("EVEMon") != null);
+                runAtStartupComboBox.Checked = rk.GetValue("EVEMon") != null;
             }
         }
 
@@ -387,10 +387,6 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private Task ApplyToSettings()
         {
-            // If enabled validate email notification settings
-            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
-                return Task.CompletedTask;
-
             // General - Compatibility
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
             m_settings.UI.SafeForWork = cbWorksafeMode.Checked;
@@ -462,7 +458,11 @@ namespace EVEMon.SettingsUI
             // Notifications
             m_settings.Notifications.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
             m_settings.Notifications.SendMailAlert = mailNotificationCheckBox.Checked;
-            emailNotificationsControl.PopulateSettingsFromControls();
+
+            // Email notifications
+            // If enabled, validate email notification settings
+            if (mailNotificationCheckBox.Checked && emailNotificationsControl.ValidateChildren())
+                emailNotificationsControl.PopulateSettingsFromControls();
 
             // IGB
             m_settings.IGB.IgbServerEnabled = igbCheckBox.Checked;
@@ -516,11 +516,11 @@ namespace EVEMon.SettingsUI
 
             // Run at startup
             if (!runAtStartupComboBox.Enabled)
-                return Task.CompletedTask;
+                return Settings.ImportAsync(m_settings, true);
 
             RegistryKey rk = Registry.CurrentUser.OpenSubKey(StartupRegistryKey, true);
             if (rk == null)
-                return Task.CompletedTask;
+                return Settings.ImportAsync(m_settings, true);
 
             if (runAtStartupComboBox.Checked)
             {
