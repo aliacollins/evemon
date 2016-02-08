@@ -49,7 +49,7 @@ namespace EVEMon.Common.Models.Collections
                 }));
             }
 
-            m_isImporting = true;
+            m_isImporting = false;
         }
 
         /// <summary>
@@ -67,6 +67,7 @@ namespace EVEMon.Common.Models.Collections
         /// <summary>
         /// Gets the jumps.
         /// </summary>
+        /// <param name="asset">The asset.</param>
         /// <returns></returns>
         private int GetJumps(Asset asset)
         {

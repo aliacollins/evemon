@@ -792,7 +792,7 @@ namespace EVEMon.Common
         public static FileStream GetFileStream(string filePath, FileMode mode = FileMode.OpenOrCreate,
                                                FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
-            return new FileStream(filePath, mode, access, share);
+            return new FileStream(filePath, mode, access, share, bufferSize: 4096, useAsync: true);
         }
 
         /// <summary>

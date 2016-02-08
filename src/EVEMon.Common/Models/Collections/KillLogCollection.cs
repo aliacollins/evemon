@@ -50,7 +50,7 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         public void ImportFromCacheFile()
         {
-            string filename = LocalXmlCache.GetFile(String.Format(CultureConstants.InvariantCulture, "{0}-{1}",
+            string filename = LocalXmlCache.GetFileInfo(String.Format(CultureConstants.InvariantCulture, "{0}-{1}",
                                                                   m_ccpCharacter.Name, CCPAPICharacterMethods.KillLog)).FullName;
 
             // Abort if the file hasn't been obtained for any reason

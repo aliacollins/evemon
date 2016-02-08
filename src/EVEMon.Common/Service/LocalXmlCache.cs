@@ -1,10 +1,11 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Helpers;
+using EVEMon.Common.Models;
 
 namespace EVEMon.Common.Service
 {
@@ -16,35 +17,52 @@ namespace EVEMon.Common.Service
         private static readonly object s_syncLock = new object();
 
         /// <summary>
-        /// Gets the <see cref="System.IO.FileInfo"/> for the specified character XML.
-        /// If you really want the xml, use GetCharacterXml
+        /// Gets the <see cref="System.IO.FileInfo" /> for the specified filename.
         /// </summary>
-        /// <value></value>
-        public static FileInfo GetFile(string filename)
+        /// <param name="filename">The filename.</param>
+        /// <returns></returns>
+        public static FileInfo GetFileInfo(string filename)
         {
             lock (s_syncLock)
             {
                 EveMonClient.EnsureCacheDirInit();
-                return new FileInfo(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename)));
+
+                return new FileInfo(Path.Combine(EveMonClient.EVEMonXmlCacheDir, $"{filename}.xml"));
             }
         }
 
         /// <summary>
         /// Gets the character XML.
         /// </summary>
-        /// <param name="charName"></param>
+        /// <param name="character">The character.</param>
         /// <returns></returns>
-        public static IXPathNavigable GetCharacterXml(string charName)
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public static IXPathNavigable GetCharacterXml(Character character)
         {
-            lock (s_syncLock)
-            {
-                XmlDocument doc = new XmlDocument();
-                EveMonClient.EnsureCacheDirInit();
-                doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", charName)));
-                return doc;
-            }
+            if (character == null)
+                throw new ArgumentNullException(nameof(character));
+
+            EveMonClient.EnsureCacheDirInit();
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir, $"{character.Name}.xml"));
+            return doc;
+        }
+
+        /// <summary>
+        /// Gets the URI for the cached xml for the given character.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns></returns>
+        [Obsolete]
+        internal static Uri GetCharacterUri(Character character)
+        {
+            if (character == null)
+                throw new ArgumentNullException(nameof(character));
+
+            EveMonClient.EnsureCacheDirInit();
+
+            return new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir, $"{character.Name}.xml"));
         }
 
         /// <summary>
@@ -52,50 +70,31 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <param name="xdoc">The xml to save.</param>
-        public static void Save(string filename, IXPathNavigable xdoc)
+        public static async Task SaveAsync(string filename, IXPathNavigable xdoc)
         {
             if (xdoc == null)
-                throw new ArgumentNullException("xdoc");
+                throw new ArgumentNullException(nameof(xdoc));
 
-            lock (s_syncLock)
-            {
-                XmlDocument xmlDoc = (XmlDocument)xdoc;
-                XmlNode characterNode = xmlDoc.SelectSingleNode("//name");
-                filename = (characterNode == null ? filename : characterNode.InnerText);
+            EveMonClient.EnsureCacheDirInit();
 
-                // Writes in the target file
-                EveMonClient.EnsureCacheDirInit();
-                string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename));
-                string content = Util.GetXmlStringRepresentation(xdoc);
-                FileHelper.OverwriteOrWarnTheUser(fileName,
-                    fs =>
+            XmlDocument xmlDoc = (XmlDocument)xdoc;
+            XmlNode characterNode = xmlDoc.SelectSingleNode("//name");
+            filename = characterNode?.InnerText ?? filename;
+
+            // Writes in the target file
+            string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir, $"{filename}.xml");
+            string content = Util.GetXmlStringRepresentation(xdoc);
+            await FileHelper.OverwriteOrWarnTheUserAsync(fileName,
+                async fs =>
+                {
+                    using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                     {
-                        using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                        {
-                            writer.Write(content);
-                            writer.Flush();
-                            fs.Flush();
-                        }
-                        return true;
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Gets the URI for the cached xml for the given character.
-        /// </summary>
-        /// <param name="characterName"></param>
-        /// <returns></returns>
-        [Obsolete]
-        internal static Uri GetCharacterUri(string characterName)
-        {
-            lock (s_syncLock)
-            {
-                EveMonClient.EnsureCacheDirInit();
-                return new Uri(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", characterName)));
-            }
+                        await writer.WriteAsync(content);
+                        writer.Flush();
+                        fs.Flush();
+                    }
+                    return true;
+                });
         }
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace EVEMon.Common.Service
         /// </returns>
         internal static bool CheckFileUpToDate(string filename, DateTime updateTime, TimeSpan period)
         {
-            FileInfo file = GetFile(filename);
+            FileInfo file = GetFileInfo(filename);
             DateTime previousUpdateTime = updateTime.Subtract(period);
 
             // File is already downloaded ?

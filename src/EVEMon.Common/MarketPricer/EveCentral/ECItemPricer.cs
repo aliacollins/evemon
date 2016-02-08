@@ -78,7 +78,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             else
                 SelectedProviderName = Name;
 
-            string file = LocalXmlCache.GetFile(Filename).FullName;
+            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
 
             if ((!Loaded && !File.Exists(file)) || (Loaded && CachedUntil < DateTime.UtcNow))
             {
@@ -252,10 +252,10 @@ namespace EVEMon.Common.MarketPricer.EveCentral
 
             EveMonClient.Trace("done");
 
-            // Save the file in cache
-            Save(Filename, Util.SerializeToXmlDocument(Export()));
-
             EveMonClient.OnPricesDownloaded(null, String.Empty);
+
+            // Save the file in cache
+            Task _ = SaveAsync(Filename, Util.SerializeToXmlDocument(Export()));
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
@@ -526,15 +527,15 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Saves the document to the disk.
         /// </summary>
-        public static void SaveDocument(string filename, IXPathNavigable xmlDocument)
+        public static async Task SaveDocumentAsync(string filename, IXPathNavigable xmlDocument)
         {
             if (xmlDocument == null)
-                throw new ArgumentNullException("xmlDocument");
+                throw new ArgumentNullException(nameof(xmlDocument));
 
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
                 sfd.DefaultExt = "xml";
-                sfd.Filter = "XML (*.xml)|*.xml";
+                sfd.Filter = @"XML (*.xml)|*.xml";
                 sfd.FileName = filename;
 
                 if (sfd.ShowDialog() != DialogResult.OK)
@@ -545,13 +546,13 @@ namespace EVEMon.Common.Helpers
                     string content = Util.GetXmlStringRepresentation(xmlDocument);
 
                     // Moves to the final file
-                    FileHelper.OverwriteOrWarnTheUser(
+                    await FileHelper.OverwriteOrWarnTheUserAsync(
                         sfd.FileName,
-                        fs =>
+                        async fs =>
                             {
                                 using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                                 {
-                                    writer.Write(content);
+                                    await writer.WriteAsync(content);
                                     writer.Flush();
                                     fs.Flush();
                                 }
@@ -561,14 +562,14 @@ namespace EVEMon.Common.Helpers
                 catch (IOException err)
                 {
                     ExceptionHandler.LogException(err, true);
-                    MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
-                                    "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"There was an error writing out the file:\n\n{err.Message}",
+                                    @"Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (XmlException err)
                 {
                     ExceptionHandler.LogException(err, true);
-                    MessageBox.Show("There was an error while converting to XML format.\r\nThe message was:\r\n" + err.Message,
-                                    "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"There was an error while converting to XML format.\r\nThe message was:\r\n{err.Message}",
+                                    @"Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

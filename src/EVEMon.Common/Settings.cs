@@ -68,9 +68,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private static void EveMonClient_TimerTick(object sender, EventArgs e)
+        private static async void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            UpdateOnOneSecondTick();
+            await UpdateOnOneSecondTickAsync();
         }
 
         /// <summary>
@@ -154,11 +154,7 @@ namespace EVEMon.Common
         /// <summary>
         /// Creates new empty Settings file, overwriting the existing file.
         /// </summary>
-        public static async Task ResetAsync()
-        {
-            // Append new properties here
-            await ImportAsync(new SerializableSettings());
-        }
+        public static Task ResetAsync() => ImportAsync(new SerializableSettings());
 
         /// <summary>
         /// Asynchronous imports the provided serialization object.
@@ -170,59 +166,7 @@ namespace EVEMon.Common
         {
             EveMonClient.Trace("begin");
 
-            await Task.Run(() =>
-            {
-                // When null, we just reset
-                if (serial == null)
-                    serial = new SerializableSettings();
-
-                IsRestoring = true;
-                try
-                {
-                    // API providers
-                    EveMonClient.APIProviders.Import(serial.APIProviders);
-
-                    // User settings
-                    UI = serial.UI;
-                    G15 = serial.G15;
-                    IGB = serial.IGB;
-                    Proxy = serial.Proxy;
-                    Updates = serial.Updates;
-                    Calendar = serial.Calendar;
-                    Exportation = serial.Exportation;
-                    MarketPricer = serial.MarketPricer;
-                    Notifications = serial.Notifications;
-                    Compatibility = serial.Compatibility;
-                    LoadoutsProvider = serial.LoadoutsProvider;
-                    PortableEveInstallations = serial.PortableEveInstallations;
-                    CloudStorageServiceProvider = serial.CloudStorageServiceProvider;
-
-                    // Import the characters, API keys and plans
-                    if (!preferencesOnly)
-                    {
-                        // The above check prevents the settings form to trigger a 
-                        // characters updates since the last queried infos would be lost
-                        EveMonClient.ResetCollections();
-                        EveMonClient.Characters.Import(serial.Characters);
-                        EveMonClient.APIKeys.Import(serial.APIKeys);
-                        EveMonClient.Characters.ImportPlans(serial.Plans);
-                        EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
-                    }
-
-                    // Scheduler
-                    Scheduler.Import(serial.Scheduler);
-
-                    // Trim the data
-                    OnImportCompleted();
-
-                    // Save
-                    SaveImmediate();
-                }
-                finally
-                {
-                    IsRestoring = false;
-                }
-            });
+            await TaskHelper.RunCPUBoundTaskAsync(() => ImportInternalAsync(serial, preferencesOnly));
 
             EveMonClient.Trace("Settins.ImportAsync - done", printMethod: false);
 
@@ -231,20 +175,79 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Imports the provided serialization object.
+        /// </summary>
+        /// <param name="serial">The serial.</param>
+        /// <param name="preferencesOnly">if set to <c>true</c> [preferences only].</param>
+        private static async Task ImportInternalAsync(SerializableSettings serial, bool preferencesOnly)
+        {
+            // When null, we just reset
+            if (serial == null)
+                serial = new SerializableSettings();
+
+            IsRestoring = true;
+            try
+            {
+                // API providers
+                EveMonClient.APIProviders.Import(serial.APIProviders);
+
+                // User settings
+                UI = serial.UI;
+                G15 = serial.G15;
+                IGB = serial.IGB;
+                Proxy = serial.Proxy;
+                Updates = serial.Updates;
+                Calendar = serial.Calendar;
+                Exportation = serial.Exportation;
+                MarketPricer = serial.MarketPricer;
+                Notifications = serial.Notifications;
+                Compatibility = serial.Compatibility;
+                LoadoutsProvider = serial.LoadoutsProvider;
+                PortableEveInstallations = serial.PortableEveInstallations;
+                CloudStorageServiceProvider = serial.CloudStorageServiceProvider;
+
+                // Import the characters, API keys and plans
+                if (!preferencesOnly)
+                {
+                    // The above check prevents the settings form to trigger a 
+                    // characters updates since the last queried infos would be lost
+                    EveMonClient.ResetCollections();
+                    EveMonClient.Characters.Import(serial.Characters);
+                    EveMonClient.APIKeys.Import(serial.APIKeys);
+                    EveMonClient.Characters.ImportPlans(serial.Plans);
+                    EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
+
+                    // Trim the data
+                    OnImportCompleted();
+                }
+
+                // Scheduler
+                Scheduler.Import(serial.Scheduler);
+
+                // Save
+                await SaveImmediateAsync();
+            }
+            finally
+            {
+                IsRestoring = false;
+            }
+        }
+
+        /// <summary>
         /// Corrects the imported data and add missing stuff.
         /// </summary>
         private static void OnImportCompleted()
         {
             // Add missing notification behaviours
-            foreach (NotificationCategory category in EnumExtensions.GetValues<NotificationCategory>().Where(
-                category => !Notifications.Categories.ContainsKey(category) && category.HasHeader()))
+            foreach (NotificationCategory category in EnumExtensions.GetValues<NotificationCategory>()
+                .Where(category => !Notifications.Categories.ContainsKey(category) && category.HasHeader()))
             {
                 Notifications.Categories[category] = new NotificationCategorySettings();
             }
 
             // Add missing API methods update periods
-            foreach (Enum method in APIMethods.Methods.Where(method => method.GetUpdatePeriod() != null).Where(
-                method => !Updates.Periods.ContainsKey(method.ToString())))
+            foreach (Enum method in APIMethods.Methods.Where(method => method.GetUpdatePeriod() != null)
+                .Where(method => !Updates.Periods.ContainsKey(method.ToString())))
             {
                 Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
 
@@ -260,24 +263,24 @@ namespace EVEMon.Common
             // Removes redundant notification behaviours
             List<KeyValuePair<NotificationCategory, NotificationCategorySettings>> notifications =
                 Notifications.Categories.ToList();
-            foreach (KeyValuePair<NotificationCategory, NotificationCategorySettings> notification in notifications.Where(
-                notification => !notification.Key.HasHeader()))
+            foreach (KeyValuePair<NotificationCategory, NotificationCategorySettings> notification in notifications
+                .Where(notification => !notification.Key.HasHeader()))
             {
                 Notifications.Categories.Remove(notification.Key);
             }
 
             // Removes redundant windows locations
             List<KeyValuePair<string, WindowLocationSettings>> locations = UI.WindowLocations.ToList();
-            foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations.Where(
-                windowLocation => windowLocation.Key == "FeaturesWindow"))
+            foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations
+                .Where(windowLocation => windowLocation.Key == "FeaturesWindow"))
             {
                 UI.WindowLocations.Remove(windowLocation.Key);
             }
 
             // Removes redundant splitters
             List<KeyValuePair<string, int>> splitters = UI.Splitters.ToList();
-            foreach (KeyValuePair<string, int> splitter in splitters.Where(
-                splitter => splitter.Key == "EFTLoadoutImportationForm"))
+            foreach (KeyValuePair<string, int> splitter in splitters
+                .Where(splitter => splitter.Key == "EFTLoadoutImportationForm"))
             {
                 UI.Splitters.Remove(splitter.Key);
             }
@@ -389,7 +392,7 @@ namespace EVEMon.Common
 
             // Loading settings
             // If there are none, we create them from scratch
-            Task.WhenAll(ImportAsync(settings));
+            Task _ = ImportAsync(settings);
         }
 
         /// <summary>
@@ -442,16 +445,13 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="filename">The fully qualified filename of the settings file to load</param>
         /// <returns>The Settings object loaded</returns>
-        public static async Task RestoreAsync(string filename)
+        public static Task RestoreAsync(string filename)
         {
             // Try deserialize
             SerializableSettings settings = TryDeserializeFromBackupFile(filename, false);
 
             // Loading from file failed, we abort and keep our current settings
-            if (settings == null)
-                return;
-
-            await ImportAsync(settings);
+            return settings == null ? Task.CompletedTask : ImportAsync(settings);
         }
 
         /// <summary>
@@ -629,11 +629,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Every timer tick, checks whether we should save the settings every 10s.
         /// </summary>
-        private static void UpdateOnOneSecondTick()
+        private static async Task UpdateOnOneSecondTickAsync()
         {
             // Is a save requested and is the last save older than 10s ?
             if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
-                SaveImmediate();
+                await SaveImmediateAsync();
         }
 
         /// <summary>
@@ -652,18 +652,18 @@ namespace EVEMon.Common
         /// <summary>
         /// Saves settings immediately.
         /// </summary>
-        public static void SaveImmediate()
+        public static async Task SaveImmediateAsync()
         {
             SerializableSettings settings = Export();
 
             // Save in settings file
-            FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath,
+            await FileHelper.OverwriteOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath,
                 fs =>
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
                     xs.Serialize(fs, settings);
                     fs.Flush();
-                    return true;
+                    return Task.FromResult(true);
                 });
 
             // Reset savePending flag
@@ -675,10 +675,10 @@ namespace EVEMon.Common
         /// Copies the current Settings file to the specified location.
         /// </summary>
         /// <param name="copyFileName">The fully qualified filename of the destination file</param>
-        public static void CopySettings(string copyFileName)
+        public static async Task CopySettingsAsync(string copyFileName)
         {
             // Ensure we have the latest settings saved
-            SaveImmediate();
+            await SaveImmediateAsync();
             FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, copyFileName);
         }
 

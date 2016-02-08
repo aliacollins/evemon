@@ -421,13 +421,13 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miExportPlan_Click(object sender, EventArgs e)
+        private async void miExportPlan_Click(object sender, EventArgs e)
         {
             if (lbPlanList.SelectedItems.Count != 1)
                 return;
 
             Plan plan = (Plan)lbPlanList.SelectedItems[0].Tag;
-            UIHelper.ExportPlan(plan);
+            await UIHelper.ExportPlanAsync(plan);
         }
 
         /// <summary>
@@ -435,9 +435,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miExportCharacterSkillsAsPlan_Click(object sender, EventArgs e)
+        private async void miExportCharacterSkillsAsPlan_Click(object sender, EventArgs e)
         {
-            UIHelper.ExportCharacterSkillsAsPlan(m_character);
+            await UIHelper.ExportCharacterSkillsAsPlanAsync(m_character);
         }
 
         /// <summary>
@@ -472,10 +472,10 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miSavePlans_Click(object sender, EventArgs e)
+        private async void miSavePlans_Click(object sender, EventArgs e)
         {
-            IEnumerable<Plan> plans = (lbPlanList.Items.Cast<ListViewItem>().Select(item => item.Tag as Plan));
-            UIHelper.SavePlans(plans);
+            IList<Plan> plans = lbPlanList.Items.Cast<ListViewItem>().Select(item => item.Tag as Plan).ToList();
+            await UIHelper.SavePlansAsync(plans);
         }
 
         /// <summary>

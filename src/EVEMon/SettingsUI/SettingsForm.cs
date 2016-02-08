@@ -8,7 +8,6 @@ using System.Linq;
 using System.Net;
 using System.Resources;
 using System.Security;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CloudStorageServices;
@@ -21,6 +20,7 @@ using EVEMon.Common.Factories;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.MarketPricer;
 using EVEMon.Common.Models;
+using EVEMon.Common.Models.Comparers;
 using EVEMon.Common.Resources.Skill_Select;
 using EVEMon.Common.Serialization.Settings;
 using EVEMon.Common.SettingsObjects;
@@ -33,7 +33,7 @@ namespace EVEMon.SettingsUI
         private const string StartupRegistryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 
         private readonly SerializableSettings m_settings;
-        private readonly SerializableSettings m_oldSettings;
+        private SerializableSettings m_oldSettings;
         private bool m_isLoading;
 
 
@@ -57,6 +57,22 @@ namespace EVEMon.SettingsUI
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Gets a value indicating whether the settings have changed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the settings have changed; otherwise, <c>false</c>.
+        /// </value>
+        private bool SettingsChanged
+        {
+            get
+            {
+                var comparer = new SerializableSettingsComparer();
+                return !comparer.Equals(m_settings, m_oldSettings);
+            }
+        }
 
 
         #region Inherited Events
@@ -156,23 +172,23 @@ namespace EVEMon.SettingsUI
             SetSkillPlannerSettings();
 
             // Obsolete plan entry removal behaviour
-            alwaysAskRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                                            ObsoleteEntryRemovalBehaviour.AlwaysAsk);
-            removeAllRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                                            ObsoleteEntryRemovalBehaviour.RemoveAll);
-            removeConfirmedRadioButton.Checked = (m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
-                                                  ObsoleteEntryRemovalBehaviour.RemoveConfirmed);
+            alwaysAskRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
+                                           ObsoleteEntryRemovalBehaviour.AlwaysAsk;
+            removeAllRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
+                                           ObsoleteEntryRemovalBehaviour.RemoveAll;
+            removeConfirmedRadioButton.Checked = m_settings.UI.PlanWindow.ObsoleteEntryRemovalBehaviour ==
+                                                 ObsoleteEntryRemovalBehaviour.RemoveConfirmed;
 
             // Skill Browser Icon Set
-            cbSkillIconSet.SelectedIndex = (m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count &&
+            cbSkillIconSet.SelectedIndex = m_settings.UI.SkillBrowser.IconsGroupIndex <= cbSkillIconSet.Items.Count &&
                                             m_settings.UI.SkillBrowser.IconsGroupIndex > 0
                 ? m_settings.UI.SkillBrowser.IconsGroupIndex - 1
-                : 0);
+                : 0;
 
             // System tray popup/tooltip
-            trayPopupRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm);
-            trayTooltipRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.WindowsTooltip);
-            trayPopupDisabledRadio.Checked = (m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.Disabled);
+            trayPopupRadio.Checked = m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.PopupForm;
+            trayTooltipRadio.Checked = m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.WindowsTooltip;
+            trayPopupDisabledRadio.Checked = m_settings.UI.SystemTrayPopup.Style == TrayPopupStyles.Disabled;
 
             // Calendar
             SetCalendarSettings();
@@ -203,44 +219,49 @@ namespace EVEMon.SettingsUI
 
         /// <summary>
         /// Occurs when the user click "Cancel".
-        /// We restore the old settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            // Update settings
-            await Settings.ImportAsync(m_oldSettings, true);
-
-            // Close
             Close();
         }
 
         /// <summary>
         /// Occurs when the user click "OK".
-        /// We set up the new settings.
+        /// We set up the new settings if they have changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private async void btnOk_Click(object sender, EventArgs e)
         {
             // Return settings
-            await ApplyToSettings();
+            ApplyToSettings();
 
-            // Close
+            if (SettingsChanged)
+                await Settings.ImportAsync(m_settings, true);
+
             Close();
         }
 
         /// <summary>
         /// Occurs when the user click "Apply".
-        /// We set up the new settings.
+        /// We set up the new settings if they have changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private async void applyButton_Click(object sender, EventArgs e)
         {
-            // Return settings
-            await ApplyToSettings();
+            ApplyToSettings();
+
+            if (!SettingsChanged)
+                return;
+
+            // Import the new settings
+            await Settings.ImportAsync(m_settings, true);
+
+            // Refresh the old settings
+            m_oldSettings = Settings.Export();
         }
 
         #endregion
@@ -253,9 +274,9 @@ namespace EVEMon.SettingsUI
         /// </summary>
         private void SetTrayIconSettings()
         {
-            rbSystemTrayOptionsNever.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled);
-            rbSystemTrayOptionsAlways.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
-            rbSystemTrayOptionsMinimized.Checked = (m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized);
+            rbSystemTrayOptionsNever.Checked = m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
+            rbSystemTrayOptionsAlways.Checked = m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible;
+            rbSystemTrayOptionsMinimized.Checked = m_settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized;
 
             switch (m_settings.UI.MainWindowCloseBehaviour)
             {
@@ -378,19 +399,15 @@ namespace EVEMon.SettingsUI
             else
             {
                 // Run at startup ?
-                runAtStartupComboBox.Checked = (rk.GetValue("EVEMon") != null);
+                runAtStartupComboBox.Checked = rk.GetValue("EVEMon") != null;
             }
         }
 
         /// <summary>
         /// Fetches the controls' values to <see cref="m_settings"/>.
         /// </summary>
-        private async Task ApplyToSettings()
+        private void ApplyToSettings()
         {
-            // If enabled validate email notification settings
-            if (mailNotificationCheckBox.Checked && !emailNotificationsControl.ValidateChildren())
-                return;
-
             // General - Compatibility
             m_settings.Compatibility = (CompatibilityMode)Math.Max(0, compatibilityCombo.SelectedIndex);
             m_settings.UI.SafeForWork = cbWorksafeMode.Checked;
@@ -462,7 +479,11 @@ namespace EVEMon.SettingsUI
             // Notifications
             m_settings.Notifications.PlaySoundOnSkillCompletion = cbPlaySoundOnSkillComplete.Checked;
             m_settings.Notifications.SendMailAlert = mailNotificationCheckBox.Checked;
-            emailNotificationsControl.PopulateSettingsFromControls();
+
+            // Email notifications
+            // If enabled, validate email notification settings
+            if (mailNotificationCheckBox.Checked && emailNotificationsControl.ValidateChildren())
+                emailNotificationsControl.PopulateSettingsFromControls();
 
             // IGB
             m_settings.IGB.IgbServerEnabled = igbCheckBox.Checked;
@@ -529,8 +550,6 @@ namespace EVEMon.SettingsUI
             }
             else
                 rk.DeleteValue("EVEMon", false);
-
-            await Settings.ImportAsync(m_settings, true);
         }
 
         /// <summary>
@@ -939,7 +958,7 @@ namespace EVEMon.SettingsUI
                 "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                 Path.DirectorySeparatorChar,
                 AppDomain.CurrentDomain.BaseDirectory,
-                (cbSkillIconSet.SelectedIndex + 1),
+                cbSkillIconSet.SelectedIndex + 1,
                 groupname)))
                 ||
                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
@@ -985,7 +1004,7 @@ namespace EVEMon.SettingsUI
                         "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
                         Path.DirectorySeparatorChar,
                         AppDomain.CurrentDomain.BaseDirectory,
-                        (cbSkillIconSet.SelectedIndex + 1),
+                        cbSkillIconSet.SelectedIndex + 1,
                         groupname));
 
                     basicx = groupReader.GetEnumerator();

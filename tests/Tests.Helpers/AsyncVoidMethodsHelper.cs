@@ -32,8 +32,8 @@ namespace Tests.Helpers
                         .Select(param => param.ParameterType)
                         .SequenceEqual(new[] { typeof(EventArgs) }))
                 .Where(method =>
-                    !method.GetParameters().Skip(1)
-                        .All(param => param.ParameterType.IsSubclassOf(typeof(EventArgs))))
+                    !method.GetParameters()
+                        .Any(param => param.ParameterType.IsSubclassOf(typeof(EventArgs))))
                 .Where(method => method.ReturnType == typeof(void));
 
         /// <summary>

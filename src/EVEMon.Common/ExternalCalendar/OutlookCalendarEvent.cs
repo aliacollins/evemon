@@ -79,7 +79,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="queuePosition">The queue position.</param>
         /// <param name="lastSkillInQueue">if set to <c>true</c> skill is the last in queue.</param>
         internal override Task AddOrUpdateEventAsync(bool eventExists, int queuePosition, bool lastSkillInQueue)
-            => Task.Run(() =>
+            => TaskHelper.RunIOBoundTaskAsync(() =>
             {
                 AppointmentItem eventItem = eventExists
                     ? (AppointmentItem)Events[0]
@@ -161,7 +161,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// Pull all the events and populate the event array.
         /// </summary>
         internal override Task ReadEventsAsync()
-            => Task.Run(() =>
+            => TaskHelper.RunIOBoundTaskAsync(() =>
             {
                 Events.Clear();
                 Events.AddRange(GetEventItems());
@@ -172,7 +172,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// </summary>
         /// <param name="eventIndex">The event index.</param>
         internal override Task DeleteEventAsync(int eventIndex)
-            => Task.Run(() =>
+            => TaskHelper.RunIOBoundTaskAsync(() =>
             {
                 ((AppointmentItem)Events[eventIndex]).Delete();
             });

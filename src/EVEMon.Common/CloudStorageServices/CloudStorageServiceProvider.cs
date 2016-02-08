@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 using EVEMon.Common.Constants;
 using EVEMon.Common.CustomEventArgs;
 using EVEMon.Common.Extensions;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization;
 using EVEMon.Common.Threading;
 
@@ -357,12 +358,12 @@ namespace EVEMon.Common.CloudStorageServices
         /// <summary>
         /// Synchronously checks that API authentication is valid.
         /// </summary>
-        /// <remarks>Because only Google is correctly implementing the use of "<![CDATA[ Task<T>.Result ]]>"
+        /// <remarks>Because only Google and Dropbox are correctly implementing the use of "<![CDATA[ Task<T>.Result ]]>"
         /// we are forced to use "<![CDATA[ Task.Run ]]>" to avoid deadlocks.
         /// When the rest of the providers implement it correctly it should be removed.
         /// </remarks>
         public bool CheckAPIAuthIsValid()
-            => !Task.Run(CheckAuthenticationAsync).Result.HasError;
+            => !TaskHelper.RunCPUBoundTaskAsync(CheckAuthenticationAsync).Result.HasError;
 
         /// <summary>
         /// Asynchronously checks that API authentication is valid.

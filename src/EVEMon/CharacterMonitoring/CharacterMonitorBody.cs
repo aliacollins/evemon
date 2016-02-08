@@ -169,7 +169,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
             }
         }
 
@@ -226,7 +226,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
             }
         }
 
@@ -447,6 +447,7 @@ namespace EVEMon.CharacterMonitoring
         private void UpdateNotifications()
         {
             notificationList.Notifications = EveMonClient.Notifications.Where(x => x.Sender == m_character);
+            Refresh();
         }
 
         #endregion
@@ -1558,6 +1559,7 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Sets the character.
         /// </summary>
+        /// <param name="character">The character.</param>
         /// <value>The character.</value>
         public void SetCharacter(Character character)
         {

@@ -111,7 +111,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
             }
         }
 
@@ -254,7 +254,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
             }
         }
 
@@ -337,8 +337,8 @@ namespace EVEMon.CharacterMonitoring
         /// <summary>
         /// Sets the character.
         /// </summary>
-        /// <value>The character.</value>
         /// <param name="character">The character.</param>
+        /// <value>The character.</value>
         public void SetCharacter(Character character)
         {
             m_character = character;

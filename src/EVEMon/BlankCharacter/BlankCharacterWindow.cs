@@ -82,7 +82,7 @@ namespace EVEMon.BlankCharacter
             {
                     // Save blank character
                 case DialogResult.None:
-                    BlankCharacterUIHelper.Save(OnCharacterSaved);
+                    await BlankCharacterUIHelper.SaveAsync(OnCharacterSaved);
                     break;
                     // Add blank character
                 case DialogResult.OK:

@@ -89,7 +89,7 @@ namespace EVEMon.Common.Service
         /// </summary>
         private static void EnsureImportation()
         {
-            string file = LocalXmlCache.GetFile(Filename).FullName;
+            string file = LocalXmlCache.GetFileInfo(Filename).FullName;
 
             // Update the file if we don't have it or the data have expired
             if (!File.Exists(file) || (s_loaded && s_cachedUntil < DateTime.UtcNow))
@@ -190,7 +190,7 @@ namespace EVEMon.Common.Service
             EveMonClient.OnNotificationRefTypesUpdated();
 
             // Save the file in cache
-            LocalXmlCache.Save(Filename, result.XmlDocument);
+            Task _ = LocalXmlCache.SaveAsync(Filename, result.XmlDocument);
         }
     }
 }

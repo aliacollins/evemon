@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -28,47 +27,46 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Initialize static properties.
         /// </summary>
-        internal static Task LoadAsync()
-            => Task.Run(() =>
+        internal static void Load()
+        {
+            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.PropertiesDatafile)))
+                return;
+
+            PropertiesDatafile datafile =
+                Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile,
+                    Util.LoadXslt(Properties.Resources.DatafilesXSLT));
+
+            // Fetch deserialized data
+            foreach (EvePropertyCategory category in datafile.Categories.Select(
+                srcCategory => new EvePropertyCategory(srcCategory)))
             {
-                if (!File.Exists(Datafile.GetFullPath(DatafileConstants.PropertiesDatafile)))
-                    return;
+                s_categoriesByID[category.ID] = category;
+                s_categoriesByName[category.Name] = category;
 
-                PropertiesDatafile datafile =
-                    Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile,
-                        Util.LoadXslt(Properties.Resources.DatafilesXSLT));
-
-                // Fetch deserialized data
-                foreach (EvePropertyCategory category in datafile.Categories.Select(
-                    srcCategory => new EvePropertyCategory(srcCategory)))
+                // Store properties
+                foreach (EveProperty property in category)
                 {
-                    s_categoriesByID[category.ID] = category;
-                    s_categoriesByName[category.Name] = category;
-
-                    // Store properties
-                    foreach (EveProperty property in category)
-                    {
-                        s_propertiesByID[property.ID] = property;
-                        s_propertiesByName[property.Name] = property;
-                    }
+                    s_propertiesByID[property.ID] = property;
+                    s_propertiesByName[property.Name] = property;
                 }
+            }
 
-                // Set visibility in ships browser
-                foreach (int propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs.Where(
-                    propertyID => s_propertiesByID.ContainsKey(propertyID)))
-                {
-                    s_propertiesByID[propertyID].AlwaysVisibleForShips = true;
-                }
+            // Set visibility in ships browser
+            foreach (int propertyID in DBConstants.AlwaysVisibleForShipPropertyIDs.Where(
+                propertyID => s_propertiesByID.ContainsKey(propertyID)))
+            {
+                s_propertiesByID[propertyID].AlwaysVisibleForShips = true;
+            }
 
-                // Set hide if default for properties
-                // we want to hide in browser if they just show their default value
-                foreach (int propertyID in DBConstants.HideIfDefaultPropertyIDs.Where(
-                    propertyID => s_propertiesByID.ContainsKey(propertyID)))
-                {
-                    s_propertiesByID[propertyID].HideIfDefault = true;
-                }
-            });
-        
+            // Set hide if default for properties
+            // we want to hide in browser if they just show their default value
+            foreach (int propertyID in DBConstants.HideIfDefaultPropertyIDs.Where(
+                propertyID => s_propertiesByID.ContainsKey(propertyID)))
+            {
+                s_propertiesByID[propertyID].HideIfDefault = true;
+            }
+        }
+
         #endregion
 
 

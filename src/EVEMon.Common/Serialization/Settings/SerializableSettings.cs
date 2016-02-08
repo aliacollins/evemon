@@ -5,7 +5,7 @@ using EVEMon.Common.SettingsObjects;
 namespace EVEMon.Common.Serialization.Settings
 {
     /// <summary>
-    /// This class is a temporary representation of the <see cref="Settings"/> class for serialization purposes through automatic serialization
+    /// This class is a temporary representation of the <see cref="EVEMon.Common.Settings" /> class for serialization purposes through automatic serialization
     /// </summary>
     [XmlRoot("Settings")]
     public sealed class SerializableSettings

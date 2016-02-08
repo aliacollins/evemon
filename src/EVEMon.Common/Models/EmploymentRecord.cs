@@ -99,7 +99,7 @@ namespace EVEMon.Common.Models
                 if (m_image != null)
                     return m_image;
 
-                Task.Run(() => GetImageAsync());
+                Task _ = GetImageAsync();
 
                 return m_image = Properties.Resources.DefaultCorporationImage32;
             }

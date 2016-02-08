@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.Collections.Global;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Data;
 using EVEMon.Common.Models;
 using EVEMon.Common.Models.Extended;
 using EVEMon.Common.Net;
@@ -54,10 +53,13 @@ namespace EVEMon.Common
 
             Trace("begin");
 
+            // Load static data
+            GlobalDatafileCollection.Load();
+
             // Network monitoring (connection availability changes)
             NetworkMonitor.Initialize();
 
-            // APIMethodsEnum collection initialization (always before members instatiation)
+            // APIMethods collection initialization (always before members instatiation)
             APIMethods.Initialize();
 
             // Members instantiations
@@ -69,23 +71,6 @@ namespace EVEMon.Common
             Datafiles = new GlobalDatafileCollection();
             APIKeys = new GlobalAPIKeyCollection();
             EVEServer = new EveServer();
-
-            // Load static data
-            // This is the optimal loading time order
-            // (min order to follow : 
-            // skills before anything else,
-            // items before blueprints and certs,
-            // certs before masteries)
-            Trace("Datafiles.Load - begin", printMethod: false);
-            StaticSkills.LoadAsync();
-            StaticProperties.LoadAsync();
-            // Must always run synchronously as blueprints and certificates depend on it
-            StaticItems.LoadAsync().GetAwaiter().GetResult();
-            StaticBlueprints.LoadAsync();
-            // Must always run synchronously as masteries depend on it
-            StaticCertificates.LoadAsync().GetAwaiter().GetResult();
-            StaticMasteries.LoadAsync();
-            Trace("Datafiles.Load - done", printMethod: false);
 
             Trace("done");
         }
@@ -107,6 +92,7 @@ namespace EVEMon.Common
         {
             Closed = true;
             Dispatcher.Shutdown();
+            Trace();
         }
 
         /// <summary>
