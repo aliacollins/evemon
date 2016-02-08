@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Interfaces;
@@ -292,7 +291,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Processed the queried character's skill queue information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnCharacterSheetUpdated(CCPAPIResult<SerializableAPICharacterSheet> result)
+        private async void OnCharacterSheetUpdated(CCPAPIResult<SerializableAPICharacterSheet> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -309,14 +308,14 @@ namespace EVEMon.Common.QueryMonitor
             // Query the Character's info
             QueryCharacterInfo();
 
-            // Save the file to our cache
-            LocalXmlCache.Save(result.Result.Name, result.XmlDocument);
-
             // Imports the data
             m_ccpCharacter.Import(result);
 
             // Notify for insufficient balance
             m_ccpCharacter.NotifyInsufficientBalance();
+
+            // Save the file to our cache
+            await LocalXmlCache.SaveAsync(result.Result.Name, result.XmlDocument);
         }
 
         /// <summary>
@@ -804,16 +803,15 @@ namespace EVEMon.Common.QueryMonitor
             if (result.HasError)
                 return;
 
-            // Save the file to our cache
-            string filename = String.Format(CultureConstants.InvariantCulture, "{0}-{1}", m_ccpCharacter.Name,
-                                            CCPAPICharacterMethods.KillLog);
-            LocalXmlCache.Save(filename, result.XmlDocument);
-
             // Import the data
             m_ccpCharacter.KillLog.Import(result.Result.Kills);
 
             // Fires the event regarding kill log update
             EveMonClient.OnCharacterKillLogUpdated(m_ccpCharacter);
+
+            // Save the file to our cache
+            string filename = $"{m_ccpCharacter.Name}-{CCPAPICharacterMethods.KillLog}";
+            LocalXmlCache.SaveAsync(filename, result.XmlDocument).ConfigureAwait(false);
         }
 
         /// <summary>

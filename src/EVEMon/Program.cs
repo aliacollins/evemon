@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CloudStorageServices;
@@ -32,6 +33,15 @@ namespace EVEMon
         /// </summary>
         [STAThread]
         private static void Main()
+        {
+            StartupAsync().Wait();
+        }
+
+        /// <summary>
+        /// Starts up the application asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        private static async Task StartupAsync()
         {
             // Quits if another instance already exists
             if (!IsInstanceUnique)
@@ -68,7 +78,7 @@ namespace EVEMon
 
             // Initialization
             EveMonClient.Initialize();
-            TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
+            Task _ = TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
             Settings.Initialize();
 
             // Initialize G15
@@ -93,12 +103,11 @@ namespace EVEMon
             finally
             {
                 // Save before we quit
-                Settings.SaveImmediate();
-                EveIDToName.SaveImmediate();
+                await Task.WhenAll(Settings.SaveImmediateAsync(), EveIDToName.SaveImmediateAsync());
 
                 // Stop the one-second timer right now
                 EveMonClient.Shutdown();
-                EveMonClient.Trace("Closed", false);
+                EveMonClient.Trace("Closed", printMethod: false);
                 EveMonClient.StopTraceLogging();
             }
         }
@@ -106,10 +115,11 @@ namespace EVEMon
 
         #region Properties
 
-        /// <summary>
-        /// Ensures that only one instance of EVEMon is run at once.
-        /// </summary>
-        private static bool IsInstanceUnique
+                /// <summary>
+                /// Ensures that only one instance of EVEMon is run at once.
+                /// </summary>
+            private static
+            bool IsInstanceUnique
         {
             get
             {

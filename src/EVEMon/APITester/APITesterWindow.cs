@@ -379,7 +379,7 @@ namespace EVEMon.ApiTester
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void SaveButton_Click(object sender, EventArgs e)
+        private async void SaveButton_Click(object sender, EventArgs e)
         {
             IXPathNavigable result = null;
 
@@ -404,7 +404,7 @@ namespace EVEMon.ApiTester
                 return;
 
             string filename = Path.GetFileNameWithoutExtension(WebBrowser.Url.AbsoluteUri);
-            ApiTesterUIHelper.SaveDocument(filename, result);
+            await ApiTesterUIHelper.SaveDocumentAsync(filename, result);
         }
 
         /// <summary>

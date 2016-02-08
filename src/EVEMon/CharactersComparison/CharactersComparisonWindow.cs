@@ -454,13 +454,13 @@ namespace EVEMon.CharactersComparison
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.ToolStripItemClickedEventArgs"/> instance containing the event data.</param>
-        private void characterListContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private async void characterListContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             Character character = e.ClickedItem.Tag as Character;
             characterListContextMenu.Close();
 
             if (character != null)
-                UIHelper.ExportCharacterSkillsAsPlan(character);
+                await UIHelper.ExportCharacterSkillsAsPlanAsync(character);
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace EVEMon.CharactersComparison
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.ToolStripItemClickedEventArgs"/> instance containing the event data.</param>
-        private void exportSelectedSkillsAsPlanFromToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private async void exportSelectedSkillsAsPlanFromToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             Character character = e.ClickedItem.Tag as Character;
             characterInfoContextMenu.Close();
@@ -512,10 +512,10 @@ namespace EVEMon.CharactersComparison
                 return;
 
             IEnumerable<Skill> skills = lvCharacterInfo.SelectedItems.Cast<ListViewItem>().SelectMany(
-                item => character.Skills.Where(skill => skill.Name == item.Text && skill.Level != 0));
+                item => character.Skills.Where(skill => skill.Name == item.Text && skill.Level != 0)).ToList();
 
             if (skills.Any())
-                UIHelper.ExportCharacterSkillsAsPlan(character, skills);
+                await UIHelper.ExportCharacterSkillsAsPlanAsync(character, skills);
         }
 
         /// <summary>

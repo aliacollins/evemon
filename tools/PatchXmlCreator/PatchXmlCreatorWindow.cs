@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using EVEMon.Common;
@@ -586,19 +587,19 @@ namespace EVEMon.PatchXmlCreator
         /// <summary>
         /// Creates the patch xml file.
         /// </summary>
-        private void SaveFile()
+        private async Task SaveFileAsync()
         {
             string patch = ExportPatchXml();
             string filenamePath = Helper.GetPatchFilePath;
 
             try
             {
-                FileHelper.OverwriteOrWarnTheUser(filenamePath,
-                    fs =>
+                await FileHelper.OverwriteOrWarnTheUserAsync(filenamePath,
+                    async fs =>
                     {
                         using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
                         {
-                            sw.Write(patch);
+                            await sw.WriteAsync(patch);
                             sw.Flush();
                             fs.Flush();
                         }
@@ -692,9 +693,9 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnCreate_Click(object sender, EventArgs e)
+        private async void btnCreate_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            await SaveFileAsync();
         }
 
         /// <summary>

@@ -39,9 +39,9 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private static void EveMonClient_TimerTick(object sender, EventArgs e)
+        private static async void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            UpdateOnOneSecondTick();
+            await UpdateOnOneSecondTickAsync();
         }
 
         /// <summary>
@@ -248,11 +248,11 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Every timer tick, checks whether we should save the list every 10s.
         /// </summary>
-        private static void UpdateOnOneSecondTick()
+        private static async Task UpdateOnOneSecondTickAsync()
         {
             // Is a save requested and is the last save older than 10s ?
             if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
-                SaveImmediate();
+                await SaveImmediateAsync();
         }
 
         /// <summary>
@@ -270,10 +270,10 @@ namespace EVEMon.Common.Service
         /// <summary>
         /// Saves this cache list to a file.
         /// </summary>
-        public static void SaveImmediate()
+        public static async Task SaveImmediateAsync()
         {
             // Save in file
-            LocalXmlCache.Save(Filename, Util.SerializeToXmlDocument(Export()));
+            await LocalXmlCache.SaveAsync(Filename, Util.SerializeToXmlDocument(Export()));
 
             // Reset savePending flag
             s_lastSaveTime = DateTime.UtcNow;

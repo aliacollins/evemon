@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EVEMon.Common.Helpers
@@ -41,7 +42,7 @@ namespace EVEMon.Common.Helpers
                                "You may have insufficient rights or a synchronization may be occuring. Choosing to " +
                                (allowIgnore ? "abort" : "cancel") + " will make EVEMon quit.";
 
-                    DialogResult result = MessageBox.Show(message, "Failed to read a file",
+                    DialogResult result = MessageBox.Show(message, @"Failed to read a file",
                                                           allowIgnore
                                                                ? MessageBoxButtons.AbortRetryIgnore
                                                                : MessageBoxButtons.RetryCancel,
@@ -73,17 +74,17 @@ namespace EVEMon.Common.Helpers
         /// if the user denied to remove the read-only attribute or 
         /// if he didn't have the permissions to write the file;
         /// true otherwise.</returns>
-        public static void OverwriteOrWarnTheUser(string destFileName, Func<Stream, bool> writeContentFunc)
+        public static async Task OverwriteOrWarnTheUserAsync(string destFileName, Func<Stream, Task<bool>> writeContentFunc)
         {
             if (writeContentFunc == null)
-                throw new ArgumentNullException("writeContentFunc");
+                throw new ArgumentNullException(nameof(writeContentFunc));
 
             string tempFileName = Path.GetTempFileName();
             try
             {
                 using (FileStream fs = Util.GetFileStream(tempFileName, FileMode.Open))
                 {
-                    if (!writeContentFunc(fs))
+                    if (!await writeContentFunc(fs))
                         return;
                 }
 
@@ -151,7 +152,7 @@ namespace EVEMon.Common.Helpers
                                "You may have insufficient rights or a synchronization may be occuring. " +
                                "Choosing to abort will make EVEMon quit.";
 
-                    DialogResult result = MessageBox.Show(message, "Failed to write over a file",
+                    DialogResult result = MessageBox.Show(message, @"Failed to write over a file",
                                                           MessageBoxButtons.AbortRetryIgnore,
                                                           MessageBoxIcon.Error);
 
@@ -174,19 +175,9 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="filename">The file to make writable.</param>
         /// <returns>False if file exists, is readonly and the user denied permission to make it writable; true otherwise.</returns>
-        public static bool EnsureWritable(string filename)
+        private static bool EnsureWritable(string filename)
         {
             FileInfo file = new FileInfo(filename);
-            return EnsureWritable(file);
-        }
-
-        /// <summary>
-        /// Ensures the given file is writable.
-        /// </summary>
-        /// <param name="file">The file to make writable.</param>
-        /// <returns>False if file exists, is readonly and the user denied permission to make it writable; true otherwise.</returns>
-        private static bool EnsureWritable(FileInfo file)
-        {
             return !file.Exists || TryMakeWritable(file);
         }
 
@@ -236,7 +227,7 @@ namespace EVEMon.Common.Helpers
                                "you will be prompted again.";
 
                     // Display the message box
-                    DialogResult result = MessageBox.Show(message, "Allow EVEMon to make its files writable",
+                    DialogResult result = MessageBox.Show(message, @"Allow EVEMon to make its files writable",
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Error);
 

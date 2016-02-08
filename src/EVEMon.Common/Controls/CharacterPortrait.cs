@@ -5,9 +5,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
-using EVEMon.Common.Helpers;
 using EVEMon.Common.Models;
 using EVEMon.Common.Service;
 
@@ -106,9 +106,8 @@ namespace EVEMon.Common.Controls
                 return;
 
             // Try to retrieve the portrait from our portrait cache (%APPDATA%\cache\portraits)
-            TaskHelper.RunIOBoundTaskAsync(
-                () => ImageService.GetImageFromCache($"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir))
-                .ContinueWith(task =>
+            ImageService.GetImageFromCacheAsync($"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir)
+                .ContinueWith(async task =>
                 {
                     Image image = task.Result;
                     if (image != null)
@@ -119,7 +118,7 @@ namespace EVEMon.Common.Controls
 
                     // The image does not exist in cache, we try to retrieve it from CCP
                     pictureBox.Image = pictureBox.InitialImage;
-                    UpdateCharacterImageFromCCP();
+                    await UpdateCharacterImageFromCCPAsync();
 
                 }, EveMonClient.CurrentSynchronizationContext);
         }
@@ -132,7 +131,7 @@ namespace EVEMon.Common.Controls
         /// then download the url if no image was found in cache.</item>
         /// </list>
         /// </summary>
-        private void UpdateCharacterImageFromCCP()
+        private async Task UpdateCharacterImageFromCCPAsync()
         {
             Cursor.Current = Cursors.WaitCursor;
             if (m_updatingPortrait)
@@ -144,42 +143,37 @@ namespace EVEMon.Common.Controls
             if (m_character.CharacterID == UriCharacter.BlankCharacterID)
                 return;
 
-            ImageService.GetCharacterImageAsync(m_character.CharacterID)
-                .ContinueWith(task =>
-                {
-                    Image image = task.Result;
-                    Cursor.Current = Cursors.Default;
+            Image image = await ImageService.GetCharacterImageAsync(m_character.CharacterID);
 
-                    if (image == null)
-                    {
-                        m_updatingPortrait = false;
-                        return;
-                    }
+            Cursor.Current = Cursors.Default;
 
-                    // Release the updating flag
-                    m_updatingPortrait = false;
+            if (image == null)
+            {
+                m_updatingPortrait = false;
+                return;
+            }
 
-                    // Update the portrait
-                    pictureBox.Image = image;
+            // Release the updating flag
+            m_updatingPortrait = false;
 
-                    // The image was retrieved, we save it to the cache
-                    SaveCharacterImageToCache(image);
+            // Update the portrait
+            pictureBox.Image = image;
 
-                }, EveMonClient.CurrentSynchronizationContext);
+            // The image was retrieved, we save it to the cache
+            await SaveCharacterImageToCacheAsync(image);
         }
 
         /// <summary>
         /// Save the specified image to the EVEMon cache as this character's portrait.
         /// </summary>
         /// <param name="image">The portrait image.</param>
-        private void SaveCharacterImageToCache(Image image)
+        private async Task SaveCharacterImageToCacheAsync(Image image)
         {
             if (m_character == null)
                 return;
 
             // Save to the portraits cache
-            TaskHelper.RunIOBoundTaskAsync(
-                () => ImageService.AddImageToCache(image, $"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir));
+            await ImageService.AddImageToCacheAsync(image, $"{m_character.Guid}.png", EveMonClient.EVEMonPortraitCacheDir);
         }
 
         #endregion
@@ -190,7 +184,7 @@ namespace EVEMon.Common.Controls
         /// <summary>
         /// Download the image from the EVE cache (in EVE Online client installation folder).
         /// </summary>
-        private void UpdateCharacterFromEVECache()
+        private async Task UpdateCharacterFromEVECacheAsync()
         {
             m_updatingPortrait = true;
             try
@@ -272,7 +266,7 @@ namespace EVEMon.Common.Controls
                 // Update the portrait
                 pictureBox.Image = image;
 
-                SaveCharacterImageToCache(image);
+                await SaveCharacterImageToCacheAsync(image);
             }
             finally
             {
@@ -329,9 +323,9 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void miUpdatePicture_Click(object sender, EventArgs e)
+        private async void miUpdatePicture_Click(object sender, EventArgs e)
         {
-            UpdateCharacterImageFromCCP();
+            await UpdateCharacterImageFromCCPAsync();
         }
 
         /// <summary>
@@ -339,9 +333,9 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void miUpdatePictureFromEVECache_Click(object sender, EventArgs e)
+        private async void miUpdatePictureFromEVECache_Click(object sender, EventArgs e)
         {
-            UpdateCharacterFromEVECache();
+            await UpdateCharacterFromEVECacheAsync();
         }
 
         /// <summary>

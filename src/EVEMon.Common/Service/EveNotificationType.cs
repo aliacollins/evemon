@@ -190,7 +190,7 @@ namespace EVEMon.Common.Service
             EveMonClient.OnNotificationRefTypesUpdated();
 
             // Save the file in cache
-            LocalXmlCache.Save(Filename, result.XmlDocument);
+            Task _ = LocalXmlCache.SaveAsync(Filename, result.XmlDocument);
         }
     }
 }

@@ -68,9 +68,9 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private static void EveMonClient_TimerTick(object sender, EventArgs e)
+        private static async void EveMonClient_TimerTick(object sender, EventArgs e)
         {
-            UpdateOnOneSecondTick();
+            await UpdateOnOneSecondTickAsync();
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace EVEMon.Common
         {
             EveMonClient.Trace("begin");
 
-            await TaskHelper.RunCPUBoundTaskAsync(() => ImportInternal(serial, preferencesOnly));
+            await TaskHelper.RunCPUBoundTaskAsync(() => ImportInternalAsync(serial, preferencesOnly));
 
             EveMonClient.Trace("Settins.ImportAsync - done", printMethod: false);
 
@@ -179,7 +179,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="serial">The serial.</param>
         /// <param name="preferencesOnly">if set to <c>true</c> [preferences only].</param>
-        private static void ImportInternal(SerializableSettings serial, bool preferencesOnly)
+        private static async Task ImportInternalAsync(SerializableSettings serial, bool preferencesOnly)
         {
             // When null, we just reset
             if (serial == null)
@@ -225,7 +225,7 @@ namespace EVEMon.Common
                 OnImportCompleted();
 
                 // Save
-                SaveImmediate();
+                await SaveImmediateAsync();
             }
             finally
             {
@@ -392,7 +392,7 @@ namespace EVEMon.Common
 
             // Loading settings
             // If there are none, we create them from scratch
-            var _ = ImportAsync(settings);
+            Task _ = ImportAsync(settings);
         }
 
         /// <summary>
@@ -629,11 +629,11 @@ namespace EVEMon.Common
         /// <summary>
         /// Every timer tick, checks whether we should save the settings every 10s.
         /// </summary>
-        private static void UpdateOnOneSecondTick()
+        private static async Task UpdateOnOneSecondTickAsync()
         {
             // Is a save requested and is the last save older than 10s ?
             if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
-                SaveImmediate();
+                await SaveImmediateAsync();
         }
 
         /// <summary>
@@ -652,18 +652,18 @@ namespace EVEMon.Common
         /// <summary>
         /// Saves settings immediately.
         /// </summary>
-        public static void SaveImmediate()
+        public static async Task SaveImmediateAsync()
         {
             SerializableSettings settings = Export();
 
             // Save in settings file
-            FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath,
+            await FileHelper.OverwriteOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath,
                 fs =>
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableSettings));
                     xs.Serialize(fs, settings);
                     fs.Flush();
-                    return true;
+                    return Task.FromResult(true);
                 });
 
             // Reset savePending flag
@@ -675,10 +675,10 @@ namespace EVEMon.Common
         /// Copies the current Settings file to the specified location.
         /// </summary>
         /// <param name="copyFileName">The fully qualified filename of the destination file</param>
-        public static void CopySettings(string copyFileName)
+        public static async Task CopySettingsAsync(string copyFileName)
         {
             // Ensure we have the latest settings saved
-            SaveImmediate();
+            await SaveImmediateAsync();
             FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, copyFileName);
         }
 
