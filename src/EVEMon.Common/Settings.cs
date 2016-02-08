@@ -216,13 +216,13 @@ namespace EVEMon.Common
                     EveMonClient.APIKeys.Import(serial.APIKeys);
                     EveMonClient.Characters.ImportPlans(serial.Plans);
                     EveMonClient.MonitoredCharacters.Import(serial.MonitoredCharacters);
+
+                    // Trim the data
+                    OnImportCompleted();
                 }
 
                 // Scheduler
                 Scheduler.Import(serial.Scheduler);
-
-                // Trim the data
-                OnImportCompleted();
 
                 // Save
                 await SaveImmediateAsync();
@@ -239,15 +239,15 @@ namespace EVEMon.Common
         private static void OnImportCompleted()
         {
             // Add missing notification behaviours
-            foreach (NotificationCategory category in EnumExtensions.GetValues<NotificationCategory>().Where(
-                category => !Notifications.Categories.ContainsKey(category) && category.HasHeader()))
+            foreach (NotificationCategory category in EnumExtensions.GetValues<NotificationCategory>()
+                .Where(category => !Notifications.Categories.ContainsKey(category) && category.HasHeader()))
             {
                 Notifications.Categories[category] = new NotificationCategorySettings();
             }
 
             // Add missing API methods update periods
-            foreach (Enum method in APIMethods.Methods.Where(method => method.GetUpdatePeriod() != null).Where(
-                method => !Updates.Periods.ContainsKey(method.ToString())))
+            foreach (Enum method in APIMethods.Methods.Where(method => method.GetUpdatePeriod() != null)
+                .Where(method => !Updates.Periods.ContainsKey(method.ToString())))
             {
                 Updates.Periods.Add(method.ToString(), method.GetUpdatePeriod().DefaultPeriod);
 
@@ -263,24 +263,24 @@ namespace EVEMon.Common
             // Removes redundant notification behaviours
             List<KeyValuePair<NotificationCategory, NotificationCategorySettings>> notifications =
                 Notifications.Categories.ToList();
-            foreach (KeyValuePair<NotificationCategory, NotificationCategorySettings> notification in notifications.Where(
-                notification => !notification.Key.HasHeader()))
+            foreach (KeyValuePair<NotificationCategory, NotificationCategorySettings> notification in notifications
+                .Where(notification => !notification.Key.HasHeader()))
             {
                 Notifications.Categories.Remove(notification.Key);
             }
 
             // Removes redundant windows locations
             List<KeyValuePair<string, WindowLocationSettings>> locations = UI.WindowLocations.ToList();
-            foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations.Where(
-                windowLocation => windowLocation.Key == "FeaturesWindow"))
+            foreach (KeyValuePair<string, WindowLocationSettings> windowLocation in locations
+                .Where(windowLocation => windowLocation.Key == "FeaturesWindow"))
             {
                 UI.WindowLocations.Remove(windowLocation.Key);
             }
 
             // Removes redundant splitters
             List<KeyValuePair<string, int>> splitters = UI.Splitters.ToList();
-            foreach (KeyValuePair<string, int> splitter in splitters.Where(
-                splitter => splitter.Key == "EFTLoadoutImportationForm"))
+            foreach (KeyValuePair<string, int> splitter in splitters
+                .Where(splitter => splitter.Key == "EFTLoadoutImportationForm"))
             {
                 UI.Splitters.Remove(splitter.Key);
             }
