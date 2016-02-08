@@ -211,10 +211,10 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
 
             EveMonClient.Trace("done");
 
-            // Save the file in cache
-            Save(Filename, Util.SerializeToXmlDocument(result.Result));
-
             EveMonClient.OnPricesDownloaded(null, String.Empty);
+
+            // Save the file in cache
+            Task _ = SaveAsync(Filename, Util.SerializeToXmlDocument(result.Result));
         }
 
         #endregion

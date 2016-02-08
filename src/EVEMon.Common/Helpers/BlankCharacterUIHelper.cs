@@ -258,7 +258,7 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Saves the blank character.
         /// </summary>
-        public static void Save(Action callback)
+        public static async Task SaveAsync(Action callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -267,8 +267,8 @@ namespace EVEMon.Common.Helpers
 
             using (SaveFileDialog fileDialog = new SaveFileDialog())
             {
-                fileDialog.Title = "Save Blank Character";
-                fileDialog.Filter = "Blank Character CCPXML (*.xml) | *.xml";
+                fileDialog.Title = @"Save Blank Character";
+                fileDialog.Filter = @"Blank Character CCPXML (*.xml) | *.xml";
                 fileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.xml", serial.Name);
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
@@ -278,12 +278,12 @@ namespace EVEMon.Common.Helpers
 
                 XmlDocument xmlDoc = (XmlDocument)Util.SerializeToXmlDocument(serial);
                 string content = Util.GetXmlStringRepresentation(xmlDoc);
-                FileHelper.OverwriteOrWarnTheUser(fileDialog.FileName,
-                    fs =>
+                await FileHelper.OverwriteOrWarnTheUserAsync(fileDialog.FileName,
+                    async fs =>
                     {
                         using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                         {
-                            writer.Write(content);
+                            await writer.WriteAsync(content);
                             writer.Flush();
                             fs.Flush();
                         }

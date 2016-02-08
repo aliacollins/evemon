@@ -144,10 +144,10 @@ namespace EVEMon.Common.Models
             if (s_queryPending || fileUpToDate)
                 return;
 
+            s_queryPending = true;
+
             EveMonClient.APIProviders.CurrentProvider
                 .QueryMethodAsync<SerializableAPIEveFactionalWarfareStats>(CCPAPIGenericMethods.EVEFactionalWarfareStats, OnUpdated);
-
-            s_queryPending = true;
         }
 
         /// <summary>
@@ -175,9 +175,6 @@ namespace EVEMon.Common.Models
 
             EveMonClient.Notifications.InvalidateAPIError();
 
-            // Save the file to our cache
-            LocalXmlCache.Save(Filename, result.XmlDocument);
-
             // Deserialize the result
             Import(result.Result);
 
@@ -186,6 +183,9 @@ namespace EVEMon.Common.Models
 
             // Notify the subscribers
             EveMonClient.OnEveFactionalWarfareStatsUpdated();
+
+            // Save the file to our cache
+            LocalXmlCache.SaveAsync(Filename, result.XmlDocument).ConfigureAwait(false);
         }
 
         #endregion

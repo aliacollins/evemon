@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
@@ -26,7 +27,7 @@ namespace EVEMon.Common.Helpers
         /// Saves the plans to a file.
         /// </summary>
         /// <param name="plans">The plans.</param>
-        public static void SavePlans(IEnumerable<Plan> plans)
+        public static async Task SavePlansAsync(IList<Plan> plans)
         {
             Character character = (Character)plans.First().Character;
 
@@ -34,8 +35,8 @@ namespace EVEMon.Common.Helpers
             using (SaveFileDialog sfdSave = new SaveFileDialog())
             {
                 sfdSave.FileName = String.Format(CultureConstants.DefaultCulture, "{0} - Plans Backup", character.Name);
-                sfdSave.Title = "Save to File";
-                sfdSave.Filter = "EVEMon Plans Backup Format (*.epb)|*.epb";
+                sfdSave.Title = @"Save to File";
+                sfdSave.Filter = @"EVEMon Plans Backup Format (*.epb)|*.epb";
                 sfdSave.FilterIndex = (int)PlanFormat.Emp;
 
                 if (sfdSave.ShowDialog() == DialogResult.Cancel)
@@ -46,15 +47,15 @@ namespace EVEMon.Common.Helpers
                     string content = PlanIOHelper.ExportAsXML(plans);
 
                     // Moves to the final file
-                    FileHelper.OverwriteOrWarnTheUser(
+                    await FileHelper.OverwriteOrWarnTheUserAsync(
                         sfdSave.FileName,
-                        fs =>
+                        async fs =>
                             {
                                 // Emp is actually compressed xml
                                 Stream stream = new GZipStream(fs, CompressionMode.Compress);
                                 using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
                                 {
-                                    writer.Write(content);
+                                    await writer.WriteAsync(content);
                                     writer.Flush();
                                     stream.Flush();
                                     fs.Flush();
@@ -65,8 +66,8 @@ namespace EVEMon.Common.Helpers
                 catch (IOException err)
                 {
                     ExceptionHandler.LogException(err, false);
-                    MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
-                                    "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"There was an error writing out the file:\n\n{err.Message}",
+                                    @"Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -75,12 +76,12 @@ namespace EVEMon.Common.Helpers
         /// Displays the plan exportation window and then exports it.
         /// </summary>
         /// <param name="plan"></param>
-        public static void ExportPlan(Plan plan)
+        public static async Task ExportPlanAsync(Plan plan)
         {
             if (plan == null)
-                throw new ArgumentNullException("plan");
+                throw new ArgumentNullException(nameof(plan));
             
-            ExportPlan(plan, (Character)plan.Character);
+            await ExportPlanAsync(plan, (Character)plan.Character);
         }
 
         /// <summary>
@@ -88,18 +89,17 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="selectedSkills">The selected skills.</param>
-        public static void ExportCharacterSkillsAsPlan(Character character, IEnumerable<Skill> selectedSkills = null)
+        public static async Task ExportCharacterSkillsAsPlanAsync(Character character, IEnumerable<Skill> selectedSkills = null)
         {
             if (character == null)
-                throw new ArgumentNullException("character");
+                throw new ArgumentNullException(nameof(character));
 
             // Create a character without any skill
             CharacterScratchpad scratchpad = new CharacterScratchpad(character);
             scratchpad.ClearSkills();
 
             // Create a new plan
-            Plan plan = new Plan(scratchpad);
-            plan.Name = "Skills Plan";
+            Plan plan = new Plan(scratchpad) { Name = "Skills Plan" };
 
             IEnumerable<Skill> skills = selectedSkills ?? character.Skills.Where(skill => skill.IsPublic);
 
@@ -109,7 +109,7 @@ namespace EVEMon.Common.Helpers
                 plan.PlanTo(skill, skill.Level);
             }
 
-            ExportPlan(plan, character);
+            await ExportPlanAsync(plan, character);
         }
 
         /// <summary>
@@ -117,10 +117,10 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="plan"></param>
         /// <param name="character"></param>
-        private static void ExportPlan(Plan plan, Character character)
+        private static async Task ExportPlanAsync(Plan plan, Character character)
         {
             if (plan == null)
-                throw new ArgumentNullException("plan");
+                throw new ArgumentNullException(nameof(plan));
 
             // Assemble an initial filename and remove prohibited characters
             string planSaveName = String.Format(CultureConstants.DefaultCulture, "{0} - {1}", character.Name, plan.Name);
@@ -136,9 +136,9 @@ namespace EVEMon.Common.Helpers
             using (SaveFileDialog sfdSave = new SaveFileDialog())
             {
                 sfdSave.FileName = planSaveName;
-                sfdSave.Title = "Save to File";
+                sfdSave.Title = @"Save to File";
                 sfdSave.Filter =
-                    "EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
+                    @"EVEMon Plan Format (*.emp)|*.emp|XML  Format (*.xml)|*.xml|Text Format (*.txt)|*.txt";
                 sfdSave.FilterIndex = (int)PlanFormat.Emp;
 
                 if (sfdSave.ShowDialog() == DialogResult.Cancel)
@@ -169,9 +169,9 @@ namespace EVEMon.Common.Helpers
                     }
 
                     // Moves to the final file
-                    FileHelper.OverwriteOrWarnTheUser(
+                    await FileHelper.OverwriteOrWarnTheUserAsync(
                         sfdSave.FileName,
-                        fs =>
+                        async fs =>
                             {
                                 Stream stream = fs;
                                 // Emp is actually compressed text
@@ -180,7 +180,7 @@ namespace EVEMon.Common.Helpers
 
                                 using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
                                 {
-                                    writer.Write(content);
+                                    await writer.WriteAsync(content);
                                     writer.Flush();
                                     stream.Flush();
                                     fs.Flush();
@@ -191,8 +191,8 @@ namespace EVEMon.Common.Helpers
                 catch (IOException err)
                 {
                     ExceptionHandler.LogException(err, true);
-                    MessageBox.Show("There was an error writing out the file:\n\n" + err.Message,
-                                    "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"There was an error writing out the file:\n\n{err.Message}",
+                                    @"Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -230,7 +230,7 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="character">The character.</param>
         /// <param name="plan">The plan.</param>
-        public static void ExportCharacter(Character character, Plan plan = null)
+        public static async Task ExportCharacterAsync(Character character, Plan plan = null)
         {
             if (character == null)
                 throw new ArgumentNullException("character");
@@ -240,13 +240,12 @@ namespace EVEMon.Common.Helpers
             // Open the dialog box
             using (SaveFileDialog characterSaveDialog = new SaveFileDialog())
             {
-                characterSaveDialog.Title = String.Format(CultureConstants.InvariantCulture, "Save {0}Character Info",
-                                                          isAfterPlanExport ? "After Plan " : String.Empty);
+                characterSaveDialog.Title = $"Save {(isAfterPlanExport ? "After Plan " : String.Empty)}Character Info";
                 characterSaveDialog.Filter =
-                    "Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml";
+                    @"Text Format|*.txt|CHR Format (EFT)|*.chr|HTML Format|*.html|XML Format (EVEMon)|*.xml";
 
                 if (!isAfterPlanExport)
-                    characterSaveDialog.Filter += "|XML Format (CCP API)|*.xml|PNG Image|*.png";
+                    characterSaveDialog.Filter += @"|XML Format (CCP API)|*.xml|PNG Image|*.png";
 
                 characterSaveDialog.FileName = String.Format(CultureConstants.InvariantCulture, "{0}{1}",
                                                              character.Name,
@@ -268,14 +267,14 @@ namespace EVEMon.Common.Helpers
                     CharacterSaveFormat format = (CharacterSaveFormat)characterSaveDialog.FilterIndex;
 
                     // Save character with the chosen format to our file
-                    FileHelper.OverwriteOrWarnTheUser(
+                    await FileHelper.OverwriteOrWarnTheUserAsync(
                         characterSaveDialog.FileName,
-                        fs =>
+                        async fs =>
                             {
                                 if (format == CharacterSaveFormat.PNG)
                                 {
-                                    Bitmap bmp = CharacterMonitorScreenshot;
-                                    bmp.Save(fs, ImageFormat.Png);
+                                    Image image = CharacterMonitorScreenshot;
+                                    image.Save(fs, ImageFormat.Png);
                                     fs.Flush();
                                     return true;
                                 }
@@ -284,14 +283,14 @@ namespace EVEMon.Common.Helpers
                                 if ((format == CharacterSaveFormat.CCPXML) && string.IsNullOrEmpty(content))
                                 {
                                     MessageBox.Show(
-                                        "This character has never been downloaded from CCP, cannot find it in the XML cache.",
-                                        "Cannot export the character", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        @"This character has never been downloaded from CCP, cannot find it in the XML cache.",
+                                        @"Cannot export the character", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                     return false;
                                 }
 
                                 using (StreamWriter sw = new StreamWriter(fs))
                                 {
-                                    sw.Write(content);
+                                    await sw.WriteAsync(content);
                                     sw.Flush();
                                     fs.Flush();
                                 }
@@ -302,7 +301,7 @@ namespace EVEMon.Common.Helpers
                 catch (IOException exc)
                 {
                     ExceptionHandler.LogException(exc, true);
-                    MessageBox.Show("A problem occurred during exportation. The operation has not been completed.");
+                    MessageBox.Show(@"A problem occurred during exportation. The operation has not been completed.");
                 }
             }
         }
@@ -317,13 +316,13 @@ namespace EVEMon.Common.Helpers
                                  Action<ToolStripMenuItem, Plan> initialize)
         {
             if (plans == null)
-                throw new ArgumentNullException("plans");
+                throw new ArgumentNullException(nameof(plans));
 
             if (list == null)
-                throw new ArgumentNullException("list");
+                throw new ArgumentNullException(nameof(list));
 
             if (initialize == null)
-                throw new ArgumentNullException("initialize");
+                throw new ArgumentNullException(nameof(initialize));
 
             //Scroll through plans
             foreach (Plan plan in plans)
@@ -344,9 +343,9 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         internal static object ShowNoSupportMessage()
         {
-            MessageBox.Show("The file is probably from an EVEMon version prior to 1.3.0.\n" +
-                            "This type of file is no longer supported.",
-                            "File type not supported", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"The file is probably from an EVEMon version prior to 1.3.0.{Environment.NewLine}" +
+                            @"This type of file is no longer supported.",
+                            @"File type not supported", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             return null;
         }

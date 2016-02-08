@@ -102,7 +102,7 @@ namespace EVEMon.Common.Service
                 return GotImage(result);
             }
 
-            await TaskHelper.RunIOBoundTaskAsync(() => GetImageFromCache(GetCacheName(url)));
+            await GetImageFromCacheAsync(GetCacheName(url));
 
             // First check whether the image exists in cache
             EveMonClient.EnsureCacheDirInit();
@@ -121,7 +121,7 @@ namespace EVEMon.Common.Service
 
                     using (MemoryStream stream = new MemoryStream())
                     {
-                        stream.Write(imageBytes, 0, imageBytes.Length);
+                        await stream.WriteAsync(imageBytes, 0, imageBytes.Length);
                         stream.Position = 0;
 
                         image = Image.FromStream(stream);
@@ -149,7 +149,7 @@ namespace EVEMon.Common.Service
 
             if (img != null)
             {
-                var _ = TaskHelper.RunIOBoundTaskAsync(() => AddImageToCache(img, GetCacheName(url)));
+                await AddImageToCacheAsync(img, GetCacheName(url));
             }
 
             return img;
@@ -161,7 +161,7 @@ namespace EVEMon.Common.Service
         /// <param name="filename">The filename.</param>
         /// <param name="directory">The directory.</param>
         /// <returns></returns>
-        internal static Image GetImageFromCache(string filename, string directory = null)
+        internal static async Task<Image> GetImageFromCacheAsync(string filename, string directory = null)
         {
             // First check whether the image exists in cache
             EveMonClient.EnsureCacheDirInit();
@@ -181,7 +181,7 @@ namespace EVEMon.Common.Service
 
                 using (MemoryStream stream = new MemoryStream())
                 {
-                    stream.Write(imageBytes, 0, imageBytes.Length);
+                    await stream.WriteAsync(imageBytes, 0, imageBytes.Length);
                     stream.Position = 0;
 
                     image = Image.FromStream(stream);
@@ -229,7 +229,7 @@ namespace EVEMon.Common.Service
         /// <param name="filename">The filename.</param>
         /// <param name="directory">The directory.</param>
         /// <returns></returns>
-        internal static void AddImageToCache(Image image, string filename, string directory = null)
+        internal static async Task AddImageToCacheAsync(Image image, string filename, string directory = null)
         {
             // Saves the image file
             try
@@ -237,7 +237,7 @@ namespace EVEMon.Common.Service
                 // Write this image to the cache file
                 EveMonClient.EnsureCacheDirInit();
                 string cacheFileName = Path.Combine(directory ?? EveMonClient.EVEMonImageCacheDir, filename);
-                FileHelper.OverwriteOrWarnTheUser(cacheFileName,
+                await FileHelper.OverwriteOrWarnTheUserAsync(cacheFileName,
                     fs =>
                     {
                         using (image = (Image)image.Clone())
@@ -245,7 +245,7 @@ namespace EVEMon.Common.Service
                             image.Save(fs, ImageFormat.Png);
                             fs.Flush();
                         }
-                        return true;
+                        return Task.FromResult(true);
                     });
             }
             catch (Exception ex)

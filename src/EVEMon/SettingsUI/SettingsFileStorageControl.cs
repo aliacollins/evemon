@@ -151,7 +151,7 @@ namespace EVEMon.SettingsUI
             throbber.State = ThrobberState.Rotating;
             throbber.Visible = true;
 
-            Settings.SaveImmediate();
+            await Settings.SaveImmediateAsync();
 
             Task uploadSettingsFileAsync = Provider?.UploadSettingsFileAsync();
             if (uploadSettingsFileAsync != null)

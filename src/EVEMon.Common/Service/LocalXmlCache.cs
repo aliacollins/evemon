@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using EVEMon.Common.Constants;
@@ -39,8 +40,8 @@ namespace EVEMon.Common.Service
         {
             lock (s_syncLock)
             {
-                XmlDocument doc = new XmlDocument();
                 EveMonClient.EnsureCacheDirInit();
+                XmlDocument doc = new XmlDocument();
                 doc.Load(Path.Combine(EveMonClient.EVEMonXmlCacheDir,
                     String.Format(CultureConstants.DefaultCulture, "{0}.xml", charName)));
                 return doc;
@@ -52,34 +53,31 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <param name="xdoc">The xml to save.</param>
-        public static void Save(string filename, IXPathNavigable xdoc)
+        public static async Task SaveAsync(string filename, IXPathNavigable xdoc)
         {
             if (xdoc == null)
-                throw new ArgumentNullException("xdoc");
+                throw new ArgumentNullException(nameof(xdoc));
 
-            lock (s_syncLock)
-            {
-                XmlDocument xmlDoc = (XmlDocument)xdoc;
-                XmlNode characterNode = xmlDoc.SelectSingleNode("//name");
-                filename = (characterNode == null ? filename : characterNode.InnerText);
+            XmlDocument xmlDoc = (XmlDocument)xdoc;
+            XmlNode characterNode = xmlDoc.SelectSingleNode("//name");
+            filename = characterNode?.InnerText ?? filename;
 
-                // Writes in the target file
-                EveMonClient.EnsureCacheDirInit();
-                string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir,
-                    String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename));
-                string content = Util.GetXmlStringRepresentation(xdoc);
-                FileHelper.OverwriteOrWarnTheUser(fileName,
-                    fs =>
+            // Writes in the target file
+            EveMonClient.EnsureCacheDirInit();
+            string fileName = Path.Combine(EveMonClient.EVEMonXmlCacheDir,
+                String.Format(CultureConstants.DefaultCulture, "{0}.xml", filename));
+            string content = Util.GetXmlStringRepresentation(xdoc);
+            await FileHelper.OverwriteOrWarnTheUserAsync(fileName,
+                async fs =>
+                {
+                    using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                     {
-                        using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                        {
-                            writer.Write(content);
-                            writer.Flush();
-                            fs.Flush();
-                        }
-                        return true;
-                    });
-            }
+                        await writer.WriteAsync(content);
+                        writer.Flush();
+                        fs.Flush();
+                    }
+                    return true;
+                });
         }
 
         /// <summary>

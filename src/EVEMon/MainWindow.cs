@@ -1060,7 +1060,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
+        private async void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
             // Notify the user and prompt him
             if (m_isShowingUpdateWindow)
@@ -1074,7 +1074,7 @@ namespace EVEMon
                     m_isUpdating = true;
 
                     // Save the settings to make sure we don't lose anything
-                    Settings.SaveImmediate();
+                    await Settings.SaveImmediateAsync();
                     Close();
                 }
             }
@@ -1097,7 +1097,7 @@ namespace EVEMon
             using (DataUpdateNotifyForm f = new DataUpdateNotifyForm(e))
             {
                 if (f.ShowDialog() == DialogResult.OK)
-                    await RestartApplication();
+                    await RestartApplicationAsync();
             }
 
             m_isShowingDataUpdateWindow = false;
@@ -1107,10 +1107,10 @@ namespace EVEMon
         /// <summary>
         /// Triggers a restart of EVEMon.
         /// </summary>
-        private async Task RestartApplication()
+        private async Task RestartApplicationAsync()
         {
             // Save the settings to make sure we don't lose anything
-            Settings.SaveImmediate();
+            await Settings.SaveImmediateAsync();
 
             // Try to save settings to cloud storage service provider
             bool canExit = await TasksSucceeded(TryUploadToCloudStorageProvider());
@@ -1232,14 +1232,14 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveCharacterInfosMenuItem_Click(object sender, EventArgs e)
+        private async void saveCharacterInfosMenuItem_Click(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
             if (character == null)
                 return;
 
             UIHelper.CharacterMonitorScreenshot = GetCurrentMonitor().GetCharacterScreenshot();
-            UIHelper.ExportCharacter(character);
+            await UIHelper.ExportCharacterAsync(character);
         }
 
         /// <summary>
@@ -1247,7 +1247,7 @@ namespace EVEMon
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void saveSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Prompts the user for a location
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -1255,7 +1255,7 @@ namespace EVEMon
 
             // Copy settings if OK
             if (result == DialogResult.OK)
-                Settings.CopySettings(saveFileDialog.FileName);
+                await Settings.CopySettingsAsync(saveFileDialog.FileName);
         }
 
         /// <summary>

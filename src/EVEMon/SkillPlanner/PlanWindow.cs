@@ -721,9 +721,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmiPlan_Click(object sender, EventArgs e)
+        private async void tsmiPlan_Click(object sender, EventArgs e)
         {
-            UIHelper.ExportPlan(m_plan);
+            await UIHelper.ExportPlanAsync(m_plan);
         }
 
         /// <summary>
@@ -731,9 +731,9 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsmiAfterPlanCharacter_Click(object sender, EventArgs e)
+        private async void tsmiAfterPlanCharacter_Click(object sender, EventArgs e)
         {
-            UIHelper.ExportCharacter(Character, m_plan);
+            await UIHelper.ExportCharacterAsync(Character, m_plan);
         }
 
         /// <summary>
