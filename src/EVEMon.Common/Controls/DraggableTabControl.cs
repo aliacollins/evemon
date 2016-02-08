@@ -150,7 +150,7 @@ namespace EVEMon.Common.Controls
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
                 base.OnDragDrop(e);
             }
         }

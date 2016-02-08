@@ -248,7 +248,7 @@ namespace EVEMon.PatchXmlCreator
                 // Update the message of each data file control
                 UpdateDatafilesMessage();
 
-                ResumeLayout();
+                ResumeLayout(false);
             }
 
             CenterToScreen();

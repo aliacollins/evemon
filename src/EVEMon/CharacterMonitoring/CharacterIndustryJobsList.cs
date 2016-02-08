@@ -1233,7 +1233,7 @@ namespace EVEMon.CharacterMonitoring
                                                                    ? industryExpPanelControl.HeaderHeight
                                                                    : Pad);
 
-            industryExpPanelControl.ResumeLayout();
+            industryExpPanelControl.ResumeLayout(false);
         }
 
 
@@ -1332,7 +1332,7 @@ namespace EVEMon.CharacterMonitoring
                 label.MouseClick += OnExpandablePanelMouseClick;
             }
 
-            industryExpPanelControl.ResumeLayout();
+            industryExpPanelControl.ResumeLayout(false);
         }
 
         /// <summary>

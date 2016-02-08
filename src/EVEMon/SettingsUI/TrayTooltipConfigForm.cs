@@ -192,7 +192,7 @@ namespace EVEMon.SettingsUI
         {
             SuspendLayout();
             tbTooltipString.ReadOnly = !custom;
-            ResumeLayout();
+            ResumeLayout(false);
         }
 
         /// <summary>

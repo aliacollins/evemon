@@ -1186,7 +1186,7 @@ namespace EVEMon.CharacterMonitoring
                                                                  ? marketExpPanelControl.HeaderHeight
                                                                  : Pad);
 
-            marketExpPanelControl.ResumeLayout();
+            marketExpPanelControl.ResumeLayout(false);
         }
 
         /// <summary>
@@ -1344,7 +1344,7 @@ namespace EVEMon.CharacterMonitoring
                 label.MouseClick += OnExpandablePanelMouseClick;
             }
 
-            marketExpPanelControl.ResumeLayout();
+            marketExpPanelControl.ResumeLayout(false);
         }
 
         /// <summary>

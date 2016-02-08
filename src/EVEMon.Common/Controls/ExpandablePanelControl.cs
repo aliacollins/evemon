@@ -131,7 +131,7 @@ namespace EVEMon.Common.Controls
                 m_tsmiSeparator,
                 m_tsmiSelectAnim
             });
-            m_contextMenuStrip.ResumeLayout();
+            m_contextMenuStrip.ResumeLayout(false);
 
             // Subscribe events
             m_tsmiExpandCollapse.Click += tsmiExpandCollapse_Click;

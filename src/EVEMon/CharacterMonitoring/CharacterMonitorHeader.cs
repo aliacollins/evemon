@@ -140,7 +140,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
             }
         }
 
@@ -216,7 +216,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
             }
         }
 
@@ -241,7 +241,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
             }
         }
 
@@ -279,7 +279,7 @@ namespace EVEMon.CharacterMonitoring
             }
             finally
             {
-                ResumeLayout();
+                ResumeLayout(false);
             }
         }
 
