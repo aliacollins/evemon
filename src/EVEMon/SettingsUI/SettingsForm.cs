@@ -219,22 +219,17 @@ namespace EVEMon.SettingsUI
 
         /// <summary>
         /// Occurs when the user click "Cancel".
-        /// We restore the old settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            // Update settings
-            await Settings.ImportAsync(m_oldSettings, true);
-
-            // Close
             Close();
         }
 
         /// <summary>
         /// Occurs when the user click "OK".
-        /// We set up the new settings.
+        /// We set up the new settings if they have changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -246,13 +241,12 @@ namespace EVEMon.SettingsUI
             if (SettingsChanged)
                 await Settings.ImportAsync(m_settings, true);
 
-            // Close
             Close();
         }
 
         /// <summary>
         /// Occurs when the user click "Apply".
-        /// We set up the new settings.
+        /// We set up the new settings if they have changed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
