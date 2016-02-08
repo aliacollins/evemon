@@ -335,6 +335,7 @@
     <Compile Include="Serialization\Datafiles\SerializableMastery.cs" />
     <Compile Include="Serialization\Datafiles\SerializableMasteryCertificate.cs" />
     <Compile Include="Serialization\Datafiles\SerializableMasteryShip.cs" />
+    <Compile Include="Models\Comparers\SerializableSettingsComparer.cs" />
     <Compile Include="Service\CodeCompiler.cs" />
     <Compile Include="Controls\AutoEllipsisToolStripRenderer.cs" />
     <Compile Include="Controls\BorderPanel.cs">
