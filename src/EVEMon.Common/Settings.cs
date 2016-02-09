@@ -9,7 +9,6 @@ using System.Xml.Xsl;
 using EVEMon.Common.Attributes;
 using EVEMon.Common.CloudStorageServices;
 using EVEMon.Common.Collections;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Extensions;
 using EVEMon.Common.Helpers;
@@ -427,14 +426,14 @@ namespace EVEMon.Common
 
             const string Caption = "Corrupt Settings";
 
-            DialogResult dr = MessageBox.Show("Loading settings from the storage server file failed.\n" +
+            DialogResult dr = MessageBox.Show($"Loading settings from the storage server file failed.{Environment.NewLine}" +
                                               @"Do you want to use the local settings file?",
                 Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
             if (dr != DialogResult.No)
                 return TryDeserializeFromFile();
 
-            MessageBox.Show("A new settings file will be created.\n"
+            MessageBox.Show($"A new settings file will be created.{Environment.NewLine}"
                             + @"You may wish then to restore a saved copy of the file.", Caption,
                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
@@ -452,7 +451,10 @@ namespace EVEMon.Common
             SerializableSettings settings = TryDeserializeFromBackupFile(filename, false);
 
             // Loading from file failed, we abort and keep our current settings
-            return settings == null ? Task.CompletedTask : ImportAsync(settings);
+            if (settings == null)
+                return Task.CompletedTask;
+
+            return ImportAsync(settings);
         }
 
         /// <summary>
@@ -488,7 +490,8 @@ namespace EVEMon.Common
                 return TryDeserializeFromBackupFile(backupFile);
 
             CheckSettingsVersion(settings);
-            FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
+            Task _ = FileHelper.CopyOrWarnTheUserAsync(settingsFile, backupFile);
+
             EveMonClient.Trace("done");
             return settings;
         }
@@ -520,23 +523,21 @@ namespace EVEMon.Common
             if (recover)
             {
                 // Prompts the user to use the backup
-                string fileDate = String.Format(CultureConstants.DefaultCulture, "{0} at {1}",
-                    backupInfo.LastWriteTime.ToLocalTime().ToShortDateString(),
-                    backupInfo.LastWriteTime.ToLocalTime().ToShortTimeString());
+                string fileDate =
+                    $"{backupInfo.LastWriteTime.ToLocalTime().ToShortDateString()} " +
+                    $"at {backupInfo.LastWriteTime.ToLocalTime().ToShortTimeString()}";
                 DialogResult dialogResult = MessageBox.Show(
-                    String.Format(CultureConstants.DefaultCulture,
-                        "The settings file is missing or corrupt. There is a backup available from {0}.\n" +
-                        "Do you want to use the backup file?",
-                        fileDate), Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                    $"The settings file is missing or corrupt. There is a backup available from {fileDate}.{Environment.NewLine}" +
+                    @"Do you want to use the backup file?", Caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                 if (dialogResult == DialogResult.No)
                 {
-                    MessageBox.Show("A new settings file will be created.\n"
+                    MessageBox.Show($"A new settings file will be created.{Environment.NewLine}"
                                     + @"You may wish then to restore a saved copy of the file.", Caption,
                         MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                     // Save a copy of the corrupt file just in case
-                    FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile + ".corrupt");
+                    Task _ = FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile + ".corrupt");
 
                     return null;
                 }
@@ -553,8 +554,9 @@ namespace EVEMon.Common
             if (settings != null)
             {
                 CheckSettingsVersion(settings);
-                FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile);
-                FileHelper.OverwriteOrWarnTheUser(settingsFile, backupFile);
+                Task _ = FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile)
+                    .ContinueWith(__ => FileHelper.CopyOrWarnTheUserAsync(settingsFile, backupFile));
+
                 EveMonClient.Trace("done");
                 return settings;
             }
@@ -562,12 +564,12 @@ namespace EVEMon.Common
             if (recover)
             {
                 // Backup failed too, notify the user we have a problem
-                MessageBox.Show("Loading from backup failed.\nA new settings file will be created.\n"
+                MessageBox.Show($"Loading from backup failed.\nA new settings file will be created.{Environment.NewLine}"
                                 + @"You may wish then to restore a saved copy of the file.",
                     Caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                 // Save a copy of the corrupt file just in case
-                FileHelper.OverwriteOrWarnTheUser(backupFile, settingsFile + ".corrupt");
+                Task _ = FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile + ".corrupt");
             }
             else
             {
@@ -592,7 +594,7 @@ namespace EVEMon.Common
                 return;
 
             DialogResult backupSettings =
-                MessageBox.Show("The current EVEMon settings file is from a previous version.\n" +
+                MessageBox.Show($"The current EVEMon settings file is from a previous version.{Environment.NewLine}" +
                                 @"Backup the current file before proceeding (recommended)?",
                     @"EVEMon version changed", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button1);
@@ -604,13 +606,12 @@ namespace EVEMon.Common
             {
                 fileDialog.Title = @"Settings file backup";
                 fileDialog.Filter = @"Settings Backup Files (*.bak)|*.bak";
-                fileDialog.FileName = String.Format(CultureConstants.DefaultCulture,
-                    "EVEMon_Settings_{0}.xml.bak", settings.Revision);
+                fileDialog.FileName = $"EVEMon_Settings_{settings.Revision}.xml.bak";
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 if (fileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
+                Task _= FileHelper.CopyOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
             }
         }
 
@@ -680,7 +681,7 @@ namespace EVEMon.Common
         {
             // Ensure we have the latest settings saved
             await SaveImmediateAsync();
-            FileHelper.OverwriteOrWarnTheUser(EveMonClient.SettingsFileNameFullPath, copyFileName);
+            await FileHelper.CopyOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath, copyFileName);
         }
 
         #endregion

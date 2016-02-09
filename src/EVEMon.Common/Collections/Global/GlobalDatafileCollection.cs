@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using EVEMon.Common.Data;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.Datafiles;
@@ -45,20 +46,34 @@ namespace EVEMon.Common.Collections.Global
             // This is the time optimal loading order
             // (min order to follow : 
             // skills before anything else,
+            // properties before items,
             // items before blueprints, reprocessing and certificates,
             // certs before masteries)
 
             EveMonClient.Trace("Datafiles.Load - begin", printMethod: false);
 
-            TaskHelper.RunIOBoundTaskAsync(() => StaticSkills.Load());
+            // Must always run first
+            // It will have finished loading until static skills finish
             TaskHelper.RunIOBoundTaskAsync(() => StaticProperties.Load());
-            TaskHelper.RunIOBoundTaskAsync(() => StaticGeography.Load());
+
+            // Must always run before items
+            Task staticSkillsLoadTask = TaskHelper.RunIOBoundTaskAsync(() => StaticSkills.Load());
+
+            // Delay until the task is completed
+            while (!staticSkillsLoadTask.IsCompleted)
+            {
+            }
+
             // Must always run synchronously as blueprints, reprocessing and certificates depend on it
             StaticItems.Load();
-            TaskHelper.RunIOBoundTaskAsync(() => StaticReprocessing.Load());
-            TaskHelper.RunIOBoundTaskAsync(() => StaticBlueprints.Load());
+
             // Must always run synchronously as masteries depend on it
             StaticCertificates.Load();
+
+            // Non critical loadings as all dependencies have been loaded
+            TaskHelper.RunIOBoundTaskAsync(() => StaticGeography.Load());
+            TaskHelper.RunIOBoundTaskAsync(() => StaticBlueprints.Load());
+            TaskHelper.RunIOBoundTaskAsync(() => StaticReprocessing.Load());
             TaskHelper.RunIOBoundTaskAsync(() => StaticMasteries.Load());
 
             EveMonClient.Trace("Datafiles.Load - done", printMethod: false);

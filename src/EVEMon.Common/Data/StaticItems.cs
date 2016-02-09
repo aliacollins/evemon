@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations;
@@ -32,9 +31,6 @@ namespace EVEMon.Common.Data
             {
                 s_implantSlots[i] = new ImplantCollection((ImplantSlots)i) { new Implant() };
             }
-
-            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.ItemsDatafile)))
-                return;
 
             // Deserialize the items datafile
             ItemsDatafile datafile = Util.DeserializeDatafile<ItemsDatafile>(DatafileConstants.ItemsDatafile,
@@ -90,18 +86,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the collection of all the market groups in this category and its descendants.
         /// </summary>
-        public static IEnumerable<MarketGroup> AllGroups
-        {
-            get { return s_marketGroupsByID.Values; }
-        }
+        public static IEnumerable<MarketGroup> AllGroups => s_marketGroupsByID.Values;
 
         /// <summary>
         /// Gets the collection of all the items in this category and its descendants.
         /// </summary>
-        public static IEnumerable<Item> AllItems
-        {
-            get { return s_itemsByID.Values; }
-        }
+        public static IEnumerable<Item> AllItems => s_itemsByID.Values;
 
         #endregion
 
@@ -113,10 +103,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="slot"></param>
         /// <returns></returns>
-        public static ImplantCollection GetImplants(ImplantSlots slot)
-        {
-            return s_implantSlots[(int)slot];
-        }
+        public static ImplantCollection GetImplants(ImplantSlots slot) => s_implantSlots[(int)slot];
 
         /// <summary>
         /// Recursively searches the root category and all underlying categories
@@ -138,9 +125,7 @@ namespace EVEMon.Common.Data
         /// <param name="itemName">The name of the item to find.</param>
         /// <returns>The first item which name matches itemName, Null if no such item is found.</returns>
         public static Item GetItemByName(string itemName)
-        {
-            return s_itemsByID.Values.FirstOrDefault(item => item.Name == itemName);
-        }
+            => s_itemsByID.Values.FirstOrDefault(item => item.Name == itemName);
 
         #endregion
     }
