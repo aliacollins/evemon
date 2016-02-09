@@ -166,7 +166,11 @@ namespace EVEMon.Common
         {
             EveMonClient.Trace("begin");
 
-            await TaskHelper.RunCPUBoundTaskAsync(() => ImportInternalAsync(serial, preferencesOnly));
+            // Import
+            await TaskHelper.RunCPUBoundTaskAsync(() => ImportInternal(serial, preferencesOnly));
+
+            // Save
+            await SaveImmediateAsync();
 
             EveMonClient.Trace("Settins.ImportAsync - done", printMethod: false);
 
@@ -179,7 +183,7 @@ namespace EVEMon.Common
         /// </summary>
         /// <param name="serial">The serial.</param>
         /// <param name="preferencesOnly">if set to <c>true</c> [preferences only].</param>
-        private static async Task ImportInternalAsync(SerializableSettings serial, bool preferencesOnly)
+        private static void ImportInternal(SerializableSettings serial, bool preferencesOnly)
         {
             // When null, we just reset
             if (serial == null)
@@ -223,9 +227,6 @@ namespace EVEMon.Common
 
                 // Scheduler
                 Scheduler.Import(serial.Scheduler);
-
-                // Save
-                await SaveImmediateAsync();
             }
             finally
             {
