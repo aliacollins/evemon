@@ -270,8 +270,8 @@ namespace EVEMon.SkillPlanner
 
             // Store the selected item (if any) to restore it after the update
             int selectedItem = (PropertiesList.SelectedItems.Count > 0
-                                    ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+                ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
+                : 0);
 
             PropertiesList.BeginUpdate();
             try
@@ -346,10 +346,10 @@ namespace EVEMon.SkillPlanner
                     {
                         visibleProperty = SelectControl.SelectedObjects.Any(
                             x =>
-                                {
-                                    EvePropertyValue? eveProperty = x.Properties[prop.ID];
-                                    return (eveProperty != null && prop.DefaultValue != eveProperty.Value.Value);
-                                });
+                            {
+                                EvePropertyValue? eveProperty = x.Properties[prop.ID];
+                                return (eveProperty != null && prop.DefaultValue != eveProperty.Value.Value);
+                            });
                     }
 
                     // We hide the reprocessing skill here and make it visible in the "Reprocessing Info" section
@@ -470,7 +470,7 @@ namespace EVEMon.SkillPlanner
 
             // Create the list view item
             ListViewItem item = new ListViewItem(group)
-                                    { ToolTipText = "The slot that this item fits in", Text = "Fitting Slot", Tag = Text };
+            { ToolTipText = "The slot that this item fits in", Text = @"Fitting Slot", Tag = Text };
             items.Add(item);
 
             // Add the value for every selected item
@@ -487,8 +487,8 @@ namespace EVEMon.SkillPlanner
                 return;
 
             EveProperty prop = StaticProperties.GetPropertyByName(DBConstants.ConsumptionRatePropertyName);
-            IEnumerable<SerializableControlTowerFuel> fuelMaterials = SelectControl.SelectedObjects.Where(
-                x => x.ControlTowerFuel.Any()).SelectMany(x => x.ControlTowerFuel);
+            IList<SerializableControlTowerFuel> fuelMaterials = SelectControl.SelectedObjects.Where(
+                x => x.ControlTowerFuel.Any()).SelectMany(x => x.ControlTowerFuel).ToList();
 
             foreach (string purpose in fuelMaterials.Select(x => x.Purpose).Distinct())
             {
@@ -545,17 +545,17 @@ namespace EVEMon.SkillPlanner
                 return;
 
             EveProperty prop = StaticProperties.GetPropertyByID(DBConstants.ConsumptionQuantityPropertyID);
-            IEnumerable<SerializableReactionInfo> reactionMaterials = SelectControl.SelectedObjects.Where(
-                x => x.ReactionMaterial.Any()).SelectMany(x => x.ReactionMaterial);
+            IList<SerializableReactionInfo> reactionMaterials = SelectControl.SelectedObjects.Where(
+                x => x.ReactionMaterial.Any()).SelectMany(x => x.ReactionMaterial).ToList();
 
             // Add resources info
             ListViewGroup resourcesGroup = new ListViewGroup("Resources");
-            IEnumerable<SerializableReactionInfo> resources = reactionMaterials.Where(x => x.IsInput);
+            IList<SerializableReactionInfo> resources = reactionMaterials.Where(x => x.IsInput).ToList();
             AddItemsAndSubItems(prop, items, resourcesGroup, resources);
 
             // Add products info
             ListViewGroup productsGroup = new ListViewGroup("Products");
-            IEnumerable<SerializableReactionInfo> products = reactionMaterials.Where(x => !x.IsInput);
+            IList<SerializableReactionInfo> products = reactionMaterials.Where(x => !x.IsInput).ToList();
             AddItemsAndSubItems(prop, items, productsGroup, products);
         }
 
@@ -567,7 +567,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="resourcesGroup">The resources group.</param>
         /// <param name="reactionMaterials">The reaction materials.</param>
         private void AddItemsAndSubItems(EveProperty prop, ICollection<ListViewItem> items, ListViewGroup resourcesGroup,
-                                         IEnumerable<SerializableReactionInfo> reactionMaterials)
+            IList<SerializableReactionInfo> reactionMaterials)
         {
             foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
             {
@@ -624,8 +624,8 @@ namespace EVEMon.SkillPlanner
             // Add the reprocessing skill
             AddReprocessingSkill(group, items);
 
-            IEnumerable<Material> reprocessingMaterials = SelectControl.SelectedObjects.Where(
-                x => x.ReprocessingMaterials != null).SelectMany(x => x.ReprocessingMaterials);
+            IList<Material> reprocessingMaterials = SelectControl.SelectedObjects.Where(
+                x => x.ReprocessingMaterials != null).SelectMany(x => x.ReprocessingMaterials).ToList();
 
             AddItemsAndSubItems(items, group, reprocessingMaterials);
         }
@@ -637,7 +637,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="group">The group.</param>
         /// <param name="reprocessingMaterials">The reprocessing materials.</param>
         private void AddItemsAndSubItems(ICollection<ListViewItem> items, ListViewGroup group,
-                                         IEnumerable<Material> reprocessingMaterials)
+            IList<Material> reprocessingMaterials)
         {
             foreach (Item item in StaticItems.AllItems.OrderBy(x => x.ID))
             {
@@ -674,7 +674,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="item">The item.</param>
         /// <param name="materials">The materials.</param>
         private void AddListViewItem(EveProperty prop, ICollection<ListViewItem> items, ListViewGroup group, Item item,
-                                     IEnumerable<Material> materials)
+            IEnumerable<Material> materials)
         {
             // Create the list of labels and values
             List<String> labels = new List<String>();
@@ -689,8 +689,7 @@ namespace EVEMon.SkillPlanner
                     continue;
                 }
 
-                labels.Add(String.Format(CultureConstants.DefaultCulture, "{0:N0} {1}", material.Quantity,
-                                         prop != null ? prop.Unit : String.Empty));
+                labels.Add($"{material.Quantity:N0} {prop?.Unit}");
                 values.Add(material.Quantity);
             }
 
