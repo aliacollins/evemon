@@ -109,8 +109,8 @@ namespace EVEMon.ApiCredentialsManagement
         {
             using (OpenFileDialog form = new OpenFileDialog())
             {
-                form.Title = "Import character file";
-                form.Filter = "CCP XML Character (*.xml)|*.xml";
+                form.Title = @"Import character file";
+                form.Filter = @"CCP XML Character (*.xml)|*.xml";
                 form.FilterIndex = 0;
 
                 DialogResult dr = form.ShowDialog();
