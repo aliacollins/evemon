@@ -45,16 +45,11 @@ namespace EVEMon.Common.MarketPricer
         /// The providers.
         /// </value>
         public static IEnumerable<ItemPricer> Providers
-        {
-            get
-            {
-                return Assembly.GetExecutingAssembly().GetTypes()
-                    .Where(type => typeof(ItemPricer).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null)
-                    .Select(type => Activator.CreateInstance(type) as ItemPricer)
-                    .Where(provider => !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
-                    .OrderBy(pricer => pricer.Name);
-            }
-        }
+            => Assembly.GetExecutingAssembly().GetTypes()
+                .Where(type => typeof(ItemPricer).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null)
+                .Select(type => Activator.CreateInstance(type) as ItemPricer)
+                .Where(provider => !String.IsNullOrWhiteSpace(provider.Name) && provider.Enabled)
+                .OrderBy(pricer => pricer.Name);
 
         /// <summary>
         /// Gets the price by type ID.

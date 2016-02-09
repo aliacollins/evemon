@@ -618,9 +618,7 @@ namespace EVEMon.Common
         /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="XmlSerializer"/>
         /// </summary>
         private static XslCompiledTransform SettingsTransform
-        {
-            get { return s_settingsTransform ?? (s_settingsTransform = Util.LoadXslt(Properties.Resources.SettingsXSLT)); }
-        }
+            => s_settingsTransform ?? (s_settingsTransform = Util.LoadXslt(Properties.Resources.SettingsXSLT));
 
         #endregion
 
