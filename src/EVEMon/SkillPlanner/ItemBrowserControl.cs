@@ -66,8 +66,8 @@ namespace EVEMon.SkillPlanner
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
             scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
-                                           ? reqSkillPanelMinWidth
-                                           : reqSkillControlMinWidth);
+                ? reqSkillPanelMinWidth
+                : reqSkillControlMinWidth);
         }
 
         #endregion

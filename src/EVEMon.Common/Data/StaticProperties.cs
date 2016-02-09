@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Serialization.Datafiles;
@@ -29,10 +28,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.PropertiesDatafile)))
-                return;
-
-            PropertiesDatafile datafile =
+            PropertiesDatafile datafile = 
                 Util.DeserializeDatafile<PropertiesDatafile>(DatafileConstants.PropertiesDatafile,
                     Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 

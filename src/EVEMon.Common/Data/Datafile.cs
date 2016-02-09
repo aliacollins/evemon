@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Helpers;
+using NetOffice.OfficeApi;
 
 namespace EVEMon.Common.Data
 {
@@ -27,13 +29,13 @@ namespace EVEMon.Common.Data
             Filename = filename;
 
             // Compute the MD5 sum
-            MD5Sum = Util.CreateMD5From(GetFullPath(filename));
+            MD5Sum = Util.CreateMD5From(GetFullPath(Filename));
         }
 
         /// <summary>
         /// Gets or sets the datafile name
         /// </summary>
-        public string Filename { get; private set; }
+        public string Filename { get; }
 
         /// <summary>
         /// Gets or sets the MD5 sum
@@ -46,10 +48,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The datafile extension.
         /// </value>
-        public static string DatafilesExtension
-        {
-            get { return DatafileExtension; }
-        }
+        public static string DatafilesExtension => DatafileExtension;
 
         /// <summary>
         /// Gets the old datafile extension.
@@ -57,10 +56,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The old datafile extension.
         /// </value>
-        public static string OldDatafileExtension
-        {
-            get { return DatafileExtension.TrimEnd("ip".ToCharArray()); }
-        }
+        public static string OldDatafileExtension => DatafileExtension.TrimEnd("ip".ToCharArray());
 
         /// <summary>
         /// Gets the fully-qualified path of the provided datafile name
@@ -94,7 +90,7 @@ namespace EVEMon.Common.Data
                 throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", baseFile));
 
             // The file was in the installation directory, let's copy it to %APPDATA%
-            FileHelper.OverwriteOrWarnTheUser(baseFile, filepath);
+            Task _ = FileHelper.CopyOrWarnTheUserAsync(baseFile, filepath);
 
             // Return
             return baseFile;
@@ -107,9 +103,7 @@ namespace EVEMon.Common.Data
         /// <param name="fileExtension">The file extension.</param>
         /// <returns></returns>
         public static IEnumerable<string> GetFilesFrom(string dirPath, string fileExtension)
-        {
-            return Directory.GetFiles(dirPath, "*" + fileExtension, SearchOption.TopDirectoryOnly);
-        }
+            => Directory.GetFiles(dirPath, "*" + fileExtension, SearchOption.TopDirectoryOnly);
     }
 
     #endregion

@@ -32,6 +32,7 @@ namespace EVEMon.Common.Models
         private static int s_totalsVictoryPointsYesterday;
         private static int s_totalsVictoryPointsLastWeek;
         private static int s_totalsVictoryPointsTotal;
+        private static DateTime s_checkTime;
 
         #endregion
 
@@ -133,6 +134,10 @@ namespace EVEMon.Common.Models
         /// </summary>
         private static void UpdateList()
         {
+            // Quit if we already checked a minute ago or query is pending
+            if (s_checkTime.AddMinutes(1) > DateTime.UtcNow || s_queryPending)
+                return;
+
             // Set the update time and period
             DateTime updateTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(EveConstants.DowntimeDuration);
             TimeSpan updatePeriod = TimeSpan.FromDays(1);
@@ -140,8 +145,10 @@ namespace EVEMon.Common.Models
             // Check to see if file is up to date
             bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(Filename, updateTime, updatePeriod);
 
-            // Up to date or query is pending? Quit
-            if (s_queryPending || fileUpToDate)
+            s_checkTime = DateTime.UtcNow;
+
+            // Quit if file is up to date
+            if (fileUpToDate)
                 return;
 
             s_queryPending = true;

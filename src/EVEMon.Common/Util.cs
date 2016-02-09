@@ -216,23 +216,20 @@ namespace EVEMon.Common
                     // Deserialize from the given stream
                     memoryStream.Seek(0, SeekOrigin.Begin);
                     return (T)xs.Deserialize(memoryStream);
-
                 }
             }
             catch (InvalidOperationException ex)
             {
-                String message = String.Format(CultureConstants.DefaultCulture,
-                                               "An error occurred decompressing {0}, the error message was '{1}' from '{2}'. "
-                                               + "Try deleting all of the {3} files in %APPDATA%\\EVEMon.", filename,
-                                               ex.Message, ex.Source, Datafile.DatafilesExtension);
+                String message =
+                    $"An error occurred decompressing {filename}, the error message was '{ex.Message}' from '{ex.Source}'. " +
+                    $"Try deleting all of the {Datafile.DatafilesExtension} files in %APPDATA%\\EVEMon.";
                 throw new InvalidOperationException(message, ex);
             }
             catch (XmlException ex)
             {
-                String message = String.Format(CultureConstants.DefaultCulture,
-                                               "An error occurred reading the XML from {0}, the error message was '{1}' from '{2}'. "
-                                               + "Try deleting all of the {3} files in %APPDATA%\\EVEMon.", filename,
-                                               ex.Message, ex.Source, Datafile.DatafilesExtension);
+                String message =
+                    $"An error occurred reading the XML from {filename}, the error message was '{ex.Message}' from '{ex.Source}'. " +
+                    $"Try deleting all of the {Datafile.DatafilesExtension} files in %APPDATA%\\EVEMon.";
                 throw new XmlException(message, ex);
             }
         }

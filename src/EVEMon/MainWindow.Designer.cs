@@ -134,12 +134,13 @@ namespace EVEMon
             this.ofdOpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.tcCharacterTabs = new EVEMon.Common.Controls.DraggableTabControl();
             this.tpOverview = new System.Windows.Forms.TabPage();
+            this.overview = new EVEMon.Controls.Overview();
             this.trayIcon = new EVEMon.Common.Controls.TrayIcon(this.components);
             this.tabLoadingLabel = new System.Windows.Forms.Label();
             this.noCharactersLabel = new System.Windows.Forms.Label();
             this.mainLoadingThrobber = new EVEMon.Common.Controls.Throbber();
-            this.overview = new EVEMon.Controls.Overview();
             this.notificationList = new EVEMon.Controls.NotificationList();
+            this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconContextMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -661,7 +662,8 @@ namespace EVEMon
             this.exceptionWindowRecursiveExceptionToolStripMenuItem,
             this.testNotificationToolStripMenuItem,
             this.testCharacterNotificationToolStripMenuItem,
-            this.testTimeoutOneSecToolStripMenuItem});
+            this.testTimeoutOneSecToolStripMenuItem,
+            this.restartToolStripMenuItem});
             this.testsToolStripMenuItem.Name = "testsToolStripMenuItem";
             this.testsToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.testsToolStripMenuItem.Text = "Te&st";
@@ -1051,6 +1053,18 @@ namespace EVEMon
             this.tpOverview.Text = "Overview";
             this.tpOverview.UseVisualStyleBackColor = true;
             // 
+            // overview
+            // 
+            this.overview.AutoScroll = true;
+            this.overview.BackColor = System.Drawing.Color.Transparent;
+            this.overview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.overview.Location = new System.Drawing.Point(0, 0);
+            this.overview.Name = "overview";
+            this.overview.Size = new System.Drawing.Size(592, 477);
+            this.overview.TabIndex = 0;
+            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
+            // 
             // trayIcon
             // 
             this.trayIcon.ContextMenuStrip = this.trayIconContextMenuStrip;
@@ -1099,18 +1113,6 @@ namespace EVEMon
             this.mainLoadingThrobber.TabIndex = 1;
             this.mainLoadingThrobber.TabStop = false;
             // 
-            // overview
-            // 
-            this.overview.AutoScroll = true;
-            this.overview.BackColor = System.Drawing.Color.Transparent;
-            this.overview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.overview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.overview.Location = new System.Drawing.Point(0, 0);
-            this.overview.Name = "overview";
-            this.overview.Size = new System.Drawing.Size(592, 477);
-            this.overview.TabIndex = 0;
-            this.overview.CharacterClicked += new System.EventHandler<EVEMon.Common.CustomEventArgs.CharacterChangedEventArgs>(this.overview_CharacterClicked);
-            // 
             // notificationList
             // 
             this.notificationList.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -1120,6 +1122,13 @@ namespace EVEMon
             this.notificationList.Name = "notificationList";
             this.notificationList.Size = new System.Drawing.Size(600, 72);
             this.notificationList.TabIndex = 6;
+            // 
+            // restartToolStripMenuItem
+            // 
+            this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.restartToolStripMenuItem.Text = "Restart";
+            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -1268,5 +1277,6 @@ namespace EVEMon
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusSpacerLabel;
         private System.Windows.Forms.ToolStripStatusLabel lblCSSProviderStatus;
         private Common.Controls.Throbber mainLoadingThrobber;
+        private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
     }
 }

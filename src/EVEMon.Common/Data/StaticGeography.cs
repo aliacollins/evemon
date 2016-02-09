@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -30,9 +29,6 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.GeographyDatafile)))
-                return;
-
             GeoDatafile datafile = Util.DeserializeDatafile<GeoDatafile>(DatafileConstants.GeographyDatafile,
                 Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 

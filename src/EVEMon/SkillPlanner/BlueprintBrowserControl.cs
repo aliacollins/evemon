@@ -75,7 +75,7 @@ namespace EVEMon.SkillPlanner
             base.OnLoad(e);
 
             lblHelp.Text = @"Use the tree on the left to select a blueprint to view.";
-            gbDescription.Text = "Attributes";
+            gbDescription.Text = @"Attributes";
             pnlAttributes.AutoScroll = true;
 
             // Update ImplantSet Modifier
@@ -121,8 +121,8 @@ namespace EVEMon.SkillPlanner
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
             scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
-                                           ? reqSkillPanelMinWidth
-                                           : reqSkillControlMinWidth);
+                ? reqSkillPanelMinWidth
+                : reqSkillControlMinWidth);
         }
 
         /// <summary>
@@ -334,8 +334,8 @@ namespace EVEMon.SkillPlanner
 
             // Store the selected item (if any) to restore it after the update
             int selectedItem = (PropertiesList.SelectedItems.Count > 0
-                                    ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+                ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
+                : 0);
 
             PropertiesList.BeginUpdate();
             try
@@ -346,7 +346,7 @@ namespace EVEMon.SkillPlanner
                 PropertiesList.Columns.Clear();
 
                 // Create the columns
-                PropertiesList.Columns.Add("item","Item");
+                PropertiesList.Columns.Add("item", "Item");
                 PropertiesList.Columns.Add("qBase", "Quantity (Base)");
                 PropertiesList.Columns.Add("quant", "Quantity (You)");
 
@@ -408,16 +408,17 @@ namespace EVEMon.SkillPlanner
                     long baseMaterialQuantity = material.Quantity;
 
                     // Calculate the base material quantity
-                    long actualMaterialQuantity = (long)Math.Ceiling(material.Quantity * materiaEffModifier * m_materialFacilityMultiplier);
+                    long actualMaterialQuantity =
+                        (long)Math.Ceiling(material.Quantity * materiaEffModifier * m_materialFacilityMultiplier);
 
                     // Add the base quantity for every item
                     ListViewItem.ListViewSubItem subItemBase =
-                        new ListViewItem.ListViewSubItem(item, baseMaterialQuantity.ToString(CultureConstants.DefaultCulture));
+                        new ListViewItem.ListViewSubItem(item, baseMaterialQuantity.ToString("N0"));
                     item.SubItems.Add(subItemBase);
 
                     // Add the quantity needed by according to the charater's skiils for every item
                     ListViewItem.ListViewSubItem subItem =
-                        new ListViewItem.ListViewSubItem(item, actualMaterialQuantity.ToString(CultureConstants.DefaultCulture));
+                        new ListViewItem.ListViewSubItem(item, actualMaterialQuantity.ToString("N0"));
                     item.SubItems.Add(subItem);
                 }
 
@@ -549,8 +550,8 @@ namespace EVEMon.SkillPlanner
 
             // Update the selected index
             cbImplantSet.SelectedIndex = (Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count
-                                              ? Settings.UI.BlueprintBrowser.ImplantSetIndex
-                                              : 0);
+                ? Settings.UI.BlueprintBrowser.ImplantSetIndex
+                : 0);
         }
 
         /// <summary>

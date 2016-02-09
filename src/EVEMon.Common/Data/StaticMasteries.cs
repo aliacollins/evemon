@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using EVEMon.Common.Serialization.Datafiles;
 
 namespace EVEMon.Common.Data
@@ -19,9 +18,6 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.MasteriesDatafile)))
-                return;
-
             MasteriesDatafile datafile = Util.DeserializeDatafile<MasteriesDatafile>(DatafileConstants.MasteriesDatafile);
 
             foreach (SerializableMasteryShip srcShip in datafile.MasteryShips)

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using EVEMon.Common.Serialization.Datafiles;
 
@@ -17,9 +16,6 @@ namespace EVEMon.Common.Data
         /// </summary>
         internal static void Load()
         {
-            if (!File.Exists(Datafile.GetFullPath(DatafileConstants.ReprocessingDatafile)))
-                return;
-
             ReprocessingDatafile datafile = Util.DeserializeDatafile<ReprocessingDatafile>(
                 DatafileConstants.ReprocessingDatafile, Util.LoadXslt(Properties.Resources.DatafilesXSLT));
 

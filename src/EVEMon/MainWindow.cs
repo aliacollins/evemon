@@ -2208,6 +2208,16 @@ namespace EVEMon
             Settings.Updates.HttpTimeout = 1;
         }
 
+        /// <summary>
+        /// Handles the Click event of the restartToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private async void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await RestartApplicationAsync();
+        }
+
         #endregion
     }
 }
