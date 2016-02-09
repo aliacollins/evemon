@@ -74,9 +74,7 @@ namespace EVEMon.Common.MarketPricer
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <param name="xdoc">The xdoc.</param>
-        protected static async Task SaveAsync(string filename, IXPathNavigable xdoc)
-        {
-            await LocalXmlCache.SaveAsync(filename, xdoc);
-        }
+        protected static Task SaveAsync(string filename, IXPathNavigable xdoc)
+            => LocalXmlCache.SaveAsync(filename, xdoc);
     }
 }

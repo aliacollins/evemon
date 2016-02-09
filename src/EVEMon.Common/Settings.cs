@@ -630,11 +630,13 @@ namespace EVEMon.Common
         /// <summary>
         /// Every timer tick, checks whether we should save the settings every 10s.
         /// </summary>
-        private static async Task UpdateOnOneSecondTickAsync()
+        private static Task UpdateOnOneSecondTickAsync()
         {
             // Is a save requested and is the last save older than 10s ?
             if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
-                await SaveImmediateAsync();
+                return SaveImmediateAsync();
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
