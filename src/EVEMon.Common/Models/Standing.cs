@@ -76,7 +76,7 @@ namespace EVEMon.Common.Models
 
                 Task _ = GetImageAsync();
 
-                return m_image = GetDefaultImage();
+                return m_image ?? (m_image = GetDefaultImage());
             }
         }
 

@@ -21,8 +21,7 @@ namespace EVEMon.Common.Service
         /// <param name="path">The path.</param>
         /// <returns></returns>
         public static Uri GetImageServerCdnUri(string path)
-            => new Uri(
-                String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageServerCDN, path));
+            => new Uri($"{NetworkConstants.EVEImageServerCDN}{path}");
 
         /// <summary>
         /// Gets the image server base URI.
@@ -30,8 +29,7 @@ namespace EVEMon.Common.Service
         /// <param name="path">The path.</param>
         /// <returns></returns>
         public static Uri GetImageServerBaseUri(string path)
-            => new Uri(
-                String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEImageServerBase, path));
+            => new Uri($"{NetworkConstants.EVEImageServerBase}{path}");
 
         /// <summary>
         /// Asynchronously downloads a character portrait from its ID.
@@ -102,57 +100,18 @@ namespace EVEMon.Common.Service
                 return GotImage(result);
             }
 
-            await GetImageFromCacheAsync(GetCacheName(url));
-
-            // First check whether the image exists in cache
-            EveMonClient.EnsureCacheDirInit();
-            string cacheFileName = Path.Combine(EveMonClient.EVEMonImageCacheDir, GetCacheName(url));
-
-            if (File.Exists(cacheFileName))
-            {
-                try
-                {
-                    // Load the data into a MemoryStream
-                    // before returning the image
-                    // to avoid file locking
-                    Image image;
-
-                    byte[] imageBytes = File.ReadAllBytes(cacheFileName);
-
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        await stream.WriteAsync(imageBytes, 0, imageBytes.Length);
-                        stream.Position = 0;
-
-                        image = Image.FromStream(stream);
-                    }
-                    return image;
-                }
-                catch (ArgumentException e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                    File.Delete(cacheFileName);
-                }
-                catch (IOException e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                }
-                catch (UnauthorizedAccessException e)
-                {
-                    ExceptionHandler.LogException(e, false);
-                }
-            }
+            Image image = await GetImageFromCacheAsync(GetCacheName(url));
+            if (image != null)
+                return image;
 
             // Downloads the image and adds it to cache
             result = await HttpWebClientService.DownloadImageAsync(url).ConfigureAwait(false);
-            Image img = GotImage(result);
+            image = GotImage(result);
 
-            if (img != null)
-            {
-                await AddImageToCacheAsync(img, GetCacheName(url));
-            }
+            if (image != null)
+                await AddImageToCacheAsync(image, GetCacheName(url));
 
-            return img;
+            return image;
         }
 
         /// <summary>
