@@ -217,7 +217,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                     WriteMode.Overwrite.Instance);
 
                 using (DropboxClient client = GetClient())
-                using (MemoryStream stream = Util.GetMemoryStream(content))
+                using (Stream stream = Util.GetMemoryStream(content))
                 {
                     await client.Files.UploadAsync(commitInfo, stream).ConfigureAwait(false);
                     return result;
@@ -260,7 +260,7 @@ namespace EVEMon.Common.CloudStorageServices.Dropbox
                 {
                     Task<Stream> response = await client.Files.DownloadAsync(arg)
                         .ContinueWith(async task => await task.Result.GetContentAsStreamAsync());
-                    return GetMappedAPIFile(result, response.Result);
+                    return await GetMappedAPIFileAsync(result, response.Result);
                 }
             }
             catch (ApiException<DownloadError> ex)
