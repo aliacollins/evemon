@@ -246,18 +246,20 @@ namespace EVEMon
             catch (Exception e)
             {
                 StringBuilder messageBuilder = new StringBuilder();
-                messageBuilder.AppendLine(
-                    @"An error occurred and EVEMon was unable to handle the error message gracefully");
-                messageBuilder.AppendLine();
-                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, @"The exception encountered was '{0}'.",
-                    e.Message);
-                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, @"The original exception encountered was '{0}'.",
-                    ex.Message);
-                messageBuilder.AppendLine();
-                messageBuilder.AppendLine();
-                messageBuilder.AppendLine(@"Please report this on the EVEMon forums.");
+                messageBuilder
+                    .AppendLine(@"An error occurred and EVEMon was unable to handle the error message gracefully")
+                    .AppendLine()
+                    .Append($"The exception encountered was '{e.Message}'.")
+                    .AppendLine()
+                    .Append($"The original exception encountered was '{ex.GetBaseException().Message}'.")
+                    .AppendLine()
+                    .AppendLine()
+                    .AppendLine(@"Please report this on the EVEMon forums.");
+
                 MessageBox.Show(messageBuilder.ToString(), @"EVEMon Error Occurred", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
+                ExceptionHandler.LogRethrowException(e);
                 throw;
             }
 
