@@ -13,7 +13,7 @@ namespace EVEMon.Common.Controls
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
             if (e == null)
-                throw new ArgumentNullException("e");
+                throw new ArgumentNullException(nameof(e));
 
             Rectangle newBounds = new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height);
 
@@ -21,18 +21,16 @@ namespace EVEMon.Common.Controls
                 return;
 
             // stacked using blocks to avoid indentation, don't need to call IDisposable.Dispose explicitly
-            using (BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current)
+            using (BufferedGraphicsContext currentContext = new BufferedGraphicsContext())
+            using (BufferedGraphics bufferedGraphics = currentContext.Allocate(e.Graphics, newBounds))
             {
-                using (BufferedGraphics bufferedGraphics = currentContext.Allocate(e.Graphics, newBounds))
-                {
-                    DrawItemEventArgs newArgs = new DrawItemEventArgs(
-                        bufferedGraphics.Graphics, e.Font, newBounds, e.Index, e.State, e.ForeColor, e.BackColor);
+                DrawItemEventArgs newArgs = new DrawItemEventArgs(
+                    bufferedGraphics.Graphics, e.Font, newBounds, e.Index, e.State, e.ForeColor, e.BackColor);
 
-                    // Supply the real DrawItem with the off-screen graphics context
-                    base.OnDrawItem(newArgs);
+                // Supply the real DrawItem with the off-screen graphics context
+                base.OnDrawItem(newArgs);
 
-                    NativeMethods.CopyGraphics(e.Graphics, e.Bounds, bufferedGraphics.Graphics, new Point(0, 0));
-                }
+                NativeMethods.CopyGraphics(e.Graphics, e.Bounds, bufferedGraphics.Graphics, new Point(0, 0));
             }
         }
 
