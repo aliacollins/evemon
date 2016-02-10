@@ -40,7 +40,7 @@ namespace EVEMon.Common
         public static void OpenURL(Uri url)
         {
             if (url == null)
-                throw new ArgumentNullException("url");
+                throw new ArgumentNullException(nameof(url));
 
             try
             {
@@ -523,7 +523,7 @@ namespace EVEMon.Common
         public static string GetXmlStringRepresentation(IXPathNavigable doc)
         {
             if (doc == null)
-                throw new ArgumentNullException("doc");
+                throw new ArgumentNullException(nameof(doc));
 
             // Creates the settings for the text writer
             XmlWriterSettings settings = new XmlWriterSettings { Indent = true, NewLineHandling = NewLineHandling.Replace };
@@ -570,7 +570,7 @@ namespace EVEMon.Common
         public static IXPathNavigable Transform(IXPathNavigable doc, XslCompiledTransform xslt)
         {
             if (xslt == null)
-                throw new ArgumentNullException("xslt");
+                throw new ArgumentNullException(nameof(xslt));
 
             MemoryStream stream = GetMemoryStream();
             using (XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
@@ -666,7 +666,7 @@ namespace EVEMon.Common
         public static string GetXmlRootElement(Uri filename)
         {
             if (filename == null)
-                throw new ArgumentNullException("filename");
+                throw new ArgumentNullException(nameof(filename));
 
             if (!File.Exists(filename.LocalPath))
                 throw new FileNotFoundException("Document not found", filename.LocalPath);
@@ -692,7 +692,7 @@ namespace EVEMon.Common
         public static string GetXmlRootElement(TextReader input)
         {
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             try
             {
@@ -779,6 +779,20 @@ namespace EVEMon.Common
         }
 
         /// <summary>
+        /// Gets a memory stream from the specified stream.
+        /// </summary>
+        /// <param name="inputStream">The input stream.</param>
+        /// <returns></returns>
+        public static MemoryStream GetMemoryStream(Stream inputStream)
+        {
+            using (MemoryStream outputStream = GetMemoryStream())
+            {
+                inputStream.CopyTo(outputStream);
+                return outputStream;
+            }
+        }
+
+        /// <summary>
         /// Gets a file stream.
         /// </summary>
         /// <param name="filePath">The file path.</param>
@@ -800,7 +814,7 @@ namespace EVEMon.Common
         public static IEnumerable<byte> GZipCompress(byte[] inputData)
         {
             if (inputData == null)
-                throw new ArgumentNullException("inputData");
+                throw new ArgumentNullException(nameof(inputData));
 
             using (MemoryStream outputStream = GetMemoryStream())
             {
@@ -820,7 +834,7 @@ namespace EVEMon.Common
         public static IEnumerable<byte> GZipUncompress(byte[] inputData)
         {
             if (inputData == null)
-                throw new ArgumentNullException("inputData");
+                throw new ArgumentNullException(nameof(inputData));
 
             using (MemoryStream inputStream = GetMemoryStream(inputData))
             using (MemoryStream outputStream = GetMemoryStream())
@@ -841,7 +855,7 @@ namespace EVEMon.Common
         public static IEnumerable<byte> DeflateCompress(byte[] inputData)
         {
             if (inputData == null)
-                throw new ArgumentNullException("inputData");
+                throw new ArgumentNullException(nameof(inputData));
 
             using (MemoryStream outputStream = GetMemoryStream())
             {
@@ -861,7 +875,7 @@ namespace EVEMon.Common
         public static IEnumerable<byte> InflateUncompress(byte[] inputData)
         {
             if (inputData == null)
-                throw new ArgumentNullException("inputData");
+                throw new ArgumentNullException(nameof(inputData));
 
             using (MemoryStream inputStream = GetMemoryStream(inputData))
             using (MemoryStream outputStream = GetMemoryStream())
@@ -882,7 +896,7 @@ namespace EVEMon.Common
         public static IEnumerable<byte> ZlibUncompress(byte[] inputData)
         {
             if (inputData == null)
-                throw new ArgumentNullException("inputData");
+                throw new ArgumentNullException(nameof(inputData));
 
             if (!inputData.Any())
                 return null;
@@ -904,10 +918,11 @@ namespace EVEMon.Common
         public static Stream ZlibUncompress(Stream inputStream)
         {
             if (inputStream == null)
-                throw new ArgumentNullException("inputStream");
+                throw new ArgumentNullException(nameof(inputStream));
 
-            MemoryStream stream = inputStream as MemoryStream;
-
+            // If it's not a MemoryStream copy it to one
+            MemoryStream stream = inputStream as MemoryStream ?? GetMemoryStream(inputStream);
+            
             if (stream == null)
                 return inputStream;
 

@@ -260,7 +260,7 @@ namespace EVEMon.Common.CloudStorageServices.OneDrive
                 using (OneDriveClient client = (OneDriveClient)await GetClient().ConfigureAwait(false))
                 {
                     Stream stream = await client.Drive.Items[m_fileId].Content.Request().GetAsync().ConfigureAwait(false);
-                    return GetMappedAPIFile(result, stream);
+                    return await GetMappedAPIFileAsync(result, stream);
                 }
             }
             catch (OneDriveException exc)

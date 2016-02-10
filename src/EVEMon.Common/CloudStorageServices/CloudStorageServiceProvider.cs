@@ -602,7 +602,7 @@ namespace EVEMon.Common.CloudStorageServices
                 saveFileDialog.RestoreDirectory = true;
 
                 // Prompts the user for a location
-                saveFileDialog.FileName = String.Format(CultureConstants.DefaultCulture, "{0}.bak", result.FileName);
+                saveFileDialog.FileName = $"{result.FileName}.bak";
                 saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 DialogResult dialogResult = saveFileDialog.ShowDialog();
 
@@ -616,12 +616,12 @@ namespace EVEMon.Common.CloudStorageServices
         }
 
         /// <summary>
-        /// Gets a mapped API file.
+        /// Asynchronously gets a mapped API file.
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="response">The response.</param>
         /// <returns></returns>
-        protected static SerializableAPIResult<CloudStorageServiceAPIFile> GetMappedAPIFile(
+        protected static async Task<SerializableAPIResult<CloudStorageServiceAPIFile>> GetMappedAPIFileAsync(
             SerializableAPIResult<CloudStorageServiceAPIFile> result, Stream response)
         {
             if (response == null)
@@ -629,7 +629,7 @@ namespace EVEMon.Common.CloudStorageServices
 
             string content;
             using (StreamReader reader = new StreamReader(Util.ZlibUncompress(response)))
-                content = reader.ReadToEnd();
+                content = await reader.ReadToEndAsync();
 
             if (String.IsNullOrWhiteSpace(content))
             {

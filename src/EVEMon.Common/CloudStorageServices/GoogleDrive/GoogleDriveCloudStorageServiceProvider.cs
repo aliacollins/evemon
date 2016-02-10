@@ -332,7 +332,7 @@ namespace EVEMon.Common.CloudStorageServices.GoogleDrive
                     IDownloadProgress response = await request.DownloadAsync(stream).ConfigureAwait(false);
 
                     if (response.Exception == null)
-                        return GetMappedAPIFile(result, stream);
+                        return await GetMappedAPIFileAsync(result, stream);
 
                     result.Error = new SerializableAPIError { ErrorMessage = response.Exception.Message };
                 }
