@@ -898,6 +898,15 @@ namespace EVEMon.Common.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/issues.
+        /// </summary>
+        public static string BitBucketIssuesBase {
+            get {
+                return ResourceManager.GetString("BitBucketIssuesBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://bitbucket.org/EVEMonDevTeam/evemon/wiki.
         /// </summary>
         public static string BitBucketWikiBase {
