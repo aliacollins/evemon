@@ -546,4 +546,7 @@
   <data name="BitBucketDatafilesBase" xml:space="preserve">
     <value>https://bitbucket.org/EVEMonDevTeam/evemon/wiki/updates/datafiles/</value>
   </data>
+  <data name="BitBucketIssuesBase" xml:space="preserve">
+    <value>https://bitbucket.org/EVEMonDevTeam/evemon/issues</value>
+  </data>
 </root>

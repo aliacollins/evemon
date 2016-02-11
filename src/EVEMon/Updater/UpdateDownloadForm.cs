@@ -135,24 +135,7 @@ namespace EVEMon.Updater
             {
                 DialogResult = DialogResult.Cancel;
                 if (File.Exists(m_fileName))
-                {
-                    try
-                    {
-                        File.Delete(m_fileName);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        ExceptionHandler.LogException(ex, false);
-                    }
-                    catch (IOException ex)
-                    {
-                        ExceptionHandler.LogException(ex, false);
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        ExceptionHandler.LogException(ex, false);
-                    }
-                }
+                    FileHelper.DeleteFile(m_fileName);
             }
             else
                 DialogResult = DialogResult.OK;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
@@ -457,10 +458,13 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Import the data
-            m_ccpCharacter.Assets.Import(result.Result.Assets);
+            TaskHelper.RunCPUBoundTaskAsync(() => m_ccpCharacter.Assets.Import(result.Result.Assets))
+                .ContinueWith(_ =>
+                {
+                    // Fires the event regarding assets update
+                    EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter);
 
-            // Fires the event regarding assets update
-            EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter);
+                }, EveMonClient.CurrentSynchronizationContext);
         }
 
         /// <summary>

@@ -261,7 +261,7 @@ namespace EVEMon.CharacterMonitoring
                     column.Width = -2;
             });
 
-            Task _ = UpdateColumnsAsync();
+            UpdateColumnsAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -796,7 +796,7 @@ namespace EVEMon.CharacterMonitoring
                 Assets = Character.Assets;
             });
 
-            Task _ = UpdateColumnsAsync();
+            await UpdateColumnsAsync();
         }
 
         #endregion

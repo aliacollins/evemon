@@ -88,26 +88,11 @@ namespace EVEMon.Common.Helpers
                         return;
                 }
 
-                await CopyOrWarnTheUserAsync(tempFileName, destFileName);
+                await CopyOrWarnTheUserAsync(tempFileName, destFileName).ConfigureAwait(false);
             }
             finally
             {
-                try
-                {
-                    File.Delete(tempFileName);
-                }
-                catch (ArgumentException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-                catch (IOException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
+                DeleteFile(tempFileName);
             }
         }
 
@@ -132,8 +117,7 @@ namespace EVEMon.Common.Helpers
                         return;
 
                     // Overwrite the file
-                    //File.Copy(srcFileName, destFileName, true);
-                    await CopyFileAsync(srcFileName, destFileName);
+                    await CopyFileAsync(srcFileName, destFileName).ConfigureAwait(false);
 
                     // Ensures we didn't copied a read-only attribute, no permission required since the file has been overwritten
                     FileInfo destFile = new FileInfo(destFileName);
@@ -257,6 +241,34 @@ namespace EVEMon.Common.Helpers
                     return s_removeReadOnlyAttributes.Value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Deletes the file.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        public static bool DeleteFile(string filename)
+        {
+            bool success = false;
+            try
+            {
+                File.Delete(filename);
+                success = true;
+            }
+            catch (ArgumentException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
+            catch (IOException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
+
+            return success;
         }
     }
 }

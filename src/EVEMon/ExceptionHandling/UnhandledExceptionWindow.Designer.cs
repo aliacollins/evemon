@@ -35,10 +35,8 @@ namespace EVEMon.ExceptionHandling
             this.BugPictureBox = new System.Windows.Forms.PictureBox();
             this.DescriptionLabel = new System.Windows.Forms.Label();
             this.WhatCanYouDoTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.KnownProblemsLinkLabel = new System.Windows.Forms.LinkLabel();
             this.ReportLinkLabel = new System.Windows.Forms.LinkLabel();
             this.LatestBinariesLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.KnownProblemsPictureBox = new System.Windows.Forms.PictureBox();
             this.LatestBinariesPictureBox = new System.Windows.Forms.PictureBox();
             this.ReportPictureBox = new System.Windows.Forms.PictureBox();
             this.WhatCanYouDoLabel = new System.Windows.Forms.Label();
@@ -51,7 +49,6 @@ namespace EVEMon.ExceptionHandling
             this.TechnicalDetailsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BugPictureBox)).BeginInit();
             this.WhatCanYouDoTableLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KnownProblemsPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LatestBinariesPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReportPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -85,7 +82,7 @@ namespace EVEMon.ExceptionHandling
             this.TechnicalDetailsPanel.Controls.Add(this.TechnicalDetailsTextBox);
             this.TechnicalDetailsPanel.Location = new System.Drawing.Point(12, 104);
             this.TechnicalDetailsPanel.Name = "TechnicalDetailsPanel";
-            this.TechnicalDetailsPanel.Size = new System.Drawing.Size(559, 205);
+            this.TechnicalDetailsPanel.Size = new System.Drawing.Size(559, 238);
             this.TechnicalDetailsPanel.TabIndex = 13;
             // 
             // TechnicalDetailsTextBox
@@ -96,7 +93,7 @@ namespace EVEMon.ExceptionHandling
             this.TechnicalDetailsTextBox.Name = "TechnicalDetailsTextBox";
             this.TechnicalDetailsTextBox.ReadOnly = true;
             this.TechnicalDetailsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TechnicalDetailsTextBox.Size = new System.Drawing.Size(559, 205);
+            this.TechnicalDetailsTextBox.Size = new System.Drawing.Size(559, 238);
             this.TechnicalDetailsTextBox.TabIndex = 1;
             // 
             // BugPictureBox
@@ -124,44 +121,27 @@ namespace EVEMon.ExceptionHandling
             this.WhatCanYouDoTableLayoutPanel.ColumnCount = 2;
             this.WhatCanYouDoTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.WhatCanYouDoTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.WhatCanYouDoTableLayoutPanel.Controls.Add(this.KnownProblemsLinkLabel, 1, 0);
             this.WhatCanYouDoTableLayoutPanel.Controls.Add(this.ReportLinkLabel, 1, 2);
             this.WhatCanYouDoTableLayoutPanel.Controls.Add(this.LatestBinariesLinkLabel, 1, 1);
-            this.WhatCanYouDoTableLayoutPanel.Controls.Add(this.KnownProblemsPictureBox, 0, 0);
             this.WhatCanYouDoTableLayoutPanel.Controls.Add(this.LatestBinariesPictureBox, 0, 1);
             this.WhatCanYouDoTableLayoutPanel.Controls.Add(this.ReportPictureBox, 0, 2);
             this.WhatCanYouDoTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.WhatCanYouDoTableLayoutPanel.Location = new System.Drawing.Point(0, 347);
+            this.WhatCanYouDoTableLayoutPanel.Location = new System.Drawing.Point(0, 377);
             this.WhatCanYouDoTableLayoutPanel.Name = "WhatCanYouDoTableLayoutPanel";
             this.WhatCanYouDoTableLayoutPanel.Padding = new System.Windows.Forms.Padding(16, 0, 16, 16);
             this.WhatCanYouDoTableLayoutPanel.RowCount = 3;
             this.WhatCanYouDoTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.WhatCanYouDoTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.WhatCanYouDoTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.WhatCanYouDoTableLayoutPanel.Size = new System.Drawing.Size(583, 118);
+            this.WhatCanYouDoTableLayoutPanel.Size = new System.Drawing.Size(583, 88);
             this.WhatCanYouDoTableLayoutPanel.TabIndex = 11;
-            // 
-            // KnownProblemsLinkLabel
-            // 
-            this.KnownProblemsLinkLabel.AutoSize = true;
-            this.KnownProblemsLinkLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.KnownProblemsLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(12, 14);
-            this.KnownProblemsLinkLabel.Location = new System.Drawing.Point(49, 0);
-            this.KnownProblemsLinkLabel.Name = "KnownProblemsLinkLabel";
-            this.KnownProblemsLinkLabel.Size = new System.Drawing.Size(515, 30);
-            this.KnownProblemsLinkLabel.TabIndex = 10;
-            this.KnownProblemsLinkLabel.TabStop = true;
-            this.KnownProblemsLinkLabel.Text = "Look at our known problems page and its top five, there is probably a solution.";
-            this.KnownProblemsLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.KnownProblemsLinkLabel.UseCompatibleTextRendering = true;
-            this.KnownProblemsLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblKnownProblems_LinkClicked);
             // 
             // ReportLinkLabel
             // 
             this.ReportLinkLabel.AutoSize = true;
             this.ReportLinkLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ReportLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(31, 9);
-            this.ReportLinkLabel.Location = new System.Drawing.Point(49, 72);
+            this.ReportLinkLabel.Location = new System.Drawing.Point(49, 42);
             this.ReportLinkLabel.Name = "ReportLinkLabel";
             this.ReportLinkLabel.Size = new System.Drawing.Size(515, 30);
             this.ReportLinkLabel.TabIndex = 8;
@@ -176,7 +156,7 @@ namespace EVEMon.ExceptionHandling
             this.LatestBinariesLinkLabel.AutoSize = true;
             this.LatestBinariesLinkLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LatestBinariesLinkLabel.LinkArea = new System.Windows.Forms.LinkArea(8, 24);
-            this.LatestBinariesLinkLabel.Location = new System.Drawing.Point(49, 30);
+            this.LatestBinariesLinkLabel.Location = new System.Drawing.Point(49, 0);
             this.LatestBinariesLinkLabel.Name = "LatestBinariesLinkLabel";
             this.LatestBinariesLinkLabel.Size = new System.Drawing.Size(515, 42);
             this.LatestBinariesLinkLabel.TabIndex = 11;
@@ -186,23 +166,11 @@ namespace EVEMon.ExceptionHandling
             this.LatestBinariesLinkLabel.UseCompatibleTextRendering = true;
             this.LatestBinariesLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblLatestBinaries_LinkClicked);
             // 
-            // KnownProblemsPictureBox
-            // 
-            this.KnownProblemsPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.KnownProblemsPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("KnownProblemsPictureBox.Image")));
-            this.KnownProblemsPictureBox.Location = new System.Drawing.Point(16, 0);
-            this.KnownProblemsPictureBox.Margin = new System.Windows.Forms.Padding(0);
-            this.KnownProblemsPictureBox.Name = "KnownProblemsPictureBox";
-            this.KnownProblemsPictureBox.Size = new System.Drawing.Size(30, 30);
-            this.KnownProblemsPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.KnownProblemsPictureBox.TabIndex = 12;
-            this.KnownProblemsPictureBox.TabStop = false;
-            // 
             // LatestBinariesPictureBox
             // 
             this.LatestBinariesPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LatestBinariesPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("LatestBinariesPictureBox.Image")));
-            this.LatestBinariesPictureBox.Location = new System.Drawing.Point(16, 30);
+            this.LatestBinariesPictureBox.Location = new System.Drawing.Point(16, 0);
             this.LatestBinariesPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.LatestBinariesPictureBox.Name = "LatestBinariesPictureBox";
             this.LatestBinariesPictureBox.Size = new System.Drawing.Size(30, 42);
@@ -214,7 +182,7 @@ namespace EVEMon.ExceptionHandling
             // 
             this.ReportPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ReportPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("ReportPictureBox.Image")));
-            this.ReportPictureBox.Location = new System.Drawing.Point(16, 72);
+            this.ReportPictureBox.Location = new System.Drawing.Point(16, 42);
             this.ReportPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.ReportPictureBox.Name = "ReportPictureBox";
             this.ReportPictureBox.Size = new System.Drawing.Size(30, 30);
@@ -227,7 +195,7 @@ namespace EVEMon.ExceptionHandling
             this.WhatCanYouDoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.WhatCanYouDoLabel.AutoSize = true;
-            this.WhatCanYouDoLabel.Location = new System.Drawing.Point(16, 331);
+            this.WhatCanYouDoLabel.Location = new System.Drawing.Point(16, 356);
             this.WhatCanYouDoLabel.Name = "WhatCanYouDoLabel";
             this.WhatCanYouDoLabel.Size = new System.Drawing.Size(98, 13);
             this.WhatCanYouDoLabel.TabIndex = 9;
@@ -263,7 +231,7 @@ namespace EVEMon.ExceptionHandling
             this.TechnicalDetailsLabel.TabIndex = 2;
             this.TechnicalDetailsLabel.Text = "Technical details of this error:";
             // 
-            // DataFolderButton
+            // DataDirectoryButton
             // 
             this.DataDirectoryButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DataDirectoryButton.AutoSize = true;
@@ -311,7 +279,6 @@ namespace EVEMon.ExceptionHandling
             ((System.ComponentModel.ISupportInitialize)(this.BugPictureBox)).EndInit();
             this.WhatCanYouDoTableLayoutPanel.ResumeLayout(false);
             this.WhatCanYouDoTableLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KnownProblemsPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LatestBinariesPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReportPictureBox)).EndInit();
             this.ResumeLayout(false);
@@ -331,11 +298,9 @@ namespace EVEMon.ExceptionHandling
         private System.Windows.Forms.LinkLabel CopyDetailsLinkLabel;
         private System.Windows.Forms.Label WhatCanYouDoLabel;
         private System.Windows.Forms.TableLayoutPanel WhatCanYouDoTableLayoutPanel;
-        private System.Windows.Forms.LinkLabel KnownProblemsLinkLabel;
         private System.Windows.Forms.Label DescriptionLabel;
         private System.Windows.Forms.LinkLabel ReportLinkLabel;
         private System.Windows.Forms.LinkLabel LatestBinariesLinkLabel;
-        private System.Windows.Forms.PictureBox KnownProblemsPictureBox;
         private System.Windows.Forms.PictureBox LatestBinariesPictureBox;
         private System.Windows.Forms.PictureBox ReportPictureBox;
         private System.Windows.Forms.Panel TechnicalDetailsPanel;

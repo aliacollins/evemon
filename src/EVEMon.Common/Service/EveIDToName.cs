@@ -114,22 +114,7 @@ namespace EVEMon.Common.Service
             if (cache == null || cache.Entities.Any(x => x.ID == 0) || cache.Entities.Any(x => x.Name.Length == 0))
             {
                 EveMonClient.Trace("Deserializing failed. File may be corrupt. Deleting file.");
-                try
-                {
-                    File.Delete(file);
-                }
-                catch (ArgumentException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-                catch (IOException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
+                FileHelper.DeleteFile(file);
                 return;
             }
 

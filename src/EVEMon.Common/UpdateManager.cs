@@ -35,7 +35,7 @@ namespace EVEMon.Common
                     if (!installationFile.Exists)
                         continue;
 
-                    File.Delete(installationFile.FullName);
+                    FileHelper.DeleteFile(installationFile.FullName);
                 }
                 catch (UnauthorizedAccessException e)
                 {
@@ -58,7 +58,7 @@ namespace EVEMon.Common
                     if (!dataFile.Exists)
                         continue;
 
-                    File.Delete(dataFile.FullName);
+                    FileHelper.DeleteFile(dataFile.FullName);
                 }
                 catch (UnauthorizedAccessException e)
                 {

@@ -80,7 +80,7 @@ namespace EVEMon.Common.Controls
             {
                 m_item = value;
                 if (m_imageSize != EveImageSize.x0)
-                    Task.WhenAll(GetImageAsync());
+                   GetImageAsync().ConfigureAwait(false);
             }
         }
 

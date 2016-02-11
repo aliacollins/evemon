@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.CloudStorageServices;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Helpers;
 using EVEMon.Common.Service;
 using EVEMon.Common.Threading;
@@ -78,7 +77,7 @@ namespace EVEMon
 
             // Initialization
             EveMonClient.Initialize();
-            Task _ = TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
+            EveIDToName.InitializeFromFile();
             Settings.Initialize();
 
             // Initialize G15
@@ -148,8 +147,9 @@ namespace EVEMon
                 Application.SetCompatibleTextRenderingDefault(false);
 
                 string appId = "EVEMon";
+
                 if (EveMonClient.IsDebugBuild)
-                    appId = String.Format(CultureConstants.InvariantCulture, "{0}-DEBUG", appId);
+                    appId = $"{appId}-DEBUG";
 
                 Windows7.SetProcessAppId(appId);
             }
@@ -237,7 +237,10 @@ namespace EVEMon
 
                 using (UnhandledExceptionWindow form = new UnhandledExceptionWindow(ex))
                 {
-                    form.ShowDialog(s_mainWindow);
+                    if (!s_mainWindow.IsDisposed)
+                        form.ShowDialog(s_mainWindow);
+                    else
+                        form.ShowDialog();
                 }
 
                 // Notify Gooogle Analytics about ending via the Unhandled Exception window
@@ -246,18 +249,20 @@ namespace EVEMon
             catch (Exception e)
             {
                 StringBuilder messageBuilder = new StringBuilder();
-                messageBuilder.AppendLine(
-                    @"An error occurred and EVEMon was unable to handle the error message gracefully");
-                messageBuilder.AppendLine();
-                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, @"The exception encountered was '{0}'.",
-                    e.Message);
-                messageBuilder.AppendFormat(CultureConstants.DefaultCulture, @"The original exception encountered was '{0}'.",
-                    ex.Message);
-                messageBuilder.AppendLine();
-                messageBuilder.AppendLine();
-                messageBuilder.AppendLine(@"Please report this on the EVEMon forums.");
+                messageBuilder
+                    .AppendLine(@"An error occurred and EVEMon was unable to handle the error message gracefully")
+                    .AppendLine()
+                    .AppendLine($"The exception encountered was '{e.Message}'.")
+                    .AppendLine($"The original exception encountered was '{ex.GetBaseException().Message}'.")
+                    .AppendLine()
+                    .AppendLine(@"Please report this on the EVEMon forums.");
+
+                if (EveMonClient.IsDebugBuild)
+                    messageBuilder.AppendLine().AppendLine(UnhandledExceptionWindow.GetRecursiveStackTrace(ex));
+
                 MessageBox.Show(messageBuilder.ToString(), @"EVEMon Error Occurred", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
                 throw;
             }
 

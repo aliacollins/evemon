@@ -119,9 +119,9 @@ namespace EVEMon.Common.Models
                 if (m_image != null)
                     return m_image;
 
-                Task _ = GetVictimShipImageAsync();
+                GetVictimShipImageAsync().ConfigureAwait(false);
 
-                return m_image = GetDefaultImage();
+                return m_image ?? (m_image = GetDefaultImage());
             }
         }
 

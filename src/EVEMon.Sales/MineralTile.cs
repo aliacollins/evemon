@@ -50,7 +50,7 @@ namespace EVEMon.Sales
                     return;
 
                 m_mineral = StaticItems.GetItemByName(value);
-                Task.WhenAll(GetImageFromCCPAsync());
+                GetImageFromCCPAsync().ConfigureAwait(false);
             }
         }
 

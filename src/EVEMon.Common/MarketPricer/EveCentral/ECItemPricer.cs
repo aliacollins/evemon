@@ -255,7 +255,7 @@ namespace EVEMon.Common.MarketPricer.EveCentral
             EveMonClient.OnPricesDownloaded(null, String.Empty);
 
             // Save the file in cache
-            Task _ = SaveAsync(Filename, Util.SerializeToXmlDocument(Export()));
+            SaveAsync(Filename, Util.SerializeToXmlDocument(Export())).ConfigureAwait(false);
         }
 
         /// <summary>

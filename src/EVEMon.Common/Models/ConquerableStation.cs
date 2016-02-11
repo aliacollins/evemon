@@ -5,6 +5,7 @@ using System.Linq;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Data;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Serialization.Eve;
 using EVEMon.Common.Service;
 
@@ -23,6 +24,7 @@ namespace EVEMon.Common.Models
         private static bool s_loaded;
         private static bool s_queryPending;
         private static DateTime s_checkTime;
+        private static bool s_isImporting;
 
 
         #region Constructor
@@ -57,18 +59,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets something like OwnerName - StationName.
         /// </summary>
-        public string FullName
-        {
-            get { return CorporationName + " - " + Name; }
-        }
+        public string FullName => $"{CorporationName} - {Name}";
 
         /// <summary>
         /// Gets something like Region > Constellation > SolarSystem > OwnerName - StationName.
         /// </summary>
-        public new string FullLocation
-        {
-            get { return SolarSystem.FullLocation + " > " + FullName; }
-        }
+        public new string FullLocation => $"{SolarSystem.FullLocation} > {FullName}";
 
         #endregion
 
@@ -82,17 +78,18 @@ namespace EVEMon.Common.Models
         private static void UpdateList()
         {
             // Quit if we already checked a minute ago or query is pending
-            if (s_checkTime.AddMinutes(1) > DateTime.UtcNow || s_queryPending)
+            if (s_checkTime > DateTime.UtcNow || s_queryPending)
                 return;
 
             // Set the update time and period
-            DateTime updateTime = DateTime.Today.AddHours(EveConstants.DowntimeHour).AddMinutes(EveConstants.DowntimeDuration);
+            DateTime updateTime = DateTime.Today
+                .AddHours(EveConstants.DowntimeHour).AddMinutes(EveConstants.DowntimeDuration);
             TimeSpan updatePeriod = TimeSpan.FromDays(1);
 
             // Check to see if file is up to date
             bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(Filename, updateTime, updatePeriod);
 
-            s_checkTime = DateTime.UtcNow;
+            s_checkTime = DateTime.UtcNow.AddMinutes(1);
 
             // Quit if file is up to date
             if (fileUpToDate)
@@ -154,6 +151,12 @@ namespace EVEMon.Common.Models
         {
             UpdateList();
             Import();
+
+            // Importation may be done on another thread,
+            // delay until importation finishes
+            while (s_isImporting)
+            {
+            }
         }
 
         /// <summary>
@@ -161,8 +164,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         private static void Import()
         {
-            // Exit if we have already imported the list
-            if (s_loaded)
+            // Exit if we have already imported or are in the process of importing the list
+            if (s_loaded || s_queryPending || s_isImporting)
                 return;
 
             string filename = LocalXmlCache.GetFileInfo(Filename).FullName;
@@ -176,7 +179,13 @@ namespace EVEMon.Common.Models
 
             // In case the file has an error we prevent the deserialization
             if (result.HasError)
+            {
+                FileHelper.DeleteFile(filename);
+
+                s_checkTime = DateTime.UtcNow;
+
                 return;
+            }
 
             // Deserialize the list
             Import(result.Result.Outposts);
@@ -187,6 +196,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         private static void Import(IEnumerable<SerializableOutpost> outposts)
         {
+            s_isImporting = true;
+
             EveMonClient.Trace("begin");
 
             s_conqStationsByID.Clear();
@@ -196,6 +207,8 @@ namespace EVEMon.Common.Models
             }
 
             s_loaded = true;
+            s_isImporting = false;
+
             EveMonClient.Trace("done");
         }
 
@@ -224,6 +237,7 @@ namespace EVEMon.Common.Models
         {
             // Ensure list importation
             EnsureImportation();
+
             return s_conqStationsByID.Values.FirstOrDefault(station => station.Name == name);
         }
 

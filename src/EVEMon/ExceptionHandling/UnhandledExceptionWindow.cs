@@ -79,21 +79,14 @@ namespace EVEMon.ExceptionHandling
                 StringBuilder exceptionReport = new StringBuilder();
 
                 exceptionReport
-                    .AppendFormat(CultureConstants.DefaultCulture, "EVEMon Version: {0}",
-                        EveMonClient.FileVersionInfo.FileVersion).AppendLine()
-                    .AppendFormat(CultureConstants.DefaultCulture, ".NET Runtime Version: {0}",
-                        Environment.Version).AppendLine()
-                    .AppendFormat(CultureConstants.DefaultCulture, "Operating System: {0}",
-                        Environment.OSVersion.VersionString).AppendLine()
-                    .AppendFormat(CultureConstants.DefaultCulture, "Executable Path: {0}",
-                        Environment.CommandLine).AppendLine()
-                    .AppendLine()
-                    .Append(GetRecursiveStackTrace()).AppendLine()
-                    .AppendLine()
-                    .Append(GetDatafileReport()).AppendLine()
-                    .AppendLine()
-                    .Append("Diagnostic Log:").AppendLine()
-                    .Append(GetTraceLog().Trim()).AppendLine();
+                    .AppendLine($"EVEMon Version: {EveMonClient.FileVersionInfo.FileVersion}")
+                    .AppendLine($".NET Runtime Version: {Environment.Version}")
+                    .AppendLine($"Operating System: {Environment.OSVersion.VersionString}")
+                    .AppendLine($"Executable Path: {Environment.CommandLine}").AppendLine()
+                    .AppendLine(GetRecursiveStackTrace(m_exception)).AppendLine()
+                    .AppendLine(GetDatafileReport()).AppendLine()
+                    .AppendLine("Diagnostic Log:")
+                    .AppendLine(GetTraceLog().Trim());
 
                 TechnicalDetailsTextBox.Text = exceptionReport.ToString();
             }
@@ -199,10 +192,10 @@ namespace EVEMon.ExceptionHandling
         /// Gets the recursive stack trace.
         /// </summary>
         /// <value>The recursive stack trace.</value>
-        private string GetRecursiveStackTrace()
+        internal static string GetRecursiveStackTrace(Exception exception)
         {
             StringBuilder stackTraceBuilder = new StringBuilder();
-            Exception ex = m_exception;
+            Exception ex = exception;
 
             stackTraceBuilder.Append(ex).AppendLine();
 
@@ -272,17 +265,7 @@ namespace EVEMon.ExceptionHandling
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblReport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(new Uri(NetworkConstants.EVEMonBugReport));
-        }
-
-        /// <summary>
-        /// Handles the LinkClicked event of the llblKnownProblems control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void llblKnownProblems_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Util.OpenURL(new Uri(NetworkConstants.EVEMonKnownProblems));
+            Util.OpenURL(new Uri(NetworkConstants.BitBucketIssuesBase));
         }
 
         /// <summary>
@@ -292,7 +275,7 @@ namespace EVEMon.ExceptionHandling
         /// <param name="e">The <see cref="LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
         private void llblLatestBinaries_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.OpenURL(new Uri(NetworkConstants.EVEMonMainPage));
+            Util.OpenURL(new Uri(NetworkConstants.BitBucketDownloadsBase));
         }
 
         #endregion
