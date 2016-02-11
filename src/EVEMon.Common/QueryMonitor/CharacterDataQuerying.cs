@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EVEMon.Common.Enumerations;
 using EVEMon.Common.Enumerations.CCPAPI;
+using EVEMon.Common.Helpers;
 using EVEMon.Common.Interfaces;
 using EVEMon.Common.Models;
 using EVEMon.Common.Net;
@@ -442,7 +443,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's assets information.
         /// </summary>
         /// <param name="result"></param>
-        private void OnAssetsUpdated(CCPAPIResult<SerializableAPIAssetList> result)
+        private async void OnAssetsUpdated(CCPAPIResult<SerializableAPIAssetList> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -457,7 +458,7 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Import the data
-            m_ccpCharacter.Assets.Import(result.Result.Assets);
+            await TaskHelper.RunCPUBoundTaskAsync(() => m_ccpCharacter.Assets.Import(result.Result.Assets));
 
             // Fires the event regarding assets update
             EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter);

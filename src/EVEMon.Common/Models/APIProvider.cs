@@ -7,6 +7,7 @@ using EVEMon.Common.Attributes;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Serialization.Eve;
+using EVEMon.Common.Threading;
 
 namespace EVEMon.Common.Models
 {
@@ -276,9 +277,8 @@ namespace EVEMon.Common.Models
                     }
 
                     // Invokes the callback
-                    callback.Invoke(task.Result);
-
-                }, EveMonClient.CurrentSynchronizationContext);
+                    Dispatcher.Invoke(() => callback.Invoke(task.Result));
+                });
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace EVEMon.Common.Models
         }
 
         /// <summary>
-        /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="XmlSerializer"/>
+        /// Gets the XSLT used for transforming rowsets into something deserializable by <see cref="System.Xml.Serialization.XmlSerializer"/>
         /// </summary>
         internal static XslCompiledTransform RowsetsTransform
         {
