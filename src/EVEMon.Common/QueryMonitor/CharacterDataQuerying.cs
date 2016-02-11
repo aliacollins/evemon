@@ -443,7 +443,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Processes the queried character's assets information.
         /// </summary>
         /// <param name="result"></param>
-        private async void OnAssetsUpdated(CCPAPIResult<SerializableAPIAssetList> result)
+        private void OnAssetsUpdated(CCPAPIResult<SerializableAPIAssetList> result)
         {
             // Character may have been deleted or set to not be monitored since we queried
             if (m_ccpCharacter == null || !m_ccpCharacter.Monitored)
@@ -458,10 +458,13 @@ namespace EVEMon.Common.QueryMonitor
                 return;
 
             // Import the data
-            await TaskHelper.RunCPUBoundTaskAsync(() => m_ccpCharacter.Assets.Import(result.Result.Assets));
+            TaskHelper.RunCPUBoundTaskAsync(() => m_ccpCharacter.Assets.Import(result.Result.Assets))
+                .ContinueWith(_ =>
+                {
+                    // Fires the event regarding assets update
+                    EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter);
 
-            // Fires the event regarding assets update
-            EveMonClient.OnCharacterAssetsUpdated(m_ccpCharacter);
+                }, EveMonClient.CurrentSynchronizationContext);
         }
 
         /// <summary>
