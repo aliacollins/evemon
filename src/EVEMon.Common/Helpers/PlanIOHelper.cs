@@ -340,22 +340,7 @@ namespace EVEMon.Common.Helpers
                     }
                     finally
                     {
-                        try
-                        {
-                            File.Delete(tempFile);
-                        }
-                        catch (ArgumentException ex)
-                        {
-                            ExceptionHandler.LogException(ex, false);
-                        }
-                        catch (IOException ex)
-                        {
-                            ExceptionHandler.LogException(ex, false);
-                        }
-                        catch (UnauthorizedAccessException ex)
-                        {
-                            ExceptionHandler.LogException(ex, false);
-                        }
+                        FileHelper.DeleteFile(tempFile);
                     }
                 }
 
@@ -407,22 +392,7 @@ namespace EVEMon.Common.Helpers
                     }
                     finally
                     {
-                        try
-                        {
-                            File.Delete(tempFile);
-                        }
-                        catch (ArgumentException ex)
-                        {
-                            ExceptionHandler.LogException(ex, false);
-                        }
-                        catch (IOException ex)
-                        {
-                            ExceptionHandler.LogException(ex, false);
-                        }
-                        catch (UnauthorizedAccessException ex)
-                        {
-                            ExceptionHandler.LogException(ex, false);
-                        }
+                        FileHelper.DeleteFile(tempFile);
                     }
                 }
 

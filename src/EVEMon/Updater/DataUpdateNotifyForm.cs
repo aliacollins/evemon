@@ -107,24 +107,7 @@ namespace EVEMon.Updater
 
                 // If the file already exists delete it
                 if (File.Exists(newFilename))
-                {
-                    try
-                    {
-                        File.Delete(newFilename);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        ExceptionHandler.LogException(ex, false);
-                    }
-                    catch (IOException ex)
-                    {
-                        ExceptionHandler.LogException(ex, false);
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        ExceptionHandler.LogException(ex, false);
-                    }
-                }
+                    FileHelper.DeleteFile(newFilename);
 
                 Uri url = new Uri(String.Format(CultureConstants.InvariantCulture, "{0}/{1}", versionDatafile.Address,
                     versionDatafile.Name));
@@ -139,22 +122,7 @@ namespace EVEMon.Updater
 
                     if (versionDatafile.MD5Sum != null && versionDatafile.MD5Sum != downloadedDatafile.MD5Sum)
                     {
-                        try
-                        {
-                            File.Delete(newFilename);
-                        }
-                        catch (ArgumentException e)
-                        {
-                            ExceptionHandler.LogException(e, false);
-                        }
-                        catch (IOException ex)
-                        {
-                            ExceptionHandler.LogException(ex, false);
-                        }
-                        catch (UnauthorizedAccessException ex)
-                        {
-                            ExceptionHandler.LogException(ex, false);
-                        }
+                        FileHelper.DeleteFile(newFilename);
                         continue;
                     }
 
@@ -173,9 +141,9 @@ namespace EVEMon.Updater
         {
             try
             {
-                File.Delete(String.Format(CultureConstants.InvariantCulture, "{0}.bak", oldFilename));
-                File.Copy(oldFilename, String.Format(CultureConstants.InvariantCulture, "{0}.bak", oldFilename));
-                File.Delete(oldFilename);
+                FileHelper.DeleteFile($"{oldFilename}.bak");
+                File.Copy(oldFilename, $"{oldFilename}.bak");
+                FileHelper.DeleteFile(oldFilename);
                 File.Move(newFilename, oldFilename);
             }
             catch (ArgumentException ex)

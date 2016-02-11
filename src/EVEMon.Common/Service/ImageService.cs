@@ -150,7 +150,7 @@ namespace EVEMon.Common.Service
             catch (ArgumentException e)
             {
                 ExceptionHandler.LogException(e, false);
-                File.Delete(cacheFileName);
+                FileHelper.DeleteFile(cacheFileName);
             }
             catch (IOException e)
             {

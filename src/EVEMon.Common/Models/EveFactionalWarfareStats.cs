@@ -252,22 +252,7 @@ namespace EVEMon.Common.Models
             // In case the file has an error we prevent the deserialization
             if (result.HasError)
             {
-                try
-                {
-                    File.Delete(filename);
-                }
-                catch (ArgumentException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-                catch (IOException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
+                FileHelper.DeleteFile(filename);
 
                 s_checkTime = DateTime.UtcNow;
 

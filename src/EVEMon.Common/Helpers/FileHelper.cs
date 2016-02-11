@@ -92,22 +92,7 @@ namespace EVEMon.Common.Helpers
             }
             finally
             {
-                try
-                {
-                    File.Delete(tempFileName);
-                }
-                catch (ArgumentException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-                catch (IOException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    ExceptionHandler.LogException(ex, false);
-                }
+                DeleteFile(tempFileName);
             }
         }
 
@@ -257,6 +242,34 @@ namespace EVEMon.Common.Helpers
                     return s_removeReadOnlyAttributes.Value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Deletes the file.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        public static bool DeleteFile(string filename)
+        {
+            bool success = false;
+            try
+            {
+                File.Delete(filename);
+                success = true;
+            }
+            catch (ArgumentException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
+            catch (IOException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
+
+            return success;
         }
     }
 }
