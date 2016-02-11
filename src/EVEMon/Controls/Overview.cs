@@ -111,6 +111,10 @@ namespace EVEMon.Controls
         /// </summary>
         private void UpdateContent()
         {
+            // User has disabled the Overview
+            if (!Settings.UI.MainWindow.ShowOverview)
+                return;
+
             // Updates the visibility of the label for when no characters are loaded
             if (!EveMonClient.MonitoredCharacters.Any())
             {
