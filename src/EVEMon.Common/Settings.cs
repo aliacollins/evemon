@@ -392,7 +392,7 @@ namespace EVEMon.Common
 
             // Loading settings
             // If there are none, we create them from scratch
-            Task _ = ImportAsync(settings);
+            ImportAsync(settings).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -490,7 +490,7 @@ namespace EVEMon.Common
                 return TryDeserializeFromBackupFile(backupFile);
 
             CheckSettingsVersion(settings);
-            Task _ = FileHelper.CopyOrWarnTheUserAsync(settingsFile, backupFile);
+            FileHelper.CopyOrWarnTheUserAsync(settingsFile, backupFile).ConfigureAwait(false);
 
             EveMonClient.Trace("done");
             return settings;
@@ -537,7 +537,7 @@ namespace EVEMon.Common
                         MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                     // Save a copy of the corrupt file just in case
-                    Task _ = FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile + ".corrupt");
+                    FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile + ".corrupt").ConfigureAwait(false);
 
                     return null;
                 }
@@ -554,8 +554,8 @@ namespace EVEMon.Common
             if (settings != null)
             {
                 CheckSettingsVersion(settings);
-                Task _ = FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile)
-                    .ContinueWith(__ => FileHelper.CopyOrWarnTheUserAsync(settingsFile, backupFile));
+                FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile)
+                    .ContinueWith(_ => FileHelper.CopyOrWarnTheUserAsync(settingsFile, backupFile));
 
                 EveMonClient.Trace("done");
                 return settings;
@@ -569,7 +569,7 @@ namespace EVEMon.Common
                     Caption, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                 // Save a copy of the corrupt file just in case
-                Task _ = FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile + ".corrupt");
+                FileHelper.CopyOrWarnTheUserAsync(backupFile, settingsFile + ".corrupt").ConfigureAwait(false);
             }
             else
             {

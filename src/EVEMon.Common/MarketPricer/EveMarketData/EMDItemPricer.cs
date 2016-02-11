@@ -214,7 +214,7 @@ namespace EVEMon.Common.MarketPricer.EveMarketdata
             EveMonClient.OnPricesDownloaded(null, String.Empty);
 
             // Save the file in cache
-            Task _ = SaveAsync(Filename, Util.SerializeToXmlDocument(result.Result));
+            SaveAsync(Filename, Util.SerializeToXmlDocument(result.Result)).ConfigureAwait(false);
         }
 
         #endregion

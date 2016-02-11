@@ -109,7 +109,7 @@ namespace EVEMon.Common.Service
             image = GotImage(result);
 
             if (image != null)
-                await AddImageToCacheAsync(image, GetCacheName(url));
+                await AddImageToCacheAsync(image, GetCacheName(url)).ConfigureAwait(false);
 
             return image;
         }
@@ -199,13 +199,10 @@ namespace EVEMon.Common.Service
                 await FileHelper.OverwriteOrWarnTheUserAsync(cacheFileName,
                     fs =>
                     {
-                        using (image = (Image)image.Clone())
-                        {
-                            image.Save(fs, ImageFormat.Png);
-                            fs.Flush();
-                        }
+                        ((Image)image.Clone()).Save(fs, ImageFormat.Png);
+                        fs.Flush();
                         return Task.FromResult(true);
-                    });
+                    }).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

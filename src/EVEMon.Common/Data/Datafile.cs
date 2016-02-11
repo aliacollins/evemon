@@ -90,7 +90,7 @@ namespace EVEMon.Common.Data
                 throw new FileNotFoundException(String.Format(CultureConstants.DefaultCulture, "{0} not found!", baseFile));
 
             // The file was in the installation directory, let's copy it to %APPDATA%
-            Task _ = FileHelper.CopyOrWarnTheUserAsync(baseFile, filepath);
+            FileHelper.CopyOrWarnTheUserAsync(baseFile, filepath).ConfigureAwait(false);
 
             // Return
             return baseFile;
