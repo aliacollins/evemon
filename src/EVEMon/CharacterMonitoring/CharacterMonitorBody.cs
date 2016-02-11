@@ -1003,6 +1003,8 @@ namespace EVEMon.CharacterMonitoring
                 preferencesMenu.DropDownItems.Add(autoSizeColumnMenuItem);
                 preferencesMenu.DropDownItems.Add(tsPlanetarySeparator);
                 preferencesMenu.DropDownItems.Add(showOnlyExtractorMenuItem);
+                showOnlyExtractorMenuItem.Checked = Settings.UI.MainWindow.Planetary.ShowEcuOnly;
+
                 return;
             }
 
@@ -1454,7 +1456,8 @@ namespace EVEMon.CharacterMonitoring
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void showOnlyExtractorMenuItem_Click(object sender, EventArgs e)
         {
-            planetaryList.ShowOnlyExtractors = showOnlyExtractorMenuItem.Checked;
+            Settings.UI.MainWindow.Planetary.ShowEcuOnly = showOnlyExtractorMenuItem.Checked;
+            planetaryList.UpdateColumns();
         }
 
         #endregion

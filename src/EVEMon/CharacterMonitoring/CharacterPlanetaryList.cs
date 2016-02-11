@@ -37,7 +37,6 @@ namespace EVEMon.CharacterMonitoring
         private bool m_columnsChanged;
         private bool m_isUpdatingColumns;
         private bool m_init;
-        private bool m_showOnlyExtractors;
 
         private int m_columnTTCDisplayIndex;
 
@@ -164,23 +163,6 @@ namespace EVEMon.CharacterMonitoring
                 // reset the dipslay index of the TTC column
                 m_columnTTCDisplayIndex = -1;
 
-                if (m_init)
-                    UpdateColumns();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [show only extractors].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [show only extractors]; otherwise, <c>false</c>.
-        /// </value>
-        internal bool ShowOnlyExtractors
-        {
-            get { return m_showOnlyExtractors; }
-            set
-            {
-                m_showOnlyExtractors = value;
                 if (m_init)
                     UpdateColumns();
             }
@@ -354,7 +336,7 @@ namespace EVEMon.CharacterMonitoring
                 string text = m_textFilter.ToUpperInvariant();
                 IEnumerable<PlanetaryPin> pins = m_list.Where(x => IsTextMatching(x, text));
 
-                if (m_showOnlyExtractors)
+                if (Settings.UI.MainWindow.Planetary.ShowEcuOnly)
                     pins = pins.Where(pin => DBConstants.EcuTypeIDs.Any(id => id == pin.TypeID));
 
                 UpdateSort();

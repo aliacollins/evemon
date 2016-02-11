@@ -24,7 +24,7 @@ namespace EVEMon.Common.SettingsObjects
         {
             m_columns = new Collection<PlanetaryColumnSettings>();
         }
-
+        
         /// <summary>
         /// Gets the columns.
         /// </summary>
@@ -35,6 +35,15 @@ namespace EVEMon.Common.SettingsObjects
         {
             get { return m_columns; }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show only the ECU.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if to show only the ECU; otherwise, <c>false</c>.
+        /// </value>
+        [XmlElement("showEcuOnly")]
+        public bool ShowEcuOnly { get; set; }
 
         /// <summary>
         /// Gets the default columns.
