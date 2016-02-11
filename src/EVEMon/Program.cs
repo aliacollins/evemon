@@ -77,7 +77,7 @@ namespace EVEMon
 
             // Initialization
             EveMonClient.Initialize();
-            Task _ = TaskHelper.RunIOBoundTaskAsync(() => EveIDToName.InitializeFromFile());
+            EveIDToName.InitializeFromFile();
             Settings.Initialize();
 
             // Initialize G15
