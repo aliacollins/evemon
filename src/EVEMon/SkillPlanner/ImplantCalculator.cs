@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
@@ -356,9 +357,10 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the times when "choose implant set" changes.
         /// </summary>
-        public void UpdateOnImplantSetChange()
+        public Task UpdateOnImplantSetChange()
         {
             UpdateTimes();
+            return Task.CompletedTask;
         }
 
         #endregion
