@@ -126,37 +126,9 @@ namespace EVEMon.Updater
                         continue;
                     }
 
-                    ReplaceDatafile(oldFilename, newFilename);
+                    UpdateManager.ReplaceDatafile(oldFilename, newFilename);
                     m_args.ChangedFiles.Remove(versionDatafile);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Replaces the datafile.
-        /// </summary>
-        /// <param name="oldFilename">The old filename.</param>
-        /// <param name="newFilename">The new filename.</param>
-        private static void ReplaceDatafile(string oldFilename, string newFilename)
-        {
-            try
-            {
-                FileHelper.DeleteFile($"{oldFilename}.bak");
-                File.Copy(oldFilename, $"{oldFilename}.bak");
-                FileHelper.DeleteFile(oldFilename);
-                File.Move(newFilename, oldFilename);
-            }
-            catch (ArgumentException ex)
-            {
-                ExceptionHandler.LogException(ex, false);
-            }
-            catch (IOException ex)
-            {
-                ExceptionHandler.LogException(ex, false);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                ExceptionHandler.LogException(ex, false);
             }
         }
 

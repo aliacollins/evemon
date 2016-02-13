@@ -22,6 +22,27 @@ namespace EVEMon.Common
         private static bool s_enabled;
 
         /// <summary>
+        /// Gets or sets whether the autoupdater is enabled.
+        /// </summary>
+        public static bool Enabled
+        {
+            get { return s_enabled; }
+            set
+            {
+                s_enabled = value;
+
+                if (!s_enabled)
+                    return;
+
+                if (s_checkScheduled)
+                    return;
+
+                // Schedule a check in 10 seconds
+                ScheduleCheck(TimeSpan.FromSeconds(10));
+            }
+        }
+
+        /// <summary>
         /// Deletes the installation files.
         /// </summary>
         public static void DeleteInstallationFiles()
@@ -64,27 +85,6 @@ namespace EVEMon.Common
                 {
                     ExceptionHandler.LogException(e, false);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets whether the autoupdater is enabled.
-        /// </summary>
-        public static bool Enabled
-        {
-            get { return s_enabled; }
-            set
-            {
-                s_enabled = value;
-
-                if (!s_enabled)
-                    return;
-
-                if (s_checkScheduled)
-                    return;
-
-                // Schedule a check in 10 seconds
-                ScheduleCheck(TimeSpan.FromSeconds(10));
             }
         }
 
@@ -232,6 +232,34 @@ namespace EVEMon.Common
 
             // Requests a notification to subscribers
             EveMonClient.OnDataUpdateAvailable(result.ChangedDatafiles);
+        }
+
+        /// <summary>
+        /// Replaces the datafile.
+        /// </summary>
+        /// <param name="oldFilename">The old filename.</param>
+        /// <param name="newFilename">The new filename.</param>
+        public static void ReplaceDatafile(string oldFilename, string newFilename)
+        {
+            try
+            {
+                FileHelper.DeleteFile($"{oldFilename}.bak");
+                File.Copy(oldFilename, $"{oldFilename}.bak");
+                FileHelper.DeleteFile(oldFilename);
+                File.Move(newFilename, oldFilename);
+            }
+            catch (ArgumentException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
+            catch (IOException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ExceptionHandler.LogException(ex, false);
+            }
         }
     }
 }
