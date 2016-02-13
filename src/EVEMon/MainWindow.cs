@@ -149,6 +149,11 @@ namespace EVEMon
             menubarToolStripMenuItem.Checked = mainMenuBar.Visible = Settings.UI.MainWindow.ShowMenuBar;
             toolbarToolStripMenuItem.Checked = mainToolBar.Visible = !Settings.UI.MainWindow.ShowMenuBar;
 
+            // Prepare settings controls
+            loadSettingsToolStripMenuItem.Enabled =
+                resetSettingsToolStripMenuItem.Enabled =
+                    saveSettingsToolStripMenuItem.Enabled = false;
+
             // Subscribe events
             TimeCheck.TimeCheckCompleted += TimeCheck_TimeCheckCompleted;
             EveMonClient.NotificationSent += EveMonClient_NotificationSent;
@@ -1283,6 +1288,9 @@ namespace EVEMon
             mainLoadingThrobber.State = ThrobberState.Rotating;
             mainLoadingThrobber.Show();
             tabLoadingLabel.Show();
+            loadSettingsToolStripMenuItem.Enabled =
+                resetSettingsToolStripMenuItem.Enabled =
+                    saveSettingsToolStripMenuItem.Enabled = false;
 
             // Open the specified settings
             await Settings.RestoreAsync(openFileDialog.FileName);
@@ -1997,6 +2005,9 @@ namespace EVEMon
             mainLoadingThrobber.State = ThrobberState.Stopped;
             mainLoadingThrobber.Hide();
             tabLoadingLabel.Hide();
+            loadSettingsToolStripMenuItem.Enabled =
+                resetSettingsToolStripMenuItem.Enabled =
+                    saveSettingsToolStripMenuItem.Enabled = true;
 
             UpdateControlsVisibility();
         }
