@@ -26,19 +26,9 @@ namespace EVEMon.Common
     [EnforceUIThreadAffinity]
     public static class Settings
     {
-        /// <summary>
-        /// Flag to indicate if a save is pending but not committed.
-        /// </summary>
+        private static bool s_isSaving;
         private static bool s_savePending;
-
-        /// <summary>
-        /// The last time the settings were saved.
-        /// </summary>
-        private static DateTime s_lastSaveTime;
-
-        /// <summary>
-        /// The settings transform
-        /// </summary>
+        private static DateTime s_nextSaveTime;
         private static XslCompiledTransform s_settingsTransform;
 
         /// <summary>
@@ -608,10 +598,11 @@ namespace EVEMon.Common
                 fileDialog.Filter = @"Settings Backup Files (*.bak)|*.bak";
                 fileDialog.FileName = $"EVEMon_Settings_{settings.Revision}.xml.bak";
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
                 if (fileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                Task _= FileHelper.CopyOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName);
+                FileHelper.CopyOrWarnTheUserAsync(EveMonClient.SettingsFileNameFullPath, fileDialog.FileName).ConfigureAwait(false);
             }
         }
 
@@ -632,7 +623,7 @@ namespace EVEMon.Common
         private static Task UpdateOnOneSecondTickAsync()
         {
             // Is a save requested and is the last save older than 10s ?
-            if (s_savePending && DateTime.UtcNow > s_lastSaveTime.AddSeconds(10))
+            if (s_savePending && DateTime.UtcNow > s_nextSaveTime)
                 return SaveImmediateAsync();
 
             return Task.CompletedTask;
@@ -656,6 +647,11 @@ namespace EVEMon.Common
         /// </summary>
         public static async Task SaveImmediateAsync()
         {
+            if (s_isSaving)
+                return;
+
+            s_isSaving = true;
+
             SerializableSettings settings = Export();
 
             // Save in settings file
@@ -668,9 +664,10 @@ namespace EVEMon.Common
                     return Task.FromResult(true);
                 });
 
-            // Reset savePending flag
-            s_lastSaveTime = DateTime.UtcNow;
+            // Reset flags
+            s_nextSaveTime = DateTime.UtcNow.AddSeconds(10);
             s_savePending = false;
+            s_isSaving = false;
         }
 
         /// <summary>
