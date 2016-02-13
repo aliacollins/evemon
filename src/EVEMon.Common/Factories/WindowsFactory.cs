@@ -215,13 +215,11 @@ namespace EVEMon.Common.Factories
             lock (s_syncLock)
             {
                 // Does it already exist ?
-                foreach (TForm existingWindow in s_taggedWindows.OfType<TForm>())
+                foreach (TForm existingWindow in s_taggedWindows.OfType<TForm>()
+                    .Where(existingWindow => existingWindow.Tag == otag))
                 {
                     try
                     {
-                        if (existingWindow.Tag != otag)
-                            continue;
-
                         // Bring to front or show
                         if (existingWindow.Visible)
                             existingWindow.BringToFront();
@@ -240,18 +238,18 @@ namespace EVEMon.Common.Factories
                 }
 
                 // Create the window and attach the tag
-                TForm window = creation(tag);
+                TForm window = creation.Invoke(tag);
                 window.Tag = otag;
 
                 // Store it and subscribe to closing for clean up
                 s_taggedWindows.Add(window);
-                window.FormClosing += (FormClosingEventHandler)((sender, args) =>
-                                                                    {
-                                                                        lock (s_syncLock)
-                                                                        {
-                                                                            s_taggedWindows.Remove((TForm)sender);
-                                                                        }
-                                                                    });
+                window.FormClosing += (sender, args) =>
+                {
+                    lock (s_syncLock)
+                    {
+                        s_taggedWindows.Remove((TForm)sender);
+                    }
+                };
 
                 // Show and return
                 window.Show();

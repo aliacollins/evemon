@@ -26,6 +26,7 @@ namespace EVEMon.Common.Models
 
         private static bool s_loaded;
         private static bool s_queryPending;
+        private static bool s_isImporting;
 
         private static int s_totalsKillsYesterday;
         private static int s_totalsKillsLastWeek;
@@ -33,8 +34,7 @@ namespace EVEMon.Common.Models
         private static int s_totalsVictoryPointsYesterday;
         private static int s_totalsVictoryPointsLastWeek;
         private static int s_totalsVictoryPointsTotal;
-        private static DateTime s_checkTime;
-        private static bool s_isImporting;
+        private static DateTime s_nextCheckTime;
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsKillsYesterday;
+                return s_isImporting ? 0 : s_totalsKillsYesterday;
             }
         }
 
@@ -65,7 +65,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsKillsLastWeek;
+                return s_isImporting ? 0 : s_totalsKillsLastWeek;
             }
         }
 
@@ -79,7 +79,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsKillsTotal;
+                return s_isImporting ? 0 : s_totalsKillsTotal;
             }
         }
 
@@ -93,7 +93,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsVictoryPointsYesterday;
+                return s_isImporting ? 0 : s_totalsVictoryPointsYesterday;
             }
         }
 
@@ -107,7 +107,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsVictoryPointsLastWeek;
+                return s_isImporting ? 0 : s_totalsVictoryPointsLastWeek;
             }
         }
 
@@ -121,7 +121,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsVictoryPointsTotal;
+                return s_isImporting ? 0 : s_totalsVictoryPointsTotal;
             }
         }
 
@@ -135,7 +135,9 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_eveFactionalWarfareStats;
+                return s_isImporting
+                    ? Enumerable.Empty<EveFactionWarfareStats>()
+                    : s_eveFactionalWarfareStats;
             }
         }
 
@@ -151,7 +153,7 @@ namespace EVEMon.Common.Models
         private static void UpdateList()
         {
             // Quit if we already checked a minute ago or query is pending
-            if (s_checkTime > DateTime.UtcNow || s_queryPending)
+            if (s_nextCheckTime > DateTime.UtcNow || s_queryPending)
                 return;
 
             // Set the update time and period
@@ -161,7 +163,7 @@ namespace EVEMon.Common.Models
             // Check to see if file is up to date
             bool fileUpToDate = LocalXmlCache.CheckFileUpToDate(Filename, updateTime, updatePeriod);
 
-            s_checkTime = DateTime.UtcNow.AddMinutes(1);
+            s_nextCheckTime = DateTime.UtcNow.AddMinutes(1);
 
             // Quit if file is up to date
             if (fileUpToDate)
@@ -223,12 +225,6 @@ namespace EVEMon.Common.Models
         {
             UpdateList();
             Import();
-
-            // Importation may be done on another thread,
-            // delay until importation finishes
-            while (s_isImporting)
-            {
-            }
         }
 
         /// <summary>
@@ -254,7 +250,7 @@ namespace EVEMon.Common.Models
             {
                 FileHelper.DeleteFile(filename);
 
-                s_checkTime = DateTime.UtcNow;
+                s_nextCheckTime = DateTime.UtcNow;
 
                 return;
             }
@@ -303,6 +299,9 @@ namespace EVEMon.Common.Models
             // Ensure list importation
             EnsureImportation();
 
+            if (s_isImporting)
+                return Enumerable.Empty<int>();
+
             List<int> againstIDs = new List<int>();
             foreach (EveFactionWar factionWar in s_eveFactionWars.Where(faction => faction.FactionID == factionID))
             {
@@ -326,7 +325,9 @@ namespace EVEMon.Common.Models
             // Ensure list importation
             EnsureImportation();
 
-            return s_eveFactionalWarfareStats.FirstOrDefault(factionStats => factionStats.FactionID == factionID);
+            return s_isImporting
+                ? null
+                : s_eveFactionalWarfareStats.FirstOrDefault(factionStats => factionStats.FactionID == factionID);
         }
 
         #endregion

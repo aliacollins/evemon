@@ -191,7 +191,7 @@ namespace EVEMon.Common
         internal static T DeserializeDatafile<T>(string filename, XslCompiledTransform transform = null)
         {
             // Gets the full path
-            string path = Datafile.GetFullPath(filename);
+            string path = Datafile.GetFullPath(filename).Result;
             try
             {
                 using (Stream stream = FileHelper.OpenRead(path, false))

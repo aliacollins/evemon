@@ -386,8 +386,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lbWarning
             // 
-            this.lbWarning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbWarning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbWarning.AutoSize = true;
             this.lbWarning.ForeColor = System.Drawing.Color.DarkRed;
             this.lbWarning.Location = new System.Drawing.Point(256, 292);
@@ -430,8 +430,8 @@ namespace EVEMon.SkillPlanner
             // 
             // lblNotice
             // 
-            this.lblNotice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblNotice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblNotice.AutoSize = true;
             this.lblNotice.ForeColor = System.Drawing.Color.Red;
             this.lblNotice.Location = new System.Drawing.Point(8, 26);
@@ -474,6 +474,7 @@ namespace EVEMon.SkillPlanner
             this.pbMEMRemappable.Size = new System.Drawing.Size(103, 18);
             this.pbMEMRemappable.TabIndex = 82;
             this.pbMEMRemappable.TabStop = false;
+            this.pbMEMRemappable.Value = ((long)(0));
             this.pbMEMRemappable.ValueChanging += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangingEventArgs>(this.pbRemappable_ValueChanging);
             this.pbMEMRemappable.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             this.pbMEMRemappable.Highlighting += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeHighlightingEventArgs>(this.pbRemappable_Highlighting);
@@ -497,6 +498,7 @@ namespace EVEMon.SkillPlanner
             this.pbWILRemappable.Size = new System.Drawing.Size(103, 18);
             this.pbWILRemappable.TabIndex = 89;
             this.pbWILRemappable.TabStop = false;
+            this.pbWILRemappable.Value = ((long)(0));
             this.pbWILRemappable.ValueChanging += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangingEventArgs>(this.pbRemappable_ValueChanging);
             this.pbWILRemappable.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             this.pbWILRemappable.Highlighting += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeHighlightingEventArgs>(this.pbRemappable_Highlighting);
@@ -520,6 +522,7 @@ namespace EVEMon.SkillPlanner
             this.pbCHARemappable.Size = new System.Drawing.Size(103, 18);
             this.pbCHARemappable.TabIndex = 90;
             this.pbCHARemappable.TabStop = false;
+            this.pbCHARemappable.Value = ((long)(0));
             this.pbCHARemappable.ValueChanging += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangingEventArgs>(this.pbRemappable_ValueChanging);
             this.pbCHARemappable.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             this.pbCHARemappable.Highlighting += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeHighlightingEventArgs>(this.pbRemappable_Highlighting);
@@ -543,6 +546,7 @@ namespace EVEMon.SkillPlanner
             this.pbPERRemappable.Size = new System.Drawing.Size(103, 18);
             this.pbPERRemappable.TabIndex = 91;
             this.pbPERRemappable.TabStop = false;
+            this.pbPERRemappable.Value = ((long)(0));
             this.pbPERRemappable.ValueChanging += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangingEventArgs>(this.pbRemappable_ValueChanging);
             this.pbPERRemappable.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             this.pbPERRemappable.Highlighting += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeHighlightingEventArgs>(this.pbRemappable_Highlighting);
@@ -566,6 +570,7 @@ namespace EVEMon.SkillPlanner
             this.pbINTRemappable.Size = new System.Drawing.Size(103, 18);
             this.pbINTRemappable.TabIndex = 81;
             this.pbINTRemappable.TabStop = false;
+            this.pbINTRemappable.Value = ((long)(0));
             this.pbINTRemappable.ValueChanging += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangingEventArgs>(this.pbRemappable_ValueChanging);
             this.pbINTRemappable.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             this.pbINTRemappable.Highlighting += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeHighlightingEventArgs>(this.pbRemappable_Highlighting);
@@ -634,6 +639,7 @@ namespace EVEMon.SkillPlanner
             this.pbINTImplants.SpentPointColor = System.Drawing.Color.LightGray;
             this.pbINTImplants.TabIndex = 100;
             this.pbINTImplants.TabStop = false;
+            this.pbINTImplants.Value = ((long)(0));
             this.pbINTImplants.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             // 
             // pbPERImplants
@@ -645,6 +651,7 @@ namespace EVEMon.SkillPlanner
             this.pbPERImplants.SpentPointColor = System.Drawing.Color.LightGray;
             this.pbPERImplants.TabIndex = 99;
             this.pbPERImplants.TabStop = false;
+            this.pbPERImplants.Value = ((long)(0));
             this.pbPERImplants.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             // 
             // pbCHAImplants
@@ -656,6 +663,7 @@ namespace EVEMon.SkillPlanner
             this.pbCHAImplants.SpentPointColor = System.Drawing.Color.LightGray;
             this.pbCHAImplants.TabIndex = 98;
             this.pbCHAImplants.TabStop = false;
+            this.pbCHAImplants.Value = ((long)(0));
             this.pbCHAImplants.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             // 
             // pbWILImplants
@@ -667,6 +675,7 @@ namespace EVEMon.SkillPlanner
             this.pbWILImplants.SpentPointColor = System.Drawing.Color.LightGray;
             this.pbWILImplants.TabIndex = 97;
             this.pbWILImplants.TabStop = false;
+            this.pbWILImplants.Value = ((long)(0));
             this.pbWILImplants.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             // 
             // pbMEMImplants
@@ -678,6 +687,7 @@ namespace EVEMon.SkillPlanner
             this.pbMEMImplants.SpentPointColor = System.Drawing.Color.LightGray;
             this.pbMEMImplants.TabIndex = 96;
             this.pbMEMImplants.TabStop = false;
+            this.pbMEMImplants.Value = ((long)(0));
             this.pbMEMImplants.ValueChanged += new System.EventHandler<EVEMon.Common.CustomEventArgs.AttributeValueChangedEventArgs>(this.pb_ValueChanged);
             // 
             // pbUnassigned
@@ -689,6 +699,7 @@ namespace EVEMon.SkillPlanner
             this.pbUnassigned.Size = new System.Drawing.Size(143, 18);
             this.pbUnassigned.TabIndex = 80;
             this.pbUnassigned.TabStop = false;
+            this.pbUnassigned.Value = ((long)(0));
             // 
             // AttributesOptimizationControl
             // 

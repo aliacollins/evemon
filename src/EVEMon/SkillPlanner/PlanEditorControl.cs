@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common;
 using EVEMon.Common.Collections;
@@ -44,7 +45,6 @@ namespace EVEMon.SkillPlanner
         private Color m_remappingBackColor;
         private Color m_remappingForeColor;
 
-        private Character m_character;
         private RemappingPoint m_formTag;
         private AttributesOptimizationForm m_oldForm;
 
@@ -166,8 +166,7 @@ namespace EVEMon.SkillPlanner
                     return;
 
                 m_plan = value;
-                m_character = (Character)m_plan.Character;
-                DisplayPlan = new PlanScratchpad(m_character);
+                DisplayPlan = new PlanScratchpad(Character);
                 m_lastImplantSetIndex = -1;
 
                 // Children controls
@@ -248,7 +247,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_CharacterUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (!Visible || e.Character != m_character)
+            if (!Visible || e.Character != Character)
                 return;
 
             UpdateDisplayPlan();
@@ -262,7 +261,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void EveMonClient_CharacterSkillQueueUpdated(object sender, CharacterChangedEventArgs e)
         {
-            if (!Visible || e.Character != m_character)
+            if (!Visible || e.Character != Character)
                 return;
 
             UpdateDisplayPlan();
@@ -274,11 +273,11 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EveMonClient_CharacterImplantSetCollectionChanged(object sender, EventArgs e)
+        private async void EveMonClient_CharacterImplantSetCollectionChanged(object sender, EventArgs e)
         {
             UpdateImplantSetList();
             cbChooseImplantSet.SelectedIndex = m_lastImplantSetIndex < cbChooseImplantSet.Items.Count ? m_lastImplantSetIndex : 0;
-            UpdateImplantSet();
+            await UpdateImplantSet();
         }
 
         /// <summary>
@@ -349,14 +348,16 @@ namespace EVEMon.SkillPlanner
         {
             // Populate the "choose implant set"
             cbChooseImplantSet.Items.Clear();
-            foreach (ImplantSet set in m_character.ImplantSets)
+            foreach (ImplantSet set in Character.ImplantSets)
             {
                 cbChooseImplantSet.Items.Add(set);
             }
 
-            int maxWidth = Math.Min(m_character.ImplantSets.Max(x =>
-                TextRenderer.MeasureText(x.Name, cbChooseImplantSet.Font).Width),
+            int comboBoxArrowWidth = 16 * (int)Math.Truncate(Graphics.FromHwnd(Handle).DpiX / EVEMonConstants.DefaultDpi);
+            int maxWidth = Math.Min(Character.ImplantSets.Max(set =>
+                TextRenderer.MeasureText(set.Name, cbChooseImplantSet.Font).Width) + comboBoxArrowWidth,
                 (int)(cbChooseImplantSet.Font.Size * EVEMonConstants.ImplantSetNameMaxLength));
+
             cbChooseImplantSet.Size = new Size(Math.Max(maxWidth, cbChooseImplantSet.Size.Width), cbChooseImplantSet.Size.Height);
         }
 
@@ -662,7 +663,7 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                CharacterScratchpad scratchpad = new CharacterScratchpad(m_character);
+                CharacterScratchpad scratchpad = new CharacterScratchpad(Character);
                 if (m_plan.ChosenImplantSet != null)
                     scratchpad = scratchpad.After(m_plan.ChosenImplantSet);
 
@@ -680,7 +681,7 @@ namespace EVEMon.SkillPlanner
             if (!Settings.UI.PlanWindow.HighlightQueuedSkills)
                 return;
 
-            CCPCharacter ccpCharacter = m_character as CCPCharacter;
+            CCPCharacter ccpCharacter = Character as CCPCharacter;
 
             // Current character isn't a CCP character, so can't have a Queue
             if (ccpCharacter == null)
@@ -904,13 +905,15 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the implant set.
         /// </summary>
-        private void UpdateImplantSet()
+        private async Task UpdateImplantSet()
         {
             m_plan.ChosenImplantSet = cbChooseImplantSet.SelectedItem as ImplantSet;
             m_lastImplantSetIndex = cbChooseImplantSet.SelectedIndex;
             DisplayPlan.ChosenImplantSet = m_plan.ChosenImplantSet;
 
-            m_pluggable?.UpdateOnImplantSetChange();
+            Task updateOnImplantSetChange = m_pluggable?.UpdateOnImplantSetChange();
+            if (updateOnImplantSetChange != null)
+                await updateOnImplantSetChange;
         }
 
         #endregion
@@ -2065,7 +2068,7 @@ namespace EVEMon.SkillPlanner
             AttributesOptimizationForm tempForm = null;
             try
             {
-                tempForm = new AttributesOptimizationForm(m_character, m_plan, point);
+                tempForm = new AttributesOptimizationForm(Character, m_plan, point);
                 tempForm.FormClosed += (attributesOptimizationForm, args) => m_formTag = null;
                 tempForm.PlanEditor = this;
                 tempForm.Show(this);
@@ -2395,12 +2398,12 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cbChooseImplantSet_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cbChooseImplantSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbChooseImplantSet.SelectedIndex == m_lastImplantSetIndex)
                 return;
 
-            UpdateImplantSet();
+            await UpdateImplantSet();
             UpdateSkillList();
         }
 

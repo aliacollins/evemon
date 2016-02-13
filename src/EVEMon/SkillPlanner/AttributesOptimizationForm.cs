@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
@@ -23,7 +23,7 @@ namespace EVEMon.SkillPlanner
     public partial class AttributesOptimizationForm : EVEMonForm, IPlanOrderPluggable
     {
         private readonly Dictionary<AttributesOptimizationControl, RemappingResult>
-            m_remappingDictionary;
+            m_remappingDictionary = new Dictionary<AttributesOptimizationControl, RemappingResult>();
 
         private readonly BaseCharacter m_baseCharacter;
         private readonly Character m_character;
@@ -31,11 +31,8 @@ namespace EVEMon.SkillPlanner
         private readonly BasePlan m_plan;
         private readonly string m_description;
 
-        private Thread m_thread;
-        private PlanEditorControl m_planEditor;
         private CharacterScratchpad m_statisticsScratchpad;
         private bool m_areRemappingPointsActive;
-        private bool m_update;
 
         // Variables for manual edition of a plan
         private RemappingPoint m_manuallyEditedRemappingPoint;
@@ -47,7 +44,6 @@ namespace EVEMon.SkillPlanner
         private AttributesOptimizationForm()
         {
             InitializeComponent();
-            m_remappingDictionary = new Dictionary<AttributesOptimizationControl, RemappingResult>();
         }
 
         /// <summary>
@@ -73,7 +69,7 @@ namespace EVEMon.SkillPlanner
             m_strategy = strategy;
             m_plan = plan;
             m_description = description;
-            base.Text = name;
+            Text = name;
         }
 
         /// <summary>
@@ -97,48 +93,40 @@ namespace EVEMon.SkillPlanner
             m_manuallyEditedRemappingPoint = point;
             m_strategy = AttributeOptimizationStrategy.ManualRemappingPointEdition;
             m_description = "Manual editing of a remapping point";
-            base.Text = String.Format(CultureConstants.DefaultCulture, "Remapping point manual editing ({0})", plan.Name);
+            Text = String.Format(CultureConstants.DefaultCulture, "Remapping point manual editing ({0})", plan.Name);
+        }
+
+        public sealed override string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
         }
 
         /// <summary>
         /// Gets or sets a <see cref="PlanEditorControl"/>.
         /// </summary>
-        public PlanEditorControl PlanEditor
-        {
-            get { return m_planEditor; }
-            set { m_planEditor = value; }
-        }
+        public PlanEditorControl PlanEditor { private get; set; }
 
         /// <summary>
-        /// 
+        /// On load, restores the window rectangle from the settings.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
+        protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             lvPoints.Font = FontFactory.GetFont("Arial", 9F);
             throbber.State = ThrobberState.Rotating;
 
-            m_thread = new Thread(Run);
-            m_thread.Start();
-
-            lvPoints.Font = FontFactory.GetDefaultFont(9F);
+            await TaskHelper.RunCPUBoundTaskAsync(() => Run());
         }
 
         /// <summary>
-        /// 
+        /// Raises the <see cref="E:System.Windows.Forms.Form.Closed" /> event.
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">The <see cref="T:System.EventArgs" /> that contains the event data.</param>
         protected override void OnClosed(EventArgs e)
         {
-            // Stop the thread
-            if (m_thread != null)
-            {
-                m_thread.Abort();
-                m_thread = null;
-            }
-
-            m_planEditor = null;
+            PlanEditor = null;
 
             // Base call
             base.OnClosed(e);
@@ -147,8 +135,10 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Starts optimization.
         /// </summary>
+        /// <param name="update">if set to <c>true</c> [update].</param>
+        /// <exception cref="System.NotImplementedException"></exception>
         /// <exception cref="NotImplementedException"></exception>
-        private void Run()
+        private void Run(bool update = false)
         {
             // Compute best scratchpad
             RemappingResult remapping = null;
@@ -158,7 +148,7 @@ namespace EVEMon.SkillPlanner
             {
                 case AttributeOptimizationStrategy.ManualRemappingPointEdition:
                     m_areRemappingPointsActive = true;
-                    if (m_update)
+                    if (update)
                     {
                         remapping = m_remapping;
                         m_manuallyEditedRemappingPoint = remapping.Point.Clone();
@@ -188,16 +178,8 @@ namespace EVEMon.SkillPlanner
                     throw new NotImplementedException();
             }
 
-            if (m_update)
-            {
-                // Update the controls for every attribute on the already shown form
-                UpdateForm(remapping, remappingList);
-            }
-            else
-            {
-                // Update the controls for every attribute
-                Dispatcher.Invoke(() => UpdateForm(remapping, remappingList));
-            }
+            // Update the controls for every attribute
+            Dispatcher.Invoke(() => UpdateForm(remapping, remappingList));
         }
 
         /// <summary>
@@ -207,16 +189,6 @@ namespace EVEMon.SkillPlanner
         /// <param name="remappingList">List of remappings</param>
         private void UpdateForm(RemappingResult remapping, ICollection<RemappingResult> remappingList)
         {
-            // If the thread has been canceled, we stop right now to prevent an exception
-            if (m_thread == null)
-                return;
-
-            // Hide the throbber and the waiting message
-            throbber.State = ThrobberState.Stopped;
-            panelWait.Visible = false;
-
-            tabControl.Controls.Clear();
-
             // Update the attributes
             if (remapping != null)
             {
@@ -227,8 +199,11 @@ namespace EVEMon.SkillPlanner
                 UpdateForRemappingList(remappingList);
 
             // Update the plan order's column
-            if (m_planEditor != null && (remapping != null || remappingList.Count != 0))
-                m_planEditor.ShowWithPluggable(this);
+            if (PlanEditor != null && (remapping != null || remappingList.Count != 0))
+                PlanEditor.ShowWithPluggable(this);
+
+            // Hide the throbber and the waiting message
+            panelWait.Hide();
         }
 
         /// <summary>
@@ -236,11 +211,17 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="remapping"></param>
         private void UpdateForRemapping(RemappingResult remapping)
-        {
+        {          
             // Create control
-            AttributesOptimizationControl ctl = CreateAttributesOptimizationControl(remapping, m_description);
-            Controls.Add(ctl);
-            ctl.BringToFront();
+            AttributesOptimizationControl ctrl = CreateAttributesOptimizationControl(remapping, m_description);
+            Controls.Add(ctrl);
+
+            IList<AttributesOptimizationControl> optControls = Controls.OfType<AttributesOptimizationControl>().ToList();
+
+            if (optControls.Count == 1)
+                return;
+
+            Controls.RemoveAt(Controls.IndexOf(optControls.First()));
         }
 
         /// <summary>
@@ -252,9 +233,11 @@ namespace EVEMon.SkillPlanner
             // Display "no result" or "summary"
             if (remappingList.Count == 0)
             {
-                panelNoResult.Visible = true;
+                panelNoResult.Show();
                 return;
             }
+
+            tabControl.Controls.Clear();
 
             // Adds a tab page for the summary
             tabControl.Controls.Add(tabSummary);
@@ -266,11 +249,10 @@ namespace EVEMon.SkillPlanner
             int index = 1;
             foreach (RemappingResult remap in remappingList)
             {
-                AddTabPage(remap, "#" + index, m_description);
-                index++;
+                AddTabPage(remap, "#" + index++, m_description);
             }
 
-            tabControl.Visible = true;
+            tabControl.Show();
             tabSummary.Focus();
         }
 
@@ -278,7 +260,7 @@ namespace EVEMon.SkillPlanner
         /// Updates information in summary page.
         /// </summary>
         /// <param name="remappingList">List of remappings</param>
-        private void UpdateSummaryInformation(IEnumerable<RemappingResult> remappingList)
+        private void UpdateSummaryInformation(ICollection<RemappingResult> remappingList)
         {
             TimeSpan baseDuration = m_plan.GetTotalTime(m_character.After(m_plan.ChosenImplantSet), false);
             lvPoints.Items.Clear();
@@ -457,7 +439,7 @@ namespace EVEMon.SkillPlanner
         private void AttributesOptimizationControl_AttributeChanged(object sender, AttributeChangedEventArgs e)
         {
             // Update the plan order's column
-            if (m_planEditor == null)
+            if (PlanEditor == null)
                 return;
 
             AttributesOptimizationControl control = (AttributesOptimizationControl)sender;
@@ -469,7 +451,7 @@ namespace EVEMon.SkillPlanner
             }
 
             m_statisticsScratchpad = e.Remapping.BestScratchpad.Clone();
-            m_planEditor.ShowWithPluggable(this);
+            PlanEditor.ShowWithPluggable(this);
             m_remapping = e.Remapping;
         }
 
@@ -500,38 +482,13 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the times when "choose implant set" changes.
         /// </summary>
-        public void UpdateOnImplantSetChange()
+        public Task UpdateOnImplantSetChange()
         {
-            m_update = true;
-            Run();
+            panelWait.Show();
+
+            return TaskHelper.RunCPUBoundTaskAsync(() => Run(update: true));
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// Remapping strategy.
-    /// </summary>
-    public enum AttributeOptimizationStrategy
-    {
-        /// <summary>
-        /// Stratagy based on remapping points.
-        /// </summary>
-        RemappingPoints,
-
-        /// <summary>
-        /// Strategy based on the first year from a plan.
-        /// </summary>
-        OneYearPlan,
-
-        /// <summary>
-        /// Strategy based on already trained skills.
-        /// </summary>
-        Character,
-
-        /// <summary>
-        /// Used when the user double-click a remapping point to manually edit it.
-        /// </summary>
-        ManualRemappingPointEdition
     }
 }

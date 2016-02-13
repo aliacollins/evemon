@@ -63,8 +63,6 @@ namespace EVEMon.SkillPlanner
             this.lblComparedToBase = new System.Windows.Forms.Label();
             this.lblThisDate = new System.Windows.Forms.Label();
             this.lblThisSpan = new System.Windows.Forms.Label();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.mnLoadAtts = new System.Windows.Forms.ToolStripMenuItem();
             this.miNoImplants = new System.Windows.Forms.ToolStripMenuItem();
             this.miCurrentClone = new System.Windows.Forms.ToolStripMenuItem();
             this.miJumpClone1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,7 +81,6 @@ namespace EVEMon.SkillPlanner
             this.gbCurrentBase.SuspendLayout();
             this.gbCurrent.SuspendLayout();
             this.gbWithThisAttributes.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbAttributes
@@ -507,23 +504,6 @@ namespace EVEMon.SkillPlanner
             this.lblThisSpan.TabIndex = 0;
             this.lblThisSpan.Text = "This Span";
             // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnLoadAtts});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(553, 24);
-            this.menuStrip1.TabIndex = 5;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // mnLoadAtts
-            // 
-            this.mnLoadAtts.Name = "mnLoadAtts";
-            this.mnLoadAtts.Size = new System.Drawing.Size(109, 20);
-            this.mnLoadAtts.Text = "Load Attributes...";
-            this.mnLoadAtts.DropDownOpening += new System.EventHandler(this.mnLoadAtts_DropDownOpening);
-            // 
             // miNoImplants
             // 
             this.miNoImplants.Name = "miNoImplants";
@@ -563,7 +543,7 @@ namespace EVEMon.SkillPlanner
             // 
             this.lblNotice.AutoSize = true;
             this.lblNotice.ForeColor = System.Drawing.Color.Red;
-            this.lblNotice.Location = new System.Drawing.Point(18, 216);
+            this.lblNotice.Location = new System.Drawing.Point(6, 7);
             this.lblNotice.Name = "lblNotice";
             this.lblNotice.Size = new System.Drawing.Size(294, 13);
             this.lblNotice.TabIndex = 6;
@@ -572,15 +552,13 @@ namespace EVEMon.SkillPlanner
             // ImplantCalculator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(553, 234);
+            this.ClientSize = new System.Drawing.Size(553, 219);
             this.Controls.Add(this.lblNotice);
             this.Controls.Add(this.gbWithThisAttributes);
             this.Controls.Add(this.gbCurrent);
             this.Controls.Add(this.gbCurrentBase);
             this.Controls.Add(this.gbAttributes);
-            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "ImplantCalculator";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -599,8 +577,6 @@ namespace EVEMon.SkillPlanner
             this.gbCurrent.PerformLayout();
             this.gbWithThisAttributes.ResumeLayout(false);
             this.gbWithThisAttributes.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -643,8 +619,6 @@ namespace EVEMon.SkillPlanner
         private System.Windows.Forms.Panel AtrributesPanel;
         private System.Windows.Forms.Label lblComparedToCurrent;
         private System.Windows.Forms.Label lblComparedToBase;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem mnLoadAtts;
         private System.Windows.Forms.ToolStripMenuItem miNoImplants;
         private System.Windows.Forms.ToolStripMenuItem miCurrentClone;
         private System.Windows.Forms.ToolStripMenuItem miJumpClone1;

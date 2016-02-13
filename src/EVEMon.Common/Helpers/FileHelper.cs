@@ -88,7 +88,7 @@ namespace EVEMon.Common.Helpers
                         return;
                 }
 
-                await CopyOrWarnTheUserAsync(tempFileName, destFileName).ConfigureAwait(false);
+                await CopyOrWarnTheUserAsync(tempFileName, destFileName);
             }
             finally
             {
@@ -117,7 +117,7 @@ namespace EVEMon.Common.Helpers
                         return;
 
                     // Overwrite the file
-                    await CopyFileAsync(srcFileName, destFileName).ConfigureAwait(false);
+                    await CopyFileAsync(srcFileName, destFileName);
 
                     // Ensures we didn't copied a read-only attribute, no permission required since the file has been overwritten
                     FileInfo destFile = new FileInfo(destFileName);

@@ -98,6 +98,7 @@ namespace EVEMon
             this.testNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testCharacterNotificationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testTimeoutOneSecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolBar = new System.Windows.Forms.ToolStrip();
             this.addAPIKeyTbMenu = new System.Windows.Forms.ToolStripButton();
             this.apiKeysManagementTbMenu = new System.Windows.Forms.ToolStripButton();
@@ -140,7 +141,6 @@ namespace EVEMon
             this.noCharactersLabel = new System.Windows.Forms.Label();
             this.mainLoadingThrobber = new EVEMon.Common.Controls.Throbber();
             this.notificationList = new EVEMon.Controls.NotificationList();
-            this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trayIconContextMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.mainMenuBar.SuspendLayout();
@@ -705,6 +705,13 @@ namespace EVEMon
             this.testTimeoutOneSecToolStripMenuItem.Text = "Set Timeout to 1 Second";
             this.testTimeoutOneSecToolStripMenuItem.Click += new System.EventHandler(this.testTimeoutOneSecToolStripMenuItem_Click);
             // 
+            // restartToolStripMenuItem
+            // 
+            this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+            this.restartToolStripMenuItem.Text = "Restart";
+            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
+            // 
             // mainToolBar
             // 
             this.mainToolBar.ContextMenuStrip = this.toolbarContext;
@@ -1122,13 +1129,6 @@ namespace EVEMon
             this.notificationList.Name = "notificationList";
             this.notificationList.Size = new System.Drawing.Size(600, 72);
             this.notificationList.TabIndex = 6;
-            // 
-            // restartToolStripMenuItem
-            // 
-            this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-            this.restartToolStripMenuItem.Text = "Restart";
-            this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
             // MainWindow
             // 

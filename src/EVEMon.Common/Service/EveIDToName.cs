@@ -97,16 +97,9 @@ namespace EVEMon.Common.Service
         {
             string file = LocalXmlCache.GetFileInfo(Filename).FullName;
 
-            if (File.Exists(file) && !s_cacheList.Any())
-                ImportCacheFile(file);
-        }
+            if (!File.Exists(file) || s_cacheList.Any())
+                return;
 
-        /// <summary>
-        /// Imports the cache file.
-        /// </summary>
-        /// <param name="file">The file.</param>
-        private static void ImportCacheFile(string file)
-        {
             // Deserialize the file
             SerializableEveIDToName cache = Util.DeserializeXmlFromFile<SerializableEveIDToName>(file);
 
@@ -118,11 +111,8 @@ namespace EVEMon.Common.Service
                 return;
             }
 
-            // Add the data to the dictionary
-            foreach (SerializableEveIDToNameListItem entity in cache.Entities)
-            {
-                s_cacheList.Add(entity.ID, entity.Name);
-            }
+            // Add the data to the cache
+            Import(cache.Entities.Select(entity => new SerializableCharacterNameListItem { ID = entity.ID, Name = entity.Name }));
         }
 
         /// <summary>
@@ -199,6 +189,9 @@ namespace EVEMon.Common.Service
             // Deserialize the result
             Import(result.Result.Entities);
 
+            // Notify the subscribers
+            EveMonClient.OnEveIDToNameUpdated();
+
             // We save the data to the disk
             Save();
         }
@@ -209,25 +202,20 @@ namespace EVEMon.Common.Service
         /// <param name="entities">The entities.</param>
         private static void Import(IEnumerable<SerializableCharacterNameListItem> entities)
         {
+            EveMonClient.Trace("begin");
+
             foreach (SerializableCharacterNameListItem entity in entities)
             {
                 // Remove the queried id from the queried list
                 if (s_queriedIDs.Contains(entity.ID.ToString(CultureConstants.InvariantCulture)))
                     s_queriedIDs.Remove(entity.ID.ToString(CultureConstants.InvariantCulture));
 
-                // Add the name to the list of names
-                s_listOfNames.Add(entity.Name);
-
                 // Add the query result to our cache list if it doesn't exist already
                 if (!s_cacheList.ContainsKey(entity.ID))
                     s_cacheList.Add(entity.ID, entity.Name);
             }
 
-            // In case the list is empty, add an "Unknown" entry
-            if (!s_listOfNames.Any())
-                s_listOfNames.Add(EVEMonConstants.UnknownText);
-
-            EveMonClient.OnEveIDToNameUpdated();
+            EveMonClient.Trace("done");
         }
 
         /// <summary>
