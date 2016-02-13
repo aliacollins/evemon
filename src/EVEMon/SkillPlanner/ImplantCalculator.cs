@@ -18,13 +18,7 @@ namespace EVEMon.SkillPlanner
     public partial class ImplantCalculator : EVEMonForm, IPlanOrderPluggable
     {
         private readonly Plan m_plan;
-
-        private PlanEditorControl m_planEditor;
-        private Character m_character;
-        private BaseCharacter m_characterScratchpad;
-        private ImplantSet m_set;
-
-        private bool m_isUpdating;
+        private readonly Character m_character;
 
         /// <summary>
         /// Default constructor for designer.
@@ -42,18 +36,15 @@ namespace EVEMon.SkillPlanner
             : this()
         {
             m_plan = plan;
+            m_character = (Character)m_plan.Character;
         }
 
         /// <summary>
         /// On load, update the controls states.
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnLoad(EventArgs e)
+        protected override async void OnLoad(EventArgs e)
         {
-            m_character = (Character)m_plan.Character;
-            m_characterScratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
-            m_set = m_plan.ChosenImplantSet;
-
             // Set the min and max values of the NumericUpDown controls
             // based on character attributes value
             foreach (object control in AtrributesPanel.Controls)
@@ -63,46 +54,43 @@ namespace EVEMon.SkillPlanner
                 if (nud == null)
                     continue;
 
-                EveAttribute attrib = (EveAttribute)(int.Parse((string)nud.Tag, CultureConstants.InvariantCulture));
+                EveAttribute attrib = (EveAttribute)int.Parse((string)nud.Tag, CultureConstants.InvariantCulture);
                 nud.Minimum = m_character[attrib].EffectiveValue - m_character[attrib].ImplantBonus;
-                nud.Maximum = (m_plan.ChosenImplantSet[attrib].Bonus > EveConstants.MaxImplantPoints
-                                   ? nud.Minimum + m_plan.ChosenImplantSet[attrib].Bonus
-                                   : nud.Minimum + EveConstants.MaxImplantPoints);
+                nud.Maximum = m_plan.ChosenImplantSet[attrib].Bonus > EveConstants.MaxImplantPoints
+                    ? nud.Minimum + m_plan.ChosenImplantSet[attrib].Bonus
+                    : nud.Minimum + EveConstants.MaxImplantPoints;
             }
 
-            UpdateContent();
+            PlanEditor?.ShowWithPluggable(this);
+            await UpdateContent();
             base.OnLoad(e);
         }
 
         /// <summary>
-        /// Sets the owner control.
+        /// Gets or sets a <see cref="PlanEditorControl"/>.
         /// </summary>
-        public void SetPlanEditor(PlanEditorControl control)
-        {
-            m_planEditor = control;
-        }
+        public PlanEditorControl PlanEditor { private get; set; }
 
         /// <summary>
         /// Update all the numeric boxes
         /// </summary>
-        private void UpdateContent()
+        private async Task UpdateContent()
         {
-            gbAttributes.Text = String.Format(CultureConstants.DefaultCulture, "Attributes of \"{0}\"", m_set.Name);
+            gbAttributes.Text = $"Attributes of \"{m_plan.ChosenImplantSet.Name}\"";
 
-            m_isUpdating = true;
+            CharacterScratchpad characterScratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
 
-            nudCharisma.Value = m_characterScratchpad.Charisma.EffectiveValue;
-            nudWillpower.Value = m_characterScratchpad.Willpower.EffectiveValue;
-            nudIntelligence.Value = m_characterScratchpad.Intelligence.EffectiveValue;
-            nudPerception.Value = m_characterScratchpad.Perception.EffectiveValue;
-            nudMemory.Value = m_characterScratchpad.Memory.EffectiveValue;
-            m_isUpdating = false;
+            nudCharisma.Value = characterScratchpad.Charisma.EffectiveValue;
+            nudWillpower.Value = characterScratchpad.Willpower.EffectiveValue;
+            nudIntelligence.Value = characterScratchpad.Intelligence.EffectiveValue;
+            nudPerception.Value = characterScratchpad.Perception.EffectiveValue;
+            nudMemory.Value = characterScratchpad.Memory.EffectiveValue;
 
             // If the implant set isn't the active one we notify the user
-            lblNotice.Visible = (m_set != m_character.ImplantSets.Current);
+            lblNotice.Visible = m_plan.ChosenImplantSet != m_character.ImplantSets.Current;
 
             //  Update all the times on the right pane
-            UpdateTimes();
+            await UpdateTimes();
         }
 
         /// <summary>
@@ -114,108 +102,67 @@ namespace EVEMon.SkillPlanner
         /// <param name="lblEffectiveAttribute"></param>
         private void UpdateAttributeLabels(EveAttribute attrib, int myValue, Control lblAdjust, Control lblEffectiveAttribute)
         {
-            Int64 baseAttr = m_characterScratchpad[attrib].EffectiveValue - m_characterScratchpad[attrib].ImplantBonus;
+            CharacterScratchpad characterScratchpad = m_plan.Character.After(m_plan.ChosenImplantSet);
+
+            Int64 baseAttr = characterScratchpad[attrib].EffectiveValue - characterScratchpad[attrib].ImplantBonus;
             Int64 adjust = myValue - baseAttr;
 
-            if (adjust >= 0)
-            {
-                lblAdjust.ForeColor = SystemColors.ControlText;
-                lblAdjust.Text = String.Format(CultureConstants.DefaultCulture, "+{0}", adjust);
-            }
-            else
-            {
-                lblAdjust.ForeColor = Color.Red;
-                lblAdjust.Text = adjust.ToString(CultureConstants.DefaultCulture);
-            }
-
-            lblEffectiveAttribute.Text = m_characterScratchpad[attrib].EffectiveValue.ToNumericString(0);
+            lblAdjust.ForeColor = adjust >= 0 ? SystemColors.ControlText : Color.Red;
+            lblAdjust.Text = $"{(adjust >= 0 ? "+" : String.Empty)}{adjust}";
+            lblEffectiveAttribute.Text = characterScratchpad[attrib].EffectiveValue.ToNumericString(0);
         }
 
         /// <summary>
         /// Update all the times on the right pane (base time, best time, etc).
         /// </summary>
-        private void UpdateTimes()
+        private async Task UpdateTimes()
         {
-            if (m_isUpdating)
-                return;
-
-            if (m_planEditor != null)
-            {
-                m_characterScratchpad = m_character.After(m_set);
-                m_planEditor.ShowWithPluggable(this);
-            }
-
             // Current (with implants)
-            TimeSpan currentSpan = UpdateTimesForCharacter(m_character.After(m_plan.ChosenImplantSet), lblCurrentSpan,
-                                                           lblCurrentDate);
+            TimeSpan currentSpan = await UpdateTimesForCharacter(m_character.After(m_plan.ChosenImplantSet));
 
             // Current (without implants)
             ImplantSet noneImplantSet = m_character.ImplantSets.None;
-            TimeSpan baseSpan = UpdateTimesForCharacter(m_character.After(noneImplantSet), lblBaseSpan, lblBaseDate);
+            TimeSpan baseSpan = await UpdateTimesForCharacter(m_character.After(noneImplantSet));
 
             // This
-            CharacterScratchpad scratchpad = CreateModifiedScratchpad();
-            TimeSpan thisSpan = UpdateTimesForCharacter(scratchpad, lblThisSpan, lblThisDate);
+            CharacterScratchpad scratchpad = CreateModifiedScratchpad(m_character.After(m_plan.ChosenImplantSet));
+            TimeSpan thisSpan = await UpdateTimesForCharacter(scratchpad);
+
+            lblCurrentSpan.Text = currentSpan.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            lblCurrentDate.Text = DateTime.Now.Add(currentSpan).ToString(CultureConstants.DefaultCulture);
+            lblBaseSpan.Text = baseSpan.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            lblBaseDate.Text = DateTime.Now.Add(baseSpan).ToString(CultureConstants.DefaultCulture);
+            lblThisSpan.Text = thisSpan.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
+            lblThisDate.Text = DateTime.Now.Add(thisSpan).ToString(CultureConstants.DefaultCulture);
 
             // Are the new attributes better than current (without implants) ?
-            if (thisSpan > baseSpan)
-            {
-                lblComparedToBase.ForeColor = Color.Red;
-                lblComparedToBase.Text = String.Format(CultureConstants.DefaultCulture, "{0} slower than current base",
-                                                       thisSpan.Subtract(baseSpan).ToDescriptiveText(
-                                                           DescriptiveTextOptions.IncludeCommas));
-            }
-            else if (thisSpan < baseSpan)
-            {
-                lblComparedToBase.ForeColor = Color.Green;
-                lblComparedToBase.Text = String.Format(CultureConstants.DefaultCulture, "{0} faster than current base",
-                                                       baseSpan.Subtract(thisSpan).ToDescriptiveText(
-                                                           DescriptiveTextOptions.IncludeCommas));
-            }
-            else
-            {
-                lblComparedToBase.ForeColor = SystemColors.ControlText;
-                lblComparedToBase.Text = "No time difference than current base";
-            }
+            lblComparedToBase.ForeColor = thisSpan > baseSpan
+                ? Color.Red
+                : thisSpan < baseSpan ? Color.Green : SystemColors.ControlText;
+            lblComparedToBase.Text = thisSpan > baseSpan
+                ? $"{thisSpan.Subtract(baseSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} slower than current base"
+                : thisSpan < baseSpan
+                    ? $"{baseSpan.Subtract(thisSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} faster than current base"
+                    : @"No time difference than current base";
 
             // Are the new attributes better than current (with implants) ?
-            if (thisSpan > currentSpan)
-            {
-                lblComparedToCurrent.ForeColor = Color.DarkRed;
-                lblComparedToCurrent.Text = String.Format(CultureConstants.DefaultCulture, "{0} slower than current",
-                                                          thisSpan.Subtract(currentSpan).ToDescriptiveText(
-                                                              DescriptiveTextOptions.IncludeCommas));
-            }
-            else if (thisSpan < currentSpan)
-            {
-                lblComparedToCurrent.ForeColor = Color.DarkGreen;
-                lblComparedToCurrent.Text = String.Format(CultureConstants.DefaultCulture, "{0} faster than current",
-                                                          currentSpan.Subtract(thisSpan).ToDescriptiveText(
-                                                              DescriptiveTextOptions.IncludeCommas));
-            }
-            else
-            {
-                lblComparedToCurrent.ForeColor = SystemColors.ControlText;
-                lblComparedToCurrent.Text = "No time difference than current";
-            }
+            lblComparedToCurrent.ForeColor = thisSpan > currentSpan
+                ? Color.DarkRed
+                : thisSpan < currentSpan ? Color.DarkGreen : SystemColors.ControlText;
+            lblComparedToCurrent.Text = thisSpan > currentSpan
+                ? $"{thisSpan.Subtract(currentSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} slower than current"
+                : thisSpan < currentSpan
+                    ? $"{currentSpan.Subtract(thisSpan).ToDescriptiveText(DescriptiveTextOptions.IncludeCommas)} faster than current"
+                    : @"No time difference than current base";
         }
 
         /// <summary>
         /// Update the times labels from the given character
         /// </summary>
         /// <param name="character"></param>
-        /// <param name="lblSpan"></param>
-        /// <param name="lblDate"></param>
         /// <returns></returns>
-        private TimeSpan UpdateTimesForCharacter(BaseCharacter character, Control lblSpan, Control lblDate)
-        {
-            TimeSpan ts = character.GetTrainingTimeToMultipleSkills(m_plan);
-
-            lblSpan.Text = ts.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas);
-            lblDate.Text = DateTime.Now.Add(ts).ToString();
-
-            return ts;
-        }
+        private Task<TimeSpan> UpdateTimesForCharacter(BaseCharacter character)
+            => TaskHelper.RunCPUBoundTaskAsync(() => character.GetTrainingTimeToMultipleSkills(m_plan));
 
 
         #region Controls events
@@ -225,11 +172,11 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void nudIntelligence_ValueChanged(object sender, EventArgs e)
+        private async void nudIntelligence_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Intelligence, (int)(nudIntelligence.Value),
-                                  lblAdjustIntelligence, lblEffectiveIntelligence);
-            UpdateTimes();
+            UpdateAttributeLabels(EveAttribute.Intelligence, (int)nudIntelligence.Value,
+                lblAdjustIntelligence, lblEffectiveIntelligence);
+            await UpdateTimes();
         }
 
         /// <summary>
@@ -237,11 +184,11 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void nudCharisma_ValueChanged(object sender, EventArgs e)
+        private async void nudCharisma_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Charisma, (int)(nudCharisma.Value),
-                                  lblAdjustCharisma, lblEffectiveCharisma);
-            UpdateTimes();
+            UpdateAttributeLabels(EveAttribute.Charisma, (int)nudCharisma.Value,
+                lblAdjustCharisma, lblEffectiveCharisma);
+            await UpdateTimes();
         }
 
         /// <summary>
@@ -249,12 +196,11 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void nudPerception_ValueChanged(object sender, EventArgs e)
+        private async void nudPerception_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Perception, (int)(nudPerception.Value),
-                                  lblAdjustPerception, lblEffectivePerception);
-            UpdateTimes();
-            m_planEditor?.ShowWithPluggable(this);
+            UpdateAttributeLabels(EveAttribute.Perception, (int)nudPerception.Value,
+                lblAdjustPerception, lblEffectivePerception);
+            await UpdateTimes();
         }
 
         /// <summary>
@@ -262,11 +208,11 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void nudMemory_ValueChanged(object sender, EventArgs e)
+        private async void nudMemory_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Memory, (int)(nudMemory.Value),
-                                  lblAdjustMemory, lblEffectiveMemory);
-            UpdateTimes();
+            UpdateAttributeLabels(EveAttribute.Memory, (int)nudMemory.Value,
+                lblAdjustMemory, lblEffectiveMemory);
+            await UpdateTimes();
         }
 
         /// <summary>
@@ -274,60 +220,28 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void nudWillpower_ValueChanged(object sender, EventArgs e)
+        private async void nudWillpower_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAttributeLabels(EveAttribute.Willpower, (int)(nudWillpower.Value),
-                                  lblAdjustWillpower, lblEffectiveWillpower);
-            UpdateTimes();
+            UpdateAttributeLabels(EveAttribute.Willpower, (int)nudWillpower.Value,
+                lblAdjustWillpower, lblEffectiveWillpower);
+            await UpdateTimes();
         }
 
-        /// <summary>
-        /// When the "load attributes" menu is opening, we add the items.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void mnLoadAtts_DropDownOpening(object sender, EventArgs e)
-        {
-            // Add the menus for the sets
-            mnLoadAtts.DropDownItems.Clear();
-            foreach (ImplantSet set in m_character.ImplantSets)
-            {
-                ToolStripItem item = mnLoadAtts.DropDownItems.Add(set.Name);
-                item.Click += implantSetMenuitem_Click;
-                item.Tag = set;
-            }
-        }
-
-        /// <summary>
-        /// When an implant set menu item is clicked, we update the member for the current character.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void implantSetMenuitem_Click(object sender, EventArgs e)
-        {
-            // Update the character to a scratchpad using the implant set attacthed to the sender menu as its tag.
-            ToolStripItem menu = (ToolStripItem)sender;
-            m_set = menu.Tag as ImplantSet;
-            m_characterScratchpad = m_character.After(m_set);
-
-            UpdateContent();
-        }
 
         /// <summary>
         /// Creates a scratchpad with the new implants values.
         /// </summary>
         /// <returns></returns>
-        private CharacterScratchpad CreateModifiedScratchpad()
+        private CharacterScratchpad CreateModifiedScratchpad(BaseCharacter character)
         {
             // Creates a scratchpad with new implants
-            m_characterScratchpad = m_character.After(m_set);
-            CharacterScratchpad scratchpad = new CharacterScratchpad(m_characterScratchpad);
+            CharacterScratchpad scratchpad = new CharacterScratchpad(character);
 
-            scratchpad.Memory.ImplantBonus += (int)nudMemory.Value - m_characterScratchpad.Memory.EffectiveValue;
-            scratchpad.Charisma.ImplantBonus += (int)nudCharisma.Value - m_characterScratchpad.Charisma.EffectiveValue;
-            scratchpad.Intelligence.ImplantBonus += (int)nudIntelligence.Value - m_characterScratchpad.Intelligence.EffectiveValue;
-            scratchpad.Perception.ImplantBonus += (int)nudPerception.Value - m_characterScratchpad.Perception.EffectiveValue;
-            scratchpad.Willpower.ImplantBonus += (int)nudWillpower.Value - m_characterScratchpad.Willpower.EffectiveValue;
+            scratchpad.Memory.ImplantBonus += (int)nudMemory.Value - character.Memory.EffectiveValue;
+            scratchpad.Charisma.ImplantBonus += (int)nudCharisma.Value - character.Charisma.EffectiveValue;
+            scratchpad.Intelligence.ImplantBonus += (int)nudIntelligence.Value - character.Intelligence.EffectiveValue;
+            scratchpad.Perception.ImplantBonus += (int)nudPerception.Value - character.Perception.EffectiveValue;
+            scratchpad.Willpower.ImplantBonus += (int)nudWillpower.Value - character.Willpower.EffectiveValue;
 
             return scratchpad;
         }
@@ -349,7 +263,7 @@ namespace EVEMon.SkillPlanner
 
             areRemappingPointsActive = true;
 
-            CharacterScratchpad scratchpad = CreateModifiedScratchpad();
+            CharacterScratchpad scratchpad = CreateModifiedScratchpad(m_character.After(m_plan.ChosenImplantSet));
             plan.UpdateStatistics(scratchpad, true, true);
             plan.UpdateOldTrainingTimes();
         }
@@ -357,11 +271,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Updates the times when "choose implant set" changes.
         /// </summary>
-        public Task UpdateOnImplantSetChange()
-        {
-            UpdateTimes();
-            return Task.CompletedTask;
-        }
+        public Task UpdateOnImplantSetChange() => UpdateContent();
 
         #endregion
     }

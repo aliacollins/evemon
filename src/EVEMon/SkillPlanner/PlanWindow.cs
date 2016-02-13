@@ -572,9 +572,10 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbDeletePlan_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("Are you sure you want to delete this plan?", "Delete Plan",
-                                              MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                                              MessageBoxDefaultButton.Button2);
+            DialogResult dr = MessageBox.Show(@"Are you sure you want to delete this plan?",
+                @"Delete Plan",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
 
             if (dr != DialogResult.Yes)
                 return;
@@ -774,9 +775,10 @@ namespace EVEMon.SkillPlanner
             {
                 ExceptionHandler.LogException(ex, true);
 
-                MessageBox.Show("The copy to clipboard has failed. You may retry later", "Plan Copy Failure",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
+                MessageBox.Show(@"The copy to clipboard has failed. You may retry later",
+                    @"Plan Copy Failure",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
         }
 
@@ -787,20 +789,17 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void tsbImplantCalculator_Click(object sender, EventArgs e)
         {
-            PlanEditorControl control = (tabControl.SelectedIndex == 0) ? planEditor : null;
-
             if (m_implantCalcWindow == null)
             {
                 m_implantCalcWindow = new ImplantCalculator(m_plan);
                 m_implantCalcWindow.FormClosed += (form, args) => m_implantCalcWindow = null;
-                m_implantCalcWindow.SetPlanEditor(control);
+                m_implantCalcWindow.PlanEditor = tabControl.SelectedIndex == 0 ? planEditor : null;
                 m_implantCalcWindow.Show(this);
             }
             else
             {
-                m_implantCalcWindow.Visible = true;
+                m_implantCalcWindow.Show();
                 m_implantCalcWindow.BringToFront();
-                m_implantCalcWindow.SetPlanEditor(control);
             }
         }
 
@@ -823,17 +822,17 @@ namespace EVEMon.SkillPlanner
 
                     // Now displays the computation window
                     m_attributesOptimizerWindow = settingsForm.OptimizationForm;
-                    m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
                     m_attributesOptimizerWindow.FormClosed += (form, args) => m_attributesOptimizerWindow = null;
+                    m_attributesOptimizerWindow.PlanEditor = tabControl.SelectedIndex == 0 ? planEditor : null;
                     m_attributesOptimizerWindow.Show(this);
                 }
-                return;
             }
-
-            // Bring the window to front
-            m_attributesOptimizerWindow.Visible = true;
-            m_attributesOptimizerWindow.BringToFront();
-            m_attributesOptimizerWindow.PlanEditor = (tabControl.SelectedIndex == 0) ? planEditor : null;
+            else
+            {
+                // Bring the window to front
+                m_attributesOptimizerWindow.Show();
+                m_attributesOptimizerWindow.BringToFront();
+            }
         }
 
         /// <summary>

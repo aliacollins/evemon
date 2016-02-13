@@ -201,11 +201,8 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="trainings">A sequence of pairs of skills and the target levels.</param>
         /// <returns></returns>
-        public TimeSpan GetTrainingTimeToMultipleSkills(IEnumerable<ISkillLevel> trainings)
-        {
-            CharacterScratchpad scratchpad = After(trainings);
-            return scratchpad.TrainingTime;
-        }
+        public TimeSpan GetTrainingTimeToMultipleSkills(IEnumerable<ISkillLevel> trainings) 
+            => After(trainings).TrainingTime;
 
         #endregion
 

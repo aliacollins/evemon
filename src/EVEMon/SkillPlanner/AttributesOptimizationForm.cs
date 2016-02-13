@@ -105,7 +105,7 @@ namespace EVEMon.SkillPlanner
         /// <summary>
         /// Gets or sets a <see cref="PlanEditorControl"/>.
         /// </summary>
-        public PlanEditorControl PlanEditor { get; set; }
+        public PlanEditorControl PlanEditor { private get; set; }
 
         /// <summary>
         /// On load, restores the window rectangle from the settings.
