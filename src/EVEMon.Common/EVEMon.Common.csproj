@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="AsyncPump.cs" />
     <Compile Include="CloudStorageServices\AuthenticationSteps.cs" />
+    <Compile Include="Enumerations\AttributeOptimizationStrategy.cs" />
     <Compile Include="EveMonClient.Events.cs" />
     <Compile Include="Exceptions\APIException.cs" />
     <Compile Include="CustomEventArgs\TimeCheckSyncEventArgs.cs" />
