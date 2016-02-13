@@ -159,6 +159,9 @@ namespace EVEMon.SkillPlanner
 
                 // Tell the implant window we're closing down
                 m_implantCalcWindow?.Close();
+
+                // Tell the loadout window we're closing down
+                m_loadoutWindow?.Close();
             }
 
             base.OnFormClosing(e);
