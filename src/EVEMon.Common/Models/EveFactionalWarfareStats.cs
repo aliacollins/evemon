@@ -26,6 +26,7 @@ namespace EVEMon.Common.Models
 
         private static bool s_loaded;
         private static bool s_queryPending;
+        private static bool s_isImporting;
 
         private static int s_totalsKillsYesterday;
         private static int s_totalsKillsLastWeek;
@@ -34,7 +35,6 @@ namespace EVEMon.Common.Models
         private static int s_totalsVictoryPointsLastWeek;
         private static int s_totalsVictoryPointsTotal;
         private static DateTime s_nextCheckTime;
-        private static bool s_isImporting;
 
         #endregion
 

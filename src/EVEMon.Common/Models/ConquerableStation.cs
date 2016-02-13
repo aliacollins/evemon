@@ -23,8 +23,9 @@ namespace EVEMon.Common.Models
 
         private static bool s_loaded;
         private static bool s_queryPending;
-        private static DateTime s_nextCheckTime;
         private static bool s_isImporting;
+
+        private static DateTime s_nextCheckTime;
 
 
         #region Constructor
