@@ -31,6 +31,7 @@ namespace EVEMon.SkillPlanner
         private Plan m_plan;
         private ImplantCalculator m_implantCalcWindow;
         private AttributesOptimizationForm m_attributesOptimizerWindow;
+        private LoadoutImportationForm m_loadoutWindow;
 
 
         #region Initialization and Lifecycle
@@ -209,7 +210,7 @@ namespace EVEMon.SkillPlanner
 
                 // Jump to the appropriate tab depending on whether
                 // or not the plan is empty
-                tabControl.SelectedTab = (m_plan.Count == 0 ? tpSkillBrowser : tpPlanQueue);
+                tabControl.SelectedTab = m_plan.Count == 0 ? tpSkillBrowser : tpPlanEditor;
 
                 // Update controls
                 Text = String.Format(CultureConstants.DefaultCulture, "{0} [{1}] - EVEMon Skill Planner", Character.Name,
@@ -240,22 +241,25 @@ namespace EVEMon.SkillPlanner
         /// </summary>
         private void UpdateControlsVisibility()
         {
-            tabControl.ImageList = (!Settings.UI.SafeForWork
-                                        ? ilTabIcons
-                                        : m_emptyImageList);
+            tabControl.ImageList = !Settings.UI.SafeForWork
+                ? ilTabIcons
+                : m_emptyImageList;
 
             foreach (ToolStripItem button in upperToolStrip.Items)
             {
-                button.DisplayStyle = (!Settings.UI.SafeForWork
-                                           ? ToolStripItemDisplayStyle.ImageAndText
-                                           : ToolStripItemDisplayStyle.Text);
+                // Enable or disable the tool strip items except the plan selector
+                button.Enabled = button == tsddbPlans || tabControl.SelectedIndex == 0;
+
+                button.DisplayStyle = !Settings.UI.SafeForWork
+                    ? ToolStripItemDisplayStyle.ImageAndText
+                    : ToolStripItemDisplayStyle.Text;
             }
 
             foreach (ToolStripItem label in MainStatusStrip.Items)
             {
-                label.DisplayStyle = (!Settings.UI.SafeForWork
-                                          ? ToolStripItemDisplayStyle.ImageAndText
-                                          : ToolStripItemDisplayStyle.Text);
+                label.DisplayStyle = !Settings.UI.SafeForWork
+                    ? ToolStripItemDisplayStyle.ImageAndText
+                    : ToolStripItemDisplayStyle.Text;
             }
         }
 
@@ -384,8 +388,10 @@ namespace EVEMon.SkillPlanner
                 "If you select \"Yes\" the entries will be removed from the plan\r  and will be stored in settings.\r\n- " +
                 "If you select \"No\" the entries will be discarded.");
 
-            DialogResult result = MessageBox.Show(message.ToString(), "Invalid Entries Detected",
-                                                  MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            DialogResult result = MessageBox.Show(message.ToString(),
+                @"Invalid Entries Detected",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Exclamation);
 
             switch (result)
             {
@@ -615,9 +621,19 @@ namespace EVEMon.SkillPlanner
             if (DesignMode)
                 return;
 
+            UpdateControlsVisibility();
+
+            // Close the implant calculator and attribute optimizer if the user moves away for the pln editor
+            if (tabControl.SelectedIndex != 0)
+            {
+                m_implantCalcWindow?.Close();
+                m_attributesOptimizerWindow?.Close();
+                m_loadoutWindow?.Close();
+                return;
+            }
+
             // Force update of column widths in case we've just created a new plan from within the planner window
-            if (tabControl.SelectedIndex == 0)
-                planEditor.UpdateListColumns();
+            planEditor.UpdateListColumns();
         }
 
         /// <summary>
@@ -738,13 +754,13 @@ namespace EVEMon.SkillPlanner
         }
 
         /// <summary>
-        /// Opens the EFTLoadout form and passes it the current Plan.
+        /// Opens the Loadout form and passes it the current Plan.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tsbEFTImport_Click(object sender, EventArgs e)
+        private void tsbLoadoutImport_Click(object sender, EventArgs e)
         {
-            WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
+            m_loadoutWindow = WindowsFactory.ShowByTag<LoadoutImportationForm, Plan>(m_plan);
         }
 
         /// <summary>
@@ -767,9 +783,10 @@ namespace EVEMon.SkillPlanner
                 Clipboard.Clear();
                 Clipboard.SetText(output);
 
-                MessageBox.Show("The skill plan has been copied to the clipboard in a " +
-                                "format suitable for forum posting.", "Plan Copied", MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
+                MessageBox.Show(@"The skill plan has been copied to the clipboard in a format suitable for forum posting.",
+                    @"Plan Copied",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             catch (ExternalException ex)
             {
@@ -846,6 +863,5 @@ namespace EVEMon.SkillPlanner
         }
 
         #endregion
-
     }
 }
