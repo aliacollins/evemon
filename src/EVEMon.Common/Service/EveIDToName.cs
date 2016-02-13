@@ -189,7 +189,7 @@ namespace EVEMon.Common.Service
             // Deserialize the result
             Import(result.Result.Entities);
 
-            // Notifiy the subscribers
+            // Notify the subscribers
             EveMonClient.OnEveIDToNameUpdated();
 
             // We save the data to the disk

@@ -623,7 +623,7 @@ namespace EVEMon.Common
         private static Task UpdateOnOneSecondTickAsync()
         {
             // Is a save requested and is the last save older than 10s ?
-            if (s_savePending && DateTime.UtcNow > s_nextSaveTime)
+            if (!s_isSaving && s_savePending && DateTime.UtcNow > s_nextSaveTime)
                 return SaveImmediateAsync();
 
             return Task.CompletedTask;
@@ -647,11 +647,6 @@ namespace EVEMon.Common
         /// </summary>
         public static async Task SaveImmediateAsync()
         {
-            // Prevent recurring saving if another saving is in process
-            while (s_isSaving)
-            {
-            }
-
             s_isSaving = true;
 
             SerializableSettings settings = Export();

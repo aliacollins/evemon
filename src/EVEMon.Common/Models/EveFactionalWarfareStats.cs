@@ -51,7 +51,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsKillsYesterday;
+                return s_isImporting ? 0 : s_totalsKillsYesterday;
             }
         }
 
@@ -65,7 +65,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsKillsLastWeek;
+                return s_isImporting ? 0 : s_totalsKillsLastWeek;
             }
         }
 
@@ -79,7 +79,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsKillsTotal;
+                return s_isImporting ? 0 : s_totalsKillsTotal;
             }
         }
 
@@ -93,7 +93,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsVictoryPointsYesterday;
+                return s_isImporting ? 0 : s_totalsVictoryPointsYesterday;
             }
         }
 
@@ -107,7 +107,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsVictoryPointsLastWeek;
+                return s_isImporting ? 0 : s_totalsVictoryPointsLastWeek;
             }
         }
 
@@ -121,7 +121,7 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_totalsVictoryPointsTotal;
+                return s_isImporting ? 0 : s_totalsVictoryPointsTotal;
             }
         }
 
@@ -135,7 +135,9 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_eveFactionalWarfareStats;
+                return s_isImporting
+                    ? Enumerable.Empty<EveFactionWarfareStats>()
+                    : s_eveFactionalWarfareStats;
             }
         }
 
@@ -223,12 +225,6 @@ namespace EVEMon.Common.Models
         {
             UpdateList();
             Import();
-
-            // Importation may be done on another thread,
-            // delay until importation finishes
-            while (s_isImporting)
-            {
-            }
         }
 
         /// <summary>
@@ -303,6 +299,9 @@ namespace EVEMon.Common.Models
             // Ensure list importation
             EnsureImportation();
 
+            if (s_isImporting)
+                return Enumerable.Empty<int>();
+
             List<int> againstIDs = new List<int>();
             foreach (EveFactionWar factionWar in s_eveFactionWars.Where(faction => faction.FactionID == factionID))
             {
@@ -326,7 +325,9 @@ namespace EVEMon.Common.Models
             // Ensure list importation
             EnsureImportation();
 
-            return s_eveFactionalWarfareStats.FirstOrDefault(factionStats => factionStats.FactionID == factionID);
+            return s_isImporting
+                ? null
+                : s_eveFactionalWarfareStats.FirstOrDefault(factionStats => factionStats.FactionID == factionID);
         }
 
         #endregion

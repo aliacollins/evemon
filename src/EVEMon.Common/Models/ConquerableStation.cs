@@ -53,7 +53,9 @@ namespace EVEMon.Common.Models
                 // Ensure list importation
                 EnsureImportation();
 
-                return s_conqStationsByID.Values;
+                return s_isImporting
+                    ? Enumerable.Empty<ConquerableStation>()
+                    : s_conqStationsByID.Values;
             }
         }
 
@@ -152,12 +154,6 @@ namespace EVEMon.Common.Models
         {
             UpdateList();
             Import();
-
-            // Importation may be done on another thread,
-            // delay until importation finishes
-            while (s_isImporting)
-            {
-            }
         }
 
         /// <summary>
@@ -226,6 +222,9 @@ namespace EVEMon.Common.Models
             // Ensure list importation
             EnsureImportation();
 
+            if (s_isImporting)
+                return null;
+
             ConquerableStation result;
             s_conqStationsByID.TryGetValue(id, out result);
             return result;
@@ -239,7 +238,9 @@ namespace EVEMon.Common.Models
             // Ensure list importation
             EnsureImportation();
 
-            return s_conqStationsByID.Values.FirstOrDefault(station => station.Name == name);
+            return s_isImporting
+                ? null
+                : s_conqStationsByID.Values.FirstOrDefault(station => station.Name == name);
         }
 
         #endregion
