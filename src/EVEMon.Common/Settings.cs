@@ -647,8 +647,10 @@ namespace EVEMon.Common
         /// </summary>
         public static async Task SaveImmediateAsync()
         {
-            if (s_isSaving)
-                return;
+            // Prevent recurring saving if another saving is in process
+            while (s_isSaving)
+            {
+            }
 
             s_isSaving = true;
 
