@@ -82,7 +82,7 @@ namespace EVEMon.SkillPlanner
         {
             string title = String.Format(CultureConstants.DefaultCulture, "Attributes optimization ({0})", m_character.Name);
             string description = String.Format(CultureConstants.DefaultCulture, "Based on {0}", m_character.Name);
-            description += (description.EndsWith("s", StringComparison.CurrentCulture) ? "' skills" : "'s skills");
+            description += description.EndsWith("s", StringComparison.CurrentCulture) ? "' skills" : "'s skills";
             OptimizationForm = new AttributesOptimizationForm(m_character, m_plan,
                                                               AttributeOptimizationStrategy.Character, title, description);
         }

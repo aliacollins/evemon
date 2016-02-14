@@ -237,9 +237,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvPlanetary.Visible = false;
 
-            PlanetaryPins = (Character == null ? null : Character.PlanetaryColonies.SelectMany(x => x.Pins));
+            PlanetaryPins = Character == null ? null : Character.PlanetaryColonies.SelectMany(x => x.Pins);
             Columns = Settings.UI.MainWindow.Planetary.Columns;
-            Grouping = (Character == null ? PlanetaryGrouping.None : Character.UISettings.PlanetaryGroupBy);
+            Grouping = Character == null ? PlanetaryGrouping.None : Character.UISettings.PlanetaryGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -326,9 +326,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvPlanetary.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvPlanetary.SelectedItems.Count > 0
-                                    ? lvPlanetary.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvPlanetary.SelectedItems.Count > 0
+                ? lvPlanetary.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvPlanetary.BeginUpdate();
             try
@@ -582,7 +582,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 PlanetaryColumn column = (PlanetaryColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -716,8 +716,8 @@ namespace EVEMon.CharacterMonitoring
                         if (ilIcons.ImageSize.Width > 0)
                             columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
-                        int columnWidth = (lvPlanetary.Items.Cast<ListViewItem>().Select(
-                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width)).Concat(
+                        int columnWidth = lvPlanetary.Items.Cast<ListViewItem>().Select(
+                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width).Concat(
                                 new[] { columnHeaderWidth }).Max() + Pad + 2;
                         lvPlanetary.Columns[m_columnTTCDisplayIndex].Width = columnWidth;
                     }
@@ -856,7 +856,7 @@ namespace EVEMon.CharacterMonitoring
 
             // We use time dilation according to the ammount of active pins that are active,
             // due to excess CPU usage for computing the 'time to completion' when there are too many pins
-            m_refreshTimer.Interval = 900 + (100 * activePins);
+            m_refreshTimer.Interval = 900 + 100 * activePins;
 
             if (!m_columnsChanged)
                 return;

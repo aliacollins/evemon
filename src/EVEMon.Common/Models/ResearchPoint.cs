@@ -65,7 +65,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Cets the current accumulated research points.
         /// </summary>
-        public double CurrentRP => (m_remainderPoints + (PointsPerDay * DateTime.UtcNow.Subtract(StartDate).TotalDays));
+        public double CurrentRP => m_remainderPoints + PointsPerDay * DateTime.UtcNow.Subtract(StartDate).TotalDays;
 
         /// <summary>
         /// Gets the date the research was started.

@@ -139,7 +139,7 @@ namespace EVEMon.Common.Scheduling
 
                 case RecurringFrequency.Weekly:
                     DateTime firstInstance = StartDate.AddDays((DayOfWeek - StartDate.DayOfWeek + 7) % 7);
-                    if (day.DayOfWeek != DayOfWeek || (day.Subtract(firstInstance).Days % (7 * WeeksPeriod)) != 0)
+                    if (day.DayOfWeek != DayOfWeek || day.Subtract(firstInstance).Days % (7 * WeeksPeriod) != 0)
                         return null;
                     break;
 
@@ -185,7 +185,7 @@ namespace EVEMon.Common.Scheduling
                     DateTime lastDayOfPreviousMonthDt = day - TimeSpan.FromDays(day.Day);
                     int lastDayOfPreviousMonth = lastDayOfPreviousMonthDt.Day;
                     int dayOfThisMonth = day.Day;
-                    return (DayOfMonth - lastDayOfPreviousMonth == dayOfThisMonth);
+                    return DayOfMonth - lastDayOfPreviousMonth == dayOfThisMonth;
 
                 case MonthlyOverflowResolution.ClipBack:
                     DateTime searchForward = day + TimeSpan.FromDays(1);

@@ -60,7 +60,7 @@ namespace EVEMon.Common.Notifications
         private void UpdateDescription()
         {
             Description = String.Format(CultureConstants.DefaultCulture, "{0} industry job{1} completed.", Jobs.Count,
-                                        (Jobs.Count > 1 ? "s" : String.Empty));
+                                        Jobs.Count > 1 ? "s" : String.Empty);
         }
     }
 }

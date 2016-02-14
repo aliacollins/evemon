@@ -140,7 +140,7 @@ namespace EVEMon.Common.Data
 
             // Retrieve the string for the number
             Nullable<EvePropertyValue> value = obj.Properties[ID];
-            String number = (value == null ? DefaultValue : value.Value.Value);
+            String number = value == null ? DefaultValue : value.Value.Value;
 
             // Try to parse it as a real
             Single result;
@@ -196,7 +196,7 @@ namespace EVEMon.Common.Data
 
                         // Format a value of Absolute Percentage
                     case DBConstants.AbsolutePercentUnitID:
-                        return String.Format(CultureConstants.DefaultCulture, "{0} {1}", (numericValue) * 100, Unit);
+                        return String.Format(CultureConstants.DefaultCulture, "{0} {1}", numericValue * 100, Unit);
 
                         // Format a value of Inverse Absolute Percentage
                     case DBConstants.InverseAbsolutePercentUnitID:

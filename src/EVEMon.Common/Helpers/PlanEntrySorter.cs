@@ -133,8 +133,8 @@ namespace EVEMon.Common.Helpers
         /// <returns></returns>
         public static int CompareByCost(PlanEntry x, PlanEntry y)
         {
-            long xCost = (x.Level == 1 && !x.CharacterSkill.IsOwned ? x.Skill.Cost : 0);
-            long yCost = (y.Level == 1 && !x.CharacterSkill.IsOwned ? y.Skill.Cost : 0);
+            long xCost = x.Level == 1 && !x.CharacterSkill.IsOwned ? x.Skill.Cost : 0;
+            long yCost = y.Level == 1 && !x.CharacterSkill.IsOwned ? y.Skill.Cost : 0;
             return xCost.CompareTo(yCost);
         }
 

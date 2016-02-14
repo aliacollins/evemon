@@ -142,7 +142,7 @@ namespace EVEMon.SkillPlanner
 
             m_boldFont = FontFactory.GetFont(Font, FontStyle.Bold);
             treeView.Font = FontFactory.GetFont("Microsoft Sans Serif", 8.25F);
-            treeView.ItemHeight = (treeView.Font.Height * 2) + 6;
+            treeView.ItemHeight = treeView.Font.Height * 2 + 6;
 
             m_emptyImageList.ImageSize = new Size(30, 24);
             m_emptyImageList.Images.Add(new Bitmap(30, 24));
@@ -221,7 +221,7 @@ namespace EVEMon.SkillPlanner
                     continue;
 
                 // If the user clicked the "arrow zone", we do not change the selection and just return
-                if (e.X < (node.Bounds.Left - 32))
+                if (e.X < node.Bounds.Left - 32)
                     return;
 
                 selection = node;
@@ -281,7 +281,7 @@ namespace EVEMon.SkillPlanner
             CertificateLevel oldSelection = SelectedCertificateLevel;
             TreeNode newSelection = null;
 
-            treeView.ImageList = (Settings.UI.SafeForWork ? m_emptyImageList : imageList);
+            treeView.ImageList = Settings.UI.SafeForWork ? m_emptyImageList : imageList;
 
             treeView.BeginUpdate();
             try
@@ -468,10 +468,10 @@ namespace EVEMon.SkillPlanner
             }
 
             // Choose colors according to selection
-            bool isSelected = ((e.State & TreeNodeStates.Selected) == TreeNodeStates.Selected);
-            Color backColor = (isSelected ? SystemColors.Highlight : treeView.BackColor);
-            Color foreColor = (isSelected ? SystemColors.HighlightText : treeView.ForeColor);
-            Color lightForeColor = (isSelected ? SystemColors.HighlightText : SystemColors.GrayText);
+            bool isSelected = (e.State & TreeNodeStates.Selected) == TreeNodeStates.Selected;
+            Color backColor = isSelected ? SystemColors.Highlight : treeView.BackColor;
+            Color foreColor = isSelected ? SystemColors.HighlightText : treeView.ForeColor;
+            Color lightForeColor = isSelected ? SystemColors.HighlightText : SystemColors.GrayText;
 
             // Draws the background
             using (SolidBrush background = new SolidBrush(backColor))
@@ -512,7 +512,7 @@ namespace EVEMon.SkillPlanner
 
             int imgOfssetX = e.Bounds.Left;
             float imgOffsetY = Math.Max(0.0f, (e.Bounds.Height - il.ImageSize.Height) * 0.5f);
-            e.Graphics.DrawImageUnscaled(il.Images[supIcon], (imgOfssetX), (int)(e.Bounds.Top + imgOffsetY));
+            e.Graphics.DrawImageUnscaled(il.Images[supIcon], imgOfssetX, (int)(e.Bounds.Top + imgOffsetY));
         }
 
         #endregion
@@ -591,18 +591,18 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            tsSeparatorToggle.Visible = (node != null && node.GetNodeCount(true) > 0);
+            tsSeparatorToggle.Visible = node != null && node.GetNodeCount(true) > 0;
 
             // "Collapse" and "Expand" menus
-            tsmCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded);
-            tsmExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded);
+            tsmCollapseSelected.Visible = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded;
+            tsmExpandSelected.Visible = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded;
 
-            tsmExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
+            tsmExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
                 ? String.Format(CultureConstants.DefaultCulture, "Expand {0}", node.Text)
-                : String.Empty);
-            tsmCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
+                : String.Empty;
+            tsmCollapseSelected.Text = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
                 ? String.Format(CultureConstants.DefaultCulture, "Collapse {0}", node.Text)
-                : String.Empty);
+                : String.Empty;
 
             // "Expand All" and "Collapse All" menus
             tsmCollapseAll.Enabled = tsmCollapseAll.Visible = m_allExpanded;

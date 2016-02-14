@@ -125,7 +125,7 @@ namespace EVEMon.SkillPlanner
             // Store selection and focus
             Plan selection = lbPlanList.Items.Cast<ListViewItem>().Where(x => x.Selected)
                 .Select(x => x.Tag).OfType<Plan>().FirstOrDefault();
-            Plan focused = (lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan);
+            Plan focused = lbPlanList.FocusedItem == null ? null : lbPlanList.FocusedItem.Tag as Plan;
 
             lbPlanList.BeginUpdate();
             try
@@ -148,8 +148,8 @@ namespace EVEMon.SkillPlanner
                     if (!restoreSelectionAndFocus)
                         continue;
 
-                    lvi.Selected = (selection == plan);
-                    lvi.Focused = (focused == plan);
+                    lvi.Selected = selection == plan;
+                    lvi.Focused = focused == plan;
                 }
 
                 // Adjust the size of the columns
@@ -253,14 +253,14 @@ namespace EVEMon.SkillPlanner
         private void lbPlanList_SelectedIndexChanged(object sender, EventArgs e)
         {
             // One one plan selected means we can move it
-            tsbMoveUp.Enabled = (lbPlanList.SelectedItems.Count == 1);
-            tsbMoveDown.Enabled = (lbPlanList.SelectedItems.Count == 1);
+            tsbMoveUp.Enabled = lbPlanList.SelectedItems.Count == 1;
+            tsbMoveDown.Enabled = lbPlanList.SelectedItems.Count == 1;
 
             // No items -> Disabled "open"
             // One item -> Enabled "open"
             // More items -> Enabled "merge"
-            btnOpen.Enabled = (lbPlanList.SelectedItems.Count > 0);
-            btnOpen.Text = (lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open");
+            btnOpen.Enabled = lbPlanList.SelectedItems.Count > 0;
+            btnOpen.Text = lbPlanList.SelectedItems.Count > 1 ? "Merge" : "Open";
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace EVEMon.SkillPlanner
             if (e.Column == (int)m_columnSorter.Sort)
             {
                 // Swap sort order
-                m_columnSorter.Order = (m_columnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending);
+                m_columnSorter.Order = m_columnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
             }
                 // Or a new column
             else
@@ -630,7 +630,7 @@ namespace EVEMon.SkillPlanner
         private void mFile_DropDownOpening(object sender, EventArgs e)
         {
             // See if we have multiple characters to determine if load from character is enabled
-            miImportPlanFromCharacter.Enabled = (EveMonClient.Characters.Count > 1);
+            miImportPlanFromCharacter.Enabled = EveMonClient.Characters.Count > 1;
             miExportPlan.Enabled = lbPlanList.SelectedItems.Count == 1;
             miSavePlans.Enabled = lbPlanList.Items.Count > 0;
         }

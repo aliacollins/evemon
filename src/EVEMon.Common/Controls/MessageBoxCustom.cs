@@ -191,33 +191,33 @@ namespace EVEMon.Common.Controls
 
             switch (buttons)
             {
-                case (MessageBoxButtons.AbortRetryIgnore):
+                case MessageBoxButtons.AbortRetryIgnore:
                     button3.Text = "Ignore";
                     button2.Text = "Retry";
                     button1.Text = "Abort";
                     break;
-                case (MessageBoxButtons.OK):
+                case MessageBoxButtons.OK:
                     button3.Visible = false;
                     button2.Visible = false;
                     button1.Text = "OK";
                     AcceptButton = button1;
                     break;
-                case (MessageBoxButtons.OKCancel):
+                case MessageBoxButtons.OKCancel:
                     button3.Visible = false;
                     button2.Text = "OK";
                     button1.Text = "Cancel";
                     break;
-                case (MessageBoxButtons.RetryCancel):
+                case MessageBoxButtons.RetryCancel:
                     button3.Visible = false;
                     button2.Text = "Retry";
                     button1.Text = "Cancel";
                     break;
-                case (MessageBoxButtons.YesNo):
+                case MessageBoxButtons.YesNo:
                     button3.Visible = false;
                     button2.Text = "Yes";
                     button1.Text = "No";
                     break;
-                case (MessageBoxButtons.YesNoCancel):
+                case MessageBoxButtons.YesNoCancel:
                     button3.Text = "Yes";
                     button2.Text = "No";
                     button1.Text = "Cancel";

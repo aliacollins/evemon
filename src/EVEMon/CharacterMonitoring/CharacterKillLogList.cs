@@ -303,9 +303,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvKillLog.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvKillLog.SelectedItems.Count > 0
+            int selectedItem = lvKillLog.SelectedItems.Count > 0
                 ? lvKillLog.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             lvKillLog.BeginUpdate();
             try
@@ -436,7 +436,7 @@ namespace EVEMon.CharacterMonitoring
             foreach (ColumnHeader columnHeader in lvKillLog.Columns)
             {
                 if (m_sortCriteria == columnHeader)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -536,7 +536,7 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Draw background
-            g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Draw text for a kill
             if (killLog.Group == KillGroup.Kills)
@@ -566,7 +566,7 @@ namespace EVEMon.CharacterMonitoring
             // Draw the kill image
             g.DrawImage(killLog.VictimShipImage,
                 new Rectangle(e.Bounds.Left + PadLeft / 2,
-                    (KillDetailHeight / 2) - (killLog.VictimShipImage.Height / 2) + e.Bounds.Top,
+                    KillDetailHeight / 2 - killLog.VictimShipImage.Height / 2 + e.Bounds.Top,
                     killLog.VictimShipImage.Width, killLog.VictimShipImage.Height));
 
             // Draw the copy image
@@ -717,7 +717,7 @@ namespace EVEMon.CharacterMonitoring
                 m_killBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                 e.Bounds.Top +
-                ((e.Bounds.Height / 2) - (standingGroupTextSize.Height / 2)),
+                (e.Bounds.Height / 2 - standingGroupTextSize.Height / 2),
                 standingGroupTextSize.Width + PadRight,
                 standingGroupTextSize.Height);
 
@@ -727,10 +727,10 @@ namespace EVEMon.CharacterMonitoring
 
             // Draws the collapsing arrows
             bool isCollapsed = m_collapsedGroups.Contains(group);
-            Image img = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image img = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             g.DrawImageUnscaled(img, new Rectangle(e.Bounds.Right - img.Width - CollapserPadRight,
-                (KillGroupHeaderHeight / 2) - (img.Height / 2) + e.Bounds.Top,
+                KillGroupHeaderHeight / 2 - img.Height / 2 + e.Bounds.Top,
                 img.Width, img.Height));
         }
 
@@ -1019,11 +1019,11 @@ namespace EVEMon.CharacterMonitoring
             bool isCollapsed = m_collapsedGroups.Contains(group);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image btnImage = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
-                (KillGroupHeaderHeight / 2) - (btnImage.Height / 2) + itemRect.Top);
+                KillGroupHeaderHeight / 2 - btnImage.Height / 2 + itemRect.Top);
 
             return new Rectangle(btnPoint, btnImage.Size);
         }

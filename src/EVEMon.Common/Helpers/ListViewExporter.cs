@@ -68,7 +68,7 @@ namespace EVEMon.Common.Helpers
                     if (listViewToExport.Items[line].SubItems.Count < maxElements)
                         maxElements = listViewToExport.Items[line].SubItems.Count;
 
-                    for (int subitem = 0; (subitem < maxElements); subitem++)
+                    for (int subitem = 0; subitem < maxElements; subitem++)
                     {
                         elements = listViewToExport.Items[line].SubItems[subitem].Text.Split(" ".ToCharArray());
 

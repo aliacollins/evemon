@@ -88,8 +88,8 @@ namespace EVEMon.Controls
             } while (wbMailBody.IsBusy);
 
             // Show the controls
-            Visible = ((m_selectedObject is EveMailMessage) && ((EveMailMessage)m_selectedObject).EVEMailBody.MessageID != 0)
-                      || ((m_selectedObject is EveNotification) &&
+            Visible = (m_selectedObject is EveMailMessage && ((EveMailMessage)m_selectedObject).EVEMailBody.MessageID != 0)
+                      || (m_selectedObject is EveNotification &&
                           ((EveNotification)m_selectedObject).EVENotificationText.NotificationID != 0);
         }
 
@@ -221,18 +221,18 @@ namespace EVEMon.Controls
         {
             string color = match.Groups[1].Value;
             Color textColor = ColorTranslator.FromHtml(String.Format(CultureConstants.InvariantCulture, "#{0}", color));
-            bool textColorIsShadeOfWhite = (textColor.R == textColor.G && textColor.G == textColor.B);
-            bool backColorIsShadeOfWhite = (backColor.R == backColor.G && backColor.G == backColor.B);
+            bool textColorIsShadeOfWhite = textColor.R == textColor.G && textColor.G == textColor.B;
+            bool backColorIsShadeOfWhite = backColor.R == backColor.G && backColor.G == backColor.B;
             if (!textColorIsShadeOfWhite || !backColorIsShadeOfWhite)
                 return color;
 
             const int ContrastDiff = 64;
-            int colorValue = (textColor.R <= backColor.R - ContrastDiff) ? textColor.R : 0;
+            int colorValue = textColor.R <= backColor.R - ContrastDiff ? textColor.R : 0;
             string colorElement = Convert.ToString(colorValue, 16);
             color = String.Format(CultureConstants.InvariantCulture, "{0}{0}{0}",
-                (colorElement.Length == 1
+                colorElement.Length == 1
                     ? String.Format(CultureConstants.InvariantCulture, "0{0}", colorElement)
-                    : colorElement));
+                    : colorElement);
             return color;
         }
 

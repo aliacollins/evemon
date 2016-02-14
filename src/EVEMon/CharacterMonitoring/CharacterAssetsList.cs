@@ -637,7 +637,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 AssetColumn column = (AssetColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -659,24 +659,24 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = asset.Item.Name;
                     break;
                 case AssetColumn.Quantity:
-                    item.Text = (numberFormat
+                    item.Text = numberFormat
                         ? FormatHelper.Format(asset.Quantity, AbbreviationFormat.AbbreviationSymbols)
-                        : asset.Quantity.ToNumericString(0));
+                        : asset.Quantity.ToNumericString(0);
                     break;
                 case AssetColumn.UnitaryPrice:
-                    item.Text = (numberFormat
+                    item.Text = numberFormat
                         ? FormatHelper.Format(asset.Price, AbbreviationFormat.AbbreviationSymbols)
-                        : asset.Price.ToNumericString(2));
+                        : asset.Price.ToNumericString(2);
                     break;
                 case AssetColumn.TotalPrice:
-                    item.Text = (numberFormat
+                    item.Text = numberFormat
                         ? FormatHelper.Format(asset.Cost, AbbreviationFormat.AbbreviationSymbols)
-                        : asset.Cost.ToNumericString(2));
+                        : asset.Cost.ToNumericString(2);
                     break;
                 case AssetColumn.Volume:
-                    item.Text = (numberFormat
+                    item.Text = numberFormat
                         ? FormatHelper.Format(asset.TotalVolume, AbbreviationFormat.AbbreviationSymbols)
-                        : asset.TotalVolume.ToNumericString(2));
+                        : asset.TotalVolume.ToNumericString(2);
                     break;
                 case AssetColumn.BlueprintType:
                     item.Text = asset.TypeOfBlueprint;

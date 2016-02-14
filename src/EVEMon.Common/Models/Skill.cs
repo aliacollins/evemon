@@ -68,7 +68,7 @@ namespace EVEMon.Common.Models
         internal void Import(SerializableCharacterSkill src, bool fromCCP)
         {
             m_owned = src.OwnsBook;
-            m_known = (fromCCP | src.IsKnown);
+            m_known = fromCCP | src.IsKnown;
             m_currentSkillPoints = src.Skillpoints;
             LastConfirmedLvl = src.Level;
             m_level = src.Level;
@@ -357,7 +357,7 @@ namespace EVEMon.Common.Models
                 float nextLevelSp = StaticData.GetPointsRequiredForLevel(m_level + 1);
                 float fraction = (SkillPoints - levelSp) / (nextLevelSp - levelSp);
 
-                return (fraction <= 1 ? fraction : fraction % 1);
+                return fraction <= 1 ? fraction : fraction % 1;
             }
         }
 
@@ -377,8 +377,8 @@ namespace EVEMon.Common.Models
                     return false;
 
                 bool partialLevel = SkillPoints > StaticData.GetPointsRequiredForLevel(Level),
-                     isNotFullyTrained = (GetLeftPointsRequiredToLevel(Level + 1) != 0),
-                     isPartiallyTrained = (partialLevel && isNotFullyTrained);
+                     isNotFullyTrained = GetLeftPointsRequiredToLevel(Level + 1) != 0,
+                     isPartiallyTrained = partialLevel && isNotFullyTrained;
                 return isPartiallyTrained;
             }
         }

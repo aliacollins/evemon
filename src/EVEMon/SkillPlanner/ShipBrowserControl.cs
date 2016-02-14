@@ -171,9 +171,9 @@ namespace EVEMon.SkillPlanner
             // We recalculate the right panels minimum size
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
-            scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
+            scDetails.Panel2MinSize = reqSkillPanelMinWidth > reqSkillControlMinWidth
                 ? reqSkillPanelMinWidth
-                : reqSkillControlMinWidth);
+                : reqSkillControlMinWidth;
 
             UpdateEligibility();
         }

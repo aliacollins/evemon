@@ -71,16 +71,16 @@ namespace EVEMon.Sales
         {
             foreach (ToolStripItem item in MineralWorksheetToolStrip.Items)
             {
-                item.DisplayStyle = (Settings.UI.SafeForWork
+                item.DisplayStyle = Settings.UI.SafeForWork
                     ? ToolStripItemDisplayStyle.Text
-                    : ToolStripItemDisplayStyle.ImageAndText);
+                    : ToolStripItemDisplayStyle.ImageAndText;
             }
 
             foreach (ToolStripStatusLabel item in MineralWorksheetStatusStrip.Items)
             {
-                item.DisplayStyle = (Settings.UI.SafeForWork
+                item.DisplayStyle = Settings.UI.SafeForWork
                     ? ToolStripItemDisplayStyle.Text
-                    : ToolStripItemDisplayStyle.ImageAndText);
+                    : ToolStripItemDisplayStyle.ImageAndText;
             }
 
             foreach (MineralTile tile in Tiles)

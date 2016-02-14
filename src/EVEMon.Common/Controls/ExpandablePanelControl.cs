@@ -177,7 +177,7 @@ namespace EVEMon.Common.Controls
                 gr.DrawLine(pen, Width - 1, 0, 0, 0);
             }
 
-            int height = (ExpandDirection == Direction.Up ? Height - Header.Height : 0);
+            int height = ExpandDirection == Direction.Up ? Height - Header.Height : 0;
             Header.Location = new Point(0, height);
 
             base.OnPaint(e);
@@ -194,7 +194,7 @@ namespace EVEMon.Common.Controls
             gr.SmoothingMode = SmoothingMode.AntiAlias;
 
             Header.Width = Width;
-            m_headerImage = (IsExpanded ? m_collapseImage : m_expandImage);
+            m_headerImage = IsExpanded ? m_collapseImage : m_expandImage;
 
             if (m_headerImage != null)
             {
@@ -398,7 +398,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         private void UpdateContextMenu()
         {
-            m_tsmiExpandCollapse.Text = (IsExpanded ? "Collapse Panel" : "Expand Panel");
+            m_tsmiExpandCollapse.Text = IsExpanded ? "Collapse Panel" : "Expand Panel";
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace EVEMon.Common.Controls
 
             // Set the panel status for startup
             m_animationStep = m_expandedHeight;
-            m_panelState = (ExpandedOnStartup ? PanelState.Collapsed : PanelState.Expanded);
+            m_panelState = ExpandedOnStartup ? PanelState.Collapsed : PanelState.Expanded;
             SwitchStatus();
 
             // Set the animation speed

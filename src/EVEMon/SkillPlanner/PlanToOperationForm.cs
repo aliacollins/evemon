@@ -83,7 +83,7 @@ namespace EVEMon.SkillPlanner
             else
             {
                 Text = "Remove entries from plan";
-                previousButton.Visible = (m_operation.RemovablePrerequisites.Count() != 0);
+                previousButton.Visible = m_operation.RemovablePrerequisites.Count() != 0;
                 cancelButton.Focus();
 
                 // Updates the selected page
@@ -151,7 +151,7 @@ namespace EVEMon.SkillPlanner
             if (rootMultiPanel.SelectedPage == uselessPrereqsSuppressionPage)
                 isFinal = true;
             else
-                isFinal = (!m_operation.RemovablePrerequisites.Any());
+                isFinal = !m_operation.RemovablePrerequisites.Any();
 
             // Final page ? 
             if (isFinal)

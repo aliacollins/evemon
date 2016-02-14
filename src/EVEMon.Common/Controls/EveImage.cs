@@ -110,9 +110,9 @@ namespace EVEMon.Common.Controls
             get { return base.Size; }
             set
             {
-                base.Size = (m_sizeMode == EveImageSizeMode.AutoSize
+                base.Size = m_sizeMode == EveImageSizeMode.AutoSize
                     ? new Size((int)m_imageSize, (int)m_imageSize)
-                    : value);
+                    : value;
             }
         }
 

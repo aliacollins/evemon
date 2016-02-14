@@ -394,7 +394,7 @@ namespace EVEMon.Common
                 if (result.Result is ISynchronizableWithLocalClock)
                 {
                     DateTime requestTime = DateTime.UtcNow;
-                    double offsetCCP = (result.CurrentTime.Subtract(requestTime)).TotalMilliseconds;
+                    double offsetCCP = result.CurrentTime.Subtract(requestTime).TotalMilliseconds;
                     result.SynchronizeWithLocalClock(offsetCCP);
                 }
             }

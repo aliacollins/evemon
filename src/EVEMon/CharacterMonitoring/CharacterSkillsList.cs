@@ -167,9 +167,9 @@ namespace EVEMon.CharacterMonitoring
                 IOrderedEnumerable<IGrouping<SkillGroup, Skill>> groups =
                     skills.GroupBy(x => x.Group).OrderBy(x => x.Key.Name);
 
-                m_maxGroupNameWidth = (groups.Select(
-                    group => TextRenderer.MeasureText(group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
-                        groupNameSize => groupNameSize.Width)).Concat(new[] { 0 }).Max();
+                m_maxGroupNameWidth = groups.Select(
+                    group => TextRenderer.MeasureText(@group.Key.Name, m_boldSkillsFont, Size.Empty, Format)).Select(
+                        groupNameSize => groupNameSize.Width).Concat(new[] { 0 }).Max();
 
                 // Scroll through groups
                 lbSkills.Items.Clear();
@@ -369,7 +369,7 @@ namespace EVEMon.CharacterMonitoring
                 // In training
                 g.FillRectangle(Brushes.LightSteelBlue, e.Bounds);
             }
-            else if ((e.Index % 2) == 0)
+            else if (e.Index % 2 == 0)
             {
                 // Not in training - odd
                 g.FillRectangle(Brushes.White, e.Bounds);
@@ -423,7 +423,7 @@ namespace EVEMon.CharacterMonitoring
             for (int level = 1; level <= 5; level++)
             {
                 Rectangle brect = new Rectangle(
-                    e.Bounds.Right - BoxWidth - PadRight + 2 + (LevelBoxWidth * (level - 1)) + (level - 1),
+                    e.Bounds.Right - BoxWidth - PadRight + 2 + LevelBoxWidth * (level - 1) + (level - 1),
                     e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
 
                 g.FillRectangle(level <= skill.Level ? Brushes.Black : Brushes.DarkGray, brect);
@@ -496,23 +496,23 @@ namespace EVEMon.CharacterMonitoring
             string skillsTotalSPText = String.Format(CultureConstants.DefaultCulture, "{0:N0} Points", group.TotalSP);
 
             Rectangle skillGroupNameTextRect = new Rectangle(e.Bounds.Left + PadLeft,
-                                                             e.Bounds.Top + (e.Bounds.Height / 2) - (lbSkills.ItemHeight / 2),
-                                                             m_maxGroupNameWidth + (PadLeft / 2),
+                                                             e.Bounds.Top + e.Bounds.Height / 2 - lbSkills.ItemHeight / 2,
+                                                             m_maxGroupNameWidth + PadLeft / 2,
                                                              lbSkills.ItemHeight);
 
             int skillsSummaryTextWidth = (int)(SkillsSummaryTextWidth * (g.DpiX / EVEMonConstants.DefaultDpi));
             Rectangle skillsSummaryTextRect = new Rectangle(
-                skillGroupNameTextRect.X + m_maxGroupNameWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
-                skillsSummaryTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
+                skillGroupNameTextRect.X + m_maxGroupNameWidth + PadLeft / 2, skillGroupNameTextRect.Y,
+                skillsSummaryTextWidth + PadLeft / 2, lbSkills.ItemHeight);
 
             int skillGroupTotalSPTextWidth = (int)(SkillGroupTotalSPTextWidth * (g.DpiX / EVEMonConstants.DefaultDpi));
             Rectangle skillsTotalSPTextRect = new Rectangle(
-                skillsSummaryTextRect.X + skillsSummaryTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
-                skillGroupTotalSPTextWidth + (PadLeft / 2), lbSkills.ItemHeight);
+                skillsSummaryTextRect.X + skillsSummaryTextWidth + PadLeft / 2, skillGroupNameTextRect.Y,
+                skillGroupTotalSPTextWidth + PadLeft / 2, lbSkills.ItemHeight);
 
             Size skillInTrainingSuffixSize = TextRenderer.MeasureText(g, skillInTrainingSuffix, m_skillsFont, Size.Empty);
             Rectangle skillInTrainingSuffixRect = new Rectangle(
-                skillsTotalSPTextRect.X + skillGroupTotalSPTextWidth + (PadLeft / 2), skillGroupNameTextRect.Y,
+                skillsTotalSPTextRect.X + skillGroupTotalSPTextWidth + PadLeft / 2, skillGroupNameTextRect.Y,
                 skillInTrainingSuffixSize.Width, lbSkills.ItemHeight);
 
             Size skillQueueTextSize = TextRenderer.MeasureText(g, skillsInQueueSuffix, m_skillsFont, Size.Empty);
@@ -528,17 +528,17 @@ namespace EVEMon.CharacterMonitoring
                                   Format | TextFormatFlags.Right);
             TextRenderer.DrawText(g, skillInTrainingSuffix, m_skillsFont, skillInTrainingSuffixRect, Color.White,
                                   Format | TextFormatFlags.Right);
-            TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect, (Settings.UI.SafeForWork
-                                                                                             ? Color.White
-                                                                                             : Color.Yellow),
+            TextRenderer.DrawText(g, skillsInQueueSuffix, m_skillsFont, skillQueueRect, Settings.UI.SafeForWork
+                ? Color.White
+                : Color.Yellow,
                                   Format | TextFormatFlags.Right);
 
             // Draws the collapsing arrows
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
-            Image image = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image image = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             g.DrawImageUnscaled(image, new Point(e.Bounds.Right - image.Width - CollapserPadRight,
-                                                 (SkillHeaderHeight / 2) - (image.Height / 2) + e.Bounds.Top));
+                                                 SkillHeaderHeight / 2 - image.Height / 2 + e.Bounds.Top));
         }
 
         /// <summary>
@@ -972,8 +972,8 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // If the group is not completed yet
-            double percentDonePoints = (1.0 * Math.Min(totalSP, maxSP)) / maxSP;
-            double percentDoneSkills = (1.0 * Math.Min(known, maxKnown)) / maxKnown;
+            double percentDonePoints = 1.0 * Math.Min(totalSP, maxSP) / maxSP;
+            double percentDoneSkills = 1.0 * Math.Min(known, maxKnown) / maxKnown;
 
             return String.Format(CultureConstants.DefaultCulture,
                 "Points Completed: {0:N0} of {1:N0} ({2:P1})\nSkills Known: {3} of {4} ({5:P0})",
@@ -992,11 +992,11 @@ namespace EVEMon.CharacterMonitoring
             bool isCollapsed = Character.UISettings.CollapsedGroups.Contains(group.Name);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image btnImage = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
-                                       (SkillHeaderHeight / 2) - (btnImage.Height / 2) + itemRect.Top);
+                                       SkillHeaderHeight / 2 - btnImage.Height / 2 + itemRect.Top);
 
             return new Rectangle(btnPoint, btnImage.Size);
         }

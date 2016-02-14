@@ -36,7 +36,7 @@ namespace EVEMon.ApiCredentialsManagement
             : this()
         {
             m_apiKey = apiKey;
-            m_updateMode = (m_apiKey != null);
+            m_updateMode = m_apiKey != null;
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             WarningLabel.Visible = m_updateMode;
-            VerificationCodeTextBox.Text = (m_apiKey != null ? m_apiKey.VerificationCode : String.Empty);
-            IDTextBox.Text = (m_apiKey != null ? m_apiKey.ID.ToString(CultureConstants.DefaultCulture) : String.Empty);
+            VerificationCodeTextBox.Text = m_apiKey != null ? m_apiKey.VerificationCode : String.Empty;
+            IDTextBox.Text = m_apiKey != null ? m_apiKey.ID.ToString(CultureConstants.DefaultCulture) : String.Empty;
             IDTextBox.ReadOnly = m_updateMode;
             CharactersListView.Items.Clear();
 
@@ -81,8 +81,8 @@ namespace EVEMon.ApiCredentialsManagement
             else
             {
                 ButtonPrevious.Enabled = true;
-                ButtonNext.Enabled = (ResultsMultiPanel.SelectedPage == CharactersListPage);
-                ButtonNext.Text = (m_updateMode ? "&Update" : "&Import");
+                ButtonNext.Enabled = ResultsMultiPanel.SelectedPage == CharactersListPage;
+                ButtonNext.Text = m_updateMode ? "&Update" : "&Import";
                 ButtonNext.Focus();
             }
         }
@@ -257,7 +257,7 @@ namespace EVEMon.ApiCredentialsManagement
                 id => new ListViewItem(id.CharacterName)
                           {
                               Tag = id,
-                              Checked = (m_apiKey == null || !m_apiKey.IdentityIgnoreList.Contains(id))
+                              Checked = m_apiKey == null || !m_apiKey.IdentityIgnoreList.Contains(id)
                           }))
             {
                 CharactersListView.Items.Add(item);

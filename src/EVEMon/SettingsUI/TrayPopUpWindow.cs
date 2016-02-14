@@ -340,7 +340,7 @@ namespace EVEMon.SettingsUI
             // Fix the panel widths to the largest
             // We let the framework determine the appropriate widths, then fix them so that
             // updates to training time remaining don't cause the form to resize
-            int pnlWidth = (MainFlowLayoutPanel.Controls.Cast<Control>().Select(control => control.Width)).Concat(new[] { 0 }).Max();
+            int pnlWidth = MainFlowLayoutPanel.Controls.Cast<Control>().Select(control => control.Width).Concat(new[] { 0 }).Max();
 
             foreach (FlowLayoutPanel flowPanel in MainFlowLayoutPanel.Controls.OfType<FlowLayoutPanel>())
             {

@@ -197,7 +197,7 @@ namespace EVEMon.CharacterMonitoring
 
             lvResearchPoints.Visible = false;
 
-            ResearchPoints = (Character == null ? null : Character.ResearchPoints);
+            ResearchPoints = Character == null ? null : Character.ResearchPoints;
             Columns = Settings.UI.MainWindow.Research.Columns;
             TextFilter = String.Empty;
 
@@ -284,9 +284,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvResearchPoints.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvResearchPoints.SelectedItems.Count > 0
-                                    ? lvResearchPoints.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvResearchPoints.SelectedItems.Count > 0
+                ? lvResearchPoints.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvResearchPoints.BeginUpdate();
             try
@@ -425,7 +425,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 ResearchColumn column = (ResearchColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -462,9 +462,9 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = researchPoint.StartDate.ToLocalTime().ToString();
                     break;
                 case ResearchColumn.Location:
-                    item.Text = (outpost != null
-                                     ? outpost.FullLocation
-                                     : researchPoint.Station.FullLocation);
+                    item.Text = outpost != null
+                        ? outpost.FullLocation
+                        : researchPoint.Station.FullLocation;
                     break;
                 case ResearchColumn.Region:
                     item.Text = researchPoint.Station.SolarSystem.Constellation.Region.Name;
@@ -474,9 +474,9 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = researchPoint.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case ResearchColumn.Station:
-                    item.Text = (outpost != null
-                                     ? outpost.FullName
-                                     : researchPoint.Station.Name);
+                    item.Text = outpost != null
+                        ? outpost.FullName
+                        : researchPoint.Station.Name;
                     break;
                 case ResearchColumn.Quality:
                     break;

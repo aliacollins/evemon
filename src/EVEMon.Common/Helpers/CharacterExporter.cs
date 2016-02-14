@@ -156,9 +156,9 @@ namespace EVEMon.Common.Helpers
             StringBuilder builder = new StringBuilder();
 
             foreach (SerializableCharacterSkill skill in character.Skills.Where(
-                x => (x.IsPublic && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
-                      && x.Group.ID != DBConstants.SocialSkillsGroupID
-                      && x.Group.ID != DBConstants.TradeSkillsGroupID)).Select(x => GetMergedSkill(plan, x)))
+                x => x.IsPublic && x.Group.ID != DBConstants.CorporationManagementSkillsGroupID
+                     && x.Group.ID != DBConstants.SocialSkillsGroupID
+                     && x.Group.ID != DBConstants.TradeSkillsGroupID).Select(x => GetMergedSkill(plan, x)))
             {
                 builder.AppendFormat(CultureConstants.InvariantCulture, "{0}={1}{2}", skill.Name, skill.Level,
                                      Environment.NewLine);
@@ -303,7 +303,7 @@ namespace EVEMon.Common.Helpers
             if (plan != null)
             {
                 serial.Skills.Clear();
-                serial.Skills.AddRange(character.Skills.Where(skill => skill.IsKnown || (plan.IsPlanned(skill)))
+                serial.Skills.AddRange(character.Skills.Where(skill => skill.IsKnown || plan.IsPlanned(skill))
                     .Select(skill => GetMergedSkill(plan, skill)));
             }
 

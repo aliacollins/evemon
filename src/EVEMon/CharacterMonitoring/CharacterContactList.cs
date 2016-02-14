@@ -256,7 +256,7 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Draw background
-            g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Measure texts
             Size contactTextSize = TextRenderer.MeasureText(g, contact.Name, m_contactsBoldFont, Size.Empty, Format);
@@ -352,7 +352,7 @@ namespace EVEMon.CharacterMonitoring
                     g.DrawImage(standingImage,
                                 new Rectangle(
                                     e.Bounds.Left + contact.EntityImage.Width + 4 + contactTextSize.Width + PadRight * 2,
-                                    e.Bounds.Top + ((e.Bounds.Height - standingImage.Size.Height) / 2),
+                                    e.Bounds.Top + (e.Bounds.Height - standingImage.Size.Height) / 2,
                                     standingImage.Width, standingImage.Height));
 
                     //Draw watchlist image
@@ -362,7 +362,7 @@ namespace EVEMon.CharacterMonitoring
                                     new Rectangle(
                                         e.Bounds.Left + contact.EntityImage.Width + 4 + contactTextSize.Width +
                                         standingImage.Width + PadRight * 3,
-                                        e.Bounds.Top + ((e.Bounds.Height - Resources.Watch.Height) / 2),
+                                        e.Bounds.Top + (e.Bounds.Height - Resources.Watch.Height) / 2,
                                         Resources.Watch.Width, Resources.Watch.Height));
                     }
                 }
@@ -375,7 +375,7 @@ namespace EVEMon.CharacterMonitoring
             // Draw the entity image
             g.DrawImage(contact.EntityImage,
                         new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                      (ContactDetailHeight / 2) - (contact.EntityImage.Height / 2) + e.Bounds.Top,
+                                      ContactDetailHeight / 2 - contact.EntityImage.Height / 2 + e.Bounds.Top,
                                       contact.EntityImage.Width, contact.EntityImage.Height));
         }
 
@@ -408,7 +408,7 @@ namespace EVEMon.CharacterMonitoring
                                                                   m_contactsBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                                                             e.Bounds.Top +
-                                                            ((e.Bounds.Height / 2) - (standingGroupTextSize.Height / 2)),
+                                                            (e.Bounds.Height / 2 - standingGroupTextSize.Height / 2),
                                                             standingGroupTextSize.Width + PadRight,
                                                             standingGroupTextSize.Height);
 
@@ -418,10 +418,10 @@ namespace EVEMon.CharacterMonitoring
 
             // Draws the collapsing arrows
             bool isCollapsed = m_collapsedGroups.Contains(group);
-            Image img = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image img = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             g.DrawImageUnscaled(img, new Rectangle(e.Bounds.Right - img.Width - CollapserPadRight,
-                                                   (ContactGroupHeaderHeight / 2) - (img.Height / 2) + e.Bounds.Top,
+                                                   ContactGroupHeaderHeight / 2 - img.Height / 2 + e.Bounds.Top,
                                                    img.Width, img.Height));
         }
 
@@ -579,11 +579,11 @@ namespace EVEMon.CharacterMonitoring
             bool isCollapsed = m_collapsedGroups.Contains(group);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image btnImage = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
-                                       (ContactGroupHeaderHeight / 2) - (btnImage.Height / 2) + itemRect.Top);
+                                       ContactGroupHeaderHeight / 2 - btnImage.Height / 2 + itemRect.Top);
 
             return new Rectangle(btnPoint, btnImage.Size);
         }

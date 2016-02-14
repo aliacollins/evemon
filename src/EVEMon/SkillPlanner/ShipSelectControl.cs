@@ -226,7 +226,7 @@ namespace EVEMon.SkillPlanner
                 AllExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
-                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                if (numberOfItems < tvItems.DisplayRectangle.Height / tvItems.ItemHeight)
                 {
                     tvItems.ExpandAll();
                     AllExpanded = true;

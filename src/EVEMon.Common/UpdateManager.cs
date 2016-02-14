@@ -211,7 +211,7 @@ namespace EVEMon.Common
                 string installArgs = result.Release.InstallerArgs;
                 string md5Sum = result.Release.MD5Sum;
                 string additionalArgs = result.Release.AdditionalArgs;
-                bool canAutoInstall = (!String.IsNullOrEmpty(installerUrl.AbsoluteUri) && !String.IsNullOrEmpty(installArgs));
+                bool canAutoInstall = !String.IsNullOrEmpty(installerUrl.AbsoluteUri) && !String.IsNullOrEmpty(installArgs);
 
                 if (!String.IsNullOrEmpty(additionalArgs) && additionalArgs.Contains("%EVEMON_EXECUTABLE_PATH%"))
                 {

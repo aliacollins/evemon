@@ -335,7 +335,7 @@ namespace EVEMon.Common.Models
                                       m_entryType = m_entryType,
                                       m_priority = m_priority,
                                       m_notes = m_notes,
-                                      m_remapping = (m_remapping != null ? m_remapping.Clone() : null),
+                                      m_remapping = m_remapping != null ? m_remapping.Clone() : null,
                                       OldTrainingTime = OldTrainingTime,
                                       TrainingTime = TrainingTime
                                   };

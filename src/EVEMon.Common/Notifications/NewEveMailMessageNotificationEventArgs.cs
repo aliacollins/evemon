@@ -40,7 +40,7 @@ namespace EVEMon.Common.Notifications
         private void UpdateDescription()
         {
             Description = String.Format(CultureConstants.DefaultCulture, "{0} new EVE mail message{1}.",
-                                        m_newMailMessagesCount, (m_newMailMessagesCount > 1 ? "s" : String.Empty));
+                                        m_newMailMessagesCount, m_newMailMessagesCount > 1 ? "s" : String.Empty);
         }
     }
 }

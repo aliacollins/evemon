@@ -135,7 +135,7 @@ namespace EVEMon.SettingsUI
             }
 
             // Check the name does not already exist
-            bool exist = (configName == APIProvider.DefaultProvider.Name);
+            bool exist = configName == APIProvider.DefaultProvider.Name;
             exist = m_providers.CustomProviders.Aggregate(exist,
                                                           (current, provider) =>
                                                           current | (configName == provider.Name && provider != m_provider));

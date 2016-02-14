@@ -359,8 +359,8 @@ namespace EVEMon.ApiTester
         private void WebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             // Enable "Save" button on condition
-            SaveButton.Enabled = (m_url == e.Url && e.Url != m_defaultUri &&
-                                  WebBrowser.Document != null && WebBrowser.Document.Body != null);
+            SaveButton.Enabled = m_url == e.Url && e.Url != m_defaultUri &&
+                                 WebBrowser.Document != null && WebBrowser.Document.Body != null;
         }
 
         /// <summary>

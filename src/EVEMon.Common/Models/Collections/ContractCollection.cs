@@ -54,12 +54,12 @@ namespace EVEMon.Common.Models.Collections
 
             // Import the contracts from the API, excluding the expired assigned ones
             List<Contract> newContracts = src.Where(
-                x => (x.IssuerID == m_character.CharacterID ||
-                      x.AcceptorID == m_character.CharacterID ||
-                      x.Status == CCPContractStatus.Completed.ToString() ||
-                      x.Status == CCPContractStatus.CompletedByContractor.ToString() ||
-                      x.Status == CCPContractStatus.CompletedByIssuer.ToString() ||
-                      (x.Status == CCPContractStatus.Outstanding.ToString() && x.DateExpired >= DateTime.UtcNow))).Select(
+                x => x.IssuerID == m_character.CharacterID ||
+                     x.AcceptorID == m_character.CharacterID ||
+                     x.Status == CCPContractStatus.Completed.ToString() ||
+                     x.Status == CCPContractStatus.CompletedByContractor.ToString() ||
+                     x.Status == CCPContractStatus.CompletedByIssuer.ToString() ||
+                     (x.Status == CCPContractStatus.Outstanding.ToString() && x.DateExpired >= DateTime.UtcNow)).Select(
                           srcContract =>
                               new
                               {

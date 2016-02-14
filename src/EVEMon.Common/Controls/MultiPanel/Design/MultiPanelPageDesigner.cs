@@ -48,7 +48,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// <returns></returns>
         public override bool CanBeParentedTo(IDesigner parentDesigner)
         {
-            return ((parentDesigner != null) && (parentDesigner.Component is MultiPanel));
+            return (parentDesigner != null) && parentDesigner.Component is MultiPanel;
         }
 
         /// <summary>

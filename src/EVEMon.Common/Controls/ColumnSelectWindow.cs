@@ -69,7 +69,7 @@ namespace EVEMon.Common.Controls
         /// <param name="e"></param>
         private void clbColumns_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            bool isChecked = (e.NewValue == CheckState.Checked);
+            bool isChecked = e.NewValue == CheckState.Checked;
 
             // Gets the key of the modified column
             string header = (string)clbColumns.Items[e.Index];

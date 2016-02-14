@@ -50,7 +50,7 @@ namespace EVEMon.Common.Models
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
         public bool IsDependentOf(ISkillLevel level)
         {
-            return (new StaticSkillLevel(this)).IsDependentOf(level);
+            return new StaticSkillLevel(this).IsDependentOf(level);
         }
 
         /// <summary>

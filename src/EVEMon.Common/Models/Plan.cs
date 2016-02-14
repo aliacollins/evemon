@@ -684,7 +684,7 @@ namespace EVEMon.Common.Models
                                  int lowestPrerequisitesPriority)
             {
                 m_plan = plan;
-                m_type = (!skillsToAdd.Any() ? PlanOperations.None : PlanOperations.Addition);
+                m_type = !skillsToAdd.Any() ? PlanOperations.None : PlanOperations.Addition;
 
                 m_skillsToAdd.AddRange(skillsToAdd);
                 m_allEntriesToAdd.AddRange(allEntriesToAdd);
@@ -703,7 +703,7 @@ namespace EVEMon.Common.Models
                                  IEnumerable<PlanEntry> removablePrerequisites)
             {
                 m_plan = plan;
-                m_type = (!skillsToRemove.Any() ? PlanOperations.None : PlanOperations.Suppression);
+                m_type = !skillsToRemove.Any() ? PlanOperations.None : PlanOperations.Suppression;
 
                 m_skillsToRemove.AddRange(skillsToRemove);
                 m_allEntriesToRemove.AddRange(allEntriesToRemove);

@@ -401,9 +401,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
                 ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             TreeNode selectedNode = null;
 
@@ -470,7 +470,7 @@ namespace EVEMon.SkillPlanner
                 m_allExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
-                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                if (numberOfItems < tvItems.DisplayRectangle.Height / tvItems.ItemHeight)
                 {
                     tvItems.ExpandAll();
                     m_allExpanded = true;
@@ -508,9 +508,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateListView(IList<CertificateClass> classes)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
-                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                        : 0);
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
+                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                : 0;
 
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
@@ -755,7 +755,7 @@ namespace EVEMon.SkillPlanner
                     SizeF size = g.MeasureString(letters[i], m_iconsFont, MaxLetterWidth, StringFormat.GenericTypographic);
                     height = Math.Max(height, size.Height);
                     xPositions[i] = x;
-                    x += (size.Width + 1.0f);
+                    x += size.Width + 1.0f;
                     i++;
                 }
 
@@ -903,20 +903,20 @@ namespace EVEMon.SkillPlanner
                 }
             }
 
-            tsSeparatorPlanTo.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0);
+            tsSeparatorPlanTo.Visible = certClass == null && node != null && lbSearchList.Items.Count == 0;
 
             // "Expand" and "Collapse" selected menu
-            tsmExpandSelected.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0 && !node.IsExpanded);
-            tsmCollapseSelected.Visible = (certClass == null && node != null && lbSearchList.Items.Count == 0 && node.IsExpanded);
+            tsmExpandSelected.Visible = certClass == null && node != null && lbSearchList.Items.Count == 0 && !node.IsExpanded;
+            tsmCollapseSelected.Visible = certClass == null && node != null && lbSearchList.Items.Count == 0 && node.IsExpanded;
 
-            tsmExpandSelected.Text = (certClass == null && node != null &&
-                                      !node.IsExpanded
-                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
-                                          : String.Empty);
-            tsmCollapseSelected.Text = (certClass == null && node != null &&
-                                        node.IsExpanded
-                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
-                                            : String.Empty);
+            tsmExpandSelected.Text = certClass == null && node != null &&
+                                     !node.IsExpanded
+                ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
+                : String.Empty;
+            tsmCollapseSelected.Text = certClass == null && node != null &&
+                                       node.IsExpanded
+                ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
+                : String.Empty;
 
             tsSeparatorExpandCollapse.Visible = lbSearchList.Items.Count == 0;
 

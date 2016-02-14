@@ -51,7 +51,7 @@ namespace EVEMon.Common.Models
             EndDate = src.EndDate;
             PauseDate = src.PauseDate;
             LastStateChange = src.LastStateChange;
-            IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
+            IssuedFor = src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor;
             ActiveJobState = GetActiveJobState();
         }
 
@@ -289,7 +289,7 @@ namespace EVEMon.Common.Models
                     PauseDate = src.PauseDate;
                 }
 
-                State = (PauseDate == DateTime.MinValue ? JobState.Active : JobState.Paused);
+                State = PauseDate == DateTime.MinValue ? JobState.Active : JobState.Paused;
                 ActiveJobState = GetActiveJobState();
                 LastStateChange = DateTime.UtcNow;
             }

@@ -102,7 +102,7 @@ namespace EVEMon.Updater
                 // This hackish way though solves this issue (in a way) as explained in
                 // http://stackoverflow.com/questions/977278/how-can-i-make-the-progress-bar-update-fast-enough/1214147#1214147.
                 pbProgress.Value = e.ProgressPercentage;
-                pbProgress.Value = (e.ProgressPercentage == 0 ? e.ProgressPercentage : e.ProgressPercentage - 1);
+                pbProgress.Value = e.ProgressPercentage == 0 ? e.ProgressPercentage : e.ProgressPercentage - 1;
             }
             else
             {

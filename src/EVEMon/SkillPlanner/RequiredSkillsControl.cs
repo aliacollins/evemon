@@ -129,12 +129,12 @@ namespace EVEMon.SkillPlanner
             // Treeview update
             tvSkillList.BeginUpdate();
 
-            IEnumerable<StaticSkillLevel> prerequisites = (Activity == BlueprintActivity.None
-                                                               ? m_object.Prerequisites.Where(
-                                                                   x => !x.Level.Equals(0) && x.Activity.Equals(Activity))
-                                                               : m_object.Prerequisites.Where(
-                                                                   x => !x.Level.Equals(0) && x.Activity.Equals(Activity)).
-                                                                     OrderBy(x => x.Skill.Name));
+            IEnumerable<StaticSkillLevel> prerequisites = Activity == BlueprintActivity.None
+                ? m_object.Prerequisites.Where(
+                    x => !x.Level.Equals(0) && x.Activity.Equals(Activity))
+                : m_object.Prerequisites.Where(
+                    x => !x.Level.Equals(0) && x.Activity.Equals(Activity)).
+                    OrderBy(x => x.Skill.Name);
 
             try
             {
@@ -245,7 +245,7 @@ namespace EVEMon.SkillPlanner
                     continue;
 
                 // If the user clicked the "arrow zone", we do not change the selection and just return
-                if (e.X < (node.Bounds.Left - 32))
+                if (e.X < node.Bounds.Left - 32)
                     return;
 
                 selection = node;

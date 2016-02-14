@@ -377,10 +377,10 @@ namespace EVEMon.SkillPlanner
             tmrAutoRefresh.Stop();
 
             // Stores selection and focus, to restore them after the update
-            Dictionary<int, bool> selection = (restoreSelectionAndFocus ? StoreSelection() : null);
-            int focusedHashCode = (restoreSelectionAndFocus && lvSkills.FocusedItem != null
-                                       ? lvSkills.FocusedItem.Tag.GetHashCode()
-                                       : 0);
+            Dictionary<int, bool> selection = restoreSelectionAndFocus ? StoreSelection() : null;
+            int focusedHashCode = restoreSelectionAndFocus && lvSkills.FocusedItem != null
+                ? lvSkills.FocusedItem.Tag.GetHashCode()
+                : 0;
 
             lvSkills.BeginUpdate();
             try
@@ -409,9 +409,9 @@ namespace EVEMon.SkillPlanner
                     // Is it a prerequisite or a top level entry ?
                     if (!Settings.UI.SafeForWork)
                     {
-                        lvi.Font = (Settings.UI.PlanWindow.HighlightPlannedSkills && entry.Type == PlanEntryType.Planned
-                                        ? m_plannedSkillFont
-                                        : m_prerequisiteSkillFont);
+                        lvi.Font = Settings.UI.PlanWindow.HighlightPlannedSkills && entry.Type == PlanEntryType.Planned
+                            ? m_plannedSkillFont
+                            : m_prerequisiteSkillFont;
                     }
 
                     // Gray out entries that cannot be trained immediately
@@ -512,11 +512,11 @@ namespace EVEMon.SkillPlanner
                 lvi.ForeColor = Color.LightSlateGray;
 
             // Checks if this entry is partially trained
-            bool level = (entry.Level == entry.CharacterSkill.Level + 1);
+            bool level = entry.Level == entry.CharacterSkill.Level + 1;
             if (Settings.UI.PlanWindow.HighlightPartialSkills)
             {
-                bool partiallyTrained = (entry.CharacterSkill.FractionCompleted > 0 &&
-                                         entry.CharacterSkill.FractionCompleted < 1);
+                bool partiallyTrained = entry.CharacterSkill.FractionCompleted > 0 &&
+                                        entry.CharacterSkill.FractionCompleted < 1;
                 if (level && partiallyTrained)
                     lvi.ForeColor = Color.Green;
             }
@@ -563,7 +563,7 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update every column
-            lvi.UseItemStyleForSubItems = (m_pluggable == null);
+            lvi.UseItemStyleForSubItems = m_pluggable == null;
             for (int columnIndex = 0; columnIndex < lvSkills.Columns.Count; columnIndex++)
             {
                 // Regular columns (not pluggable-dependent)
@@ -625,9 +625,9 @@ namespace EVEMon.SkillPlanner
                 // We display the text in the SkillName column for better visibility
                 if (columnSettings != null && columnSettings.Column == PlanColumn.SkillName)
                 {
-                    lvi.SubItems[columnIndex].Text = (m_areRemappingPointsActive
-                                                          ? point.ToString()
-                                                          : "Remapping (ignored)");
+                    lvi.SubItems[columnIndex].Text = m_areRemappingPointsActive
+                        ? point.ToString()
+                        : "Remapping (ignored)";
                 }
             }
         }
@@ -1367,9 +1367,9 @@ namespace EVEMon.SkillPlanner
                         continue;
                     }
 
-                    columnHeader.ImageIndex = (m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending
-                                                   ? ArrowUpIndex
-                                                   : ArrowDownIndex);
+                    columnHeader.ImageIndex = m_plan.SortingPreferences.Order == ThreeStateSortOrder.Ascending
+                        ? ArrowUpIndex
+                        : ArrowDownIndex;
                 }
                 else
                     columnHeader.ImageIndex = 6;
@@ -1529,7 +1529,7 @@ namespace EVEMon.SkillPlanner
 
             if (skills.Any(x => !x.IsKnown))
             {
-                miMarkOwned.Text = (skills.Any(x => !x.IsOwned) ? "Mark as owned" : "Mark as unowned");
+                miMarkOwned.Text = skills.Any(x => !x.IsOwned) ? "Mark as owned" : "Mark as unowned";
                 miMarkOwned.Enabled = true;
             }
             else
@@ -1711,7 +1711,7 @@ namespace EVEMon.SkillPlanner
 
             // We get the current skill's note and call the note editor window with this initial value
             string noteText = entries.First().Notes;
-            string title = (entries.Count() == 1 ? entries.First().Skill.ToString() : "Selected entries");
+            string title = entries.Count() == 1 ? entries.First().Skill.ToString() : "Selected entries";
             using (PlanNotesEditorWindow f = new PlanNotesEditorWindow(title))
             {
                 f.NoteText = noteText;
@@ -1867,7 +1867,7 @@ namespace EVEMon.SkillPlanner
                     Rectangle hoverBounds = hoverItem.GetBounds(ItemBoundsPortion.ItemOnly);
 
                     // If the user is dropping on the lower half of the item, increase the dragging index
-                    if (cp.Y > (hoverBounds.Top + (hoverBounds.Height / 2)))
+                    if (cp.Y > hoverBounds.Top + hoverBounds.Height / 2)
                         dragIndex++;
                 }
 
@@ -1908,7 +1908,7 @@ namespace EVEMon.SkillPlanner
             if (hoverItem != null)
             {
                 Rectangle hoverBounds = hoverItem.GetBounds(ItemBoundsPortion.ItemOnly);
-                lvSkills.DrawDropMarker(hoverItem.Index, (cp.Y > (hoverBounds.Top + (hoverBounds.Height / 2))));
+                lvSkills.DrawDropMarker(hoverItem.Index, cp.Y > hoverBounds.Top + hoverBounds.Height / 2);
             }
             else
                 lvSkills.ClearDropMarker();
@@ -2119,8 +2119,8 @@ namespace EVEMon.SkillPlanner
             }
             else
             {
-                tsbMoveUp.Enabled = (lvSkills.SelectedIndices[0] != 0);
-                tsbMoveDown.Enabled = (lvSkills.SelectedIndices[lvSkills.SelectedIndices.Count - 1] != lvSkills.Items.Count - 1);
+                tsbMoveUp.Enabled = lvSkills.SelectedIndices[0] != 0;
+                tsbMoveDown.Enabled = lvSkills.SelectedIndices[lvSkills.SelectedIndices.Count - 1] != lvSkills.Items.Count - 1;
                 ResetPrereqMarks();
             }
 
@@ -2214,7 +2214,7 @@ namespace EVEMon.SkillPlanner
             else if (e.Item.Tag is RemappingPoint)
             {
                 RemappingPoint point = e.Item.Tag as RemappingPoint;
-                e.Item.ToolTipText = (m_areRemappingPointsActive ? point.ToLongString() : "Remapping (ignored)");
+                e.Item.ToolTipText = m_areRemappingPointsActive ? point.ToLongString() : "Remapping (ignored)";
             }
         }
 

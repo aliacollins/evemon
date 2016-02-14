@@ -172,18 +172,18 @@ namespace EVEMon.SkillPlanner
             if (m_skill.IsKnown)
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, "Trained to level {0} with {1}", m_skill.Level,
-                                (m_skill.SkillPoints > 0
-                                     ? String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} sp", m_skill.SkillPoints)
-                                     : "0 sp"));
+                                m_skill.SkillPoints > 0
+                                    ? String.Format(CultureConstants.DefaultCulture, "{0:0,0,0} sp", m_skill.SkillPoints)
+                                    : "0 sp");
             }
             else
             {
                 sb.AppendFormat(CultureConstants.DefaultCulture, "Not Trained - prereqs {0}met, skillbook is {1}",
-                                (m_skill.ArePrerequisitesMet ? String.Empty : "not "),
-                                (m_skill.IsOwned
-                                     ? "owned"
-                                     : String.Format(CultureConstants.DefaultCulture, "not owned, book costs {0} ISK",
-                                                     m_skill.FormattedCost)));
+                                m_skill.ArePrerequisitesMet ? String.Empty : "not ",
+                                m_skill.IsOwned
+                                    ? "owned"
+                                    : String.Format(CultureConstants.DefaultCulture, "not owned, book costs {0} ISK",
+                                        m_skill.FormattedCost));
             }
             sb.Append(")");
 
@@ -781,11 +781,11 @@ namespace EVEMon.SkillPlanner
             // We don't know this prereq at all
             index++;
             sb.AppendFormat(CultureConstants.DefaultCulture, "{0}. {1} (Prereqs {2}met, skillbook {3}", index, prereq,
-                            (prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not "),
-                            (prereq.Skill.IsOwned
-                                 ? "owned)"
-                                 : String.Format(CultureConstants.DefaultCulture, "not owned,\n costs {0} ISK)\n",
-                                                 prereq.Skill.FormattedCost)));
+                            prereq.Skill.Prerequisites.AreTrained() ? String.Empty : "not ",
+                            prereq.Skill.IsOwned
+                                ? "owned)"
+                                : String.Format(CultureConstants.DefaultCulture, "not owned,\n costs {0} ISK)\n",
+                                    prereq.Skill.FormattedCost));
         }
 
         #endregion
@@ -810,7 +810,7 @@ namespace EVEMon.SkillPlanner
                 tvEntity.SelectedNode.Text.Replace(entity.Name, String.Empty).Trim().Trim("()".ToCharArray()).Split(',').ToList();
 
             if (list.First().Length == 0)
-                list[0] = (BlueprintActivity.None.GetDescription());
+                list[0] = BlueprintActivity.None.GetDescription();
 
             return list;
         }

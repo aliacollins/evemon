@@ -95,7 +95,7 @@ namespace EVEMon.Common.Controls
             if (SpecifyFolderRadioButton.Checked && FilenameTextBox.Text.Length == 0)
                 AcceptButton = BrowseButton;
 
-            OKButton.Enabled = (SpecifyFolderRadioButton.Checked && FilenameTextBox.Text.Length != 0);
+            OKButton.Enabled = SpecifyFolderRadioButton.Checked && FilenameTextBox.Text.Length != 0;
         }
     }
 }

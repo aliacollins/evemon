@@ -68,7 +68,7 @@ namespace EVEMon.Common.Collections
             public bool MoveNext()
             {
                 m_index++;
-                return (m_index < m_count);
+                return m_index < m_count;
             }
 
             /// <summary>

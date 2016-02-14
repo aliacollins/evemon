@@ -208,7 +208,7 @@ namespace EVEMon.Common.Controls
 
             // Is it on the left or the right side of the tab ?
             Rectangle rect = GetTabRect(newIndex);
-            onLeft = (pt.X < (rect.Left + rect.Right) / 2);
+            onLeft = pt.X < (rect.Left + rect.Right) / 2;
             if (onLeft)
                 return newIndex;
 

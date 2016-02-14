@@ -231,7 +231,7 @@ namespace EVEMon.ImplantControls
             }
 
             // Scroll through comboboxes
-            bool isReadOnly = (set == m_sets.ActiveClone || m_sets.JumpClones.Any(x => x == set));
+            bool isReadOnly = set == m_sets.ActiveClone || m_sets.JumpClones.Any(x => x == set);
             foreach (DropDownMouseMoveComboBox combo in Controls.OfType<DropDownMouseMoveComboBox>())
             {
                 // Enable the combo with the <None> implant
@@ -272,7 +272,7 @@ namespace EVEMon.ImplantControls
         /// <summary>
         /// Gets the selected implant slot
         /// </summary>
-        private SerializableSettingsImplantSet GetSelectedSet() => (setsGrid.SelectedRows.Count == 0 ? null : (SerializableSettingsImplantSet)setsGrid.SelectedRows[0].Tag);
+        private SerializableSettingsImplantSet GetSelectedSet() => setsGrid.SelectedRows.Count == 0 ? null : (SerializableSettingsImplantSet)setsGrid.SelectedRows[0].Tag;
 
         /// <summary>
         /// Gets the implant name for the given slot and the provided set.
@@ -320,7 +320,7 @@ namespace EVEMon.ImplantControls
             // If cell is empty, replaces the content by <New set>
             DataGridViewRow row = setsGrid.Rows[e.RowIndex];
             object formattedValue = row.Cells[0].FormattedValue;
-            if (formattedValue != null && (row.Tag == null && String.IsNullOrEmpty(formattedValue.ToString())))
+            if (formattedValue != null && row.Tag == null && String.IsNullOrEmpty(formattedValue.ToString()))
                 row.Cells[0].Value = PhantomSetName;
         }
 
@@ -333,7 +333,7 @@ namespace EVEMon.ImplantControls
         {
             // Enable/disable the top buttons
             if (setsGrid.SelectedRows.Count > 0)
-                setsGrid.AllowUserToDeleteRows = (setsGrid.SelectedRows[0].Index >= m_sets.JumpClones.Count + 1);
+                setsGrid.AllowUserToDeleteRows = setsGrid.SelectedRows[0].Index >= m_sets.JumpClones.Count + 1;
 
             UpdateSlots();
         }

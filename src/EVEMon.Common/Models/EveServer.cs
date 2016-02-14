@@ -101,7 +101,7 @@ namespace EVEMon.Common.Models
 
             // Update status and users
             m_users = result.Result.Players;
-            m_status = (result.Result.Open ? ServerStatus.Online : ServerStatus.Offline);
+            m_status = result.Result.Open ? ServerStatus.Online : ServerStatus.Offline;
 
             // Invalidate any error notifications
             EveMonClient.Notifications.InvalidateAPIError();

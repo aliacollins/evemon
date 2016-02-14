@@ -232,9 +232,9 @@ namespace EVEMon.CharacterMonitoring
             lvMailMessages.Visible = false;
             eveMailReadingPane.HidePane();
 
-            EVEMailMessages = (Character == null ? null : Character.EVEMailMessages);
+            EVEMailMessages = Character == null ? null : Character.EVEMailMessages;
             Columns = Settings.UI.MainWindow.EVEMailMessages.Columns;
-            Grouping = (Character == null ? EVEMailMessagesGrouping.State : Character.UISettings.EVEMailMessagesGroupBy);
+            Grouping = Character == null ? EVEMailMessagesGrouping.State : Character.UISettings.EVEMailMessagesGroupBy;
             TextFilter = String.Empty;
             PanePosition = Settings.UI.MainWindow.EVEMailMessages.ReadingPanePosition;
 
@@ -309,9 +309,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvMailMessages.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvMailMessages.SelectedItems.Count > 0
-                                    ? lvMailMessages.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvMailMessages.SelectedItems.Count > 0
+                ? lvMailMessages.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvMailMessages.BeginUpdate();
             try
@@ -556,7 +556,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 EveMailMessageColumn column = (EveMailMessageColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }

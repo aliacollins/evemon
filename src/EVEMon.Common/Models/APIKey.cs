@@ -542,9 +542,9 @@ namespace EVEMon.Common.Models
             StringBuilder builder = new StringBuilder();
             if (accountsNotTraining.Count() == 1)
             {
-                builder.AppendFormat("{0} is not in training", (EveMonClient.APIKeys.Count == 1
-                                                                    ? "The account"
-                                                                    : "One of the accounts"));
+                builder.AppendFormat("{0} is not in training", EveMonClient.APIKeys.Count == 1
+                    ? "The account"
+                    : "One of the accounts");
             }
             else
                 builder.Append("Some of the accounts are not in training.");

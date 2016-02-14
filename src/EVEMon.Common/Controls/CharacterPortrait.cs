@@ -247,7 +247,7 @@ namespace EVEMon.Common.Controls
             int charIDLength = m_character.CharacterID.ToString(CultureConstants.DefaultCulture).Length;
             foreach (FileInfo file in imageFilesInEveCache)
             {
-                int sizeLength = (file.Name.Length - (file.Extension.Length + 1)) - charIDLength;
+                int sizeLength = file.Name.Length - (file.Extension.Length + 1) - charIDLength;
                 int imageSize = int.Parse(file.Name.Substring(charIDLength + 1, sizeLength), CultureConstants.InvariantCulture);
 
                 if (imageSize <= bestSize)

@@ -195,7 +195,7 @@ namespace EVEMon.Common.Models
                     m_entityID, (int)EveImageSize.x32)
                 : String.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPIconsFromImageServer,
-                    (Group == StandingGroup.Factions ? "alliance" : "corporation"),
+                    Group == StandingGroup.Factions ? "alliance" : "corporation",
                     m_entityID, (int)EveImageSize.x32);
 
             return useFallbackUri

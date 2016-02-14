@@ -619,10 +619,10 @@ namespace EVEMon.CharacterMonitoring
         /// </summary>
         /// <returns></returns>
         private string GetActiveShipText() => String.Format(CultureConstants.DefaultCulture, "Active Ship: {0}",
-                     (!String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
-                          ? String.Format(CultureConstants.DefaultCulture, "{0} [{1}]", m_character.ShipTypeName,
-                                          m_character.ShipName)
-                          : EVEMonConstants.UnknownText));
+                     !String.IsNullOrEmpty(m_character.ShipTypeName) && !String.IsNullOrEmpty(m_character.ShipName)
+                         ? String.Format(CultureConstants.DefaultCulture, "{0} [{1}]", m_character.ShipTypeName,
+                             m_character.ShipName)
+                         : EVEMonConstants.UnknownText);
 
         #endregion
 
@@ -924,7 +924,7 @@ namespace EVEMon.CharacterMonitoring
                 location = String.Format(CultureConstants.DefaultCulture, "{0} ({1:N1})\nDocked in {2}",
                                          station.SolarSystem.FullLocation,
                                          station.SolarSystem.SecurityLevel,
-                                         (outpost != null ? outpost.FullName : station.Name));
+                                         outpost != null ? outpost.FullName : station.Name);
             }
 
             string tooltipText = String.Format(CultureConstants.DefaultCulture, "Location: {0}", location);

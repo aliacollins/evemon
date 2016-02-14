@@ -186,7 +186,7 @@ namespace EVEMon.Common.Helpers
                     if (loadoutInfo.Ship == null)
                         return loadoutInfo;
 
-                    loadout = new Loadout(line.Substring(commaIndex + 1, (line.Length - commaIndex - 2)).Trim(), String.Empty);
+                    loadout = new Loadout(line.Substring(commaIndex + 1, line.Length - commaIndex - 2).Trim(), String.Empty);
 
                     continue;
                 }

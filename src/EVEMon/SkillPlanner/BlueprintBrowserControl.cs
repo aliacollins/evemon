@@ -120,9 +120,9 @@ namespace EVEMon.SkillPlanner
             // We recalculate the right panels minimum size
             int reqSkillControlMinWidth = requiredSkillsControl.MinimumSize.Width;
             int reqSkillPanelMinWidth = scDetails.Panel2MinSize;
-            scDetails.Panel2MinSize = (reqSkillPanelMinWidth > reqSkillControlMinWidth
+            scDetails.Panel2MinSize = reqSkillPanelMinWidth > reqSkillControlMinWidth
                 ? reqSkillPanelMinWidth
-                : reqSkillControlMinWidth);
+                : reqSkillControlMinWidth;
         }
 
         /// <summary>
@@ -310,8 +310,8 @@ namespace EVEMon.SkillPlanner
                 ? m_gbResearchingOriginalLocation
                 : m_gbManufOriginalLocation;
             gbResearching.Visible = m_hasCopying || m_hasResearchingMaterialEfficiency || m_hasResearchingTimeEfficiency;
-            gbInvention.Location = (gbResearching.Visible ? m_gbInventionOriginalLocation : gbResearching.Location);
-            gbInvention.Visible = (!gbResearching.Visible || m_hasInvention);
+            gbInvention.Location = gbResearching.Visible ? m_gbInventionOriginalLocation : gbResearching.Location;
+            gbInvention.Visible = !gbResearching.Visible || m_hasInvention;
 
             if (!gbInvention.Visible)
                 return;
@@ -333,9 +333,9 @@ namespace EVEMon.SkillPlanner
             int scrollBarPosition = PropertiesList.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (PropertiesList.SelectedItems.Count > 0
+            int selectedItem = PropertiesList.SelectedItems.Count > 0
                 ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             PropertiesList.BeginUpdate();
             try
@@ -385,7 +385,7 @@ namespace EVEMon.SkillPlanner
         private IEnumerable<ListViewItem> AddGroups()
         {
             List<ListViewItem> items = new List<ListViewItem>();
-            double materiaEffModifier = 1d - ((double)nudME.Value / 100);
+            double materiaEffModifier = 1d - (double)nudME.Value / 100;
 
             foreach (MarketGroup marketGroup in StaticItems.AllGroups)
             {
@@ -549,9 +549,9 @@ namespace EVEMon.SkillPlanner
             }
 
             // Update the selected index
-            cbImplantSet.SelectedIndex = (Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count
+            cbImplantSet.SelectedIndex = Settings.UI.BlueprintBrowser.ImplantSetIndex < cbImplantSet.Items.Count
                 ? Settings.UI.BlueprintBrowser.ImplantSetIndex
-                : 0);
+                : 0;
         }
 
         /// <summary>
@@ -597,8 +597,8 @@ namespace EVEMon.SkillPlanner
                 Int64 skillLevel = m_character.Skills[skillID].LastConfirmedLvl;
                 skillBonusModifier = skillBonusFactor * skillLevel;
             }
-            activityTimeModifier = (activityTimeModifier - (skillBonusModifier)) *
-                                   (activityTimeModifier - (AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel));
+            activityTimeModifier = (activityTimeModifier - skillBonusModifier) *
+                                   (activityTimeModifier - AdvancedIndustrySkillBonusFactor * advancedIndustrySkillLevel);
 
             TimeSpan time = TimeSpan.FromSeconds(Math.Ceiling(activityTime * activityTimeModifier));
             return String.Format(CultureConstants.DefaultCulture, "{0} (You)", TimeSpanToText(time, time.Seconds != 0));
@@ -624,7 +624,7 @@ namespace EVEMon.SkillPlanner
                 .Where(x => x.Skill != null)
                 .Max(x => m_character.Skills[x.Skill.ID].LastConfirmedLvl);
 
-            return 1d + (BonusFactor * skillLevel);
+            return 1d + BonusFactor * skillLevel;
         }
 
         /// <summary>
@@ -635,7 +635,7 @@ namespace EVEMon.SkillPlanner
         private double GetTimeEfficiencyModifier(BlueprintActivity activity)
         {
             if (activity == BlueprintActivity.Manufacturing)
-                return 1d - ((double)nudTE.Value / 100);
+                return 1d - (double)nudTE.Value / 100;
 
             if (activity == BlueprintActivity.ResearchingMaterialEfficiency)
             {
@@ -842,7 +842,7 @@ namespace EVEMon.SkillPlanner
 
             double bonus = implant.Properties.FirstOrDefault(
                 x => DBConstants.IndustryModifyingPropertyIDs.IndexOf(x.Property.ID) != -1).Int64Value;
-            double multiplier = 1.0d + (bonus / 100);
+            double multiplier = 1.0d + bonus / 100;
 
             return multiplier;
         }

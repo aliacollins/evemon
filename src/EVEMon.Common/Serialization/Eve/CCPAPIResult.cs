@@ -79,7 +79,7 @@ namespace EVEMon.Common.Serialization.Eve
                 throw new ArgumentNullException("exc");
 
             m_error = CCPAPIErrors.Xml;
-            m_errorMessage = (exc.InnerException == null ? exc.Message : exc.InnerException.Message);
+            m_errorMessage = exc.InnerException == null ? exc.Message : exc.InnerException.Message;
             m_exception = exc;
         }
 

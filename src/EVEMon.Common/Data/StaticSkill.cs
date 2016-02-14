@@ -225,7 +225,7 @@ namespace EVEMon.Common.Data
                 case 3:
                     return 8000 * Rank;
                 case 4:
-                    return Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * level) - 2.5) * 250 * Rank));
+                    return Convert.ToInt32(Math.Ceiling(Math.Pow(2, 2.5 * level - 2.5) * 250 * Rank));
                 case 5:
                     return 256000 * Rank;
                 default:

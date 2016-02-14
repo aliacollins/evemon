@@ -136,7 +136,7 @@ namespace EVEMon.ApiCredentialsManagement
             // Background
             Graphics g = e.Graphics;
             bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
-            Brush fontBrush = (isSelected ? SystemBrushes.HighlightText : SystemBrushes.ControlText);
+            Brush fontBrush = isSelected ? SystemBrushes.HighlightText : SystemBrushes.ControlText;
             e.DrawBackground();
 
             if (e.Index < 0 || e.Index >= Items.Count)

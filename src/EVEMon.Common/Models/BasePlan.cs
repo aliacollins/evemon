@@ -715,7 +715,7 @@ namespace EVEMon.Common.Models
             bool loweringPriorities = true;
             foreach (PlanEntry entry in entries)
             {
-                loweringPriorities &= (priority > entry.Priority);
+                loweringPriorities &= priority > entry.Priority;
                 entry.Priority = priority;
             }
 
@@ -839,8 +839,8 @@ namespace EVEMon.Common.Models
             if (settings == null)
                 throw new ArgumentNullException("settings");
 
-            PlanEntrySort criteria = (settings.Order == ThreeStateSortOrder.None ? PlanEntrySort.None : settings.Criteria);
-            Sort(criteria, (settings.Order == ThreeStateSortOrder.Descending), settings.GroupByPriority);
+            PlanEntrySort criteria = settings.Order == ThreeStateSortOrder.None ? PlanEntrySort.None : settings.Criteria;
+            Sort(criteria, settings.Order == ThreeStateSortOrder.Descending, settings.GroupByPriority);
         }
 
         #endregion

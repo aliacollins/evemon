@@ -404,7 +404,7 @@ namespace EVEMon.SkillPlanner
             foreach (ColumnHeader columnHeader in lvLoadouts.Columns.Cast<ColumnHeader>())
             {
                 if (m_columnSorter.SortColumn == columnHeader.Index)
-                    columnHeader.ImageIndex = (m_columnSorter.OrderOfSort == SortOrder.Ascending ? 0 : 1);
+                    columnHeader.ImageIndex = m_columnSorter.OrderOfSort == SortOrder.Ascending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -531,9 +531,9 @@ namespace EVEMon.SkillPlanner
             // Is the column we're already sorting by ? Then swap sort order
             if (e.Column == m_columnSorter.SortColumn)
             {
-                m_columnSorter.OrderOfSort = (m_columnSorter.OrderOfSort == SortOrder.Ascending
-                                                  ? SortOrder.Descending
-                                                  : SortOrder.Ascending);
+                m_columnSorter.OrderOfSort = m_columnSorter.OrderOfSort == SortOrder.Ascending
+                    ? SortOrder.Descending
+                    : SortOrder.Ascending;
             }
                 // Then the user wants to sort by a different column
             else
@@ -721,9 +721,9 @@ namespace EVEMon.SkillPlanner
                         compareResult = String.Compare(a.SubItems[1].Text, b.SubItems[1].Text, StringComparison.CurrentCulture);
                         break;
                     case 2: // Rating
-                        if (loadoutB != null && (loadoutA != null && loadoutA.Rating < loadoutB.Rating))
+                        if (loadoutB != null && loadoutA != null && loadoutA.Rating < loadoutB.Rating)
                             compareResult = -1;
-                        else if (loadoutB != null && (loadoutA != null && loadoutA.Rating > loadoutB.Rating))
+                        else if (loadoutB != null && loadoutA != null && loadoutA.Rating > loadoutB.Rating)
                             compareResult = 1;
                         break;
                     case 3: // Date

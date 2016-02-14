@@ -203,7 +203,7 @@ namespace EVEMon.XmlGenerator.Utils
         internal static void UpdatePercentDone(double totalCount)
         {
             s_counter++;
-            double percent = totalCount > 0d ? (s_counter / totalCount) : 0d;
+            double percent = totalCount > 0d ? s_counter / totalCount : 0d;
             int percentRounded = (int)(percent * 100);
 
             if (s_counter != 1 && s_percentOld >= percentRounded)
@@ -228,7 +228,7 @@ namespace EVEMon.XmlGenerator.Utils
                 Console.SetCursorPosition(Console.CursorLeft - s_text.Length, Console.CursorTop);
 
             s_tablesCount++;
-            s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", (s_tablesCount / (double)totalCount));
+            s_text = String.Format(CultureConstants.DefaultCulture, "{0:P0}", s_tablesCount / (double)totalCount);
             Console.Write(s_text);
         }
 

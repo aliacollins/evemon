@@ -235,7 +235,7 @@ namespace EVEMon.SkillPlanner
             int ofsTop = AutoScrollPosition.Y;
 
             // Draw the lines
-            using (Pen linePen = new Pen((Settings.UI.SafeForWork ? SystemColors.ControlText : Color.White), 5.0F))
+            using (Pen linePen = new Pen(Settings.UI.SafeForWork ? SystemColors.ControlText : Color.White, 5.0F))
             {
                 foreach (Cell cell in m_rootCell.Cells)
                 {
@@ -601,7 +601,7 @@ namespace EVEMon.SkillPlanner
                 Cell right = this[Math.Max(leftIndex, rightIndex)];
 
                 space = right.Rectangle.Left - (left.Rectangle.Right + SkillboxMarginLr);
-                return (space < 0);
+                return space < 0;
             }
         }
 
@@ -765,7 +765,7 @@ namespace EVEMon.SkillPlanner
                         continue;
 
                     // Shift the two cells
-                    int shift = (-space) >> 1;
+                    int shift = -space >> 1;
                     row[i].Offset(-shift, 0);
                     row[i + 1].Offset(shift, 0);
 

@@ -136,8 +136,8 @@ namespace EVEMon.Schedule
             int calWidth = effectiveWidth * 7;
             int calHeight = effectiveHeight * MaxRows;
 
-            m_calTopLeft = new Point((ClientSize.Width / 2) - (calWidth / 2),
-                                     (ClientSize.Height / 2) - ((calHeight + HeaderHeight + DayHeaderHeight) / 2));
+            m_calTopLeft = new Point(ClientSize.Width / 2 - calWidth / 2,
+                                     ClientSize.Height / 2 - (calHeight + HeaderHeight + DayHeaderHeight) / 2);
             m_cellSize = new Size(effectiveWidth, effectiveHeight);
         }
 
@@ -172,7 +172,7 @@ namespace EVEMon.Schedule
                 {
                     for (int x = 0; x < 7; x++)
                     {
-                        Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width * x),
+                        Rectangle cellRect = new Rectangle(m_calTopLeft.X + m_cellSize.Width * x,
                                                            m_calTopLeft.Y + HeaderHeight, m_cellSize.Width,
                                                            DayHeaderHeight);
                         g.FillRectangle(db, cellRect);
@@ -202,7 +202,7 @@ namespace EVEMon.Schedule
                     cDow = m_firstDayOfWeek;
                     using (Brush invalidDayBrush = new LinearGradientBrush(
                         new Rectangle(m_calTopLeft.X,
-                                      m_calTopLeft.Y + HeaderHeight + DayHeaderHeight + (y * m_cellSize.Height),
+                                      m_calTopLeft.Y + HeaderHeight + DayHeaderHeight + y * m_cellSize.Height,
                                       m_cellSize.Width * 7, m_cellSize.Height),
                         Color.FromArgb(169, 169, 169), Color.FromArgb(140, 140, 140), LinearGradientMode.Vertical))
                     {
@@ -223,9 +223,9 @@ namespace EVEMon.Schedule
                                 }
                             }
 
-                            Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width * x),
+                            Rectangle cellRect = new Rectangle(m_calTopLeft.X + m_cellSize.Width * x,
                                                                m_calTopLeft.Y + HeaderHeight + DayHeaderHeight +
-                                                               (m_cellSize.Height * y), m_cellSize.Width,
+                                                               m_cellSize.Height * y, m_cellSize.Width,
                                                                m_cellSize.Height);
                             g.FillRectangle(isValidDay ? validDayBrush : invalidDayBrush, cellRect);
                             g.DrawRectangle(Pens.Black, cellRect);
@@ -270,12 +270,12 @@ namespace EVEMon.Schedule
             CalculateCellMetrics();
             DateTime mdt = new DateTime(m_date.Year, m_date.Month, 1);
 
-            int boxNumber = m_date.Day + (((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7) - 1;
+            int boxNumber = m_date.Day + ((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7 - 1;
             int x = boxNumber % 7;
             int y = (int)Math.Floor(boxNumber / 7.0);
-            Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width * x),
+            Rectangle cellRect = new Rectangle(m_calTopLeft.X + m_cellSize.Width * x,
                                                m_calTopLeft.Y + HeaderHeight + DayHeaderHeight +
-                                               (m_cellSize.Height * y), m_cellSize.Width, m_cellSize.Height);
+                                               m_cellSize.Height * y, m_cellSize.Width, m_cellSize.Height);
             g.DrawRectangle(Pens.DeepSkyBlue, cellRect);
         }
 
@@ -294,12 +294,12 @@ namespace EVEMon.Schedule
 
             CalculateCellMetrics();
 
-            int boxNumber = today.Day + (((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7) - 1;
+            int boxNumber = today.Day + ((int)mdt.DayOfWeek + (7 - (int)m_firstDayOfWeek)) % 7 - 1;
             int x = boxNumber % 7;
             int y = (int)Math.Floor(boxNumber / 7.0);
-            Rectangle cellRect = new Rectangle(m_calTopLeft.X + (m_cellSize.Width * x),
+            Rectangle cellRect = new Rectangle(m_calTopLeft.X + m_cellSize.Width * x,
                                                m_calTopLeft.Y + HeaderHeight + DayHeaderHeight +
-                                               (m_cellSize.Height * y), m_cellSize.Width, m_cellSize.Height);
+                                               m_cellSize.Height * y, m_cellSize.Width, m_cellSize.Height);
             g.DrawRectangle(Pens.Violet, cellRect);
         }
 
@@ -357,23 +357,23 @@ namespace EVEMon.Schedule
             // Make sure we clicked on the scheduler
             if (p.X < m_calTopLeft.X || p.Y < m_calTopLeft.Y ||
                 (p.X > m_calTopLeft.X + m_cellSize.Width * 7) ||
-                (p.Y > m_calTopLeft.Y + (m_cellSize.Height * MaxRows) + HeaderHeight + DayHeaderHeight))
+                (p.Y > m_calTopLeft.Y + m_cellSize.Height * MaxRows + HeaderHeight + DayHeaderHeight))
                 return new DateTime(0);
 
             // We need an int value for the first day of the month
-            DayOfWeek nFirstDayOfMonth = (new DateTime(m_date.Year, m_date.Month, 1)).DayOfWeek;
+            DayOfWeek nFirstDayOfMonth = new DateTime(m_date.Year, m_date.Month, 1).DayOfWeek;
             int nStartDay = nFirstDayOfMonth - m_firstDayOfWeek;
 
             // Calculate the x/y position over the grid, and hence the day/week number the user is clicking on
             int day = (p.X -= m_calTopLeft.X) / m_cellSize.Width;
-            int week = (p.Y -= (m_calTopLeft.Y + HeaderHeight + DayHeaderHeight)) / m_cellSize.Height;
+            int week = (p.Y -= m_calTopLeft.Y + HeaderHeight + DayHeaderHeight) / m_cellSize.Height;
 
             if (nStartDay < 0)
                 week -= 1;
 
             day -= nStartDay;
 
-            day += (week * 7) + 1;
+            day += week * 7 + 1;
 
             DateTime dt = m_date;
             int month = m_date.Month;

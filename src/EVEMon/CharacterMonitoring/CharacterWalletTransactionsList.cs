@@ -210,9 +210,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvWalletTransactions.Visible = false;
 
-            WalletTransactions = (Character == null ? null : Character.WalletTransactions);
+            WalletTransactions = Character == null ? null : Character.WalletTransactions;
             Columns = Settings.UI.MainWindow.WalletTransactions.Columns;
-            Grouping = (Character == null ? WalletTransactionGrouping.None : Character.UISettings.WalletTransactionsGroupBy);
+            Grouping = Character == null ? WalletTransactionGrouping.None : Character.UISettings.WalletTransactionsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -296,9 +296,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvWalletTransactions.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvWalletTransactions.SelectedItems.Count > 0
-                                    ? lvWalletTransactions.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvWalletTransactions.SelectedItems.Count > 0
+                ? lvWalletTransactions.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvWalletTransactions.BeginUpdate();
             try
@@ -537,7 +537,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 WalletTransactionColumn column = (WalletTransactionColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -564,28 +564,28 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = walletTransaction.ItemName;
                     break;
                 case WalletTransactionColumn.Price:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletTransaction.Price, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Price.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletTransaction.Price, AbbreviationFormat.AbbreviationSymbols)
+                        : walletTransaction.Price.ToNumericString(2);
                     break;
                 case WalletTransactionColumn.Quantity:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletTransaction.Quantity, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Quantity.ToNumericString(0));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletTransaction.Quantity, AbbreviationFormat.AbbreviationSymbols)
+                        : walletTransaction.Quantity.ToNumericString(0);
                     break;
                 case WalletTransactionColumn.Credit:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletTransaction.Credit, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletTransaction.Credit.ToNumericString(2));
-                    item.ForeColor = (walletTransaction.TransactionType == TransactionType.Buy ? Color.DarkRed : Color.DarkGreen);
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletTransaction.Credit, AbbreviationFormat.AbbreviationSymbols)
+                        : walletTransaction.Credit.ToNumericString(2);
+                    item.ForeColor = walletTransaction.TransactionType == TransactionType.Buy ? Color.DarkRed : Color.DarkGreen;
                     break;
                 case WalletTransactionColumn.Client:
                     item.Text = walletTransaction.ClientName;
                     break;
                 case WalletTransactionColumn.Location:
-                    item.Text = (outpost != null
-                                     ? outpost.FullLocation
-                                     : walletTransaction.Station.FullLocation);
+                    item.Text = outpost != null
+                        ? outpost.FullLocation
+                        : walletTransaction.Station.FullLocation;
                     break;
                 case WalletTransactionColumn.Region:
                     item.Text = walletTransaction.Station.SolarSystem.Constellation.Region.Name;
@@ -595,9 +595,9 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = walletTransaction.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case WalletTransactionColumn.Station:
-                    item.Text = (outpost != null
-                                     ? outpost.FullName
-                                     : walletTransaction.Station.Name);
+                    item.Text = outpost != null
+                        ? outpost.FullName
+                        : walletTransaction.Station.Name;
                     break;
                 case WalletTransactionColumn.TransactionFor:
                     item.Text = walletTransaction.TransactionFor.ToString();

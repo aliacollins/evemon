@@ -212,7 +212,7 @@ namespace EVEMon.PieChart
             float[] slicesDiscplacements = new float[targetSkillPoints.Length];
             for (int i = 0; i < targetSkillPoints.Length; i++)
             {
-                slicesDiscplacements[i] = (targetSkillPoints[i] < 100000) ? 0.06F + (0.008F * ++tinyGroups) : 0.05F;
+                slicesDiscplacements[i] = targetSkillPoints[i] < 100000 ? 0.06F + 0.008F * ++tinyGroups : 0.05F;
             }
 
             // Assign and sort

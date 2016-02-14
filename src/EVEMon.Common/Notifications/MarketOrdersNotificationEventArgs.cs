@@ -45,7 +45,7 @@ namespace EVEMon.Common.Notifications
         {
             foreach (MarketOrder order in ((MarketOrdersNotificationEventArgs)other).Orders)
             {
-                Orders.Add((order));
+                Orders.Add(order);
             }
 
             UpdateDescription();
@@ -57,7 +57,7 @@ namespace EVEMon.Common.Notifications
         private void UpdateDescription()
         {
             Description = String.Format(CultureConstants.DefaultCulture, "{0} market order{1} expired or fulfilled.",
-                                        Orders.Count, (Orders.Count > 1 ? "s" : String.Empty));
+                                        Orders.Count, Orders.Count > 1 ? "s" : String.Empty);
         }
     }
 }

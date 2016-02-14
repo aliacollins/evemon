@@ -233,9 +233,9 @@ namespace EVEMon.CharacterMonitoring
             lvNotifications.Visible = false;
             eveNotificationReadingPane.HidePane();
 
-            EVENotifications = (Character == null ? null : Character.EVENotifications);
+            EVENotifications = Character == null ? null : Character.EVENotifications;
             Columns = Settings.UI.MainWindow.EVENotifications.Columns;
-            Grouping = (Character == null ? EVENotificationsGrouping.Type : Character.UISettings.EVENotificationsGroupBy);
+            Grouping = Character == null ? EVENotificationsGrouping.Type : Character.UISettings.EVENotificationsGroupBy;
             PanePosition = Settings.UI.MainWindow.EVENotifications.ReadingPanePosition;
             TextFilter = String.Empty;
 
@@ -310,9 +310,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvNotifications.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvNotifications.SelectedItems.Count > 0
+            int selectedItem = lvNotifications.SelectedItems.Count > 0
                 ? lvNotifications.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             lvNotifications.BeginUpdate();
             splitContainerNotifications.Visible = false;
@@ -518,7 +518,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 EveNotificationColumn column = (EveNotificationColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }

@@ -249,7 +249,7 @@ namespace EVEMon.CharacterMonitoring
 
             string indexText = String.Format(CultureConstants.DefaultCulture, "{0}. ", e.Index + 1);
             string rankText = String.Format(CultureConstants.DefaultCulture, " (Rank {0})",
-                (skill.Skill == null ? 0 : skill.Rank));
+                skill.Skill == null ? 0 : skill.Rank);
             string spPerHourText = String.Format(CultureConstants.DefaultCulture, " SP/Hour: {0}", skill.SkillPointsPerHour);
             string spText = String.Format(CultureConstants.DefaultCulture, "SP: {0:N0}/{1:N0}", skillPoints,
                 skillPointsToNextLevel);
@@ -355,7 +355,7 @@ namespace EVEMon.CharacterMonitoring
             for (int level = 1; level <= 5; level++)
             {
                 Rectangle brect =
-                    new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2 + (LevelBoxWidth * (level - 1)) + (level - 1),
+                    new Rectangle(e.Bounds.Right - BoxWidth - PadRight + 2 + LevelBoxWidth * (level - 1) + (level - 1),
                         e.Bounds.Top + PadTop + 2, LevelBoxWidth, BoxHeight - 3);
 
                 // Box color
@@ -365,7 +365,7 @@ namespace EVEMon.CharacterMonitoring
                 if (skill.Skill == null)
                     continue;
 
-                Brush brush = (Settings.UI.SafeForWork ? Brushes.Gray : Brushes.RoyalBlue);
+                Brush brush = Settings.UI.SafeForWork ? Brushes.Gray : Brushes.RoyalBlue;
 
                 foreach (QueuedSkill qskill in Character.SkillQueue)
                 {
@@ -400,7 +400,7 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Draw skill queue color bar
-            Brush brush = (Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue);
+            Brush brush = Settings.UI.SafeForWork ? Brushes.DarkGray : Brushes.CornflowerBlue;
             Rectangle qBarRect = new Rectangle(e.Bounds.Left, GetItemHeight - LowerBoxHeight, e.Bounds.Width, LowerBoxHeight);
             g.FillRectangle(Brushes.DimGray, qBarRect);
             Rectangle skillRect = SkillQueueControl.GetSkillRect(skill, qBarRect.Width, LowerBoxHeight - 1);

@@ -47,7 +47,7 @@ namespace EVEMon.Common.Helpers
 
             ToolStripMenuItem menuItem = menu as ToolStripMenuItem;
             if (menuItem != null)
-                menuItem.Checked = (plan.GetPlannedLevel(skill) == level);
+                menuItem.Checked = plan.GetPlannedLevel(skill) == level;
 
             return menu.Enabled;
         }
@@ -84,7 +84,7 @@ namespace EVEMon.Common.Helpers
             if (operation?.Type != PlanOperations.Suppression)
                 return false;
 
-            return (operation.SkillsToRemove.Count() != operation.AllEntriesToRemove.Count());
+            return operation.SkillsToRemove.Count() != operation.AllEntriesToRemove.Count();
         }
 
         /// <summary>

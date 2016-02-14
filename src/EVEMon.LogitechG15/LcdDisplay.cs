@@ -422,7 +422,7 @@ namespace EVEMon.LogitechG15
             string walletBalance = String.Format(CultureConstants.DefaultCulture, "{0:N2} ISK", balance);
             SizeF balanceSize = m_lcdCanvas.MeasureString(walletBalance, m_defaultFont);
             SizeF charNameSize = m_lcdCanvas.MeasureString(CurrentCharacter.AdornedName, m_defaultFont);
-            float availableWidth = (G15Width - charNameSize.Width);
+            float availableWidth = G15Width - charNameSize.Width;
 
             if (availableWidth < balanceSize.Width)
             {
@@ -606,8 +606,8 @@ namespace EVEMon.LogitechG15
             using (Bitmap splashLogo = new Bitmap(Properties.Resources.LCDSplash))
             {
                 // Display the splash logo
-                int left = (G15Width / 2) - (splashLogo.Width / 2);
-                int top = (G15Height / 2) - (splashLogo.Height / 2);
+                int left = G15Width / 2 - splashLogo.Width / 2;
+                int top = G15Height / 2 - splashLogo.Height / 2;
                 m_lcdCanvas.DrawImage(splashLogo, new Rectangle(left, top, splashLogo.Width, splashLogo.Height));
                 UpdateLcdDisplay();
             }
@@ -683,7 +683,7 @@ namespace EVEMon.LogitechG15
                             {
                                 for (int j = 0; j < m_bmpLCD.Width; j++)
                                 {
-                                    *output = (byte)((*input) ^ (*inputX));
+                                    *output = (byte)(*input ^ *inputX);
                                     inputX += bpp;
                                     input += bpp;
                                     output++;

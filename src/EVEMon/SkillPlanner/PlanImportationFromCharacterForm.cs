@@ -86,7 +86,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void lbPlan_SelectedIndexChanged(object sender, EventArgs e)
         {
-            btnLoad.Enabled = (lbPlan.SelectedItems.Count == 1);
+            btnLoad.Enabled = lbPlan.SelectedItems.Count == 1;
         }
 
         /// <summary>

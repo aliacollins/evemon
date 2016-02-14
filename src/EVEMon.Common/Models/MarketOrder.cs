@@ -51,7 +51,7 @@ namespace EVEMon.Common.Models
             UnitaryPrice = src.UnitaryPrice;
             RemainingVolume = src.RemainingVolume;
             Issued = src.Issued;
-            IssuedFor = (src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor);
+            IssuedFor = src.IssuedFor == IssuedFor.None ? IssuedFor.Character : src.IssuedFor;
             LastStateChange = src.LastStateChange;
             m_state = src.State;
         }
@@ -323,7 +323,7 @@ namespace EVEMon.Common.Models
                 case CCPOrderState.Opened:
                     return OrderState.Active;
                 case CCPOrderState.ExpiredOrFulfilled:
-                    return (src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired);
+                    return src.RemainingVolume == 0 ? OrderState.Fulfilled : OrderState.Expired;
                 default:
                     throw new NotImplementedException();
             }

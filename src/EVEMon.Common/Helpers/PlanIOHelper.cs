@@ -233,9 +233,9 @@ namespace EVEMon.Common.Helpers
             {
                 builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} unique skill{3}, ",
                                      boldStart, plan.GetUniqueSkillsCount(), boldEnd,
-                                     (plan.GetUniqueSkillsCount() == 1 ? String.Empty : "s"));
+                                     plan.GetUniqueSkillsCount() == 1 ? String.Empty : "s");
                 builder.AppendFormat(CultureConstants.DefaultCulture, "{0}{1}{2} skill level{3}", boldStart, index, boldEnd,
-                                     (index == 1 ? String.Empty : "s"));
+                                     index == 1 ? String.Empty : "s");
                 needComma = true;
             }
 

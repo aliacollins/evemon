@@ -716,7 +716,7 @@ namespace EVEMon.PieChart
             if (indexFound <= -1)
                 return -1;
 
-            indexFound %= (m_pieSlicesMapping.Count);
+            indexFound %= m_pieSlicesMapping.Count;
             return (int)m_pieSlicesMapping[indexFound];
         }
 
@@ -738,9 +738,9 @@ namespace EVEMon.PieChart
             for (int i = 0; i < pieSlices.Count; ++i)
             {
                 PieSlice pieSlice = pieSlices[i];
-                if (((pieSlice.StartAngle <= 90) && ((pieSlice.StartAngle + pieSlice.SweepAngle) >= 90)) ||
-                    ((pieSlice.StartAngle + pieSlice.SweepAngle > 360) && ((pieSlice.StartAngle) <= 450) &&
-                     (pieSlice.StartAngle + pieSlice.SweepAngle) >= 450))
+                if (((pieSlice.StartAngle <= 90) && (pieSlice.StartAngle + pieSlice.SweepAngle >= 90)) ||
+                    ((pieSlice.StartAngle + pieSlice.SweepAngle > 360) && (pieSlice.StartAngle <= 450) &&
+                     pieSlice.StartAngle + pieSlice.SweepAngle >= 450))
                     return i;
             }
 
@@ -881,7 +881,7 @@ namespace EVEMon.PieChart
                         CreatePieSliceHighlighted(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
                                                   m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
                                                   topEllipeSize.Width, topEllipeSize.Height, PieHeight,
-                                                  (float)(startAngle), (float)(sweepAngle), m_colors[colorIndex],
+                                                  (float)startAngle, (float)sweepAngle, m_colors[colorIndex],
                                                   m_shadowStyle, m_edgeColorType, m_edgeLineWidth))
                     {
                         slice = (PieSlice)pieSlice.Clone();
@@ -892,7 +892,7 @@ namespace EVEMon.PieChart
                     using (PieSlice pieSlice = CreatePieSlice(m_left + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
                                                               m_top + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
                                                               topEllipeSize.Width, topEllipeSize.Height, PieHeight,
-                                                              (float)(startAngle), (float)(sweepAngle), m_colors[colorIndex],
+                                                              (float)startAngle, (float)sweepAngle, m_colors[colorIndex],
                                                               m_shadowStyle, m_edgeColorType, m_edgeLineWidth))
                     {
                         slice = (PieSlice)pieSlice.Clone();
@@ -1181,7 +1181,7 @@ namespace EVEMon.PieChart
         /// </returns>
         private static bool IsDisplacementValid(float value)
         {
-            return (value >= 0F && value <= 1F);
+            return value >= 0F && value <= 1F;
         }
     }
 }

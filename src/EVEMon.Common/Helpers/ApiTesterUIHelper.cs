@@ -134,7 +134,7 @@ namespace EVEMon.Common.Helpers
                 string postData = GetPostData();
                 string uriString = EveMonClient.APIProviders.CurrentProvider.GetMethodUrl((Enum)SelectedItem).AbsoluteUri;
 
-                ErrorText = (postData == NoAPIKeyWithAccess ? NoAPIKeyWithAccess : String.Empty);
+                ErrorText = postData == NoAPIKeyWithAccess ? NoAPIKeyWithAccess : String.Empty;
 
                 if (!String.IsNullOrWhiteSpace(postData) && postData != NoAPIKeyWithAccess)
                     uriString += String.Format(CultureConstants.InvariantCulture, "?{0}", postData);

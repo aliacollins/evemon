@@ -129,7 +129,7 @@ namespace EVEMon.Common.ExternalCalendar
 
                     // Subtract the reminder time from the event time
                     TimeSpan timeSpan = eventItem.Start.Subtract(dateTimeAlternateReminder);
-                    eventItem.ReminderMinutesBeforeStart = Math.Abs((timeSpan.Hours * 60) + timeSpan.Minutes);
+                    eventItem.ReminderMinutesBeforeStart = Math.Abs(timeSpan.Hours * 60 + timeSpan.Minutes);
                     Minutes = eventItem.ReminderMinutesBeforeStart;
                 }
 
@@ -251,10 +251,10 @@ namespace EVEMon.Common.ExternalCalendar
             calendarItems.IncludeRecurrences = true;
 
             // Must use 'like' comparison for Find/FindNext
-            string subjectFilter = (!String.IsNullOrEmpty(Subject)
+            string subjectFilter = !String.IsNullOrEmpty(Subject)
                 ? String.Format(CultureConstants.InvariantCulture,
                     "@SQL=\"urn:schemas:httpmail:subject\" like '%{0}%'", Subject.Replace("'", "''"))
-                : "@SQL=\"urn:schemas:httpmail:subject\" <> '!@#'");
+                : "@SQL=\"urn:schemas:httpmail:subject\" <> '!@#'";
 
             // Use Find and FindNext methods to get all the items
             ArrayList resultArray = new ArrayList();

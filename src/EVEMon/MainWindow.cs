@@ -207,9 +207,9 @@ namespace EVEMon
                 return;
             }
 
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                                || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
-                                    WindowState == FormWindowState.Minimized));
+            trayIcon.Visible = Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
+                               || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
+                                   WindowState == FormWindowState.Minimized);
 
             Visible = Settings.UI.MainWindowCloseBehaviour == CloseBehaviour.MinimizeToTaskbar
                       || Settings.UI.SystemTrayIcon == SystemTrayBehaviour.Disabled;
@@ -1373,7 +1373,7 @@ namespace EVEMon
         private void editToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             Character character = GetCurrentCharacter();
-            copySkillsToClipboardBBFormatToolStripMenuItem.Enabled = (character != null);
+            copySkillsToClipboardBBFormatToolStripMenuItem.Enabled = character != null;
         }
 
         /// <summary>
@@ -1412,7 +1412,7 @@ namespace EVEMon
             Character character = GetCurrentCharacter();
 
             // Enable or disable items
-            bool enabled = (character != null);
+            bool enabled = character != null;
             manageToolStripMenuItem.Enabled = enabled;
             newToolStripMenuItem.Enabled = enabled;
             plansSeparator.Visible = enabled;
@@ -1981,7 +1981,7 @@ namespace EVEMon
                 Visible = true;
                 WindowState = FormWindowState.Normal;
                 ShowInTaskbar = Visible;
-                trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible);
+                trayIcon.Visible = Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible;
             }
 
             Activate();
@@ -2018,9 +2018,9 @@ namespace EVEMon
             noCharactersLabel.Visible = !EveMonClient.MonitoredCharacters.Any();
             
             // Tray icon's visibility
-            trayIcon.Visible = (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
-                                || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
-                                    WindowState == FormWindowState.Minimized));
+            trayIcon.Visible = Settings.UI.SystemTrayIcon == SystemTrayBehaviour.AlwaysVisible
+                               || (Settings.UI.SystemTrayIcon == SystemTrayBehaviour.ShowWhenMinimized &&
+                                   WindowState == FormWindowState.Minimized);
 
             // Update manager configuration
             UpdateManager.Enabled = Settings.Updates.CheckEVEMonVersion;

@@ -342,7 +342,7 @@ namespace EVEMon.SkillPlanner
         private void SetSelectedObjects(IEnumerable<Item> items)
         {
             // Updates selection
-            SelectedObjects = (items == null ? new List<Item>() : new List<Item>(items));
+            SelectedObjects = items == null ? new List<Item>() : new List<Item>(items);
 
             // Selects the proper nodes
             if (SelectedObjects.Count() == 1)
@@ -459,19 +459,19 @@ namespace EVEMon.SkillPlanner
             PlanToMasteryLevel(node);
 
             // "Expand" and "Collapse" selected menu
-            cmiExpandSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && !node.IsExpanded);
-            cmiCollapseSelected.Visible = (node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && node.IsExpanded);
+            cmiExpandSelected.Visible = node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && !node.IsExpanded;
+            cmiCollapseSelected.Visible = node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0 && node.IsExpanded;
 
-            cmiExpandSelected.Text = (node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
+            cmiExpandSelected.Text = node != null && node.GetNodeCount(true) > 0 && !node.IsExpanded
                 ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"",
                     node.Text.Replace("&", "&&"))
-                : String.Empty);
-            cmiCollapseSelected.Text = (node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
+                : String.Empty;
+            cmiCollapseSelected.Text = node != null && node.GetNodeCount(true) > 0 && node.IsExpanded
                 ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"",
                     node.Text.Replace("&", "&&"))
-                : String.Empty);
+                : String.Empty;
 
-            tsSeparatorExpandCollapse.Visible = (node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0);
+            tsSeparatorExpandCollapse.Visible = node != null && node.GetNodeCount(true) > 0 && lbSearchList.Items.Count == 0;
 
             // "Expand All" and "Collapse All" menu
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = AllExpanded && lbSearchList.Items.Count == 0;

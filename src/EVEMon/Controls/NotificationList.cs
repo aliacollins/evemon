@@ -235,7 +235,7 @@ namespace EVEMon.Controls
                                 new Point(e.Bounds.Left + LeftPadding, e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));
 
             // Delete icon
-            icon = (m_hoveredIndex == e.Index ? Resources.CrossBlack : Resources.CrossGray);
+            icon = m_hoveredIndex == e.Index ? Resources.CrossBlack : Resources.CrossGray;
             g.DrawImageUnscaled(icon,
                                 new Point(e.Bounds.Right - IconDeletePositionFromRight,
                                           e.Bounds.Top + (listBox.ItemHeight - icon.Height) / 2));

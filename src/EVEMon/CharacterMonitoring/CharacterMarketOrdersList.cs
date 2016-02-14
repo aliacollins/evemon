@@ -288,9 +288,9 @@ namespace EVEMon.CharacterMonitoring
             lvOrders.Visible = false;
             marketExpPanelControl.Visible = false;
 
-            Orders = (Character == null ? null : Character.MarketOrders);
+            Orders = Character == null ? null : Character.MarketOrders;
             Columns = Settings.UI.MainWindow.MarketOrders.Columns;
-            Grouping = (Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy);
+            Grouping = Character == null ? MarketOrderGrouping.State : Character.UISettings.OrdersGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -382,9 +382,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvOrders.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvOrders.SelectedItems.Count > 0
-                                    ? lvOrders.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvOrders.SelectedItems.Count > 0
+                ? lvOrders.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvOrders.BeginUpdate();
             try
@@ -574,7 +574,7 @@ namespace EVEMon.CharacterMonitoring
             builder.AppendFormat(CultureConstants.DefaultCulture, "Issued For: {0}", order.IssuedFor).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Issued: {0}", order.Issued.ToLocalTime()).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Duration: {0} Day{1}", order.Duration,
-                                 (order.Duration > 1 ? "s" : String.Empty)).AppendLine();
+                                 order.Duration > 1 ? "s" : String.Empty).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Solar System: {0}",
                                  order.Station.SolarSystem.FullLocation).AppendLine();
             builder.AppendFormat(CultureConstants.DefaultCulture, "Station: {0}", order.Station.Name).AppendLine();
@@ -640,7 +640,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 MarketOrderColumn column = (MarketOrderColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -663,7 +663,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 case MarketOrderColumn.Duration:
                     item.Text = String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", order.Duration,
-                                              (order.Duration > 1 ? "s" : String.Empty));
+                                              order.Duration > 1 ? "s" : String.Empty);
                     break;
                 case MarketOrderColumn.Expiration:
                     ListViewItemFormat format = FormatExpiration(order);
@@ -671,9 +671,9 @@ namespace EVEMon.CharacterMonitoring
                     item.ForeColor = format.TextColor;
                     break;
                 case MarketOrderColumn.InitialVolume:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.InitialVolume.ToNumericString(0));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
+                        : order.InitialVolume.ToNumericString(0);
                     break;
                 case MarketOrderColumn.Issued:
                     item.Text = order.Issued.ToLocalTime().ToShortDateString();
@@ -688,53 +688,53 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = order.Item.MarketGroup.Name;
                     break;
                 case MarketOrderColumn.Location:
-                    item.Text = (outpost != null
-                                     ? outpost.FullLocation
-                                     : order.Station.FullLocation);
+                    item.Text = outpost != null
+                        ? outpost.FullLocation
+                        : order.Station.FullLocation;
                     break;
                 case MarketOrderColumn.MinimumVolume:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.MinVolume.ToNumericString(0));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(order.MinVolume, AbbreviationFormat.AbbreviationSymbols)
+                        : order.MinVolume.ToNumericString(0);
                     break;
                 case MarketOrderColumn.Region:
                     item.Text = order.Station.SolarSystem.Constellation.Region.Name;
                     break;
                 case MarketOrderColumn.RemainingVolume:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.RemainingVolume.ToNumericString(0));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
+                        : order.RemainingVolume.ToNumericString(0);
                     break;
                 case MarketOrderColumn.SolarSystem:
                     item.Text = order.Station.SolarSystem.Name;
                     item.ForeColor = order.Station.SolarSystem.SecurityLevelColor;
                     break;
                 case MarketOrderColumn.Station:
-                    item.Text = (outpost != null
-                                     ? outpost.FullName
-                                     : order.Station.Name);
+                    item.Text = outpost != null
+                        ? outpost.FullName
+                        : order.Station.Name;
                     break;
                 case MarketOrderColumn.TotalPrice:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.TotalPrice.ToNumericString(2));
-                    item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(order.TotalPrice, AbbreviationFormat.AbbreviationSymbols)
+                        : order.TotalPrice.ToNumericString(2);
+                    item.ForeColor = buyOrder != null ? Color.DarkRed : Color.DarkGreen;
                     break;
                 case MarketOrderColumn.UnitaryPrice:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
-                                     : order.UnitaryPrice.ToNumericString(2));
-                    item.ForeColor = (buyOrder != null ? Color.DarkRed : Color.DarkGreen);
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(order.UnitaryPrice, AbbreviationFormat.AbbreviationSymbols)
+                        : order.UnitaryPrice.ToNumericString(2);
+                    item.ForeColor = buyOrder != null ? Color.DarkRed : Color.DarkGreen;
                     break;
                 case MarketOrderColumn.Volume:
                     item.Text = String.Format(
                         CultureConstants.DefaultCulture, "{0} / {1}",
-                        (numberFormat
-                             ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
-                             : order.RemainingVolume.ToNumericString(0)),
-                        (numberFormat
-                             ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
-                             : order.InitialVolume.ToNumericString(0)));
+                        numberFormat
+                            ? FormatHelper.Format(order.RemainingVolume, AbbreviationFormat.AbbreviationSymbols)
+                            : order.RemainingVolume.ToNumericString(0),
+                        numberFormat
+                            ? FormatHelper.Format(order.InitialVolume, AbbreviationFormat.AbbreviationSymbols)
+                            : order.InitialVolume.ToNumericString(0));
                     break;
                 case MarketOrderColumn.LastStateChange:
                     item.Text = order.LastStateChange.ToLocalTime().ToShortDateString();
@@ -746,9 +746,9 @@ namespace EVEMon.CharacterMonitoring
                 case MarketOrderColumn.Escrow:
                     if (buyOrder != null)
                     {
-                        item.Text = (numberFormat
-                                         ? FormatHelper.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
-                                         : buyOrder.Escrow.ToNumericString(2));
+                        item.Text = numberFormat
+                            ? FormatHelper.Format(buyOrder.Escrow, AbbreviationFormat.AbbreviationSymbols)
+                            : buyOrder.Escrow.ToNumericString(2);
                         item.ForeColor = Color.DarkBlue;
                     }
                     break;
@@ -1041,10 +1041,10 @@ namespace EVEMon.CharacterMonitoring
                                                StaticGeography.GetRange(m_bidRange));
             m_lblModificationRange.Text = String.Format(CultureConstants.DefaultCulture, "Modification Range: limited to {0}",
                                                         StaticGeography.GetRange(m_modificationRange));
-            m_lblRemoteBidRange.Text = (Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl > 0
-                                            ? String.Format(CultureConstants.DefaultCulture, "Remote Bid Range: limited to {0}",
-                                                            StaticGeography.GetRange(m_remoteBidRange))
-                                            : String.Empty);
+            m_lblRemoteBidRange.Text = Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl > 0
+                ? String.Format(CultureConstants.DefaultCulture, "Remote Bid Range: limited to {0}",
+                    StaticGeography.GetRange(m_remoteBidRange))
+                : String.Empty;
 
             // Supplemental label text
             if (HasActiveCorporationIssuedOrders)
@@ -1087,7 +1087,7 @@ namespace EVEMon.CharacterMonitoring
             marketExpPanelControl.SuspendLayout();
 
             const int Pad = 5;
-            int height = (marketExpPanelControl.ExpandDirection == Direction.Up ? Pad : marketExpPanelControl.HeaderHeight);
+            int height = marketExpPanelControl.ExpandDirection == Direction.Up ? Pad : marketExpPanelControl.HeaderHeight;
 
             m_lblTotalEscrow.Location = new Point(5, height);
             height += m_lblTotalEscrow.Height;
@@ -1203,13 +1203,13 @@ namespace EVEMon.CharacterMonitoring
 
             // Calculate character's base broker fee
             m_baseBrokerFee = EveConstants.BrokerFeeBase -
-                              (EveConstants.BrokerFeeBase *
-                               (Character.Skills[DBConstants.BrokerRelationsSkillID].LastConfirmedLvl * 0.05f));
+                              EveConstants.BrokerFeeBase *
+                              (Character.Skills[DBConstants.BrokerRelationsSkillID].LastConfirmedLvl * 0.05f);
 
             // Calculate character's transaction tax
             m_transactionTax = EveConstants.TransactionTaxBase -
-                               (EveConstants.TransactionTaxBase *
-                                (Character.Skills[DBConstants.AccountingSkillID].LastConfirmedLvl * 0.1f));
+                               EveConstants.TransactionTaxBase *
+                               (Character.Skills[DBConstants.AccountingSkillID].LastConfirmedLvl * 0.1f);
 
             // Calculate character's ask range
             m_askRange = Character.Skills[DBConstants.MarketingSkillID].LastConfirmedLvl;

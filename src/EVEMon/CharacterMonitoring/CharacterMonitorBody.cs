@@ -107,7 +107,7 @@ namespace EVEMon.CharacterMonitoring
                     item = skillsIcon;
             }
 
-            toolbarIcon_Click((item ?? skillsIcon), EventArgs.Empty);
+            toolbarIcon_Click(item ?? skillsIcon, EventArgs.Empty);
         }
 
         /// <summary>
@@ -310,12 +310,12 @@ namespace EVEMon.CharacterMonitoring
             }
 
             // Show the wallet journal charts button only when on wallet journal page
-            walletJournalCharts.Visible = (multiPanel.SelectedPage == walletJournalPage);
+            walletJournalCharts.Visible = multiPanel.SelectedPage == walletJournalPage;
 
             // Show contacts buttons only when on contacts page
-            allContacts.Visible = contactsExcellent.Visible = (multiPanel.SelectedPage == contactsPage);
-            contactsGood.Visible = contactsNeutral.Visible = (multiPanel.SelectedPage == contactsPage);
-            contactsBad.Visible = contactsTerrible.Visible = inWatchList.Visible = (multiPanel.SelectedPage == contactsPage);
+            allContacts.Visible = contactsExcellent.Visible = multiPanel.SelectedPage == contactsPage;
+            contactsGood.Visible = contactsNeutral.Visible = multiPanel.SelectedPage == contactsPage;
+            contactsBad.Visible = contactsTerrible.Visible = inWatchList.Visible = multiPanel.SelectedPage == contactsPage;
 
             // Enables / Disables the contacts page related controls
             if (multiPanel.SelectedPage == contactsPage)
@@ -540,7 +540,7 @@ namespace EVEMon.CharacterMonitoring
             m_character.UISettings.SelectedPage = e.NewPage.Text;
 
             // Update the buttons visibility
-            toggleSkillsIcon.Visible = (e.NewPage == skillsPage);
+            toggleSkillsIcon.Visible = e.NewPage == skillsPage;
             tsPagesSeparator.Visible = featuresMenu.Visible;
             tsToggleSeparator.Visible = toggleSkillsIcon.Visible;
             toolStripContextual.Visible = m_advancedFeatures.Any(button => (string)button.Tag != standingsPage.Text &&
@@ -665,9 +665,9 @@ namespace EVEMon.CharacterMonitoring
 
             item.Checked = !item.Checked;
 
-            m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = (item.Text == featureIcon.Text
-                                                                                 ? item.Checked
-                                                                                 : featureIcon.Visible));
+            m_advancedFeatures.ForEach(featureIcon => featureIcon.Visible = item.Text == featureIcon.Text
+                ? item.Checked
+                : featureIcon.Visible);
 
             UpdateAdvancedFeaturesPagesSettings();
             ToggleAdvancedFeaturesMonitoring();
@@ -747,7 +747,7 @@ namespace EVEMon.CharacterMonitoring
         {
             foreach (ToolStripButton item in toolStripContextual.Items.OfType<ToolStripButton>())
             {
-                item.Checked = (item == sender);
+                item.Checked = item == sender;
             }
 
             contactsList.ShowAllContacts = sender.Equals(allContacts);
@@ -937,7 +937,7 @@ namespace EVEMon.CharacterMonitoring
                     preferencesMenu.DropDownItems.Add(item);
                 }
 
-                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+                numberAbsFormatMenuItem.Text = numberFormat ? "Full Number Format" : "Abbreviating Number Format";
             }
 
             if (multiPanel.SelectedPage == ordersPage)
@@ -954,7 +954,7 @@ namespace EVEMon.CharacterMonitoring
                     preferencesMenu.DropDownItems.Add(item);
                 }
 
-                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+                numberAbsFormatMenuItem.Text = numberFormat ? "Full Number Format" : "Abbreviating Number Format";
                 showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
             }
@@ -973,7 +973,7 @@ namespace EVEMon.CharacterMonitoring
                     preferencesMenu.DropDownItems.Add(item);
                 }
 
-                numberAbsFormatMenuItem.Text = (numberFormat ? "Full Number Format" : "Abbreviating Number Format");
+                numberAbsFormatMenuItem.Text = numberFormat ? "Full Number Format" : "Abbreviating Number Format";
                 showOnlyCharMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Character;
                 showOnlyCorpMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Corporation;
             }
@@ -1026,7 +1026,7 @@ namespace EVEMon.CharacterMonitoring
                 return;
             }
 
-            hideInactiveMenuItem.Text = (hideInactive ? "Unhide Inactive" : "Hide Inactive");
+            hideInactiveMenuItem.Text = hideInactive ? "Unhide Inactive" : "Hide Inactive";
         }
 
         /// <summary>
@@ -1232,7 +1232,7 @@ namespace EVEMon.CharacterMonitoring
                 Settings.UI.MainWindow.IndustryJobs.HideInactiveJobs = !hideInactive;
                 jobsList.UpdateColumns();
             }
-            hideInactiveMenuItem.Text = (!hideInactive ? "Unhide Inactive" : "Hide Inactive");
+            hideInactiveMenuItem.Text = !hideInactive ? "Unhide Inactive" : "Hide Inactive";
         }
 
         /// <summary>
@@ -1245,7 +1245,7 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == assetsPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.Assets.NumberAbsFormat;
-                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                numberAbsFormatMenuItem.Text = !numberFormat ? "Number Full Format" : "Number Abbreviating Format";
                 Settings.UI.MainWindow.Assets.NumberAbsFormat = !numberFormat;
                 await assetsList.UpdateColumnsAsync();
             }
@@ -1253,7 +1253,7 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == ordersPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.MarketOrders.NumberAbsFormat;
-                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                numberAbsFormatMenuItem.Text = !numberFormat ? "Number Full Format" : "Number Abbreviating Format";
                 Settings.UI.MainWindow.MarketOrders.NumberAbsFormat = !numberFormat;
                 ordersList.UpdateColumns();
             }
@@ -1261,7 +1261,7 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == contractsPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.Contracts.NumberAbsFormat;
-                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                numberAbsFormatMenuItem.Text = !numberFormat ? "Number Full Format" : "Number Abbreviating Format";
                 Settings.UI.MainWindow.Contracts.NumberAbsFormat = !numberFormat;
                 contractsList.UpdateColumns();
             }
@@ -1269,7 +1269,7 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == walletJournalPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.WalletJournal.NumberAbsFormat;
-                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                numberAbsFormatMenuItem.Text = !numberFormat ? "Number Full Format" : "Number Abbreviating Format";
                 Settings.UI.MainWindow.WalletJournal.NumberAbsFormat = !numberFormat;
                 walletJournalList.UpdateColumns();
             }
@@ -1277,7 +1277,7 @@ namespace EVEMon.CharacterMonitoring
             if (multiPanel.SelectedPage == walletTransactionsPage)
             {
                 bool numberFormat = Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat;
-                numberAbsFormatMenuItem.Text = (!numberFormat ? "Number Full Format" : "Number Abbreviating Format");
+                numberAbsFormatMenuItem.Text = !numberFormat ? "Number Full Format" : "Number Abbreviating Format";
                 Settings.UI.MainWindow.WalletTransactions.NumberAbsFormat = !numberFormat;
                 walletTransactionsList.UpdateColumns();
             }
@@ -1292,20 +1292,20 @@ namespace EVEMon.CharacterMonitoring
         {
             if (multiPanel.SelectedPage == ordersPage)
             {
-                ordersList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
-                showOnlyCorpMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Corporation);
+                ordersList.ShowIssuedFor = showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All;
+                showOnlyCorpMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
             if (multiPanel.SelectedPage == contractsPage)
             {
-                contractsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
-                showOnlyCorpMenuItem.Checked = (contractsList.ShowIssuedFor == IssuedFor.Corporation);
+                contractsList.ShowIssuedFor = showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All;
+                showOnlyCorpMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Corporation;
             }
 
             if (multiPanel.SelectedPage == jobsPage)
             {
-                jobsList.ShowIssuedFor = (showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All);
-                showOnlyCorpMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Corporation);
+                jobsList.ShowIssuedFor = showOnlyCharMenuItem.Checked ? IssuedFor.Character : IssuedFor.All;
+                showOnlyCorpMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Corporation;
             }
         }
 
@@ -1318,20 +1318,20 @@ namespace EVEMon.CharacterMonitoring
         {
             if (multiPanel.SelectedPage == ordersPage)
             {
-                ordersList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
-                showOnlyCharMenuItem.Checked = (ordersList.ShowIssuedFor == IssuedFor.Character);
+                ordersList.ShowIssuedFor = showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All;
+                showOnlyCharMenuItem.Checked = ordersList.ShowIssuedFor == IssuedFor.Character;
             }
 
             if (multiPanel.SelectedPage == contractsPage)
             {
-                contractsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
-                showOnlyCharMenuItem.Checked = (contractsList.ShowIssuedFor == IssuedFor.Character);
+                contractsList.ShowIssuedFor = showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All;
+                showOnlyCharMenuItem.Checked = contractsList.ShowIssuedFor == IssuedFor.Character;
             }
 
             if (multiPanel.SelectedPage != jobsPage)
             {
-                jobsList.ShowIssuedFor = (showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All);
-                showOnlyCharMenuItem.Checked = (jobsList.ShowIssuedFor == IssuedFor.Character);
+                jobsList.ShowIssuedFor = showOnlyCorpMenuItem.Checked ? IssuedFor.Corporation : IssuedFor.All;
+                showOnlyCharMenuItem.Checked = jobsList.ShowIssuedFor == IssuedFor.Character;
             }
         }
 
@@ -1352,7 +1352,7 @@ namespace EVEMon.CharacterMonitoring
 
             foreach (ToolStripMenuItem menuItem in readingPaneMenuItem.DropDownItems)
             {
-                menuItem.Checked = ((string)menuItem.Tag == paneSetting);
+                menuItem.Checked = (string)menuItem.Tag == paneSetting;
             }
         }
 
@@ -1491,7 +1491,7 @@ namespace EVEMon.CharacterMonitoring
                             {
                                 tempToolStripButton = new ToolStripButton(menu.group.GetHeader())
                                 {
-                                    Checked = (list.Grouping.CompareTo(menu.@group) == 0),
+                                    Checked = list.Grouping.CompareTo(menu.@group) == 0,
                                     Tag = menu.grouping
                                 };
 

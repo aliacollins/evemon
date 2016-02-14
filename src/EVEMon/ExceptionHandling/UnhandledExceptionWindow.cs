@@ -146,7 +146,7 @@ namespace EVEMon.ExceptionHandling
                 if (bug.Height <= BugPictureBox.ClientSize.Height)
                     return;
 
-                double scale = (double)(BugPictureBox.ClientSize.Height) / bug.Height;
+                double scale = (double)BugPictureBox.ClientSize.Height / bug.Height;
                 oHeight = (int)(oHeight * scale);
                 oWidth = (int)(oWidth * scale);
                 BugPictureBox.Image = new Bitmap(bug, new Size(oWidth, oHeight));

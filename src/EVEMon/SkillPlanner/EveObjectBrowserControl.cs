@@ -269,9 +269,9 @@ namespace EVEMon.SkillPlanner
             int scrollBarPosition = PropertiesList.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (PropertiesList.SelectedItems.Count > 0
+            int selectedItem = PropertiesList.SelectedItems.Count > 0
                 ? PropertiesList.SelectedItems[0].Tag.GetHashCode()
-                : 0);
+                : 0;
 
             PropertiesList.BeginUpdate();
             try
@@ -348,7 +348,7 @@ namespace EVEMon.SkillPlanner
                             x =>
                             {
                                 EvePropertyValue? eveProperty = x.Properties[prop.ID];
-                                return (eveProperty != null && prop.DefaultValue != eveProperty.Value.Value);
+                                return eveProperty != null && prop.DefaultValue != eveProperty.Value.Value;
                             });
                     }
 

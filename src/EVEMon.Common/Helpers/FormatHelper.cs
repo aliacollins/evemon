@@ -98,13 +98,13 @@ namespace EVEMon.Common.Helpers
 
             decimal abs = Math.Abs(value);
             if (abs < 1.0M)
-                return (((int)value * 100) / 100M).ToString("0.##", culture) + suffix;
+                return ((int)value * 100 / 100M).ToString("0.##", culture) + suffix;
             if (abs < 10.0M)
-                return (((int)value * 1000) / 1000M).ToString("#.##", culture) + suffix;
+                return ((int)value * 1000 / 1000M).ToString("#.##", culture) + suffix;
             if (abs < 100.0M)
-                return (((int)value * 1000) / 1000M).ToString("##.#", culture) + suffix;
+                return ((int)value * 1000 / 1000M).ToString("##.#", culture) + suffix;
 
-            return (((int)value * 1000) / 1000M).ToString("###", culture) + suffix;
+            return ((int)value * 1000 / 1000M).ToString("###", culture) + suffix;
         }
     }
 }

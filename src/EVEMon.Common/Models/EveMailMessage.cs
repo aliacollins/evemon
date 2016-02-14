@@ -34,9 +34,9 @@ namespace EVEMon.Common.Models
             m_ccpCharacter = ccpCharacter;
             m_source = src;
 
-            State = (src.SenderID != ccpCharacter.CharacterID
+            State = src.SenderID != ccpCharacter.CharacterID
                 ? EveMailState.Inbox
-                : EveMailState.SentItem);
+                : EveMailState.SentItem;
             MessageID = src.MessageID;
             SentDate = src.SentDate;
             Title = src.Title.HtmlDecode();

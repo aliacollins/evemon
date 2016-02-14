@@ -68,7 +68,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Returns true if this APIConfiguration represents the default API service.
         /// </summary>
-        public bool IsDefault => (this == DefaultProvider);
+        public bool IsDefault => this == DefaultProvider;
 
         /// <summary>
         /// Gets the default API provider
@@ -273,8 +273,8 @@ namespace EVEMon.Common.Models
         /// <returns></returns>
         private bool ShouldRetryWithCCP(IAPIResult result)
         {
-            return (s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
-                    result.ErrorType != CCPAPIErrors.CCP);
+            return s_ccpProvider != this && s_ccpTestProvider != this && result.HasError &&
+                   result.ErrorType != CCPAPIErrors.CCP;
         }
 
         /// <summary>

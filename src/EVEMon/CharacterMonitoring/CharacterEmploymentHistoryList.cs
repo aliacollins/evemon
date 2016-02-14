@@ -196,7 +196,7 @@ namespace EVEMon.CharacterMonitoring
             EmploymentRecord previousRecord = e.Index == 0 ? null : (EmploymentRecord)lbEmploymentHistory.Items[e.Index - 1];
 
             // Draw background
-            g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Measure texts
             DateTime dt = previousRecord == null ? DateTime.UtcNow : previousRecord.StartDate;
@@ -271,7 +271,7 @@ namespace EVEMon.CharacterMonitoring
 
             g.DrawImage(record.CorporationImage,
                         new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                      (EmploymentRecordDetailHeight / 2) - (record.CorporationImage.Height / 2) + e.Bounds.Top,
+                                      EmploymentRecordDetailHeight / 2 - record.CorporationImage.Height / 2 + e.Bounds.Top,
                                       record.CorporationImage.Width, record.CorporationImage.Height));
         }
 

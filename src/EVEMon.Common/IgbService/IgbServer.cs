@@ -277,14 +277,14 @@ namespace EVEMon.Common.IgbService
             bool gotOne = false;
             for (int i = 0; i < length; i++)
             {
-                if (buffer[buffer.Count - i - 1] == ((byte)'\n'))
+                if (buffer[buffer.Count - i - 1] == (byte)'\n')
                 {
                     if (gotOne)
                         return true;
 
                     gotOne = true;
                 }
-                else if (buffer[buffer.Count - i - 1] != ((byte)'\r'))
+                else if (buffer[buffer.Count - i - 1] != (byte)'\r')
                     gotOne = false;
             }
 

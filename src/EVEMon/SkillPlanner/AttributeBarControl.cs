@@ -276,7 +276,7 @@ namespace EVEMon.SkillPlanner
 
             // Change cursor if required
             int value = GetValueAt(e.Location);
-            Cursor = (value == -1) ? Cursors.Arrow : Cursors.Hand;
+            Cursor = value == -1 ? Cursors.Arrow : Cursors.Hand;
 
             HighlightedValue = value;
             if (HighlightedValue >= 0 && HighlightedValue < m_baseValue)

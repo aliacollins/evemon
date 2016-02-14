@@ -209,16 +209,16 @@ namespace EVEMon.SkillPlanner
                     groupname = settingsProperty.DefaultValue.ToString();
             }
 
-            if ((!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                                                                 "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
-                                                                 Path.DirectorySeparatorChar,
-                                                                 AppDomain.CurrentDomain.BaseDirectory,
-                                                                 index,
-                                                                 groupname)) ||
-                 !File.Exists(String.Format(CultureConstants.InvariantCulture,
-                                            "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
-                                            Path.DirectorySeparatorChar,
-                                            AppDomain.CurrentDomain.BaseDirectory))))
+            if (!String.IsNullOrEmpty(groupname) && !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                "{1}Resources{0}Skill_Select{0}Group{2}{0}{3}.resources",
+                Path.DirectorySeparatorChar,
+                AppDomain.CurrentDomain.BaseDirectory,
+                index,
+                groupname)) ||
+                !File.Exists(String.Format(CultureConstants.InvariantCulture,
+                    "{1}Resources{0}Skill_Select{0}Group0{0}Default.resources",
+                    Path.DirectorySeparatorChar,
+                    AppDomain.CurrentDomain.BaseDirectory)))
                 groupname = String.Empty;
 
             return String.IsNullOrEmpty(groupname) ? defaultList : GetIconSet(index, groupname);
@@ -436,9 +436,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateTree(IEnumerable<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
-                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                        : 0);
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
+                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                : 0;
 
             // Update the image list choice
             int iconGroupIndex = Settings.UI.SkillBrowser.IconsGroupIndex;
@@ -479,7 +479,7 @@ namespace EVEMon.SkillPlanner
                 m_allExpanded = false;
 
                 // If the filtered set is small enough to fit all nodes on screen, call expandAll()
-                if (numberOfItems < (tvItems.DisplayRectangle.Height / tvItems.ItemHeight))
+                if (numberOfItems < tvItems.DisplayRectangle.Height / tvItems.ItemHeight)
                 {
                     tvItems.ExpandAll();
                     m_allExpanded = true;
@@ -497,7 +497,7 @@ namespace EVEMon.SkillPlanner
         {
             foreach (IGrouping<SkillGroup, Skill> group in skills.GroupBy(x => x.Group).OrderBy(x => x.Key.Name))
             {
-                int index = (!Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0);
+                int index = !Settings.UI.SafeForWork ? tvItems.ImageList.Images.IndexOfKey("book") : 0;
 
                 TreeNode groupNode = new TreeNode
                                          {
@@ -587,9 +587,9 @@ namespace EVEMon.SkillPlanner
         private void UpdateListView(IEnumerable<Skill> skills)
         {
             // Store the selected node (if any) to restore it after the update
-            int selectedItemHash = (tvItems.SelectedNodes.Count > 0
-                                        ? tvItems.SelectedNodes[0].Tag.GetHashCode()
-                                        : 0);
+            int selectedItemHash = tvItems.SelectedNodes.Count > 0
+                ? tvItems.SelectedNodes[0].Tag.GetHashCode()
+                : 0;
 
             // Retrieve the data to fetch into the list
             IEnumerable<string> labels = null;
@@ -961,31 +961,31 @@ namespace EVEMon.SkillPlanner
             if (SelectedSkill == null && skill != null)
                 node = null;
 
-            tsSeparatorBrowser.Visible = (node != null);
+            tsSeparatorBrowser.Visible = node != null;
 
             // "Show in skill browser/explorer"
-            showInSkillExplorerMenu.Visible = (SelectedSkill != null);
-            showInSkillBrowserMenu.Visible = (SelectedSkill != null && !HostedInSkillBrowser);
+            showInSkillExplorerMenu.Visible = SelectedSkill != null;
+            showInSkillBrowserMenu.Visible = SelectedSkill != null && !HostedInSkillBrowser;
 
             // "Collapse" and "Expand" menus
-            cmiCollapseSelected.Visible = (SelectedSkill == null && node != null && node.IsExpanded);
-            cmiExpandSelected.Visible = (SelectedSkill == null && node != null && !node.IsExpanded);
+            cmiCollapseSelected.Visible = SelectedSkill == null && node != null && node.IsExpanded;
+            cmiExpandSelected.Visible = SelectedSkill == null && node != null && !node.IsExpanded;
 
-            cmiExpandSelected.Text = (SelectedSkill == null && node != null &&
-                                      !node.IsExpanded
-                                          ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
-                                          : String.Empty);
-            cmiCollapseSelected.Text = (SelectedSkill == null && node != null &&
-                                        node.IsExpanded
-                                            ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
-                                            : String.Empty);
+            cmiExpandSelected.Text = SelectedSkill == null && node != null &&
+                                     !node.IsExpanded
+                ? String.Format(CultureConstants.DefaultCulture, "Expand \"{0}\"", node.Text)
+                : String.Empty;
+            cmiCollapseSelected.Text = SelectedSkill == null && node != null &&
+                                       node.IsExpanded
+                ? String.Format(CultureConstants.DefaultCulture, "Collapse \"{0}\"", node.Text)
+                : String.Empty;
 
             // "Expand All" and "Collapse All" menus
             cmiCollapseAll.Enabled = cmiCollapseAll.Visible = m_allExpanded;
             cmiExpandAll.Enabled = cmiExpandAll.Visible = !cmiCollapseAll.Enabled;
 
             // "Plan to N" menus
-            cmiPlanTo.Enabled = (SelectedSkill != null && SelectedSkill.Level < 5);
+            cmiPlanTo.Enabled = SelectedSkill != null && SelectedSkill.Level < 5;
             if (SelectedSkill == null)
                 return;
 

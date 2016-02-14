@@ -211,9 +211,9 @@ namespace EVEMon.CharacterMonitoring
 
             lvWalletJournal.Visible = false;
 
-            WalletJournal = (Character == null ? null : Character.WalletJournal);
+            WalletJournal = Character == null ? null : Character.WalletJournal;
             Columns = Settings.UI.MainWindow.WalletJournal.Columns;
-            Grouping = (Character == null ? WalletJournalGrouping.None : Character.UISettings.WalletJournalGroupBy);
+            Grouping = Character == null ? WalletJournalGrouping.None : Character.UISettings.WalletJournalGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -297,9 +297,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvWalletJournal.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvWalletJournal.SelectedItems.Count > 0
-                                    ? lvWalletJournal.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvWalletJournal.SelectedItems.Count > 0
+                ? lvWalletJournal.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvWalletJournal.BeginUpdate();
             try
@@ -537,7 +537,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 WalletJournalColumn column = (WalletJournalColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -563,15 +563,15 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = walletJournal.Type;
                     break;
                 case WalletJournalColumn.Amount:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletJournal.Amount, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.Amount.ToNumericString(2));
-                    item.ForeColor = (walletJournal.Amount < 0 ? Color.DarkRed : Color.DarkGreen);
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletJournal.Amount, AbbreviationFormat.AbbreviationSymbols)
+                        : walletJournal.Amount.ToNumericString(2);
+                    item.ForeColor = walletJournal.Amount < 0 ? Color.DarkRed : Color.DarkGreen;
                     break;
                 case WalletJournalColumn.Balance:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletJournal.Balance, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.Balance.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletJournal.Balance, AbbreviationFormat.AbbreviationSymbols)
+                        : walletJournal.Balance.ToNumericString(2);
                     break;
                 case WalletJournalColumn.Reason:
                     item.Text = walletJournal.Reason;
@@ -586,9 +586,9 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = walletJournal.TaxReceiver;
                     break;
                 case WalletJournalColumn.TaxAmount:
-                    item.Text = (numberFormat
-                                     ? FormatHelper.Format(walletJournal.TaxAmount, AbbreviationFormat.AbbreviationSymbols)
-                                     : walletJournal.TaxAmount.ToNumericString(2));
+                    item.Text = numberFormat
+                        ? FormatHelper.Format(walletJournal.TaxAmount, AbbreviationFormat.AbbreviationSymbols)
+                        : walletJournal.TaxAmount.ToNumericString(2);
                     break;
                 case WalletJournalColumn.ID:
                     item.Text = walletJournal.ID.ToString(CultureConstants.DefaultCulture);

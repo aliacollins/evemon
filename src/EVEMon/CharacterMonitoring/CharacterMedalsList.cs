@@ -241,7 +241,7 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Draw background
-            g.FillRectangle((e.Index % 2) == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
+            g.FillRectangle(e.Index % 2 == 0 ? Brushes.White : Brushes.LightGray, e.Bounds);
 
             // Texts
             string medalTitleText = medal.Title;
@@ -287,7 +287,7 @@ namespace EVEMon.CharacterMonitoring
 
             // Draw the medal image
             g.DrawImage(m_medalImage, new Rectangle(e.Bounds.Left + PadLeft / 2,
-                                             (MedalDetailHeight / 2) - (m_medalImage.Height / 2) + e.Bounds.Top,
+                                             MedalDetailHeight / 2 - m_medalImage.Height / 2 + e.Bounds.Top,
                                              m_medalImage.Width, m_medalImage.Height));
         }
 
@@ -320,7 +320,7 @@ namespace EVEMon.CharacterMonitoring
                                                                   m_medalsBoldFont, Size.Empty, Format);
             Rectangle standingGroupTextRect = new Rectangle(e.Bounds.Left + PadLeft,
                                                             e.Bounds.Top +
-                                                            ((e.Bounds.Height / 2) - (standingGroupTextSize.Height / 2)),
+                                                            (e.Bounds.Height / 2 - standingGroupTextSize.Height / 2),
                                                             standingGroupTextSize.Width + PadRight,
                                                             standingGroupTextSize.Height);
 
@@ -330,10 +330,10 @@ namespace EVEMon.CharacterMonitoring
 
             // Draws the collapsing arrows
             bool isCollapsed = m_collapsedGroups.Contains(group);
-            Image img = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image img = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             g.DrawImageUnscaled(img, new Rectangle(e.Bounds.Right - img.Width - CollapserPadRight,
-                                                   (MedalGroupHeaderHeight / 2) - (img.Height / 2) + e.Bounds.Top,
+                                                   MedalGroupHeaderHeight / 2 - img.Height / 2 + e.Bounds.Top,
                                                    img.Width, img.Height));
         }
 
@@ -540,11 +540,11 @@ namespace EVEMon.CharacterMonitoring
             bool isCollapsed = m_collapsedGroups.Contains(group);
 
             // Get the image for this state
-            Image btnImage = (isCollapsed ? Resources.Expand : Resources.Collapse);
+            Image btnImage = isCollapsed ? Resources.Expand : Resources.Collapse;
 
             // Compute the top left point
             Point btnPoint = new Point(itemRect.Right - btnImage.Width - CollapserPadRight,
-                                       (MedalGroupHeaderHeight / 2) - (btnImage.Height / 2) + itemRect.Top);
+                                       MedalGroupHeaderHeight / 2 - btnImage.Height / 2 + itemRect.Top);
 
             return new Rectangle(btnPoint, btnImage.Size);
         }

@@ -277,9 +277,9 @@ namespace EVEMon.CharacterMonitoring
             lvJobs.Visible = false;
             industryExpPanelControl.Visible = false;
 
-            Jobs = (Character == null ? null : Character.IndustryJobs);
+            Jobs = Character == null ? null : Character.IndustryJobs;
             Columns = Settings.UI.MainWindow.IndustryJobs.Columns;
-            Grouping = (Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy);
+            Grouping = Character == null ? IndustryJobGrouping.State : Character.UISettings.JobsGroupBy;
             TextFilter = String.Empty;
 
             UpdateColumns();
@@ -366,9 +366,9 @@ namespace EVEMon.CharacterMonitoring
             int scrollBarPosition = lvJobs.GetVerticalScrollBarPosition();
 
             // Store the selected item (if any) to restore it after the update
-            int selectedItem = (lvJobs.SelectedItems.Count > 0
-                                    ? lvJobs.SelectedItems[0].Tag.GetHashCode()
-                                    : 0);
+            int selectedItem = lvJobs.SelectedItems.Count > 0
+                ? lvJobs.SelectedItems[0].Tag.GetHashCode()
+                : 0;
 
             lvJobs.BeginUpdate();
             try
@@ -650,7 +650,7 @@ namespace EVEMon.CharacterMonitoring
             {
                 IndustryJobColumn column = (IndustryJobColumn)columnHeader.Tag;
                 if (m_sortCriteria == column)
-                    columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                    columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                 else
                     columnHeader.ImageIndex = 2;
             }
@@ -667,9 +667,9 @@ namespace EVEMon.CharacterMonitoring
             switch (column)
             {
                 case IndustryJobColumn.State:
-                    item.Text = (job.State == JobState.Active
+                    item.Text = job.State == JobState.Active
                         ? job.ActiveJobState.GetDescription()
-                        : job.State.ToString());
+                        : job.State.ToString();
                     item.ForeColor = GetStateColor(job);
                     break;
                 case IndustryJobColumn.TTC:
@@ -685,7 +685,7 @@ namespace EVEMon.CharacterMonitoring
                     break;
                 case IndustryJobColumn.OutputItem:
                     item.Text = String.Format(CultureConstants.DefaultCulture, "{0} Unit{1} of {2}", GetUnitCount(job),
-                        (GetUnitCount(job) > 1 ? "s" : String.Empty), job.OutputItem.Name);
+                        GetUnitCount(job) > 1 ? "s" : String.Empty, job.OutputItem.Name);
                     break;
                 case IndustryJobColumn.OutputItemType:
                     item.Text = job.OutputItem.MarketGroup.CategoryPath;
@@ -866,8 +866,8 @@ namespace EVEMon.CharacterMonitoring
                         if (ilIcons.ImageSize.Width > 0)
                             columnHeaderWidth += ilIcons.ImageSize.Width + Pad;
 
-                        int columnWidth = (lvJobs.Items.Cast<ListViewItem>().Select(
-                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width)).Concat(
+                        int columnWidth = lvJobs.Items.Cast<ListViewItem>().Select(
+                            item => TextRenderer.MeasureText(item.SubItems[m_columnTTCDisplayIndex].Text, Font).Width).Concat(
                                 new[] { columnHeaderWidth }).Max() + Pad + 2;
                         lvJobs.Columns[m_columnTTCDisplayIndex].Width = columnWidth;
                     }
@@ -1050,7 +1050,7 @@ namespace EVEMon.CharacterMonitoring
 
             // We use time dilation according to the ammount of active jobs that are not ready,
             // due to excess CPU usage for computing the 'time to completion' when there are too many jobs
-            m_refreshTimer.Interval = 900 + (100 * activeJobs);
+            m_refreshTimer.Interval = 900 + 100 * activeJobs;
 
             if (!m_columnsChanged)
                 return;
@@ -1177,7 +1177,7 @@ namespace EVEMon.CharacterMonitoring
             industryExpPanelControl.SuspendLayout();
 
             const int Pad = 5;
-            int height = (industryExpPanelControl.ExpandDirection == Direction.Up ? Pad : industryExpPanelControl.HeaderHeight);
+            int height = industryExpPanelControl.ExpandDirection == Direction.Up ? Pad : industryExpPanelControl.HeaderHeight;
 
             m_lblActiveManufacturingJobs.Location = new Point(5, height);
             m_lblRemoteManufacturingRange.Location = new Point(m_lblRemoteManufacturingRange.Location.X, height);

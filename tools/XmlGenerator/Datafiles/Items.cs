@@ -192,14 +192,14 @@ namespace EVEMon.XmlGenerator.Datafiles
                 ID = srcItem.ID,
                 Name = srcItem.Name,
                 Description = srcItem.Description ?? String.Empty,
-                Icon = (srcItem.IconID.HasValue
+                Icon = srcItem.IconID.HasValue
                     ? Database.EveIconsTable[srcItem.IconID.Value].Icon
-                    : String.Empty),
+                    : String.Empty,
                 PortionSize = srcItem.PortionSize,
                 MetaGroup = ItemMetaGroup.None,
                 Group = itemGroup.Name,
                 Category = Database.InvCategoriesTable[itemGroup.CategoryID].Name,
-                Race = (Race)Enum.ToObject(typeof(Race), (srcItem.RaceID ?? 0))
+                Race = (Race)Enum.ToObject(typeof(Race), srcItem.RaceID ?? 0)
             };
 
 

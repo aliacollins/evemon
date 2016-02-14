@@ -156,10 +156,10 @@ namespace EVEMon.CharacterMonitoring
             DateTime completionTime = training.EndTime.ToLocalTime();
 
             lblTrainingSkill.Text = training.ToString();
-            lblSPPerHour.Text = (training.Skill == null
-                                     ? "???"
-                                     : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
-                                                     training.SkillPointsPerHour));
+            lblSPPerHour.Text = training.Skill == null
+                ? "???"
+                : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
+                    training.SkillPointsPerHour);
             lblTrainingEst.Text = String.Format(CultureConstants.DefaultCulture, "{0:ddd} {1:G}", completionTime, completionTime);
 
             // Dipslay a warning if anything scheduled is blocking us
@@ -221,10 +221,10 @@ namespace EVEMon.CharacterMonitoring
 
             QueuedSkill training = ccpCharacter.SkillQueue.CurrentlyTraining;
             lblTrainingSkill.Text = training.ToString();
-            lblSPPerHour.Text = (training.Skill == null
-                                     ? "???"
-                                     : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
-                                                     training.Skill.SkillPointsPerHour));
+            lblSPPerHour.Text = training.Skill == null
+                ? "???"
+                : String.Format(CultureConstants.DefaultCulture, "{0} SP/Hour",
+                    training.Skill.SkillPointsPerHour);
 
             lblTrainingRemain.Text = "Paused";
             lblTrainingEst.Text = String.Empty;

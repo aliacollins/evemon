@@ -80,7 +80,7 @@ namespace EVEMon.ApiCredentialsManagement
                 return;
 
             charactersListGroupBox.Visible = false;
-            Size = new Size(Size.Width - (charactersListGroupBox.Height / 2), Size.Height - charactersListGroupBox.Height);
+            Size = new Size(Size.Width - charactersListGroupBox.Height / 2, Size.Height - charactersListGroupBox.Height);
         }
 
         /// <summary>

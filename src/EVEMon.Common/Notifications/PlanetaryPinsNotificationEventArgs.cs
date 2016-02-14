@@ -55,7 +55,7 @@ namespace EVEMon.Common.Notifications
         private void UpdateDescription()
         {
             Description = String.Format(CultureConstants.DefaultCulture, "{0} planetary work{1} completed.", PlanetaryPins.Count,
-                                        (PlanetaryPins.Count > 1 ? "s" : String.Empty));
+                                        PlanetaryPins.Count > 1 ? "s" : String.Empty);
         }
     }
  }

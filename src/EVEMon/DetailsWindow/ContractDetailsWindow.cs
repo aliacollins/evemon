@@ -438,7 +438,7 @@ namespace EVEMon.DetailsWindow
             if (m_contract.Accepted == DateTime.MinValue)
             {
                 DrawText(e, "Complete In", String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", m_contract.DaysToComplete,
-                                                         (m_contract.DaysToComplete > 1 ? "s" : String.Empty)), Font);
+                                                         m_contract.DaysToComplete > 1 ? "s" : String.Empty), Font);
             }
             else
             {
@@ -909,7 +909,7 @@ namespace EVEMon.DetailsWindow
             int imageWidth = headerImage.Width + Pad * 2;
             g.DrawString(headerText, headerTextFont, Brushes.Black,
                          new Rectangle(DetailsPanel.Left + imageWidth,
-                                       (headerImage.Height / 2) - textSize.Height,
+                                       headerImage.Height / 2 - textSize.Height,
                                        DetailsPanel.Width - imageWidth, textSize.Height * 2));
 
             m_height = headerImage.Height;
@@ -1121,7 +1121,7 @@ namespace EVEMon.DetailsWindow
         /// </summary>
         /// <param name="number">The number.</param>
         /// <returns></returns>
-        private static string GetNumberFormat(decimal number) => (number - (long)number == 0) ? "{0:N0} ISK {1}" : "{0:N2} ISK {1}";
+        private static string GetNumberFormat(decimal number) => number - (long)number == 0 ? "{0:N0} ISK {1}" : "{0:N2} ISK {1}";
 
         #endregion
 
@@ -1303,7 +1303,7 @@ namespace EVEMon.DetailsWindow
                 foreach (ColumnHeader columnHeader in Columns.Cast<ColumnHeader>())
                 {
                     if (m_sortCriteria == columnHeader)
-                        columnHeader.ImageIndex = (m_sortAscending ? 0 : 1);
+                        columnHeader.ImageIndex = m_sortAscending ? 0 : 1;
                     else
                         columnHeader.ImageIndex = 2;
                 }

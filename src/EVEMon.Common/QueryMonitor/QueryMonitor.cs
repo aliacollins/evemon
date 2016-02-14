@@ -113,9 +113,9 @@ namespace EVEMon.Common.QueryMonitor
 
                     // The 'return' condition have been placed to prevent any 'CCP screw up'
                     // with the cachedUntil timer as they have done in Incarna 1.0.1 expansion
-                    return (LastResult.CachedUntil > LastResult.CurrentTime
-                                ? LastResult.CachedUntil
-                                : LastResult.CachedUntil.AddMinutes(15));
+                    return LastResult.CachedUntil > LastResult.CurrentTime
+                        ? LastResult.CachedUntil
+                        : LastResult.CachedUntil.AddMinutes(15);
                 }
 
                 // No error ? Then we compute the next update according to the settings
@@ -287,7 +287,7 @@ namespace EVEMon.Common.QueryMonitor
             Status = QueryStatus.Pending;
 
             // Do we need to retry the force update ?
-            m_forceUpdate = (m_retryOnForceUpdateError && result.HasError);
+            m_forceUpdate = m_retryOnForceUpdateError && result.HasError;
 
             // Was it canceled ?
             if (m_isCanceled)

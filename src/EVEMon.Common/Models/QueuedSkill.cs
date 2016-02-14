@@ -63,7 +63,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the skill name, or "Unknown skill" if the skill was not in our datafiles.
         /// </summary>
-        public string SkillName => (Skill != null ? Skill.Name : "Unknown Skill");
+        public string SkillName => Skill != null ? Skill.Name : "Unknown Skill";
 
         /// <summary>
         /// Gets the training start time (UTC).
@@ -118,8 +118,8 @@ namespace EVEMon.Common.Models
         {
             get
             {
-                double estimatedSP = EndSP - (EndTime.Subtract(DateTime.UtcNow)).TotalHours * SkillPointsPerHour;
-                return (IsTraining ? Math.Max((int)estimatedSP, StartSP) : StartSP);
+                double estimatedSP = EndSP - EndTime.Subtract(DateTime.UtcNow).TotalHours * SkillPointsPerHour;
+                return IsTraining ? Math.Max((int)estimatedSP, StartSP) : StartSP;
             }
         }
 
@@ -147,7 +147,7 @@ namespace EVEMon.Common.Models
                     case 3:
                         return EndSP / 8000;
                     case 4:
-                        return EndSP / Convert.ToInt32(Math.Ceiling(Math.Pow(2, (2.5 * Level) - 2.5) * 250));
+                        return EndSP / Convert.ToInt32(Math.Ceiling(Math.Pow(2, 2.5 * Level - 2.5) * 250));
                     case 5:
                         return EndSP / 256000;
                 }
@@ -206,7 +206,7 @@ namespace EVEMon.Common.Models
         {
             SerializableQueuedSkill skill = new SerializableQueuedSkill
                                                 {
-                                                    ID = (Skill == null ? 0 : Skill.ID),
+                                                    ID = Skill == null ? 0 : Skill.ID,
                                                     Level = Level,
                                                     StartSP = StartSP,
                                                     EndSP = EndSP,

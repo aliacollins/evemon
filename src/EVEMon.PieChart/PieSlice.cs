@@ -754,7 +754,7 @@ namespace EVEMon.PieChart
         /// </returns>
         internal bool StartSideContainsPoint(PointF point)
         {
-            return SliceHeight > 0 && (m_startSide.Contains(point));
+            return SliceHeight > 0 && m_startSide.Contains(point);
         }
 
         /// <summary>
@@ -768,7 +768,7 @@ namespace EVEMon.PieChart
         /// </returns>
         internal bool EndSideContainsPoint(PointF point)
         {
-            return SliceHeight > 0 && (m_endSide.Contains(point));
+            return SliceHeight > 0 && m_endSide.Contains(point);
         }
 
         /// <summary>
@@ -785,8 +785,8 @@ namespace EVEMon.PieChart
             if (SliceHeight > 0)
             {
                 return
-                    (PieSliceContainsPoint(point, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight,
-                                           BoundingRectangle.Width, BoundingRectangle.Height, StartAngle, SweepAngle));
+                    PieSliceContainsPoint(point, BoundingRectangle.X, BoundingRectangle.Y + SliceHeight,
+                        BoundingRectangle.Width, BoundingRectangle.Height, StartAngle, SweepAngle);
             }
             return false;
         }
@@ -1278,11 +1278,11 @@ namespace EVEMon.PieChart
             double y = point.Y - boundingRectYangle - boundingRectHeightangle / 2;
             double angle = Math.Atan2(y, x);
             if (angle < 0)
-                angle += (2 * Math.PI);
+                angle += 2 * Math.PI;
             double angleDegrees = angle * 180 / Math.PI;
             // point is inside the pie slice only if between start and end angle
-            if ((!(angleDegrees >= startAngle) || !(angleDegrees <= (startAngle + sweepAngle))) &&
-                ((!(startAngle + sweepAngle > 360)) || (!((angleDegrees + 360) <= (startAngle + sweepAngle)))))
+            if ((!(angleDegrees >= startAngle) || !(angleDegrees <= startAngle + sweepAngle)) &&
+                (!(startAngle + sweepAngle > 360) || !(angleDegrees + 360 <= startAngle + sweepAngle)))
                 return false;
 
             // distance of the point from the ellipse centre
@@ -1309,7 +1309,7 @@ namespace EVEMon.PieChart
             double cosFi = Math.Cos(angle);
             double sinFi = Math.Sin(angle);
             // distance of the ellipse perimeter point
-            return (a * b) / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
+            return a * b / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
         }
 
         /// <summary>

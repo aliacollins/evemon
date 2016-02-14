@@ -498,7 +498,7 @@ namespace EVEMon.Common.Controls
         /// <returns>True if specified node is selected, false if not.</returns>
         private bool IsNodeSelected(TreeNode tn)
         {
-            return (tn != null && m_listSelectedNodes.Contains(tn));
+            return tn != null && m_listSelectedNodes.Contains(tn);
         }
 
         /// <summary>
@@ -690,7 +690,7 @@ namespace EVEMon.Common.Controls
             // Determine the rightmost position we'll process clicks (so that the click has to be on the node's bounds, 
             // like the .NET treeview
             int rightMostX = tn.Bounds.X + tn.Bounds.Width;
-            return (e.X < rightMostX); // GKM
+            return e.X < rightMostX; // GKM
         }
 
         /// <summary>
@@ -979,7 +979,7 @@ namespace EVEMon.Common.Controls
                 // If mouse down on a node that is already selected, then we should process this node in the mouse up event, because we
                 // might want to drag it and it should not be put in edit mode.
                 // Also, only process node if click was in node's bounds.
-                if ((IsClickOnNode(tn, e)) && (!IsNodeSelected(tn)))
+                if (IsClickOnNode(tn, e) && !IsNodeSelected(tn))
                 {
                     // Flash node. In case the node selection is cancelled by the user, this gives the effect that it
                     // was selected and unselected again.
@@ -1074,7 +1074,7 @@ namespace EVEMon.Common.Controls
             {
                 case MouseButtons.Left:
                     {
-                        m_blnWasDoubleClick = (m_intMouseClicks == 2);
+                        m_blnWasDoubleClick = m_intMouseClicks == 2;
 
                         if (((keys & Keys.Control) == 0) && ((keys & Keys.Shift) == 0))
                         {
@@ -1097,7 +1097,7 @@ namespace EVEMon.Common.Controls
                                 SelectNode(endNode, true, tva);
 
 
-                                if ((blnNodeWasSelected) && (LabelEdit) && (allowStartEdit) && (!m_blnWasDoubleClick) &&
+                                if (blnNodeWasSelected && LabelEdit && allowStartEdit && !m_blnWasDoubleClick &&
                                     (intNumberOfSelectedNodes <= 1))
                                 {
                                     // Node should be put in edit mode					
@@ -1504,7 +1504,7 @@ namespace EVEMon.Common.Controls
                         return;
                 }
             }
-            if ((tnNewlySelectedNodeWithKeys != null))
+            if (tnNewlySelectedNodeWithKeys != null)
             {
                 SetFocusToNode(m_tnMostRecentSelectedNode, false);
                 ProcessNodeRange(m_tnKeysStartNode, tnNewlySelectedNodeWithKeys,

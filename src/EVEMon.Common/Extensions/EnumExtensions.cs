@@ -104,7 +104,7 @@ namespace EVEMon.Common.Extensions
                 bool found = false;
                 for (int i = 0; i < 32; i++)
                 {
-                    if ((int)value != (1 << i))
+                    if ((int)value != 1 << i)
                         continue;
                     found = !found;
 

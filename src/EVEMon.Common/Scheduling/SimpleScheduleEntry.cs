@@ -35,7 +35,7 @@ namespace EVEMon.Common.Scheduling
         /// <returns></returns>
         public override bool Contains(DateTime checkDateTime)
         {
-            return (checkDateTime >= StartDate && checkDateTime < EndDate);
+            return checkDateTime >= StartDate && checkDateTime < EndDate;
         }
 
         /// <summary>

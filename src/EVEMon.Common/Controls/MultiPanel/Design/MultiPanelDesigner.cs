@@ -81,7 +81,7 @@ namespace EVEMon.Common.Controls.MultiPanel.Design
         /// <returns></returns>
         public override bool CanParent(Control control)
         {
-            return ((control is MultiPanelPage) && !Control.Contains(control));
+            return control is MultiPanelPage && !Control.Contains(control);
         }
 
 

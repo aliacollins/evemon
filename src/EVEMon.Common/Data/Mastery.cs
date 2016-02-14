@@ -140,7 +140,7 @@ namespace EVEMon.Common.Data
             foreach (SkillLevel prereqSkill in GetPrerequisiteSkills)
             {
                 // Trained only if the skill's level is greater or equal than the minimum level
-                trained &= (prereqSkill.Skill.Level >= prereqSkill.Level);
+                trained &= prereqSkill.Skill.Level >= prereqSkill.Level;
 
                 noPrereq &= prereqSkill.AllDependencies.All(x => !x.IsTrained);
             }
@@ -169,7 +169,7 @@ namespace EVEMon.Common.Data
         /// </returns>
         public override string ToString()
         {
-            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt((Level)));
+            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt(Level));
         }
     }
 }

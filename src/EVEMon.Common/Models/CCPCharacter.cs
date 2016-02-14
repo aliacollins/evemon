@@ -127,8 +127,8 @@ namespace EVEMon.Common.Models
         /// Gets an adorned name, with (file), (url) or (cached) labels.
         /// </summary>
         public override string AdornedName
-            => (!Identity.APIKeys.Any() || Identity.APIKeys.All(apiKey => !apiKey.Monitored) ||
-                (m_characterDataQuerying != null && m_characterDataQuerying.CharacterSheetMonitor.HasError))
+            => !Identity.APIKeys.Any() || Identity.APIKeys.All(apiKey => !apiKey.Monitored) ||
+               (m_characterDataQuerying != null && m_characterDataQuerying.CharacterSheetMonitor.HasError)
                 ? String.Format(CultureConstants.DefaultCulture, "{0} (cached)", Name)
                 : Name;
 

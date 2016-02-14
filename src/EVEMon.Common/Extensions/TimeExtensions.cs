@@ -85,7 +85,7 @@ namespace EVEMon.Common.Extensions
         /// <returns></returns>
         public static string ToRemainingTimeShortDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
-            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
             StringBuilder sb = new StringBuilder();
             if (t <= now)
                 return "Done";
@@ -135,7 +135,7 @@ namespace EVEMon.Common.Extensions
         /// <returns></returns>
         public static string ToRemainingTimeDigitalDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
-            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
 
             // Small chance that the function could cross over the
             // second boundry, and have an inconsistent result.
@@ -181,7 +181,7 @@ namespace EVEMon.Common.Extensions
         /// <returns></returns>
         public static string ToRemainingTimeDescription(this DateTime t, DateTimeKind dateTimeKind)
         {
-            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
 
             StringBuilder sb = new StringBuilder();
             if (t <= now)
@@ -247,7 +247,7 @@ namespace EVEMon.Common.Extensions
         /// <returns>String representation of the time and relative date.</returns>
         public static string ToAbsoluteDateTimeDescription(this DateTime absoluteDateTime, DateTimeKind dateTimeKind)
         {
-            DateTime now = (dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow);
+            DateTime now = dateTimeKind == DateTimeKind.Local ? DateTime.Now : DateTime.UtcNow;
             string shortTime = absoluteDateTime.ToShortTimeString();
 
             // Yesterday (i.e. before 00:00 today)

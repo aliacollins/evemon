@@ -284,7 +284,7 @@ namespace EVEMon.Common.Extensions
                         currentLineLength + currentWord.Length + 1 < maxLength)
                     {
                         currentLine += currentWord + " ";
-                        currentLineLength += (currentWord.Length + 1);
+                        currentLineLength += currentWord.Length + 1;
                     }
                     else
                     {

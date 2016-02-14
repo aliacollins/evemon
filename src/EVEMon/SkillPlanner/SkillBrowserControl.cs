@@ -174,10 +174,10 @@ namespace EVEMon.SkillPlanner
             // Toolbar > "Planned to" label
             int level = m_plan.GetPlannedLevel(m_selectedSkill);
 
-            planToMenu.Text = (level == 0
-                                   ? "Plan To (none)..."
-                                   : String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...",
-                                                   Skill.GetRomanFromInt(level)));
+            planToMenu.Text = level == 0
+                ? "Plan To (none)..."
+                : String.Format(CultureConstants.DefaultCulture, "Plan To Level {0}...",
+                    Skill.GetRomanFromInt(level));
         }
 
         /// <summary>

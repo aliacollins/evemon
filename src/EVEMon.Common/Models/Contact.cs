@@ -35,7 +35,7 @@ namespace EVEMon.Common.Models
             Name = src.ContactName;
             IsInWatchlist = src.InWatchlist;
             Standing = src.Standing;
-            Group = (src.Group == ContactGroup.Personal && StaticGeography.AllAgents.Any(x => x.ID == m_contactID))
+            Group = src.Group == ContactGroup.Personal && StaticGeography.AllAgents.Any(x => x.ID == m_contactID)
                 ? ContactGroup.Agent
                 : src.Group;
 
@@ -155,7 +155,7 @@ namespace EVEMon.Common.Models
                     m_contactID, (int)EveImageSize.x32)
                 : String.Format(CultureConstants.InvariantCulture,
                     NetworkConstants.CCPIconsFromImageServer,
-                    (m_contactType == ContactType.Alliance ? "alliance" : "corporation"),
+                    m_contactType == ContactType.Alliance ? "alliance" : "corporation",
                     m_contactID, (int)EveImageSize.x32);
 
             return useFallbackUri

@@ -186,9 +186,9 @@ namespace EVEMon.SkillPlanner
 
                 Size tslTextSize = TextRenderer.MeasureText(tsl.Text, Font);
                 int panelMinSize = rSplCont.Panel2MinSize;
-                rSplCont.Panel2MinSize = (panelMinSize > tslTextSize.Width + HPad
+                rSplCont.Panel2MinSize = panelMinSize > tslTextSize.Width + HPad
                     ? panelMinSize
-                    : tslTextSize.Width + HPad);
+                    : tslTextSize.Width + HPad;
                 rSplCont.SplitterDistance = rSplCont.Width - rSplCont.Panel2MinSize;
             }
             finally

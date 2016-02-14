@@ -584,7 +584,7 @@ namespace EVEMon.Common.Models
                 case CCPContractStatus.Overdue:
                 case CCPContractStatus.Outstanding:
                 case CCPContractStatus.InProgress:
-                    return (IssuerID != Character.CharacterID) ? ContractState.Assigned : ContractState.Created;
+                    return IssuerID != Character.CharacterID ? ContractState.Assigned : ContractState.Created;
                 case CCPContractStatus.Completed:
                 case CCPContractStatus.CompletedByContractor:
                 case CCPContractStatus.CompletedByIssuer:

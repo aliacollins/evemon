@@ -123,12 +123,12 @@ namespace EVEMon.SkillPlanner
             Int64 sparePoints = EveConstants.SpareAttributePointsOnRemap;
             for (int i = 0; i < 5; i++)
             {
-                sparePoints -= (remapping.BestScratchpad[(EveAttribute)i].Base) - EveConstants.CharacterBaseAttributePoints;
+                sparePoints -= remapping.BestScratchpad[(EveAttribute)i].Base - EveConstants.CharacterBaseAttributePoints;
             }
             pbUnassigned.Value = sparePoints;
 
             // If the implant set isn't the active one we notify the user
-            lblNotice.Visible = (plan.ChosenImplantSet != character.ImplantSets.Current);
+            lblNotice.Visible = plan.ChosenImplantSet != character.ImplantSets.Current;
         }
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace EVEMon.SkillPlanner
         /// <param name="e"></param>
         private void attributeButton_Click(object sender, EventArgs e)
         {
-            AttributeButtonControl button = (sender as AttributeButtonControl);
+            AttributeButtonControl button = sender as AttributeButtonControl;
             if (button?.AttributeBar == null)
                 return;
 

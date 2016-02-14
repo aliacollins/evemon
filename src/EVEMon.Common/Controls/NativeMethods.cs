@@ -166,7 +166,7 @@ namespace EVEMon.Common.Controls
         private enum ListViewMessages
         {
             LVM_FIRST = 0x1000,
-            LVM_SCROLL = (LVM_FIRST + 20)
+            LVM_SCROLL = LVM_FIRST + 20
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]

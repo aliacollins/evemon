@@ -58,13 +58,13 @@ namespace EVEMon.Schedule
             for (int i = 1; i <= CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year); i++)
             {
                 nudMonth.Items.Add(
-                    monthNames[((CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year)) - i)]);
+                    monthNames[CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) - i]);
             }
 
             // Set controls to current date
             nudMonth.Items.Add(monthNames[CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) - 1]);
             nudYear.Value = m_currentDate.Year;
-            nudMonth.SelectedIndex = ((nudMonth.Items.Count - 1) - m_currentDate.Month);
+            nudMonth.SelectedIndex = nudMonth.Items.Count - 1 - m_currentDate.Month;
             nudDay.Maximum = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month) + 1;
             nudDay.Value = m_currentDate.Day;
             calControl.Date = m_currentDate;
@@ -129,7 +129,7 @@ namespace EVEMon.Schedule
             lbEntries.Items.Clear();
             m_lbEntriesData.ForEach(x => lbEntries.Items.Add(x));
 
-            lbEntries.SelectedIndex = (m_lbEntriesData.Any() ? 0 : -1);
+            lbEntries.SelectedIndex = m_lbEntriesData.Any() ? 0 : -1;
         }
 
         /// <summary>
@@ -186,21 +186,21 @@ namespace EVEMon.Schedule
                             DateTime initial =
                                 recurringEntry.StartDate.AddDays((recurringEntry.DayOfWeek - recurringEntry.StartDate.DayOfWeek +
                                                                   DaysOfWeek) % DaysOfWeek);
-                            Double datediff = ((DaysOfWeek * recurringEntry.WeeksPeriod) -
-                                               (nowish.Subtract(initial).Days % (DaysOfWeek * recurringEntry.WeeksPeriod))) %
+                            Double datediff = (DaysOfWeek * recurringEntry.WeeksPeriod -
+                                               nowish.Subtract(initial).Days % (DaysOfWeek * recurringEntry.WeeksPeriod)) %
                                               (DaysOfWeek * recurringEntry.WeeksPeriod);
 
-                            if (((nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds))) <
+                            if (nowish.AddDays(datediff).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds)) <
                                 DateTime.Now)
-                                datediff = datediff + (DaysOfWeek * recurringEntry.WeeksPeriod);
+                                datediff = datediff + DaysOfWeek * recurringEntry.WeeksPeriod;
 
                             sb.AppendFormat(CultureConstants.DefaultCulture, "  Day of Week: {0}", recurringEntry.DayOfWeek).
                                 AppendLine();
                             sb.AppendFormat(CultureConstants.DefaultCulture, "  Every: {0} week{1}",
-                                            recurringEntry.WeeksPeriod, (recurringEntry.WeeksPeriod == 1 ? String.Empty : "s")).
+                                            recurringEntry.WeeksPeriod, recurringEntry.WeeksPeriod == 1 ? String.Empty : "s").
                                 AppendLine();
                             sb.AppendFormat(CultureConstants.DefaultCulture, "  Next: {0}",
-                                            (nowish.AddDays(datediff)).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds))
+                                            nowish.AddDays(datediff).Add(TimeSpan.FromSeconds(recurringEntry.StartTimeInSeconds))
                                                 .ToShortDateString()).AppendLine();
                         }
                         break;
@@ -397,9 +397,9 @@ namespace EVEMon.Schedule
                 {
                     // In case local time conversion extends beyond the entry date,
                     // we display also the ending date
-                    string toLocalTime = (to.Day == to.ToLocalTime().Day
-                                              ? to.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture)
-                                              : to.ToLocalTime().ToString());
+                    string toLocalTime = to.Day == to.ToLocalTime().Day
+                        ? to.ToLocalTime().ToString("HH:mm", CultureConstants.DefaultCulture)
+                        : to.ToLocalTime().ToString();
 
                     content.AppendFormat(" [ EVE Time: {0} - {1} ] ", from.ToString("HH:mm", CultureConstants.DefaultCulture),
                                          to.ToString("HH:mm", CultureConstants.DefaultCulture));
@@ -592,7 +592,7 @@ namespace EVEMon.Schedule
             bool doney = false;
             if (nudDay.Value == 0)
             {
-                if (nudMonth.SelectedIndex == (nudMonth.Items.Count - 2) && nudYear.Value == nudYear.Minimum)
+                if (nudMonth.SelectedIndex == nudMonth.Items.Count - 2 && nudYear.Value == nudYear.Minimum)
                     nudDay.Value = 1;
 
                 m_currentDate = m_currentDate.AddDays((int)nudDay.Value - m_currentDate.Day);
@@ -633,8 +633,8 @@ namespace EVEMon.Schedule
 
             calControl.Date = m_currentDate;
             nudYear.Value = m_currentDate.Year;
-            nudMonth.SelectedIndex = (CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) -
-                                      m_currentDate.Month) + 1;
+            nudMonth.SelectedIndex = CultureConstants.DefaultCulture.Calendar.GetMonthsInYear(m_currentDate.Year) -
+                                     m_currentDate.Month + 1;
         }
 
         /// <summary>
@@ -651,9 +651,9 @@ namespace EVEMon.Schedule
                 nudMonth.SelectedIndex = 1;
 
             m_currentDate =
-                m_currentDate.AddMonths((((nudMonth.Items.Count - 1) - nudMonth.SelectedIndex) - m_currentDate.Month));
+                m_currentDate.AddMonths(nudMonth.Items.Count - 1 - nudMonth.SelectedIndex - m_currentDate.Month);
 
-            nudMonth.SelectedIndex = ((nudMonth.SelectedIndex + (nudMonth.Items.Count - 3)) % (nudMonth.Items.Count - 2)) + 1;
+            nudMonth.SelectedIndex = (nudMonth.SelectedIndex + (nudMonth.Items.Count - 3)) % (nudMonth.Items.Count - 2) + 1;
 
             if (nudDay.Value > CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month))
                 nudDay.Value = CultureConstants.DefaultCulture.Calendar.GetDaysInMonth(m_currentDate.Year, m_currentDate.Month);
