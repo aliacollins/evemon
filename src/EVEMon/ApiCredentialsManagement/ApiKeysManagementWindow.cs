@@ -455,7 +455,7 @@ namespace EVEMon.ApiCredentialsManagement
                     else
                         hasUrlChars = true;
                 }
-                    // CCP character ?
+                // CCP character ?
                 else
                 {
                     if (!character.Identity.APIKeys.Any())
@@ -466,8 +466,7 @@ namespace EVEMon.ApiCredentialsManagement
                             apiKey => !apiKeyGroups.ContainsKey(apiKey)))
                         {
                             apiKeyGroups.Add(apiKey,
-                                             new ListViewGroup(String.Format(CultureConstants.DefaultCulture,
-                                                                             "Key ID #{0}", apiKey.ID)));
+                                new ListViewGroup($"Key ID #{apiKey.ID}"));
                         }
                     }
                 }

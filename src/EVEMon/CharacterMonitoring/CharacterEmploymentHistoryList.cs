@@ -200,9 +200,8 @@ namespace EVEMon.CharacterMonitoring
 
             // Measure texts
             DateTime dt = previousRecord == null ? DateTime.UtcNow : previousRecord.StartDate;
-            string recordPeriodText = String.Format(CultureConstants.DefaultCulture, "( {0} )",
-                                                    dt.Subtract(record.StartDate).ToDescriptiveText(
-                                                        DescriptiveTextOptions.SpaceBetween, false));
+            string recordPeriodText =
+                $"( {dt.Subtract(record.StartDate).ToDescriptiveText(DescriptiveTextOptions.SpaceBetween, false)} )";
             string recordStartDateText = record.StartDate.ToLocalTime().DateTimeToDotFormattedString();
             string recordEndDateText = previousRecord == null
                                            ? RecordDateTodayText

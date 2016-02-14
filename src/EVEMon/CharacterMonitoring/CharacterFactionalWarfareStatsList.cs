@@ -171,23 +171,18 @@ namespace EVEMon.CharacterMonitoring
 
             // Update the labels
             string highestRankText = m_charFacWarStats.HighestRank > m_charFacWarStats.CurrentRank
-                                         ? String.Format(CultureConstants.DefaultCulture,
-                                                         "({0})", GetMilitiaRank(m_charFacWarStats.HighestRank))
-                                         : String.Empty;
+                ? $"({GetMilitiaRank(m_charFacWarStats.HighestRank)})"
+                : String.Empty;
 
             TimeSpan timeServed = DateTime.UtcNow.Subtract(m_charFacWarStats.EnlistedDate);
             string timeServedText = timeServed < TimeSpan.FromDays(1)
                                         ? "Less than one day."
-                                        : String.Format(CultureConstants.DefaultCulture, "{0} day{1}", timeServed.Days,
-                                                        timeServed.Days > 1
-                                                            ? "s"
-                                                            : String.Empty);
+                                        : $"{timeServed.Days} day{(timeServed.Days > 1 ? "s" : String.Empty)}";
 
-            FactionLabel.Text = String.Format(CultureConstants.DefaultCulture, "Faction: {0}", m_charFacWarStats.FactionName);
-            CorporationLabel.Text = String.Format(CultureConstants.DefaultCulture, "Corporation: {0}", Character.CorporationName);
-            RankLabel.Text = String.Format(CultureConstants.DefaultCulture, "Rank: {0} {1}",
-                                           GetMilitiaRank(m_charFacWarStats.CurrentRank), highestRankText);
-            TimeServedLabel.Text = String.Format(CultureConstants.DefaultCulture, "Time served: {0}", timeServedText);
+            FactionLabel.Text = $"Faction: {m_charFacWarStats.FactionName}";
+            CorporationLabel.Text = $"Corporation: {Character.CorporationName}";
+            RankLabel.Text = $"Rank: {GetMilitiaRank(m_charFacWarStats.CurrentRank)} {highestRankText}";
+            TimeServedLabel.Text = $"Time served: {timeServedText}";
         }
 
         /// <summary>

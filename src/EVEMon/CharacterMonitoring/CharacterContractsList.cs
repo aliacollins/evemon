@@ -725,14 +725,12 @@ namespace EVEMon.CharacterMonitoring
                                     : contract.Completed.ToLocalTime().ToShortDateString();
                     break;
                 case ContractColumn.Duration:
-                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", contract.Duration,
-                                              contract.Duration > 1 ? "s" : String.Empty);
+                    item.Text = $"{contract.Duration} Day{(contract.Duration > 1 ? "s" : String.Empty)}";
                     break;
                 case ContractColumn.DaysToComplete:
                     item.Text = contract.DaysToComplete == 0
                                     ? String.Empty
-                                    : String.Format(CultureConstants.DefaultCulture, "{0} Day{1}", contract.DaysToComplete,
-                                                    contract.DaysToComplete > 1 ? "s" : String.Empty);
+                                    : $"{contract.DaysToComplete} Day{(contract.DaysToComplete > 1 ? "s" : String.Empty)}";
                     break;
                 case ContractColumn.Expiration:
                     ListViewItemFormat format = FormatExpiration(contract);

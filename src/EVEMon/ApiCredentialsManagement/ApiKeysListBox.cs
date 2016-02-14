@@ -191,10 +191,11 @@ namespace EVEMon.ApiCredentialsManagement
             indentedLeft += g.MeasureString(apiKey.VerificationCode, Font).ToSize().Width + Margin.Left * 2;
 
             // Api key expiration date
-            string apiKeyExpiration = String.Format(CultureConstants.DefaultCulture, "Expires: {0}",
-                apiKey.Expiration != DateTime.MinValue
-                    ? apiKey.Expiration.ToLocalTime().ToString(CultureConstants.DefaultCulture)
-                    : "Never");
+            string expirationDateText = apiKey.Expiration != DateTime.MinValue
+                ? apiKey.Expiration.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                : "Never";
+            string apiKeyExpiration = $"Expires: {expirationDateText}";
+
             g.DrawString(apiKeyExpiration, Font, fontBrush, new Point(indentedLeft, top));
 
             // Draw the texts on the middle third
@@ -206,18 +207,19 @@ namespace EVEMon.ApiCredentialsManagement
             indentedLeft = left + g.MeasureString(accountHeader, m_boldFont).ToSize().Width + Margin.Left * 2;
 
             // Account created
-            string accountCreated = String.Format(CultureConstants.DefaultCulture, "Created: {0}",
-                apiKey.AccountCreated != DateTime.MinValue
-                    ? apiKey.AccountCreated.ToLocalTime().ToString(CultureConstants.DefaultCulture)
-                    : "-");
+            string accountCreatedText = apiKey.AccountCreated != DateTime.MinValue
+                ? apiKey.AccountCreated.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                : "-";
+            string accountCreated = $"Created: {accountCreatedText}";
+
             g.DrawString(accountCreated, m_middleFont, fontBrush, new Point(indentedLeft, top));
             indentedLeft += g.MeasureString(accountCreated, m_middleFont).ToSize().Width + Margin.Left * 2;
 
             // Account paid until
-            string accountPaidUntil = String.Format(CultureConstants.DefaultCulture, "Paid Until: {0}",
-                apiKey.AccountExpires != DateTime.MinValue
-                    ? apiKey.AccountExpires.ToLocalTime().ToString(CultureConstants.DefaultCulture)
-                    : "-");
+            string accountPaidUntilText = apiKey.AccountExpires != DateTime.MinValue
+                ? apiKey.AccountExpires.ToLocalTime().ToString(CultureConstants.DefaultCulture)
+                : "-";
+            string accountPaidUntil = $"Paid Until: {accountPaidUntilText}";
             g.DrawString(accountPaidUntil, m_middleFont, fontBrush, new Point(indentedLeft, top));
             indentedLeft += g.MeasureString(accountPaidUntil, m_middleFont).ToSize().Width + Margin.Left * 2;
 

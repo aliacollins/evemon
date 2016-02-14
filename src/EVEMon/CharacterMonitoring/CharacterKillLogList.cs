@@ -233,9 +233,7 @@ namespace EVEMon.CharacterMonitoring
                 lbKillLog.Items.Clear();
                 foreach (IGrouping<KillGroup, KillLog> group in groups)
                 {
-                    string groupHeaderText = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                        group.Key,
-                        group.Count());
+                    string groupHeaderText = $"{@group.Key} ({@group.Count()})";
 
                     lbKillLog.Items.Add(groupHeaderText);
 
@@ -319,7 +317,7 @@ namespace EVEMon.CharacterMonitoring
 
                 foreach (IGrouping<KillGroup, KillLog> group in killlog.GroupBy(x => x.Group).OrderBy(x => x.Key))
                 {
-                    string groupText = String.Format(CultureConstants.DefaultCulture, "{0} ({1})", group.Key, group.Count());
+                    string groupText = $"{group.Key} ({group.Count()})";
                     ListViewGroup listGroup = new ListViewGroup(groupText);
                     lvKillLog.Groups.Add(listGroup);
 
@@ -328,7 +326,7 @@ namespace EVEMon.CharacterMonitoring
                         group.Select(kill => new
                         {
                             kill,
-                            item = new ListViewItem(kill.KillTime.ToLocalTime().ToString(), listGroup)
+                            item = new ListViewItem(kill.KillTime.ToLocalTime().ToString(CultureConstants.DefaultCulture), listGroup)
                             {
                                 UseItemStyleForSubItems = false,
                                 Tag = kill
@@ -587,15 +585,16 @@ namespace EVEMon.CharacterMonitoring
 
             // Texts
             string victimNameText = killLog.Victim.Name;
-            string killTimeText = String.Format(CultureConstants.DefaultCulture, "({0} ago)",
-                killLog.TimeSinceKill.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas |
-                                                        DescriptiveTextOptions.SpaceText |
-                                                        DescriptiveTextOptions.FullText));
+            string killTimeSinceText = killLog.TimeSinceKill
+                .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas |
+                                   DescriptiveTextOptions.SpaceText |
+                                   DescriptiveTextOptions.FullText);
+            string killTimeText = $"({killTimeSinceText} ago)";
             string victimNameCorpAndAllianceName = GetText(killLog.Victim.CorporationName, killLog.Victim.AllianceName);
-            string whatAndWhereInfo = String.Format(CultureConstants.DefaultCulture, "{0}, {1}, {2}, {3:N1}",
-                killLog.Victim.ShipTypeName, killLog.SolarSystem.Name,
-                killLog.SolarSystem.Constellation.Region.Name,
-                killLog.SolarSystem.SecurityLevel);
+            string whatAndWhereInfo = $"{killLog.Victim.ShipTypeName}, " +
+                                      $"{killLog.SolarSystem.Name}, " +
+                                      $"{killLog.SolarSystem.Constellation.Region.Name}, " +
+                                      $"{killLog.SolarSystem.SecurityLevel:N1}";
 
             // Measure texts
             Size victimNameTextSize = TextRenderer.MeasureText(g, victimNameText, m_killBoldFont, Size.Empty, Format);
@@ -642,10 +641,11 @@ namespace EVEMon.CharacterMonitoring
             Graphics g = e.Graphics;
 
             // Texts
-            string killTimeText = String.Format(CultureConstants.DefaultCulture, "({0} ago)",
-                killLog.TimeSinceKill.ToDescriptiveText(DescriptiveTextOptions.IncludeCommas |
-                                                        DescriptiveTextOptions.SpaceText |
-                                                        DescriptiveTextOptions.FullText));
+            string killTimeSinceText = killLog.TimeSinceKill
+                .ToDescriptiveText(DescriptiveTextOptions.IncludeCommas |
+                                   DescriptiveTextOptions.SpaceText |
+                                   DescriptiveTextOptions.FullText);
+            string killTimeText = $"({killTimeSinceText} ago)";
             string finalBlowAttackerCorpAndAllianceName = GetText(killLog.FinalBlowAttacker.CorporationName,
                 killLog.FinalBlowAttacker.AllianceName);
             string finalBlowAttackerShipAndModuleName = GetText(killLog.FinalBlowAttacker.ShipTypeName,

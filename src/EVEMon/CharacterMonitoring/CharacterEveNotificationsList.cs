@@ -542,8 +542,8 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = eveNotification.Title;
                     break;
                 case EveNotificationColumn.SentDate:
-                    item.Text = String.Format(CultureConstants.DefaultCulture,
-                        "{0:ddd} {0:G}", eveNotification.SentDate.ToLocalTime());
+                    DateTime sentDateTime = eveNotification.SentDate.ToLocalTime();
+                    item.Text = $"{sentDateTime:ddd} {sentDateTime:G}";
                     break;
                 default:
                     throw new NotImplementedException();

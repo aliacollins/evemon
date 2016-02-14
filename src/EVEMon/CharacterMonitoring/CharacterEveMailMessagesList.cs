@@ -579,8 +579,8 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = eveMailMessage.Title;
                     break;
                 case EveMailMessageColumn.SentDate:
-                    item.Text = String.Format(CultureConstants.DefaultCulture,
-                                              "{0:ddd} {0:G}", eveMailMessage.SentDate.ToLocalTime());
+                    DateTime sentDateTime = eveMailMessage.SentDate.ToLocalTime();
+                    item.Text = $"{sentDateTime:ddd} {sentDateTime:G}";
                     break;
                 case EveMailMessageColumn.ToCharacters:
                     item.Text = string.Join(", ", eveMailMessage.ToCharacters);
@@ -643,9 +643,10 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailOpen,
-                                                     message.MessageID))));
+            Util.OpenURL(
+                new Uri(
+                    $"{NetworkConstants.EVEGateBase}" +
+                    $"{String.Format(NetworkConstants.EVEGateMailOpen, message.MessageID)}"));
         }
 
         /// <summary>
@@ -655,9 +656,10 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReply,
-                                                     message.MessageID))));
+            Util.OpenURL(
+                new Uri(
+                    $"{NetworkConstants.EVEGateBase}" +
+                    $"{String.Format(NetworkConstants.EVEGateMailReply, message.MessageID)}"));
         }
 
         /// <summary>
@@ -667,9 +669,10 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailReplyAll,
-                                                     message.MessageID))));
+            Util.OpenURL(
+                new Uri(
+                    $"{NetworkConstants.EVEGateBase}" +
+                    $"{String.Format(NetworkConstants.EVEGateMailReplyAll, message.MessageID)}"));
         }
 
         /// <summary>
@@ -679,9 +682,10 @@ namespace EVEMon.CharacterMonitoring
         {
             ListViewItem item = lvMailMessages.SelectedItems[0];
             EveMailMessage message = (EveMailMessage)item.Tag;
-            Util.OpenURL(new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}", NetworkConstants.EVEGateBase,
-                                       String.Format(CultureConstants.InvariantCulture, NetworkConstants.EVEGateMailForward,
-                                                     message.MessageID))));
+            Util.OpenURL(
+                new Uri(
+                    $"{NetworkConstants.EVEGateBase}" +
+                    $"{String.Format(NetworkConstants.EVEGateMailForward, message.MessageID)}"));
         }
 
         /// <summary>

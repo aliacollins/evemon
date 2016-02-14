@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Windows.Forms;
 using System.Xml.XPath;
 using EVEMon.Common;
-using EVEMon.Common.Constants;
 using EVEMon.Common.Controls;
 using EVEMon.Common.Enumerations.CCPAPI;
 using EVEMon.Common.Helpers;
@@ -206,7 +205,7 @@ namespace EVEMon.ApiTester
             ErrorProvider.SetError(UrlLabel, errorText);
 
             UrlLabel.Text = url != m_defaultUri
-                ? String.Format(CultureConstants.InvariantCulture, "URL: {0}", url.AbsoluteUri)
+                ? $"URL: {url.AbsoluteUri}"
                 : String.Empty;
 
             // Show the xml document using the webbrowser control
@@ -428,11 +427,12 @@ namespace EVEMon.ApiTester
 
             if (String.IsNullOrEmpty(textbox.Text))
             {
-                string errorText = String.Format(CultureConstants.DefaultCulture, "{0} can not be blank.",
-                                                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterID) ||
-                                                 APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.OwnerID)
-                                                     ? "Names"
-                                                     : "IDs");
+                string text =
+                    APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.CharacterID) ||
+                    APIMethodComboBox.SelectedItem.Equals(CCPAPIGenericMethods.OwnerID)
+                        ? "Names"
+                        : "IDs";
+                string errorText = $"{text} can not be blank.";
                 ErrorProvider.SetError(textbox, errorText);
                 e.Cancel = true;
                 return;

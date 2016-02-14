@@ -169,9 +169,7 @@ namespace EVEMon.CharacterMonitoring
                 lbContacts.Items.Clear();
                 foreach (IGrouping<ContactGroup, Contact> group in groups)
                 {
-                    string groupHeaderText = String.Format(CultureConstants.DefaultCulture, "{0} ({1})",
-                                                           group.Key.GetDescription(),
-                                                           group.Count());
+                    string groupHeaderText = $"{@group.Key.GetDescription()} ({@group.Count()})";
                     lbContacts.Items.Add(groupHeaderText);
 
                     // Add items in the group when it's not collapsed
@@ -279,13 +277,13 @@ namespace EVEMon.CharacterMonitoring
                 string agentLocationText = agentStation != null
                                                ? agentStation.Name
                                                : agent.Station.Name;
-                string agentLevelDivisionText = String.Format(CultureConstants.DefaultCulture, "( {0} - {1} )",
-                                                              agent.AgentType != AgentType.BasicAgent &&
-                                                              agent.AgentType != AgentType.ResearchAgent
-                                                                  ? agent.AgentType.GetDescription()
-                                                                  : String.Format(CultureConstants.DefaultCulture, "Level {0}",
-                                                                                  Skill.GetRomanFromInt(agent.Level)),
-                                                              agent.Division);
+
+                string agentLevelText = agent.AgentType != AgentType.BasicAgent &&
+                              agent.AgentType != AgentType.ResearchAgent
+                    ? agent.AgentType.GetDescription()
+                    : $"Level {Skill.GetRomanFromInt(agent.Level)}";
+
+                string agentLevelDivisionText = $"( {agentLevelText} - {agent.Division} )";
 
                 Size agentLocationTextSize = TextRenderer.MeasureText(g, agentLocationText, m_contactsFont, Size.Empty, Format);
                 Size agentLevelDivisionTextSize = TextRenderer.MeasureText(g, agentLevelDivisionText, m_contactsFont, Size.Empty,
@@ -313,8 +311,7 @@ namespace EVEMon.CharacterMonitoring
                 if (Settings.UI.SafeForWork)
                 {
                     // Texts
-                    string contactStandingStatusText = String.Format(CultureConstants.DefaultCulture, "({0})",
-                                                                     Standing.Status(contact.Standing));
+                    string contactStandingStatusText = $"({Standing.Status(contact.Standing)})";
 
                     // Measure texts
                     Size contactStandingStatusTextSize = TextRenderer.MeasureText(g, contactStandingStatusText, m_contactsFont,

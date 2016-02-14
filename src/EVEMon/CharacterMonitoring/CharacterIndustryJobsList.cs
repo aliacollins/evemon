@@ -684,8 +684,7 @@ namespace EVEMon.CharacterMonitoring
                     item.Text = job.InstalledItem.MarketGroup.CategoryPath;
                     break;
                 case IndustryJobColumn.OutputItem:
-                    item.Text = String.Format(CultureConstants.DefaultCulture, "{0} Unit{1} of {2}", GetUnitCount(job),
-                        GetUnitCount(job) > 1 ? "s" : String.Empty, job.OutputItem.Name);
+                    item.Text = $"{GetUnitCount(job)} Unit{(GetUnitCount(job) > 1 ? "s" : String.Empty)} of {job.OutputItem.Name}";
                     break;
                 case IndustryJobColumn.OutputItemType:
                     item.Text = job.OutputItem.MarketGroup.CategoryPath;
@@ -1123,14 +1122,11 @@ namespace EVEMon.CharacterMonitoring
             Int64 remainingResearchingJobs = maxResearchingJobs - m_activeResearchJobsIssuedForCharacterCount -
                                            m_activeResearchJobsIssuedForCorporationCount;
 
-            string manufJobsRemainingText = String.Format(CultureConstants.DefaultCulture,
-                                                          "Manufacturing Jobs Remaining: {0} out of {1} max",
-                                                          remainingManufacturingJobs, maxManufacturingJobs);
-            string researchJobsRemainingText = String.Format(CultureConstants.DefaultCulture,
-                                                             "Researching Jobs Remaining: {0} out of {1} max",
-                                                             remainingResearchingJobs, maxResearchingJobs);
-            industryExpPanelControl.HeaderText = String.Format(CultureConstants.DefaultCulture, "{0}{2,5}{1}",
-                                                               manufJobsRemainingText, researchJobsRemainingText, String.Empty);
+            string manufJobsRemainingText =
+                $"Manufacturing Jobs Remaining: {remainingManufacturingJobs} out of {maxManufacturingJobs} max";
+            string researchJobsRemainingText =
+                $"Researching Jobs Remaining: {remainingResearchingJobs} out of {maxResearchingJobs} max";
+            industryExpPanelControl.HeaderText = $"{manufJobsRemainingText}{String.Empty,5}{researchJobsRemainingText}";
         }
 
         /// <summary>
@@ -1139,30 +1135,22 @@ namespace EVEMon.CharacterMonitoring
         private void UpdatePanelInfo()
         {
             // Basic label text
-            m_lblActiveManufacturingJobs.Text = String.Format(CultureConstants.DefaultCulture, "Active Manufacturing Jobs: {0}",
-                                                              m_activeManufJobsIssuedForCharacterCount +
-                                                              m_activeManufJobsIssuedForCorporationCount);
-            m_lblActiveResearchingJobs.Text = String.Format(CultureConstants.DefaultCulture, "Active Researching Jobs: {0}",
-                                                            m_activeResearchJobsIssuedForCharacterCount +
-                                                            m_activeResearchJobsIssuedForCorporationCount);
-            m_lblRemoteManufacturingRange.Text = String.Format(CultureConstants.DefaultCulture,
-                                                               "Remote Manufacturing Range: limited to {0}",
-                                                               StaticGeography.GetRange(m_remoteManufacturingRange));
-            m_lblRemoteResearchingRange.Text = String.Format(CultureConstants.DefaultCulture,
-                                                             "Remote Researching Range: limited to {0}",
-                                                             StaticGeography.GetRange(m_remoteResearchingRange));
+            m_lblActiveManufacturingJobs.Text =
+                $"Active Manufacturing Jobs: {m_activeManufJobsIssuedForCharacterCount + m_activeManufJobsIssuedForCorporationCount}";
+            m_lblActiveResearchingJobs.Text =
+                $"Active Researching Jobs: {m_activeResearchJobsIssuedForCharacterCount + m_activeResearchJobsIssuedForCorporationCount}";
+            m_lblRemoteManufacturingRange.Text =
+                $"Remote Manufacturing Range: limited to {StaticGeography.GetRange(m_remoteManufacturingRange)}";
+            m_lblRemoteResearchingRange.Text =
+                $"Remote Researching Range: limited to {StaticGeography.GetRange(m_remoteResearchingRange)}";
 
             if (HasActiveCorporationIssuedJobs)
             {
                 // Supplemental label text
-                m_lblActiveCharManufacturingJobs.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0}",
-                                                                      m_activeManufJobsIssuedForCharacterCount);
-                m_lblActiveCorpManufacturingJobs.Text = String.Format(CultureConstants.DefaultCulture, "Corporation Issued: {0}",
-                                                                      m_activeManufJobsIssuedForCorporationCount);
-                m_lblActiveCharResearchingJobs.Text = String.Format(CultureConstants.DefaultCulture, "Character Issued: {0}",
-                                                                    m_activeResearchJobsIssuedForCharacterCount);
-                m_lblActiveCorpResearchingJobs.Text = String.Format(CultureConstants.DefaultCulture, "Corporation Issued: {0}",
-                                                                    m_activeResearchJobsIssuedForCorporationCount);
+                m_lblActiveCharManufacturingJobs.Text = $"Character Issued: {m_activeManufJobsIssuedForCharacterCount}";
+                m_lblActiveCorpManufacturingJobs.Text = $"Corporation Issued: {m_activeManufJobsIssuedForCorporationCount}";
+                m_lblActiveCharResearchingJobs.Text = $"Character Issued: {m_activeResearchJobsIssuedForCharacterCount}";
+                m_lblActiveCorpResearchingJobs.Text = $"Corporation Issued: {m_activeResearchJobsIssuedForCorporationCount}";
             }
 
             // Update label position

@@ -28,10 +28,10 @@ namespace EVEMon.ApiCredentialsManagement
         private void CreateBasicAPIKeyLinkLabel_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}{2}", NetworkConstants.EVECommunityBase,
-                    NetworkConstants.APICredentialsBase,
-                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsPredefined,
-                        (int)CCPAPIMethodsEnum.BasicCharacterFeatures))));
+                new Uri(
+                    $"{NetworkConstants.EVECommunityBase}" +
+                    $"{NetworkConstants.APICredentialsBase}" +
+                    $"{String.Format(NetworkConstants.APICredentialsPredefined, (int)CCPAPIMethodsEnum.BasicCharacterFeatures)}"));
         }
 
         /// <summary>
@@ -43,10 +43,10 @@ namespace EVEMon.ApiCredentialsManagement
             System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
             Util.OpenURL(
-                new Uri(String.Format(CultureConstants.InvariantCulture, "{0}{1}{2}", NetworkConstants.EVECommunityBase,
-                    NetworkConstants.APICredentialsBase,
-                    String.Format(CultureConstants.InvariantCulture, NetworkConstants.APICredentialsPredefined,
-                        (int)CCPAPIMethodsEnum.AllCharacterFeatures))));
+                new Uri(
+                    $"{NetworkConstants.EVECommunityBase}" +
+                    $"{NetworkConstants.APICredentialsBase}" +
+                    $"{String.Format(NetworkConstants.APICredentialsPredefined, (int)CCPAPIMethodsEnum.AllCharacterFeatures)}"));
         }
     }
 }
