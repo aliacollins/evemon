@@ -876,7 +876,6 @@
     <Compile Include="Attributes\ForcedOnStartupAttribute.cs" />
     <Compile Include="Attributes\HeaderAttribute.cs" />
     <Compile Include="Attributes\Internals\NotifyPropertyChanged.Subs.cs" />
-    <Compile Include="Attributes\NotifyPropertyChanged.cs" />
     <Compile Include="Models\BaseCharacter.cs" />
     <Compile Include="Models\BasePlan.cs" />
     <Compile Include="Models\CharacterAttribute.cs" />
