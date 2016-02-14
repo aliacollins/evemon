@@ -18,9 +18,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string Format(double value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
-        {
-            return Format(Convert.ToDecimal(value), format, truncated, culture);
-        }
+            => Format(Convert.ToDecimal(value), format, truncated, culture);
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
@@ -31,9 +29,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string Format(int value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
-        {
-            return Format(Convert.ToDecimal(value), format, truncated, culture);
-        }
+            => Format(Convert.ToDecimal(value), format, truncated, culture);
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
@@ -44,9 +40,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string Format(long value, AbbreviationFormat format, bool truncated = true, CultureInfo culture = null)
-        {
-            return Format(Convert.ToDecimal(value), format, truncated, culture);
-        }
+            => Format(Convert.ToDecimal(value), format, truncated, culture);
 
         /// <summary>
         /// Formats the given value into an abbreviated format string.
@@ -69,7 +63,9 @@ namespace EVEMon.Common.Helpers
                 if (abs >= 1E6M)
                     return Format(" Millions", value / 1E6M, truncated, culture);
 
-                return abs >= 1E3M ? Format(" Thousands", value / 1E3M, truncated, culture) : Format(String.Empty, value, truncated, culture);
+                return abs >= 1E3M
+                    ? Format(" Thousands", value / 1E3M, truncated, culture)
+                    : Format(String.Empty, value, truncated, culture);
             }
 
             if (abs >= 1E9M)

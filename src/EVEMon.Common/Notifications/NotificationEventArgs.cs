@@ -107,9 +107,6 @@ namespace EVEMon.Common.Notifications
         /// Gets the description for this notification.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Description;
-        }
+        public override string ToString() => Description;
     }
 }

@@ -30,9 +30,6 @@ namespace EVEMon.Common.Models
         /// Gets the name of the corporation.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
     }
 }

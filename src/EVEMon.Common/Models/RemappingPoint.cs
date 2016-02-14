@@ -156,7 +156,7 @@ namespace EVEMon.Common.Models
         /// <param name="newScratchpad"></param>
         /// <returns></returns>
         public static string GetStringForAttribute(EveAttribute attrib, CharacterScratchpad oldScratchpad,
-                                                   CharacterScratchpad newScratchpad)
+            CharacterScratchpad newScratchpad)
         {
             if (oldScratchpad == null)
                 throw new ArgumentNullException("oldScratchpad");
@@ -170,20 +170,17 @@ namespace EVEMon.Common.Models
                 return newScratchpad[attrib].ToString("%N (0) = %e = (%B + %r + %i)");
 
             return newScratchpad[attrib].ToString(bonusDifference > 0
-                                                      ? String.Format(CultureConstants.DefaultCulture,
-                                                                      "%N (+{0}) = %e = (%B + %r + %i)", bonusDifference)
-                                                      : String.Format(CultureConstants.DefaultCulture,
-                                                                      "%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
+                ? String.Format(CultureConstants.DefaultCulture,
+                    "%N (+{0}) = %e = (%B + %r + %i)", bonusDifference)
+                : String.Format(CultureConstants.DefaultCulture,
+                    "%N ({0}) = %e = (%B + %r + %i)", bonusDifference));
         }
 
         /// <summary>
         /// Gets a hash code from the GUID.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return Guid.GetHashCode();
-        }
+        public override int GetHashCode() => Guid.GetHashCode();
 
         /// <summary>
         /// Clones the remapping point.
@@ -202,18 +199,15 @@ namespace EVEMon.Common.Models
         /// Creates a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal SerializableRemappingPoint Export()
+        internal SerializableRemappingPoint Export() => new SerializableRemappingPoint
         {
-            return new SerializableRemappingPoint
-                       {
-                           Intelligence = m_attributes[(int)EveAttribute.Intelligence],
-                           Perception = m_attributes[(int)EveAttribute.Perception],
-                           Willpower = m_attributes[(int)EveAttribute.Willpower],
-                           Charisma = m_attributes[(int)EveAttribute.Charisma],
-                           Memory = m_attributes[(int)EveAttribute.Memory],
-                           Description = m_description,
-                           Status = Status
-                       };
-        }
+            Intelligence = m_attributes[(int)EveAttribute.Intelligence],
+            Perception = m_attributes[(int)EveAttribute.Perception],
+            Willpower = m_attributes[(int)EveAttribute.Willpower],
+            Charisma = m_attributes[(int)EveAttribute.Charisma],
+            Memory = m_attributes[(int)EveAttribute.Memory],
+            Description = m_description,
+            Status = Status
+        };
     }
 }

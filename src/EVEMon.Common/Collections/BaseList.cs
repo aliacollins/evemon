@@ -101,10 +101,7 @@ namespace EVEMon.Common.Collections
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public int IndexOf(T item)
-        {
-            return m_items.IndexOf(item);
-        }
+        public int IndexOf(T item) => m_items.IndexOf(item);
 
         /// <summary>
         /// Inserts the given item at the provided index
@@ -218,10 +215,7 @@ namespace EVEMon.Common.Collections
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Contains(T item)
-        {
-            return m_items.Contains(item);
-        }
+        public bool Contains(T item) => m_items.Contains(item);
 
         /// <summary>
         /// Copy the list to the given array.
@@ -252,15 +246,9 @@ namespace EVEMon.Common.Collections
         /// Gets an enumerator over this list.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<T> GetEnumerator()
-        {
-            return m_items.GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => m_items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return m_items.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => m_items.GetEnumerator();
 
         #endregion
     }

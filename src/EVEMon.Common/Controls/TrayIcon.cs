@@ -392,19 +392,13 @@ namespace EVEMon.Common.Controls
             /// Gets the mouse state over.
             /// </summary>
             /// <returns></returns>
-            private MouseStateOver GetMouseStateOver()
-            {
-                return new MouseStateOver(TrayIcon, MousePosition);
-            }
+            private MouseStateOver GetMouseStateOver() => new MouseStateOver(TrayIcon, MousePosition);
 
             /// <summary>
             /// Gets the mouse state hovering.
             /// </summary>
             /// <returns></returns>
-            private MouseStateHovering GetMouseStateHovering()
-            {
-                return new MouseStateHovering(TrayIcon, MousePosition);
-            }
+            private MouseStateHovering GetMouseStateHovering() => new MouseStateHovering(TrayIcon, MousePosition);
         }
 
         #endregion

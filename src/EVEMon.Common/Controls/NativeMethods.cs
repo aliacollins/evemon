@@ -25,7 +25,7 @@ namespace EVEMon.Common.Controls
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetWindowPos(IntPtr hWnd, Int32 hWndInsertAfter, Int32 x, Int32 y,
-                                                Int32 cx, Int32 cy, uint uFlags);
+            Int32 cx, Int32 cy, uint uFlags);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -34,7 +34,7 @@ namespace EVEMon.Common.Controls
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth,
-                                          int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, uint dwRop);
+            int nHeight, IntPtr hObjSource, int nXSrc, int nYSrc, uint dwRop);
 
         /// <summary>
         /// Show the given form on topmost without activating it.
@@ -72,7 +72,7 @@ namespace EVEMon.Common.Controls
                 throw new ArgumentNullException("src");
 
             BitBlt(dest.GetHdc(), destClip.Left, destClip.Top, destClip.Width, destClip.Height,
-                   src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
+                src.GetHdc(), bltFrom.X, bltFrom.Y, SRCCOPY);
         }
 
 
@@ -211,7 +211,7 @@ namespace EVEMon.Common.Controls
         }
 
         public const int ABM_QUERYPOS = 0x00000002,
-                         ABM_GETTASKBARPOS = 5;
+            ABM_GETTASKBARPOS = 5;
 
         public const int ABE_LEFT = 0;
         public const int ABE_TOP = 1;
@@ -305,10 +305,7 @@ namespace EVEMon.Common.Controls
             /// Handy method for converting to a System.Drawing.Rectangle
             /// </summary>
             /// <returns></returns>
-            public Rectangle ToRectangle()
-            {
-                return Rectangle.FromLTRB(Left, Top, Right, Bottom);
-            }
+            public Rectangle ToRectangle() => Rectangle.FromLTRB(Left, Top, Right, Bottom);
 
             /// <summary>
             /// Froms the rectangle.
@@ -316,29 +313,20 @@ namespace EVEMon.Common.Controls
             /// <param name="rectangle">The rectangle.</param>
             /// <returns></returns>
             public static RECT FromRectangle(Rectangle rectangle)
-            {
-                return new RECT(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
-            }
+                => new RECT(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
 
             public override int GetHashCode()
-            {
-                return Left ^ ((Top << 13) | (Top >> 0x13))
-                       ^ ((Width << 0x1a) | (Width >> 6))
-                       ^ ((Height << 7) | (Height >> 0x19));
-            }
+                => Left ^ ((Top << 13) | (Top >> 0x13))
+                   ^ ((Width << 0x1a) | (Width >> 6))
+                   ^ ((Height << 7) | (Height >> 0x19));
 
 
             #region Operator overloads
 
             public static implicit operator Rectangle(RECT rect)
-            {
-                return Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
-            }
+                => Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
-            public static implicit operator RECT(Rectangle rect)
-            {
-                return new RECT(rect.Left, rect.Top, rect.Right, rect.Bottom);
-            }
+            public static implicit operator RECT(Rectangle rect) => new RECT(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
             #endregion
         }

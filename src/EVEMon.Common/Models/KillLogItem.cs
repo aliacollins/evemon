@@ -248,10 +248,7 @@ namespace EVEMon.Common.Models
         /// Gets the default image.
         /// </summary>
         /// <returns></returns>
-        private static Bitmap GetDefaultImage()
-        {
-            return new Bitmap(24, 24);
-        }
+        private static Bitmap GetDefaultImage() => new Bitmap(24, 24);
 
         /// <summary>
         /// Gets the image URL.
@@ -270,6 +267,5 @@ namespace EVEMon.Common.Models
         }
 
         #endregion
-
     }
 }

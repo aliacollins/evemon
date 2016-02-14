@@ -54,10 +54,7 @@ namespace EVEMon.Common.SettingsObjects
         /// that is produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> method
         /// and consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/> method.
         /// </returns>
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public XmlSchema GetSchema() => null;
 
         /// <summary>
         /// Generates an object from its XML representation.
@@ -155,11 +152,11 @@ namespace EVEMon.Common.SettingsObjects
             // Check that each type we use is serializable
             if (!keyType.IsSerializable)
                 throw new ArgumentException(String.Format(CultureConstants.DefaultCulture, "{0} is not serializable",
-                                                          keyType), keyType.ToString());
+                    keyType), keyType.ToString());
 
             if (!valueType.IsSerializable)
                 throw new ArgumentException(String.Format(CultureConstants.DefaultCulture, "{0} is not serializable",
-                                                          valueType), valueType.ToString());
+                    valueType), valueType.ToString());
 
             // Serialize each dictionary element as Xml
             foreach (TKey key in Keys)
@@ -169,8 +166,8 @@ namespace EVEMon.Common.SettingsObjects
 
                 // Get the name specified in XmlRootAttribute or use the type name
                 string elementName = rootAttribute != null && !String.IsNullOrWhiteSpace(rootAttribute.ElementName)
-                                         ? rootAttribute.ElementName
-                                         : TypeName;
+                    ? rootAttribute.ElementName
+                    : TypeName;
 
                 // Write as XmlElement
                 writer.WriteStartElement(elementName);
@@ -212,8 +209,8 @@ namespace EVEMon.Common.SettingsObjects
 
                         // Special condition for Boolean type (because "Boolean.ToString()" returns "True"/"False")
                         string propertyValueString = propertyValue is Boolean
-                                                         ? XmlConvert.ToString((bool)propertyValue)
-                                                         : propertyValue.ToString();
+                            ? XmlConvert.ToString((bool)propertyValue)
+                            : propertyValue.ToString();
 
                         writer.WriteAttributeString(attributeName, propertyValueString);
                     }

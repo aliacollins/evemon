@@ -66,10 +66,7 @@ namespace EVEMon.Common.Models.Collections
         /// Exports the contract bids to a serialization object for the settings file.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SerializableContractBid> Export()
-        {
-            return Items.Select(contractBid => contractBid.Export());
-        }
+        internal IEnumerable<SerializableContractBid> Export() => Items.Select(contractBid => contractBid.Export());
 
         #endregion
     }

@@ -30,15 +30,9 @@ namespace EVEMon.Common.Collections
 
         #region Enumerators
 
-        IEnumerator<TItem> IEnumerable<TItem>.GetEnumerator()
-        {
-            return Items.Values.GetEnumerator();
-        }
+        IEnumerator<TItem> IEnumerable<TItem>.GetEnumerator() => Items.Values.GetEnumerator();
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return Items.Values.GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => Items.Values.GetEnumerator();
 
         #endregion
 

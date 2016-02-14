@@ -47,20 +47,14 @@ namespace EVEMon.Common.Scheduling
         /// </summary>
         /// <param name="timeToTest"></param>
         /// <returns></returns>
-        public bool Silent(DateTime timeToTest)
-        {
-            return (Options & ScheduleEntryOptions.Quiet) != 0 && Clash(timeToTest);
-        }
+        public bool Silent(DateTime timeToTest) => (Options & ScheduleEntryOptions.Quiet) != 0 && Clash(timeToTest);
 
         /// <summary>
         /// Checks whether this entry intersects with a blocking option with the given time while its options.
         /// </summary>
         /// <param name="timeToTest"></param>
         /// <returns></returns>
-        public bool Blocking(DateTime timeToTest)
-        {
-            return (Options & ScheduleEntryOptions.Blocking) != 0 && Clash(timeToTest);
-        }
+        public bool Blocking(DateTime timeToTest) => (Options & ScheduleEntryOptions.Blocking) != 0 && Clash(timeToTest);
 
         /// <summary>
         /// Checks whether the given time is contained within this entry
@@ -101,9 +95,6 @@ namespace EVEMon.Common.Scheduling
         /// Gets the entry's title.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Title;
-        }
+        public override string ToString() => Title;
     }
 }

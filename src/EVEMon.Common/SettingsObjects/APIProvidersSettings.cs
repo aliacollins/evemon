@@ -29,9 +29,6 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        public override string ToString()
-        {
-            return CurrentProviderName;
-        }
+        public override string ToString() => CurrentProviderName;
     }
 }

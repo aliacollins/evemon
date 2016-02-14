@@ -49,10 +49,7 @@ namespace EVEMon.Common.Service
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        internal static string GetIDToName(long id)
-        {
-            return GetIDToName(id.ToString(CultureConstants.InvariantCulture));
-        }
+        internal static string GetIDToName(long id) => GetIDToName(id.ToString(CultureConstants.InvariantCulture));
 
         /// <summary>
         /// Gets the owner name from its ID.

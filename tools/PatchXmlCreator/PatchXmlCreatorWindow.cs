@@ -140,11 +140,8 @@ namespace EVEMon.PatchXmlCreator
         /// </summary>
         /// <returns></returns>
         private static string GetAssemblyVersion()
-        {
-            return
-                AssemblyName.GetAssemblyName(Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename))
-                    .Version.ToString();
-        }
+            => AssemblyName.GetAssemblyName(Path.Combine(Helper.GetSourceFilesDirectory, Helper.EVEMonExecFilename))
+                .Version.ToString();
 
         /// <summary>
         /// Gets EVEMon's assembly version without revision.
@@ -152,9 +149,7 @@ namespace EVEMon.PatchXmlCreator
         /// <param name="version">The version.</param>
         /// <returns></returns>
         private static string GetAssemblyVersionWithoutRevision(string version)
-        {
-            return version.Remove(version.LastIndexOf(".", StringComparison.Ordinal));
-        }
+            => version.Remove(version.LastIndexOf(".", StringComparison.Ordinal));
 
         /// <summary>
         /// Updates the info in the release section.
@@ -647,7 +642,8 @@ namespace EVEMon.PatchXmlCreator
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar));
             string expansionName = url.Remove(0, url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
             url = url.Remove(url.LastIndexOf(Path.AltDirectorySeparatorChar) + 1);
-            int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName, StringComparison.Ordinal) + expansionName.Length + 1;
+            int expansionNameLastIndex = patch.Datafiles[0].Message.IndexOf(expansionName, StringComparison.Ordinal) +
+                                         expansionName.Length + 1;
             string message = patch.Datafiles[0].Message.Remove(0, expansionNameLastIndex);
             string version = message.Remove(message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1,
                 message.Length - (message.IndexOf("(", StringComparison.OrdinalIgnoreCase) - 1));

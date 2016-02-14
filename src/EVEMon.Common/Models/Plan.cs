@@ -78,10 +78,10 @@ namespace EVEMon.Common.Models
                 if (entry.Skill == null)
                 {
                     InvalidPlanEntry invalidEntry = new InvalidPlanEntry
-                                                        {
-                                                            SkillName = serialEntry.SkillName,
-                                                            PlannedLevel = serialEntry.Level
-                                                        };
+                    {
+                        SkillName = serialEntry.SkillName,
+                        PlannedLevel = serialEntry.Level
+                    };
 
                     invalidEntries.Add(invalidEntry);
                     continue;
@@ -95,11 +95,11 @@ namespace EVEMon.Common.Models
 
             invalidEntries.AddRange(serial.InvalidEntries.Select(
                 serialInvalidEntry => new InvalidPlanEntry
-                                          {
-                                              SkillName = serialInvalidEntry.SkillName,
-                                              PlannedLevel = serialInvalidEntry.PlannedLevel,
-                                              Acknowledged = serialInvalidEntry.Acknowledged
-                                          }));
+                {
+                    SkillName = serialInvalidEntry.SkillName,
+                    PlannedLevel = serialInvalidEntry.PlannedLevel,
+                    Acknowledged = serialInvalidEntry.Acknowledged
+                }));
 
             m_invalidEntries = invalidEntries.ToArray();
 
@@ -116,11 +116,11 @@ namespace EVEMon.Common.Models
         {
             // Create serialization object
             SerializablePlan serial = new SerializablePlan
-                                          {
-                                              Name = m_name,
-                                              Description = m_description,
-                                              SortingPreferences = SortingPreferences
-                                          };
+            {
+                Name = m_name,
+                Description = m_description,
+                SortingPreferences = SortingPreferences
+            };
 
             Character character = Character as Character;
             if (character != null)
@@ -130,14 +130,14 @@ namespace EVEMon.Common.Models
             foreach (PlanEntry entry in Items)
             {
                 SerializablePlanEntry serialEntry = new SerializablePlanEntry
-                                                        {
-                                                            ID = entry.Skill.ID,
-                                                            SkillName = entry.Skill.Name,
-                                                            Level = entry.Level,
-                                                            Type = entry.Type,
-                                                            Notes = entry.Notes,
-                                                            Priority = entry.Priority
-                                                        };
+                {
+                    ID = entry.Skill.ID,
+                    SkillName = entry.Skill.Name,
+                    Level = entry.Level,
+                    Type = entry.Type,
+                    Notes = entry.Notes,
+                    Priority = entry.Priority
+                };
 
                 // Add groups
                 foreach (string group in entry.PlanGroups)
@@ -154,11 +154,11 @@ namespace EVEMon.Common.Models
 
             foreach (SerializableInvalidPlanEntry serialEntry in m_invalidEntries.Select(
                 entry => new SerializableInvalidPlanEntry
-                             {
-                                 SkillName = entry.SkillName,
-                                 PlannedLevel = entry.PlannedLevel,
-                                 Acknowledged = entry.Acknowledged
-                             }))
+                {
+                    SkillName = entry.SkillName,
+                    PlannedLevel = entry.PlannedLevel,
+                    Acknowledged = entry.Acknowledged
+                }))
             {
                 serial.InvalidEntries.Add(serialEntry);
             }
@@ -213,18 +213,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// List of invalid entries in the plan.
         /// </summary>
-        public IEnumerable<InvalidPlanEntry> InvalidEntries
-        {
-            get { return m_invalidEntries.Where(x => !x.Acknowledged); }
-        }
+        public IEnumerable<InvalidPlanEntry> InvalidEntries => m_invalidEntries.Where(x => !x.Acknowledged);
 
         /// <summary>
         /// Does the plan contain one or more invalid entries.
         /// </summary>
-        public bool ContainsInvalidEntries
-        {
-            get { return m_invalidEntries.Any(x => !x.Acknowledged); }
-        }
+        public bool ContainsInvalidEntries => m_invalidEntries.Any(x => !x.Acknowledged);
 
         /// <summary>
         /// Gets sorting preferences for this plan.
@@ -248,11 +242,11 @@ namespace EVEMon.Common.Models
 
             return new DisposableWithCallback(
                 () =>
-                    {
-                        if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0 &&
-                            m_change != PlanChange.None)
-                            OnChanged(m_change);
-                    });
+                {
+                    if (Interlocked.Decrement(ref m_changedNotificationSuppressions) == 0 &&
+                        m_change != PlanChange.None)
+                        OnChanged(m_change);
+                });
         }
 
         /// <summary>
@@ -447,7 +441,7 @@ namespace EVEMon.Common.Models
 
             // Create the operation
             return new PlanOperation(this, skillsToRemove.Cast<ISkillLevel>(), allEntriesToRemove,
-                                     removablePrerequisites);
+                removablePrerequisites);
         }
 
         #endregion
@@ -481,7 +475,7 @@ namespace EVEMon.Common.Models
             }
 
             return TryAddSet(skillsToAdd, String.Format(CultureConstants.DefaultCulture, "{0} {1}",
-                    certificateLevel.Certificate.Name, certificateLevel));
+                certificateLevel.Certificate.Name, certificateLevel));
         }
 
         #endregion
@@ -593,10 +587,7 @@ namespace EVEMon.Common.Models
         /// Creates a clone.
         /// </summary>
         /// <returns></returns>
-        public Plan Clone()
-        {
-            return Clone(Character);
-        }
+        public Plan Clone() => Clone(Character);
 
         #endregion
 
@@ -681,7 +672,7 @@ namespace EVEMon.Common.Models
             /// <param name="allEntriesToAdd">All entries to add.</param>
             /// <param name="lowestPrerequisitesPriority">The lowest prerequisites priority.</param>
             public PlanOperation(Plan plan, IEnumerable<ISkillLevel> skillsToAdd, IEnumerable<PlanEntry> allEntriesToAdd,
-                                 int lowestPrerequisitesPriority)
+                int lowestPrerequisitesPriority)
             {
                 m_plan = plan;
                 m_type = !skillsToAdd.Any() ? PlanOperations.None : PlanOperations.Addition;
@@ -699,8 +690,8 @@ namespace EVEMon.Common.Models
             /// <param name="allEntriesToRemove">All entries to remove.</param>
             /// <param name="removablePrerequisites">The removable prerequisites.</param>
             public PlanOperation(Plan plan, IEnumerable<ISkillLevel> skillsToRemove,
-                                 IEnumerable<PlanEntry> allEntriesToRemove,
-                                 IEnumerable<PlanEntry> removablePrerequisites)
+                IEnumerable<PlanEntry> allEntriesToRemove,
+                IEnumerable<PlanEntry> removablePrerequisites)
             {
                 m_plan = plan;
                 m_type = !skillsToRemove.Any() ? PlanOperations.None : PlanOperations.Suppression;
@@ -838,17 +829,17 @@ namespace EVEMon.Common.Models
                             // If existing entry's notes is null, we replace it
                             // else we catch the distinct notes                           
                             existingEntry.Notes = existingEntry.Notes != null
-                                                      ? String.Join(", ", existingEntry.Notes.Split(',')
-                                                                                      .Select(note => note.Trim())
-                                                                                      .Distinct())
-                                                      : String.Empty;
+                                ? String.Join(", ", existingEntry.Notes.Split(',')
+                                    .Select(note => note.Trim())
+                                    .Distinct())
+                                : String.Empty;
 
                             // If entry's notes is null, we replace it
                             entry.Notes = entry.Notes ?? String.Empty;
 
                             // We concatenate the notes
                             foreach (String note in entry.Notes.Split(',').Select(note => note.Trim()).Distinct()
-                                                                   .Where(note => !existingEntry.Notes.Contains(note)))
+                                .Where(note => !existingEntry.Notes.Contains(note)))
                             {
                                 existingEntry.Notes = String.Join(", ", existingEntry.Notes, note);
                             }

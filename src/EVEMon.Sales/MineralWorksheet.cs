@@ -39,9 +39,7 @@ namespace EVEMon.Sales
         /// </summary>
         /// <value>The tiles.</value>
         private IEnumerable<MineralTile> Tiles
-        {
-            get { return MineralTileTableLayout.Controls.OfType<MineralTile>().Select(control => control); }
-        }
+            => MineralTileTableLayout.Controls.OfType<MineralTile>().Select(control => control);
 
         /// <summary>
         /// Sets a value indicating whether [prices locked].

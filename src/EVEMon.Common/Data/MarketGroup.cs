@@ -140,10 +140,7 @@ namespace EVEMon.Common.Data
         /// Gets the name of this item.
         /// </summary>
         /// <returns>Name of the Market Group.</returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

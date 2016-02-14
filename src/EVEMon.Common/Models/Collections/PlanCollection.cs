@@ -26,10 +26,7 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Plan this[string name]
-        {
-            get { return Items.FirstOrDefault(plan => plan.Name == name); }
-        }
+        public Plan this[string name] => Items.FirstOrDefault(plan => plan.Name == name);
 
         /// <summary>
         /// When we add a plan, we may have to clone it (and maybe changed the character it is bound to) and connects it.

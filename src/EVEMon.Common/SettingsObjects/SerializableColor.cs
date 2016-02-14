@@ -9,20 +9,44 @@ namespace EVEMon.Common.SettingsObjects
     /// </summary>
     public sealed class SerializableColor
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializableColor"/> class.
+        /// </summary>
         public SerializableColor()
         {
             A = 255;
         }
 
+        /// <summary>
+        /// Gets or sets a.
+        /// </summary>
+        /// <value>
+        /// a.
+        /// </value>
         [XmlAttribute]
         public byte A { get; set; }
 
+        /// <summary>
+        /// </summary>
+        /// <value>
+        /// The r.
+        /// </value>
         [XmlAttribute]
         public byte R { get; set; }
 
+        /// <summary>
+        /// </summary>
+        /// <value>
+        /// The g.
+        /// </value>
         [XmlAttribute]
         public byte G { get; set; }
 
+        /// <summary>
+        /// </summary>
+        /// <value>
+        /// The b.
+        /// </value>
         [XmlAttribute]
         public byte B { get; set; }
 
@@ -50,9 +74,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns>The result of the conversion.</returns>
         /// <remarks>Do not make the conversion operators implicit, there is a bug with XML serialization</remarks>
         public static explicit operator SerializableColor(Color src)
-        {
-            return new SerializableColor { A = src.A, R = src.R, G = src.G, B = src.B };
-        }
+            => new SerializableColor { A = src.A, R = src.R, G = src.G, B = src.B };
 
         #endregion
     }

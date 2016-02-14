@@ -82,10 +82,7 @@ namespace EVEMon.Common.Factories
         /// </summary>
         /// <returns></returns>
         public static TForm ShowUnique<TForm>()
-            where TForm : Form
-        {
-            return ShowUnique(Create<TForm>);
-        }
+            where TForm : Form => ShowUnique(Create<TForm>);
 
         /// <summary>
         /// Show the unique window.
@@ -130,12 +127,12 @@ namespace EVEMon.Common.Factories
                 // Create the window and subscribe to its closing for cleanup
                 s_uniqueWindow = creation();
                 s_uniqueWindow.FormClosing += (FormClosingEventHandler)((sender, args) =>
-                                                                            {
-                                                                                lock (s_syncLock)
-                                                                                {
-                                                                                    s_uniqueWindow = null;
-                                                                                }
-                                                                            });
+                {
+                    lock (s_syncLock)
+                    {
+                        s_uniqueWindow = null;
+                    }
+                });
 
                 // Show and return
                 s_uniqueWindow.Show();
@@ -190,10 +187,7 @@ namespace EVEMon.Common.Factories
         /// <returns></returns>
         public static TForm ShowByTag<TForm, TTag>(TTag tag)
             where TForm : Form
-            where TTag : class
-        {
-            return ShowByTag(tag, Create<TForm, TTag>);
-        }
+            where TTag : class => ShowByTag(tag, Create<TForm, TTag>);
 
         /// <summary>
         /// Show the window with the given tag.

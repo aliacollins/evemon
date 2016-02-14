@@ -63,7 +63,8 @@ namespace EVEMon.Common.Models
             format = format.Replace("%B", EveConstants.CharacterBaseAttributePoints.ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%b", Base.ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%i", ImplantBonus.ToString(CultureConstants.DefaultCulture));
-            format = format.Replace("%r", (Base - EveConstants.CharacterBaseAttributePoints).ToString(CultureConstants.DefaultCulture));
+            format = format.Replace("%r",
+                (Base - EveConstants.CharacterBaseAttributePoints).ToString(CultureConstants.DefaultCulture));
             format = format.Replace("%e", EffectiveValue.ToString("0", CultureConstants.DefaultCulture));
             return format;
         }
@@ -73,8 +74,6 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <returns></returns>
         public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} : {1}", m_attrib, EffectiveValue);
-        }
+            => String.Format(CultureConstants.DefaultCulture, "{0} : {1}", m_attrib, EffectiveValue);
     }
 }

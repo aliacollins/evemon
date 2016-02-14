@@ -58,7 +58,7 @@ namespace EVEMon.Common.Collections.Global
 
             // Dispose
             character.Dispose();
-            
+
             if (notify)
                 EveMonClient.OnCharacterCollectionChanged();
         }
@@ -141,7 +141,7 @@ namespace EVEMon.Common.Collections.Global
             {
                 character.Dispose();
             }
-            
+
             // Import the characters, their identies, etc
             Items.Clear();
             foreach (SerializableSettingsCharacter serialCharacter in serial)
@@ -172,10 +172,7 @@ namespace EVEMon.Common.Collections.Global
         /// Exports this collection to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SerializableSettingsCharacter> Export()
-        {
-            return Items.Select(character => character.Export());
-        }
+        internal IEnumerable<SerializableSettingsCharacter> Export() => Items.Select(character => character.Export());
 
         /// <summary>
         /// imports the plans from serialization objects.

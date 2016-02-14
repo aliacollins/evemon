@@ -205,12 +205,12 @@ namespace EVEMon.Common.Models
         internal SerializableQueuedSkill Export()
         {
             SerializableQueuedSkill skill = new SerializableQueuedSkill
-                                                {
-                                                    ID = Skill == null ? 0 : Skill.ID,
-                                                    Level = Level,
-                                                    StartSP = StartSP,
-                                                    EndSP = EndSP,
-                                                };
+            {
+                ID = Skill == null ? 0 : Skill.ID,
+                Level = Level,
+                StartSP = StartSP,
+                EndSP = EndSP,
+            };
 
             // CCP's API indicates paused training skill with missing start and end times
             // Mimicing them is ugly but necessary
@@ -228,8 +228,6 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <returns></returns>
         public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", SkillName, Skill.GetRomanFromInt(Level));
-        }
+            => String.Format(CultureConstants.DefaultCulture, "{0} {1}", SkillName, Skill.GetRomanFromInt(Level));
     }
 }

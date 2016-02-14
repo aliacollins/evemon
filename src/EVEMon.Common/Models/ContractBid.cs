@@ -88,17 +88,14 @@ namespace EVEMon.Common.Models
         /// Exports the given object to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal SerializableContractBid Export()
+        internal SerializableContractBid Export() => new SerializableContractBid
         {
-            return new SerializableContractBid
-                       {
-                           BidID = ID,
-                           ContractID = ContractID,
-                           Bidder = Bidder,
-                           BidDate = BidDate,
-                           Amount = Amount
-                       };
-        }
+            BidID = ID,
+            ContractID = ContractID,
+            Bidder = Bidder,
+            BidDate = BidDate,
+            Amount = Amount
+        };
 
         #endregion
     }

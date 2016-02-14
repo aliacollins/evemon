@@ -23,7 +23,8 @@ namespace EVEMon.Common.Data
         /// <param name="skill">The skill.</param>
         /// <param name="cert">The cert.</param>
         /// <param name="character">The character.</param>
-        public CertificateLevel(KeyValuePair<CertificateGrade, List<StaticSkillLevel>> skill, Certificate cert, Character character)
+        public CertificateLevel(KeyValuePair<CertificateGrade, List<StaticSkillLevel>> skill, Certificate cert,
+            Character character)
         {
             m_character = character;
 
@@ -125,8 +126,6 @@ namespace EVEMon.Common.Data
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt((int)Level));
-        }
+            => String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt((int)Level));
     }
 }

@@ -149,9 +149,7 @@ namespace EVEMon.Common.Data
         /// <param name="training"></param>
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(SkillLevel training)
-        {
-            return training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
-        }
+            => training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
 
         #endregion
 
@@ -163,9 +161,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <returns>Skill Name and Level</returns>
         public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Models.Skill.GetRomanFromInt(Level));
-        }
+            => String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Models.Skill.GetRomanFromInt(Level));
 
         #endregion
     }

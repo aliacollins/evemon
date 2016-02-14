@@ -206,7 +206,8 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the job installation full celestrial path.
         /// </summary>
-        public string FullLocation => String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, Installation);
+        public string FullLocation
+            => String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, Installation);
 
         /// <summary>
         /// Gets for which the job was issued.
@@ -223,21 +224,15 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool MatchesWith(SerializableJobListItem src)
-        {
-            return src.JobID == ID;
-        }
+        private bool MatchesWith(SerializableJobListItem src) => src.JobID == ID;
 
         /// <summary>
         /// Checks whether the given API object has been modified.
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool IsModified(SerializableJobListItem src)
-        {
-            return src.EndDate != EndDate
-                   || src.PauseDate != PauseDate;
-        }
+        private bool IsModified(SerializableJobListItem src) => src.EndDate != EndDate
+                                                                || src.PauseDate != PauseDate;
 
         #endregion
 
@@ -247,19 +242,16 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Exports the given object to a serialization object.
         /// </summary>
-        internal SerializableJob Export()
+        internal SerializableJob Export() => new SerializableJob
         {
-            return new SerializableJob
-                       {
-                           JobID = ID,
-                           State = State,                         
-                           StartDate = StartDate,
-                           EndDate = EndDate,
-                           PauseDate = PauseDate,
-                           IssuedFor = IssuedFor,
-                           LastStateChange = LastStateChange,
-                       };
-        }
+            JobID = ID,
+            State = State,
+            StartDate = StartDate,
+            EndDate = EndDate,
+            PauseDate = PauseDate,
+            IssuedFor = IssuedFor,
+            LastStateChange = LastStateChange,
+        };
 
         /// <summary>
         /// Try to update this job with a serialization object from the API.
@@ -279,7 +271,7 @@ namespace EVEMon.Common.Models
 
             // Update infos (if ID is the same it may have been modified)
             if (IsModified(src))
-            {                
+            {
                 // Job is from a serialized object, so populate the missing info
                 if (InstalledItem == null)
                     PopulateJobInfo(src);
@@ -395,12 +387,12 @@ namespace EVEMon.Common.Models
             // and installation will be assigned manually based on activity
             // otherwise assigns the station name
             return station == null
-                       ? Activity == BlueprintActivity.Manufacturing
-                             ? "POS - Assembly Array"
-                             : "POS - Laboratory"
-                       : outpost != null
-                             ? outpost.FullName
-                             : station.Name;
+                ? Activity == BlueprintActivity.Manufacturing
+                    ? "POS - Assembly Array"
+                    : "POS - Laboratory"
+                : outpost != null
+                    ? outpost.FullName
+                    : station.Name;
         }
 
         /// <summary>
@@ -415,19 +407,19 @@ namespace EVEMon.Common.Models
 
             switch ((CCPJobCompletedStatus)src.Status)
             {
-                    // Active States
+                // Active States
                 case CCPJobCompletedStatus.Installed:
                     return JobState.Active;
-                    // Canceled States
+                // Canceled States
                 case CCPJobCompletedStatus.Canceled:
                     return JobState.Canceled;
-                    // Failed States
+                // Failed States
                 case CCPJobCompletedStatus.Reverted:
                     return JobState.Failed;
-                    // Delivered States
+                // Delivered States
                 case CCPJobCompletedStatus.Delivered:
                     return JobState.Delivered;
-                    // Paused States
+                // Paused States
                 case CCPJobCompletedStatus.Paused:
                     return JobState.Paused;
                 default:

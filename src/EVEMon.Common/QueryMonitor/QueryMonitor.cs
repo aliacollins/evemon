@@ -334,10 +334,7 @@ namespace EVEMon.Common.QueryMonitor
         /// Gets the bound method header.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Method.HasHeader() ? Method.GetHeader() : Method.ToString();
-        }
+        public override string ToString() => Method.HasHeader() ? Method.GetHeader() : Method.ToString();
 
         #endregion
 

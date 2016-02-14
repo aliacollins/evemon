@@ -15,19 +15,15 @@ namespace EVEMon.Common.Extensions
         /// <param name="timestamp">The timestamp.</param>
         /// <returns></returns>
         public static DateTime WinTimeStampToDateTime(this long timestamp)
-        {
-            return new DateTime(1601, 1, 1).AddTicks(timestamp);
-        }
+            => new DateTime(1601, 1, 1).AddTicks(timestamp);
 
         /// <summary>
         /// Converts a Unix timestamp to <see cref="System.DateTime"/>.
         /// </summary>
         /// <param name="timestamp">The timestamp.</param>
         /// <returns></returns>
-        public static DateTime UnixTimeStampToDateTime(this long timestamp)
-        {
-            return new DateTime(1970, 1, 1).AddSeconds(timestamp);
-        }
+        public static DateTime UnixTimeStampToDateTime(this long timestamp) 
+            => new DateTime(1970, 1, 1).AddSeconds(timestamp);
 
         /// <summary>
         /// Converts a DateTime to the API date/time string.
@@ -35,13 +31,11 @@ namespace EVEMon.Common.Extensions
         /// <param name="time">The time.</param>
         /// <param name="format">The format.</param>
         /// <returns></returns>
+        // 'time' can be any predefined or custom format
         public static string DateTimeToTimeString(this DateTime time, string format = null)
-        {
-            // 'time' can be any predefined or custom format
-            return !String.IsNullOrWhiteSpace(format)
+            => !String.IsNullOrWhiteSpace(format)
                 ? time.ToString(format, CultureConstants.InvariantCulture.DateTimeFormat)
                 : time.ToString("u", CultureConstants.InvariantCulture.DateTimeFormat).TrimEnd('Z');
-        }
 
         /// <summary>
         /// Converts an API date/time string to a UTC DateTime.
@@ -52,9 +46,10 @@ namespace EVEMon.Common.Extensions
         {
             // timeUTC = yyyy-MM-dd HH:mm:ss
             DateTime dt;
-            return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture.DateTimeFormat, DateTimeStyles.AdjustToUniversal, out dt)
-                       ? dt
-                       : default(DateTime);
+            return DateTime.TryParse(timeUTC, CultureConstants.DefaultCulture.DateTimeFormat, DateTimeStyles.AdjustToUniversal,
+                out dt)
+                ? dt
+                : default(DateTime);
         }
 
         /// <summary>
@@ -65,11 +60,9 @@ namespace EVEMon.Common.Extensions
         /// <remarks>
         /// String Format: yyyy.MM.dd HH:mm:ss
         /// </remarks>
+        // time can be any predefined or custom format
         public static string DateTimeToDotFormattedString(this DateTime time)
-        {
-            // time can be any predefined or custom format
-            return time.DateTimeToTimeString().Replace("-", ".");
-        }
+            => time.DateTimeToTimeString().Replace("-", ".");
 
         /// <summary>
         /// Returns a string representation for the time left to the given date, using the following formats : 
@@ -89,7 +82,7 @@ namespace EVEMon.Common.Extensions
             StringBuilder sb = new StringBuilder();
             if (t <= now)
                 return "Done";
-            
+
             // Fixing the small chance that the method could cross over the
             // second boundary, and have an inconsistent result.
             double factor = Math.Pow(10, 7);

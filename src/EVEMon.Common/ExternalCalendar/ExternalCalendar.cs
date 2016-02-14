@@ -28,9 +28,7 @@ namespace EVEMon.Common.ExternalCalendar
         /// <param name="path">The path.</param>
         /// <returns></returns>
         public static bool OutlookCalendarExist(bool useDefaultCalendar, string path)
-        {
-            return OutlookCalendarEvent.OutlookCalendarExist(useDefaultCalendar, path);
-        }
+            => OutlookCalendarEvent.OutlookCalendarExist(useDefaultCalendar, path);
 
         /// <summary>
         /// Process the selected character skill queue into the selected calendar.

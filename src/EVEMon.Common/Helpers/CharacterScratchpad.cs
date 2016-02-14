@@ -147,10 +147,7 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <param name="attribute"></param>
         /// <returns></returns>
-        protected override ICharacterAttribute GetAttribute(EveAttribute attribute)
-        {
-            return m_attributes[(int)attribute];
-        }
+        protected override ICharacterAttribute GetAttribute(EveAttribute attribute) => m_attributes[(int)attribute];
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
@@ -343,10 +340,7 @@ namespace EVEMon.Common.Helpers
         /// Returns a clone of this scratchpad.
         /// </summary>
         /// <returns></returns>
-        public CharacterScratchpad Clone()
-        {
-            return new CharacterScratchpad(this);
-        }
+        public CharacterScratchpad Clone() => new CharacterScratchpad(this);
 
         /// <summary>
         /// Resets the scratchpad from the <see cref="BaseCharacter"/> it was built upon.

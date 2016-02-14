@@ -16,7 +16,9 @@ namespace EVEMon.Common.Data
         private readonly FastList<StaticSkillLevel> m_prerequisites;
         private static Item s_unknownItem;
 
+
         #region Constructors
+
         /// <summary>
         /// Constructor for an unknown static skill.
         /// </summary>
@@ -314,8 +316,8 @@ namespace EVEMon.Common.Data
                 return stripMe;
 
             return stripMe.EndsWith(tail, StringComparison.CurrentCulture)
-                       ? stripMe.Remove(stripMe.Length - tail.Length)
-                       : stripMe;
+                ? stripMe.Remove(stripMe.Length - tail.Length)
+                : stripMe;
         }
 
         /// <summary>
@@ -366,10 +368,7 @@ namespace EVEMon.Common.Data
         /// Gets a string representation of this object
         /// </summary>
         /// <returns>Name of the Item</returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

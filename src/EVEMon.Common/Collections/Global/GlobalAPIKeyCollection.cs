@@ -17,10 +17,7 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="id">The id to look for</param>
         /// <returns>The searched API key when found; null otherwise.</returns>
-        public APIKey this[long id]
-        {
-            get { return Items.Values.FirstOrDefault(apiKey => apiKey.ID == id); }
-        }
+        public APIKey this[long id] => Items.Values.FirstOrDefault(apiKey => apiKey.ID == id);
 
         #endregion
 
@@ -104,10 +101,7 @@ namespace EVEMon.Common.Collections.Global
         /// Exports the data to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SerializableAPIKey> Export()
-        {
-            return Items.Values.Select(apikey => apikey.Export());
-        }
+        internal IEnumerable<SerializableAPIKey> Export() => Items.Values.Select(apikey => apikey.Export());
 
         #endregion
     }

@@ -75,8 +75,8 @@ namespace EVEMon.Common.Data
                 throw new ArgumentNullException("other");
 
             return Region != other.Region
-                       ? Region.CompareTo(other.Region)
-                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+                ? Region.CompareTo(other.Region)
+                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion
@@ -88,10 +88,7 @@ namespace EVEMon.Common.Data
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

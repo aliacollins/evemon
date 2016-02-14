@@ -159,8 +159,8 @@ namespace EVEMon.Common.Data
 
 
         #endregion
-        
-        
+
+
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
@@ -168,8 +168,6 @@ namespace EVEMon.Common.Data
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt(Level));
-        }
+            => String.Format(CultureConstants.DefaultCulture, "Level {0}", Skill.GetRomanFromInt(Level));
     }
 }

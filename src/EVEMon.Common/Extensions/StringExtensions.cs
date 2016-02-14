@@ -18,10 +18,8 @@ namespace EVEMon.Common.Extensions
         /// <param name="text">The text.</param>
         /// <returns></returns>
         public static string RemoveProjectLocalPath(this string text)
-        {
-            return Regex.Replace(text, @"[a-zA-Z]+:\\.*\\(?=EVEMon)",
+            => Regex.Replace(text, @"[a-zA-Z]+:\\.*\\(?=EVEMon)",
                 String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        }
 
         /// <summary>
         ///Converts a string that has been HTML-encoded for HTTP transmission into a decoded string.        
@@ -44,13 +42,10 @@ namespace EVEMon.Common.Extensions
         /// <returns>
         /// 	<c>true</c> if the string is of a valid email format; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsValidEmail(this string strIn)
-        {
-            // Return true if strIn is in valid e-mail format
-            return Regex.IsMatch(strIn,
-                @"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))" +
-                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,6}))$");
-        }
+        // Return true if strIn is in valid e-mail format
+        public static bool IsValidEmail(this string strIn) => Regex.IsMatch(strIn,
+            @"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))" +
+            @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,6}))$");
 
         /// <summary>
         /// Converts new lines to break lines.
@@ -124,7 +119,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="text">The text.</param>
         /// <returns></returns>
         public static string ConvertUpperCamelCaseToString(this string text)
-            => Regex.Replace(text.Trim(), "\\B([A-Z])", " $1", RegexOptions.Compiled | RegexOptions.CultureInvariant );
+            => Regex.Replace(text.Trim(), "\\B([A-Z])", " $1", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Determines whether the source contains the specified text.
@@ -180,9 +175,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string ToNumericString(this int number, int decimals, CultureInfo culture = null)
-        {
-            return ToNumericString(Convert.ToInt64(number), decimals, culture);
-        }
+            => ToNumericString(Convert.ToInt64(number), decimals, culture);
 
         /// <summary>
         /// Convert an Single number to string with the specified decimals.
@@ -192,9 +185,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string ToNumericString(this float number, int decimals, CultureInfo culture = null)
-        {
-            return ToNumericString(Convert.ToDouble(number), decimals, culture);
-        }
+            => ToNumericString(Convert.ToDouble(number), decimals, culture);
 
         /// <summary>
         /// Convert an Decimal number to string with the specified decimals.
@@ -204,9 +195,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="culture">The culture.</param>
         /// <returns></returns>
         public static string ToNumericString(this decimal number, int decimals, CultureInfo culture = null)
-        {
-            return ToNumericString(Convert.ToDouble(number), decimals, culture);
-        }
+            => ToNumericString(Convert.ToDouble(number), decimals, culture);
 
         /// <summary>
         /// Convert an Int64 number to string with the specified decimals.

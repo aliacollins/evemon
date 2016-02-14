@@ -81,10 +81,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// All level.
         /// </value>
-        public IEnumerable<CertificateLevel> AllLevel
-        {
-            get { return m_levels.Where(level => level != null); }
-        }
+        public IEnumerable<CertificateLevel> AllLevel => m_levels.Where(level => level != null);
 
         /// <summary>
         /// Gets all the top-level prerequisite skills.
@@ -101,19 +98,13 @@ namespace EVEMon.Common.Data
         /// Gets the lowest untrained certificate level.
         /// Null if all certificates have been trained.
         /// </summary>
-        public CertificateLevel LowestUntrainedLevel
-        {
-            get { return AllLevel.FirstOrDefault(cert => !cert.IsTrained); }
-        }
+        public CertificateLevel LowestUntrainedLevel => AllLevel.FirstOrDefault(cert => !cert.IsTrained);
 
         /// <summary>
         /// Gets the highest trained certificate level.
         /// Null if no certificates have been trained.
         /// </summary>
-        public CertificateLevel HighestTrainedLevel
-        {
-            get { return AllLevel.LastOrDefault(cert => cert.IsTrained); }
-        }
+        public CertificateLevel HighestTrainedLevel => AllLevel.LastOrDefault(cert => cert.IsTrained);
 
         #endregion
 
@@ -125,19 +116,14 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="level">The level.</param>
         /// <returns></returns>
-        public CertificateLevel GetCertificateLevel(int level)
-        {
-            return AllLevel.FirstOrDefault(x => (int)x.Level == level);
-        }
+        public CertificateLevel GetCertificateLevel(int level) => AllLevel.FirstOrDefault(x => (int)x.Level == level);
 
         /// <summary>
         /// Try to update the certificate's status. 
         /// </summary>
         /// <returns>True if the status was updated, false otherwise.</returns>
         internal bool TryUpdateCertificateStatus()
-        {
-            return AllLevel.Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
-        }
+            => AllLevel.Aggregate(false, (current, level) => current | level.TryUpdateCertificateStatus());
 
         #endregion
 
@@ -146,19 +132,13 @@ namespace EVEMon.Common.Data
         /// Gets a string representation of this certificate.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return StaticData.ToString();
-        }
+        public override string ToString() => StaticData.ToString();
 
         /// <summary>
         /// Implicit conversion operator to the static equivalent of this certificate.
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
-        public static implicit operator StaticCertificate(Certificate cert)
-        {
-            return cert == null ? null : cert.StaticData;
-        }
+        public static implicit operator StaticCertificate(Certificate cert) => cert == null ? null : cert.StaticData;
     }
 }

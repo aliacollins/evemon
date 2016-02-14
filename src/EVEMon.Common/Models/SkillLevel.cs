@@ -48,10 +48,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="level"></param>
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
-        public bool IsDependentOf(ISkillLevel level)
-        {
-            return new StaticSkillLevel(this).IsDependentOf(level);
-        }
+        public bool IsDependentOf(ISkillLevel level) => new StaticSkillLevel(this).IsDependentOf(level);
 
         /// <summary>
         /// Gets all the dependencies, in a way matching the hierarchical order and without redudancies.
@@ -63,11 +60,8 @@ namespace EVEMon.Common.Models
         /// Gets a hash code for this object.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            // 3 bits for level (0 - 5) and the rest are for the skill name
-            return (Skill.Name.GetHashCode() << 3) | Convert.ToInt32(Level);
-        }
+        // 3 bits for level (0 - 5) and the rest are for the skill name
+        public override int GetHashCode() => (Skill.Name.GetHashCode() << 3) | Convert.ToInt32(Level);
 
         /// <summary>
         /// Implicitly converts from a non-static training.
@@ -75,17 +69,13 @@ namespace EVEMon.Common.Models
         /// <param name="training"></param>
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(SkillLevel training)
-        {
-            return training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
-        }
+            => training == null ? null : new StaticSkillLevel(training.Skill.StaticData, training.Level);
 
         /// <summary>
         /// Gets a string representation of this prerequisite.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Skill.GetRomanFromInt(Level));
-        }
+            => String.Format(CultureConstants.DefaultCulture, "{0} {1}", Skill.Name, Skill.GetRomanFromInt(Level));
     }
 }

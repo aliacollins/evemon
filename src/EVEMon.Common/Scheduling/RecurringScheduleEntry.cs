@@ -163,7 +163,7 @@ namespace EVEMon.Common.Scheduling
             }
 
             return new ScheduleDateTimeRange(day.Add(TimeSpan.FromSeconds(StartTimeInSeconds)),
-                                             day.Add(TimeSpan.FromSeconds(EndTimeInSeconds)));
+                day.Add(TimeSpan.FromSeconds(EndTimeInSeconds)));
         }
 
         /// <summary>
@@ -237,21 +237,19 @@ namespace EVEMon.Common.Scheduling
         /// </summary>
         /// <returns></returns>
         internal override SerializableScheduleEntry Export()
-        {
-            return new SerializableRecurringScheduleEntry
-                       {
-                           StartDate = StartDate,
-                           EndDate = EndDate,
-                           Title = Title,
-                           Options = Options,
-                           DayOfMonth = DayOfMonth,
-                           DayOfWeek = DayOfWeek,
-                           StartTimeInSeconds = StartTimeInSeconds,
-                           EndTimeInSeconds = EndTimeInSeconds,
-                           Frequency = Frequency,
-                           WeeksPeriod = WeeksPeriod,
-                           OverflowResolution = OverflowResolution
-                       };
-        }
+            => new SerializableRecurringScheduleEntry
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                Title = Title,
+                Options = Options,
+                DayOfMonth = DayOfMonth,
+                DayOfWeek = DayOfWeek,
+                StartTimeInSeconds = StartTimeInSeconds,
+                EndTimeInSeconds = EndTimeInSeconds,
+                Frequency = Frequency,
+                WeeksPeriod = WeeksPeriod,
+                OverflowResolution = OverflowResolution
+            };
     }
 }

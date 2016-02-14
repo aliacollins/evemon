@@ -26,10 +26,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public MasteryShip GetMasteryShipByID(int id)
-        {
-            return Items.ContainsKey(id) ? Items[id] : null;
-        }
+        public MasteryShip GetMasteryShipByID(int id) => Items.ContainsKey(id) ? Items[id] : null;
 
         /// <summary>
         /// Initializes each item in the collection.

@@ -20,10 +20,8 @@ namespace EVEMon.Common.Extensions
         /// <param name="character"></param>
         /// <returns></returns>
         public static IEnumerable<SkillLevel> ToCharacter(this IEnumerable<StaticSkillLevel> src, Character character)
-        {
-            return src.Where(item => item.Skill != null).Select(
+            => src.Where(item => item.Skill != null).Select(
                 item => new SkillLevel(character.Skills[item.Skill.ID], item.Level));
-        }
 
         /// <summary>
         /// Gets all the dependencies, in a way matching the hierachical order and without redudancies.
@@ -58,7 +56,7 @@ namespace EVEMon.Common.Extensions
         /// <param name="item">The item.</param>
         /// <param name="includeRoots">if set to <c>true</c> [include roots].</param>
         internal static void FillDependencies(this IList<StaticSkillLevel> list, SkillLevelSet<StaticSkillLevel> set,
-                                              StaticSkillLevel item, bool includeRoots)
+            StaticSkillLevel item, bool includeRoots)
         {
             StaticSkill skill = item.Skill;
 

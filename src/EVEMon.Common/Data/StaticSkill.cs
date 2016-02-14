@@ -19,6 +19,7 @@ namespace EVEMon.Common.Data
     {
         private static StaticSkill s_unknownStaticSkill;
 
+
         #region Constructors
 
         /// <summary>
@@ -230,7 +231,7 @@ namespace EVEMon.Common.Data
                     return 256000 * Rank;
                 default:
                     throw new NotImplementedException(String.Format(CultureConstants.DefaultCulture,
-                                                                    "One of our devs messed up. Skill level was {0} ?!", level));
+                        "One of our devs messed up. Skill level was {0} ?!", level));
             }
         }
 
@@ -274,10 +275,7 @@ namespace EVEMon.Common.Data
         /// Gets a string representation for this skill (the name of the skill).
         /// </summary>
         /// <returns>Name of the Static Skill.</returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

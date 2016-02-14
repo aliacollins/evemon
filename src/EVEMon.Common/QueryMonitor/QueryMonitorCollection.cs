@@ -15,26 +15,17 @@ namespace EVEMon.Common.QueryMonitor
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public IQueryMonitor this[Enum method]
-        {
-            get { return Items.FirstOrDefault(monitor => method.Equals(monitor.Method)); }
-        }
+        public IQueryMonitor this[Enum method] => Items.FirstOrDefault(monitor => method.Equals(monitor.Method));
 
         /// <summary>
         /// Gets true when at least one of the monitors encountered an error on last try.
         /// </summary>
-        public bool HasErrors
-        {
-            get { return Items.Any(x => x.LastResult != null && x.LastResult.HasError); }
-        }
+        public bool HasErrors => Items.Any(x => x.LastResult != null && x.LastResult.HasError);
 
         /// <summary>
         /// Gets the last API results gotten.
         /// </summary>
-        public IEnumerable<IAPIResult> APIResults
-        {
-            get { return Items.Where(x => x.LastResult != null).Select(x => x.LastResult); }
-        }
+        public IEnumerable<IAPIResult> APIResults => Items.Where(x => x.LastResult != null).Select(x => x.LastResult);
 
         /// <summary>
         /// Gets the list of monitors to be auto-updated, ordered from the earliest to the latest.

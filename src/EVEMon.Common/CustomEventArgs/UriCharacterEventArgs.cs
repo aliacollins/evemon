@@ -118,14 +118,12 @@ namespace EVEMon.Common.CustomEventArgs
         /// </summary>
         /// <param name="character">The character.</param>
         /// <returns></returns>
+        // Retrieve the identity and create one if needed
         private static CharacterIdentity GetIdentity(ISerializableCharacterIdentity character)
-        {
-            // Retrieve the identity and create one if needed
-            return EveMonClient.CharacterIdentities[character.ID] ??
-                   EveMonClient.CharacterIdentities.Add(character.ID, character.Name,
-                       character.CorporationID, character.CorporationName,
-                       character.AllianceID, character.AllianceName,
-                       character.FactionID, character.FactionName);
-        }
+            => EveMonClient.CharacterIdentities[character.ID] ??
+               EveMonClient.CharacterIdentities.Add(character.ID, character.Name,
+                   character.CorporationID, character.CorporationName,
+                   character.AllianceID, character.AllianceName,
+                   character.FactionID, character.FactionName);
     }
 }

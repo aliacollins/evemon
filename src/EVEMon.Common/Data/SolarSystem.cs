@@ -160,9 +160,7 @@ namespace EVEMon.Common.Data
         /// <param name="maxInclusiveNumberOfJumps">The maximum, inclusive, number of jumps from this system.</param>
         /// <returns></returns>
         public IEnumerable<SolarSystemRange> GetSystemsWithinRange(int maxInclusiveNumberOfJumps)
-        {
-            return SolarSystemRange.GetSystemRangesFrom(this, maxInclusiveNumberOfJumps);
-        }
+            => SolarSystemRange.GetSystemRangesFrom(this, maxInclusiveNumberOfJumps);
 
         /// <summary>
         /// Find the guessed shortest path using a A* (heuristic) algorithm.
@@ -175,10 +173,8 @@ namespace EVEMon.Common.Data
         /// The list of systems, beginning with this one and ending with the provided target.
         /// </returns>
         public IEnumerable<SolarSystem> GetFastestPathTo(SolarSystem target, PathSearchCriteria criteria,
-                                                         float minSecurityLevel = -1.0f, float maxSecurityLevel = 1.0f)
-        {
-            return PathFinder.FindBestPath(this, target, criteria, minSecurityLevel, maxSecurityLevel);
-        }
+            float minSecurityLevel = -1.0f, float maxSecurityLevel = 1.0f)
+            => PathFinder.FindBestPath(this, target, criteria, minSecurityLevel, maxSecurityLevel);
 
         /// <summary>
         /// Gets the systems which have a jumpgate connection with his one.
@@ -211,25 +207,19 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        # region Overridden Methods
+        #region Overridden Methods
 
         /// <summary>
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         /// <summary>
         /// Gets the ID of the object.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return ID;
-        }
+        public override int GetHashCode() => ID;
 
         #endregion
 
@@ -247,8 +237,8 @@ namespace EVEMon.Common.Data
                 throw new ArgumentNullException("other");
 
             return Constellation != other.Constellation
-                       ? Constellation.CompareTo(other.Constellation)
-                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+                ? Constellation.CompareTo(other.Constellation)
+                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion

@@ -27,7 +27,7 @@ namespace EVEMon.Common.Controls
         /// </summary>
         /// <param name="columns">The columns.</param>
         protected ColumnSelectWindow(IEnumerable<IColumnSettings> columns)
-            :this()
+            : this()
         {
             // Fill the columns list
             m_initialColumns.AddRange(columns.Select(x => (IColumnSettings)x.Clone()));
@@ -91,7 +91,7 @@ namespace EVEMon.Common.Controls
             // Revert changes
             m_columns.Clear();
             m_columns.AddRange(m_initialColumns);
-            
+
             DialogResult = DialogResult.Cancel;
             Close();
         }
@@ -119,10 +119,7 @@ namespace EVEMon.Common.Controls
             UpdateContent();
         }
 
-        protected virtual string GetHeader(int key)
-        {
-            return String.Empty;
-        }
+        protected virtual string GetHeader(int key) => String.Empty;
 
         protected virtual IEnumerable<int> AllKeys => Enumerable.Empty<int>();
 

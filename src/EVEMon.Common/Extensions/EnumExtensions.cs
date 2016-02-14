@@ -14,50 +14,35 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static bool HasForcedOnStartup(this Enum item)
-        {
-            return GetAttribute<ForcedOnStartupAttribute>(item) != null;
-        }
+        public static bool HasForcedOnStartup(this Enum item) => GetAttribute<ForcedOnStartupAttribute>(item) != null;
 
         /// <summary>
         /// Gets the description bound to the given enumeration member.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static string GetDescription(this Enum item)
-        {
-            return GetAttribute<DescriptionAttribute>(item).Description;
-        }
+        public static string GetDescription(this Enum item) => GetAttribute<DescriptionAttribute>(item).Description;
 
         /// <summary>
         /// Checks whether the given member has a header.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static bool HasHeader(this Enum item)
-        {
-            return GetAttribute<HeaderAttribute>(item) != null;
-        }
+        public static bool HasHeader(this Enum item) => GetAttribute<HeaderAttribute>(item) != null;
 
         /// <summary>
         /// Gets the header bound to the given enumeration member.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static string GetHeader(this Enum item)
-        {
-            return GetAttribute<HeaderAttribute>(item).Header;
-        }
+        public static string GetHeader(this Enum item) => GetAttribute<HeaderAttribute>(item).Header;
 
         /// <summary>
         /// Gets the period bound to the given enumeration member.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static UpdateAttribute GetUpdatePeriod(this Enum item)
-        {
-            return GetAttribute<UpdateAttribute>(item);
-        }
+        public static UpdateAttribute GetUpdatePeriod(this Enum item) => GetAttribute<UpdateAttribute>(item);
 
         /// <summary>
         /// Gets the attribute associated to the given enumeration item.
@@ -86,10 +71,7 @@ namespace EVEMon.Common.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> GetValues<T>()
-        {
-            return Enum.GetValues(typeof(T)).Cast<T>();
-        }
+        public static IEnumerable<T> GetValues<T>() => Enum.GetValues(typeof(T)).Cast<T>();
 
         /// <summary>
         /// Gets the values that are powers of two for this flag enum, excluding the one for zero.

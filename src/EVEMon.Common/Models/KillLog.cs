@@ -88,10 +88,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the final blow attacker.
         /// </summary>
-        public SerializableKillLogAttackersListItem FinalBlowAttacker
-        {
-            get { return Attackers.Single(x => x.FinalBlow); }
-        }
+        public SerializableKillLogAttackersListItem FinalBlowAttacker => Attackers.Single(x => x.FinalBlow);
 
         /// <summary>
         /// Gets or sets the group.
@@ -155,10 +152,7 @@ namespace EVEMon.Common.Models
         /// Gets the default image.
         /// </summary>
         /// <returns></returns>
-        private static Bitmap GetDefaultImage()
-        {
-            return new Bitmap(32, 32);
-        }
+        private static Bitmap GetDefaultImage() => new Bitmap(32, 32);
 
         /// <summary>
         /// Gets the image URL.

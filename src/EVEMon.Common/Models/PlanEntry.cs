@@ -170,8 +170,8 @@ namespace EVEMon.Common.Models
                     return "None";
 
                 return m_planGroups.Count == 1
-                           ? m_planGroups[0]
-                           : String.Format(CultureConstants.DefaultCulture, "Multiple ({0})", m_planGroups.Count);
+                    ? m_planGroups[0]
+                    : String.Format(CultureConstants.DefaultCulture, "Multiple ({0})", m_planGroups.Count);
             }
         }
 
@@ -213,10 +213,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="level"></param>
         /// <returns>True if the given item's skill is a prerequisite of this one or if it is a lower level of the same skill.</returns>
-        public bool IsDependentOf(ISkillLevel level)
-        {
-            return ((StaticSkillLevel)this).IsDependentOf(level);
-        }
+        public bool IsDependentOf(ISkillLevel level) => ((StaticSkillLevel)this).IsDependentOf(level);
 
 
         #region Computations done when UpdateTrainingTime is called
@@ -304,23 +301,18 @@ namespace EVEMon.Common.Models
         /// Gets a hash code from the level and skill ID.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            // After the switch to 64-bit integers this line was throwing a
-            // warning. GetHashCode can't possibly be unique for every object
-            // there is, additionally GetHashCode() should not be used for
-            // equality only grouping; or at least Google says so...
-            return m_skill.ID << 3 | Convert.ToInt32(m_level);
-        }
+        // After the switch to 64-bit integers this line was throwing a
+        // warning. GetHashCode can't possibly be unique for every object
+        // there is, additionally GetHashCode() should not be used for
+        // equality only grouping; or at least Google says so...
+        public override int GetHashCode() => m_skill.ID << 3 | Convert.ToInt32(m_level);
 
         /// <summary>
         /// Returns a string representation of entry - eases debugging.
         /// </summary>
         /// <returns>Hull Upgrades IV</returns>
         public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} {1}", m_skill.Name, Models.Skill.GetRomanFromInt(m_level));
-        }
+            => String.Format(CultureConstants.DefaultCulture, "{0} {1}", m_skill.Name, Models.Skill.GetRomanFromInt(m_level));
 
         /// <summary>
         /// Creates a clone of this entry for the given plan.
@@ -331,14 +323,14 @@ namespace EVEMon.Common.Models
         {
             // We need a skill for the plan's character
             PlanEntry clone = new PlanEntry(plan, m_skill, m_level)
-                                  {
-                                      m_entryType = m_entryType,
-                                      m_priority = m_priority,
-                                      m_notes = m_notes,
-                                      m_remapping = m_remapping != null ? m_remapping.Clone() : null,
-                                      OldTrainingTime = OldTrainingTime,
-                                      TrainingTime = TrainingTime
-                                  };
+            {
+                m_entryType = m_entryType,
+                m_priority = m_priority,
+                m_notes = m_notes,
+                m_remapping = m_remapping != null ? m_remapping.Clone() : null,
+                OldTrainingTime = OldTrainingTime,
+                TrainingTime = TrainingTime
+            };
             clone.m_planGroups.AddRange(m_planGroups);
 
             return clone;
@@ -350,8 +342,6 @@ namespace EVEMon.Common.Models
         /// <param name="entry"></param>
         /// <returns></returns>
         public static implicit operator StaticSkillLevel(PlanEntry entry)
-        {
-            return entry == null ? null : new StaticSkillLevel(entry.Skill, entry.Level);
-        }
+            => entry == null ? null : new StaticSkillLevel(entry.Skill, entry.Level);
     }
 }

@@ -63,16 +63,13 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        # region Overridden Methods
+        #region Overridden Methods
 
         /// <summary>
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

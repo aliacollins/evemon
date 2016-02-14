@@ -80,18 +80,12 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="skillName"></param>
         /// <returns></returns>
-        public bool Contains(string skillName)
-        {
-            return Items.ContainsKey(skillName);
-        }
+        public bool Contains(string skillName) => Items.ContainsKey(skillName);
 
         /// <summary>
         /// Gets the total number of SP in this group
         /// </summary>
-        public Int64 TotalSP
-        {
-            get { return Items.Values.Sum(gs => gs.SkillPoints); }
-        }
+        public Int64 TotalSP => Items.Values.Sum(gs => gs.SkillPoints);
 
         #endregion
     }

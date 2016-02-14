@@ -92,42 +92,33 @@ namespace EVEMon.Common.Models
         /// Core method on which everything else relies.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<Implant> Enumerate()
-        {
-            return m_values;
-        }
+        protected override IEnumerable<Implant> Enumerate() => m_values;
 
         /// <summary>
         /// Generates a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal SerializableSettingsImplantSet Export()
+        internal SerializableSettingsImplantSet Export() => new SerializableSettingsImplantSet
         {
-            return new SerializableSettingsImplantSet
-                       {
-                           Intelligence = Export(ImplantSlots.Intelligence),
-                           Perception = Export(ImplantSlots.Perception),
-                           Willpower = Export(ImplantSlots.Willpower),
-                           Charisma = Export(ImplantSlots.Charisma),
-                           Memory = Export(ImplantSlots.Memory),
-                           Slot6 = Export(ImplantSlots.Slot6),
-                           Slot7 = Export(ImplantSlots.Slot7),
-                           Slot8 = Export(ImplantSlots.Slot8),
-                           Slot9 = Export(ImplantSlots.Slot9),
-                           Slot10 = Export(ImplantSlots.Slot10),
-                           Name = m_name
-                       };
-        }
+            Intelligence = Export(ImplantSlots.Intelligence),
+            Perception = Export(ImplantSlots.Perception),
+            Willpower = Export(ImplantSlots.Willpower),
+            Charisma = Export(ImplantSlots.Charisma),
+            Memory = Export(ImplantSlots.Memory),
+            Slot6 = Export(ImplantSlots.Slot6),
+            Slot7 = Export(ImplantSlots.Slot7),
+            Slot8 = Export(ImplantSlots.Slot8),
+            Slot9 = Export(ImplantSlots.Slot9),
+            Slot10 = Export(ImplantSlots.Slot10),
+            Name = m_name
+        };
 
         /// <summary>
         /// Exports an implant as a serialization object.
         /// </summary>
         /// <param name="slot"></param>
         /// <returns></returns>
-        private string Export(ImplantSlots slot)
-        {
-            return m_values[(int)slot].Name;
-        }
+        private string Export(ImplantSlots slot) => m_values[(int)slot].Name;
 
         /// <summary>
         /// Imports data from a settings serialization object.

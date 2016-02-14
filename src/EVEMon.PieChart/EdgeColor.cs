@@ -55,13 +55,13 @@ namespace EVEMon.PieChart
             if (color.GetBrightness() > BrightnessThreshold)
             {
                 return colorType == EdgeColorType.Contrast
-                           ? EdgeColorType.DarkerThanSurface
-                           : EdgeColorType.DarkerDarkerThanSurface;
+                    ? EdgeColorType.DarkerThanSurface
+                    : EdgeColorType.DarkerDarkerThanSurface;
             }
 
             return colorType == EdgeColorType.Contrast
-                       ? EdgeColorType.LighterThanSurface
-                       : EdgeColorType.LighterLighterThanSurface;
+                ? EdgeColorType.LighterThanSurface
+                : EdgeColorType.LighterLighterThanSurface;
         }
 
         /// <summary>
@@ -70,9 +70,7 @@ namespace EVEMon.PieChart
         /// <param name="color">The color.</param>
         /// <returns></returns>
         private static Color GetFullContrastColor(Color color)
-        {
-            return color.GetBrightness() > BrightnessThreshold ? Color.Black : Color.White;
-        }
+            => color.GetBrightness() > BrightnessThreshold ? Color.Black : Color.White;
 
         private const float BrightnessThreshold = 0.4F;
     }

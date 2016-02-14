@@ -22,7 +22,7 @@ namespace EVEMon.Common.Data
             Category = category;
             StaticData = src;
             Certificate = new Certificate(character, src.Certificate, this);
-        }        
+        }
 
         /// <summary>
         /// Gets the static data associated with this object.
@@ -54,26 +54,19 @@ namespace EVEMon.Common.Data
         /// Null if all certificates have been trained.
         /// </summary>
         public CertificateLevel LowestUntrainedLevel
-        {
-            get { return Certificate.AllLevel.FirstOrDefault(level => !level.IsTrained); }
-        }
+            => Certificate.AllLevel.FirstOrDefault(level => !level.IsTrained);
 
         /// <summary>
         /// Gets the highest trained certificate level.
         /// May be null if no level has been trained.
         /// </summary>
         public CertificateLevel HighestTrainedLevel
-        {
-            get { return Certificate.AllLevel.LastOrDefault(level => level.IsTrained); }
-        }
+            => Certificate.AllLevel.LastOrDefault(level => level.IsTrained);
 
         /// <summary>
         /// Gets true if the provided character has completed this class.
         /// </summary>
-        public bool IsCompleted
-        {
-            get { return Certificate.AllLevel.All(certLevel => certLevel.IsTrained); }
-        }
+        public bool IsCompleted => Certificate.AllLevel.All(certLevel => certLevel.IsTrained);
 
         /// <summary>
         /// Gets true if the provided character can train to the next grade,
@@ -106,9 +99,6 @@ namespace EVEMon.Common.Data
         /// Gets the name of the class.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return StaticData.Name;
-        }
+        public override string ToString() => StaticData.Name;
     }
 }

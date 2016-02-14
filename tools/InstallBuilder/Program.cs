@@ -217,12 +217,10 @@ namespace EVEMon.InstallBuilder
         /// <param name="directory">The directory.</param>
         /// <returns></returns>
         private static string GetInstallbuilderDirectory(string directory)
-        {
-            return
-                Path.GetFullPath(Regex.Replace(SourceFilesDirectory, "Debug|Release",
-                                               Path.Combine("Installbuilder", directory),
-                                               RegexOptions.Compiled | RegexOptions.IgnoreCase));
-        }
+            => Path.GetFullPath(
+                Regex.Replace(SourceFilesDirectory, "Debug|Release",
+                    Path.Combine("Installbuilder", directory),
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase));
 
         /// <summary>
         /// Checks the configuration is Snapshot.
@@ -240,8 +238,8 @@ namespace EVEMon.InstallBuilder
         {
             s_nsisExe = FindMakeNsisExe();
             Console.WriteLine("NSIS : {0}", String.IsNullOrEmpty(s_nsisExe)
-                                                ? "Not Found - Installer will not be created."
-                                                : s_nsisExe);
+                ? "Not Found - Installer will not be created."
+                : s_nsisExe);
 
             Console.WriteLine();
 
@@ -323,7 +321,7 @@ namespace EVEMon.InstallBuilder
                     foreach (string file in filenames.Where(file => !file.Contains("vshost") && !file.Contains(".config")))
                     {
                         string entryName = String.Format(CultureInfo.InvariantCulture, "EVEMon\\{0}",
-                                                         file.Remove(0, SourceFilesDirectory.Length));
+                            file.Remove(0, SourceFilesDirectory.Length));
                         Console.WriteLine("Zipping {0}", entryName);
                         ZipEntry entry = new ZipEntry(entryName) { DateTime = DateTime.Now };
 
@@ -369,30 +367,33 @@ namespace EVEMon.InstallBuilder
                 string nsisScript = Path.Combine(ProjectDirectory, OutputPath, "EVEMonInstallerScript.nsi");
                 string resourcesDir = Path.Combine(SolutionDirectory, @"src\\EVEMon.Common\Resources");
                 string appCopyright =
-                    ((AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(AssemblyCopyrightAttribute)))
+                    ((AssemblyCopyrightAttribute)
+                        Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(AssemblyCopyrightAttribute)))
                         .Copyright;
                 string productName = String.Format(CultureInfo.InvariantCulture, "/DPRODUCTNAME=\"{0}\"", Application.ProductName);
                 string companyName = String.Format(CultureInfo.InvariantCulture, "/DCOMPANYNAME=\"{0}\"", Application.CompanyName);
                 string copyright = String.Format(CultureInfo.InvariantCulture, "/DCOPYRIGHT=\"{0}\"", appCopyright);
                 string description = String.Format(CultureInfo.InvariantCulture, "/DDESCRIPTION=\"{0}\"", Application.ProductName);
                 string version = String.Format(CultureInfo.InvariantCulture, "/DVERSION={0}", s_fileVersionInfo.ProductVersion);
-                string fullVersion = String.Format(CultureInfo.InvariantCulture, "/DFULLVERSION={0}", s_fileVersionInfo.FileVersion);
+                string fullVersion = String.Format(CultureInfo.InvariantCulture, "/DFULLVERSION={0}",
+                    s_fileVersionInfo.FileVersion);
                 string installerDir = String.Format(CultureInfo.InvariantCulture, "/DOUTDIR={0}", InstallerDirectory);
                 string sourceDir = String.Format(CultureInfo.InvariantCulture, "/DSOURCEDIR={0}", SourceFilesDirectory);
                 string resourceDir = String.Format(CultureInfo.InvariantCulture, "/DRESOURCESDIR={0}", resourcesDir);
 
                 string param = String.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}",
-                    productName, companyName, copyright, description, version, fullVersion, installerDir, sourceDir, resourceDir, nsisScript);
+                    productName, companyName, copyright, description, version, fullVersion, installerDir, sourceDir, resourceDir,
+                    nsisScript);
 
                 Console.WriteLine("NSIS script : {0}", nsisScript);
                 Console.WriteLine("Output directory : {0}", InstallerDirectory);
 
                 ProcessStartInfo psi = new ProcessStartInfo(s_nsisExe, param)
-                                       {
-                                           WorkingDirectory = ProjectDirectory,
-                                           UseShellExecute = false,
-                                           RedirectStandardOutput = true
-                                       };
+                {
+                    WorkingDirectory = ProjectDirectory,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
 
                 using (Process makensisProcess = new Process())
                 {

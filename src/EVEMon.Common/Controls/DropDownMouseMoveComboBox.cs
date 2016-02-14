@@ -187,10 +187,7 @@ namespace EVEMon.Common.Controls
         /// Gets the text to display.
         /// </summary>
         /// <returns></returns>
-        public override string GetTextValue()
-        {
-            return m_listBox.SelectedItem == null ? String.Empty : m_listBox.SelectedItem.ToString();
-        }
+        public override string GetTextValue() => m_listBox.SelectedItem == null ? String.Empty : m_listBox.SelectedItem.ToString();
 
         /// <summary>
         /// When the drop down is closed, we hide the tooltip.
@@ -252,7 +249,7 @@ namespace EVEMon.Common.Controls
                     const int Offset = 3;
                     Size size = e.Graphics.MeasureString(m_displayText, Font).ToSize();
                     Rectangle rect = new Rectangle(Offset, (Bounds.Height - size.Height) / 2, e.Bounds.Width - Offset,
-                                                   size.Height);
+                        size.Height);
                     e.Graphics.DrawString(m_displayText, Font, foreBrush, rect, StringFormat.GenericTypographic);
                 }
             }

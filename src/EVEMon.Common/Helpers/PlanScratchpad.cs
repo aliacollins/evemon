@@ -61,10 +61,7 @@ namespace EVEMon.Common.Helpers
         /// </summary>
         /// <remarks>Use the returned object in a <c>using</c> block to ensure the disposal of the object even when exceptions are thrown.</remarks>
         /// <returns></returns>
-        public override IDisposable SuspendingEvents()
-        {
-            return s_disposable;
-        }
+        public override IDisposable SuspendingEvents() => s_disposable;
 
         /// <summary>
         /// Notify changes happened in the entries

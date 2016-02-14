@@ -33,6 +33,7 @@ namespace EVEMon.Common.Models
 
         #endregion
 
+
         /// <summary>
         /// Called when the object gets disposed.
         /// </summary>
@@ -40,6 +41,7 @@ namespace EVEMon.Common.Models
         {
             EveMonClient.TimerTick -= EveMonClient_TimerTick;
         }
+
 
         #region Properties
 
@@ -136,10 +138,7 @@ namespace EVEMon.Common.Models
         /// Generates a deserialization object.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<SerializableQueuedSkill> Export()
-        {
-            return Items.Select(skill => skill.Export());
-        }
+        internal IEnumerable<SerializableQueuedSkill> Export() => Items.Select(skill => skill.Export());
 
         /// <summary>
         /// Imports data from a serialization object.

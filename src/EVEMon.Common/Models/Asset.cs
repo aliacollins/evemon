@@ -103,10 +103,11 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the jumps text.
         /// </summary>
-        public string JumpsText => Jumps == -1
-            ? String.Empty
-            : String.Format(CultureConstants.DefaultCulture,
-                "{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
+        public string JumpsText
+            => Jumps == -1
+                ? String.Empty
+                : String.Format(CultureConstants.DefaultCulture,
+                    "{0} jump{1}", Jumps, Jumps != 1 ? "s" : String.Empty);
 
         /// <summary>
         /// Gets the volume.
@@ -121,11 +122,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the price.
         /// </summary>
-        public double Price => TypeOfBlueprint != BlueprintType.Copy.ToString()
-            ? Settings.MarketPricer.Pricer != null
-                ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
-                : 0
-            : 0;
+        public double Price
+            => TypeOfBlueprint != BlueprintType.Copy.ToString()
+                ? Settings.MarketPricer.Pricer != null
+                    ? Settings.MarketPricer.Pricer.GetPriceByTypeID(Item.ID)
+                    : 0
+                : 0;
 
         /// <summary>
         /// Gets the cost.
@@ -143,23 +145,18 @@ namespace EVEMon.Common.Models
         /// <param name="rawQuantity">The raw quantity.</param>
         /// <returns></returns>
         private string GetTypeOfBlueprint(int rawQuantity)
-        {
-            return Item != null && StaticBlueprints.GetBlueprintByID(Item.ID) != null &&
-                   !Item.MarketGroup.BelongsIn(DBConstants.AncientRelicsMarketGroupID)
+            => Item != null && StaticBlueprints.GetBlueprintByID(Item.ID) != null &&
+               !Item.MarketGroup.BelongsIn(DBConstants.AncientRelicsMarketGroupID)
                 ? rawQuantity == -2 ? BlueprintType.Copy.ToString() : BlueprintType.Original.ToString()
                 : String.Empty;
-        }
 
         /// <summary>
         /// Gets the volume.
         /// </summary>
         /// <returns></returns>
-        private double GetVolume()
-        {
-            return Item != null && m_volumeProperty != null
-                       ? m_volumeProperty.GetNumericValue(Item)
-                       : 0d;
-        }
+        private double GetVolume() => Item != null && m_volumeProperty != null
+            ? m_volumeProperty.GetNumericValue(Item)
+            : 0d;
 
         /// <summary>
         /// Gets the location.

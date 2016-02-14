@@ -238,9 +238,7 @@ namespace EVEMon.XmlGenerator.Utils
         /// <param name="nameSpace">The namespace.</param>
         /// <returns></returns>
         internal static int GetCountOfTypesInNamespace(string nameSpace)
-        {
-            return typeof(Program).Assembly.GetTypes().Count(type => type.Namespace == nameSpace);
-        }
+            => typeof(Program).Assembly.GetTypes().Count(type => type.Namespace == nameSpace);
 
         /// <summary>
         /// Displays the end time.

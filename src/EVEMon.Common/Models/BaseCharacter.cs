@@ -13,7 +13,7 @@ namespace EVEMon.Common.Models
 
         protected abstract Int64 TotalSkillPoints { get; }
         protected abstract ICharacterAttribute GetAttribute(EveAttribute attribute);
-        
+
         internal abstract void Dispose();
 
         public abstract Int64 GetSkillLevel(StaticSkill skill);
@@ -86,10 +86,7 @@ namespace EVEMon.Common.Models
         /// <param name="points">The points to calculate points.</param>
         /// <param name="skill">The skill to train.</param>
         /// <returns></returns>
-        public TimeSpan GetTimeSpanForPoints(StaticSkill skill, Int64 points)
-        {
-            return GetTrainingTime(points, GetBaseSPPerHour(skill));
-        }
+        public TimeSpan GetTimeSpanForPoints(StaticSkill skill, Int64 points) => GetTrainingTime(points, GetBaseSPPerHour(skill));
 
         #endregion
 
@@ -126,12 +123,12 @@ namespace EVEMon.Common.Models
             Int64 result;
             switch (origin)
             {
-                    // Include current SP
+                // Include current SP
                 case TrainingOrigin.FromCurrent:
                     result = sp - GetSkillPoints(skill);
                     break;
 
-                    // This level only (previous are known)
+                // This level only (previous are known)
                 case TrainingOrigin.FromPreviousLevel:
                     result = sp - skill.GetPointsRequiredForLevel(level - 1);
                     break;
@@ -140,7 +137,7 @@ namespace EVEMon.Common.Models
                     result = sp - Math.Max(GetSkillPoints(skill), skill.GetPointsRequiredForLevel(level - 1));
                     break;
 
-                    // Include nothing
+                // Include nothing
                 default:
                     result = sp;
                     break;
@@ -189,16 +186,14 @@ namespace EVEMon.Common.Models
         /// <param name="spPerHour"></param>
         /// <returns></returns>
         private static TimeSpan GetTrainingTime(Int64 sp, float spPerHour)
-        {
-            return Math.Abs(spPerHour) < float.Epsilon ? TimeSpan.FromDays(999.0) : TimeSpan.FromHours(sp / spPerHour);
-        }
+            => Math.Abs(spPerHour) < float.Epsilon ? TimeSpan.FromDays(999.0) : TimeSpan.FromHours(sp / spPerHour);
 
         /// <summary>
         /// Gets the time require to train the given skills and their prerequisites.
         /// </summary>
         /// <param name="trainings">A sequence of pairs of skills and the target levels.</param>
         /// <returns></returns>
-        public TimeSpan GetTrainingTimeToMultipleSkills(IEnumerable<ISkillLevel> trainings) 
+        public TimeSpan GetTrainingTimeToMultipleSkills(IEnumerable<ISkillLevel> trainings)
             => After(trainings).TrainingTime;
 
         #endregion

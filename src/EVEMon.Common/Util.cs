@@ -286,7 +286,8 @@ namespace EVEMon.Common
         /// <param name="acceptEncoded">if set to <c>true</c> accept encoded response.</param>
         /// <param name="postData">The post data.</param>
         /// <param name="transform">The XSL transform to apply, may be null.</param>
-        internal static async Task<CCPAPIResult<T>> DownloadAPIResultAsync<T>(Uri url, bool acceptEncoded = false, string postData = null,
+        internal static async Task<CCPAPIResult<T>> DownloadAPIResultAsync<T>(Uri url, bool acceptEncoded = false,
+            string postData = null,
             XslCompiledTransform transform = null)
         {
             DownloadAsyncResult<IXPathNavigable> asyncResult =
@@ -328,7 +329,7 @@ namespace EVEMon.Common
             string postData = null, XslCompiledTransform transform = null)
         {
             CCPAPIResult<T> result;
-            
+
             try
             {
                 DownloadAsyncResult<IXPathNavigable> apiResult =
@@ -385,7 +386,7 @@ namespace EVEMon.Common
                             result = (CCPAPIResult<T>)xs.Deserialize(stream);
                         }
                     }
-                        // Deserialization without transform
+                    // Deserialization without transform
                     else
                         result = (CCPAPIResult<T>)xs.Deserialize(reader);
                 }
@@ -600,7 +601,7 @@ namespace EVEMon.Common
             string content = File.Exists(filename) ? File.ReadAllText(filename) : filename;
 
             Match match = Regex.Match(content, "revision=\"([0-9]+)\"",
-                                      RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+                RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
             // No match ? Then there was no "revision" attribute, this is an old format
             if (!match.Success || match.Groups.Count < 2)
@@ -774,9 +775,7 @@ namespace EVEMon.Common
         /// A new memory stream
         /// </returns>
         public static MemoryStream GetMemoryStream(byte[] buffer = null)
-        {
-            return buffer == null ? new MemoryStream() : new MemoryStream(buffer);
-        }
+            => buffer == null ? new MemoryStream() : new MemoryStream(buffer);
 
         /// <summary>
         /// Gets a memory stream from the specified stream.
@@ -801,10 +800,8 @@ namespace EVEMon.Common
         /// <param name="share">The share.</param>
         /// <returns>A new file stream</returns>
         public static FileStream GetFileStream(string filePath, FileMode mode = FileMode.OpenOrCreate,
-                                               FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
-        {
-            return new FileStream(filePath, mode, access, share, bufferSize: 4096, useAsync: true);
-        }
+            FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
+            => new FileStream(filePath, mode, access, share, bufferSize: 4096, useAsync: true);
 
         /// <summary>
         /// Compresses the provided input data using zlib gzip.
@@ -922,7 +919,7 @@ namespace EVEMon.Common
 
             // If it's not a MemoryStream copy it to one
             MemoryStream stream = inputStream as MemoryStream ?? GetMemoryStream(inputStream);
-            
+
             if (stream == null)
                 return inputStream;
 

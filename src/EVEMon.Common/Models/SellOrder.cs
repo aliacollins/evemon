@@ -30,9 +30,6 @@ namespace EVEMon.Common.Models
         /// Exports the given object to a serialization object.
         /// </summary>
         /// <returns></returns>
-        public override SerializableOrderBase Export()
-        {
-            return Export(new SerializableSellOrder());
-        }
+        public override SerializableOrderBase Export() => Export(new SerializableSellOrder());
     }
 }

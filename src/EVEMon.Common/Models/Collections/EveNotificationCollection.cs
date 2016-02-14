@@ -53,10 +53,10 @@ namespace EVEMon.Common.Models.Collections
             foreach (long id in ids.Select(long.Parse))
             {
                 Items.Add(new EveNotification(m_ccpCharacter,
-                                              new SerializableNotificationsListItem
-                                                  {
-                                                      NotificationID = id
-                                                  }));
+                    new SerializableNotificationsListItem
+                    {
+                        NotificationID = id
+                    }));
             }
         }
 
@@ -92,9 +92,9 @@ namespace EVEMon.Common.Models.Collections
         /// </summary>
         /// <returns></returns>
         internal String Export()
-        {
-            return String.Join(",", Items.Select(notification => notification.NotificationID.ToString(CultureConstants.InvariantCulture)));
-        }
+            =>
+                String.Join(",",
+                    Items.Select(notification => notification.NotificationID.ToString(CultureConstants.InvariantCulture)));
 
         #endregion
     }

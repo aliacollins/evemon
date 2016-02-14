@@ -75,10 +75,7 @@ namespace EVEMon.Common.IgbService
         /// Cacluates the address to bind to.
         /// </summary>
         /// <returns>IPAddress.Any if public, IPAddress.Loopback if not public</returns>
-        private IPAddress AddressToBind()
-        {
-            return m_isPublic ? IPAddress.Any : IPAddress.Loopback;
-        }
+        private IPAddress AddressToBind() => m_isPublic ? IPAddress.Any : IPAddress.Loopback;
 
         /// <summary>
         /// Starts the IGB Service if not running.
@@ -334,7 +331,7 @@ namespace EVEMon.Common.IgbService
             {
                 sw.WriteLine("<h1>Error loading requested URL</h1>" +
                              "The {0} method is not implemented.<br/><br/><i>Error Code: -501</i>",
-                             request);
+                    request);
                 return;
             }
 
@@ -349,7 +346,7 @@ namespace EVEMon.Common.IgbService
             {
                 sw.WriteLine("The in-game browser do not trust EVEMon.<br/>");
                 sw.WriteLine("<a href=\"\" onclick=\"CCPEVE.requestTrust('{0}')\">Trust EVEMon</a>.",
-                             BuildHostAndPort(headers["host"]));
+                    BuildHostAndPort(headers["host"]));
                 return;
             }
 
@@ -369,7 +366,7 @@ namespace EVEMon.Common.IgbService
             }
 
             Regex contextRegex = new Regex(@"(?'context'\/characters(\/(?'charName'[^\/]*))?)?(?'request'.*)",
-                                           RegexOptions.CultureInvariant | RegexOptions.Compiled);
+                RegexOptions.CultureInvariant | RegexOptions.Compiled);
             Match match = contextRegex.Match(requestPath);
             if (match.Success)
             {
@@ -380,8 +377,8 @@ namespace EVEMon.Common.IgbService
                 requestPath = match.Groups["request"].Value;
             }
             Character character = !String.IsNullOrEmpty(characterName)
-                                      ? EveMonClient.MonitoredCharacters.FirstOrDefault(x => x.Name == characterName)
-                                      : null;
+                ? EveMonClient.MonitoredCharacters.FirstOrDefault(x => x.Name == characterName)
+                : null;
             if (character == null)
             {
                 GenerateCharacterList(characterName, sw, EveMonClient.MonitoredCharacters);
@@ -389,7 +386,7 @@ namespace EVEMon.Common.IgbService
             }
 
             string context = String.Format(CultureConstants.InvariantCulture, "/characters/{0}",
-                                           HttpUtility.UrlEncode(character.Name));
+                HttpUtility.UrlEncode(character.Name));
 
             if (requestPath.StartsWith("/plan/", StringComparison.OrdinalIgnoreCase)
                 || requestPath.StartsWith("/shopping/", StringComparison.OrdinalIgnoreCase)
@@ -417,8 +414,8 @@ namespace EVEMon.Common.IgbService
             foreach (Character character in characters)
             {
                 sw.WriteLine("<a href=\"/characters/{0}\">{1}</a>",
-                             HttpUtility.UrlEncode(character.Name),
-                             HttpUtility.HtmlEncode(character.Name));
+                    HttpUtility.UrlEncode(character.Name),
+                    HttpUtility.HtmlEncode(character.Name));
 
                 if (!String.IsNullOrEmpty(currentCharacterName) && (currentCharacterName == character.Name))
                     sw.WriteLine(" (current)");
@@ -470,9 +467,9 @@ namespace EVEMon.Common.IgbService
             foreach (Plan plan in character.Plans)
             {
                 sw.WriteLine("<a href=\"{0}/plan/{1}\">{2}</a> (<a href=\"{0}/shopping/{1}\">shopping list</a>)<br/>",
-                             context,
-                             HttpUtility.UrlEncode(plan.Name),
-                             HttpUtility.HtmlEncode(plan.Name));
+                    context,
+                    HttpUtility.UrlEncode(plan.Name),
+                    HttpUtility.HtmlEncode(plan.Name));
             }
 
             sw.WriteLine("<h2>Your skills:</h2>");
@@ -572,7 +569,7 @@ namespace EVEMon.Common.IgbService
                         sw.WriteLine("<h2>Skillbook shopping result</h2>");
                         skill.IsOwned = setAsOwned;
                         sw.WriteLine("<a href=\"\" onclick=\"CCPEVE.showInfo({0})\">{1}</a> is now marked as {2} owned.", skill.ID,
-                                     HttpUtility.HtmlEncode(skill.Name), skill.IsOwned ? String.Empty : "not");
+                            HttpUtility.HtmlEncode(skill.Name), skill.IsOwned ? String.Empty : "not");
                     }
                     else
                     {
@@ -595,23 +592,23 @@ namespace EVEMon.Common.IgbService
                     sw.WriteLine("<h2>Plan: {0}</h2>", HttpUtility.HtmlEncode(plan.Name));
 
                     PlanExportSettings x = new PlanExportSettings
-                                               {
-                                                   // Only if not shopping
-                                                   EntryTrainingTimes = !shopping,
-                                                   // Only if not shopping
-                                                   EntryStartDate = !shopping,
-                                                   // Only if not shopping
-                                                   EntryFinishDate = !shopping,
-                                                   // Only if not shopping
-                                                   FooterTotalTime = !shopping,
-                                                   // Only if not shopping
-                                                   FooterDate = !shopping,
-                                                   FooterCount = true,
-                                                   ShoppingList = shopping,
-                                                   EntryCost = true,
-                                                   FooterCost = true,
-                                                   Markup = MarkupType.Html
-                                               };
+                    {
+                        // Only if not shopping
+                        EntryTrainingTimes = !shopping,
+                        // Only if not shopping
+                        EntryStartDate = !shopping,
+                        // Only if not shopping
+                        EntryFinishDate = !shopping,
+                        // Only if not shopping
+                        FooterTotalTime = !shopping,
+                        // Only if not shopping
+                        FooterDate = !shopping,
+                        FooterCount = true,
+                        ShoppingList = shopping,
+                        EntryCost = true,
+                        FooterCost = true,
+                        Markup = MarkupType.Html
+                    };
 
                     sw.Write(PlanIOHelper.ExportAsText(plan, x, ExportActions(context, requestType, plan)));
                 }
@@ -633,25 +630,23 @@ namespace EVEMon.Common.IgbService
         /// <param name="requestType">Type of the request.</param>
         /// <param name="plan">The plan.</param>
         /// <returns></returns>
-        private static Action<StringBuilder, PlanEntry, PlanExportSettings> ExportActions(string context, string requestType, Plan plan)
-        {
-            return (builder, entry, settings) =>
-                       {
-                           if (settings.Markup != MarkupType.Html)
-                               return;
+        private static Action<StringBuilder, PlanEntry, PlanExportSettings> ExportActions(string context, string requestType,
+            Plan plan) => (builder, entry, settings) =>
+            {
+                if (settings.Markup != MarkupType.Html)
+                    return;
 
-                           // Skill is known
-                           if (entry.CharacterSkill.IsKnown || entry.Level != 1)
-                               return;
+                // Skill is known
+                if (entry.CharacterSkill.IsKnown || entry.Level != 1)
+                    return;
 
-                           builder.AppendFormat(CultureConstants.InvariantCulture, " <a href='{0}/owned/{1}/{2}/{4}/{5}'>{3}</a>",
-                                                context, entry.Skill.ID, !entry.CharacterSkill.IsOwned,
-                                                HttpUtility.HtmlEncode(!entry.CharacterSkill.IsOwned
-                                                                           ? "Mark as owned"
-                                                                           : "Mark as not owned"),
-                                                requestType, HttpUtility.HtmlEncode(plan.Name));
-                       };
-        }
+                builder.AppendFormat(CultureConstants.InvariantCulture, " <a href='{0}/owned/{1}/{2}/{4}/{5}'>{3}</a>",
+                    context, entry.Skill.ID, !entry.CharacterSkill.IsOwned,
+                    HttpUtility.HtmlEncode(!entry.CharacterSkill.IsOwned
+                        ? "Mark as owned"
+                        : "Mark as not owned"),
+                    requestType, HttpUtility.HtmlEncode(plan.Name));
+            };
 
         #endregion
     }

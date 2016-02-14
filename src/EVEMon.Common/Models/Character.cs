@@ -192,7 +192,7 @@ namespace EVEMon.Common.Models
         /// Gets the free skill points.
         /// </summary>
         public int FreeSkillPoints { get; private set; }
-        
+
         /// <summary>
         /// Gets the jump clone creation date.
         /// </summary>
@@ -202,7 +202,7 @@ namespace EVEMon.Common.Models
         /// Gets the available remaps.
         /// </summary>
         public short AvailableReMaps { get; private set; }
-        
+
         /// <summary>
         /// Gets the last remap date.
         /// </summary>
@@ -242,10 +242,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true when the character is in a NPC corporation, false otherwise.
         /// </summary>
-        public bool IsInNPCCorporation
-        {
-            get { return StaticGeography.AllStations.Any(x => x.CorporationID == CorporationID); }
-        }
+        public bool IsInNPCCorporation => StaticGeography.AllStations.Any(x => x.CorporationID == CorporationID);
 
         #endregion
 
@@ -327,10 +324,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="attribute">The attribute to retrieve.</param>
         /// <returns></returns>
-        protected override ICharacterAttribute GetAttribute(EveAttribute attribute)
-        {
-            return m_attributes[(int)attribute];
-        }
+        protected override ICharacterAttribute GetAttribute(EveAttribute attribute) => m_attributes[(int)attribute];
 
         #endregion
 
@@ -385,20 +379,14 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the number of skills this character knows.
         /// </summary>
-        public int KnownSkillCount
-        {
-            get { return Skills.Count(skill => skill.IsKnown); }
-        }
+        public int KnownSkillCount => Skills.Count(skill => skill.IsKnown);
 
         /// <summary>
         /// Gets the number of skills currently known at the same level than the one specified.
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public int GetSkillCountAtLevel(int level)
-        {
-            return Skills.Count(skill => skill.IsKnown && skill.LastConfirmedLvl == level);
-        }
+        public int GetSkillCountAtLevel(int level) => Skills.Count(skill => skill.IsKnown && skill.LastConfirmedLvl == level);
 
         /// <summary>
         /// Gets the level of the given skill.
@@ -660,18 +648,12 @@ namespace EVEMon.Common.Models
         /// Gets a unique hashcode for this character.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return Guid.GetHashCode();
-        }
+        public override int GetHashCode() => Guid.GetHashCode();
 
         /// <summary>
         /// Gets the name of the character.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return m_name;
-        }
+        public override string ToString() => m_name;
     }
 }

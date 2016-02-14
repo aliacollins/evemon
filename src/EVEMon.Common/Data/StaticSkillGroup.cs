@@ -88,10 +88,7 @@ namespace EVEMon.Common.Data
         /// </summary>
         /// <param name="skillID"></param>
         /// <returns></returns>
-        public bool Contains(int skillID)
-        {
-            return Items.ContainsKey(skillID);
-        }
+        public bool Contains(int skillID) => Items.ContainsKey(skillID);
 
         #endregion
 
@@ -102,10 +99,7 @@ namespace EVEMon.Common.Data
         /// Gets the enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<StaticSkill> GetEnumerator()
-        {
-            return Items.Values.GetEnumerator();
-        }
+        public IEnumerator<StaticSkill> GetEnumerator() => Items.Values.GetEnumerator();
 
         #endregion
     }

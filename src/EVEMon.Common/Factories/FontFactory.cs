@@ -32,20 +32,14 @@ namespace EVEMon.Common.Factories
         /// Gets the default font.
         /// </summary>
         /// <returns></returns>
-        public static Font GetDefaultFont()
-        {
-            return DefaultFont;
-        }
+        public static Font GetDefaultFont() => DefaultFont;
 
         /// <summary>
         /// Gets the default font.
         /// </summary>
         /// <param name="style">The style.</param>
         /// <returns></returns>
-        public static Font GetDefaultFont(FontStyle style)
-        {
-            return GetDefaultFont(SystemFonts.DefaultFont.Size, style);
-        }
+        public static Font GetDefaultFont(FontStyle style) => GetDefaultFont(SystemFonts.DefaultFont.Size, style);
 
         /// <summary>
         /// Gets the default font.
@@ -55,10 +49,7 @@ namespace EVEMon.Common.Factories
         /// <param name="unit">Units for the size : pixels, points, etc. Default should be point.</param>
         /// <returns></returns>
         public static Font GetDefaultFont(float emSize, FontStyle style = FontStyle.Regular,
-                                          GraphicsUnit unit = GraphicsUnit.Point)
-        {
-            return GetFont(DefaultFont.FontFamily.Name, emSize, style, unit);
-        }
+            GraphicsUnit unit = GraphicsUnit.Point) => GetFont(DefaultFont.FontFamily.Name, emSize, style, unit);
 
         #endregion
 
@@ -72,9 +63,7 @@ namespace EVEMon.Common.Factories
         /// <param name="style">The font's style</param>
         /// <returns></returns>
         public static Font GetFont(string fontName, FontStyle style = FontStyle.Regular)
-        {
-            return GetFont(fontName, DefaultFont.Size, style, DefaultFont.Unit);
-        }
+            => GetFont(fontName, DefaultFont.Size, style, DefaultFont.Unit);
 
         /// <summary>
         /// Gets the specified font.
@@ -99,7 +88,7 @@ namespace EVEMon.Common.Factories
         /// <param name="unit">The unit to use for the given size (points, pixels, etc)</param>
         /// <returns></returns>
         public static Font GetFont(FontFamily family, float emSize, FontStyle style = FontStyle.Regular,
-                                   GraphicsUnit unit = GraphicsUnit.Point)
+            GraphicsUnit unit = GraphicsUnit.Point)
         {
             if (family == null)
                 throw new ArgumentNullException("family");
@@ -119,7 +108,7 @@ namespace EVEMon.Common.Factories
         /// <param name="unit">Units for the size : pixels, points, etc. Default is point.</param>
         /// <returns></returns>
         public static Font GetFont(string familyName, float emSize, FontStyle style = FontStyle.Regular,
-                                   GraphicsUnit unit = GraphicsUnit.Point)
+            GraphicsUnit unit = GraphicsUnit.Point)
         {
             try
             {

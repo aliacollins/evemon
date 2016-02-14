@@ -45,10 +45,10 @@ namespace EVEMon.Common.Models
             m_mailingLists = GetMailingListIDsToNames(src.ToListID);
             m_toCorpOrAlliance = GetCorpOrAlliance(src.ToCorpOrAllianceID);
             EVEMailBody = new EveMailBody(new SerializableMailBodiesListItem
-                                          {
-                                              MessageID = 0,
-                                              MessageText = String.Empty
-                                          });
+            {
+                MessageID = 0,
+                MessageText = String.Empty
+            });
         }
 
         #endregion
@@ -144,14 +144,11 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="toCorpOrAlliance">The source.</param>
         /// <returns></returns>
-        private string GetCorpOrAlliance(string toCorpOrAlliance)
-        {
-            return toCorpOrAlliance == m_ccpCharacter.Corporation.Name
-                ? m_ccpCharacter.Corporation.Name
-                : toCorpOrAlliance == m_ccpCharacter.AllianceName
-                    ? m_ccpCharacter.AllianceName
-                    : EveIDToName.GetIDToName(toCorpOrAlliance);
-        }
+        private string GetCorpOrAlliance(string toCorpOrAlliance) => toCorpOrAlliance == m_ccpCharacter.Corporation.Name
+            ? m_ccpCharacter.Corporation.Name
+            : toCorpOrAlliance == m_ccpCharacter.AllianceName
+                ? m_ccpCharacter.AllianceName
+                : EveIDToName.GetIDToName(toCorpOrAlliance);
 
 
         /// <summary>

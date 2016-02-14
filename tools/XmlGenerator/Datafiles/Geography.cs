@@ -12,6 +12,8 @@ namespace EVEMon.XmlGenerator.Datafiles
 {
     internal static class Geography
     {
+        private const double BaseDistance = 1.0E14;
+
         /// <summary>
         /// Generates the geography datafile.
         /// </summary>
@@ -63,9 +65,9 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="srcRegion">The source region.</param>
         /// <returns></returns>
         private static IEnumerable<SerializableConstellation> ExportConstellations(IHasID srcRegion)
-        {
-            return Database.MapConstellationsTable.Where(x => x.RegionID == srcRegion.ID).Select(
-                srcConstellation =>
+            => Database.MapConstellationsTable
+                .Where(x => x.RegionID == srcRegion.ID)
+                .Select(srcConstellation =>
                 {
                     SerializableConstellation constellation = new SerializableConstellation
                     {
@@ -77,7 +79,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                     constellation.Systems.AddRange(ExportSystems(srcConstellation).OrderBy(x => x.Name));
                     return constellation;
                 });
-        }
 
         /// <summary>
         /// Exports the systems.
@@ -85,26 +86,25 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="srcConstellation">The source constellation.</param>
         /// <returns></returns>
         private static IEnumerable<SerializableSolarSystem> ExportSystems(IHasID srcConstellation)
-        {
-            const double BaseDistance = 1.0E14;
-            return Database.MapSolarSystemsTable.Where(x => x.ConstellationID == srcConstellation.ID).Select(
-                srcSystem =>
-                {
-                    SerializableSolarSystem system = new SerializableSolarSystem
+            => Database.MapSolarSystemsTable
+                .Where(x => x.ConstellationID == srcConstellation.ID)
+                .Select(
+                    srcSystem =>
                     {
-                        ID = srcSystem.ID,
-                        Name = srcSystem.Name,
-                        X = (int)(srcSystem.X / BaseDistance),
-                        Y = (int)(srcSystem.Y / BaseDistance),
-                        Z = (int)(srcSystem.Z / BaseDistance),
-                        SecurityLevel = srcSystem.SecurityLevel
-                    };
+                        SerializableSolarSystem system = new SerializableSolarSystem
+                        {
+                            ID = srcSystem.ID,
+                            Name = srcSystem.Name,
+                            X = (int)(srcSystem.X / BaseDistance),
+                            Y = (int)(srcSystem.Y / BaseDistance),
+                            Z = (int)(srcSystem.Z / BaseDistance),
+                            SecurityLevel = srcSystem.SecurityLevel
+                        };
 
-                    // Stations
-                    system.Stations.AddRange(ExportStations(srcSystem).OrderBy(x => x.Name));
-                    return system;
-                });
-        }
+                        // Stations
+                        system.Stations.AddRange(ExportStations(srcSystem).OrderBy(x => x.Name));
+                        return system;
+                    });
 
         /// <summary>
         /// Exports the stations.
@@ -112,9 +112,9 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="srcSystem">The SRC system.</param>
         /// <returns></returns>
         private static IEnumerable<SerializableStation> ExportStations(IHasID srcSystem)
-        {
-            return Database.StaStationsTable.Where(x => x.SolarSystemID == srcSystem.ID).Select(
-                srcStation =>
+            => Database.StaStationsTable
+                .Where(x => x.SolarSystemID == srcSystem.ID)
+                .Select(srcStation =>
                 {
                     SerializableStation station = new SerializableStation
                     {
@@ -130,7 +130,6 @@ namespace EVEMon.XmlGenerator.Datafiles
                     station.Agents.AddRange(ExportAgents(srcStation));
                     return station;
                 });
-        }
 
         /// <summary>
         /// Exports the agents.
@@ -138,8 +137,8 @@ namespace EVEMon.XmlGenerator.Datafiles
         /// <param name="srcStation">The station.</param>
         /// <returns></returns>
         private static IEnumerable<SerializableAgent> ExportAgents(IHasID srcStation)
-        {
-            return Database.AgtAgentsTable.Where(x => x.LocationID == srcStation.ID)
+            => Database.AgtAgentsTable
+                .Where(x => x.LocationID == srcStation.ID)
                 .Select(agent => new SerializableAgent
                 {
                     ID = agent.ID,
@@ -153,6 +152,5 @@ namespace EVEMon.XmlGenerator.Datafiles
                         : 0,
                     LocatorService = agent.IsLocator
                 });
-        }
     }
 }

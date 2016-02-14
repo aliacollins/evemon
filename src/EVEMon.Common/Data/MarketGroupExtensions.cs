@@ -9,9 +9,7 @@ namespace EVEMon.Common.Data
         /// Gets true if the item's market group belongs to the questioned group. 
         /// </summary>
         public static bool BelongsIn(this MarketGroup marketGroup, int group)
-        {
-            return marketGroup.BelongsIn(new[] { group });
-        }
+            => marketGroup.BelongsIn(new[] { group });
 
         /// <summary>
         /// Gets true if the item's market group belongs to the questioned group. 

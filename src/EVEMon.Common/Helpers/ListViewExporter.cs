@@ -75,8 +75,8 @@ namespace EVEMon.Common.Helpers
                         // If the value is a number format it as so; as string otherwise
                         double number;
                         sb.Append(Double.TryParse(elements[0], out number)
-                                      ? MakeCSVNumber(number.ToString(CultureConstants.DefaultCulture), ignoreSemicolon)
-                                      : MakeCSVString(listViewToExport.Items[line].SubItems[subitem].Text, ignoreSemicolon));
+                            ? MakeCSVNumber(number.ToString(CultureConstants.DefaultCulture), ignoreSemicolon)
+                            : MakeCSVString(listViewToExport.Items[line].SubItems[subitem].Text, ignoreSemicolon));
 
                         ignoreSemicolon = false;
 
@@ -97,9 +97,7 @@ namespace EVEMon.Common.Helpers
         /// <param name="ignoreSemicolon">if set to <c>true</c> ignore semicolon.</param>
         /// <returns></returns>
         private static String MakeCSVString(string text, bool ignoreSemicolon = false)
-        {
-            return MakeCSVNumber(String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text), ignoreSemicolon);
-        }
+            => MakeCSVNumber(String.Format(CultureConstants.DefaultCulture, "\"{0}\"", text), ignoreSemicolon);
 
         /// <summary>
         /// Makes the CSV number.
@@ -108,8 +106,6 @@ namespace EVEMon.Common.Helpers
         /// <param name="ignoreSemicolon">if set to <c>true</c> ignore semicolon.</param>
         /// <returns></returns>
         private static String MakeCSVNumber(string text, bool ignoreSemicolon = false)
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0}{1}", ignoreSemicolon ? String.Empty : ";", text);
-        }
+            => String.Format(CultureConstants.DefaultCulture, "{0}{1}", ignoreSemicolon ? String.Empty : ";", text);
     }
 }

@@ -50,16 +50,13 @@ namespace EVEMon.Common.Data
         #endregion
 
 
-        # region Overridden Methods
+        #region Overridden Methods
 
         /// <summary>
         /// Gets a string representation of this prerequisite.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Property.Name;
-        }
+        public override string ToString() => Property.Name;
 
         #endregion
     }

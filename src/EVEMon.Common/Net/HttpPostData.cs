@@ -56,9 +56,6 @@ namespace EVEMon.Common.Net
         /// <returns>
         /// A <see cref="System.String"/> that represents the post data.
         /// </returns>
-        public override string ToString()
-        {
-            return m_data;
-        }
+        public override string ToString() => m_data;
     }
 }

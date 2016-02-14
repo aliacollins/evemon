@@ -56,13 +56,13 @@ namespace EVEMon.Common.Collections.Global
                 // Is it a custom provider stored in this collection ?
                 if (m_customProviders.Contains(value))
                     m_currentProvider = value;
-                    // Is it the default provider ?
+                // Is it the default provider ?
                 else if (APIProvider.DefaultProvider == value)
                     m_currentProvider = value;
-                    // is it the test provider
+                // is it the test provider
                 else if (APIProvider.TestProvider == value)
                     m_currentProvider = value;
-                    // Then it's a non-register provider, we messed up since it should be in this global collection
+                // Then it's a non-register provider, we messed up since it should be in this global collection
                 else
                     throw new InvalidOperationException("The given provider is not in the list");
             }
@@ -78,16 +78,11 @@ namespace EVEMon.Common.Collections.Global
         /// </summary>
         /// <param name="name"></param>
         /// <returns>The wanted API provider when found; null otherwise.</returns>
+        // Is it the default provider ? If not look among custom providers
         private APIProvider this[string name]
-        {
-            get
-            {
-                // Is it the default provider ? If not look among custom providers
-                return DefaultProvider.Name == name
-                           ? DefaultProvider
-                           : m_customProviders.FirstOrDefault(provider => provider.Name == name);
-            }
-        }
+            => DefaultProvider.Name == name
+                ? DefaultProvider
+                : m_customProviders.FirstOrDefault(provider => provider.Name == name);
 
         #endregion
 
@@ -107,11 +102,11 @@ namespace EVEMon.Common.Collections.Global
             foreach (SerializableAPIProvider sProvider in serial.CustomProviders)
             {
                 APIProvider provider = new APIProvider
-                    {
-                        Name = sProvider.Name,
-                        Url = new Uri(sProvider.Address),
-                        SupportsCompressedResponse = sProvider.SupportsCompressedResponse
-                    };
+                {
+                    Name = sProvider.Name,
+                    Url = new Uri(sProvider.Address),
+                    SupportsCompressedResponse = sProvider.SupportsCompressedResponse
+                };
 
                 // Providers' methods
                 foreach (SerializableAPIMethod sMethod in sProvider.Methods)
@@ -152,11 +147,11 @@ namespace EVEMon.Common.Collections.Global
             foreach (APIProvider provider in CustomProviders)
             {
                 SerializableAPIProvider serialProvider = new SerializableAPIProvider
-                    {
-                        Name = provider.Name,
-                        Address = provider.Url.AbsoluteUri,
-                        SupportsCompressedResponse = provider.SupportsCompressedResponse
-                    };
+                {
+                    Name = provider.Name,
+                    Address = provider.Url.AbsoluteUri,
+                    SupportsCompressedResponse = provider.SupportsCompressedResponse
+                };
 
                 serial.CustomProviders.Add(serialProvider);
 
@@ -164,7 +159,11 @@ namespace EVEMon.Common.Collections.Global
                 serialProvider.Methods.Clear();
                 foreach (APIMethod method in provider.Methods.Where(method => !String.IsNullOrWhiteSpace(method.Path)))
                 {
-                    serialProvider.Methods.Add(new SerializableAPIMethod { MethodName = method.Method.ToString(), Path = method.Path });
+                    serialProvider.Methods.Add(new SerializableAPIMethod
+                    {
+                        MethodName = method.Method.ToString(),
+                        Path = method.Path
+                    });
                 }
             }
 

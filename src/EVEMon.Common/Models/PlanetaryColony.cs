@@ -89,7 +89,8 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The full location.
         /// </value>
-        public string FullLocation => String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, PlanetName);
+        public string FullLocation
+            => String.Format(CultureConstants.DefaultCulture, "{0} > {1}", SolarSystem.FullLocation, PlanetName);
 
         /// <summary>
         /// Gets the last update.
@@ -333,10 +334,7 @@ namespace EVEMon.Common.Models
         /// <returns>
         /// A value that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance is less than <paramref name="obj" />. Zero This instance is equal to <paramref name="obj" />. Greater than zero This instance is greater than <paramref name="obj" />.
         /// </returns>
-        public int CompareTo(object obj)
-        {
-            return CompareTo((PlanetaryColony)obj);
-        }
+        public int CompareTo(object obj) => CompareTo((PlanetaryColony)obj);
 
         /// <summary>
         /// Compares the current object with another object of the same type.
@@ -345,9 +343,6 @@ namespace EVEMon.Common.Models
         /// <returns>
         /// A value that indicates the relative order of the objects being compared. The return value has the following meanings: Value Meaning Less than zero This object is less than the <paramref name="other" /> parameter.Zero This object is equal to <paramref name="other" />. Greater than zero This object is greater than <paramref name="other" />.
         /// </returns>
-        public int CompareTo(PlanetaryColony other)
-        {
-            return this == other ? 1 : -1;
-        }
+        public int CompareTo(PlanetaryColony other) => this == other ? 1 : -1;
     }
 }

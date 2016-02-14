@@ -147,9 +147,7 @@ namespace EVEMon.Common.Helpers
         /// 	<c>true</c> if the loadout is in CLF format; otherwise, <c>false</c>.
         /// </returns>
         internal static bool IsCLFFormat(string text)
-        {
-            return text.Length != 0 && text.StartsWith("{\"clf-version\":", StringComparison.InvariantCultureIgnoreCase);
-        }
+            => text.Length != 0 && text.StartsWith("{\"clf-version\":", StringComparison.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Deserializes an EFT loadout text.

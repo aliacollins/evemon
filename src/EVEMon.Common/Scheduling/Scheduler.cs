@@ -20,19 +20,13 @@ namespace EVEMon.Common.Scheduling
         /// <summary>
         /// Gets the scheduled entries
         /// </summary>
-        public static IEnumerable<ScheduleEntry> Entries
-        {
-            get { return s_schedule.Where(entry => !entry.Expired); }
-        }
+        public static IEnumerable<ScheduleEntry> Entries => s_schedule.Where(entry => !entry.Expired);
 
         /// <summary>
         /// Checks whether EVEMon is currently running in silent mode (no tooltips nor sounds).
         /// </summary>
         /// <returns></returns>
-        public static bool SilentMode
-        {
-            get { return s_schedule.Any(x => x.Silent(DateTime.Now)); }
-        }
+        public static bool SilentMode => s_schedule.Any(x => x.Silent(DateTime.Now));
 
         /// <summary>
         /// Add the given entry

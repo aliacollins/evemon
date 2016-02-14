@@ -12,7 +12,9 @@ namespace EVEMon.Common.Data
     /// </summary>
     public sealed class StaticCertificate
     {
-        private readonly Dictionary<CertificateGrade, List<StaticSkillLevel>> m_prerequisiteSkills = new Dictionary<CertificateGrade, List<StaticSkillLevel>>();
+        private readonly Dictionary<CertificateGrade, List<StaticSkillLevel>> m_prerequisiteSkills =
+            new Dictionary<CertificateGrade, List<StaticSkillLevel>>();
+
 
         #region Constructor
 
@@ -117,10 +119,10 @@ namespace EVEMon.Common.Data
         internal void CompleteInitialization(IEnumerable<SerializableCertificatePrerequisite> prereqs)
         {
             foreach (var prereqGrade in prereqs.GroupBy(x => x.Grade))
-            {               
+            {
                 m_prerequisiteSkills.Add(prereqGrade.Key, prereqGrade.Select(
-                    prereq => new StaticSkillLevel( prereq.ID, Int32.Parse(prereq.Level, CultureConstants.InvariantCulture)))
-                    .ToList());                               
+                    prereq => new StaticSkillLevel(prereq.ID, Int32.Parse(prereq.Level, CultureConstants.InvariantCulture)))
+                    .ToList());
             }
         }
 
@@ -133,10 +135,7 @@ namespace EVEMon.Common.Data
         /// Gets a string representation of this certificate.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Description;
-        }
+        public override string ToString() => Description;
 
         #endregion
     }

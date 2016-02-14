@@ -255,10 +255,7 @@ namespace EVEMon.Common.Models
         /// <param name="skill"></param>
         /// <param name="level"></param>
         /// <returns></returns>
-        public bool IsPlanned(StaticSkill skill, Int64 level)
-        {
-            return GetEntry(skill, level) != null;
-        }
+        public bool IsPlanned(StaticSkill skill, Int64 level) => GetEntry(skill, level) != null;
 
         /// <summary>
         /// Gets the highest planned level of the given skill.
@@ -297,7 +294,7 @@ namespace EVEMon.Common.Models
 
                 // Scroll through prerequisites
                 if (entry.Skill.Prerequisites.Any(
-                        prereq => !EnsurePrerequisiteExistBefore(prereq.Skill, prereq.Level, i, entry.Priority)))
+                    prereq => !EnsurePrerequisiteExistBefore(prereq.Skill, prereq.Level, i, entry.Priority)))
                 {
                     jumpBack = true;
                     i--;
@@ -350,7 +347,7 @@ namespace EVEMon.Common.Models
             if (skillIndex == -1)
             {
                 PlanEntry newEntry = new PlanEntry(this, skill, level)
-                                         { Type = PlanEntryType.Prerequisite, Priority = newEntriesPriority };
+                { Type = PlanEntryType.Prerequisite, Priority = newEntriesPriority };
 
                 InsertCore(insertionIndex, newEntry);
                 return false;
@@ -477,9 +474,7 @@ namespace EVEMon.Common.Models
         /// <param name="skillsToAdd"></param>
         /// <returns></returns>
         public bool AreSkillsPlanned(IEnumerable<StaticSkillLevel> skillsToAdd)
-        {
-            return skillsToAdd.All(item => IsPlanned(item.Skill, item.Level));
-        }
+            => skillsToAdd.All(item => IsPlanned(item.Skill, item.Level));
 
         /// <summary>
         /// Rebuild the plan from the given entries enumeration.
@@ -599,7 +594,7 @@ namespace EVEMon.Common.Models
         /// <param name="lowestPrereqPriority">The lowest priority (highest number) among all the prerequisites.</param>
         /// <returns>A list of all the entries to add.</returns>
         protected IEnumerable<PlanEntry> GetAllEntriesToAdd<T>(IEnumerable<T> skillsToAdd, string note,
-                                                               out int lowestPrereqPriority)
+            out int lowestPrereqPriority)
             where T : ISkillLevel
         {
             SkillLevelSet<PlanEntry> entriesSet = new SkillLevelSet<PlanEntry>();
@@ -669,7 +664,7 @@ namespace EVEMon.Common.Models
         /// <param name="lowestPrereqPriority"></param>
         /// <returns></returns>
         private PlanEntry CreateEntryToAdd(StaticSkill skill, Int64 level, PlanEntryType type, string note,
-                                           ref int lowestPrereqPriority)
+            ref int lowestPrereqPriority)
         {
             PlanEntry entry = GetEntry(skill, level);
 
@@ -677,10 +672,10 @@ namespace EVEMon.Common.Models
             if (entry == null)
             {
                 return new PlanEntry(null, skill, level)
-                       {
-                           Type = type,
-                           Notes = note
-                       };
+                {
+                    Type = type,
+                    Notes = note
+                };
             }
 
             // If the entry is already in the plan, we create an entry that will never be added to the plan.

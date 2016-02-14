@@ -90,9 +90,7 @@ namespace EVEMon.Common.Data
         /// <param name="blueprintName">The name of the blueprint to find.</param>
         /// <returns>The first blueprint which name matches blueprintName, Null if no such blueprint is found.</returns>
         public static Blueprint GetBlueprintByName(string blueprintName)
-        {
-            return s_blueprintsByID.Values.FirstOrDefault(x => x.Name == blueprintName);
-        }
+            => s_blueprintsByID.Values.FirstOrDefault(x => x.Name == blueprintName);
 
         #endregion
     }

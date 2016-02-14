@@ -72,8 +72,8 @@ namespace EVEMon.Common.Controls
         /// <param name="icon">The icon.</param>
         /// <returns></returns>
         public static DialogResult Show(IWin32Window owner, string text, string caption, string cbText,
-                                        MessageBoxButtons buttons = MessageBoxButtons.OK,
-                                        MessageBoxIcon icon = MessageBoxIcon.None)
+            MessageBoxButtons buttons = MessageBoxButtons.OK,
+            MessageBoxIcon icon = MessageBoxIcon.None)
         {
             using (MessageBoxCustom form = new MessageBoxCustom())
             {
@@ -89,9 +89,7 @@ namespace EVEMon.Common.Controls
         /// <param name="caption">Text to display in the title bar.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
         public static DialogResult Show(IWin32Window owner, string text, string caption)
-        {
-            return Show(owner, text, caption, String.Empty);
-        }
+            => Show(owner, text, caption, String.Empty);
 
         /// <summary>
         /// Displays a message box.
@@ -99,10 +97,7 @@ namespace EVEMon.Common.Controls
         /// <param name="owner">Owner window.</param>
         /// <param name="text">Text to display.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
-        public static DialogResult Show(IWin32Window owner, string text)
-        {
-            return Show(owner, text, String.Empty, String.Empty);
-        }
+        public static DialogResult Show(IWin32Window owner, string text) => Show(owner, text, String.Empty, String.Empty);
 
         #endregion
 
@@ -151,8 +146,8 @@ namespace EVEMon.Common.Controls
         /// <param name="icon">Icon to display in the mesage box.</param>
         /// <returns>One of the <see cref="DialogResult"/> values.</returns>
         private DialogResult ShowDialog(IWin32Window owner, string text, string caption, string cbText,
-                                        MessageBoxButtons buttons = MessageBoxButtons.OK,
-                                        MessageBoxIcon icon = MessageBoxIcon.None)
+            MessageBoxButtons buttons = MessageBoxButtons.OK,
+            MessageBoxIcon icon = MessageBoxIcon.None)
         {
             button1.Click += OnButtonClick;
             button2.Click += OnButtonClick;
@@ -165,7 +160,7 @@ namespace EVEMon.Common.Controls
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 NativeMethods.EnableMenuItem(NativeMethods.GetSystemMenu(Handle, false),
-                                             NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | NativeMethods.MF_GRAYED);
+                    NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | NativeMethods.MF_GRAYED);
             }
             else
                 ControlBox = false;

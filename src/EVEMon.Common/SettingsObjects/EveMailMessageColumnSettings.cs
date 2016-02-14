@@ -38,10 +38,7 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        public override string ToString()
-        {
-            return Column.GetHeader();
-        }
+        public override string ToString() => Column.GetHeader();
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
@@ -49,9 +46,6 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns>
         /// A new object that is a copy of this instance.
         /// </returns>
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
+        public object Clone() => MemberwiseClone();
     }
 }

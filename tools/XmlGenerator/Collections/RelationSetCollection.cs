@@ -35,10 +35,8 @@ namespace EVEMon.XmlGenerator.Collections
         /// <returns>
         ///   <c>true</c> if [contains] [the specified left]; otherwise, <c>false</c>.
         /// </returns>
-        public bool Contains(int left, int center, int right)
-        {
-            return m_dictionary.ContainsKey(GetKey(left, center, right));
-        }
+        public bool Contains(int left, int center, int right) 
+            => m_dictionary.ContainsKey(GetKey(left, center, right));
 
         /// <summary>
         /// Gets the specified left.
@@ -60,9 +58,7 @@ namespace EVEMon.XmlGenerator.Collections
         /// <param name="relation">The relation.</param>
         /// <returns></returns>
         private static long GetKey(IRelation relation)
-        {
-            return GetKey(relation.Left, relation.Center, relation.Right);
-        }
+            => GetKey(relation.Left, relation.Center, relation.Right);
 
         /// <summary>
         /// Gets the key.
@@ -72,18 +68,13 @@ namespace EVEMon.XmlGenerator.Collections
         /// <param name="right">The right.</param>
         /// <returns></returns>
         private static long GetKey(long left, long center, long right)
-        {
-            return Math.Abs(left) << 32 | Math.Abs(center) << 16 | Math.Abs(right) << 8;
-        }
+            => Math.Abs(left) << 32 | Math.Abs(center) << 16 | Math.Abs(right) << 8;
 
         /// <summary>
         /// Gets the enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<T> GetEnumerator()
-        {
-            return ((IEnumerable<T>)m_dictionary.Values).GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)m_dictionary.Values).GetEnumerator();
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -91,9 +82,6 @@ namespace EVEMon.XmlGenerator.Collections
         /// <returns>
         /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
         /// </returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

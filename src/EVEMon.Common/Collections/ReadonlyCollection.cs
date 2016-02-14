@@ -36,23 +36,14 @@ namespace EVEMon.Common.Collections
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Contains(T item)
-        {
-            return Items.Contains(item);
-        }
+        public bool Contains(T item) => Items.Contains(item);
 
 
         #region Enumerators
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return Items.GetEnumerator();
-        }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => Items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Items.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => Items.GetEnumerator();
 
         #endregion
     }

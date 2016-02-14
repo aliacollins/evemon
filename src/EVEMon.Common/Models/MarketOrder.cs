@@ -246,7 +246,7 @@ namespace EVEMon.Common.Models
 
             // Update state
             OrderState state = GetState(src);
-            
+
             if (m_state == OrderState.Modified || state == m_state)
                 return true;
 
@@ -334,22 +334,16 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool MatchesWith(SerializableOrderListItem src)
-        {
-            return src.OrderID == ID;
-        }
+        private bool MatchesWith(SerializableOrderListItem src) => src.OrderID == ID;
 
         /// <summary>
         /// Checks whether the given API object has been modified.
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool IsModified(SerializableOrderListItem src)
-        {
-            return src.RemainingVolume != 0
-                   && ((src.UnitaryPrice != UnitaryPrice && src.Issued != Issued)
-                       || src.RemainingVolume != RemainingVolume);
-        }
+        private bool IsModified(SerializableOrderListItem src) => src.RemainingVolume != 0
+                                                                  && ((src.UnitaryPrice != UnitaryPrice && src.Issued != Issued)
+                                                                      || src.RemainingVolume != RemainingVolume);
 
         #endregion
     }

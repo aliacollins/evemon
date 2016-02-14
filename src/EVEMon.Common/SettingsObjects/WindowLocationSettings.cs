@@ -44,8 +44,6 @@ namespace EVEMon.Common.SettingsObjects
         /// <returns>The result of the conversion.</returns>
         /// <remarks>Do not make the conversion operators implicit, there is a bug with XML serialization</remarks>
         public static explicit operator WindowLocationSettings(Rectangle rect)
-        {
-            return new WindowLocationSettings { Left = rect.Left, Top = rect.Top, Width = rect.Width, Height = rect.Height };
-        }
+            => new WindowLocationSettings { Left = rect.Left, Top = rect.Top, Width = rect.Width, Height = rect.Height };
     }
 }

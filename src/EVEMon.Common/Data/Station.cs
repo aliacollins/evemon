@@ -124,8 +124,8 @@ namespace EVEMon.Common.Data
                 throw new ArgumentNullException("other");
 
             return SolarSystem != other.SolarSystem
-                       ? SolarSystem.CompareTo(other.SolarSystem)
-                       : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
+                ? SolarSystem.CompareTo(other.SolarSystem)
+                : String.Compare(Name, other.Name, StringComparison.CurrentCulture);
         }
 
         #endregion
@@ -139,34 +139,26 @@ namespace EVEMon.Common.Data
         /// <param name="solarSystem">The solar system.</param>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        private static string GetFullLocation(SolarSystem solarSystem, string name)
-        {
-            return solarSystem == null
-                       ? String.Empty
-                       : String.Format(CultureConstants.DefaultCulture, "{0} > {1}", solarSystem.FullLocation, name);
-        }
+        private static string GetFullLocation(SolarSystem solarSystem, string name) => solarSystem == null
+            ? String.Empty
+            : String.Format(CultureConstants.DefaultCulture, "{0} > {1}", solarSystem.FullLocation, name);
 
         /// <summary>
         /// Gets the station by the provided ID.
         /// </summary>
         /// <param name="id">The station's id.</param>
         /// <returns></returns>
-        public static Station GetByID(int id)
-        {
-            // Check if it's a conquerable outpost station, if not look in our data
-            return ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
-        }
+        // Check if it's a conquerable outpost station, if not look in our data
+        public static Station GetByID(int id) => ConquerableStation.GetStationByID(id) ?? StaticGeography.GetStationByID(id);
 
         /// <summary>
         /// Gets the station by the provided name.
         /// </summary>
         /// <param name="name">The station's name.</param>
         /// <returns>The station or null</returns>
+        // Check if it's a conquerable outpost station, if not look in our data
         internal static Station GetByName(string name)
-        {
-            // Check if it's a conquerable outpost station, if not look in our data
-            return ConquerableStation.GetStationByName(name) ?? StaticGeography.GetStationByName(name);
-        }
+            => ConquerableStation.GetStationByName(name) ?? StaticGeography.GetStationByName(name);
 
         #endregion
 
@@ -177,10 +169,7 @@ namespace EVEMon.Common.Data
         /// Gets the name of this object.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #endregion
     }

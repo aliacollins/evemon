@@ -118,9 +118,7 @@ namespace EVEMon.Common.Helpers
         /// Gets a string representation with the following format : "<c>Intelligence : 15</c>"
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return String.Format(CultureConstants.DefaultCulture, "{0} : {1}", m_attrib, EffectiveValue);
-        }
+        public override string ToString() 
+            => String.Format(CultureConstants.DefaultCulture, "{0} : {1}", m_attrib, EffectiveValue);
     }
 }

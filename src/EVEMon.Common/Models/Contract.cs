@@ -210,10 +210,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the contract items.
         /// </summary>
-        public IEnumerable<ContractItem> ContractItems
-        {
-            get { return m_contractItems.Where(x => x.Item != null); }
-        }
+        public IEnumerable<ContractItem> ContractItems => m_contractItems.Where(x => x.Item != null);
 
         /// <summary>
         /// Gets the contract text.
@@ -225,7 +222,7 @@ namespace EVEMon.Common.Models
             {
                 if (ContractType == ContractType.Courier)
                     return String.Format(CultureConstants.DefaultCulture, "{0} >> {1} ({2} m³)",
-                                         StartStation.SolarSystem.Name, EndStation.SolarSystem.Name, Math.Round(Volume));
+                        StartStation.SolarSystem.Name, EndStation.SolarSystem.Name, Math.Round(Volume));
 
                 if (!m_contractItems.Any() || !ContractItems.Any())
                     return EVEMonConstants.UnknownText;
@@ -240,10 +237,10 @@ namespace EVEMon.Common.Models
                     return Reward == 0 ? "[Want A Gift]" : "[Want To Buy]";
 
                 return String.Format(CultureConstants.DefaultCulture, "{0}{1}", m_contractItems.First().Item.Name,
-                                     m_contractItems.First().Quantity > 1
-                                         ? String.Format(CultureConstants.DefaultCulture, " x {0}",
-                                                         m_contractItems.First().Quantity)
-                                         : String.Empty);
+                    m_contractItems.First().Quantity > 1
+                        ? String.Format(CultureConstants.DefaultCulture, " x {0}",
+                            m_contractItems.First().Quantity)
+                        : String.Empty);
             }
         }
 
@@ -269,26 +266,18 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true if the contract is of "buy only" type.
         /// </summary>
-        public bool IsBuyOnly
-        {
-            get { return m_contractItems.All(x => !x.Included); }
-        }
+        public bool IsBuyOnly => m_contractItems.All(x => !x.Included);
 
         /// <summary>
         /// Gets true if the contract is of "multiple items" type.
         /// </summary>
-        public bool IsMultipleItems
-        {
-            get { return m_contractItems.Count > 1 && m_contractItems.All(x => x.Included); }
-        }
+        public bool IsMultipleItems => m_contractItems.Count > 1 && m_contractItems.All(x => x.Included);
 
         /// <summary>
         /// Gets true if the contract is of "trading" type.
         /// </summary>
         public bool IsTrading
-        {
-            get { return m_contractItems.Count > 1 && m_contractItems.Any(x => x.Included) && m_contractItems.Any(x => !x.Included); }
-        }
+            => m_contractItems.Count > 1 && m_contractItems.Any(x => x.Included) && m_contractItems.Any(x => !x.Included);
 
         /// <summary>
         /// Gets true if the contract is not finished, canceled, expired, etc.
@@ -395,25 +384,25 @@ namespace EVEMon.Common.Models
             UpdateContractInfo(src);
 
             Availability = Enum.IsDefined(typeof(ContractAvailability), src.Availability)
-                               ? (ContractAvailability)Enum.Parse(typeof(ContractAvailability), src.Availability)
-                               : ContractAvailability.None;
+                ? (ContractAvailability)Enum.Parse(typeof(ContractAvailability), src.Availability)
+                : ContractAvailability.None;
 
             ContractType = Enum.IsDefined(typeof(ContractType), src.Type)
-                               ? (ContractType)Enum.Parse(typeof(ContractType), src.Type)
-                               : ContractType.None;
+                ? (ContractType)Enum.Parse(typeof(ContractType), src.Type)
+                : ContractType.None;
 
             m_issuer = src.ForCorp
-                           ? Character.Corporation.Name
-                           : src.IssuerID == Character.CharacterID
-                                 ? Character.Name
-                                 : EveIDToName.GetIDToName(src.IssuerID);
+                ? Character.Corporation.Name
+                : src.IssuerID == Character.CharacterID
+                    ? Character.Name
+                    : EveIDToName.GetIDToName(src.IssuerID);
 
 
             m_assignee = src.AssigneeID == Character.CharacterID
-                             ? Character.Name
-                             : src.AssigneeID == Character.CorporationID
-                                   ? Character.Corporation.Name
-                                   : EveIDToName.GetIDToName(src.AssigneeID);
+                ? Character.Name
+                : src.AssigneeID == Character.CorporationID
+                    ? Character.Corporation.Name
+                    : EveIDToName.GetIDToName(src.AssigneeID);
 
 
             if (ContractType != ContractType.Courier)
@@ -430,10 +419,10 @@ namespace EVEMon.Common.Models
             Completed = src.DateCompleted;
             AcceptorID = src.AcceptorID;
             m_acceptor = src.AcceptorID == Character.CharacterID
-                             ? Character.Name
-                             : src.AcceptorID == Character.CorporationID
-                                   ? Character.Corporation.Name
-                                   : EveIDToName.GetIDToName(src.AcceptorID);
+                ? Character.Name
+                : src.AcceptorID == Character.CorporationID
+                    ? Character.Corporation.Name
+                    : EveIDToName.GetIDToName(src.AcceptorID);
 
             Status = GetStatus(src);
 
@@ -457,15 +446,12 @@ namespace EVEMon.Common.Models
         /// Exports the given object to a serialization object.
         /// </summary>
         /// <returns></returns>
-        internal SerializableContract Export()
+        internal SerializableContract Export() => new SerializableContract
         {
-            return new SerializableContract
-                       {
-                           ContractID = ID,
-                           ContractState = m_state,
-                           IssuedFor = IssuedFor
-                       };
-        }
+            ContractID = ID,
+            ContractState = m_state,
+            IssuedFor = IssuedFor
+        };
 
         #endregion
 
@@ -485,8 +471,8 @@ namespace EVEMon.Common.Models
 
             // Special condition to identify corporation contracts in character query
             APIKey apiKey = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
-                                ? Character.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts)
-                                : Character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
+                ? Character.Identity.FindAPIKeyWithAccess(CCPAPICorporationMethods.CorporationContracts)
+                : Character.Identity.FindAPIKeyWithAccess(CCPAPICharacterMethods.Contracts);
 
             // Quits if access denied
             if (apiKey == null)
@@ -494,8 +480,8 @@ namespace EVEMon.Common.Models
 
             // Special condition to identify corporation contracts in character query and determine the correct api method to call
             m_apiMethod = IssuedFor == IssuedFor.Corporation && CCPAPICorporationMethods.CorporationContracts.Equals(m_method)
-                              ? CCPAPIGenericMethods.CorporationContractItems
-                              : CCPAPIGenericMethods.ContractItems;
+                ? CCPAPIGenericMethods.CorporationContractItems
+                : CCPAPIGenericMethods.ContractItems;
 
             EveMonClient.APIProviders.CurrentProvider.QueryMethodAsync<SerializableAPIContractItems>(
                 m_apiMethod, apiKey.ID, apiKey.VerificationCode, Character.CharacterID, ID, OnContractItemsDownloaded);
@@ -558,10 +544,7 @@ namespace EVEMon.Common.Models
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private bool MatchesWith(SerializableContractListItem src)
-        {
-            return src.ContractID == ID;
-        }
+        private bool MatchesWith(SerializableContractListItem src) => src.ContractID == ID;
 
         /// <summary>
         /// Gets the state of a contract.
@@ -604,11 +587,9 @@ namespace EVEMon.Common.Models
         /// <param name="src">The source.</param>
         /// <returns></returns>
         private static CCPContractStatus GetStatus(SerializableContractListItem src)
-        {
-            return Enum.IsDefined(typeof(CCPContractStatus), src.Status)
+            => Enum.IsDefined(typeof(CCPContractStatus), src.Status)
                 ? (CCPContractStatus)Enum.Parse(typeof(CCPContractStatus), src.Status)
                 : CCPContractStatus.None;
-        }
 
         #endregion
     }
