@@ -30,12 +30,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the property.
         /// </summary>
-        public EveProperty Property { get; private set; }
+        public EveProperty Property { get; }
 
         /// <summary>
         /// Gets the property value.
         /// </summary>
-        public string Value { get; private set; }
+        public string Value { get; }
 
         /// <summary>
         /// Gets the integer value.

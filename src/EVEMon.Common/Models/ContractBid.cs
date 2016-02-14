@@ -55,12 +55,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the ID.
         /// </summary>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets the contract ID.
         /// </summary>
-        public long ContractID { get; private set; }
+        public long ContractID { get; }
 
         /// <summary>
         /// Gets the bidder.
@@ -72,12 +72,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the bid date.
         /// </summary>
-        public DateTime BidDate { get; private set; }
+        public DateTime BidDate { get; }
 
         /// <summary>
         /// Gets the amount.
         /// </summary>
-        public decimal Amount { get; private set; }
+        public decimal Amount { get; }
 
         #endregion
 

@@ -51,12 +51,36 @@ namespace EVEMon.Common.Attributes
 
         #region Public Properties
 
+        /// <summary>
+        /// Gets the default update period.
+        /// </summary>
+        /// <value>
+        /// The default period.
+        /// </value>
         public UpdatePeriod DefaultPeriod { get; private set; }
 
+        /// <summary>
+        /// Gets the minimum update period.
+        /// </summary>
+        /// <value>
+        /// The minimum.
+        /// </value>
         public UpdatePeriod Minimum { get; private set; }
 
+        /// <summary>
+        /// Gets the maximum update period.
+        /// </summary>
+        /// <value>
+        /// The maximum.
+        /// </value>
         public UpdatePeriod Maximum { get; private set; }
 
+        /// <summary>
+        /// Gets the update period cache style.
+        /// </summary>
+        /// <value>
+        /// The cache style.
+        /// </value>
         public CacheStyle CacheStyle { get; private set; }
 
         #endregion

@@ -676,19 +676,19 @@ namespace EVEMon.SkillPlanner
             /// Gets or sets the skill.
             /// </summary>
             /// <value>The skill.</value>
-            public Skill Skill { get; private set; }
+            public Skill Skill { get; }
 
             /// <summary>
             /// Gets or sets the required level.
             /// </summary>
             /// <value>The required level.</value>
-            public Int64 RequiredLevel { get; private set; }
+            public Int64 RequiredLevel { get; }
 
             /// <summary>
             /// Gets or sets the cells.
             /// </summary>
             /// <value>The cells.</value>
-            public List<Cell> Cells { get; private set; }
+            public List<Cell> Cells { get; }
 
             /// <summary>
             /// Gets or sets the rectangle.

@@ -26,7 +26,7 @@ namespace EVEMon.Common.Data
             HigherIsBetter = serial.HigherIsBetter;
             Category = category;
 
-            switch (ID)
+            switch (serial.ID)
             {
                 case DBConstants.CPUNeedPropertyID:
                     CPU = this;
@@ -45,47 +45,47 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the property's ID.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets the property name (the displayName in the CCP tables).
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the property's description.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets the string representation of the default value.
         /// </summary>
-        public string DefaultValue { get; private set; }
+        public string DefaultValue { get; }
 
         /// <summary>
         /// Gets the icon for this property.
         /// </summary>
-        public string Icon { get; private set; }
+        public string Icon { get; }
 
         /// <summary>
         /// Gets the unit for this property.
         /// </summary>
-        public string Unit { get; private set; }
+        public string Unit { get; }
 
         /// <summary>
         /// Gets the unitID for this property.
         /// </summary>
-        public long UnitID { get; private set; }
+        public long UnitID { get; }
 
         /// <summary>
         /// When true, the higher the value, the better it is.
         /// </summary>
-        public bool HigherIsBetter { get; private set; }
+        public bool HigherIsBetter { get; }
 
         /// <summary>
         /// Gets the property's category.
         /// </summary>
-        public EvePropertyCategory Category { get; private set; }
+        public EvePropertyCategory Category { get; }
 
         /// <summary>
         /// When true, the property is always visible in the ships browsers, even when an object has no value for this property.

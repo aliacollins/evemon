@@ -35,12 +35,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         #endregion
 

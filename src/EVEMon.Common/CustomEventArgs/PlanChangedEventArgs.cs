@@ -15,8 +15,8 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the plan related to this event.
+        /// Gets the plan related to this event.
         /// </summary>
-        public Plan Plan { get; private set; }
+        public Plan Plan { get; }
     }
 }

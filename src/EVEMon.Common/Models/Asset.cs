@@ -68,7 +68,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the item.
         /// </summary>
-        public Item Item { get; private set; }
+        public Item Item { get; }
 
         /// <summary>
         /// Gets the container.
@@ -78,17 +78,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the quantity.
         /// </summary>
-        public long Quantity { get; private set; }
+        public long Quantity { get; }
 
         /// <summary>
         /// Gets the flag.
         /// </summary>
-        public string Flag { get; private set; }
+        public string Flag { get; }
 
         /// <summary>
         /// Gets the type of the blueprint.
         /// </summary>
-        public string TypeOfBlueprint { get; private set; }
+        public string TypeOfBlueprint { get; }
 
         /// <summary>
         /// Gets the location.
@@ -111,12 +111,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the volume.
         /// </summary>
-        public double Volume { get; private set; }
+        public double Volume { get; }
 
         /// <summary>
         /// Gets the total volume.
         /// </summary>
-        public double TotalVolume { get; private set; }
+        public double TotalVolume { get; }
 
         /// <summary>
         /// Gets the price.

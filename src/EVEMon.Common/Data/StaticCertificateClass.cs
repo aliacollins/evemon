@@ -31,24 +31,24 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this class's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this class's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets this class's description.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets the certificates class's Group.
         /// </summary>
-        public StaticCertificateGroup Group { get; private set; }
+        public StaticCertificateGroup Group { get; }
 
-        public StaticCertificate Certificate { get; private set; }
+        public StaticCertificate Certificate { get; }
 
         #endregion
 

@@ -60,7 +60,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the research points per day.
         /// </summary>
-        public double PointsPerDay { get; private set; }
+        public double PointsPerDay { get; }
 
         /// <summary>
         /// Cets the current accumulated research points.
@@ -70,7 +70,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the date the research was started.
         /// </summary>
-        public DateTime StartDate { get; private set; }
+        public DateTime StartDate { get; }
 
         /// <summary>
         /// Gets the station where the agent is.

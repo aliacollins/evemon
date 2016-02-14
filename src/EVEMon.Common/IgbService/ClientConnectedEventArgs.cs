@@ -21,6 +21,6 @@ namespace EVEMon.Common.IgbService
         /// Gets or sets the TCP client.
         /// </summary>
         /// <value>The TCP client.</value>
-        public TcpClient TcpClient { get; private set; }
+        public TcpClient TcpClient { get; }
     }
 }

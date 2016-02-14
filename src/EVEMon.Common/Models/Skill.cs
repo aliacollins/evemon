@@ -158,12 +158,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character this skill is bound to.
         /// </summary>
-        public Character Character { get; private set; }
+        public Character Character { get; }
 
         /// <summary>
         /// Gets the underlying static data.
         /// </summary>
-        public StaticSkill StaticData { get; private set; }
+        public StaticSkill StaticData { get; }
 
         /// <summary>
         /// Gets this skill's id.

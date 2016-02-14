@@ -79,7 +79,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the start date.
         /// </summary>
         /// <value>The start date.</value>
-        public DateTime StartDate { get; private set; }
+        public DateTime StartDate { get; }
 
         /// <summary>
         /// Gets the corporation image.

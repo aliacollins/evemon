@@ -82,17 +82,17 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets or sets the skill.
         /// </summary>
-        public StaticSkill Skill { get; private set; }
+        public StaticSkill Skill { get; }
 
         /// <summary>
         /// Gets or sets the skill level.
         /// </summary>
-        public Int64 Level { get; private set; }
+        public Int64 Level { get; }
 
         /// <summary>
         /// Gets or sets the activity for the skill.
         /// </summary>
-        public BlueprintActivity Activity { get; private set; }
+        public BlueprintActivity Activity { get; }
 
         /// <summary>
         /// Gets all the dependencies, in a way matching the hirarchical order and without redudancies.

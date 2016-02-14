@@ -56,7 +56,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the static data associated with this group
         /// </summary>
-        public StaticSkillGroup StaticData { get; private set; }
+        public StaticSkillGroup StaticData { get; }
 
         /// <summary>
         /// Gets the group's ID

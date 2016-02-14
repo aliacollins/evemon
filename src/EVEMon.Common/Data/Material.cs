@@ -31,12 +31,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the reprocessing item.
         /// </summary>
-        public Item Item { get; private set; }
+        public Item Item { get; }
 
         /// <summary>
         /// Gets the reprocessed quantity.
         /// </summary>
-        public long Quantity { get; private set; }
+        public long Quantity { get; }
 
         #endregion
     }

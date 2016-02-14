@@ -49,7 +49,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character.
         /// </summary>
-        public CCPCharacter Character { get; private set; }
+        public CCPCharacter Character { get; }
 
         /// <summary>
         /// Gets the planet identifier.
@@ -57,7 +57,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The planet identifier.
         /// </value>
-        public long PlanetID { get; private set; }
+        public long PlanetID { get; }
 
         /// <summary>
         /// Gets the name of the planet.
@@ -65,7 +65,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the planet.
         /// </value>
-        public string PlanetName { get; private set; }
+        public string PlanetName { get; }
 
         /// <summary>
         /// Gets the name of the planet type.
@@ -73,7 +73,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the planet type.
         /// </value>
-        public string PlanetTypeName { get; private set; }
+        public string PlanetTypeName { get; }
 
         /// <summary>
         /// Gets the solar system where this job is located.
@@ -81,7 +81,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The solar system.
         /// </value>
-        public SolarSystem SolarSystem { get; private set; }
+        public SolarSystem SolarSystem { get; }
 
         /// <summary>
         /// Gets the installation full celestrial path.
@@ -97,7 +97,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The last update.
         /// </value>
-        public DateTime LastUpdate { get; private set; }
+        public DateTime LastUpdate { get; }
 
         /// <summary>
         /// Gets the upgrade level.
@@ -105,7 +105,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The upgrade level.
         /// </value>
-        public int UpgradeLevel { get; private set; }
+        public int UpgradeLevel { get; }
 
         /// <summary>
         /// Gets the number of pins.
@@ -113,7 +113,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The number of pins.
         /// </value>
-        public int NumberOfPins { get; private set; }
+        public int NumberOfPins { get; }
 
         /// <summary>
         /// Gets the pins.

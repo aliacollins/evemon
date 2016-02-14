@@ -46,7 +46,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the owner of this plan.
         /// </summary>
-        public BaseCharacter Character { get; private set; }
+        public BaseCharacter Character { get; }
 
         /// <summary>
         /// Does the plan contain obsolete entries.

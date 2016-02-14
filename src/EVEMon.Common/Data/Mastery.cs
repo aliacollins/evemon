@@ -73,12 +73,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the mastery ship.
         /// </summary>
-        public MasteryShip MasteryShip { get; private set; }
+        public MasteryShip MasteryShip { get; }
 
         /// <summary>
         /// Gets the level.
         /// </summary>
-        public int Level { get; private set; }
+        public int Level { get; }
 
         /// <summary>
         /// Gets the status.

@@ -48,7 +48,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the static data associated with this certificate.
         /// </summary>
-        private StaticCertificate StaticData { get; set; }
+        private StaticCertificate StaticData { get; }
 
         /// <summary>
         /// Gets this certificate's id.
@@ -68,7 +68,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the class for this certificate.
         /// </summary>
-        public CertificateClass Class { get; private set; }
+        public CertificateClass Class { get; }
 
         /// <summary>
         /// Gets the ships this certificate is recommended for.

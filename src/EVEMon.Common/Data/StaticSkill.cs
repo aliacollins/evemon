@@ -94,52 +94,52 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the ID of this skill.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets a zero-based index for skills (allow the use of arrays to optimize computations).
         /// </summary>
-        public int ArrayIndex { get; private set; }
+        public int ArrayIndex { get; }
 
         /// <summary>
         /// Gets the name of this skill (interned).
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the description of this skill.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets the rank of this skill.
         /// </summary>
-        public Int64 Rank { get; private set; }
+        public Int64 Rank { get; }
 
         /// <summary>
         /// Gets the skill's cost.
         /// </summary>
-        public Int64 Cost { get; private set; }
+        public Int64 Cost { get; }
 
         /// <summary>
         /// Gets the skill group this skill is part of.
         /// </summary>
-        public StaticSkillGroup Group { get; private set; }
+        public StaticSkillGroup Group { get; }
 
         /// <summary>
         /// Gets false when the skill is not for sale by any NPC (CCP never published it or removed it from the game, it's inactive).
         /// </summary>
-        public bool IsPublic { get; private set; }
+        public bool IsPublic { get; }
 
         /// <summary>
         /// Gets the primary attribute of this skill.
         /// </summary>
-        public EveAttribute PrimaryAttribute { get; private set; }
+        public EveAttribute PrimaryAttribute { get; }
 
         /// <summary>
         /// Gets the secondary attribute of this skill.
         /// </summary>
-        public EveAttribute SecondaryAttribute { get; private set; }
+        public EveAttribute SecondaryAttribute { get; }
 
         /// <summary>
         /// Get whether skill is trainable on a trial account.
@@ -149,12 +149,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the prerequisites a character must satisfy before it can be trained.
         /// </summary>
-        public Collection<StaticSkillLevel> Prerequisites { get; private set; }
+        public Collection<StaticSkillLevel> Prerequisites { get; }
 
         /// <summary>
         /// Gets a formatted representation of the price.
         /// </summary>
-        public string FormattedCost { get; private set; }
+        public string FormattedCost { get; }
 
         /// <summary>
         /// Gets all the prerequisites. I.e, for eidetic memory, it will return <c>{ instant recall IV }</c>.

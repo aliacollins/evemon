@@ -52,7 +52,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The colony.
         /// </value>
-        public PlanetaryColony Colony { get; private set; }
+        public PlanetaryColony Colony { get; }
 
         /// <summary>
         /// Gets the pin identifier.
@@ -60,7 +60,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The pin identifier.
         /// </value>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets the type identifier.
@@ -68,7 +68,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The type identifier.
         /// </value>
-        public int TypeID { get; private set; }
+        public int TypeID { get; }
 
         /// <summary>
         /// Gets or sets the name of the type.
@@ -76,7 +76,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the type.
         /// </value>
-        public string TypeName { get; private set; }
+        public string TypeName { get; }
 
         /// <summary>
         /// Gets or sets the schematic identifier.
@@ -84,7 +84,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The schematic identifier.
         /// </value>
-        public long SchematicID { get; private set; }
+        public long SchematicID { get; }
 
         /// <summary>
         /// Gets or sets the cycle time.
@@ -92,7 +92,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The cycle time.
         /// </value>
-        public short CycleTime { get; private set; }
+        public short CycleTime { get; }
 
         /// <summary>
         /// Gets or sets the quantity per cycle.
@@ -100,7 +100,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The quantity per cycle.
         /// </value>
-        public int QuantityPerCycle { get; private set; }
+        public int QuantityPerCycle { get; }
 
         /// <summary>
         /// Gets the content type identifier.
@@ -108,7 +108,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The content type identifier.
         /// </value>
-        public int ContentTypeID { get; private set; }
+        public int ContentTypeID { get; }
 
         /// <summary>
         /// Gets or sets the name of the content type.
@@ -116,7 +116,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the content type.
         /// </value>
-        public string ContentTypeName { get; private set; }
+        public string ContentTypeName { get; }
 
         /// <summary>
         /// Gets the content volume.
@@ -124,7 +124,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The content.
         /// </value>
-        public double ContentVolume { get; private set; }
+        public double ContentVolume { get; }
 
         /// <summary>
         /// Gets or sets the content quantity.
@@ -132,7 +132,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The content quantity.
         /// </value>
-        public int ContentQuantity { get; private set; }
+        public int ContentQuantity { get; }
 
         /// <summary>
         /// Gets or sets the last launch time.
@@ -140,7 +140,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The last launch time.
         /// </value>
-        public DateTime LastLaunchTime { get; private set; }
+        public DateTime LastLaunchTime { get; }
 
         /// <summary>
         /// Gets or sets the install time.
@@ -148,7 +148,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The install time.
         /// </value>
-        public DateTime InstallTime { get; private set; }
+        public DateTime InstallTime { get; }
 
         /// <summary>
         /// Gets or sets the expiry time.
@@ -156,7 +156,7 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The expiry time.
         /// </value>
-        public DateTime ExpiryTime { get; private set; }
+        public DateTime ExpiryTime { get; }
 
         /// <summary>
         /// Gets or sets the jobs state.

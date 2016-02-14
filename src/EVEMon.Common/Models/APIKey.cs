@@ -94,7 +94,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the ID.
         /// </summary>
         /// <value>The ID.</value>
-        public long ID { get; private set; }
+        public long ID { get; }
 
         /// <summary>
         /// Gets or sets the verification code.
@@ -123,7 +123,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the list of items to never import.
         /// </summary>
-        public CharacterIdentityIgnoreList IdentityIgnoreList { get; private set; }
+        public CharacterIdentityIgnoreList IdentityIgnoreList { get; }
 
         /// <summary>
         /// Gets the account expiration date and time.

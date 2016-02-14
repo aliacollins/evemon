@@ -135,17 +135,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the skill queue for this character.
         /// </summary>
-        public SkillQueue SkillQueue { get; private set; }
+        public SkillQueue SkillQueue { get; }
 
         /// <summary>
         /// Gets the standings for this character.
         /// </summary>
-        public StandingCollection Standings { get; private set; }
+        public StandingCollection Standings { get; }
 
         /// <summary>
         /// Gets the assets for this character.
         /// </summary>
-        public AssetCollection Assets { get; private set; }
+        public AssetCollection Assets { get; }
 
         /// <summary>
         /// Gets the factional warfare stats for this character.
@@ -155,12 +155,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the wallet journal for this character.
         /// </summary>
-        public WalletJournalCollection WalletJournal { get; private set; }
+        public WalletJournalCollection WalletJournal { get; }
 
         /// <summary>
         /// Gets the wallet transactions for this character.
         /// </summary>
-        public WalletTransactionsCollection WalletTransactions { get; private set; }
+        public WalletTransactionsCollection WalletTransactions { get; }
 
         /// <summary>
         /// Gets the collection of market orders.
@@ -173,13 +173,13 @@ namespace EVEMon.Common.Models
         /// Gets or sets the character market orders.
         /// </summary>
         /// <value>The character market orders.</value>
-        public MarketOrderCollection CharacterMarketOrders { get; private set; }
+        public MarketOrderCollection CharacterMarketOrders { get; }
 
         /// <summary>
         /// Gets or sets the corporation market orders.
         /// </summary>
         /// <value>The corporation market orders.</value>
-        public MarketOrderCollection CorporationMarketOrders { get; private set; }
+        public MarketOrderCollection CorporationMarketOrders { get; }
 
         /// <summary>
         /// Gets the collection of contracts.
@@ -196,25 +196,25 @@ namespace EVEMon.Common.Models
         /// Gets or sets the character contracts.
         /// </summary>
         /// <value>The character contracts.</value>
-        public ContractCollection CharacterContracts { get; private set; }
+        public ContractCollection CharacterContracts { get; }
 
         /// <summary>
         /// Gets or sets the corporation contracts.
         /// </summary>
         /// <value>The character contracts.</value>
-        public ContractCollection CorporationContracts { get; private set; }
+        public ContractCollection CorporationContracts { get; }
 
         /// <summary>
         /// Gets or sets the character contract bids.
         /// </summary>
         /// <value>The character contract bids.</value>
-        public ContractBidCollection CharacterContractBids { get; private set; }
+        public ContractBidCollection CharacterContractBids { get; }
 
         /// <summary>
         /// Gets or sets the corporation contract bids.
         /// </summary>
         /// <value>The character contract bids.</value>
-        public ContractBidCollection CorporationContractBids { get; private set; }
+        public ContractBidCollection CorporationContractBids { get; }
 
         /// <summary>
         /// Gets the collection of industry jobs.
@@ -227,68 +227,68 @@ namespace EVEMon.Common.Models
         /// Gets or sets the character industry jobs.
         /// </summary>
         /// <value>The character industry jobs.</value>
-        public IndustryJobCollection CharacterIndustryJobs { get; private set; }
+        public IndustryJobCollection CharacterIndustryJobs { get; }
 
         /// <summary>
         /// Gets or sets the corporation industry jobs.
         /// </summary>
         /// <value>The corporation industry jobs.</value>
-        public IndustryJobCollection CorporationIndustryJobs { get; private set; }
+        public IndustryJobCollection CorporationIndustryJobs { get; }
 
         /// <summary>
         /// Gets the collection of research points.
         /// </summary>
-        public ResearchPointCollection ResearchPoints { get; private set; }
+        public ResearchPointCollection ResearchPoints { get; }
 
         /// <summary>
         /// Gets the collection of EVE mail messages.
         /// </summary>
-        public EveMailMessageCollection EVEMailMessages { get; private set; }
+        public EveMailMessageCollection EVEMailMessages { get; }
 
         /// <summary>
         /// Gets the collection of EVE mail messages.
         /// </summary>
-        public EveMailingListCollection EVEMailingLists { get; private set; }
+        public EveMailingListCollection EVEMailingLists { get; }
 
         /// <summary>
         /// Gets the collection of EVE notifications.
         /// </summary>
-        public EveNotificationCollection EVENotifications { get; private set; }
+        public EveNotificationCollection EVENotifications { get; }
 
         /// <summary>
         /// Gets the collection of contacts.
         /// </summary>
-        public ContactCollection Contacts { get; private set; }
+        public ContactCollection Contacts { get; }
 
         /// <summary>
         /// Gets the collection of character medals.
         /// </summary>
-        public MedalCollection CharacterMedals { get; private set; }
+        public MedalCollection CharacterMedals { get; }
 
         /// <summary>
         /// Gets the collection of corporation medals.
         /// </summary>
-        public MedalCollection CorporationMedals { get; private set; }
+        public MedalCollection CorporationMedals { get; }
 
         /// <summary>
         /// Gets the collection of upcoming calendar events.
         /// </summary>
-        public UpcomingCalendarEventCollection UpcomingCalendarEvents { get; private set; }
+        public UpcomingCalendarEventCollection UpcomingCalendarEvents { get; }
 
         /// <summary>
         /// Gets the collection of kill logs.
         /// </summary>
-        public KillLogCollection KillLog { get; private set; }
+        public KillLogCollection KillLog { get; }
 
         /// <summary>
         /// Gets the collection of planetary colonies.
         /// </summary>
-        public PlanetaryColonyCollection PlanetaryColonies { get; private set; }
+        public PlanetaryColonyCollection PlanetaryColonies { get; }
 
         /// <summary>
         /// Gets the query monitors enumeration.
         /// </summary>
-        public QueryMonitorCollection QueryMonitors { get; private set; }
+        public QueryMonitorCollection QueryMonitors { get; }
 
         /// <summary>
         /// Gets true when the character is currently actively training, false otherwise.
@@ -336,7 +336,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets true when a new character is created.
         /// </summary>
-        public bool ForceUpdateBasicFeatures { get; private set; }
+        public bool ForceUpdateBasicFeatures { get; }
 
         #endregion
 

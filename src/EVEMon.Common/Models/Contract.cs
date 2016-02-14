@@ -71,7 +71,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character.
         /// </summary>
-        public CCPCharacter Character { get; private set; }
+        public CCPCharacter Character { get; }
 
         /// <summary>
         /// Gets the ID.

@@ -79,7 +79,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets a global identifier for this character.
         /// </summary>
-        public Guid Guid { get; private set; }
+        public Guid Guid { get; }
 
         /// <summary>
         /// Gets the identity for this character.
@@ -156,7 +156,7 @@ namespace EVEMon.Common.Models
         /// Gets or sets the corporation.
         /// </summary>
         /// <value>The corporation.</value>
-        public Corporation Corporation { get; private set; }
+        public Corporation Corporation { get; }
 
         /// <summary>
         /// Gets the id of the character's corporation.
@@ -275,7 +275,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets or sets the character's  employment history.
         /// </summary>
-        public EmploymentRecordCollection EmploymentHistory { get; private set; }
+        public EmploymentRecordCollection EmploymentHistory { get; }
 
         /// <summary>
         /// Gets the character's last known station location.
@@ -295,17 +295,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the collection of certificate categories.
         /// </summary>
-        public CertificateCategoryCollection CertificateCategories { get; private set; }
+        public CertificateCategoryCollection CertificateCategories { get; }
 
         /// <summary>
         /// Gets the collection of certificate classes.
         /// </summary>
-        public CertificateClassCollection CertificateClasses { get; private set; }
+        public CertificateClassCollection CertificateClasses { get; }
 
         /// <summary>
         /// Gets the collection of certificates.
         /// </summary>
-        public CertificateCollection Certificates { get; private set; }
+        public CertificateCollection Certificates { get; }
 
         #endregion
 
@@ -315,7 +315,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the collection of mastery ships.
         /// </summary>
-        public MasteryShipCollection MasteryShips { get; private set; }
+        public MasteryShipCollection MasteryShips { get; }
 
         #endregion
 
@@ -340,7 +340,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the implants sets of the character and its clones.
         /// </summary>
-        public ImplantSetCollection ImplantSets { get; private set; }
+        public ImplantSetCollection ImplantSets { get; }
 
         /// <summary>
         /// Gets the current implants' bonuses.
@@ -355,12 +355,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the collection of skills.
         /// </summary>
-        public SkillCollection Skills { get; private set; }
+        public SkillCollection Skills { get; }
 
         /// <summary>
         /// Gets the collection of skill groups.
         /// </summary>
-        public SkillGroupCollection SkillGroups { get; private set; }
+        public SkillGroupCollection SkillGroups { get; }
 
         /// <summary>
         /// Gets the total skill points for this character.
@@ -434,7 +434,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the collection of plans.
         /// </summary>
-        public PlanCollection Plans { get; private set; }
+        public PlanCollection Plans { get; }
 
         #endregion
 

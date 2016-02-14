@@ -69,7 +69,7 @@ namespace EVEMon.Common.QueryMonitor
         /// <summary>
         /// Gets the API method monitored by this instance.
         /// </summary>
-        public Enum Method { get; private set; }
+        public Enum Method { get; }
 
         /// <summary>
         /// Gets the last time this instance was updated (UTC).

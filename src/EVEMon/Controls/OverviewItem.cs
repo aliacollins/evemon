@@ -222,7 +222,7 @@ namespace EVEMon.Controls
         /// <summary>
         /// Gets the character control is bound to.
         /// </summary>
-        public Character Character { get; private set; }
+        public Character Character { get; }
 
         /// <summary>
         /// Gets or sets true whether a button should appear on hover.

@@ -17,15 +17,15 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the item.
+        /// Gets the item.
         /// </summary>
         /// <value>The item.</value>
-        public Object Item { get; private set; }
+        public Object Item { get; }
 
         /// <summary>
-        /// Gets or sets the location.
+        /// Gets the location.
         /// </summary>
         /// <value>The location.</value>
-        public Point Location { get; private set; }
+        public Point Location { get; }
     }
 }

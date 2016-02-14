@@ -27,12 +27,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets or sets the quantity.
         /// </summary>
-        public long Quantity { get; private set; }
+        public long Quantity { get; }
 
         /// <summary>
         /// Gets or sets the activity.
         /// </summary>
-        public BlueprintActivity Activity { get; private set; }
+        public BlueprintActivity Activity { get; }
 
         #endregion
 

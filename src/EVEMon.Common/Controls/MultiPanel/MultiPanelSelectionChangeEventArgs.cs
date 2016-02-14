@@ -21,11 +21,11 @@ namespace EVEMon.Common.Controls.MultiPanel
         /// <summary>
         /// Gets the old selection.
         /// </summary>
-        public MultiPanelPage OldPage { get; private set; }
+        public MultiPanelPage OldPage { get; }
 
         /// <summary>
         /// Gets the new selection.
         /// </summary>
-        public MultiPanelPage NewPage { get; private set; }
+        public MultiPanelPage NewPage { get; }
     }
 }

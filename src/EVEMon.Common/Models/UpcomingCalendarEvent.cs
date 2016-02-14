@@ -49,27 +49,27 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the owner ID.
         /// </summary>
-        public long OwnerID { get; private set; }
+        public long OwnerID { get; }
 
         /// <summary>
         /// Gets the name of the owner.
         /// </summary>
-        public string OwnerName { get; private set; }
+        public string OwnerName { get; }
 
         /// <summary>
         /// Gets the event title.
         /// </summary>
-        public string EventTitle { get; private set; }
+        public string EventTitle { get; }
 
         /// <summary>
         /// Gets the event text.
         /// </summary>
-        public string EventText { get; private set; }
+        public string EventText { get; }
 
         /// <summary>
         /// Gets the duration.
         /// </summary>
-        public int Duration { get; private set; }
+        public int Duration { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="UpcomingCalendarEvent"/> is important.
@@ -77,17 +77,17 @@ namespace EVEMon.Common.Models
         /// <value>
         ///   <c>true</c> if this <see cref="UpcomingCalendarEvent"/> is important; otherwise, <c>false</c>.
         /// </value>
-        public bool Importance { get; private set; }
+        public bool Importance { get; }
 
         /// <summary>
         /// Gets the response.
         /// </summary>
-        public string Response { get; private set; }
+        public string Response { get; }
 
         /// <summary>
         /// Gets the event date.
         /// </summary>
-        public DateTime EventDate { get; private set; }
+        public DateTime EventDate { get; }
 
         /// <summary>
         /// Gets the event attendees.

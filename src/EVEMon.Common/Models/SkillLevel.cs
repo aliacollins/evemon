@@ -31,12 +31,12 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets or sets the skill.
         /// </summary>
-        public Skill Skill { get; private set; }
+        public Skill Skill { get; }
 
         /// <summary>
         /// Gets or sets the skill level.
         /// </summary>
-        public Int64 Level { get; private set; }
+        public Int64 Level { get; }
 
         /// <summary>
         /// Gets true if this skill level is already trained.

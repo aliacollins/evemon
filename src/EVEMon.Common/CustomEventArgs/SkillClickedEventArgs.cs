@@ -27,18 +27,18 @@ namespace EVEMon.Common.CustomEventArgs
         /// Gets the skill.
         /// </summary>
         /// <value>The skill.</value>
-        public Skill Skill { get; private set; }
+        public Skill Skill { get; }
 
         /// <summary>
         /// Gets the button.
         /// </summary>
         /// <value>The button.</value>
-        public MouseButtons Button { get; private set; }
+        public MouseButtons Button { get; }
 
         /// <summary>
         /// Gets the location.
         /// </summary>
         /// <value>The location.</value>
-        public Point Location { get; private set; }
+        public Point Location { get; }
     }
 }

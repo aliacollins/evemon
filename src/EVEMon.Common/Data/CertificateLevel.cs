@@ -39,7 +39,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The level.
         /// </value>
-        public CertificateGrade Level { get; private set; }
+        public CertificateGrade Level { get; }
 
         /// <summary>
         /// Gets the certificate.
@@ -47,7 +47,7 @@ namespace EVEMon.Common.Data
         /// <value>
         /// The certificate.
         /// </value>
-        public Certificate Certificate { get; private set; }
+        public Certificate Certificate { get; }
 
         /// <summary>
         /// Gets the status.
@@ -60,7 +60,7 @@ namespace EVEMon.Common.Data
         /// <summary>                                                                                                             
         /// Gets the immediate prerequisite skills.                                                                                                            
         /// </summary>
-        public IEnumerable<SkillLevel> PrerequisiteSkills { get; private set; }
+        public IEnumerable<SkillLevel> PrerequisiteSkills { get; }
 
         /// <summary>
         /// Gets true whether the certificate is trained.

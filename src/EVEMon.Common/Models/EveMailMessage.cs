@@ -60,31 +60,31 @@ namespace EVEMon.Common.Models
         /// Gets or sets the EVE mail state.
         /// </summary>
         /// <value>The state.</value>
-        public EveMailState State { get; private set; }
+        public EveMailState State { get; }
 
         /// <summary>
         /// Gets or sets the EVE mail message ID.
         /// </summary>
         /// <value>The message ID.</value>
-        public long MessageID { get; private set; }
+        public long MessageID { get; }
 
         /// <summary>
         /// Gets or sets the EVE mail sender name.
         /// </summary>
         /// <value>The sender.</value>
-        public string SenderName { get; private set; }
+        public string SenderName { get; }
 
         /// <summary>
         /// Gets or sets the sent date of the EVE mail.
         /// </summary>
         /// <value>The sent date.</value>
-        public DateTime SentDate { get; private set; }
+        public DateTime SentDate { get; }
 
         /// <summary>
         /// Gets or sets the EVE mail title.
         /// </summary>
         /// <value>The title.</value>
-        public string Title { get; private set; }
+        public string Title { get; }
 
         /// <summary>
         /// Gets or sets the EVE mail recipient (corp or alliance).

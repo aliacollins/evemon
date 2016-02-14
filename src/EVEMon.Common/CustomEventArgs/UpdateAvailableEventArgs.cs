@@ -30,53 +30,53 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the forum URL.
+        /// Gets the forum URL.
         /// </summary>
         /// <value>The forum URL.</value>
-        public Uri ForumUrl { get; private set; }
+        public Uri ForumUrl { get; }
 
         /// <summary>
-        /// Gets or sets the installer URL.
+        /// Gets the installer URL.
         /// </summary>
         /// <value>The auto install URL.</value>
-        public Uri InstallerUrl { get; private set; }
+        public Uri InstallerUrl { get; }
 
         /// <summary>
-        /// Gets or sets the update message.
+        /// Gets the update message.
         /// </summary>
         /// <value>The update message.</value>
-        public string UpdateMessage { get; private set; }
+        public string UpdateMessage { get; }
 
         /// <summary>
-        /// Gets or sets the current version.
+        /// Gets the current version.
         /// </summary>
-        /// <value>The current version.</value>
-        public Version CurrentVersion { get; private set; }
+        /// <value> The current version.</value>
+        public Version CurrentVersion { get; }
 
         /// <summary>
-        /// Gets or sets the newest version.
+        /// Gets the newest version.
         /// </summary>
         /// <value>The newest version.</value>
-        public Version NewestVersion { get; private set; }
+        public Version NewestVersion { get; }
 
         /// <summary>
-        /// Gets or sets the MD5 sum.
+        /// Gets the MD5 sum.
         /// </summary>
         /// <value>The M d5 sum.</value>
-        public string MD5Sum { get; private set; }
+        public string MD5Sum { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance can auto install.
+        /// Gets a value indicating whether this instance can auto install.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this instance can auto install; otherwise, <c>false</c>.
         /// </value>
-        public bool CanAutoInstall { get; private set; }
+        public bool CanAutoInstall { get; }
 
         /// <summary>
-        /// Gets or sets the auto install arguments.
+        /// Gets the auto install arguments.
         /// </summary>
         /// <value>The auto install arguments.</value>
-        public string AutoInstallArguments { get; private set; }
+        public string AutoInstallArguments { get; }
     }
 }

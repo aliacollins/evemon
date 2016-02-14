@@ -28,7 +28,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public Collection<PlanetaryPin> PlanetaryPins { get; private set; }
+        public Collection<PlanetaryPin> PlanetaryPins { get; }
 
         /// <summary>
         /// Gets true if the notification has details.

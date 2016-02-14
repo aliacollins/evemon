@@ -1317,6 +1317,13 @@ namespace EVEMon.PieChart
         /// </summary>
         private struct PeripherySurfaceBounds
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PeripherySurfaceBounds"/> struct.
+            /// </summary>
+            /// <param name="startAngle">The start angle.</param>
+            /// <param name="endAngle">The end angle.</param>
+            /// <param name="startPoint">The start point.</param>
+            /// <param name="endPoint">The end point.</param>
             public PeripherySurfaceBounds(float startAngle, float endAngle, PointF startPoint, PointF endPoint)
                 : this()
             {
@@ -1326,13 +1333,37 @@ namespace EVEMon.PieChart
                 EndPoint = endPoint;
             }
 
-            public float StartAngle { get; private set; }
+            /// <summary>
+            /// Gets or sets the start angle.
+            /// </summary>
+            /// <value>
+            /// The start angle.
+            /// </value>
+            public float StartAngle { get; }
 
-            public float EndAngle { get; private set; }
+            /// <summary>
+            /// Gets or sets the end angle.
+            /// </summary>
+            /// <value>
+            /// The end angle.
+            /// </value>
+            public float EndAngle { get; }
 
-            public PointF StartPoint { get; private set; }
+            /// <summary>
+            /// Gets or sets the start point.
+            /// </summary>
+            /// <value>
+            /// The start point.
+            /// </value>
+            public PointF StartPoint { get; }
 
-            public PointF EndPoint { get; private set; }
+            /// <summary>
+            /// Gets or sets the end point.
+            /// </summary>
+            /// <value>
+            /// The end point.
+            /// </value>
+            public PointF EndPoint { get; }
         }
     }
 }

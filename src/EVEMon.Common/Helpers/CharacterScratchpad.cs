@@ -172,7 +172,7 @@ namespace EVEMon.Common.Helpers
         /// <summary>
         /// Gets the list of skills trained so far (by the <see cref="Train&lt;T&gt;"/> or <see cref="SetSkillLevel"/> methods).
         /// </summary>
-        public Collection<StaticSkillLevel> TrainedSkills { get; private set; }
+        public Collection<StaticSkillLevel> TrainedSkills { get; }
 
         /// <summary>
         /// Clears the training time and trained skills only. 

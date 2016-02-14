@@ -41,12 +41,12 @@ namespace EVEMon.Common.Models.Collections
         /// <summary>
         /// Gets the none implant.
         /// </summary>
-        public ImplantSet None { get; private set; }
+        public ImplantSet None { get; }
 
         /// <summary>
         /// Gets the implants retrieved from the API.
         /// </summary>
-        public ImplantSet ActiveClone { get; private set; }
+        public ImplantSet ActiveClone { get; }
 
         /// <summary>
         /// Gets or sets the current implant set.

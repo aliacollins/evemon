@@ -46,12 +46,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the sub categories.
         /// </summary>
-        public new BlueprintMarketGroupCollection SubGroups { get; private set; }
+        public new BlueprintMarketGroupCollection SubGroups { get; }
 
         /// <summary>
         /// Gets the blueprints in this category.
         /// </summary>
-        public BlueprintCollection Blueprints { get; private set; }
+        public BlueprintCollection Blueprints { get; }
 
         /// <summary>
         /// Gets the collection of all the blueprints in this category and its descendants.

@@ -21,6 +21,6 @@ namespace EVEMon.Common.Exceptions
         /// <value>
         /// The error code.
         /// </value>
-        public string ErrorCode { get; set; }
+        public string ErrorCode { get; }
     }
 }

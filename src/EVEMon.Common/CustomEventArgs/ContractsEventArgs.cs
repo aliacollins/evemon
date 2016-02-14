@@ -18,15 +18,15 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the character.
+        /// Gets the character.
         /// </summary>
         /// <value>The character.</value>
-        public Character Character { get; private set; }
+        public Character Character { get; }
 
         /// <summary>
-        /// Gets or sets the ended contracts.
+        /// Gets the ended contracts.
         /// </summary>
         /// <value>The ended contracts.</value>
-        public IEnumerable<Contract> EndedContracts { get; private set; }
+        public IEnumerable<Contract> EndedContracts { get; }
     }
 }

@@ -15,8 +15,8 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the API key related to this event.
+        /// Gets the API key related to this event.
         /// </summary>
-        public APIKey APIKey { get; private set; }
+        public APIKey APIKey { get; }
     }
 }

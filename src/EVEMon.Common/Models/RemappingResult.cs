@@ -59,18 +59,18 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the optimized plan.
         /// </summary>
-        public Collection<ISkillLevel> Skills { get; private set; }
+        public Collection<ISkillLevel> Skills { get; }
 
         /// <summary>
         /// Gets the remapping point associated with that remapping.
         /// May be null if a remapping was automatically added at the beginning of the training.
         /// </summary>
-        public RemappingPoint Point { get; private set; }
+        public RemappingPoint Point { get; }
 
         /// <summary>
         /// Gets the best scratchpad after the remapping.
         /// </summary>
-        public CharacterScratchpad BaseScratchpad { get; private set; }
+        public CharacterScratchpad BaseScratchpad { get; }
 
         /// <summary>
         /// Gets the best scratchpad after the remapping.
@@ -90,7 +90,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the time when this remapping was done.
         /// </summary>
-        public TimeSpan StartTime { get; private set; }
+        public TimeSpan StartTime { get; }
 
         /// <summary>
         /// Computes an optimized scratchpad, then call <see cref="Update"/>.

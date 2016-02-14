@@ -49,19 +49,19 @@ namespace EVEMon.Common.Models
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string EntityName { get; private set; }
+        public string EntityName { get; }
 
         /// <summary>
         /// Gets or sets the standing value.
         /// </summary>
         /// <value>The standing value.</value>
-        public double StandingValue { get; private set; }
+        public double StandingValue { get; }
 
         /// <summary>
         /// Gets or sets the group.
         /// </summary>
         /// <value>The group.</value>
-        public StandingGroup Group { get; private set; }
+        public StandingGroup Group { get; }
 
         /// <summary>
         /// Gets or sets the entity image.

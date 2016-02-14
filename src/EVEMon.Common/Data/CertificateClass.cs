@@ -27,7 +27,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the static data associated with this object.
         /// </summary>
-        public StaticCertificateClass StaticData { get; private set; }
+        public StaticCertificateClass StaticData { get; }
 
         /// <summary>
         /// Gets the category for this certificate class.
@@ -37,7 +37,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the certificate of this certificate class
         /// </summary>
-        public Certificate Certificate { get; private set; }
+        public Certificate Certificate { get; }
 
         /// <summary>
         /// Gets this skill's id.

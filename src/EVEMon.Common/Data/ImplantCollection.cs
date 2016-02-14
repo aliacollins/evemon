@@ -28,7 +28,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the slot represented by this group.
         /// </summary>
-        public ImplantSlots Slot { get; private set; }
+        public ImplantSlots Slot { get; }
 
         #endregion
 

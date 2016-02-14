@@ -20,12 +20,12 @@ namespace EVEMon.Common.IgbService
         /// Gets or sets the buffer.
         /// </summary>
         /// <value>The buffer.</value>
-        public IEnumerable<byte> Buffer { get; private set; }
+        public IEnumerable<byte> Buffer { get; }
 
         /// <summary>
         /// Gets or sets the count.
         /// </summary>
         /// <value>The count.</value>
-        public int Count { get; private set; }
+        public int Count { get; }
     }
 }

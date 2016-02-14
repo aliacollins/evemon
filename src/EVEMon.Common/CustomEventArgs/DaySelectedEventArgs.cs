@@ -20,21 +20,21 @@ namespace EVEMon.Common.CustomEventArgs
         }
 
         /// <summary>
-        /// Gets or sets the date time.
+        /// Gets the date time.
         /// </summary>
         /// <value>The date time.</value>
-        public DateTime DateTime { get; private set; }
+        public DateTime DateTime { get; }
 
         /// <summary>
-        /// Gets or sets the mouse.
+        /// Gets the mouse.
         /// </summary>
         /// <value>The mouse.</value>
-        public MouseEventArgs Mouse { get; private set; }
+        public MouseEventArgs Mouse { get; }
 
         /// <summary>
-        /// Gets or sets the location.
+        /// Gets the location.
         /// </summary>
         /// <value>The location.</value>
-        public Point Location { get; private set; }
+        public Point Location { get; }
     }
 }

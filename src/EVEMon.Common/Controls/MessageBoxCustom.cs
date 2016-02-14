@@ -51,7 +51,7 @@ namespace EVEMon.Common.Controls
         public CheckBox CheckBox => cbOption;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the checkbox is checked.
+        /// Gets a value indicating whether the checkbox is checked.
         /// </summary>
         /// <value><c>true</c> if the checkbox is checked; otherwise, <c>false</c>.</value>
         public static bool CheckBoxChecked { get; private set; }

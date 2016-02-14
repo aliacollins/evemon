@@ -43,7 +43,7 @@ namespace EVEMon.Common.Models
         /// Gets the character ID.
         /// </summary>
         /// <value>The character ID.</value>
-        public long CharacterID { get; private set; }
+        public long CharacterID { get; }
 
         /// <summary>
         /// Gets the character's name.

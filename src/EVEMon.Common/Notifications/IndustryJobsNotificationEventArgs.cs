@@ -33,7 +33,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public Collection<IndustryJob> Jobs { get; private set; }
+        public Collection<IndustryJob> Jobs { get; }
 
         /// <summary>
         /// Gets true if the notification has details.

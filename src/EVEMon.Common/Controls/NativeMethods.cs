@@ -221,6 +221,13 @@ namespace EVEMon.Common.Controls
         [Serializable, StructLayout(LayoutKind.Sequential)]
         internal struct RECT
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RECT"/> struct.
+            /// </summary>
+            /// <param name="left">The left.</param>
+            /// <param name="top">The top.</param>
+            /// <param name="right">The right.</param>
+            /// <param name="bottom">The bottom.</param>
             private RECT(int left, int top, int right, int bottom)
                 : this()
             {
@@ -230,29 +237,84 @@ namespace EVEMon.Common.Controls
                 Bottom = bottom;
             }
 
-            public int Left { get; private set; }
+            /// <summary>
+            /// Gets the left.
+            /// </summary>
+            /// <value>
+            /// The left.
+            /// </value>
+            public int Left { get; }
 
-            public int Top { get; private set; }
+            /// <summary>
+            /// Gets the top.
+            /// </summary>
+            /// <value>
+            /// The top.
+            /// </value>
+            public int Top { get; }
 
-            public int Right { get; private set; }
+            /// <summary>
+            /// Gets the right.
+            /// </summary>
+            /// <value>
+            /// The right.
+            /// </value>
+            public int Right { get; }
 
-            public int Bottom { get; private set; }
+            /// <summary>
+            /// Gets the bottom.
+            /// </summary>
+            /// <value>
+            /// The bottom.
+            /// </value>
+            public int Bottom { get; }
 
-
+            /// <summary>
+            /// Gets the height.
+            /// </summary>
+            /// <value>
+            /// The height.
+            /// </value>
             public int Height => Bottom - Top + 1;
 
+            /// <summary>
+            /// Gets the width.
+            /// </summary>
+            /// <value>
+            /// The width.
+            /// </value>
             public int Width => Right - Left + 1;
 
+            /// <summary>
+            /// Gets the size.
+            /// </summary>
+            /// <value>
+            /// The size.
+            /// </value>
             public Size Size => new Size(Width, Height);
 
+            /// <summary>
+            /// Gets the location.
+            /// </summary>
+            /// <value>
+            /// The location.
+            /// </value>
             public Point Location => new Point(Left, Top);
 
-            // Handy method for converting to a System.Drawing.Rectangle
+            /// <summary>
+            /// Handy method for converting to a System.Drawing.Rectangle
+            /// </summary>
+            /// <returns></returns>
             public Rectangle ToRectangle()
             {
                 return Rectangle.FromLTRB(Left, Top, Right, Bottom);
             }
 
+            /// <summary>
+            /// Froms the rectangle.
+            /// </summary>
+            /// <param name="rectangle">The rectangle.</param>
+            /// <returns></returns>
             public static RECT FromRectangle(Rectangle rectangle)
             {
                 return new RECT(rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);

@@ -35,17 +35,17 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this group's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this group's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets this group's description.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         #endregion
 

@@ -42,22 +42,22 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the region where this constellation is located.
         /// </summary>
-        public Region Region { get; private set; }
+        public Region Region { get; }
 
         /// <summary>
         /// Gets something like Region > Constellation.
         /// </summary>
-        public string FullLocation { get; private set; }
+        public string FullLocation { get; }
 
         #endregion
 

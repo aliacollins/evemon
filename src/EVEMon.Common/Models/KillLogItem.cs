@@ -58,32 +58,32 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the EVE flag.
         /// </summary>
-        public short EVEFlag { get; private set; }
+        public short EVEFlag { get; }
 
         /// <summary>
         /// Gets the qty dropped.
         /// </summary>
-        public int QtyDropped { get; private set; }
+        public int QtyDropped { get; }
 
         /// <summary>
         /// Gets the qty destroyed.
         /// </summary>
-        public int QtyDestroyed { get; private set; }
+        public int QtyDestroyed { get; }
 
         /// <summary>
         /// Gets the singleton.
         /// </summary>
-        public byte Singleton { get; private set; }
+        public byte Singleton { get; }
 
         /// <summary>
         /// Gets a value indicating whether the item is in a container.
         /// </summary>
-        public bool IsInContainer { get; private set; }
+        public bool IsInContainer { get; }
 
         /// <summary>
         /// Gets the fitting content group.
         /// </summary>
-        public KillLogFittingContentGroup FittingContentGroup { get; private set; }
+        public KillLogFittingContentGroup FittingContentGroup { get; }
 
         /// <summary>
         /// Gets the items.

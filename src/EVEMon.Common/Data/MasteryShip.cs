@@ -59,7 +59,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the ship.
         /// </summary>
-        public Ship Ship { get; private set; }
+        public Ship Ship { get; }
 
         /// <summary>
         /// Gets the highest trained mastery level.

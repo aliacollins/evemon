@@ -71,42 +71,42 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets this object's corporation id.
         /// </summary>
-        public int CorporationID { get; private set; }
+        public int CorporationID { get; }
 
         /// <summary>
         /// Gets this object's corporation name.
         /// </summary>
-        public string CorporationName { get; private set; }
+        public string CorporationName { get; }
 
         /// <summary>
         /// Gets the solar system where this station is located.
         /// </summary>
-        public SolarSystem SolarSystem { get; private set; }
+        public SolarSystem SolarSystem { get; }
 
         /// <summary>
         /// Gets something like Region > Constellation > Solar System > Station.
         /// </summary>
-        public string FullLocation { get; private set; }
+        public string FullLocation { get; }
 
         /// <summary>
         /// Gets the base reprocessing efficiency of the station.
         /// </summary>
-        public float ReprocessingEfficiency { get; private set; }
+        public float ReprocessingEfficiency { get; }
 
         /// <summary>
         /// Gets the fraction of reprocessing products taken by the station.
         /// </summary>
-        public float ReprocessingStationsTake { get; private set; }
+        public float ReprocessingStationsTake { get; }
 
         #endregion
 

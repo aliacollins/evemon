@@ -64,27 +64,27 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this object's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this object's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the real security level, between -1.0 and +1.0
         /// </summary>
-        public float SecurityLevel { get; private set; }
+        public float SecurityLevel { get; }
 
         /// <summary>
         /// Gets the constellation this solar system is located.
         /// </summary>
-        public Constellation Constellation { get; private set; }
+        public Constellation Constellation { get; }
 
         /// <summary>
         /// Gets something like Region > Constellation > Solar System.
         /// </summary>
-        public string FullLocation { get; private set; }
+        public string FullLocation { get; }
 
         /// <summary>
         /// Gets or sets the color of the security level.

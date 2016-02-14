@@ -58,17 +58,17 @@ namespace EVEMon.Common.CustomEventArgs
         /// <summary>
         /// Gets the created Uri character.
         /// </summary>
-        public Uri Uri { get; private set; }
+        public Uri Uri { get; }
 
         /// <summary>
         /// Gets or sets a value indicating if there was an error.
         /// </summary>
-        public bool HasError { get; private set; }
+        public bool HasError { get; }
 
         /// <summary>
         /// Gets or sets the error which occurred.
         /// </summary>
-        public string Error { get; private set; }
+        public string Error { get; }
 
         /// <summary>
         /// Gets the character's name.

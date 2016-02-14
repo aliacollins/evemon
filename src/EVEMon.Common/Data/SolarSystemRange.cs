@@ -31,12 +31,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the source solar system.
         /// </summary>
-        public SolarSystem Source { get; private set; }
+        public SolarSystem Source { get; }
 
         /// <summary>
         /// The number of jumps those system are located from the source.
         /// </summary>
-        public int Range { get; private set; }
+        public int Range { get; }
 
         #endregion
 

@@ -25,7 +25,7 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Returns the APIMethodsEnum enumeration member for this APIMethod.
         /// </summary>
-        public Enum Method { get; private set; }
+        public Enum Method { get; }
 
         /// <summary>
         /// Returns the defined URL suffix path for this APIMethod.

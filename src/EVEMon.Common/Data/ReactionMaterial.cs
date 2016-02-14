@@ -31,7 +31,7 @@ namespace EVEMon.Common.Data
         /// <value>
         ///   <c>true</c> if this instance is input; otherwise, <c>false</c>.
         /// </value>
-        public bool IsInput { get; private set; }
+        public bool IsInput { get; }
 
         #endregion
 

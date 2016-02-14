@@ -58,13 +58,13 @@ namespace EVEMon.Common.Models
         /// Gets the EVE notification ID.
         /// </summary>
         /// <value>The notification ID.</value>
-        public long NotificationID { get; private set; }
+        public long NotificationID { get; }
 
         /// <summary>
         /// Gets the EVE notification type.
         /// </summary>
         /// <value>The type.</value>
-        public int TypeID { get; private set; }
+        public int TypeID { get; }
 
         /// <summary>
         /// Gets the name of the type.
@@ -72,24 +72,24 @@ namespace EVEMon.Common.Models
         /// <value>
         /// The name of the type.
         /// </value>
-        public string TypeName { get; private set; }
+        public string TypeName { get; }
 
         /// <summary>
         /// Gets the EVE notification sender name.
         /// </summary>
-        public string SenderName { get; private set; }
+        public string SenderName { get; }
 
         /// <summary>
         /// Gets the sent date of the EVE notification.
         /// </summary>
         /// <value>The sent date.</value>
-        public DateTime SentDate { get; private set; }
+        public DateTime SentDate { get; }
 
         /// <summary>
         /// Gets the EVE notification recipient.
         /// </summary>
         /// <value>The recipient.</value>
-        public IEnumerable<string> Recipient { get; private set; }
+        public IEnumerable<string> Recipient { get; }
 
         /// <summary>
         /// Gets the EVE notification text.

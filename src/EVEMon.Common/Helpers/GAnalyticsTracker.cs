@@ -387,7 +387,7 @@ namespace EVEMon.Common.Helpers
             /// <value>
             /// The token.
             /// </value>
-            internal string Token { get; private set; }
+            internal string Token { get; }
 
             /// <summary>
             /// Gets a value indicating whether this instance is required.
@@ -395,7 +395,7 @@ namespace EVEMon.Common.Helpers
             /// <value>
             /// <c>true</c> if this instance is required; otherwise, <c>false</c>.
             /// </value>
-            internal bool IsRequired { get; private set; }
+            internal bool IsRequired { get; }
         }
 
         #endregion

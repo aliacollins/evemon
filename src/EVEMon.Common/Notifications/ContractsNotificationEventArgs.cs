@@ -31,7 +31,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public Collection<Contract> Contracts { get; private set; }
+        public Collection<Contract> Contracts { get; }
 
         /// <summary>
         /// Gets true if the notification has details.

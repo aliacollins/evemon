@@ -86,7 +86,7 @@ namespace EVEMon.ApiErrorHandling
             /// Gets or sets the seconds.
             /// </summary>
             /// <value>The seconds.</value>
-            public int Seconds { get; private set; }
+            public int Seconds { get; }
 
             /// <summary>
             /// Gets the label.

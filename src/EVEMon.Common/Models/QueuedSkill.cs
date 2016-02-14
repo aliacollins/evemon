@@ -48,17 +48,17 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the character training this.
         /// </summary>
-        public Character Owner { get; private set; }
+        public Character Owner { get; }
 
         /// <summary>
         /// Gets the trained level.
         /// </summary>
-        public int Level { get; private set; }
+        public int Level { get; }
 
         /// <summary>
         /// Gets the trained skill. May be null if the skill is not in our datafiles.
         /// </summary>
-        public Skill Skill { get; private set; }
+        public Skill Skill { get; }
 
         /// <summary>
         /// Gets the skill name, or "Unknown skill" if the skill was not in our datafiles.
@@ -68,22 +68,22 @@ namespace EVEMon.Common.Models
         /// <summary>
         /// Gets the training start time (UTC).
         /// </summary>
-        public DateTime StartTime { get; private set; }
+        public DateTime StartTime { get; }
 
         /// <summary>
         /// Gets the time this training will be completed (UTC).
         /// </summary>
-        public DateTime EndTime { get; private set; }
+        public DateTime EndTime { get; }
 
         /// <summary>
         /// Gets the number of SP this skill had when the training started.
         /// </summary>
-        public int StartSP { get; private set; }
+        public int StartSP { get; }
 
         /// <summary>
         /// Gets the number of SP this skill will have once the training is over.
         /// </summary>
-        public int EndSP { get; private set; }
+        public int EndSP { get; }
 
         /// <summary>
         /// Gets the fraction completed, between 0 and 1.

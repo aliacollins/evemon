@@ -46,12 +46,12 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the mastery level.
         /// </summary>
-        public Mastery MasteryLevel { get; private set; }
+        public Mastery MasteryLevel { get; }
 
         /// <summary>
         /// Gets or sets the certificate.
         /// </summary>
-        public StaticCertificate Certificate { get; set; }
+        public StaticCertificate Certificate { get; }
 
         /// <summary>
         /// Gets this certificate's representation for the provided character.

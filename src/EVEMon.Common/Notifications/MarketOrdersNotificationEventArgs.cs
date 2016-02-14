@@ -30,7 +30,7 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets the associated API result.
         /// </summary>
-        public Collection<MarketOrder> Orders { get; private set; }
+        public Collection<MarketOrder> Orders { get; }
 
         /// <summary>
         /// Gets true if the notification has details.

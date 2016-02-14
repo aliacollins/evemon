@@ -47,22 +47,22 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets this category's id.
         /// </summary>
-        public int ID { get; private set; }
+        public int ID { get; }
 
         /// <summary>
         /// Gets this category's name.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets this category's description.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets the category's display name.
         /// </summary>
-        public string DisplayName { get; private set; }
+        public string DisplayName { get; }
 
         #endregion
     }

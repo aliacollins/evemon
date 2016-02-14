@@ -307,7 +307,7 @@ namespace EVEMon.Common.Controls
             /// <summary>
             /// The <see cref="TrayIcon"/> whose MouseState we are managing
             /// </summary>
-            protected TrayIcon TrayIcon { get; private set; }
+            protected TrayIcon TrayIcon { get; }
 
             /// <summary>
             /// Enables the mouse tracking.

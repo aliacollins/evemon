@@ -23,12 +23,12 @@ namespace EVEMon.Common.Notifications
         /// <summary>
         /// Gets this category's notification.
         /// </summary>
-        public NotificationCategory Category { get; private set; }
+        public NotificationCategory Category { get; }
 
         /// <summary>
         /// Gets the sender of this notification.
         /// </summary>
-        public object Sender { get; private set; }
+        public object Sender { get; }
 
         /// <summary>
         /// Gets the API key that sent this notification, or null if the sender was not an account.

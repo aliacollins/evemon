@@ -56,7 +56,7 @@ namespace EVEMon.Common.Data
         /// <summary>
         /// Gets the slot.
         /// </summary>
-        public ImplantSlots Slot { get; private set; }
+        public ImplantSlots Slot { get; }
 
         /// <summary>
         /// For attributes implants, gets the amount of bonus points it grants.
